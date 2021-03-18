@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as BBPromise from 'bluebird';
+import BBPromise from 'bluebird';
 import box_id from '../config/box_id';
 import {
   AssignmentOrderType,

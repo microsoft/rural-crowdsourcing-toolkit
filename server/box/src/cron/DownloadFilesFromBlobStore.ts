@@ -7,7 +7,7 @@
  */
 
 import axios from 'axios';
-import * as BBPromise from 'bluebird';
+import BBPromise from 'bluebird';
 import * as fs from 'fs';
 import config from '../config/Index';
 import { KaryaFileRecord } from '../db/TableInterfaces.auto';

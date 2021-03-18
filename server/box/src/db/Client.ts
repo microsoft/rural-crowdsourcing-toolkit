@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as knexPkg from 'knex';
+import knexPkg from 'knex';
 import config from '../config/Index';
 
 const options = {

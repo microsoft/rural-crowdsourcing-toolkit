@@ -6,7 +6,7 @@
  */
 
 import axios, { AxiosError, ResponseType as AxiosResponseType } from 'axios';
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 import { File } from 'formidable';
 import fetch, { RequestInit } from 'node-fetch';
 import config from '../config/Index';

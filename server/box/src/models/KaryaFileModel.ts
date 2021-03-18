@@ -6,7 +6,7 @@
  */
 
 import { promises as fsp } from 'fs';
-import * as md5File from 'md5-file';
+import md5File from 'md5-file';
 import box_id from '../config/box_id';
 import config from '../config/Index';
 import {

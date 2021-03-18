@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as cors from '@koa/cors';
+import cors from '@koa/cors';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
-import * as Koa from 'koa';
+import Koa from 'koa';
 import config from './config/Index';
 import { SetBox, this_box } from './config/ThisBox';
 import { GET } from './cron/HttpUtils';
