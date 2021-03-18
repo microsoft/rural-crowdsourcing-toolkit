@@ -1,17 +1,14 @@
 {
-  "name": "karya",
+  "name": "@karya/backend",
   "version": "2.0.0",
-  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
-  "main": "src/Server.ts",
+  "description": "This package implements the backend server of this rural crowdsourcing toolkit",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://projectkarya.visualstudio.com/code.v2/_git/server-backend"
-  },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@azure/identity": "^1.1.0",
     "@azure/keyvault-secrets": "^4.1.0",
