@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as moment from 'moment';
+import moment from 'moment';
 import { createLogger, format, transports } from 'winston';
 // tslint:disable-next-line:no-require-imports
 import DailyRotateFile = require('winston-daily-rotate-file');

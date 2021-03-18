@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as BodyParser from 'koa-body';
+import BodyParser from 'koa-body';
 import * as BoxRequestController from '../controllers/BoxRequestController'
 
 // Import router from the automatically created routes

@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as cors from '@koa/cors';
-import * as Koa from 'koa';
+import cors from '@koa/cors';
+import Koa from 'koa';
 
 import config, { loadSecretsFromVault } from './config/Index';
 import logger from './utils/Logger';

@@ -6,7 +6,7 @@
 // provider can only access tasks that they have created. Hence, they could not
 // be auto generated.
 
-import * as BBPromise from 'bluebird';
+import BBPromise from 'bluebird';
 import { Task, TaskRecord, TaskStatus } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';

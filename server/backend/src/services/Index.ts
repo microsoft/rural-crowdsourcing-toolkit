@@ -6,7 +6,7 @@
  */
 
 // Bull for async jobs
-import * as Bull from 'bull';
+import Bull from 'bull';
 
 // Db types
 import {

@@ -5,7 +5,7 @@
  * Handle Karya File specific tasks
  */
 
-import * as md5File from 'md5-file';
+import md5File from 'md5-file';
 import {
   ChecksumAlgorithm,
   KaryaFile,

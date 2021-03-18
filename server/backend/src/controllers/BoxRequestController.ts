@@ -7,7 +7,7 @@
 
 import { randomBytes } from 'crypto';
 import * as jwtSimple from 'jwt-simple';
-import * as RawBody from 'raw-body';
+import RawBody from 'raw-body';
 import config from '../config/Index';
 import { Box, BoxRecord, KaryaFileRecord } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
