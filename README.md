@@ -39,17 +39,15 @@ This platform architecture enables two benefits.
 
 ## Code Organization
 
-The code is split between three folders: `db-schema`, `server`, and `client`.
+The code is split between two folders: `server`, and `client`.
 
-The `db-schema` folder contains the specification of the database schema that
-will be used across all components of the platform. This component contains
-parsers and generators for database initializers, type specification files, and
-API related files.
-
-The `server` folder in turn contains three components: `backend` is the main
+The `server` folder in turn contains four components: `backend` is the main
 server built on top of nodejs, `frontend` is a react webapp that allows admins
 and work requestors to interact with the main server, and `box` is the box
-server built on top of nodejs.
+server built on top of nodejs. The `db-schema` folder contains the specification
+of the database schema that will be used across all components of the platform.
+This component contains parsers and generators for database initializers, type
+specification files, and API related files.
 
 The `client` folder contains the Android app that allows workers to interact
 with the platform.
