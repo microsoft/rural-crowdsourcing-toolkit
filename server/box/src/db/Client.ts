@@ -1,0 +1,16 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+import * as knexPkg from 'knex';
+import config from '../config/Index';
+
+const options = {
+  client: 'pg',
+  connection: config.dbConfig,
+  pool: {
+    min: 2,
+    max: 10,
+  },
+};
+
+export const knex = knexPkg(options);

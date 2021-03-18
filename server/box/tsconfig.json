@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "strict": true,
+    "incremental": true,
+    "lib": ["es2018"],
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin",
+        "configFile": "./tslint.json"
+      }
+    ]
+  },
+  "include": ["./src/**/*"]
+}

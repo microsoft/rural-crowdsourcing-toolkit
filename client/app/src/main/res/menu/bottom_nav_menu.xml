@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_language"
+        android:icon="@drawable/ic_translate"
+        android:title="@string/update_app_language"/>
+
+    <item
+        android:id="@+id/navigation_skills"
+        android:icon="@drawable/ic_update_skills"
+        android:title="@string/update_skills"/>
+
+</menu>

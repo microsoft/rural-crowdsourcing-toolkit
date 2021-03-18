@@ -1,0 +1,6 @@
+/node_modules
+/scratch
+/logs
+/dist
+/files
+/src/config/box_id.ts

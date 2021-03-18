@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/speech_verification_instruction_desc"
+        android:textColor="#BBBBBB"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sentenceCv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
+        card_view:cardBackgroundColor="#DCDCDC"
+        card_view:cardCornerRadius="18dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:layout_constraintBottom_toTopOf="@id/recordLengthLL">
+
+        <TextView
+            android:id="@+id/sentenceTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_20sdp"
+            app:autoSizeMaxTextSize="@dimen/_30ssp"
+            app:autoSizeMinTextSize="@dimen/_12ssp"
+            app:autoSizeStepGranularity="@dimen/_2ssp"
+            app:autoSizeTextType="uniform"
+            app:fontFamily="sans-serif"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/recordLengthLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/playbackProgressPb">
+
+        <TextView
+            android:id="@+id/playbackSecondsTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/_30ssp"
+            app:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/playbackCentiSecondsTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:gravity="center"
+            android:text="00"
+            android:textColor="@color/light_red"
+            android:textSize="@dimen/_20ssp"
+            app:fontFamily="monospace" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/playbackProgressPb"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:max="100"
+        android:progressBackgroundTint="@color/colorLightGrey2"
+        android:progressTint="@color/colorRed"
+        android:scaleY="2"
+        app:layout_constraintBottom_toTopOf="@id/accuracyCl" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/accuracyCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/qualityCl">
+
+        <TextView
+            android:id="@+id/accuracyLbl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/recording_accuracy"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/accuracyIncorrectBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.22" />
+
+        <Button
+            android:id="@+id/accuracyIncorrectBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/accuracy_incorrect"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/accuracyLbl"
+            app:layout_constraintRight_toLeftOf="@id/accuracyErrorsBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/accuracyErrorsBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/accuracy_errors"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/accuracyIncorrectBtn"
+            app:layout_constraintRight_toLeftOf="@id/accuracyCorrectBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/accuracyCorrectBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/accuracy_correct"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/accuracyErrorsBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/qualityCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/volumeCl">
+
+        <TextView
+            android:id="@+id/qualityLbl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/recording_quality"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/qualityBadBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.22" />
+
+        <Button
+            android:id="@+id/qualityBadBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/quality_bad"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/qualityLbl"
+            app:layout_constraintRight_toLeftOf="@id/qualityNoisyBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/qualityNoisyBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/quality_noisy"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/qualityBadBtn"
+            app:layout_constraintRight_toLeftOf="@id/qualityGoodBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/qualityGoodBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/quality_good"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/qualityNoisyBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/volumeCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/playBtnCl">
+
+        <TextView
+            android:id="@+id/volumeLbl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/recording_volume"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/volumeLowBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.22" />
+
+        <Button
+            android:id="@+id/volumeLowBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/volume_low"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/volumeLbl"
+            app:layout_constraintRight_toLeftOf="@id/volumeOkayBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/volumeOkayBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/volume_okay"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/volumeLowBtn"
+            app:layout_constraintRight_toLeftOf="@id/volumeHighBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/volumeHighBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/volume_high"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/volumeOkayBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/backBtnCl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/playBtnCl"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/playBtnCl"
+        app:layout_constraintWidth_percent="0.30">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/backBtnCv"
+            android:visibility="invisible"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:translationZ="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_25sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.6">
+
+            <ImageView
+                android:id="@+id/backBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_back_enabled"
+                android:contentDescription="@string/back"
+                android:soundEffectsEnabled="false" />
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/playBtnCl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/backBtnCl"
+        app:layout_constraintWidth_percent="0.40">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/playBtnCv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:translationZ="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_25sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5">
+
+            <ImageView
+                android:id="@+id/playBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_speaker_enabled"
+                android:contentDescription="@string/back"
+                android:soundEffectsEnabled="false" />
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nextBtnCl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/playBtnCl"
+        app:layout_constraintLeft_toRightOf="@id/playBtnCl"
+        app:layout_constraintTop_toTopOf="@id/playBtnCl"
+        app:layout_constraintWidth_percent="0.30">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/nextBtnCv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:translationZ="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_25sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.6">
+
+            <ImageView
+                android:id="@+id/nextBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_next_enabled"
+                android:contentDescription="@string/back"
+                android:soundEffectsEnabled="false" />
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/sentencePointerIv"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_60sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:background="@drawable/ic_pointer"
+        android:elevation="@dimen/_20sdp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/sentenceCv"
+        app:layout_constraintEnd_toEndOf="@id/sentenceCv" />
+
+    <ImageView
+        android:id="@+id/backPointerIv"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@drawable/ic_pointer"
+        android:rotation="180"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/backBtnCl"
+        app:layout_constraintLeft_toLeftOf="@id/backBtnCl"
+        app:layout_constraintRight_toRightOf="@id/backBtnCl" />
+
+    <ImageView
+        android:id="@+id/playPointerIv"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@drawable/ic_pointer"
+        android:rotation="180"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/playBtnCl"
+        app:layout_constraintLeft_toLeftOf="@id/playBtnCl"
+        app:layout_constraintRight_toRightOf="@id/playBtnCl" />
+
+    <ImageView
+        android:id="@+id/nextPointerIv"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@drawable/ic_pointer"
+        android:rotation="180"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/nextBtnCl"
+        app:layout_constraintLeft_toLeftOf="@id/nextBtnCl"
+        app:layout_constraintRight_toRightOf="@id/nextBtnCl" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

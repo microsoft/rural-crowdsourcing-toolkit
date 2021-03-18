@@ -1,0 +1,533 @@
+{
+    "language": "English",
+    "values": [
+        {
+            "scenario_name": null,
+            "name": "project_name",
+            "description": "karya",
+            "value": "Karya",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "no_internet_or_server_down",
+            "description": "We are not able to reach our server. Please ensure you have internet turned on.",
+            "value": "We are not able to reach our server. Please ensure you have internet turned on.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "click_to_retry",
+            "description": "Click this button to retry",
+            "value": "Click this button to retry",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "unknown_error",
+            "description": "Unknown error occured. Please close the application and open again. If error persists, contact your project coordinator",
+            "value": "Unknown error occured. Please close the application and open again. If error persists, contact your project coordinator",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "salutation",
+            "description": "Hi",
+            "value": "Hi",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "show_app_in_language",
+            "description": "Show the app in <language>",
+            "value": "Show the app in English",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "prompt_for_language_select",
+            "description": "To show app in <language>, press here",
+            "value": "To show app in English, press here",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "fetching_values_for_language",
+            "description": "Getting all necessary data to display the app in <language>",
+            "value": "Getting all necessary data to display the app in English",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "consent_form_agree",
+            "description": "I agree",
+            "value": "I agree",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "consent_form_disagree",
+            "description": "No. I do not want to participate",
+            "value": "No. I do not want to participate",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "consent_form_text",
+            "description": "HTML text for the consent form",
+            "value": "<h5>Purpose of the Project</h5>\n<br/>\n<p>\nProject Karya aims to make paid digital work accessible to users in rural communities outside of large IT centers. In this task, you will help us by verifying Marathi speech data we have collected from our participatns.\n</p>\n<br/>\n\n<h5>Procedure</h5>\n<p>\n● If you are seeing this, you have successfully installed the Karya app.<br/>\n● We would have given you a “16-digit Access Code”. You need to enter the code during the registration\nprocess. Each access code can be used only once. As part of the registration process, we will require you to sign-in\nwith your phone number. This information will be used to identify you on the platform when you close\nthe application and open it again. In addition, we will also collect your age range, and gender. The application\nwill also ask you to choose a profile picture. This picture will only be used for display in the application.<br/>\n● After completing the registration, the application will present you with a set of sentences with recordings (one sentence at a time). Your task is to rate the recording for accuracy, noise, and volume.\n</p>\n<br />\n\n<h5>Risks and Benefits</h5>\n<br />\n<p>\n• We recommend doing the provided work in a patient manner. This will allow you to submit more accurate reports and\nwill also make sure you don’t spend too much time on the smartphone. Spending too much time on a smartphone could be bad\nfor your eyes and may affect your social life. We recommend not working for more than 2 hours a day.<br />\n\n<h5>Personal Information</h5>\n<br />\n<p>\nDuring the project, we will collect your name, picture, and age. Your personal information will only be used to identify\nyou during the duration of the study. We will delete all personal information as soon as the study is over. We will not\nshare your personal information with anyone. However, we may use pictures from the study in presentations or posters\nwithout identifying specific individuals. We will request your permission before taking pictures and obtain your\npermission to use those pictures in our presentations or posters. Not providing consent for taking pictures will not\ndisqualify you from participating in the study.\n</p>\n<p>\nFor additional information or concerns about how Microsoft handles your personal information, please see the Microsoft\nPrivacy Statement, https://go.microsoft.com/fwlink/?LinkId=521839\n</p>\n<br />\n\n<h5>Payment for Participation</h5>\n<br />\n<p>\nBased on the quality of the recording, we will pay you between INR 0.5 for every recording you rate.\n</p>\n<br/>\n\n<h5>Dataset Collected from the Study</h5>\n<br/>\n<p>\nWe will use the dataset collected from this study for further research and will release\nit publicly for research purposes. This dataset will not contain any personally identifiable information. If you have\nany questions regarding how the dataset will be used, please feel free to ask us through your project coordinator or\nusing the phone number provided below.\n</p>\n<br/>\n\n<h5>Contact Information</h5>\n<br/>\n<p>\nShould you have any questions concerning the project, you can contact Vivek Seshadri by phone at 9482393817. Should you\nhave any questions about your rights as a research subject, please report your concern via email to Microsoft Research\nEthics Program Feedback: MSRStudyfeedback@microsoft.com. In case you do not have access to email, you can contact your\nproject coordinator, and have her relay your concerns.\n</p>\n<br/>\n\n<h5>Consent</h5>\n<br/>\n<p>\nBy clicking “I agree” below, you confirm that the study was explained to you, you had a chance to ask questions before\nbeginning the study, and all your questions were answered satisfactorily. By clicking “I agree” below, you voluntarily\nconsent to participate, and you do not give up any legal rights you have as a study participant. On behalf of Microsoft\nand Navana Tech India, we thank you for your contribution and look forward to your research session.\n</p>\n<br/>\n<p>Do you understand and consent to these terms?</p>\n",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "consent_form_summary",
+            "description": "Summarize the key points in the consent form",
+            "value": "Thank you for participating in the research study as part of Project Karya. Please listen to this message carefully. The goal of this study is to collect speech data from users in the Odia language in finance, agriculture, and health care domains. In this study, you will help us generate the speech data by reading out sentences in Odia. This data will then be used to train computers and smartphones to understand Odia and in turn build applications that can interact with Odia speakers. You will be paid for your work. In this study, you have the opportunity to earn upto rupees 1200. The speech data collected from you will be released and used for research purposes. We will not store or release any of your personal information. Please read the consent form in this page for more details",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "access_code_prompt",
+            "description": "You should have received a 16-digit access code from the project coordinator. Please enter that access code below.",
+            "value": "You should have received a 16-digit access code from the project coordinator. Please enter that access code below.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "invalid_creation_code",
+            "description": "You have entered an invalid creation code.",
+            "value": "You have entered an invalid creation code.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "creation_code_already_used",
+            "description": "The creation code you have entered is already used. Please contact your project coordinator.",
+            "value": "The creation code you have entered is already used. Please contact your project coordinator.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "phone_number_prompt",
+            "description": "To use Karya, you need to register with our application using your phone number. Please enter your phone number below.",
+            "value": "To use Karya, you need to register with our application using your phone number. Please enter your phone number below.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "sending_otp",
+            "description": "Sending OTP to your phone",
+            "value": "Sending OTP to your phone",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "unable_to_send_otp",
+            "description": "We were unable to send OTP to your number. Please try again later",
+            "value": "We were unable to send OTP to your number. Please try again later.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "otp_prompt",
+            "description": "We have sent you a 6-digit OTP via SMS. Please enter that OTP below",
+            "value": "We have sent you a 6-digit OTP via SMS. Please enter that OTP below",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "invalid_otp",
+            "description": "You have entered an invalid OTP",
+            "value": "You have entered an invalid OTP",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "resend_otp",
+            "description": "Resend OTP",
+            "value": "Resend OTP",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "profile_picture_prompt",
+            "description": "Please click your profile picture. You can skip this step if you do not want a profile picture",
+            "value": "Please click your profile picture. You can skip this step if you do not want a profile picture",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "gender_prompt",
+            "description": "Please choose your gender. If you do not wish to state your gender, you can skip this step",
+            "value": "Please choose your gender. If you do not wish to state your gender, you can skip this step",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "male",
+            "description": "Male",
+            "value": "Male",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "female",
+            "description": "Female",
+            "value": "Female",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "age_prompt",
+            "description": "Please choose your age group",
+            "value": "Please choose your age group",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "years",
+            "description": "years",
+            "value": "years",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "registering_worker",
+            "description": "Registering worker with the server",
+            "value": "Registering worker with the server",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "phone_number_already_used",
+            "description": "Your phone number is already registered. Please try with another phone number.",
+            "value": "Your phone number is already registered. Please try with another phone number.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "skill_question_description",
+            "description": "We have three questions about your skills in <language>. For each question, please click <tick> for yes, and <cross> for no.",
+            "value": "We have three questions about your skills in English. For each question, please click <tick> for yes, and <cross> for no.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "read_skill_question",
+            "description": "Can you read in <language>?",
+            "value": "Can you read in English?",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "speak_skill_question",
+            "description": "Can you speak in <language>?",
+            "value": "Can you speak in English?",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "type_skill_question",
+            "description": "Can you type in <language>?",
+            "value": "Can you type in English?",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "registering_skill",
+            "description": "Registering new skill for worker",
+            "value": "Registering new skill for worker",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "failed_to_register_skill",
+            "description": "Failed to register new skill for worker",
+            "value": "Failed to register new skill for worker",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "other_language_selection",
+            "description": "If you know any other language, please select that language below",
+            "value": "If you know any other language, please select that language below",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "uploading_files",
+            "description": "Uploading files to the box",
+            "value": "Uploading files to the box",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "send_updates",
+            "description": "Sending updates to the box",
+            "value": "Sending updates to the box",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "receive_updates",
+            "description": "Receiving updates from the box",
+            "value": "Receiving updates from the box",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "downloading_files",
+            "description": "Downloading files from the box",
+            "value": "Downloading files from the box",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "get_new_tasks",
+            "description": "Get new tasks",
+            "value": "\nGet new tasks",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "submit_completed_tasks",
+            "description": "Submit completed tasks",
+            "value": "Submit completed tasks",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "update_verified_tasks",
+            "description": "Update verified tasks",
+            "value": "Update verified tasks",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "update_earning",
+            "description": "Update earnings",
+            "value": "Update earnings",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "tasks_available",
+            "description": "tasks available",
+            "value": "tasks available",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "tasks_completed",
+            "description": "tasks completed",
+            "value": "tasks completed",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "tasks_submitted",
+            "description": "tasks submitted",
+            "value": "tasks submitted",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "tasks_verified",
+            "description": "tasks verified",
+            "value": "tasks verified",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "update_app_language",
+            "description": "Change the App Language",
+            "value": "Change the App Language",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "update_skills",
+            "description": "Update Language Skills",
+            "value": "Update Language Skills",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "sync_prompt_message",
+            "description": "You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?",
+            "value": "You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "yes",
+            "description": "Yes",
+            "value": "Yes",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": null,
+            "name": "no",
+            "description": "no",
+            "value": "No",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "scenario_name",
+            "description": "Speech-data Collection",
+            "value": "Speech-data Collection",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "scenario_description",
+            "description": "This task consists of a set of sentences. The worker is expected to record themselves reading out each sentence, one sentence at a time",
+            "value": "This task consists of a set of sentences. The worker is expected to record themselves reading out each sentence, one sentence at a time",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "story-speech",
+            "name": "scenario_name",
+            "description": "Group Speech-data Collection",
+            "value": "Group Speech-data Collection",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "story-speech",
+            "name": "scenario_description",
+            "description": "This task consists of a set of stories. The worker is expected to record themselves reading out each story, one sentence at a time",
+            "value": "This task consists of a set of stories. The worker is expected to record themselves reading out each story, one sentence at a time",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-verification",
+            "name": "scenario_name",
+            "description": "Verification of Speech Data Recordings",
+            "value": "Verification of Speech Data Recordings",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-verification",
+            "name": "scenario_description",
+            "description": "This task consists of a set of recordings. The worker is expected to verify the given recording and text.",
+            "value": "This task consists of a set of recordings. The worker is expected to verify the given recording and text.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "record_sentence",
+            "description": "You have to record yourself speaking out this sentence",
+            "value": "You have to record yourself speaking out this sentence",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "record_action",
+            "description": "To start recording, press this button. It will turn red indicating that the recording has started.",
+            "value": "To start recording, press this button. It will turn red indicating that the recording has started.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "stop_action",
+            "description": "Once you are done recording, press this button again to stop the recording",
+            "value": "Once you are done recording, press this button again to stop the recording",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "listen_action",
+            "description": "The app will play back the recorded audio. Listen to it carefully to ensure it is correct and that there is no other background voice.",
+            "value": "\nThe app will play back the recorded audio. Listen to it carefully to ensure it is correct and that there is no other background voice.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "rerecord_action",
+            "description": "If your recording is not correct, you can record again using the record button.",
+            "value": "If your recording is not correct, you can record again using the record button.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "next_action",
+            "description": "If you are happy with the recording, you can press this button to go to the next sentence.",
+            "value": "If you are happy with the recording, you can press this button to go to the next sentence.",
+            "valid": true,
+            "need_update": false
+        },
+        {
+            "scenario_name": "speech-data",
+            "name": "previous_action",
+            "description": "You can press this button to go to the previous sentence.",
+            "value": "\nYou can press this button to go to the previous sentence.",
+            "valid": true,
+            "need_update": false
+        }
+    ]
+}

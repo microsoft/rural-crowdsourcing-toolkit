@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Karya</string>
+    <string name="help_support">Help Support</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
+    <!-- Speech data quality definitions -->
+    <string name="recording_accuracy">Accuracy</string>
+    <string name="accuracy_correct">Correct</string>
+    <string name="accuracy_errors">Errors</string>
+    <string name="accuracy_incorrect">Incorrect</string>
+
+    <string name="recording_volume">Volume</string>
+    <string name="volume_high">Good</string>
+    <string name="volume_okay">Whisper</string>
+    <string name="volume_low">Inaudible</string>
+
+    <string name="recording_quality">Quality</string>
+    <string name="quality_good">Good</string>
+    <string name="quality_noisy">Noisy</string>
+    <string name="quality_bad">Bad</string>
+
+    <string name="rating_undefined">Undefined</string>
+</resources>
+

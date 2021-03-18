@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".registration.SelectGenderActivity">
+
+    <include
+        android:id="@+id/appTb"
+        layout="@layout/app_toolbar" />
+
+    <com.kofigyan.stateprogressbar.StateProgressBar
+        android:id="@+id/dottedScreenPb"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:spb_checkStateCompleted="true"
+        app:spb_currentStateDescriptionColor="?attr/colorAccent"
+        app:spb_currentStateNumber="two"
+        app:spb_maxStateNumber="three"
+        app:spb_stateBackgroundColor="#BDBDBD"
+        app:spb_stateDescriptionColor="#808080"
+        app:spb_stateForegroundColor="?attr/colorAccent"
+        app:spb_stateNumberBackgroundColor="#808080"
+        app:spb_stateNumberForegroundColor="#eeeeee" />
+
+    <TextView
+        android:id="@+id/selectGenderPromptTv"
+        style="@style/multilineText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:text="@string/gender_prompt_desc"
+        android:textColor="?attr/appLanguageTextColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dottedScreenPb" />
+
+    <Button
+        android:id="@+id/maleBtn"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:background="@drawable/male_gender_selector"
+        android:gravity="center|bottom"
+        android:textColor="@drawable/gender_text_color_selector"
+        app:layout_constraintEnd_toStartOf="@+id/femaleBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectGenderPromptTv" />
+
+    <Button
+        android:id="@+id/femaleBtn"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:background="@drawable/female_gender_selector"
+        android:gravity="center|bottom"
+        android:textColor="@drawable/gender_text_color_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/maleBtn"
+        app:layout_constraintTop_toTopOf="@+id/maleBtn" />
+
+    <TextView
+        android:id="@+id/maleTv"
+        style="@style/Widget.textMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintEnd_toEndOf="@+id/maleBtn"
+        app:layout_constraintLeft_toLeftOf="@+id/maleBtn"
+        app:layout_constraintRight_toRightOf="@+id/maleBtn"
+        app:layout_constraintStart_toStartOf="@+id/maleBtn"
+        app:layout_constraintTop_toBottomOf="@+id/maleBtn"
+        tools:text="@string/male_desc" />
+
+
+    <TextView
+        android:id="@+id/femaleTv"
+        style="@style/Widget.textMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintEnd_toEndOf="@+id/femaleBtn"
+        app:layout_constraintLeft_toLeftOf="@+id/femaleBtn"
+        app:layout_constraintRight_toRightOf="@+id/femaleBtn"
+        app:layout_constraintStart_toStartOf="@+id/femaleBtn"
+        app:layout_constraintTop_toBottomOf="@+id/femaleBtn"
+        tools:layout_editor_absoluteX="229dp"
+        tools:text="@string/female_desc" />
+
+    <ImageButton
+        android:id="@+id/submitGenderIb"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_30sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:background="@drawable/ic_next_enabled"
+        android:contentDescription="@string/next"
+        android:padding="@dimen/_25sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_quit_select" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_quit_select" android:state_pressed="true" />
+    <item android:drawable="@drawable/ic_quit_select" android:state_focused="true" />
+    <item android:drawable="@drawable/ic_cross_off" android:state_selected="false" />
+    <item android:drawable="@drawable/ic_cross_off" android:state_pressed="false" />
+    <item android:drawable="@drawable/ic_cross_off" android:state_focused="false" />
+</selector>

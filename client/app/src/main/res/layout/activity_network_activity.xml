@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/appTb"
+        layout="@layout/app_toolbar" />
+
+    <ProgressBar
+        android:id="@+id/networkRequestPb"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:indeterminate="true"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_20sdp"
+        android:scaleY="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:layout_constraintVertical_bias="0.55" />
+
+    <ImageView
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_marginBottom="@dimen/_40sdp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/karya_logo"
+        android:src="@drawable/karya_logo"
+        app:layout_constraintBottom_toTopOf="@id/networkRequestPb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/networkRequestMessageTv"
+        style="@style/multilineText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:gravity="center|center_vertical"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/networkRequestPb"
+        tools:text="Sending network request to the box to finish operation X" />
+
+
+    <TextView
+        android:id="@+id/networkRequestErrorTv"
+        style="@style/multilineError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:gravity="center|center_vertical"
+        android:paddingStart="@dimen/_20sdp"
+        android:paddingEnd="@dimen/_20sdp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/networkRequestMessageTv"
+        tools:text="We encountered an error while sending request" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/networkRequestRetryBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_40sdp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/networkRequestErrorTv">
+
+        <TextView
+            android:id="@+id/networkRequestRetryTv"
+            style="@style/multilineText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/_10sdp"
+            tools:text="Click here to retry" />
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context=".registration.OTPActivity">
+
+    <include
+        android:id="@+id/appTb"
+        layout="@layout/app_toolbar" />
+
+    <TextView
+        android:id="@+id/otpPromptTv"
+        style="@style/multilineText"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        tools:text="@string/otp_prompt_desc" />
+
+    <EditText
+        android:id="@+id/otpEt"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_30sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:background="@drawable/blue_rounded_border"
+        android:fontFamily="monospace"
+        android:hint="@string/otp_hint"
+        android:inputType="number"
+        android:maxLength="6"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintEnd_toStartOf="@id/otpStatusIv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/otpStatusIv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otpPromptTv"
+        app:layout_constraintVertical_bias="0.149"
+        android:autofillHints="" />
+
+    <ImageView
+        android:id="@+id/otpStatusIv"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginEnd="@dimen/_30sdp"
+        android:contentDescription="@string/status_check"
+        app:layout_constraintBottom_toBottomOf="@id/otpEt"
+        app:layout_constraintLeft_toRightOf="@id/otpEt"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/otpEt"
+        app:srcCompat="@drawable/ic_check_grey" />
+
+    <Button
+        android:id="@+id/resendOTPBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="@id/otpEt"
+        app:layout_constraintTop_toBottomOf="@id/otpEt"
+        tools:text="@string/resend_otp_desc" />
+
+    <TextView
+        android:id="@+id/invalidOTPTv"
+        style="@style/multilineError"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resendOTPBtn"
+        tools:text="You have entered an invalid OTP" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

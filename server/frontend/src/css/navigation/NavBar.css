@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT license.
+**/
+
+ul#nav-mobile li > a {
+  color: #000;
+}
+
+@media only screen and (min-width: 992px) {
+  div#nav-container {
+    position: relative;
+    left: 150px;
+  }
+}

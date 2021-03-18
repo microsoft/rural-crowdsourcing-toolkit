@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General strings -->
+    <string name="project_name">project_name</string>
+    <string name="no_internet_or_server_down">no_internet_or_server_down</string>
+    <string name="click_to_retry">click_to_retry</string>
+    <string name="unknown_error">unknown_error</string>
+    <string name="salutation">salutation</string>
+
+    <!-- Select app language -->
+    <string name="show_app_in_language">show_app_in_language</string>
+    <string name="fetching_values_for_language">fetching_values_for_language</string>
+    <string name="audio_prompt_for_language_select">audio_prompt_for_language_select</string>
+
+    <!-- Consent form -->
+    <string name="consent_form_agree">consent_form_agree</string>
+    <string name="consent_form_disagree">consent_form_disagree</string>
+    <string name="consent_form_summary">consent_form_summary</string>
+    <string name="consent_form_text">consent_form_text</string>
+    <string name="audio_consent_form_summary">audio_consent_form_summary</string>
+
+    <!-- Access code -->
+    <string name="access_code_prompt">access_code_prompt</string>
+    <string name="invalid_creation_code">invalid_creation_code</string>
+    <string name="creation_code_already_used">creation_code_already_used</string>
+    <string name="audio_access_code_prompt">audio_access_code_prompt</string>
+
+    <!-- Phone number -->
+    <string name="phone_number_prompt">phone_number_prompt</string>
+    <string name="audio_phone_number_prompt">audio_phone_number_prompt</string>
+
+    <!-- Sending OTP -->
+    <string name="sending_otp">sending_otp</string>
+    <string name="unable_to_send_otp">unable_to_send_otp</string>
+
+    <!-- OTP -->
+    <string name="otp_prompt">otp_prompt</string>
+    <string name="invalid_otp">invalid_otp</string>
+    <string name="resend_otp">resend_otp</string>
+    <string name="audio_otp_prompt">audio_otp_prompt</string>
+
+    <!-- Profile picture -->
+    <string name="profile_picture_prompt">profile_picture_prompt</string>
+    <string name="audio_profile_picture_prompt">audio_profile_picture_prompt</string>
+
+    <!-- Gender -->
+    <string name="gender_prompt">gender_prompt</string>
+    <string name="audio_gender_prompt">audio_gender_prompt</string>
+    <string name="male">male</string>
+    <string name="female">female</string>
+
+    <!-- Age group -->
+    <string name="age_prompt">age_prompt</string>
+    <string name="audio_age_prompt">audio_age_prompt</string>
+    <string name="years">years</string>
+
+    <!-- Registering worker -->
+    <string name="registering_worker">registering_worker</string>
+    <string name="phone_number_already_used">phone_number_already_used</string>
+
+    <!-- Skill specification -->
+    <string name="skill_question_description">skill_question_description</string>
+    <string name="read_skill_question">read_skill_question</string>
+    <string name="speak_skill_question">speak_skill_question</string>
+    <string name="type_skill_question">type_skill_question</string>
+    <string name="audio_skill_question_description">audio_skill_question_description</string>
+    <string name="audio_read_skill_question">audio_read_skill_question</string>
+    <string name="audio_speak_skill_question">audio_speak_skill_question</string>
+    <string name="audio_type_skill_question">audio_type_skill_question</string>
+
+    <!-- Register skill -->
+    <string name="registering_skill">registering_skill</string>
+    <string name="failed_to_register_skill">failed_to_register_skill</string>
+
+    <!-- Other language selection -->
+    <string name="other_language_selection">other_language_selection</string>
+    <string name="audio_other_language_selection">audio_other_language_selection</string>
+
+    <!-- Sync with server -->
+    <string name="uploading_files">uploading_files</string>
+    <string name="send_updates">send_updates</string>
+    <string name="receive_updates">receive_updates</string>
+    <string name="downloading_files">downloading_files</string>
+
+    <!-- Dashboard resources -->
+    <string name="get_new_tasks">get_new_tasks</string>
+    <string name="submit_completed_tasks">submit_completed_tasks</string>
+    <string name="update_verified_tasks">update_verified_tasks</string>
+    <string name="update_earning">update_earning</string>
+
+    <string name="tasks_available">tasks_available</string>
+    <string name="tasks_completed">tasks_completed</string>
+    <string name="tasks_submitted">tasks_submitted</string>
+    <string name="tasks_verified">tasks_verified</string>
+
+    <string name="sync_prompt_message">sync_prompt_message</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+
+    <string name="update_app_language">update_app_language</string>
+    <string name="update_skills">update_skills</string>
+
+    <!-- Microtask activities -->
+
+    <!-- Speech data recording -->
+    <string name="record_sentence">record_sentence</string>
+    <string name="audio_record_sentence">audio_record_sentence</string>
+    <string name="audio_record_action">audio_record_action</string>
+    <string name="audio_stop_action">audio_stop_action</string>
+    <string name="audio_listen_action">audio_listen_action</string>
+    <string name="audio_rerecord_action">audio_rerecord_action</string>
+    <string name="audio_next_action">audio_next_action</string>
+    <string name="audio_previous_action">audio_previous_action</string>
+
+    <!-- Speech verification -->
+    <string name="speech_verification_instruction">speech_verification_instruction</string>
+</resources>

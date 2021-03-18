@@ -1,0 +1,119 @@
+/*
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT license.
+**/
+
+.abel {
+  font-family: 'Abel';
+}
+
+/* Tables */
+td,
+th {
+  border-radius: 0px;
+  padding: 15px 15px;
+}
+
+table.tablelist thead > tr {
+  height: 60px;
+  font-size: 11pt;
+}
+
+div.tablelist-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+table.compact tr > td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+table.very-compact tr > td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+td.label {
+  text-align: right;
+  vertical-align: text-top;
+  color: #999;
+}
+
+/* Forms */
+form {
+  background: white;
+  padding: 20px;
+}
+
+.w600 {
+  width: 600pt;
+}
+
+.w500 {
+  width: 500pt;
+}
+
+.w400 {
+  width: 400pt;
+}
+
+.w200 {
+  width: 200pt;
+}
+
+.w150 {
+  width: 150pt;
+}
+
+.w100 {
+  width: 100pt;
+}
+
+.lpad20 {
+  padding-left: 20pt;
+}
+
+.tpad20 {
+  padding-top: 20pt;
+}
+
+.rpad20 {
+  padding-right: 20pt;
+}
+
+.bpad20 {
+  padding-bottom: 20pt;
+}
+
+.pad20 {
+  padding: 20pt;
+}
+
+.pad10 {
+  padding: 10pt;
+}
+
+.lmar20 {
+  margin-left: 20pt;
+}
+
+.tmar20 {
+  margin-top: 20pt;
+}
+
+.bmar20 {
+  margin-bottom: 20pt;
+}
+
+.rmar20 {
+  margin-right: 20pt;
+}
+
+.mar20 {
+  margin: 20pt;
+}
+
+.light-border {
+  border: 1px solid #eee;
+}

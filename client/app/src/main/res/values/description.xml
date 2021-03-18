@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="project_name_desc">karya</string>
+    <string name="no_internet_or_server_down_desc">We are not able to reach our server. Please ensure you have internet turned on.</string>
+    <string name="click_to_retry_desc">Click this button to retry</string>
+    <string name="unknown_error_desc">Unknown error occurred. Please close the application and open again. If error persists, contact your project coordinator</string>
+    <string name="show_app_in_language_desc">Show the app in _language_</string>
+    <string name="prompt_for_language_select_desc">To show app in _language_, press here</string>
+    <string name="fetching_values_for_language_desc">Getting all necessary data to display the app in _language_</string>
+    <string name="consent_form_agree_desc">I agree</string>
+    <string name="consent_form_disagree_desc">No. I do not want to participate</string>
+    <string name="consent_form_text_desc">HTML description of the consent form</string>
+    <string name="access_code_prompt_desc">You should have received a 16-digit access code from the project coordinator. Please enter that access code below.</string>
+    <string name="invalid_creation_code_desc">You have entered an invalid creation code.</string>
+    <string name="creation_code_already_used_desc">The creation code you have entered is already used. Please contact your project coordinator.</string>
+    <string name="phone_number_prompt_desc">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
+    <string name="sending_otp_desc">Sending OTP to your phone</string>
+    <string name="unable_to_send_otp_desc">We were unable to send OTP to your number. Please try again later.</string>
+    <string name="otp_prompt_desc">Please enter the 6-digit OTP that you received via SMS</string>
+    <string name="invalid_otp_desc">You have entered an invalid OTP</string>
+    <string name="resend_otp_desc">Click here to resend the OTP</string>
+    <string name="profile_picture_prompt_desc">Please click your profile picture. If you do not want a profile picture, you can skip this step.</string>
+    <string name="gender_prompt_desc">Please choose your gender. If you do not want to state your gender, you can skip this step.</string>
+    <string name="male_desc">Male</string>
+    <string name="female_desc">Female</string>
+    <string name="age_prompt_desc">Please choose your age group</string>
+    <string name="years_desc">years</string>
+    <string name="registering_worker_desc">Registering worker with the server</string>
+    <string name="phone_number_already_used_desc">Your phone number is already registered. Please try with another phone number.</string>
+    <string name="skill_question_description_desc">We have three questions about your skills in _language_. For each question, please click _tick_ for yes, and _cross_ for no.</string>
+    <string name="read_skill_question_desc">Can you read in _language_?</string>
+    <string name="speak_skill_question_desc">Can you speak in _language_?</string>
+    <string name="type_skill_question_desc">Can you type in _language_?</string>
+    <string name="registering_skill_desc">Registering skill for worker</string>
+    <string name="failed_to_register_skill_desc">Failed to register skill for worker</string>
+    <string name="other_language_selection_desc">If you know any other language, please select that language below</string>
+    <string name="uploading_files_desc">Uploading files to the box</string>
+    <string name="kn_files_uploaded_desc">_k_/_n_ files uploaded</string>
+    <string name="no_files_to_upload_desc">No files to upload</string>
+    <string name="send_updates_desc">Sending updates to the box</string>
+    <string name="receive_updates_desc">Receiving updates from the box</string>
+    <string name="downloading_files_desc">Downloading files from the box</string>
+    <string name="kn_files_downloaded_desc">_k_/_n_ files downloaded</string>
+    <string name="no_files_to_download_desc">No files to download</string>
+    <string name="salutation_desc">Hi</string>
+    <string name="n_microtasks_available_desc">_n_ tasks available</string>
+    <string name="no_microtasks_available_desc">No tasks available now</string>
+    <string name="kn_completed_desc">_k_ out of _n_ completed</string>
+    <string name="no_microtasks_completed_desc">You have not completed any tasks</string>
+    <string name="sync_prompt_desc">Click here to submit completed tasks and get new tasks</string>
+    <string name="n_percent_submitted_desc">You have submitted _n_% of your tasks</string>
+    <string name="n_to_submit_desc">You have to submit _n_ tasks</string>
+    <string name="nothing_to_submit_desc">There are no tasks to submit</string>
+    <string name="all_submitted_desc">You have submitted all tasks</string>
+    <string name="to_be_submitted_desc">You have tasks to be submitted.</string>
+    <string name="nothing_submitted_desc">You have not submitted any tasks</string>
+    <string name="nothing_verified_desc">None of your tasks have been verified yet. You will be updated as they are verified.</string>
+    <string name="n_percent_verified_desc">_n_% of your submissions have been verified</string>
+    <string name="n_rupees_earned_desc">You have earned _n_ rupees</string>
+    <string name="update_app_language_desc">Change the App Language</string>
+    <string name="update_skills_desc">Update Language Skills</string>
+    <string name="sync_prompt_message_desc">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
+    <string name="yes_desc">Yes</string>
+    <string name="no_desc">No</string>
+
+    <!-- Microtask activities -->
+
+    <!-- Speech data -->
+    <string name="record_sentence_desc">You have to record yourself speaking out this sentence</string>
+
+    <!-- Speech verification instruction -->
+    <string name="speech_verification_instruction_desc">Verify if the recording exactly matches the sentence in the box below</string>
+</resources>
