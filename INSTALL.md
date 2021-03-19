@@ -58,20 +58,24 @@ and spits out the access code for the admin to sign up.
 
 ---
 
-### 1. Setup the config file
+### 1. Install the necessary npm packages.
+
+`# frontend> npm install`
+
+### 2. Setup the config file
 
 Set up the config file to match the server parameters (port, oauth client ID.)
 
-### 2. Run the frontend server
+### 3. Run the frontend server
 
 `# frontend> npm start`
 
-### 3. Sign up admin user
+### 4. Sign up admin user
 
 Open the frontend server URL on a browser. Sign up using the admin access code
 that you received from the backend `ResetDB.js` script.
 
-### 4. Setup English language support
+### 5. Setup English language support
 
 Go to the "Language Support" tag, and add support for English by uploading the
 `backend/scripts/English-string-resources.json` file. Update language support
@@ -80,13 +84,13 @@ status for English by clicking on the button.
 You can add new languages and also add support for new languages through this
 interface.
 
-### 5. Generate access codes for work provider (optional)
+### 6. Generate access codes for work provider (optional)
 
 Click on the "Work Providers" tab and generate an access code for a work
 provider. This step is optional for the test setup as you can do all activities
 as an admin.
 
-### 6. Create a new box
+### 7. Create a new box
 
 Click on the "Box" tab and generate an access code for a new box.
 
@@ -94,26 +98,30 @@ Click on the "Box" tab and generate an access code for a new box.
 
 ---
 
-### 1. Setup the config file
+### 1. Install the necessary npm packages.
 
-Setup the config file. If for the test setup the box and the server are running
+`# box> npm install`
+
+### 2. Setup the config file
+
+Setup the config file `config/Local.ts`. If for the test setup the box and the server are running
 on the same machine, then the box database name should be different from the
 server database name.
 
-### 2. Update the box details
+### 3. Update the box details
 
 Open `config/BoxInfo.ts` and update the details of the box. For creation_code,
 use the access code generated in Step 6 of the frontend setup.
 
-### 3. Compile the package
+### 4. Compile the package
 
 `# box> npx tsc`
 
-### 4. Reset the database
+### 5. Reset the database
 
 `# box> node dist/scripts/ResetDB.js`
 
-### 5. Register the box
+### 6. Register the box
 
 `# box> node dist/scripts/RegisterBox.js`
 
@@ -122,15 +130,15 @@ the server. Therefore, you need to recompile the package once.
 
 `# box> npx tsc`
 
-### 6. Start the box server
+### 7. Start the box server
 
 `# box> node dist/Server.js`
 
-### 7. Start the cron job for periodic interaction with the main server
+### 8. Start the cron job for periodic interaction with the main server
 
 `# box> node dist/cron/Cron.js`
 
-### 8. Generate access codes for workers
+### 9. Generate access codes for workers
 
 `# box> node dist/scripts/GenerateCCs.js <n>`
 
