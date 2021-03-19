@@ -9,12 +9,14 @@ import { IScenario } from './common/ScenarioInterface';
 import { SpeechDataScenario } from './speech-data/Index';
 import { SpeechVerificationScenario } from './speech-verification/Index';
 import { StorySpeechScenario } from './story-speech/Index';
+import { TextTranslationScenario } from './text-translation/Index';
 
 // list of scenarios
 const scenarioList: IScenario[] = [
   SpeechDataScenario,
   StorySpeechScenario,
   SpeechVerificationScenario,
+  TextTranslationScenario
 ];
 
 // create the scenario map
