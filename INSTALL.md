@@ -50,7 +50,11 @@ and also bootstraps authentication. Any one who wants to sign up on the platform
 (admin / work provider) needs an access code. This script sets up a admin record
 and spits out the access code for the admin to sign up.
 
-### 5. Start the server
+### 5. Start the redis-server
+
+`# > redis-server`
+
+### 6. Start the server
 
 `# backend> node dist/Server.js`
 
