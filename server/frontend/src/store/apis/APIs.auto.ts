@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 /**
  * This file was auto-generated using specs and scripts in the db-schema
  * repository. DO NOT EDIT DIRECTLY.
@@ -964,7 +961,7 @@ export async function backendRequest(
   try {
     // GET_BY_ID actions
     if (action.label === 'GET_BY_ID') {
-      const endpoint = `${store}/${action.id.toString()}`;
+      const endpoint = `${store}/${action.id}`;
       return {
         type: 'BR_SUCCESS',
         store,
@@ -985,7 +982,7 @@ export async function backendRequest(
 
     // UPDATE_BY_ID actions
     if (action.label === 'UPDATE_BY_ID') {
-      const endpoint = `${store}/${action.id.toString()}`;
+      const endpoint = `${store}/${action.id}`;
       return {
         type: 'BR_SUCCESS',
         store,
@@ -1010,7 +1007,7 @@ export async function backendRequest(
         store,
         label,
         response: await PUT(
-          '/language/:id/updated_support'.replace(':id', action.id.toString()),
+          '/language/:id/updated_support'.replace(':id', action.id),
           action.request,
           action.files,
         ),
@@ -1041,10 +1038,7 @@ export async function backendRequest(
         store,
         label,
         response: await PUT(
-          '/file_language_resource_value/:id/'.replace(
-            ':id',
-            action.id.toString(),
-          ),
+          '/file_language_resource_value/:id/'.replace(':id', action.id),
           action.request,
           action.files,
         ),
@@ -1132,7 +1126,7 @@ export async function backendRequest(
         store,
         label,
         response: await PUT(
-          '/task/:id/validate'.replace(':id', action.id.toString()),
+          '/task/:id/validate'.replace(':id', action.id),
           action.request,
           action.files,
         ),
@@ -1144,7 +1138,7 @@ export async function backendRequest(
         store,
         label,
         response: await PUT(
-          '/task/:id/approve'.replace(':id', action.id.toString()),
+          '/task/:id/approve'.replace(':id', action.id),
           action.request,
           action.files,
         ),
@@ -1166,7 +1160,7 @@ export async function backendRequest(
     }
 
     throw new Error(`Unknown request type '${label}' to '${store}'`);
-  } catch (err) {
+  } catch (err: any) {
     const messages = handleError(err);
     return {
       type: 'BR_FAILURE',

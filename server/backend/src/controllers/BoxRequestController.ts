@@ -104,7 +104,7 @@ export async function uploadFile(ctx: KaryaHTTPContext) {
   const file = files.file;
 
   // Compute checksum and if checksum doesn't match, return
-  // @ts-ignore
+  @ts-ignore
   const checksum = await getChecksum(file.path, fileRecord.algorithm);
   if (checksum !== fileRecord.checksum) {
     HttpResponse.BadRequest(ctx, 'Checksum did not match');

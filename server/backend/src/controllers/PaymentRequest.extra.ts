@@ -28,8 +28,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     if (ctx.request.query.worker_id) {
       // create the worker filter
       const workerFilter: PayoutInfo = {
-        // @ts-ignore
-        worker_id: ctx.request.query.worker_id,
+        worker_id: ctx.request.query.worker_id as string,
       };
 
       // retrieve the records

@@ -38,8 +38,7 @@ export function getWorkProviderFilter(ctx: KaryaHTTPContext): Task {
 
   // first set the explicit ID if it is provided
   if (ctx.request.query.work_provider_id) {
-    // @ts-ignore
-    workProviderFilter.work_provider_id = ctx.request.query.work_provider_id;
+    workProviderFilter.work_provider_id = ctx.request.query.work_provider_id as string;
   }
   // if not admin, override with the implicit ID
   if (!current_user.admin) {
@@ -108,7 +107,7 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
     // Check if all the language params are valid
     for (const paramid of languageParams) {
       try {
-        const languageID = params[paramid] as number;
+        const languageID = params[paramid] as string;
         await BasicModel.getSingle('language', { id: languageID });
       } catch (langErr) {
         errors.push(`Invalid language input for ${paramid}`);
@@ -196,7 +195,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
   const { current_user } = ctx.state;
 
   // extract the ID and updates from params
-  const task_id: number = ctx.params.id;
+  const task_id = ctx.params.id;
   const task: Task = ctx.request.body;
 
   try {
@@ -265,7 +264,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
  */
 export async function getRecordById(ctx: KaryaHTTPContext) {
   // extract id from the params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   // get the current user from state
   const { current_user } = ctx.state;
@@ -316,7 +315,7 @@ export async function validateTask(ctx: KaryaHTTPContext) {
   // TODO: Async path to be properly implemented
 
   // extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   try {
     // get the task record
@@ -368,7 +367,7 @@ export async function validateTask(ctx: KaryaHTTPContext) {
  */
 export async function approveTask(ctx: KaryaHTTPContext) {
   // extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   try {
     const taskRecord = await BasicModel.getSingle('task', { id });

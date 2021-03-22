@@ -18,19 +18,19 @@ import { KaryaHTTPContext } from './KoaContextType';
  * @param ctx Karya koa context
  */
 export async function getLRVFile(ctx: KaryaHTTPContext) {
-  const { language_id, language_resource_id } = ctx.request.query;
+  let { language_id_s, language_resource_id_s } = ctx.request.query;
+  const language_id = Number.parseInt(language_id_s as string) //TODO: Anurag Change Query
+  const language_resource_id = Number.parseInt(language_resource_id_s as string) //TODO: Anurag Change Query
   let blobName: string;
   let containerName: ContainerName;
 
   if (language_id) {
     containerName = 'l-lrvs';
-    // @ts-ignore
     blobName = getBlobName({ cname: containerName, language_id, ext: 'tar' });
   } else if (language_resource_id) {
     containerName = 'lr-lrvs';
     blobName = getBlobName({
       cname: containerName,
-      // @ts-ignore
       language_resource_id,
       ext: 'tar',
     });

@@ -24,7 +24,7 @@ import { BlobParameters, getBlobName } from '../utils/BlobContainers';
  * @param filepath Path of the file to be uploaded
  */
 export async function insertWorkerFile(
-  worker_id: number,
+  worker_id: string,
   karyaFile: KaryaFile,
   blobParams: BlobParameters,
   filepath: string,

@@ -276,7 +276,7 @@ class SpeechDataVerifier extends React.Component<GenericVerifierComponentProps, 
                             <div className='col s2 center' key={quality} style={{ lineHeight: '54px' }}>
                               <label>
                                 <input
-                                  name={assignment.id.toString()}
+                                  name={assignment.id}
                                   type='radio'
                                   checked={audioQuality[assignment.id] === quality}
                                   disabled={disabled}
@@ -290,7 +290,7 @@ class SpeechDataVerifier extends React.Component<GenericVerifierComponentProps, 
 
                         <div className='col s5'>
                           <select
-                            id={assignment.id.toString()}
+                            id={assignment.id}
                             value={audioQualityReason[assignment.id]}
                             onChange={this.setQualityReason}
                           >

@@ -117,8 +117,7 @@ export function parseTaskParameters(
               params[identifier] = value;
               uploadParams[identifier] = {
                 ext: def.ext,
-                // @ts-ignore
-                file: files[identifier],
+                file: files[identifier] as File,
               };
             } else {
               errors.push(`File for '${def.name}' not attached`);

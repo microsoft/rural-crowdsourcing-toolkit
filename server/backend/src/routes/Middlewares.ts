@@ -55,8 +55,7 @@ export const authenticateUser: KaryaMiddleware = async (ctx, next) => {
   if (ctx.path === '/api/work_provider/sign/in' && header['auth-provider']) {
     // @ts-ignore
     authProvider = header['auth-provider'];
-    // @ts-ignore
-    idToken = header['id-token'];
+    idToken = header['id-token'] as string;
   } else if (cookies.get('auth-provider') !== undefined) {
     authProvider = cookies.get('auth-provider') as AuthProviderType;
     idToken = cookies.get('id-token') as string;
@@ -117,13 +116,12 @@ export const authenticateBox: KaryaMiddleware = async (ctx, next) => {
   }
 
   // Retrieve auth information
-  const id = header['box-id'];
-  const key = header['id-token'];
+  const id = header['box-id'] as string;
+  const key = header['id-token'] as string;
 
   // Retrieve the box record
   // TODO: This is currently very rudimentary authentication. Need to make it stronger.
   try {
-    // @ts-ignore
     const box = await BasicModel.getSingle('box', { id, key });
     ctx.state.current_box = box;
     await next();

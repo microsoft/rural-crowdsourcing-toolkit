@@ -1,6 +1,6 @@
 language:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - name, varchar, 48, unique, not null
     - primary_language_name, varchar, 48, unique, not null
     - locale, varchar, 48, unique, not null
@@ -23,7 +23,7 @@ language:
 
 scenario:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - name, varchar, 48, unique, not null
     - full_name, varchar, 48, unique, not null
     - description, text, not null
@@ -43,7 +43,7 @@ scenario:
 
 language_resource:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - core, boolean, not null, false, filter
     - scenario_id, >, scenario, filter
     - string_resource_id, >, language_resource
@@ -71,7 +71,7 @@ language_resource:
 
 language_resource_value:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - language_id, >, language, not null, filter
     - language_resource_id, >, language_resource, not null, filter
     - value, text, not null
@@ -91,7 +91,7 @@ language_resource_value:
 
 work_provider:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - admin, boolean, not null, false, filter
     - creation_code, varchar, 64, unique, not null
     - full_name, varchar, 48, not null
@@ -109,7 +109,7 @@ work_provider:
 
 box:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - creation_code, varchar, 64, unique, not null
     - physical, boolean, not null, false, filter
     - name, varchar, 48, unique, not null
@@ -230,7 +230,7 @@ microtask:
 
 policy:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - scenario_id, >, scenario, not null, filter
     - name, varchar, 48, not null
     - description, text, not null
@@ -346,7 +346,7 @@ microtask_assignment:
 
 payout_method:
   fields:
-    - id, serial, pk
+    - id, bigserial, pk
     - name, varchar, 48, unique, not null
     - description, text, not null
     - required_info, json, not null

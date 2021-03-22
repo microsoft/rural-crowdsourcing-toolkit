@@ -18,7 +18,7 @@ import { KaryaHTTPContext } from './KoaContextType';
  */
 export async function getInputFileForAssignment(ctx: KaryaHTTPContext) {
   // Get ID from the context
-  const microTaskAssignmentId: number = ctx.params.id;
+  const microTaskAssignmentId = ctx.params.id;
 
   try {
     // Retrieve the microtask assignment
@@ -68,7 +68,7 @@ export async function getInputFileForAssignment(ctx: KaryaHTTPContext) {
  */
 export async function uploadOutputFileForAssignment(ctx: KaryaHTTPContext) {
   // Get the ID and file details from the context
-  const mtaID: number = ctx.params.id;
+  const mtaID = ctx.params.id;
 
   let karyaFile: KaryaFile;
   try {

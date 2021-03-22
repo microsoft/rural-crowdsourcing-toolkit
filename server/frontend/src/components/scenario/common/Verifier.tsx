@@ -67,7 +67,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     microtask: state.all.microtask,
     microtask_assignment: state.all.microtask_assignment,
     output_files: state.all.karya_file.data.filter((kf) => kf.container_name === 'microtask-assignment-output'),
-    task: taskData.find((t) => t.id.toString() === task_id),
+    task: taskData.find((t) => t.id === task_id),
   };
 };
 
