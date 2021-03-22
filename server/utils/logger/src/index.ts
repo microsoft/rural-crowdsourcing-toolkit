@@ -1,24 +1,19 @@
 /**
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT license
+ * Copyright (c) Microsoft Corporation.
+ * Licensed under the MIT license.
  *
  * Create loggers for different components of the server
  */
 
 import moment from 'moment';
-import {
-  Logger,
-  LoggerOptions,
-  createLogger,
-  format,
-  transports,
-} from 'winston';
+import { Logger, LoggerOptions, createLogger, format, transports } from 'winston';
 import DailyRotateFile = require('winston-daily-rotate-file');
 
 /**
  * Configuration for a new logger.
  *
- * @property folder - Folder under which new logs are created
+ * @property name - Name for the new logger
+ * @property folder - Folder under which log files are created
  * @property datePattern - Archiving pattern for logs
  * @property logToConsole - Should logs should be displayed in console
  * @property consoleLogLevel - Message level for console logs
@@ -86,9 +81,7 @@ export function newLogger(config: LoggerConfig): Logger {
   // Logger options
   const options: LoggerOptions = {
     format: format.combine(timestampFormat(), format.json()),
-    transports: logToConsole
-      ? [consoleTransport, mainTransport]
-      : [mainTransport],
+    transports: logToConsole ? [consoleTransport, mainTransport] : [mainTransport],
   };
 
   return createLogger(options);
