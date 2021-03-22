@@ -1,17 +1,14 @@
 {
-  "name": "db-schema",
-  "version": "1.0.0",
+  "name": "@karya/db-schema",
+  "version": "2.0.0",
   "description": "Contains specification of Karya DB Schema, and appropriate parsers and generators",
-  "main": "Generate.ts",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "projectkarya@vs-ssh.visualstudio.com:v3/projectkarya/code.v2/db-schema"
-  },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@types/prettier": "^2.0.0",
     "@types/uppercamelcase": "^3.0.0",
@@ -24,12 +21,12 @@
     "uppercamelcase": "^3.0.0",
     "yaml": "^1.8.3"
   },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
   "devDependencies": {
     "@types/node": "^13.11.1",
     "@types/yaml": "^1.2.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
   }
 }

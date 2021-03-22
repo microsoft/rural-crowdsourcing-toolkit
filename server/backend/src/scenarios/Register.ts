@@ -18,7 +18,7 @@ import { IScenario, scenarioById, scenarioMap } from './Index';
 import * as BasicModel from '../models/BasicModel';
 import { updateLanguageResource } from '../models/LanguageResourceModel';
 
-import * as bbPromise from 'bluebird';
+import bbPromise from 'bluebird';
 import logger from '../utils/Logger';
 import { IPolicy } from './common/PolicyInterface';
 

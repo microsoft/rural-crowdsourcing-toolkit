@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as BodyParser from 'koa-body';
+import BodyParser from 'koa-body';
 import * as BoxRequestController from '../controllers/DbUpdatesController';
 import * as FileLRVController from '../controllers/FileLanguageResourceValueController';
 import {

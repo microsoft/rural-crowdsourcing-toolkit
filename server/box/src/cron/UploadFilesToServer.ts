@@ -6,7 +6,7 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import * as FormData from 'form-data';
+import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import box_id from '../config/box_id';
 import config from '../config/Index';

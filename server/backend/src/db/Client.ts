@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import * as Knex from 'knex';
+import Knex from 'knex';
 import config from '../config/Index';
 
 // Setup knex options

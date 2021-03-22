@@ -3,8 +3,8 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import * as BodyParser from 'koa-body';
-import * as Router from 'koa-router';
+import BodyParser from 'koa-body';
+import Router from 'koa-router';
 
 import { setGetFilter, setTableName } from './Middlewares';
 

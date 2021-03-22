@@ -106,7 +106,9 @@ export async function generateWorkerCCs(
   }
 
   let tags: string[] | undefined = process.argv[3]?.split(',')
-  tags = tags.length == 0 ? undefined : tags;
+  if (tags) {
+    tags = tags.length == 0 ? undefined : tags;
+  }
 
   const languageCode = process.argv[4]
 
