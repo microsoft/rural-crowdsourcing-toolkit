@@ -1,102 +1,36 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import moment from 'moment';
-import { createLogger, format, transports } from 'winston';
-// tslint:disable-next-line:no-require-imports
-import DailyRotateFile = require('winston-daily-rotate-file');
-
+import { newLogger } from '@karya/logger';
 import config from '../config/Index';
+// TODO: Seemingly unncessary type import (TS2742)
+import { Logger } from '@karya/logger/node_modules/winston';
 
 // get the logger configration
 const { logFolder, archiveDatePattern, consoleLogLevel } = config.logConfig;
 
-// console log format
-const consoleLogFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level}] : ${message}`;
+// Main logger
+// TODO: Unnecessary type annotation (TS2742)
+const logger: Logger = newLogger({
+  name: 'main',
+  folder: logFolder,
+  datePattern: archiveDatePattern,
+  logToConsole: true,
+  consoleLogLevel,
 });
 
-// Timestamp format
-const timestampFormat = format(info => {
-  info.timestamp = moment()
-    .utcOffset('+0530')
-    .format('YYYY-MM-DD HH:mm:ss Z');
-  return info;
-});
-
-// TODO: Once the DB models are in, insert archived log files into
-// the DB to be transferred to the server
-
-// setup winston configuration
-const loggerConfig = {
-  // include timestamp with default format
-  format: format.combine(timestampFormat(), format.json()),
-
-  // transports
-  transports: [
-    // console format
-    new transports.Console({
-      format: format.combine(
-        timestampFormat(),
-        consoleLogFormat,
-        format.colorize(),
-      ),
-      level: consoleLogLevel,
-    }),
-
-    // daily rotate file for all logs
-    new DailyRotateFile({
-      filename: `${logFolder}/%DATE%-all.log`,
-      datePattern: archiveDatePattern,
-      zippedArchive: true,
-    }),
-
-    // daily rotate file for error logs
-    new DailyRotateFile({
-      filename: `${logFolder}/%DATE%-error.log`,
-      datePattern: archiveDatePattern,
-      zippedArchive: true,
-      level: 'error',
-    }),
-  ],
-};
-
-// create a new logger
-const logger = createLogger(loggerConfig);
-
-// export the logger
 export default logger;
 
 // Request logger
-const requestLoggerConfig = {
-  format: format.combine(timestampFormat(), format.json()),
+export const requestLogger = newLogger({
+  name: 'requests',
+  folder: logFolder,
+  datePattern: archiveDatePattern,
+});
 
-  // Transports
-  transports: [
-    new DailyRotateFile({
-      dirname: logFolder,
-      filename: '%DATE%-requests.log',
-      datePattern: archiveDatePattern,
-      zippedArchive: true,
-    }),
-  ],
-};
-
-export const requestLogger = createLogger(requestLoggerConfig);
-
-// Request logger
-const taskLoggerConfig = {
-  format: format.combine(timestampFormat(), format.json()),
-
-  // Transports
-  transports: [
-    new DailyRotateFile({
-      dirname: logFolder,
-      filename: '%DATE%-task-ops.log',
-      datePattern: archiveDatePattern,
-      zippedArchive: true,
-    }),
-  ],
-};
-
-export const taskLogger = createLogger(taskLoggerConfig);
+// Task ops logger
+export const taskLogger = newLogger({
+  name: 'task-ops',
+  folder: logFolder,
+  datePattern: archiveDatePattern,
+});
