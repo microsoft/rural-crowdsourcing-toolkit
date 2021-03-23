@@ -16,7 +16,7 @@ import * as BoxRequestModel from '../models/BoxRequestModel';
 import { getChecksum } from '../models/KaryaFileModel';
 import * as BS from '../utils/AzureBlob';
 import { compress, decompress } from '../utils/CompressTools';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import logger from '../utils/Logger';
 

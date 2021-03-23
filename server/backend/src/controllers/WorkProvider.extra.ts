@@ -8,7 +8,7 @@ import { WorkProvider } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import { getCreationCode } from '../utils/CreationCodeGenerator';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**

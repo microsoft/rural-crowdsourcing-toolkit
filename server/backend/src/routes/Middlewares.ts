@@ -8,8 +8,8 @@ import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import { AuthProviderType, DbTableName } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
 import { requestLogger } from '../utils/Logger';
-
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
+import { setCookie } from '../controllers/Auth.extra';
 
 /**
  * Middleware to authenticate a request to the server. Depending on the path,
@@ -86,15 +86,15 @@ export const authenticateUser: KaryaMiddleware = async (ctx, next) => {
   // Extend cookies if non-signout request
   if (ctx.state.current_user) {
     const { current_user } = ctx.state;
-    HttpResponse.setCookie(
+    setCookie(
       ctx,
       'auth-provider',
       current_user.auth_provider as AuthProviderType,
     );
-    HttpResponse.setCookie(ctx, 'id-token', current_user.id_token as string);
+    setCookie(ctx, 'id-token', current_user.id_token as string);
   } else {
-    HttpResponse.resetCookie(ctx, 'auth-provider');
-    HttpResponse.resetCookie(ctx, 'id-token');
+    setCookie(ctx, 'auth-provider', undefined);
+    setCookie(ctx, 'id-token', undefined);
   }
 };
 
@@ -167,7 +167,7 @@ export const setGetFilter: KaryaMiddleware = async (ctx, next) => {
   const filterColumns: string[] = tableFilterColumns[tableName];
 
   const filter: { [id: string]: any } = {};
-  filterColumns.forEach(column => {
+  filterColumns.forEach((column) => {
     if (ctx.request.query[column]) {
       filter[column] = ctx.request.query[column];
     }

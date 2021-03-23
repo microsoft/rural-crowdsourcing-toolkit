@@ -6,7 +6,7 @@
 
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**

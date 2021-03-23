@@ -16,7 +16,7 @@ import {
 } from '../scenarios/common/ParameterParser';
 import { IScenario, scenarioMap } from '../scenarios/Index';
 import * as BlobStore from '../utils/AzureBlob';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 import { taskApprovalQueue, taskValidationQueue } from '../services/Index';
