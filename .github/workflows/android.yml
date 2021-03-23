@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, dev ]
 
+defaults:
+  run:
+    working-directory: client
+
 jobs:
   build:
 
@@ -20,4 +24,4 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x client/gradlew
     - name: Build with Gradle
-      run: ./client/gradlew build
+      run: ./gradlew build
