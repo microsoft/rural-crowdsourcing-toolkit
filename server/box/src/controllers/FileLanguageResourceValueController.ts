@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import config from '../config/Index';
 import { getControllerError } from '../errors/ControllerErrors';
 import { ContainerName, getBlobName } from '../utils/BlobContainers';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**

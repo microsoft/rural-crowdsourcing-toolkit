@@ -11,7 +11,7 @@ import {
   WorkerRecord,
 } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { requestLogger } from '../utils/Logger';
 
 /**
