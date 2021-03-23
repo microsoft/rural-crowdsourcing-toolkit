@@ -6,6 +6,6 @@
     "sourceMap": true,
     "lib": ["es2018", "dom"],
   },
-  "references": [],
+  "references": [ { "path": "../utils/logger" }],
   "exclude": ["node_modules", "dist"]
 }
