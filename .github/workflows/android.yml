@@ -22,7 +22,7 @@ jobs:
     - name: Decode google-services.json
       env:
         FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
-      run: echo $FIREBASE_CONFIG > ./client/app/google-services.json
+      run: echo $FIREBASE_CONFIG > client/app/google-services.json
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
