@@ -24,7 +24,7 @@
         - dashboard.
         -->
         <activity
-            android:name=".splashScreen.SplashScreen"
+            android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreen"
             android:noHistory="true"
             >
             <intent-filter>
@@ -35,33 +35,33 @@
 
         <!-- Activity to fetch data on initial load -->
         <activity
-            android:name="com.microsoft.research.karya.fetchData.FirstLoadFetchData"
+            android:name="com.microsoft.research.karya.ui.fetchData.FirstLoadFetchData"
             android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <!-- Activity to select the application language -->
         <activity
-            android:name="com.microsoft.research.karya.selectAppLanguage.SelectAppLanguage"
+            android:name="com.microsoft.research.karya.ui.selectAppLanguage.SelectAppLanguage"
             android:screenOrientation="portrait"
             />
 
         <!-- Activity to fetch data for the selected app language -->
         <activity
-            android:name="com.microsoft.research.karya.selectAppLanguage.FetchFileResourcesForAppLanguage"
+            android:name="com.microsoft.research.karya.ui.selectAppLanguage.FetchFileResourcesForAppLanguage"
             android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <!-- Activity to receive user consent for collecting data via the application -->
-        <activity android:name="com.microsoft.research.karya.consentForm.ConsentFormActivity"
+        <activity android:name="com.microsoft.research.karya.ui.consentForm.ConsentFormActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <!-- Activity to get the creation code from the user -->
         <activity
-            android:name="com.microsoft.research.karya.registration.CreationCodeActivity"
+            android:name="com.microsoft.research.karya.ui.registration.CreationCodeActivity"
             android:configChanges="locale|keyboard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible|adjustPan|adjustResize"
@@ -69,7 +69,7 @@
 
         <!-- Activity to get the phone number from the user -->
         <activity
-            android:name="com.microsoft.research.karya.registration.PhoneNumberActivity"
+            android:name="com.microsoft.research.karya.ui.registration.PhoneNumberActivity"
             android:configChanges="locale|keyboard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible|adjustPan|adjustResize"
@@ -77,14 +77,14 @@
 
         <!-- Activity to send OTP to the user -->
         <activity
-            android:name="com.microsoft.research.karya.registration.SendOTPActivity"
+            android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <!-- Activity to get one-time password from the user -->
         <activity
-            android:name="com.microsoft.research.karya.registration.OTPActivity"
+            android:name="com.microsoft.research.karya.ui.registration.OTPActivity"
             android:configChanges="locale|keyboard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible|adjustPan|adjustResize"
@@ -92,46 +92,46 @@
 
         <!-- Activity to prompt user to click their profile picture -->
         <activity
-            android:name="com.microsoft.research.karya.registration.ProfilePictureActivity"
+            android:name="com.microsoft.research.karya.ui.registration.ProfilePictureActivity"
             android:screenOrientation="portrait"
             />
 
         <!-- Activity to let the user choose their gender -->
         <activity
-            android:name="com.microsoft.research.karya.registration.SelectGenderActivity"
+            android:name="com.microsoft.research.karya.ui.registration.SelectGenderActivity"
             android:screenOrientation="portrait"
             />
 
         <!-- Activity to let the user choose their age group -->
         <activity
-            android:name="com.microsoft.research.karya.registration.SelectAgeGroupActivity"
+            android:name="com.microsoft.research.karya.ui.registration.SelectAgeGroupActivity"
             android:configChanges="locale|keyboard"
             android:screenOrientation="portrait"
             />
 
         <!-- Network activity to register the user -->
         <activity
-            android:name="com.microsoft.research.karya.registration.RegisterWorker"
+            android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
             android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <!-- Activity to request user to specify their skills in a particular language -->
         <activity
-            android:name="com.microsoft.research.karya.skillSpecification.SkillSpecification"
+            android:name="com.microsoft.research.karya.ui.skillSpecification.SkillSpecification"
             android:screenOrientation="portrait"
             />
 
         <!-- Activity to request user to register their skill  -->
         <activity
-            android:name="com.microsoft.research.karya.skillSpecification.RegisterSkill"
+            android:name="com.microsoft.research.karya.ui.skillSpecification.RegisterSkill"
             android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <!-- Activity to list the set of languages in which skills can be specified  -->
         <activity
-            android:name="com.microsoft.research.karya.skillSpecification.SkilledLanguageList"
+            android:name="com.microsoft.research.karya.ui.skillSpecification.SkilledLanguageList"
             android:screenOrientation="portrait"
             />
 
@@ -143,23 +143,23 @@
 
         <!-- Activity to display the user dashboard -->
         <activity
-            android:name="com.microsoft.research.karya.dashboard.DashboardActivity"
+            android:name="com.microsoft.research.karya.ui.dashboard.DashboardActivity"
             android:screenOrientation="portrait"
             />
 
         <!-- Microtask rendering activities -->
         <activity
-            android:name="com.microsoft.research.karya.scenarios.speechData.SpeechDataMain"
+            android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain"
             android:screenOrientation="portrait"
             />
 
         <activity
-            android:name="com.microsoft.research.karya.scenarios.storySpeech.StorySpeechMain"
+            android:name="com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain"
             android:screenOrientation="portrait"
             />
 
         <activity
-            android:name="com.microsoft.research.karya.scenarios.speechVerification.SpeechVerificationMain"
+            android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain"
             android:screenOrientation="portrait"
             />
 

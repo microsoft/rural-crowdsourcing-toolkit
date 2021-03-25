@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context=".selectAppLanguage.SelectAppLanguage">
+    tools:context=".ui.selectAppLanguage.SelectAppLanguage">
 
     <include
         android:id="@+id/appTb"

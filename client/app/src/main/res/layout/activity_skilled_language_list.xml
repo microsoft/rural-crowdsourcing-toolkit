@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context=".skillSpecification.SkilledLanguageList">
+    tools:context=".ui.skillSpecification.SkilledLanguageList">
 
     <include
         android:id="@+id/appTb"
