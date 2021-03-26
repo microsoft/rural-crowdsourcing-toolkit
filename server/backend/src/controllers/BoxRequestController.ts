@@ -15,7 +15,7 @@ import * as BasicModel from '../models/BasicModel';
 import * as BoxRequestModel from '../models/BoxRequestModel';
 import { getChecksum } from '../models/KaryaFileModel';
 import * as BS from '../utils/AzureBlob';
-import { compress, decompress } from '../utils/CompressTools';
+import { compress, decompress } from '@karya/compression';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import logger from '../utils/Logger';
@@ -275,9 +275,7 @@ function createNewKeyForBox(boxRecord: BoxRecord) {
     id: boxRecord.id,
     exp: Date.now() + 1000 * 60 * 60 * 48,
   };
-  const salt = randomBytes(64)
-    .toString('base64')
-    .slice(0, 32);
+  const salt = randomBytes(64).toString('base64').slice(0, 32);
   const key = jwtSimple.encode(payload, salt, 'HS256');
   return { salt, key };
 }

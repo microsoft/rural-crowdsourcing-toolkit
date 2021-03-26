@@ -5,6 +5,7 @@
  * Helper utilities for data compression and decompression
  */
 
+import { createReadStream, createWriteStream } from 'fs';
 import * as zlib from 'zlib';
 
 /**
@@ -36,5 +37,20 @@ export async function decompress(data: Buffer): Promise<string> {
         resolve(result.toString());
       }
     });
+  });
+}
+
+/**
+ * Gunzip a file into another file
+ */
+export async function gunzipFile(input: string, output: string): Promise<void> {
+  const inputStream = createReadStream(input);
+  const outputStream = createWriteStream(output);
+  const gunzip = zlib.createGunzip();
+
+  return new Promise((resolve, reject) => {
+    const op = inputStream.pipe(gunzip).pipe(outputStream);
+    op.on('finish', () => resolve());
+    op.on('error', (err) => reject(err));
   });
 }
