@@ -7,9 +7,10 @@
 import { WorkProvider } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import { getCreationCode } from '../utils/CreationCodeGenerator';
+import { getCreationCode } from '@karya/misc-utils';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
+import config from '../config/Index';
 
 /**
  * Generate a creation code for a new work provider. Create a temporary work
@@ -25,7 +26,10 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     let creation_code = '';
     while (true) {
       try {
-        creation_code = getCreationCode();
+        creation_code = getCreationCode({
+          length: config.creationCodeLength,
+          numeric: false,
+        });
         await BasicModel.getSingle('work_provider', { creation_code });
       } catch (e) {
         // Exception indicates that the record is not there.

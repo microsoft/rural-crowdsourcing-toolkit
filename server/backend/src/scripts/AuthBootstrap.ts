@@ -3,12 +3,10 @@
 
 /** Script to bootstrap authentication */
 
-import config, { loadSecretsFromVault } from '../config/Index';
-import { setupDBConnection } from '../db/Client';
+import config from '../config/Index';
 import { WorkProvider } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
-import { getCreationCode } from '../utils/CreationCodeGenerator';
-import logger from '../utils/Logger';
+import { getCreationCode } from '@karya/misc-utils';
 
 /**
  * Function to bootstrap authentication. Creates an admin user and outputs a creation code.
@@ -26,7 +24,10 @@ export async function bootstrapAuth() {
   }
 
   /** Get a creation code  */
-  const creation_code = getCreationCode();
+  const creation_code = getCreationCode({
+    length: config.creationCodeLength,
+    numeric: false,
+  });
 
   /** Create an admin user */
   const workProvider: WorkProvider = {
