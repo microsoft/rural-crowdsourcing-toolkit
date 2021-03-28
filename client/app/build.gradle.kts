@@ -72,7 +72,7 @@ dependencies {
 //    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation(viewmodelDependencies.lifecycle_extension)
 //    implementation("androidx.work:work-runtime-ktx:2.5.0")
-    implementation(viewmodelDependencies.lifecycle_runtime)
+    implementation(viewmodelDependencies.work_runtime)
 
     // UI Stuff
 //    implementation("com.google.android.material:material:1.3.0")
