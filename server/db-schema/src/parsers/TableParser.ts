@@ -60,15 +60,12 @@ for (const table of tableNames) {
 
   for (const field of fields) {
     const params = field.split(',').map((f) => f.trim());
-    // @ts-ignore
-    const fname: string = params.shift();
-    // @ts-ignore
-    const ftype: string = params.shift();
+    const fname: string = params.shift() as string;
+    const ftype: string = params.shift() as string;
 
     const info: FieldInfo = { type: ftype, options: [] };
 
-    // @ts-ignore
-    if (ftype == 'varchar') info.len = Number.parseInt(params.shift(), 10);
+    if (ftype == 'varchar') info.len = Number.parseInt(params.shift() as string, 10);
     if (ftype == '>') {
       info.ref = params.shift() as string;
       // in case of self reference update the table prematurely to reflect keys

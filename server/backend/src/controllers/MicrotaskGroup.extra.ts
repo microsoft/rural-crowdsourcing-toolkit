@@ -64,8 +64,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     // set the microtask group filter
     const microTaskGroupFilter: MicrotaskGroup = {};
     if (ctx.request.query.task_id) {
-      // @ts-ignore
-      microTaskGroupFilter.task_id = ctx.request.query.task_id;
+      microTaskGroupFilter.task_id = ctx.request.query.task_id as string;
     }
 
     // generate a work provider filter if necessary

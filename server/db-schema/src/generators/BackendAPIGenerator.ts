@@ -61,7 +61,7 @@ export function backendAPISpecsFileData() {
         const header = route.auth_header ? 'action.headers' : '{}';
         const endpoint =
           route.endpoint.indexOf(':id') > 0
-            ? `'${route.endpoint}'.replace(':id', action.id.toString())`
+            ? `'${route.endpoint}'.replace(':id', action.id)`
             : `'${route.endpoint}'`;
         switch (route.httpMethod) {
           case 'POST':
@@ -116,7 +116,7 @@ export async function backendRequest(action: BackendRequestInitAction): Promise<
   try {
     // GET_BY_ID actions
     if (action.label === 'GET_BY_ID') {
-      const endpoint = \`\${store}/\${action.id.toString()}\`;
+      const endpoint = \`\${store}/\${action.id}\`;
       return {
         type: 'BR_SUCCESS',
         store,
@@ -137,7 +137,7 @@ export async function backendRequest(action: BackendRequestInitAction): Promise<
 
     // UPDATE_BY_ID actions
     if (action.label === 'UPDATE_BY_ID') {
-      const endpoint = \`\${store}/\${action.id.toString()}\`;
+      const endpoint = \`\${store}/\${action.id}\`;
       return {
         type: 'BR_SUCCESS',
         store,

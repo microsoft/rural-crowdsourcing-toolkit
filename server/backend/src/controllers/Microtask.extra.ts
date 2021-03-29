@@ -25,7 +25,7 @@ import { getWorkProviderFilter } from './Task.extra';
  */
 export async function getRecordById(ctx: KaryaHTTPContext) {
   // extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
   // extract current work provider from state
   const { current_user } = ctx.state;
 
@@ -63,13 +63,11 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     // generate the microtask filter
     const microtaskFilter: Microtask = {};
     if (ctx.request.query.task_id) {
-      // @ts-ignore
-      microtaskFilter.task_id = ctx.request.query.task_id;
+      microtaskFilter.task_id = ctx.request.query.task_id as string;
     }
 
     if (ctx.request.query.microtask_group_id) {
-      // @ts-ignore
-      microtaskFilter.group_id = ctx.request.query.microtask_group_id;
+      microtaskFilter.group_id = ctx.request.query.microtask_group_id as string;
     }
 
     // generate a work provider filter if necessary

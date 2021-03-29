@@ -45,7 +45,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const { data, ...request } = state.all.task;
   return {
     request,
-    task: data.find((t) => t.id.toString() === task_id),
+    task: data.find((t) => t.id === task_id),
   };
 };
 

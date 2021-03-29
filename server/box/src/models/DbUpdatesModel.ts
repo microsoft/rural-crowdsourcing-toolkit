@@ -226,13 +226,13 @@ export async function applyUpdatesFromWorker(
   // Check if all the rows are updatable by this worker
   updates.forEach(({ tableName, rows }) => {
     if (tableName === 'worker') {
-      if (rows.length > 1 || rows[0].id.toString() !== worker.id.toString()) {
+      if (rows.length > 1 || rows[0].id !== worker.id) {
         throw new Error('Worker cannot update other records');
       }
     } else {
       rows.forEach(row => {
         // @ts-ignore
-        if (row.worker_id.toString() !== worker.id.toString()) {
+        if (row.worker_id !== worker.id) {
           throw new Error('Worker can only update their own records');
         }
       });
@@ -281,7 +281,6 @@ export async function applyUpdatesFromServer(
     const { tableName, rows } = update;
     await BBPromise.mapSeries(rows, async row => {
       try {
-        // @ts-ignore
         await BasicModel.upsertRecord(tableName, row);
       } catch (e) {
         // TODO: log some error

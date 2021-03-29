@@ -92,7 +92,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   // Change task
   handleTaskChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const task_id = e.currentTarget.value;
-    const task = this.props.task.data.find((t) => t.id.toString() === task_id) as TaskRecord;
+    const task = this.props.task.data.find((t) => t.id === task_id) as TaskRecord;
     const currentState = { ...this.state, task, params: {} };
     delete currentState.policy;
     this.setState(currentState);
