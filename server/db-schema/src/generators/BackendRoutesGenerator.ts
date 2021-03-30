@@ -62,8 +62,8 @@ export function backendRoutesFileData(): string {
   const routesData = `\
 ${openingComment}
 
-import * as BodyParser from 'koa-body';
-import * as Router from 'koa-router';
+import BodyParser from 'koa-body';
+import Router from 'koa-router';
 
 import { checkAdmin, setGetFilter, setTableName } from './Middlewares';
 

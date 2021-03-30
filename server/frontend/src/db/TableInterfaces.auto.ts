@@ -185,7 +185,7 @@ export type WorkerRecord = {
 export type KaryaFileRecord = {
   id: string;
   local_id: string;
-  box_id: number | null;
+  box_id: string | null;
   container_name: string;
   name: string;
   url: string | null;

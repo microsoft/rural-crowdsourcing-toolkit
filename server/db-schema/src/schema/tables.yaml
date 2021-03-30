@@ -165,7 +165,7 @@ karya_file:
   fields:
     - id, bigint, pk
     - local_id, bigserial
-    - box_id, int, filter
+    - box_id, bigint, filter
     - container_name, varchar, 64, not null, filter
     - name, varchar, 256, not null
     - url, varchar, 256

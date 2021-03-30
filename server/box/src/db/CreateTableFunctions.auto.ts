@@ -260,7 +260,7 @@ export async function createKaryaFileTable() {
   await knex.schema.createTable('karya_file', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id');
+    table.bigInteger('box_id');
     table.specificType('container_name', 'VARCHAR(64)').notNullable();
     table.specificType('name', 'VARCHAR(256)').notNullable();
     table.specificType('url', 'VARCHAR(256)');
