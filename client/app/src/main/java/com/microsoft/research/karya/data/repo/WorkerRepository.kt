@@ -104,7 +104,7 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         idTokenHeader: String
     ) = flow {
 
-        val response = workersAPI.registerSkill(skillObject, authProvider, idTokenHeader).execute()
+        val response = workersAPI.registerSkill(skillObject, authProvider, idTokenHeader)
 
         val workerLanguageSkillRecord = response.body()
 
@@ -129,7 +129,7 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
             authProvider,
             idTokenHeader,
             workerLanguageSkillId
-            ).execute()
+            )
 
         val workerLanguageSkillRecord = response.body()
 
@@ -152,7 +152,7 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         val response = workersAPI.getUpdates(authProvider,
             idTokenHeader,
             worker
-        ).execute()
+        )
 
         val jsonArray = response.body()
 

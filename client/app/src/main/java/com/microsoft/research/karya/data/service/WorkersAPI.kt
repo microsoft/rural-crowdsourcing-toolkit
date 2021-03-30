@@ -36,7 +36,7 @@ interface WorkersAPI {
         @Body skillObject: WorkerLanguageSkillObject,
         @Header("auth-provider") authProvider: String,
         @Header("id-token") idTokenHeader: String
-    ): Call<WorkerLanguageSkillRecord>
+    ): Response<WorkerLanguageSkillRecord>
 
     @PUT("/worker_language_skill/{id}")
     fun updateSkill(
@@ -44,14 +44,14 @@ interface WorkersAPI {
         @Header("auth-provider") authProvider: String,
         @Header("id-token") idTokenHeader: String,
         @Path("id") workerLanguageSkillId: String
-    ): Call<WorkerLanguageSkillRecord>
+    ): Response<WorkerLanguageSkillRecord>
 
     @POST("/db/updates-for-worker")
     fun getUpdates(
         @Header("auth-provider") authProvider: String,
         @Header("id-token") idTokenHeader: String,
         @Body worker: WorkerRecord
-    ): Call<JsonArray>
+    ): Response<JsonArray>
 
     @GET("/microtask_assignment/{id}/input_file")
     suspend fun getInputFileForAssignment(
