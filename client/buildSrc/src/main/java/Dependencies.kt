@@ -33,6 +33,7 @@ object Versions{
     val play_core_version = "1.8.0"
 }
 
+
 object kotlinDependencies {
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin_version}"
     val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines_version}"
