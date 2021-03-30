@@ -10,6 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@karya/blobstore": "^2.0.0",
     "@karya/compression": "^2.0.0",
     "@karya/http-response": "^2.0.0",
     "@karya/logger": "^2.0.0",

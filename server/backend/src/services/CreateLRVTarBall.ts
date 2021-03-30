@@ -20,7 +20,7 @@ import * as BasicModel from '../models/BasicModel';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 
 import { downloadBlob, getParts as getBlobParts } from '../utils/AzureBlob';
-import { BlobParameters, getBlobName } from '../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 import config from '../config/Index';
 import logger from '../utils/Logger';

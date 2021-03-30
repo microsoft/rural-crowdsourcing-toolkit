@@ -15,7 +15,7 @@ import {
   KaryaFileRecord,
 } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
-import { BlobParameters, getBlobName } from '../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 /**
  * Insert a karya file created by the worker.

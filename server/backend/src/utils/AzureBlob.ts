@@ -20,7 +20,7 @@ import {
   ContainerName,
   containerNames,
   getBlobName,
-} from './BlobContainers';
+} from '@karya/blobstore';
 
 // Blue bird promise
 import { Promise as BBPromise } from 'bluebird';
@@ -68,18 +68,18 @@ export async function createBlobContainers() {
     .byPage();
   let presentContainers: string[] = [];
   for await (const page of containerIterator) {
-    const names = page.containerItems.map(item => item.name);
+    const names = page.containerItems.map((item) => item.name);
     presentContainers = presentContainers.concat(names);
   }
 
   // Check containers that need to be created
   const toCreate = containerNames.filter(
-    name => !presentContainers.includes(name),
+    (name) => !presentContainers.includes(name),
   );
 
   // Create containers that are not there
   if (toCreate.length > 0) {
-    await BBPromise.map(toCreate, async cname => {
+    await BBPromise.map(toCreate, async (cname) => {
       try {
         await mainClient.createContainer(cname);
         logger.info(`Created container '${cname}'`);
@@ -100,7 +100,7 @@ export async function createBlobContainers() {
   }
 
   // Show extraneous containers
-  const extraneous = presentContainers.filter(name => !isContainerName(name));
+  const extraneous = presentContainers.filter((name) => !isContainerName(name));
   if (extraneous.length > 0) {
     logger.info(`Extraneous containers found: ${extraneous.join(', ')}`);
   }
@@ -110,7 +110,7 @@ export async function createBlobContainers() {
  * Create local folders for each container
  */
 export async function createLocalFolders() {
-  await BBPromise.map(containerNames, async cname => {
+  await BBPromise.map(containerNames, async (cname) => {
     const localFolder = config.localFolder;
     try {
       await fsp.mkdir(`${localFolder}/${cname}`, { recursive: true });
@@ -332,7 +332,7 @@ async function streamToString(
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: string[] = [];
-    readableStream.on('data', data => {
+    readableStream.on('data', (data) => {
       chunks.push(data.toString());
     });
     readableStream.on('end', () => {

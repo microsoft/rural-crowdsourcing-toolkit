@@ -22,7 +22,7 @@ import {
   MicrotaskRecord,
 } from '../../db/TableInterfaces.auto';
 import { knex } from '../../db/Client';
-import { BlobParameters, getBlobName } from '../../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 import config from '../../config/Index';
 import { downloadBlob } from '../../utils/AzureBlob';
 import { gunzipFile } from '@karya/compression';

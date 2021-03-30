@@ -10,7 +10,7 @@ import { SetBox, this_box } from './config/ThisBox';
 import { GET } from './cron/HttpUtils';
 import { authenticateRequest, httpRequestLogger } from './routes/Middlewares';
 import router from './routes/Routes';
-import { containerNames } from './utils/BlobContainers';
+import { containerNames } from '@karya/blobstore';
 import logger from './utils/Logger';
 
 // creates an instance of Koa app
@@ -30,7 +30,7 @@ app.use(router.routes());
 
   // Create all the local file folders
   logger.info(`Creating local folders for karya files`);
-  await BBPromise.mapSeries(containerNames, async cname => {
+  await BBPromise.mapSeries(containerNames, async (cname) => {
     try {
       await fsp.mkdir(`${config.filesFolder}/${cname}`, {
         recursive: true,
@@ -63,7 +63,7 @@ app.use(router.routes());
     app.listen(port);
     logger.info(`Server running on port ${port}`);
   })
-  .catch(e => {
+  .catch((e) => {
     logger.error(e.message || 'Unknown error occured');
     logger.error(`Did not start the box server.`);
   });
