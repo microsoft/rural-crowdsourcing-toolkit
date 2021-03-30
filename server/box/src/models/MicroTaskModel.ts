@@ -66,7 +66,7 @@ export async function getCompletedAssignmentsCount(microtask: MicrotaskRecord) {
  * @param worker_id ID of the worker
  */
 export async function hasIncompleteMicrotasks(
-  worker_id: number,
+  worker_id: string,
 ): Promise<boolean> {
   const incompleteMicrotasks = await knex<MicrotaskAssignmentRecord>(
     'microtask_assignment',

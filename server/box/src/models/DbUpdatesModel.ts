@@ -69,7 +69,7 @@ export async function getUpdatesForWorker(
   ];
 
   // Collect updates for tables which the server could have updated
-  await BBPromise.mapSeries(allUpdatesTables, async table => {
+  await BBPromise.mapSeries(allUpdatesTables, async (table) => {
     // @ts-ignore
     updateMap[table] = await BasicModel.getUpdatesSince(table, from_server);
   });
@@ -104,7 +104,7 @@ export async function getUpdatesForWorker(
       worker_id,
       status: 'verified',
     })
-  ).map(a => {
+  ).map((a) => {
     a.output = {};
     a.output_file_id = null;
     return a;
@@ -122,7 +122,7 @@ export async function getUpdatesForWorker(
   }
 
   // Get all microtask updates corresponding to microtask assignments
-  const microtaskIds = microtaskAssignmentUpdates.map(t => t.microtask_id);
+  const microtaskIds = microtaskAssignmentUpdates.map((t) => t.microtask_id);
   const microtaskUpdates = await BasicModel.getRecordsWhereIn(
     'microtask',
     'id',
@@ -132,7 +132,7 @@ export async function getUpdatesForWorker(
 
   // Get all microtask groups corresponding to microtask group assignments
   const microtaskGroupIds = microtaskGroupAssignmentUpdates.map(
-    g => g.microtask_group_id,
+    (g) => g.microtask_group_id,
   );
   updateMap['microtask_group'] = await BasicModel.getRecordsWhereIn(
     'microtask_group',
@@ -140,7 +140,7 @@ export async function getUpdatesForWorker(
     microtaskGroupIds,
   );
 
-  let task_ids = microtaskUpdates.map(t => t.task_id);
+  let task_ids = microtaskUpdates.map((t) => t.task_id);
   task_ids = [...new Set(task_ids)];
 
   // Get all tasks updates
@@ -162,8 +162,8 @@ export async function getUpdatesForWorker(
 
   // Get microtask input karya files
   const karya_file_ids = microtaskUpdates
-    .map(m => m.input_file_id)
-    .filter((f): f is number => f !== null);
+    .map((m) => m.input_file_id)
+    .filter((f): f is string => f !== null);
   const karyaFileUpdates = await BasicModel.getRecordsWhereIn(
     'karya_file',
     'id',
@@ -194,7 +194,7 @@ export async function getUpdatesForWorker(
   ];
 
   // Push all updates
-  tableList.forEach(tableName => {
+  tableList.forEach((tableName) => {
     const rows = updateMap[tableName];
     if (rows && rows.length > 0) {
       updates.push({ tableName, rows });
@@ -214,8 +214,8 @@ export async function applyUpdatesFromWorker(
 ) {
   // check if there are tables that a worker cannot update
   const forbiddenTables = updates
-    .filter(update => !workerUpdatableTables.includes(update.tableName))
-    .map(update => update.tableName);
+    .filter((update) => !workerUpdatableTables.includes(update.tableName))
+    .map((update) => update.tableName);
 
   if (forbiddenTables.length > 0) {
     throw new Error(
@@ -230,7 +230,7 @@ export async function applyUpdatesFromWorker(
         throw new Error('Worker cannot update other records');
       }
     } else {
-      rows.forEach(row => {
+      rows.forEach((row) => {
         // @ts-ignore
         if (row.worker_id !== worker.id) {
           throw new Error('Worker can only update their own records');
@@ -241,17 +241,17 @@ export async function applyUpdatesFromWorker(
 
   // Apply the updates
   // TODO: Do this inside a transaction?
-  await BBPromise.mapSeries(updates, async update => {
+  await BBPromise.mapSeries(updates, async (update) => {
     const { tableName, rows } = update;
-    await BBPromise.mapSeries(rows, async row => {
+    await BBPromise.mapSeries(rows, async (row) => {
       try {
         const { id, ...rowUpdates } = row;
-	try {
-        await BasicModel.updateSingle(tableName, { id }, rowUpdates);
-	} catch(e) {
-	logger.error({tableName, rows});
-	logger.error(e);
-	}
+        try {
+          await BasicModel.updateSingle(tableName, { id }, rowUpdates);
+        } catch (e) {
+          logger.error({ tableName, rows });
+          logger.error(e);
+        }
 
         if (tableName === 'microtask_assignment') {
           // @ts-ignore
@@ -277,9 +277,9 @@ export async function applyUpdatesFromServer(
 ): Promise<boolean> {
   // Apply the updates
   let success: boolean = true;
-  await BBPromise.mapSeries(updates, async update => {
+  await BBPromise.mapSeries(updates, async (update) => {
     const { tableName, rows } = update;
-    await BBPromise.mapSeries(rows, async row => {
+    await BBPromise.mapSeries(rows, async (row) => {
       try {
         await BasicModel.upsertRecord(tableName, row);
       } catch (e) {

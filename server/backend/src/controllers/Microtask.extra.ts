@@ -81,9 +81,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
         .where(microtaskFilter)
         .whereIn(
           'task_id',
-          knex<TaskRecord>('task')
-            .select()
-            .where(workProviderFilter),
+          knex<TaskRecord>('task').select().where(workProviderFilter),
         );
     } else {
       records = await BasicModel.getRecords('microtask', microtaskFilter);
@@ -107,7 +105,7 @@ export async function getMicrotasksWithCompletedAssignments(
   try {
     // generate microtask filter
     const microtaskFilter: Microtask = {};
-    tableFilterColumns['microtask'].forEach(col => {
+    tableFilterColumns['microtask'].forEach((col) => {
       if (ctx.request.query[col]) {
         // @ts-ignore
         microtaskFilter[col] = ctx.request.query[col];

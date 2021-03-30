@@ -40,7 +40,7 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
 export async function updateRecordById(ctx: KaryaHTTPContext) {
   // extract table name, ID, and updates from context
   const tableName = ctx.state.tableName as BoxUpdatableTables;
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
   const updates = ctx.request.body;
 
   // the match object is just the ID
@@ -68,7 +68,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
 export async function getRecordById(ctx: KaryaHTTPContext) {
   // extract table name and ID from the context
   const tableName = ctx.state.tableName;
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   // the match object is just the ID
   const match = { id };

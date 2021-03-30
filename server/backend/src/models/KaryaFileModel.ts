@@ -29,7 +29,7 @@ export async function upsertKaryaFile(
   path: string,
   csAlgo: ChecksumAlgorithm,
   blobParams: BlobParameters,
-  currentFileID?: number | null,
+  currentFileID?: string | null,
 ): Promise<KaryaFileRecord> {
   // Upload file to blob store
   const blobName = getBlobName(blobParams);

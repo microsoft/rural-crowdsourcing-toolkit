@@ -23,7 +23,7 @@ import { getWorkProviderFilter } from './Task.extra';
  */
 export async function getRecordById(ctx: KaryaHTTPContext) {
   // extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
   // extract the current user from state
   const { current_user } = ctx.state;
 
@@ -79,9 +79,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
         .where(microTaskGroupFilter)
         .whereIn(
           'task_id',
-          knex<TaskRecord>('task')
-            .select()
-            .where(workProviderFilter),
+          knex<TaskRecord>('task').select().where(workProviderFilter),
         );
     } else {
       records = await BasicModel.getRecords(

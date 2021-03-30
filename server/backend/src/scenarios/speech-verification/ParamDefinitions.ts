@@ -67,7 +67,7 @@ export const taskParams: ParameterDefinition[] = [
 export type SpeechVerificationTask = TaskRecord & {
   params: {
     fromSpeechTask: boolean;
-    speechTaskId?: number;
+    speechTaskId?: string;
     numRecordings?: number;
     speechDataSet?: string;
     numVerifications: number;

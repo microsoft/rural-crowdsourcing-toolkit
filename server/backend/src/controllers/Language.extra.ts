@@ -17,7 +17,7 @@ import { KaryaHTTPContext } from './KoaContextType';
  */
 export async function updateSupported(ctx: KaryaHTTPContext) {
   // Extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   try {
     const string_support = await isLanguageSupported(id, {

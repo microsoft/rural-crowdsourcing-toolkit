@@ -15,11 +15,9 @@ const audience = 'karya-box';
  * Generate token for a worker
  * @param worker Worker record
  */
-export function generateToken(id: number, worker: Worker) {
+export function generateToken(id: string, worker: Worker) {
   // Generate a random secret
-  const secret = randomBytes(64)
-    .toString('base64')
-    .slice(0, 32);
+  const secret = randomBytes(64).toString('base64').slice(0, 32);
 
   const expiresIn = '60 days';
 

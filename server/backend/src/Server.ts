@@ -88,7 +88,7 @@ app.use(router.routes());
     status: 'approved',
   });
   for (const task of incompleteTasks) {
-    const scenarioObj = scenarioById[task.scenario_id];
+    const scenarioObj = scenarioById[Number.parseInt(task.scenario_id, 10)];
     if (scenarioObj.outputGenerator) {
       taskOutputGeneratorQueue.add(task, {
         repeat: { cron: `${task.id} 0 * * *` },
@@ -100,13 +100,13 @@ app.use(router.routes());
     throw new Error('Failed to configure some of the necessary services');
   }
 })()
-  .then(res => {
+  .then((res) => {
     // Start the local web server
     const server = app.listen(config.serverPort);
     server.setTimeout(0);
     logger.info(`Server running on port ${config.serverPort}`);
   })
-  .catch(e => {
+  .catch((e) => {
     logger.error(e.message);
     logger.error('Not starting the server');
   });

@@ -46,7 +46,7 @@ export async function sendPhoneAuthInfo(ctx: KaryaHTTPContext) {
  */
 export async function getKaryaFileWithSASToken(ctx: KaryaHTTPContext) {
   // Get ID from the request
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   try {
     // Get Karya file
@@ -104,7 +104,7 @@ export async function uploadFile(ctx: KaryaHTTPContext) {
   const file = files.file;
 
   // Compute checksum and if checksum doesn't match, return
-  @ts-ignore
+  // @ts-ignore
   const checksum = await getChecksum(file.path, fileRecord.algorithm);
   if (checksum !== fileRecord.checksum) {
     HttpResponse.BadRequest(ctx, 'Checksum did not match');

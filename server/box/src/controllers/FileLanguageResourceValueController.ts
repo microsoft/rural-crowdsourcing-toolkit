@@ -19,8 +19,8 @@ import { KaryaHTTPContext } from './KoaContextType';
  */
 export async function getLRVFile(ctx: KaryaHTTPContext) {
   let { language_id_s, language_resource_id_s } = ctx.request.query;
-  const language_id = Number.parseInt(language_id_s as string) //TODO: Anurag Change Query
-  const language_resource_id = Number.parseInt(language_resource_id_s as string) //TODO: Anurag Change Query
+  const language_id = language_id_s as string;
+  const language_resource_id = language_resource_id_s as string;
   let blobName: string;
   let containerName: ContainerName;
 

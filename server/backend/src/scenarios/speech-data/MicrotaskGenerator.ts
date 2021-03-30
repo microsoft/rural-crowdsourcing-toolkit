@@ -60,7 +60,7 @@ export async function generateMicrotasks(
       );
     }
 
-    const microtasks = sentences.map(sentence => {
+    const microtasks = sentences.map((sentence) => {
       const m_info: Microtask = {
         task_id: task.id,
         input: { data: sentence },

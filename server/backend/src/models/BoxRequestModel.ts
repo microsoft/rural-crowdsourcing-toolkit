@@ -62,7 +62,7 @@ export async function getUpdatesForBox(
     'payout_method',
   ];
 
-  await BBPromise.mapSeries(allUpdatesTables, async table => {
+  await BBPromise.mapSeries(allUpdatesTables, async (table) => {
     const tableUpdates = await BasicModel.getUpdatesSince(table, from);
     // @ts-ignore
     updateMap[table] = tableUpdates;
@@ -84,7 +84,7 @@ export async function getUpdatesForBox(
   ] = await BasicModel.getUpdatesSince('task_assignment', from, { box_id });
 
   // Get all tasks corresponding to the task assignments
-  const task_ids = task_assignment_updates.map(t => t.task_id);
+  const task_ids = task_assignment_updates.map((t) => t.task_id);
   const task_updates = await BasicModel.getRecordsWhereInUpdatedSince(
     'task',
     'id',
@@ -113,21 +113,21 @@ export async function getUpdatesForBox(
 
   // Get all karya file updates
   const language_file_ids = (updateMap['language'] || []).map(
-    l => l.lrv_file_id,
+    (l) => l.lrv_file_id,
   );
 
   const lr_file_ids = (updateMap['language_resource'] || []).map(
-    lr => lr.lrv_file_id,
+    (lr) => lr.lrv_file_id,
   );
 
-  const task_file_ids = task_updates.map(t => t.input_file_id);
-  const microtask_file_ids = microtask_updates.map(m => m.input_file_id);
+  const task_file_ids = task_updates.map((t) => t.input_file_id);
+  const microtask_file_ids = microtask_updates.map((m) => m.input_file_id);
 
-  let karya_file_ids: number[] = [];
+  let karya_file_ids: string[] = [];
   [language_file_ids, lr_file_ids, task_file_ids, microtask_file_ids].forEach(
-    idlist => {
+    (idlist) => {
       karya_file_ids = karya_file_ids.concat(
-        idlist.filter((id): id is number => id !== null),
+        idlist.filter((id): id is string => id !== null),
       );
     },
   );
@@ -135,10 +135,10 @@ export async function getUpdatesForBox(
     await BasicModel.getRecordsWhereIn('karya_file', 'id', karya_file_ids)
   )
     //@ts-ignore
-    .filter(kf => kf.last_updated_at.toISOString() > from);
+    .filter((kf) => kf.last_updated_at.toISOString() > from);
 
   // Update all the karya_files with sas tokens
-  karya_file_updates.forEach(kf => {
+  karya_file_updates.forEach((kf) => {
     kf.url = kf.url !== null ? getBlobSASURL(kf.url, 'r', 60) : null;
   });
   updateMap['karya_file'] = (updateMap['karya_file'] || []).concat(
@@ -147,7 +147,7 @@ export async function getUpdatesForBox(
 
   // Collect updates from filter update tables
   const payoutTables: BoxUpdatableTables[] = ['payout_info', 'payment_request'];
-  await BBPromise.mapSeries(payoutTables, async table => {
+  await BBPromise.mapSeries(payoutTables, async (table) => {
     const tableUpdates = await BasicModel.getUpdatesSince(table, from, {
       box_id,
     });
@@ -166,7 +166,7 @@ export async function getUpdatesForBox(
   );
 
   // Push all updates
-  tableList.forEach(t => {
+  tableList.forEach((t) => {
     const tupdates = updateMap[t];
     if (tupdates && tupdates.length > 0) {
       updates.push({ tableName: t, rows: tupdates });
@@ -186,13 +186,13 @@ export async function applyUpdatesFromBox(
   box: BoxRecord,
   updates: TableUpdates<BoxUpdatableTables>[],
 ) {
-  await BBPromise.mapSeries(updates, async update => {
+  await BBPromise.mapSeries(updates, async (update) => {
     const { tableName, rows } = update;
     if (!boxUpdatableTables.includes(tableName)) {
       throw new Error(`Box cannot update table '${tableName}'`);
     }
 
-    await BBPromise.mapSeries(rows, async row => {
+    await BBPromise.mapSeries(rows, async (row) => {
       if (row.box_id !== box.id) {
         throw new Error(`Box can only update its own record`);
       }
@@ -219,7 +219,7 @@ export async function applyUpdatesFromBox(
           });
           const task = await BasicModel.getSingle('task', { id: mt.task_id });
           await scenarioById[
-            task.scenario_id
+            Number.parseInt(task.scenario_id, 10)
           ].handleMicrotaskAssignmentCompletion(mta, mt, task);
         }
       } else {

@@ -44,7 +44,7 @@ export async function assignMicrotasksForWorker(
   });
 
   // iterate over all tasks to see which all can user perform
-  await BBPromise.mapSeries(taskAssignments, async taskAssignment => {
+  await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
     if (tasksAssigned) {
       return;
     }
@@ -111,7 +111,7 @@ export async function assignMicrotasksForWorker(
       }
 
       // Add all microtasks from the selected groups to microtasks
-      await BBPromise.mapSeries(chosenMicrotaskGroups, async group => {
+      await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
         const microtasks = await BasicModel.getRecords('microtask', {
           group_id: group.id,
         });
@@ -151,7 +151,7 @@ export async function assignMicrotasksForWorker(
     }
 
     // Assign all microtask groups and microtasks to the user
-    await BBPromise.mapSeries(chosenMicrotaskGroups, async group => {
+    await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
       await BasicModel.insertRecord('microtask_group_assignment', {
         microtask_group_id: group.id,
         worker_id: worker.id,
@@ -159,7 +159,7 @@ export async function assignMicrotasksForWorker(
       });
     });
 
-    await BBPromise.mapSeries(chosenMicrotasks, async microtask => {
+    await BBPromise.mapSeries(chosenMicrotasks, async (microtask) => {
       await BasicModel.insertRecord('microtask_assignment', {
         microtask_id: microtask.id,
         worker_id: worker.id,
@@ -307,7 +307,7 @@ async function matchSkills(
  * Reorder elements of an array based on the sort order
  * @param array Array to be shuffled
  */
-function reorder<T extends { id: number }>(
+function reorder<T extends { id: string }>(
   array: T[],
   order: AssignmentOrderType,
 ) {
@@ -323,7 +323,9 @@ function reorder<T extends { id: number }>(
       array[randomIndex] = temporaryValue;
     }
   } else if (order === 'sequential') {
-    array.sort((m1, m2) => m1.id - m2.id);
+    array.sort(
+      (m1, m2) => Number.parseInt(m1.id, 10) - Number.parseInt(m2.id, 10),
+    );
   } else {
     throw new Error('Invalid assignment order');
   }

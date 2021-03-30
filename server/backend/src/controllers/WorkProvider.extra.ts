@@ -89,7 +89,7 @@ export async function getRecordById(ctx: KaryaHTTPContext) {
  */
 export async function updateRecordById(ctx: KaryaHTTPContext) {
   // extract the ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   // get current user
   const { current_user } = ctx.state;
