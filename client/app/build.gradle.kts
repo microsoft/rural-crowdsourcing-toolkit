@@ -53,78 +53,78 @@ dependencies {
     val arch_version = "2.1.0"
 
     // ViewModel
-    implementation(viewmodelDependencies.viewmodel)
+    implementation(Dependencies.AndroidX.Lifecycle.viewmodelKtx)
 //    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     // LiveData
 //    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
-    implementation(viewmodelDependencies.livedata)
+    implementation(Dependencies.AndroidX.Lifecycle.livedata)
     // Lifecycles only (without ViewModel or LiveData)
 //    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
-    implementation(viewmodelDependencies.lifecycle_runtime)
+    implementation(Dependencies.AndroidX.Lifecycle.runtimeKtx)
     // Saved state module for ViewModel
 //    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
-    implementation(viewmodelDependencies.saved_state_viewModel)
+    implementation(Dependencies.AndroidX.Lifecycle.saved_state)
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
 //    implementation("androidx.multidex:multidex:2.0.1")
-    implementation(viewmodelDependencies.multidex)
+    implementation(Dependencies.AndroidX.multidex)
 //    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation(viewmodelDependencies.lifecycle_extension)
+    implementation(Dependencies.AndroidX.Lifecycle.extension)
 //    implementation("androidx.work:work-runtime-ktx:2.5.0")
-    implementation(viewmodelDependencies.work_runtime)
+    implementation(Dependencies.AndroidX.work_runtime)
 
     // UI Stuff
 //    implementation("com.google.android.material:material:1.3.0")
-    implementation(uiDependencies.material_design)
+    implementation(Dependencies.Google.material_design)
 //    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation(uiDependencies.appcaompat)
+    implementation(Dependencies.AndroidX.appcompat)
 //    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation(uiDependencies.constraintlayout)
+    implementation(Dependencies.AndroidX.constraintlayout)
 //    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation(uiDependencies.legacy_support)
+    implementation(Dependencies.AndroidX.legacy_support)
 //    implementation("com.github.bumptech.glide:glide:4.11.0")
-    implementation(uiDependencies.glide)
+    implementation(Dependencies.ThirdParty.glide)
 //    implementation("com.kofigyan.stateprogressbar:stateprogressbar:1.0.0")
-    implementation(uiDependencies.stateprogressbar)
+    implementation(Dependencies.ThirdParty.stateprogressbar)
 
     // Kotlin Stuff
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
     implementation(kotlin("reflect", version = "1.4.10"))
 //    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
 //    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-    implementation(kotlinDependencies.coroutine_core)
-    implementation(kotlinDependencies.coroutines)
+    implementation(Dependencies.Kotlin.Coroutines.core)
+    implementation(Dependencies.Kotlin.Coroutines.coroutines)
 
     // Network stuff
 //    implementation("com.squareup.okhttp3:okhttp:3.14.9")
-    implementation(networkDependencies.okhttp)
+    implementation(Dependencies.ThirdParty.Squareup.okhttp)
 //    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation(networkDependencies.retrofit)
+    implementation(Dependencies.ThirdParty.Squareup.retrofit)
 //    implementation("com.google.code.gson:gson:2.8.6")
-    implementation(networkDependencies.gson)
+    implementation(Dependencies.Google.gson)
 //    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation(networkDependencies.retrofit_converter)
+    implementation(Dependencies.ThirdParty.Squareup.retrofit_converter)
 
     // Database stuff
 //    implementation("androidx.room:room-runtime:$room_version")
-    implementation(databaseDependencies.room_runtime)
+    implementation(Dependencies.AndroidX.Room.room_runtime)
 //    kapt("androidx.room:room-compiler:$room_version")
-    kapt(databaseDependencies.room_compiler)
+    kapt(Dependencies.AndroidX.Room.room_compiler)
 //    implementation("androidx.room:room-rxjava2:$room_version")
-    implementation(databaseDependencies.room_rxjava)
+    implementation(Dependencies.AndroidX.Room.room_rxjava)
 //    implementation("androidx.room:room-guava:$room_version")
-    implementation(databaseDependencies.room_guava)
+    implementation(Dependencies.AndroidX.Room.room_guava)
 //    implementation("androidx.room:room-ktx:$room_version")
-    implementation(databaseDependencies.room_ktx)
+    implementation(Dependencies.AndroidX.Room.room_ktx)
 
     // Firebase stuff
-    implementation(firebaseDependencies.crashlytics)
+    implementation(Dependencies.Google.Firebase.crashlytics)
 //    implementation("com.google.firebase:firebase-crashlytics:17.4.0")
-    implementation(firebaseDependencies.analytics)
+    implementation(Dependencies.Google.Firebase.analytics)
 //    implementation("com.google.firebase:firebase-analytics:18.0.2")
 
     // DEBUG DB
 //    debugImplementation("com.amitshekhar.android:debug-db:1.0.6")
-    debugImplementation(databaseDependencies.debug_db)
+    debugImplementation(Dependencies.ThirdParty.debug_db)
 }
