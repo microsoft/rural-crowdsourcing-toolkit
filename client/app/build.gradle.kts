@@ -53,7 +53,7 @@ dependencies {
     val arch_version = "2.1.0"
 
     // ViewModel
-    implementation(Dependencies.AndroidX.Lifecycle.viewmodelKtx)
+    implementation(Dependencies.AndroidX.Lifecycle.viewModelKtx)
 //    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     // LiveData
 //    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
@@ -76,17 +76,17 @@ dependencies {
 
     // UI Stuff
 //    implementation("com.google.android.material:material:1.3.0")
-    implementation(Dependencies.Google.material_design)
+    implementation(Dependencies.Google.material)
 //    implementation("androidx.appcompat:appcompat:1.2.0")
     implementation(Dependencies.AndroidX.appcompat)
 //    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation(Dependencies.AndroidX.constraintlayout)
+    implementation(Dependencies.AndroidX.constraintLayout)
 //    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation(Dependencies.AndroidX.legacy_support)
 //    implementation("com.github.bumptech.glide:glide:4.11.0")
     implementation(Dependencies.ThirdParty.glide)
 //    implementation("com.kofigyan.stateprogressbar:stateprogressbar:1.0.0")
-    implementation(Dependencies.ThirdParty.stateprogressbar)
+    implementation(Dependencies.ThirdParty.stateProgressBar)
 
     // Kotlin Stuff
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
@@ -98,13 +98,13 @@ dependencies {
 
     // Network stuff
 //    implementation("com.squareup.okhttp3:okhttp:3.14.9")
-    implementation(Dependencies.ThirdParty.Squareup.okhttp)
+    implementation(Dependencies.ThirdParty.Retrofit.okhttp)
 //    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation(Dependencies.ThirdParty.Squareup.retrofit)
+    implementation(Dependencies.ThirdParty.Retrofit.retrofit)
 //    implementation("com.google.code.gson:gson:2.8.6")
     implementation(Dependencies.Google.gson)
 //    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation(Dependencies.ThirdParty.Squareup.retrofit_converter)
+    implementation(Dependencies.ThirdParty.Retrofit.gsonConverter)
 
     // Database stuff
 //    implementation("androidx.room:room-runtime:$room_version")
@@ -126,5 +126,5 @@ dependencies {
 
     // DEBUG DB
 //    debugImplementation("com.amitshekhar.android:debug-db:1.0.6")
-    debugImplementation(Dependencies.ThirdParty.debug_db)
+    debugImplementation(Dependencies.ThirdParty.debugDB)
 }
