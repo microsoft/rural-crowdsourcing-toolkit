@@ -27,11 +27,13 @@ class SupportedLanguageListAdapter(
     private var languages: List<SupportedLanguage> = arrayListOf()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SupportedLanguageViewHolder {
-        return SupportedLanguageViewHolder(LayoutInflater.from(context).inflate(
+        return SupportedLanguageViewHolder(
+            LayoutInflater.from(context).inflate(
                 R.layout.item_supported_language,
                 p0,
                 false
-            ))
+            )
+        )
     }
 
     override fun getItemCount(): Int {

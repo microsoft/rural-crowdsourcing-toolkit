@@ -170,7 +170,7 @@ class SpeechVerificationMain : MicrotaskRenderer(
             playbackProgressPb.progress = 0
 
             setActivityState(ActivityState.WAIT_FOR_PLAY)
-        } catch(exception: Exception) {
+        } catch (exception: Exception) {
             // Alert dialog
             val alertDialogBuilder = AlertDialog.Builder(this@SpeechVerificationMain)
             alertDialogBuilder.setMessage("Audio file is corrupt")
@@ -509,8 +509,8 @@ class SpeechVerificationMain : MicrotaskRenderer(
 
     private fun updateReviewStatus() {
         reviewCompleted = accuracyRating != R.string.rating_undefined &&
-                qualityRating != R.string.rating_undefined &&
-                volumeRating != R.string.rating_undefined
+            qualityRating != R.string.rating_undefined &&
+            volumeRating != R.string.rating_undefined
 
         if (reviewCompleted) {
             setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
@@ -523,7 +523,11 @@ class SpeechVerificationMain : MicrotaskRenderer(
     private fun updatePlaybackProgress(state: ActivityState) {
         val runnable = Runnable {
             while (state == activityState) {
-                val currentPosition = try { mediaPlayer?.currentPosition } catch (e: Exception) { null }
+                val currentPosition = try {
+                    mediaPlayer?.currentPosition
+                } catch (e: Exception) {
+                    null
+                }
                 playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
                 Thread.sleep(100)
             }

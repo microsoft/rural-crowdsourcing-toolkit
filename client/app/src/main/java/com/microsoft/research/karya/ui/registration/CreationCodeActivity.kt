@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 package com.microsoft.research.karya.ui.registration
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue

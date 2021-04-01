@@ -6,9 +6,6 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageS
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.data.service.WorkersAPI
 import kotlinx.coroutines.flow.flow
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.Path
 
 class WorkerRepository(private val workersAPI: WorkersAPI) {
 
@@ -125,11 +122,12 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         idTokenHeader: String,
         workerLanguageSkillId: String
     ) = flow {
-        val response = workersAPI.updateSkill(skillObject,
+        val response = workersAPI.updateSkill(
+            skillObject,
             authProvider,
             idTokenHeader,
             workerLanguageSkillId
-            )
+        )
 
         val workerLanguageSkillRecord = response.body()
 
@@ -149,7 +147,8 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         idTokenHeader: String,
         worker: WorkerRecord
     ) = flow {
-        val response = workersAPI.getUpdates(authProvider,
+        val response = workersAPI.getUpdates(
+            authProvider,
             idTokenHeader,
             worker
         )
@@ -173,7 +172,8 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         idTokenHeader: String,
         microtaskAssignmentID: String
     ) = flow {
-        val response = workersAPI.getInputFileForAssignment(authProvider,
+        val response = workersAPI.getInputFileForAssignment(
+            authProvider,
             idTokenHeader,
             microtaskAssignmentID
         )

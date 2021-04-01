@@ -11,17 +11,17 @@ import androidx.core.app.ActivityCompat
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
+import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.FileUtils
-import java.io.File
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 /** Code to request necessary permissions */
 private const val REQUEST_PERMISSIONS = 201
@@ -154,7 +154,7 @@ abstract class MicrotaskRenderer(
         val assignmentId = microtaskAssignmentIDs[currentAssignmentIndex]
 
         return if (identifier == "") "$assignmentId.$extension"
-            else "$assignmentId-$identifier.$extension"
+        else "$assignmentId-$identifier.$extension"
     }
 
     /**
@@ -242,7 +242,7 @@ abstract class MicrotaskRenderer(
 
         /** Update progress bar */
         if (currentAssignment.status == MicrotaskAssignmentStatus.assigned) {
-            completedMicrotasks ++
+            completedMicrotasks++
             uiScope.launch {
                 microtaskProgressPb?.progress = completedMicrotasks
             }
@@ -350,7 +350,7 @@ abstract class MicrotaskRenderer(
                 if (microtaskAssignment.status == MicrotaskAssignmentStatus.assigned) {
                     break
                 }
-                currentAssignmentIndex ++
+                currentAssignmentIndex++
             } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
         }
 
@@ -468,8 +468,7 @@ abstract class MicrotaskRenderer(
                         val alertDialog = alertDialogBuilder.create()
                         alertDialog.show()
                     }
-                }
-                else {
+                } else {
                     microtaskInputFileJob = ioScope.launch {
                         FileUtils.extractGZippedTarBallIntoDirectory(
                             microtaskTarBallPath,

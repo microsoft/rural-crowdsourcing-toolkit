@@ -34,6 +34,7 @@
         android:layout_marginStart="@dimen/_30sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_24sdp"
+        android:autofillHints=""
         android:background="@drawable/blue_rounded_border"
         android:fontFamily="monospace"
         android:hint="@string/otp_hint"
@@ -46,8 +47,7 @@
         app:layout_constraintRight_toLeftOf="@id/otpStatusIv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/otpPromptTv"
-        app:layout_constraintVertical_bias="0.149"
-        android:autofillHints="" />
+        app:layout_constraintVertical_bias="0.149" />
 
     <ImageView
         android:id="@+id/otpStatusIv"

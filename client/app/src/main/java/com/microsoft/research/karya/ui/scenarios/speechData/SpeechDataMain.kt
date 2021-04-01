@@ -13,12 +13,10 @@ import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.*
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ACTIVE
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.DISABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ENABLED
 import com.microsoft.research.karya.utils.RawToAACEncoder
-import java.io.DataOutputStream
-import java.io.FileOutputStream
-import java.io.RandomAccessFile
-import java.lang.Runnable
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +24,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.DataOutputStream
+import java.io.FileOutputStream
+import java.io.RandomAccessFile
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -682,13 +683,13 @@ open class SpeechDataMain(
                 playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
             },
             onCompletionListener = {
-            uiScope.launch {
-                playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
-                playPointerIv.visibility = View.INVISIBLE
-                delay(500)
-                playRerecordAction()
-            }
-        })
+                uiScope.launch {
+                    playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
+                    playPointerIv.visibility = View.INVISIBLE
+                    delay(500)
+                    playRerecordAction()
+                }
+            })
     }
 
     private fun playRerecordAction() {
@@ -698,13 +699,13 @@ open class SpeechDataMain(
                 recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
             },
             onCompletionListener = {
-            uiScope.launch {
-                recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-                recordPointerIv.visibility = View.INVISIBLE
-                delay(500)
-                playNextAction()
-            }
-        })
+                uiScope.launch {
+                    recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+                    recordPointerIv.visibility = View.INVISIBLE
+                    delay(500)
+                    playNextAction()
+                }
+            })
     }
 
     private fun playNextAction() {
@@ -714,13 +715,13 @@ open class SpeechDataMain(
                 nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
             },
             onCompletionListener = {
-            uiScope.launch {
-                nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
-                nextPointerIv.visibility = View.INVISIBLE
-                delay(500)
-                playPreviousAction()
-            }
-        })
+                uiScope.launch {
+                    nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
+                    nextPointerIv.visibility = View.INVISIBLE
+                    delay(500)
+                    playPreviousAction()
+                }
+            })
     }
 
     private fun playPreviousAction() {
@@ -730,13 +731,13 @@ open class SpeechDataMain(
                 backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
             },
             onCompletionListener = {
-            uiScope.launch {
-                backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
-                backPointerIv.visibility = View.INVISIBLE
-                delay(500)
-                moveToPrerecording()
-            }
-        })
+                uiScope.launch {
+                    backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+                    backPointerIv.visibility = View.INVISIBLE
+                    delay(500)
+                    moveToPrerecording()
+                }
+            })
     }
 
     /**
@@ -1244,7 +1245,7 @@ open class SpeechDataMain(
                         scratchRecordingFile.write(lastBuffer, 0, currentRecordBufferConsumed)
                         totalRecordedBytes += currentRecordBufferConsumed
                     }
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     // Ignore (rare) errors
                 }
 

@@ -1,100 +1,96 @@
+private const val AGP_VERSION = "4.1.3"
+private const val ANDROIDX_HILT_VERSION = "1.0.0-alpha03"
+private const val CRASHLYTICS_VERSION = "2.5.2"
+private const val DAGGER_HILT_VERSION = "2.32-alpha"
+private const val GMS_VERSION = "4.3.5"
+private const val KOTLIN_VERSION = "1.4.30"
+private const val LINT_VERSION = "27.3.0-alpha04"
+
+object Plugins {
+
+    const val agp = "com.android.tools.build:gradle:$AGP_VERSION"
+    const val agpBuilder = "com.android.tools.build:builder:$AGP_VERSION"
+    const val agpBuilderModel = "com.android.tools.build:builder-model:$AGP_VERSION"
+    const val agpLintModel = "com.android.tools.lint:lint-model:$LINT_VERSION"
+    const val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:$CRASHLYTICS_VERSION"
+    const val gms = "com.google.gms:google-services:$GMS_VERSION"
+    const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
+    const val hilt = "com.google.dagger:hilt-android-gradle-plugin:$DAGGER_HILT_VERSION"
+}
+
 object Dependencies {
 
     object Kotlin {
 
-        private const val kotlin_version = "1.4.1"
-
-        val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlin_version}"
-
         object Coroutines {
+            private const val version = "1.4.1"
 
-            private const val coroutines_version = "1.3.9"
-
-            const val coroutines =
-                "org.jetbrains.kotlinx:kotlinx-coroutines-android:${coroutines_version}"
-            const val core =
-                "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutines_version}"
+            const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
+            const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         }
-
     }
 
     object AndroidX {
 
-        private const val appcompat_version = "1.2.0"
-        private const val constraint_layout_version = "2.0.4"
-        private const val legacy_support_version = "1.0.0"
-        private const val work_runtime_version = "2.5.0"
-        private const val multidex_version = "2.0.1"
+        const val appcompat = "androidx.appcompat:appcompat:1.3.0-beta01"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
+        const val legacy_support = "androidx.legacy:legacy-support-v4:1.0.0"
+        const val work_runtime = "androidx.work:work-runtime-ktx:2.5.0"
+        const val multidex = "androidx.multidex:multidex:2.0.1"
 
-        const val appcompat = "androidx.appcompat:appcompat:$appcompat_version"
-        const val constraintlayout = "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
-        const val legacy_support = "androidx.legacy:legacy-support-v4:$legacy_support_version"
-        const val work_runtime = "androidx.work:work-runtime-ktx:$work_runtime_version"
-        const val multidex = "androidx.multidex:multidex:$multidex_version"
-
+        object Hilt {
+            const val dagger = "com.google.dagger:hilt-android:$DAGGER_HILT_VERSION"
+            const val daggerCompiler = "com.google.dagger:hilt-compiler:$DAGGER_HILT_VERSION"
+            const val daggerHiltCompiler = "androidx.hilt:hilt-compiler:$ANDROIDX_HILT_VERSION"
+            const val hiltLifecycleViewModel =
+                "androidx.hilt:hilt-lifecycle-viewmodel:$ANDROIDX_HILT_VERSION"
+            const val hiltNavigation = "androidx.hilt:hilt-navigation:$ANDROIDX_HILT_VERSION"
+        }
 
         object Lifecycle {
-
             private const val version = "2.3.0"
             private const val extension_version = "2.2.0"
+
             const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
             const val extension = "androidx.lifecycle:lifecycle-extensions:$extension_version"
-            const val viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+            const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
             const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val saved_state = "androidx.lifecycle:lifecycle-viewmodel-savedstate:$version"
         }
 
         object Room {
-            private const val room_version = "2.2.6"
-            val room_runtime = "androidx.room:room-runtime:$room_version"
-            val room_compiler = "androidx.room:room-compiler:$room_version"
-            val room_rxjava = "androidx.room:room-rxjava2:$room_version"
-            val room_guava = "androidx.room:room-guava:$room_version"
-            val room_ktx = "androidx.room:room-ktx:$room_version"
+            private const val version = "2.2.6"
+
+            const val roomRuntime = "androidx.room:room-runtime:$version"
+            const val roomCompiler = "androidx.room:room-compiler:$version"
+            const val roomKtx = "androidx.room:room-ktx:$version"
         }
-
-
-
     }
 
     object Google {
 
-        private const val gson_version = "2.8.6"
-        private const val material_design_version = "1.3.0"
-
-        const val gson = "com.google.code.gson:gson:$gson_version"
-        const val material_design = "com.google.android.material:material:$material_design_version"
+        const val gson = "com.google.code.gson:gson:2.8.6"
+        const val material = "com.google.android.material:material:1.3.0"
 
         object Firebase {
-            private const val crashlytics_version = "17.4.0"
-            private const val analytics_version = "18.0.2"
 
-            const val crashlytics = "com.google.firebase:firebase-crashlytics:$crashlytics_version"
-            const val analytics = "com.google.firebase:firebase-analytics:$analytics_version"
+            const val crashlytics = "com.google.firebase:firebase-crashlytics:17.4.0"
+            const val analytics = "com.google.firebase:firebase-analytics:18.0.2"
         }
     }
 
     object ThirdParty {
 
-        private const val debug_db_version = "1.0.6"
-        private const val glide_version = "4.11.0"
-        private const val state_progressbar_version = "1.0.0"
+        const val debugDB = "com.amitshekhar.android:debug-db:1.0.6"
+        const val glide = "com.github.bumptech.glide:glide:4.11.0"
+        const val stateProgressBar = "com.kofigyan.stateprogressbar:stateprogressbar:1.0.0"
+        const val okhttp = "com.squareup.okhttp3:okhttp:3.14.9"
 
-        const val debug_db = "com.amitshekhar.android:debug-db:$debug_db_version"
-        const val glide = "com.github.bumptech.glide:glide:$glide_version"
-        const val stateprogressbar = "com.kofigyan.stateprogressbar:stateprogressbar:$state_progressbar_version"
+        object Retrofit {
+            private const val version = "2.9.0"
 
-        object Squareup {
-
-            private const val okhttp_version = "3.14.9"
-            private const val retrofit_version = "2.9.0"
-
-
-            const val okhttp = "com.squareup.okhttp3:okhttp:$okhttp_version"
-            const val retrofit = "com.squareup.retrofit2:retrofit:$retrofit_version"
-            const val retrofit_converter = "com.squareup.retrofit2:converter-gson:$retrofit_version"
+            const val retrofit = "com.squareup.retrofit2:retrofit:$version"
+            const val gsonConverter = "com.squareup.retrofit2:converter-gson:$version"
         }
-
     }
-
 }

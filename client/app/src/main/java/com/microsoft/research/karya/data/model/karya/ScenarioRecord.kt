@@ -7,6 +7,7 @@
  */
 
 package com.microsoft.research.karya.data.model.karya
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.JsonObject

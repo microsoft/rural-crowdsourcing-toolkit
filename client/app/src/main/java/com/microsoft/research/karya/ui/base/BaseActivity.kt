@@ -25,19 +25,19 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.KaryaDatabase
+import com.microsoft.research.karya.data.manager.RetrofitFactory
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.service.KaryaAPIService
-import com.microsoft.research.karya.data.manager.RetrofitFactory
 import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.ImageUtils
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 abstract class BaseActivity(
     private val useAssistant: Boolean = false,
@@ -241,8 +241,9 @@ abstract class BaseActivity(
      */
     protected suspend fun getValueFromName(@StringRes resId: Int, languageId: Int = appLanguageId!!): String {
         val name = getString(resId)
-        val value = karyaDb.languageResourceValueDaoExtra().getValueFromName(languageId, name).trim()  // getting language resource value
-        return value ?: ""
+        val value = karyaDb.languageResourceValueDaoExtra().getValueFromName(languageId, name)
+            .trim()  // getting language resource value
+        return value
     }
 
     /**
