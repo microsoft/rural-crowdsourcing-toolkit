@@ -27,7 +27,8 @@
 <string name="s_years">years</string>
 <string name="s_registering_worker">Registering worker with the server</string>
 <string name="s_phone_number_already_used">Your phone number is already registered. Please try with another phone number.</string>
-<string name="s_skill_question_description">We have three questions about your skills in English. For each question, please click <tick> for yes, and <cross> for no.</string>
+<!-- TODO: update tick and cross with more suitable words -->
+<string name="s_skill_question_description">We have three questions about your skills in English. For each question, please click tick for yes, and cross for no.</string>
 <string name="s_read_skill_question">Can you read in English?</string>
 <string name="s_speak_skill_question">Can you speak in English?</string>
 <string name="s_type_skill_question">Can you type in English?</string>

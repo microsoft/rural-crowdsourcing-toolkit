@@ -27,7 +27,8 @@
 <string name="s_years">साल</string>
 <string name="s_registering_worker">सर्वर के साथ श्रमिक का पंजीकरण करना</string>
 <string name="s_phone_number_already_used">आपका फ़ोन नंबर पहले से पंजीकृत है। कृपया किसी अन्य फ़ोन नंबर के साथ प्रयास करें।</string>
-<string name="s_skill_question_description">हिंदी में आपके कौशल के बारे में हमारे तीन प्रश्न हैं। प्रत्येक प्रश्न के लिए, कृपया हां के लिए <tick>, और नहीं के लिए <cross> क्लिक करें।</string>
+<!-- TODO: update tick and cross with more suitable words -->
+<string name="s_skill_question_description">हिंदी में आपके कौशल के बारे में हमारे तीन प्रश्न हैं। प्रत्येक प्रश्न के लिए, कृपया हां के लिए tick, और नहीं के लिए cross क्लिक करें।</string>
 <string name="s_read_skill_question">क्या आप हिंदी में पढ़ सकते हैं?</string>
 <string name="s_speak_skill_question">क्या आप हिंदी में बोल सकते हैं?</string>
 <string name="s_type_skill_question">क्या आप हिंदी में टाइप कर सकते हैं?</string>
