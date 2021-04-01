@@ -7,6 +7,7 @@
  */
 
 package com.microsoft.research.karya.data.local.daos
+
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction

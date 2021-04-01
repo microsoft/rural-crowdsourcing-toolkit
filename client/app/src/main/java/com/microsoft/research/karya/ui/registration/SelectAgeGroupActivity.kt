@@ -63,9 +63,15 @@ class SelectAgeGroupActivity : BaseActivity(useAssistant = true) {
         middleAgeBtn.isSelected = false
         oldAgeBtn.isSelected = false
         when (ageGroup) {
-            "18-25" -> { youthBtn.isSelected = true }
-            "26-50" -> { middleAgeBtn.isSelected = true }
-            "50+" -> { oldAgeBtn.isSelected = true }
+            "18-25" -> {
+                youthBtn.isSelected = true
+            }
+            "26-50" -> {
+                middleAgeBtn.isSelected = true
+            }
+            "50+" -> {
+                oldAgeBtn.isSelected = true
+            }
         }
         enableAgeGroupSubmitButton()
     }

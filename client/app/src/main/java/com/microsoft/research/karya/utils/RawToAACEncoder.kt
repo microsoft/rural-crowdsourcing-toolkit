@@ -20,6 +20,7 @@ class RawToAACEncoder(
 ) {
 
     private var mStop = false
+
     /**
      * Encode a raw audio file to AAC file
      */

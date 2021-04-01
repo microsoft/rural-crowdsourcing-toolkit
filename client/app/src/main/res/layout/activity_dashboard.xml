@@ -33,6 +33,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/_15sdp"
             android:paddingVertical="@dimen/_10sdp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -75,10 +76,9 @@
                 android:progressBackgroundTint="@color/colorLightGrey2"
                 android:progressTint="#6C6"
                 android:scaleY="2"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
-
 
 
     </androidx.cardview.widget.CardView>

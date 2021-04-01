@@ -9,12 +9,12 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.AppConstants
-import java.util.Timer
-import kotlin.concurrent.scheduleAtFixedRate
 import kotlinx.android.synthetic.main.activity_select_app_language.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 class SelectAppLanguage : BaseActivity(
     useAssistant = true,
@@ -170,7 +170,7 @@ class SelectAppLanguage : BaseActivity(
             when (supportedLanguages.size) {
                 1 -> onLanguageSelected(supportedLanguages[0])
                 0 -> finish()
-                else  -> supportedLanguageAdapter.setList(supportedLanguages)
+                else -> supportedLanguageAdapter.setList(supportedLanguages)
             }
         }
     }

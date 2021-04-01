@@ -7,6 +7,7 @@
  */
 
 package com.microsoft.research.karya.data.model.karya
+
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -15,7 +16,7 @@ import com.google.gson.JsonObject
 
 @Entity(
     tableName = "microtask_group", foreignKeys = arrayOf(
-    ForeignKey(
+        ForeignKey(
             entity = TaskRecord::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("task_id")

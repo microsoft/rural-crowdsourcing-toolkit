@@ -28,19 +28,23 @@ interface MicrotaskAssignmentDaoExtra {
         return getAssignmentsByStatus(MicrotaskAssignmentStatus.completed)
     }
 
-    @Query("SELECT count(id) FROM microtask_assignment WHERE " +
+    @Query(
+        "SELECT count(id) FROM microtask_assignment WHERE " +
             "status=:status AND " +
-            "microtask_id in (SELECT id from microtask WHERE task_id=:taskId)")
+            "microtask_id in (SELECT id from microtask WHERE task_id=:taskId)"
+    )
     suspend fun getCountForTask(taskId: String, status: MicrotaskAssignmentStatus): Int
 
     /**
      * Query to get all the microtask assignment IDs for a given [taskId] and with a given
      * list of [statuses]
      */
-    @Query("SELECT id FROM microtask_assignment WHERE " +
+    @Query(
+        "SELECT id FROM microtask_assignment WHERE " +
             "status IN (:statuses) AND " +
             "microtask_id IN (SELECT id FROM microtask WHERE task_id=:taskId) " +
-            "ORDER BY id")
+            "ORDER BY id"
+    )
     suspend fun getIDsForTask(
         taskId: String,
         statuses: List<MicrotaskAssignmentStatus>
@@ -52,7 +56,7 @@ interface MicrotaskAssignmentDaoExtra {
      * included in the returned list.
      */
     suspend fun getUnsubmittedIDsForTask(taskId: String, includeCompleted: Boolean):
-            List<String> {
+        List<String> {
         return if (includeCompleted) {
             getIDsForTask(
                 taskId, arrayListOf(
@@ -69,9 +73,11 @@ interface MicrotaskAssignmentDaoExtra {
      * Query to mark the microtask assignment with the given [id] as complete with the given
      * [output].
      */
-    @Query("UPDATE microtask_assignment SET " +
+    @Query(
+        "UPDATE microtask_assignment SET " +
             "status=:status, output=:output, last_updated_at=:date, completed_at=:date " +
-            "WHERE id=:id")
+            "WHERE id=:id"
+    )
     suspend fun markComplete(
         id: String,
         output: JsonObject,

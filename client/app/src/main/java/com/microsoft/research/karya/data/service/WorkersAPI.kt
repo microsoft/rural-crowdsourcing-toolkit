@@ -8,9 +8,13 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageS
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.data.remote.response.CreationCodeResponse
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface WorkersAPI {
     @GET("/worker/cc/{creation_code}")

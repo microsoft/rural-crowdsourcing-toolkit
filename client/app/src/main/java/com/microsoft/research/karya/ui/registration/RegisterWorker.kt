@@ -5,9 +5,9 @@ package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.ui.base.NetworkActivity
 import com.microsoft.research.karya.data.model.karya.AuthProviderType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
+import com.microsoft.research.karya.ui.base.NetworkActivity
 import com.microsoft.research.karya.ui.skillSpecification.SkillSpecification
 import com.microsoft.research.karya.utils.AppConstants
 

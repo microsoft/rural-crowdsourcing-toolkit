@@ -8,12 +8,11 @@
 package com.microsoft.research.karya.utils
 
 import com.microsoft.research.karya.utils.jtar.TarInputStream
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import okhttp3.ResponseBody
 import retrofit2.Response
+import java.io.BufferedInputStream
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.zip.GZIPInputStream
 
 object FileUtils {

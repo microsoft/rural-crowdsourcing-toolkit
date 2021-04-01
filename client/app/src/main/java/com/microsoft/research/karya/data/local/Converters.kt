@@ -8,7 +8,20 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import com.microsoft.research.karya.data.model.karya.*
+import com.microsoft.research.karya.data.model.karya.AssignmentGranularityType
+import com.microsoft.research.karya.data.model.karya.AssignmentOrderType
+import com.microsoft.research.karya.data.model.karya.AuthProviderType
+import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
+import com.microsoft.research.karya.data.model.karya.FileCreator
+import com.microsoft.research.karya.data.model.karya.LanguageResourceType
+import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.MicrotaskGroupAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.MicrotaskGroupStatus
+import com.microsoft.research.karya.data.model.karya.MicrotaskStatus
+import com.microsoft.research.karya.data.model.karya.PaymentRequestStatus
+import com.microsoft.research.karya.data.model.karya.PayoutInfoStatus
+import com.microsoft.research.karya.data.model.karya.TaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.TaskStatus
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.util.*
@@ -307,6 +320,7 @@ class Converters {
         val gson = Gson()
         return gson.toJson(list)
     }
+
     @TypeConverter
     fun fromStringToPaymentRequestStatus(value: String?): PaymentRequestStatus? {
         if (value == null) {

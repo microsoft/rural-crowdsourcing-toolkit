@@ -5,9 +5,9 @@ package com.microsoft.research.karya.ui.skillSpecification
 
 import android.content.Intent
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.ui.base.NetworkActivity
 import com.microsoft.research.karya.data.model.karya.WorkerLanguageSkillRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
+import com.microsoft.research.karya.ui.base.NetworkActivity
 import com.microsoft.research.karya.utils.AppConstants
 
 class RegisterSkill : NetworkActivity(

@@ -18,15 +18,13 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.model.karya.LanguageResourceRecord
-import com.microsoft.research.karya.data.model.karya.ScenarioRecord
-import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.data.manager.KaryaDatabase
+import com.microsoft.research.karya.data.manager.RetrofitFactory
 import com.microsoft.research.karya.data.model.*
 import com.microsoft.research.karya.data.model.karya.*
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
-import com.microsoft.research.karya.data.manager.RetrofitFactory
+import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
@@ -811,7 +809,7 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
             for (assignment in uploadedAssignments) {
                 val assignmentFiles = files.filter {
                     it.name.startsWith("${assignment.id}-") ||
-                            it.name.startsWith("${assignment.id}.")
+                        it.name.startsWith("${assignment.id}.")
                 }
                 assignmentFiles.forEach { if (it.exists()) it.delete() }
             }
@@ -868,19 +866,19 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
          */
         private suspend fun downloadFilesFromBox() {
             // If the file language resource is updated, download and extract it
-            val languageRecord = karyaDb.languageDao().getById(appLanguageId!!)
+            val languageRecord = karyaDb.languageDao().getById(appLanguageId)
 
             /** The following check depends on [thisWorker] not being updated by previous stages */
             if (languageRecord.lrv_file_id != null &&
                 languageRecord.last_updated_at > thisWorker.last_received_from_server_at
             ) {
                 val languageResourceFileResponse =
-                    karyaAPI.getFileLanguageResourceValuesByLanguageId(appLanguageId!!)
+                    karyaAPI.getFileLanguageResourceValuesByLanguageId(appLanguageId)
                 if (languageResourceFileResponse.isSuccessful) {
                     // The filepath is storing tar file
                     val filePath = getBlobPath(
                         BaseActivity.KaryaFileContainer.L_LRVS,
-                        appLanguageId!!.toString()
+                        appLanguageId.toString()
                     )
                     FileUtils.downloadFileToLocalPath(languageResourceFileResponse, filePath)
 

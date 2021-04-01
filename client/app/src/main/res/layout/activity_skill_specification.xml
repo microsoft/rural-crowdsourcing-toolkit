@@ -202,8 +202,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_30sdp">
+            android:layout_marginTop="@dimen/_30sdp"
+            android:paddingHorizontal="@dimen/_20sdp">
 
             <ImageButton
                 android:id="@+id/skillSpecBackIb"

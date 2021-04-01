@@ -14,7 +14,6 @@ import android.view.View
 import com.google.gson.Gson
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.modelsExtra.IDToken
-import java.lang.Exception
 import kotlinx.android.synthetic.main.activity_network_activity.*
 import kotlinx.coroutines.launch
 
