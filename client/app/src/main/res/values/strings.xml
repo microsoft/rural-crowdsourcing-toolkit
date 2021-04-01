@@ -1,7 +1,7 @@
 <resources><string name="s_project_name">Karya</string>
 <string name="s_no_internet_or_server_down">We are not able to reach our server. Please ensure you have internet turned on.</string>
 <string name="s_click_to_retry">Click this button to retry</string>
-<string name="s_unknown_error">Unknown error occured. Please close the application and open again. If error persists, contact your project coordinator</string>
+<string name="s_unknown_error">Unknown error occurred. Please close the application and open again. If error persists, contact your project coordinator</string>
 <string name="s_salutation">Hi</string>
 <string name="s_show_app_in_language">Show the app in English</string>
 <string name="s_prompt_for_language_select">To show app in English, press here</string>
@@ -51,12 +51,12 @@
 <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
 <string name="s_yes">Yes</string>
 <string name="s_no">No</string>
-<string name="s_scenario_name">Speech-data Collection</string>
-<string name="s_scenario_description">This task consists of a set of sentences. The worker is expected to record themselves reading out each sentence, one sentence at a time</string>
-<string name="s_scenario_name">Group Speech-data Collection</string>
-<string name="s_scenario_description">This task consists of a set of stories. The worker is expected to record themselves reading out each story, one sentence at a time</string>
-<string name="s_scenario_name">Verification of Speech Data Recordings</string>
-<string name="s_scenario_description">This task consists of a set of recordings. The worker is expected to verify the given recording and text.</string>
+<string name="s_speech_scenario_name">Speech-data Collection</string>
+<string name="s_speech_scenario_description">This task consists of a set of sentences. The worker is expected to record themselves reading out each sentence, one sentence at a time</string>
+<string name="s_story_scenario_name">Group Speech-data Collection</string>
+<string name="s_story_scenario_description">This task consists of a set of stories. The worker is expected to record themselves reading out each story, one sentence at a time</string>
+<string name="s_recording_scenario_name">Verification of Speech Data Recordings</string>
+<string name="s_recording_scenario_description">This task consists of a set of recordings. The worker is expected to verify the given recording and text.</string>
 <string name="s_record_sentence">You have to record yourself speaking out this sentence</string>
 <string name="s_record_action">To start recording, press this button. It will turn red indicating that the recording has started.</string>
 <string name="s_stop_action">Once you are done recording, press this button again to stop the recording</string>
