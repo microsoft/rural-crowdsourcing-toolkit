@@ -1,6 +1,8 @@
-private const val AGP_VERSION = "7.0.0-alpha08"
+private const val AGP_VERSION = "4.1.3"
 private const val ANDROIDX_HILT_VERSION = "1.0.0-alpha03"
+private const val CRASHLYTICS_VERSION = "2.5.2"
 private const val DAGGER_HILT_VERSION = "2.32-alpha"
+private const val GMS_VERSION = "4.3.5"
 private const val KOTLIN_VERSION = "1.4.30"
 private const val LINT_VERSION = "27.3.0-alpha04"
 
@@ -10,6 +12,8 @@ object Plugins {
     const val agpBuilder = "com.android.tools.build:builder:$AGP_VERSION"
     const val agpBuilderModel = "com.android.tools.build:builder-model:$AGP_VERSION"
     const val agpLintModel = "com.android.tools.lint:lint-model:$LINT_VERSION"
+    const val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:$CRASHLYTICS_VERSION"
+    const val gms = "com.google.gms:google-services:$GMS_VERSION"
     const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     const val hilt = "com.google.dagger:hilt-android-gradle-plugin:$DAGGER_HILT_VERSION"
 }
