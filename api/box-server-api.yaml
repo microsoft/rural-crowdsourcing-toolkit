@@ -1,0 +1,419 @@
+openapi: '3.0.2'
+info:
+  title: Karya Box Server API
+  description: This document describes the API between the Karya box server and
+    the android client.
+  license:
+    name: MIT
+  version: '1.0'
+
+servers:
+  - url: '/api/v1'
+
+paths:
+  /worker:
+    get:
+      description: Get a worker record. The worker can identify themselves using
+        their unique access code or the id token previously received from the
+        server.
+
+      responses:
+        200:
+          description: Authorized worker. Successfully retured worker record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worker'
+
+        401:
+          description: Invalid access code or id token.
+
+        404:
+          description: Access token already attached to another phone number.
+
+  /worker/{id}:
+    put:
+      description: Update information about worker. The worker can identify
+        themselves using their unique access code or the id token previously
+        received from the server. Depending on the identification mechanism and
+        the parameters, this request can trigger different types of actions.
+
+        If generate_otp = true, the phone number should be provided as part of
+        the request body. The server generates an OTP for the worker. The
+        identification mechanism will be the access code, if the request is
+        generated for the first time.
+
+        If verify_otp = true, the OTP should be provided as part of the header.
+        The server verifies the OTP and generates an ID token for the worker
+        that are used as part of subsequent requests.
+
+        If neither of the OTP parameters are true, this request updates the
+        "updatable" parameters of the worker, (e.g., gender, age group).
+
+      parameters:
+        - name: generate_otp
+          in: query
+          required: false
+          schema: { type: boolean }
+        - name: verify_otp
+          in: query
+          required: false
+          schema: { type: boolean }
+        - name: x-otp
+          in: header
+          required: false
+          schema: { type: string }
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Worker'
+
+      responses:
+        200:
+          description: Request executed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worker'
+
+        400:
+          description: Request did not have appropriate details.
+
+        401:
+          description: Invalid access code or id token.
+
+        404:
+          description: Access token already attached to another phone number.
+
+  /languages:
+    get:
+      description: Get all languages supported on the platform.
+
+      responses:
+        200:
+          description: Successfully sent list of languages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+
+        401:
+          description: Invalid access code or id token.
+
+  /karya_files:
+    post:
+      description: Upload a karya file to the server. This can be either an
+        output tar ball for an assignment or a log file.
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KaryaFile'
+          multipart/formdata:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+
+      responses:
+        200:
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KaryaFile'
+
+        400:
+          description: Invalid request
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+  /karya_file/{id}:
+    get:
+      description: Get a karya file from the server. This can be an input to a
+        microtask, or a language asset.
+
+      parameters:
+        - name: id
+          description: ID of the karya file
+          in: query
+          required: true
+          schema: { type: string }
+
+      responses:
+        200:
+          description: Successfully sent tar ball to the worker
+          content:
+            application/tgz:
+              schema:
+                type: string
+                format: binary
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+        404:
+          description: Could not find file with the given ID.
+
+  /assignments:
+    put:
+      description: Submit all completed and skipped assignments.
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MicrotaskAssignment'
+
+      responses:
+        200:
+          description: Successfully received all completed/skipped assignments.
+            Returns the IDs of all the received assignments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MicrotaskAssignment'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+    get:
+      description: Get assignments (new or verified) that were last updated
+        beyond the timestamp specified in the request.
+        For new assignments, the response includes all the microtask records and
+        the task information associated with the assignments.
+        For verified assignments, the response only includes the relevant
+        information from the list of assignments.
+
+      parameters:
+        - name: type
+          description: Type of assignments to get (new or verified)
+          in: query
+          required: true
+          schema: { type: string }
+
+        - name: from
+          description: ISO formatted timestamp describing the time from which
+            assignment updates should be collected
+          in: query
+          required: false
+          schema: { type: string }
+
+      responses:
+        200:
+          description: Successfully sent list of assignments to the worker.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Response to new assignments
+                    properties:
+                      assignments:
+                        type: array
+                        description: List of new assignments
+                        items:
+                          $ref: '#/components/schemas/MicrotaskAssignment'
+                      microtasks:
+                        type: array
+                        description: List of microtasks for the assignments
+                        items:
+                          $ref: '#/components/schemas/Microtask'
+                      tasks:
+                        type: array
+                        description: List of tasks for the microtasks
+                        items:
+                          $ref: '#/components/schemas/Task'
+
+                  - type: array
+                    description: Response to verified assignments
+                    items:
+                      $ref: '#/components/schemas/MicrotaskAssignment'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+  /payment_methods:
+    post:
+      description: Submit information for a new payment method for the worker.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentMethod'
+
+      responses:
+        200:
+          description: Successfully created a new payment method for the worker.
+            Returns the newly created record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+  /payment_method/{id}:
+    parameters:
+      - name: id
+        description: ID of the payment method
+        required: true
+        in: path
+        schema: { type: string }
+
+    get:
+      description: Get updated payment method record.
+      responses:
+        200:
+          description: Successfully sent the updated payment method record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+    put:
+      description: Update any updatable entries of payment method.
+      responses:
+        200:
+          description: Successfully sent the updated payment method record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+  /payments:
+    get:
+      description: Get all payments updated after the given timestamp.
+
+      parameters:
+        - name: from
+          required: true
+          description: Start timestamp for the payments
+          in: query
+          schema: { type: string }
+
+      responses:
+        200:
+          description: Successfully sent the list of payments made to the
+            worker.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+  /payments/{id}:
+    parameters:
+      - name: id
+        description: ID of the payment
+        required: true
+        in: path
+        schema: { type: string }
+
+    put:
+      description: Update the status of the payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+
+      responses:
+        200:
+          description: Successfully updated the payment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+        400:
+          description: Invalid request.
+
+        401:
+          description: Unauthorized request. Invalid id token.
+
+components:
+  schemas:
+    Worker:
+      type: object
+    Language:
+      type: object
+    KaryaFile:
+      type: object
+    MicrotaskAssignment:
+      type: object
+    Microtask:
+      type: object
+    Task:
+      type: object
+    PaymentMethod:
+      type: object
+    Payment:
+      type: object
+
+  securitySchemes:
+    access_code:
+      type: apiKey
+      name: x-access-code
+      description: Unique access code provided to each worker. This access code
+        can be used only once to associate a worker record with a specific phone
+        number. After that, this authentication method will be rejected by the
+        server.
+      in: header
+
+    id_token:
+      type: http
+      scheme: bearer
+      description: ID token generated by the server upon successful verification
+        of the OTP.
+
+security:
+  - access_code: []
+  - id_token: []
