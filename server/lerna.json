@@ -1,4 +1,4 @@
 {
-  "packages": ["db-schema", "backend", "box", "frontend", "utils/*", "common/*"],
+  "packages": ["backend", "box", "frontend", "utils/*", "common/*"],
   "version": "2.0.0"
 }
