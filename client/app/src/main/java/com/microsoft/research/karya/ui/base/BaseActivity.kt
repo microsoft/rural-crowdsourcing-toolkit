@@ -31,10 +31,7 @@ import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.ImageUtils
 import kotlinx.android.synthetic.main.app_toolbar.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -97,6 +94,11 @@ abstract class BaseActivity(
     override fun onResume() {
         super.onResume()
 
+        initialise()
+
+    }
+
+    fun initialise() {
         appLanguageChanged = false
 
         // Reset worker
@@ -128,7 +130,7 @@ abstract class BaseActivity(
         }
 
         // Update UI
-        uiScope.launch {
+        runBlocking {
             getStringsJob.join()
             if (appLanguageChanged) {
                 salutationTv.text = salutation
@@ -239,7 +241,7 @@ abstract class BaseActivity(
      * Get value from language resource using the resource Id and language Id
      * By value we mean what a particular word is known in a particular language
      */
-    protected suspend fun getValueFromName(@StringRes resId: Int, languageId: Int = appLanguageId!!): String {
+    suspend fun getValueFromName(@StringRes resId: Int, languageId: Int = appLanguageId!!): String {
         val name = getString(resId)
         val value = karyaDb.languageResourceValueDaoExtra().getValueFromName(languageId, name)
             .trim()  // getting language resource value
@@ -366,7 +368,7 @@ abstract class BaseActivity(
     /**
      * Hide the keyboard
      */
-    protected fun hideKeyboard() {
+    fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val view = currentFocus ?: View(this)
         imm.hideSoftInputFromWindow(view.windowToken, 0)

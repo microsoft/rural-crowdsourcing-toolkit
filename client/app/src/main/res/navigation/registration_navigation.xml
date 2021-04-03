@@ -9,5 +9,14 @@
         android:id="@+id/creationCodeFragment"
         android:name="com.microsoft.research.karya.ui.registration.CreationCodeFragment"
         android:label="CreationCodeFragment"
-        tools:layout="@layout/fragment_creation_code"/>
+        tools:layout="@layout/fragment_creation_code">
+        <action
+            android:id="@+id/action_creationCodeFragment_to_phoneNumberFragment"
+            app:destination="@id/phoneNumberFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/phoneNumberFragment"
+        android:name="com.microsoft.research.karya.ui.registration.PhoneNumberFragment"
+        android:label="PhoneNumberFragment"
+        tools:layout="@layout/fragment_phone_number"/>
 </navigation>

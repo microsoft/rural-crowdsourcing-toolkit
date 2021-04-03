@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
@@ -8,22 +5,55 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_phone_number.*
+import kotlinx.android.synthetic.main.fragment_phone_number.*
+import kotlinx.android.synthetic.main.fragment_phone_number.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private const val PHONE_NUMBER_LENGTH = 10
+class PhoneNumberFragment : Fragment() {
 
-class PhoneNumberActivity : BaseActivity(useAssistant = true) {
+    private val PHONE_NUMBER_LENGTH = 10
+    private lateinit var registrationActivity: RegistrationActivity
+    private lateinit var baseActivity: BaseActivity
 
-    /** Android strings */
-    private var phoneNumberPromptMessage: String = ""
+    protected val ioScope = CoroutineScope(Dispatchers.IO)
+    protected val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_phone_number)
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+
+        registrationActivity = activity as RegistrationActivity
+        baseActivity = activity as BaseActivity
+
+        /** Initialising Strings  **/
+        // TODO: Remove this implementation when we fetch strings from resource
+
+        val fragmentView = inflater.inflate(R.layout.fragment_phone_number, container, false)
+
+        fragmentView.phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
+
+        /** Inflating the layout for this fragment **/
+        return fragmentView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
+        phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
 
         /** Set the phone number font size to the same value as the phantom text view font size */
         phantomPhoneNumberTv.addOnLayoutChangeListener { _: View, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->
@@ -43,7 +73,7 @@ class PhoneNumberActivity : BaseActivity(useAssistant = true) {
                 }
             }
         })
-        requestSoftKeyFocus(phoneNumberEt)
+        baseActivity.requestSoftKeyFocus(phoneNumberEt)
 
         /** Phone number next button should not be clickable by default */
         phoneNumberNextIv.setOnClickListener {
@@ -51,28 +81,7 @@ class PhoneNumberActivity : BaseActivity(useAssistant = true) {
             handleNextClick()
         }
         phoneNumberNextIv.isClickable = false
-    }
 
-    /**
-     * Get strings for this activity
-     */
-    override suspend fun getStringsForActivity() {
-        phoneNumberPromptMessage = getValueFromName(R.string.phone_number_prompt)
-    }
-
-    /**
-     * Set initial UI strings for activity
-     */
-    override suspend fun setInitialUIStrings() {
-        phoneNumberPromptTv.text = phoneNumberPromptMessage
-    }
-
-    /**
-     * On assistant click, play the phone number prompt
-     */
-    override fun onAssistantClick() {
-        super.onAssistantClick()
-        playAssistantAudio(R.string.audio_phone_number_prompt)
     }
 
     /** Update UI when the phone number is ready */
@@ -92,11 +101,13 @@ class PhoneNumberActivity : BaseActivity(useAssistant = true) {
             phoneNumberNextIv.isClickable = false
         }
     }
-
     /** On next click, hide keyboard. Send request to send OTP to the phone number */
     private fun handleNextClick() {
-        hideKeyboard()
+        baseActivity.hideKeyboard()
         WorkerInformation.phone_number = phoneNumberEt.text.toString()
-        startActivity(Intent(applicationContext, SendOTPActivity::class.java))
+        startActivity(Intent(activity, SendOTPActivity::class.java))
     }
+
+
+
 }
