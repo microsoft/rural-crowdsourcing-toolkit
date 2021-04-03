@@ -10,7 +10,7 @@ import { TableRecordType, TableType } from './Common';
 import { tables } from './TableParser';
 
 /** Read the backend api specification */
-const apiFile = `${process.cwd()}/src/schema/backend-apis.yaml`;
+const apiFile = `${process.cwd()}/schema/backend-apis.yaml`;
 const apiData = fs.readFileSync(apiFile).toString();
 
 /** The API type information */

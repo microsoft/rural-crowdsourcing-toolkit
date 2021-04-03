@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as yaml from 'yaml';
 
 /** Read the data from the enum specification file */
-const enumFile = `${process.cwd()}/src/schema/enums.yaml`;
+const enumFile = `${process.cwd()}/schema/enums.yaml`;
 const enumData = fs.readFileSync(enumFile).toString();
 
 /** Extract the enum dictionary */

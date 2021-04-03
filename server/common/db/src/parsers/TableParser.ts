@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as yaml from 'yaml';
 
 /** Read the data from the table specification file */
-const tablesFile = `${process.cwd()}/src/schema/tables.yaml`;
+const tablesFile = `${process.cwd()}/schema/tables.yaml`;
 const tablesData = fs.readFileSync(tablesFile).toString();
 
 /** Parse the table information */
@@ -65,7 +65,8 @@ for (const table of tableNames) {
 
     const info: FieldInfo = { type: ftype, options: [] };
 
-    if (ftype == 'varchar') info.len = Number.parseInt(params.shift() as string, 10);
+    if (ftype == 'varchar')
+      info.len = Number.parseInt(params.shift() as string, 10);
     if (ftype == '>') {
       info.ref = params.shift() as string;
       // in case of self reference update the table prematurely to reflect keys

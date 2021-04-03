@@ -1,5 +1,5 @@
 {
-  "name": "@karya/db-schema",
+  "name": "@karya/db",
   "version": "2.0.0",
   "description": "Contains specification of Karya DB Schema, and appropriate parsers and generators",
   "private": true,
