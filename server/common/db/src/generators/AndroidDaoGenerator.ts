@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 import cc = require('camelcase');
 import * as fs from 'fs';
 import * as path from 'path';

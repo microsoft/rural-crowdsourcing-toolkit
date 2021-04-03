@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 /**
  * Generate the list of fields that can be provided as a filter on a GET query
  * to a table.

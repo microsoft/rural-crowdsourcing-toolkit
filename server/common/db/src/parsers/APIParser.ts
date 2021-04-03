@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 /**
  * Parse the backend apis specification and export objects that can be used by
  * the API generator

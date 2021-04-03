@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 import cc = require('camelcase');
 import prettier from 'prettier';
 

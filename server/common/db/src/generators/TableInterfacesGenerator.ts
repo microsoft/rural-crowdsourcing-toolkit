@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 /**
  * Generate the data for table interfaces file. This will be used in the backend
  * and the frontend.

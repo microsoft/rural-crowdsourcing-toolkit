@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 /**
  * Generate the data for the create table functions file. To be used by both the
  * backend and frontend.

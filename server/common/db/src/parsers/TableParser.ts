@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 /**
  * Parse the tables.yaml specification and export objects that can be used by
  * different generators
