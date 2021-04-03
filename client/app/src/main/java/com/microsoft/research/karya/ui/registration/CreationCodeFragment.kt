@@ -1,21 +1,30 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
-import kotlinx.android.synthetic.main.activity_creation_code.*
+import kotlinx.android.synthetic.main.fragment_creation_code.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+/**
+ * A simple [Fragment] subclass.
+ * Use the [CreationCodeFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+
 
 private const val CREATION_CODE_LENGTH = 16
 
-class CreationCodeActivity : BaseActivity(useAssistant = true) {
+class CreationCodeFragment : Fragment() {
 
     /** Compute creation code text box length based on the creation code length */
     private val creationCodeEtMax = CREATION_CODE_LENGTH + (CREATION_CODE_LENGTH - 1) / 4
@@ -25,10 +34,23 @@ class CreationCodeActivity : BaseActivity(useAssistant = true) {
     private var invalidCreationCodeMessage: String = ""
     private var creationCodeAlreadyUsedMessage: String = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_creation_code)
-        super.onCreate(savedInstanceState)
+    protected val ioScope = CoroutineScope(Dispatchers.IO)
+    protected val uiScope = CoroutineScope(Dispatchers.Main)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_creation_code, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         /** Set the creation code font size to the same value as the phantom text view font size */
         phantomCCTv.addOnLayoutChangeListener { _: View, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->
             creationCodeEt.setTextSize(TypedValue.COMPLEX_UNIT_PX, phantomCCTv.textSize)
@@ -50,37 +72,9 @@ class CreationCodeActivity : BaseActivity(useAssistant = true) {
                 }
             }
         })
-        requestSoftKeyFocus(creationCodeEt)
+        (activity as BaseActivity).requestSoftKeyFocus(creationCodeEt)
     }
 
-    /**
-     * On assistant click, play the access code prompt
-     */
-    override fun onAssistantClick() {
-        super.onAssistantClick()
-        playAssistantAudio(R.string.audio_access_code_prompt)
-    }
-
-    /**
-     * Get strings for this activity
-     */
-    override suspend fun getStringsForActivity() {
-        accessCodePromptMessage = getValueFromName(R.string.access_code_prompt)
-        invalidCreationCodeMessage = getValueFromName(R.string.invalid_creation_code)
-        creationCodeAlreadyUsedMessage = getValueFromName(R.string.creation_code_already_used)
-    }
-
-    /**
-     * Set the initial UI strings
-     */
-    override suspend fun setInitialUIStrings() {
-        creationCodePromptTv.text = accessCodePromptMessage
-    }
-
-    /**
-     * Handle full creation code entry by the user. Currently will automatically check if the
-     * creation code is valid by sending a request to the server
-     */
     private fun handleFullCreationCode() {
         creationCodeEt.isEnabled = false
         val creationCode = creationCodeEt.text.toString().replace("-", "")
@@ -98,6 +92,10 @@ class CreationCodeActivity : BaseActivity(useAssistant = true) {
      * Else set the error message appropriately.
      */
     private fun verifyCreationCode(creationCode: String) {
+
+        val baseActivity = activity as BaseActivity
+        val karyaAPI = baseActivity.karyaAPI
+
         ioScope.launch {
             val callForCreationCodeCheck = karyaAPI.checkCreationCode(creationCode)
             if (callForCreationCodeCheck.isSuccessful) {
@@ -109,7 +107,7 @@ class CreationCodeActivity : BaseActivity(useAssistant = true) {
                         creationCodeStatusIv.setImageResource(0)
                         creationCodeStatusIv.setImageResource(R.drawable.ic_baseline_check_circle_outline_24)
                         WorkerInformation.creation_code = creationCode
-                        startActivity(Intent(applicationContext, PhoneNumberActivity::class.java))
+                        startActivity(Intent(activity, PhoneNumberActivity::class.java))
                     }
                 } else {
                     uiScope.launch {
@@ -121,10 +119,11 @@ class CreationCodeActivity : BaseActivity(useAssistant = true) {
                         creationCodeStatusIv.setImageResource(0)
                         creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
                         creationCodeEt.isEnabled = true
-                        requestSoftKeyFocus(creationCodeEt)
+                        baseActivity.requestSoftKeyFocus(creationCodeEt)
                     }
                 }
             }
         }
     }
+
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.registration.CreationCodeActivity">
+
+    <include
+        android:id="@+id/appTb"
+        layout="@layout/app_toolbar" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/registration_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/registration_navigation"
+        app:layout_constraintTop_toBottomOf="@id/appTb" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

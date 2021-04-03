@@ -65,6 +65,10 @@ dependencies {
 
     implementation(Dependencies.AndroidX.Room.roomKtx)
     implementation(Dependencies.AndroidX.Room.roomRuntime)
+
+    implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
+    implementation(Dependencies.AndroidX.Navigation.uiKtx)
+
     kapt(Dependencies.AndroidX.Room.roomCompiler)
 
     implementation(Dependencies.Google.gson)
@@ -82,6 +86,8 @@ dependencies {
 
     implementation(Dependencies.ThirdParty.Retrofit.retrofit)
     implementation(Dependencies.ThirdParty.Retrofit.gsonConverter)
+
+
 
     debugImplementation(Dependencies.ThirdParty.debugDB)
 }

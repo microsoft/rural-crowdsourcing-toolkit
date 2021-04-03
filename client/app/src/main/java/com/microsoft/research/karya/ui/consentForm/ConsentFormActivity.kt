@@ -16,7 +16,7 @@ import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
-import com.microsoft.research.karya.ui.registration.CreationCodeActivity
+import com.microsoft.research.karya.ui.registration.RegistrationActivity
 import kotlinx.android.synthetic.main.activity_consent_form.*
 import kotlinx.coroutines.launch
 
@@ -84,6 +84,6 @@ class ConsentFormActivity : BaseActivity(useAssistant = true) {
      * Handler for agree button click. On agree, move to creation code activity
      */
     private fun onAgreeButtonClick() {
-        startActivity(Intent(applicationContext, CreationCodeActivity::class.java))
+        startActivity(Intent(applicationContext, RegistrationActivity::class.java))
     }
 }

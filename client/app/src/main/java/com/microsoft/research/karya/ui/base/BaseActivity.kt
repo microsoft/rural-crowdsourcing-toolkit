@@ -46,7 +46,7 @@ abstract class BaseActivity(
 
     /** Database and API service */
     protected lateinit var karyaDb: KaryaDatabase
-    protected lateinit var karyaAPI: KaryaAPIService
+    lateinit var karyaAPI: KaryaAPIService
 
     /** Player for assistant */
     private var assistantAvailable: Boolean = false
@@ -357,7 +357,7 @@ abstract class BaseActivity(
     /**
      * Request focus on a text field and show the keyboard
      */
-    protected fun requestSoftKeyFocus(eT: EditText) {
+    fun requestSoftKeyFocus(eT: EditText) {
         eT.requestFocus()
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(eT, InputMethodManager.SHOW_IMPLICIT)

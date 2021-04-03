@@ -65,6 +65,14 @@ object Dependencies {
             const val roomCompiler = "androidx.room:room-compiler:$version"
             const val roomKtx = "androidx.room:room-ktx:$version"
         }
+
+        object Navigation {
+            private const val version = "2.3.4"
+
+            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
+            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
+        }
+
     }
 
     object Google {
