@@ -6,7 +6,7 @@
 
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**
@@ -39,7 +39,7 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
 export async function updateRecordById(ctx: KaryaHTTPContext) {
   // extract table name, ID, and updates from context
   const tableName = ctx.state.tableName;
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
   const updates = ctx.request.body;
 
   // the match object is just the ID
@@ -67,7 +67,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
 export async function getRecordById(ctx: KaryaHTTPContext) {
   // extract table name and ID from the context
   const tableName = ctx.state.tableName;
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   // the match object is just the ID
   const match = { id };

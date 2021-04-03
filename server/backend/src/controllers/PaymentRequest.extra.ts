@@ -6,7 +6,7 @@
 import { knex } from '../db/Client';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 import {
@@ -28,8 +28,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     if (ctx.request.query.worker_id) {
       // create the worker filter
       const workerFilter: PayoutInfo = {
-        // @ts-ignore
-        worker_id: ctx.request.query.worker_id,
+        worker_id: ctx.request.query.worker_id as string,
       };
 
       // retrieve the records

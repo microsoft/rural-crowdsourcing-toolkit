@@ -16,7 +16,7 @@ import { taskLogger } from '../utils/Logger';
 import { scenarioMap } from '../scenarios/Index';
 
 import { TaskRecord } from '../db/TableInterfaces.auto';
-import { BlobParameters, getBlobName } from '../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 /**
  * Handler to approve a given task. Task approval involves the following
@@ -59,7 +59,7 @@ export async function approveTask(taskRecord: TaskRecord) {
   const taskTarFiles: string[] = [];
 
   // Perform necessary activity for each microtask group
-  await BBPromise.mapSeries(microtaskGroups, async microtaskGroup => {
+  await BBPromise.mapSeries(microtaskGroups, async (microtaskGroup) => {
     // extract info
     const { mg_info, microtasks } = microtaskGroup;
 
@@ -69,7 +69,7 @@ export async function approveTask(taskRecord: TaskRecord) {
     const group_id = groupRecord && groupRecord.id;
 
     // insert all microtasks
-    await BBPromise.mapSeries(microtasks, async microtask => {
+    await BBPromise.mapSeries(microtasks, async (microtask) => {
       // extract info
       const { m_info, files } = microtask;
 

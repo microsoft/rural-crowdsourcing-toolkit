@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 /**
  * This file was auto-generated using specs and scripts in the db-schema
  * repository. DO NOT EDIT DIRECTLY.
@@ -62,7 +59,7 @@ function computeIDTrigger(tableName: string) {
 
 export async function createLanguageTable() {
   await knex.schema.createTable('language', async (table) => {
-    table.integer('id').primary();
+    table.bigInteger('id').primary();
     table.specificType('name', 'VARCHAR(48)').unique().notNullable();
     table
       .specificType('primary_language_name', 'VARCHAR(48)')
@@ -91,7 +88,7 @@ export async function createLanguageTable() {
 
 export async function createScenarioTable() {
   await knex.schema.createTable('scenario', async (table) => {
-    table.integer('id').primary();
+    table.bigInteger('id').primary();
     table.specificType('name', 'VARCHAR(48)').unique().notNullable();
     table.specificType('full_name', 'VARCHAR(48)').unique().notNullable();
     table.text('description').notNullable();
@@ -123,11 +120,11 @@ export async function createScenarioTable() {
 
 export async function createLanguageResourceTable() {
   await knex.schema.createTable('language_resource', async (table) => {
-    table.integer('id').primary();
+    table.bigInteger('id').primary();
     table.boolean('core').notNullable().defaultTo(false);
-    table.integer('scenario_id');
+    table.bigInteger('scenario_id');
     table.foreign('scenario_id').references('scenario.id');
-    table.integer('string_resource_id');
+    table.bigInteger('string_resource_id');
     table.foreign('string_resource_id').references('language_resource.id');
     table.enu('type', ['string_resource', 'file_resource']).notNullable();
     table.boolean('list_resource').notNullable().defaultTo(false);
@@ -152,10 +149,10 @@ export async function createLanguageResourceTable() {
 
 export async function createLanguageResourceValueTable() {
   await knex.schema.createTable('language_resource_value', async (table) => {
-    table.integer('id').primary();
-    table.integer('language_id').notNullable();
+    table.bigInteger('id').primary();
+    table.bigInteger('language_id').notNullable();
     table.foreign('language_id').references('language.id');
-    table.integer('language_resource_id').notNullable();
+    table.bigInteger('language_resource_id').notNullable();
     table.foreign('language_resource_id').references('language_resource.id');
     table.text('value').notNullable();
     table.boolean('valid').notNullable().defaultTo(true);
@@ -176,7 +173,7 @@ export async function createLanguageResourceValueTable() {
 
 export async function createBoxTable() {
   await knex.schema.createTable('box', async (table) => {
-    table.integer('id').primary();
+    table.bigInteger('id').primary();
     table.specificType('creation_code', 'VARCHAR(64)').unique().notNullable();
     table.boolean('physical').notNullable().defaultTo(false);
     table.specificType('name', 'VARCHAR(48)').unique().notNullable();
@@ -211,7 +208,7 @@ export async function createWorkerTable() {
   await knex.schema.createTable('worker', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
     table.specificType('creation_code', 'VARCHAR(64)').unique().notNullable();
     table.enu('auth_provider', ['google_oauth', 'phone_otp']);
@@ -226,7 +223,7 @@ export async function createWorkerTable() {
     table.specificType('profile_picture', 'BYTEA');
     table.specificType('age', 'VARCHAR(8)');
     table.specificType('gender', 'VARCHAR(16)');
-    table.integer('app_language');
+    table.bigInteger('app_language');
     table.foreign('app_language').references('language.id');
     table
       .timestamp('last_sent_to_box_at', { useTz: true })
@@ -263,7 +260,7 @@ export async function createKaryaFileTable() {
   await knex.schema.createTable('karya_file', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id');
+    table.bigInteger('box_id');
     table.specificType('container_name', 'VARCHAR(64)').notNullable();
     table.specificType('name', 'VARCHAR(256)').notNullable();
     table.specificType('url', 'VARCHAR(256)');
@@ -292,10 +289,10 @@ export async function createKaryaFileTable() {
 export async function createTaskTable() {
   await knex.schema.createTable('task', async (table) => {
     table.bigInteger('id').primary();
-    table.integer('work_provider_id');
-    table.integer('language_id').notNullable();
+    table.bigInteger('work_provider_id');
+    table.bigInteger('language_id').notNullable();
     table.foreign('language_id').references('language.id');
-    table.integer('scenario_id').notNullable();
+    table.bigInteger('scenario_id').notNullable();
     table.foreign('scenario_id').references('scenario.id');
     table.specificType('name', 'VARCHAR(48)').notNullable();
     table.text('description').notNullable();
@@ -395,8 +392,8 @@ export async function createMicrotaskTable() {
 
 export async function createPolicyTable() {
   await knex.schema.createTable('policy', async (table) => {
-    table.integer('id').primary();
-    table.integer('scenario_id').notNullable();
+    table.bigInteger('id').primary();
+    table.bigInteger('scenario_id').notNullable();
     table.foreign('scenario_id').references('scenario.id');
     table.specificType('name', 'VARCHAR(48)').notNullable();
     table.text('description').notNullable();
@@ -419,9 +416,9 @@ export async function createTaskAssignmentTable() {
     table.bigInteger('id').primary();
     table.bigInteger('task_id').notNullable();
     table.foreign('task_id').references('task.id');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
-    table.integer('policy_id').notNullable();
+    table.bigInteger('policy_id').notNullable();
     table.foreign('policy_id').references('policy.id');
     table.timestamp('deadline', { useTz: true });
     table.enu('status', ['assigned', 'sent', 'completed']).notNullable();
@@ -443,11 +440,11 @@ export async function createWorkerLanguageSkillTable() {
   await knex.schema.createTable('worker_language_skill', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
     table.bigInteger('worker_id').notNullable();
     table.foreign('worker_id').references('worker.id');
-    table.integer('language_id').notNullable();
+    table.bigInteger('language_id').notNullable();
     table.foreign('language_id').references('language.id');
     table.boolean('can_speak').notNullable().defaultTo(false);
     table.boolean('can_type').notNullable().defaultTo(false);
@@ -476,7 +473,7 @@ export async function createMicrotaskGroupAssignmentTable() {
   await knex.schema.createTable('microtask_group_assignment', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
     table.bigInteger('microtask_group_id').notNullable();
     table.foreign('microtask_group_id').references('microtask_group.id');
@@ -504,7 +501,7 @@ export async function createMicrotaskAssignmentTable() {
   await knex.schema.createTable('microtask_assignment', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
     table.bigInteger('microtask_id').notNullable();
     table.foreign('microtask_id').references('microtask.id');
@@ -544,7 +541,7 @@ export async function createMicrotaskAssignmentTable() {
 
 export async function createPayoutMethodTable() {
   await knex.schema.createTable('payout_method', async (table) => {
-    table.integer('id').primary();
+    table.bigInteger('id').primary();
     table.specificType('name', 'VARCHAR(48)').unique().notNullable();
     table.text('description').notNullable();
     table.json('required_info').notNullable();
@@ -565,11 +562,11 @@ export async function createPayoutInfoTable() {
   await knex.schema.createTable('payout_info', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
     table.bigInteger('worker_id').notNullable();
     table.foreign('worker_id').references('worker.id');
-    table.integer('method_id').notNullable();
+    table.bigInteger('method_id').notNullable();
     table.foreign('method_id').references('payout_method.id');
     table.json('info').notNullable();
     table.enu('status', ['submitted', 'verified']).notNullable();
@@ -592,7 +589,7 @@ export async function createPaymentRequestTable() {
   await knex.schema.createTable('payment_request', async (table) => {
     table.bigInteger('id').primary();
     table.specificType('local_id', 'BIGSERIAL');
-    table.integer('box_id').notNullable();
+    table.bigInteger('box_id').notNullable();
     table.foreign('box_id').references('box.id');
     table.bigInteger('payout_info_id').notNullable();
     table.foreign('payout_info_id').references('payout_info.id');

@@ -9,8 +9,9 @@ import {
   WorkerRecord,
 } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
-import { getCreationCode } from '../utils/CreationCodeGenerator';
+import { getCreationCode } from '@karya/misc-utils';
 import logger from '../utils/Logger';
+import config from '../config/Index';
 
 export async function generateWorkerCCs(
   numCreationCodes: number,
@@ -33,7 +34,7 @@ export async function generateWorkerCCs(
     logger.error(`Unknown language code '${languageCode}'`);
   }
 
-  const params = tags ? { tags } : {}
+  const params = tags ? { tags } : {};
 
   // Repeat for num_cc times
   let continuousErrors = 0;
@@ -41,6 +42,7 @@ export async function generateWorkerCCs(
   while (newWorkers.length < numCreationCodes && continuousErrors < 3) {
     // Get a creation code
     const creationCode = getCreationCode({
+      length: config.creationCodeLength,
       numeric: true,
     });
 
@@ -105,17 +107,17 @@ export async function generateWorkerCCs(
     logger.info(`USAGE: ${process.argv[0]} ${process.argv[1]} <num-codes>`);
   }
 
-  let tags: string[] | undefined = process.argv[3]?.split(',')
+  let tags: string[] | undefined = process.argv[3]?.split(',');
   if (tags) {
     tags = tags.length == 0 ? undefined : tags;
   }
 
-  const languageCode = process.argv[4]
+  const languageCode = process.argv[4];
 
   const result = await generateWorkerCCs(numCreationCodes, tags, languageCode);
   return result;
 })()
-  .then(res => {
+  .then((res) => {
     if (res) {
       logger.info('Script completed successfully.');
     } else {

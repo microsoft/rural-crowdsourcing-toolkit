@@ -7,9 +7,10 @@
 import { Box } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import { getCreationCode } from '../utils/CreationCodeGenerator';
-import * as HttpResponse from '../utils/HttpResponse';
+import { getCreationCode } from '@karya/misc-utils';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
+import config from '../config/Index';
 
 /**
  * Creates a sample box with a new creation code and respond with the box record
@@ -24,7 +25,10 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     let creation_code = '';
     while (true) {
       try {
-        creation_code = getCreationCode();
+        creation_code = getCreationCode({
+          length: config.creationCodeLength,
+          numeric: false,
+        });
         await BasicModel.getSingle('box', { creation_code });
       } catch (e) {
         // Exception indicates that the creation code is already present

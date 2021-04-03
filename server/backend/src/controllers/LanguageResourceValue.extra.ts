@@ -7,7 +7,7 @@
 import { knex } from '../db/Client';
 import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 import {
@@ -35,8 +35,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     // check if there is a language_id filter
     const languageFilter: LanguageResourceValue = {};
     if (query.language_id) {
-      // @ts-ignore
-      languageFilter.language_id = query.language_id;
+      languageFilter.language_id = query.language_id as string;
     }
 
     // Check if there is a language resource filter
@@ -101,8 +100,7 @@ export async function createFileResourceValue(ctx: KaryaHTTPContext) {
   }
 
   // check if the file has an extension
-  // @ts-ignore
-  const ext = file.name.split('.').pop();
+  const ext = (file as unknown as File).name.split('.').pop();
   if (ext === undefined) {
     HttpResponse.BadRequest(
       ctx,
@@ -150,7 +148,7 @@ export async function createFileResourceValue(ctx: KaryaHTTPContext) {
 export async function updateFileResourceValue(ctx: KaryaHTTPContext) {
   // Extract updates and id from request
   const updates: LanguageResourceValue = JSON.parse(ctx.request.body.data);
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   // If no file attached return with error
   const file = ctx.request.files?.file;
@@ -160,8 +158,7 @@ export async function updateFileResourceValue(ctx: KaryaHTTPContext) {
   }
 
   // check if the file has an extension
-  // @ts-ignore
-  const ext = file.name.split('.').pop();
+  const ext = (file as unknown as File).name.split('.').pop();
   if (ext === undefined) {
     HttpResponse.BadRequest(
       ctx,

@@ -46,7 +46,7 @@ async function recreateAllTables() {
  */
 async function initializeLanguages() {
   logger.info(`Initializing language records`);
-  await BBPromise.mapSeries(languages, async language => {
+  await BBPromise.mapSeries(languages, async (language) => {
     try {
       await BasicModel.insertRecord('language', language);
     } catch (err) {
@@ -81,7 +81,7 @@ async function initializeCoreLRs() {
  * Function to initialize scenario language resources
  */
 async function initializeScenarioLRs() {
-  await BBPromise.mapSeries(Object.keys(scenarioMap), async scenario_name => {
+  await BBPromise.mapSeries(Object.keys(scenarioMap), async (scenario_name) => {
     logger.info(`Initializing resources for scenario '${scenario_name}'`);
     let scenarioLRs;
     try {
@@ -117,11 +117,11 @@ async function initializeScenarioLRs() {
  */
 async function insertLanguageResources(
   core: boolean,
-  scenario_id: number | null,
+  scenario_id: string | null,
   resources: ResourceSpec[],
 ) {
   // Initialize the resources for the scenario
-  await BBPromise.mapSeries(resources, async res => {
+  await BBPromise.mapSeries(resources, async (res) => {
     const strLR: LanguageResource = {
       core,
       scenario_id,
@@ -152,7 +152,7 @@ async function insertLanguageResources(
     }
 
     if (res.files) {
-      await BBPromise.mapSeries(res.files, async fLR => {
+      await BBPromise.mapSeries(res.files, async (fLR) => {
         const fileLR: LanguageResource = {
           core,
           scenario_id,
@@ -225,7 +225,7 @@ let scriptSequence = [
 
   setupDBConnection();
 
-  await BBPromise.mapSeries(scriptSequence, async action => {
+  await BBPromise.mapSeries(scriptSequence, async (action) => {
     switch (action) {
       case 'recreate-tables':
         await recreateAllTables();

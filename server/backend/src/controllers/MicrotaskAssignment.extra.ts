@@ -16,7 +16,7 @@ import {
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import { getBlobSASURL } from '../utils/AzureBlob';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**
@@ -34,15 +34,14 @@ export async function getRecords(ctx: KaryaHTTPContext) {
       }
     });
 
-    // @ts-ignore
-    const limit: number = ctx.request.query['limit'];
+    const limit = ctx.request.query['limit'] as string;
     let records: MicrotaskAssignmentRecord[];
     if (limit) {
       records = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
         .select()
         .where(microtaskAssignmentFilter)
         .orderBy('completed_at')
-        .limit(limit);
+        .limit(Number.parseInt(limit, 10));
     } else {
       records = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
         .select()

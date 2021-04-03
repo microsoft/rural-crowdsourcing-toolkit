@@ -64,7 +64,7 @@ export type SpeechDataTask = TaskRecord & {
     needVerification: boolean;
 
     // dynamic params
-    verificationTaskId: number;
+    verificationTaskId: string;
     outputFiles: Array<
       [string, 'generating' | 'failed' | 'generated' | 'none', string | null]
     >;

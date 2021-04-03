@@ -9,49 +9,50 @@
 export type BlobParameters =
   | {
       cname: 'lang-res';
-      language_resource_id: number;
-      language_id: number;
+      language_resource_id: string;
+      language_id: string;
       ext: string;
     }
   | {
       cname: 'l-lrvs';
-      language_id: number;
+      language_id: string;
       ext: 'tar';
     }
   | {
       cname: 'lr-lrvs';
-      language_resource_id: number;
+      language_resource_id: string;
       ext: 'tar';
     }
   | {
       cname: 'task-params';
-      task_id: number;
+      task_id: string;
       param_id: string;
       ext: string;
     }
   | {
       cname: 'task-input';
-      task_id: number;
+      task_id: string;
       ext: string;
     }
   | {
       cname: 'task-output';
-      task_id: number;
-      ext: 'tar';
+      task_id: string;
+      timestamp: string;
+      ext: 'tgz';
     }
   | {
       cname: 'microtask-input';
-      microtask_id: number;
+      microtask_id: string;
       ext: string;
     }
   | {
       cname: 'microtask-assignment-output';
-      microtask_assignment_id: number;
+      microtask_assignment_id: string;
       ext: 'tgz';
     }
   | {
       cname: 'box-logs';
-      box_id: number;
+      box_id: string;
       timestamp: string;
       ext: 'gz';
     }
@@ -62,7 +63,7 @@ export type BlobParameters =
     }
   | {
       cname: 'worker-logs';
-      worker_id: number;
+      worker_id: string;
       timestamp: string;
       ext: 'gz';
     };
@@ -100,7 +101,7 @@ export function getBlobName(params: BlobParameters): string {
     case 'task-input':
       return `${params.task_id}.${params.ext}`;
     case 'task-output':
-      return `${params.task_id}.${params.ext}`;
+      return `${params.task_id}-${params.timestamp}.${params.ext}`;
     case 'microtask-input':
       return `${params.microtask_id}.${params.ext}`;
     case 'microtask-assignment-output':

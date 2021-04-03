@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 /**
  * This file was auto-generated using specs and scripts in the db-schema
  * repository. DO NOT EDIT DIRECTLY.
@@ -60,7 +57,7 @@ export type ChecksumAlgorithm = 'md5';
 export type AuthProviderType = 'google_oauth' | 'phone_otp';
 
 export type LanguageRecord = {
-  id: number;
+  id: string;
   name: string;
   primary_language_name: string;
   locale: string;
@@ -70,14 +67,14 @@ export type LanguageRecord = {
   file_support: boolean;
   list_support: boolean;
   update_lrv_file: boolean;
-  lrv_file_id: number | null;
+  lrv_file_id: string | null;
   params: object;
   created_at: string;
   last_updated_at: string;
 };
 
 export type ScenarioRecord = {
-  id: number;
+  id: string;
   name: string;
   full_name: string;
   description: string;
@@ -94,26 +91,26 @@ export type ScenarioRecord = {
 };
 
 export type LanguageResourceRecord = {
-  id: number;
+  id: string;
   core: boolean;
-  scenario_id: number | null;
-  string_resource_id: number | null;
+  scenario_id: string | null;
+  string_resource_id: string | null;
   type: LanguageResourceType;
   list_resource: boolean;
   name: string;
   description: string;
   required: boolean;
   update_lrv_file: boolean;
-  lrv_file_id: number | null;
+  lrv_file_id: string | null;
   params: object;
   created_at: string;
   last_updated_at: string;
 };
 
 export type LanguageResourceValueRecord = {
-  id: number;
-  language_id: number;
-  language_resource_id: number;
+  id: string;
+  language_id: string;
+  language_resource_id: string;
   value: string;
   valid: boolean;
   need_update: boolean;
@@ -123,7 +120,7 @@ export type LanguageResourceValueRecord = {
 };
 
 export type BoxRecord = {
-  id: number;
+  id: string;
   creation_code: string;
   physical: boolean;
   name: string;
@@ -141,9 +138,9 @@ export type BoxRecord = {
 };
 
 export type WorkerRecord = {
-  id: number;
-  local_id: number;
-  box_id: number;
+  id: string;
+  local_id: string;
+  box_id: string;
   creation_code: string;
   auth_provider: AuthProviderType | null;
   username: string | null;
@@ -157,7 +154,7 @@ export type WorkerRecord = {
   profile_picture: string | null;
   age: string | null;
   gender: string | null;
-  app_language: number | null;
+  app_language: string | null;
   last_sent_to_box_at: string;
   last_received_from_box_at: string;
   last_sent_to_server_at: string;
@@ -168,14 +165,14 @@ export type WorkerRecord = {
 };
 
 export type KaryaFileRecord = {
-  id: number;
-  local_id: number;
-  box_id: number | null;
+  id: string;
+  local_id: string;
+  box_id: string | null;
   container_name: string;
   name: string;
   url: string | null;
   creator: FileCreator;
-  worker_id: number | null;
+  worker_id: string | null;
   algorithm: ChecksumAlgorithm;
   checksum: string;
   in_box: boolean;
@@ -186,10 +183,10 @@ export type KaryaFileRecord = {
 };
 
 export type TaskRecord = {
-  id: number;
-  work_provider_id: number;
-  language_id: number;
-  scenario_id: number;
+  id: string;
+  work_provider_id: string;
+  language_id: string;
+  scenario_id: string;
   name: string;
   description: string;
   primary_language_name: string;
@@ -197,8 +194,8 @@ export type TaskRecord = {
   params: object;
   errors: object;
   actions: object;
-  input_file_id: number | null;
-  output_file_id: number | null;
+  input_file_id: string | null;
+  output_file_id: string | null;
   budget: number | null;
   deadline: string | null;
   assignment_granularity: AssignmentGranularityType;
@@ -210,8 +207,8 @@ export type TaskRecord = {
 };
 
 export type MicrotaskGroupRecord = {
-  id: number;
-  task_id: number;
+  id: string;
+  task_id: string;
   microtask_assignment_order: AssignmentOrderType;
   status: MicrotaskGroupStatus;
   params: object;
@@ -220,11 +217,11 @@ export type MicrotaskGroupRecord = {
 };
 
 export type MicrotaskRecord = {
-  id: number;
-  task_id: number;
-  group_id: number | null;
+  id: string;
+  task_id: string;
+  group_id: string | null;
   input: object;
-  input_file_id: number | null;
+  input_file_id: string | null;
   deadline: string | null;
   credits: number;
   status: MicrotaskStatus;
@@ -235,8 +232,8 @@ export type MicrotaskRecord = {
 };
 
 export type PolicyRecord = {
-  id: number;
-  scenario_id: number;
+  id: string;
+  scenario_id: string;
   name: string;
   description: string;
   params: object;
@@ -245,10 +242,10 @@ export type PolicyRecord = {
 };
 
 export type TaskAssignmentRecord = {
-  id: number;
-  task_id: number;
-  box_id: number;
-  policy_id: number;
+  id: string;
+  task_id: string;
+  box_id: string;
+  policy_id: string;
   deadline: string | null;
   status: TaskAssignmentStatus;
   params: object;
@@ -257,11 +254,11 @@ export type TaskAssignmentRecord = {
 };
 
 export type WorkerLanguageSkillRecord = {
-  id: number;
-  local_id: number;
-  box_id: number;
-  worker_id: number;
-  language_id: number;
+  id: string;
+  local_id: string;
+  box_id: string;
+  worker_id: string;
+  language_id: string;
   can_speak: boolean;
   can_type: boolean;
   can_read: boolean;
@@ -276,11 +273,11 @@ export type WorkerLanguageSkillRecord = {
 };
 
 export type MicrotaskGroupAssignmentRecord = {
-  id: number;
-  local_id: number;
-  box_id: number;
-  microtask_group_id: number;
-  worker_id: number;
+  id: string;
+  local_id: string;
+  box_id: string;
+  microtask_group_id: string;
+  worker_id: string;
   status: MicrotaskGroupAssignmentStatus;
   params: object;
   created_at: string;
@@ -288,16 +285,16 @@ export type MicrotaskGroupAssignmentRecord = {
 };
 
 export type MicrotaskAssignmentRecord = {
-  id: number;
-  local_id: number;
-  box_id: number;
-  microtask_id: number;
-  worker_id: number;
+  id: string;
+  local_id: string;
+  box_id: string;
+  microtask_id: string;
+  worker_id: string;
   deadline: string | null;
   status: MicrotaskAssignmentStatus;
   completed_at: string | null;
   output: object;
-  output_file_id: number | null;
+  output_file_id: string | null;
   credits: number | null;
   params: object;
   created_at: string;
@@ -305,7 +302,7 @@ export type MicrotaskAssignmentRecord = {
 };
 
 export type PayoutMethodRecord = {
-  id: number;
+  id: string;
   name: string;
   description: string;
   required_info: object;
@@ -315,11 +312,11 @@ export type PayoutMethodRecord = {
 };
 
 export type PayoutInfoRecord = {
-  id: number;
-  local_id: number;
-  box_id: number;
-  worker_id: number;
-  method_id: number;
+  id: string;
+  local_id: string;
+  box_id: string;
+  worker_id: string;
+  method_id: string;
   info: object;
   status: PayoutInfoStatus;
   enabled: boolean;
@@ -329,10 +326,10 @@ export type PayoutInfoRecord = {
 };
 
 export type PaymentRequestRecord = {
-  id: number;
-  local_id: number;
-  box_id: number;
-  payout_info_id: number;
+  id: string;
+  local_id: string;
+  box_id: string;
+  payout_info_id: string;
   amount: number;
   status: PaymentRequestStatus;
   reference: string | null;

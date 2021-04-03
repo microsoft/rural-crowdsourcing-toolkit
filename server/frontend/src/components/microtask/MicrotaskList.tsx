@@ -26,7 +26,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const task_id = Number.parseInt(ownProps.match.params.task_id, 10);
   const { data, ...request } = state.all.microtask;
   return {
-    // @ts-ignore
+    @ts-ignore
     microtasks: data.filter((m) => Number.parseInt(m.task_id, 10) === task_id),
     request,
   };

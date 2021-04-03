@@ -12,7 +12,7 @@ import {
   KaryaFileRecord,
 } from '../db/TableInterfaces.auto';
 import { uploadBlobFromFile } from '../utils/AzureBlob';
-import { BlobParameters, getBlobName } from '../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 import * as BasicModel from './BasicModel';
 
 /**
@@ -29,7 +29,7 @@ export async function upsertKaryaFile(
   path: string,
   csAlgo: ChecksumAlgorithm,
   blobParams: BlobParameters,
-  currentFileID?: number | null,
+  currentFileID?: string | null,
 ): Promise<KaryaFileRecord> {
   // Upload file to blob store
   const blobName = getBlobName(blobParams);

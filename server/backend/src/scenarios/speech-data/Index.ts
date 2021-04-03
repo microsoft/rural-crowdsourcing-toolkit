@@ -22,10 +22,10 @@ import {
   MicrotaskRecord,
 } from '../../db/TableInterfaces.auto';
 import { knex } from '../../db/Client';
-import { BlobParameters, getBlobName } from '../../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 import config from '../../config/Index';
 import { downloadBlob } from '../../utils/AzureBlob';
-import { gunzipFile } from '../../utils/CompressTools';
+import { gunzipFile } from '@karya/compression';
 import { upsertKaryaFile } from '../../models/KaryaFileModel';
 import { taskLogger } from '../../utils/Logger';
 
@@ -194,7 +194,7 @@ async function outputGenerator(task: SpeechDataTask) {
   const files: string[] = [];
 
   // For each assignment,
-  await BBPromise.map(mtas, async mta => {
+  await BBPromise.map(mtas, async (mta) => {
     try {
       // get the microtask record
       const mt = await BasicModel.getSingle('microtask', {
@@ -259,7 +259,7 @@ async function outputGenerator(task: SpeechDataTask) {
 
   // Delete all unnecessary files
   try {
-    await BBPromise.map(files, f => fsp.unlink(`${outputFolderPath}/${f}`));
+    await BBPromise.map(files, (f) => fsp.unlink(`${outputFolderPath}/${f}`));
     await fsp.rmdir(outputFolderPath);
     await fsp.unlink(outputTgzPath);
   } catch (e) {}

@@ -2,12 +2,7 @@
 // Licensed under the MIT license.
 
 // Helper functions to set different http response
-
-import config from '../config/Index';
-import { KaryaHTTPContext } from '../controllers/KoaContextType';
-
-import { isArray } from 'util';
-import { ErrorBody } from './HttpResponseTypes';
+import { ExtendableContext } from 'koa';
 
 /**
  * All functions here, take the Koa request context as the first argument and
@@ -15,10 +10,18 @@ import { ErrorBody } from './HttpResponseTypes';
  */
 
 /**
+ * Type definition of the error body in case of a non-OK response.
+ */
+export type ErrorBody = {
+  title: string;
+  messages: string[];
+};
+
+/**
  * Set OK response
  * @param data Response object in case of a successful response
  */
-export function OK(ctx: KaryaHTTPContext, data: object) {
+export function OK(ctx: ExtendableContext, data: object) {
   ctx.status = 200;
   ctx.set('Content-type', 'application/json; charset=UTF-8;');
   ctx.body = data;
@@ -28,7 +31,7 @@ export function OK(ctx: KaryaHTTPContext, data: object) {
  * Set Bad Request response
  * @param messages List of error messages
  */
-export function BadRequest(ctx: KaryaHTTPContext, messages: string | string[]) {
+export function BadRequest(ctx: ExtendableContext, messages: string | string[]) {
   GenericError(ctx, messages, 400, 'Bad request');
 }
 
@@ -36,10 +39,7 @@ export function BadRequest(ctx: KaryaHTTPContext, messages: string | string[]) {
  * Set Unauthorized access response
  * @param messages List of error messages
  */
-export function Unauthorized(
-  ctx: KaryaHTTPContext,
-  messages: string | string[],
-) {
+export function Unauthorized(ctx: ExtendableContext, messages: string | string[]) {
   GenericError(ctx, messages, 401, 'Authentication failed');
 }
 
@@ -47,7 +47,7 @@ export function Unauthorized(
  * Set Forbidden access response
  * @param messages List of error messages
  */
-export function Forbidden(ctx: KaryaHTTPContext, messages: string | string[]) {
+export function Forbidden(ctx: ExtendableContext, messages: string | string[]) {
   GenericError(ctx, messages, 403, 'Access to resource forbidden');
 }
 
@@ -55,7 +55,7 @@ export function Forbidden(ctx: KaryaHTTPContext, messages: string | string[]) {
  * Set Not found access response
  * @param messages List of error messages
  */
-export function NotFound(ctx: KaryaHTTPContext, messages: string | string[]) {
+export function NotFound(ctx: ExtendableContext, messages: string | string[]) {
   GenericError(ctx, messages, 404, 'Resource not found');
 }
 
@@ -63,10 +63,7 @@ export function NotFound(ctx: KaryaHTTPContext, messages: string | string[]) {
  * Set Unavailable access response
  * @param messages List of error messages
  */
-export function Unavailable(
-  ctx: KaryaHTTPContext,
-  messages: string | string[],
-) {
+export function Unavailable(ctx: ExtendableContext, messages: string | string[]) {
   GenericError(ctx, messages, 503, 'Resource not available');
 }
 
@@ -77,12 +74,12 @@ export function Unavailable(
  * @param title Short title for the message
  */
 export function GenericError(
-  ctx: KaryaHTTPContext,
+  ctx: ExtendableContext,
   messages: string | string[],
   status = 400,
-  title = 'Unknown error',
+  title = 'Unknown error'
 ) {
-  const errorBody: ErrorBody = isArray(messages)
+  const errorBody: ErrorBody = Array.isArray(messages)
     ? {
         title,
         messages,
@@ -99,28 +96,3 @@ export type ResponseBody = {
   data: object | null;
   message: string;
 };
-
-/**
- * Set HTTP Response with the given parameters. Since the server is sending the
- * response without any error, the response status is always set to 200. The
- * success field represents the status of the requested operation. This
- * mechanism may have to be revisited if the handling mechanism changes in the
- * frontend.
- *
- * @param ctx koa context
- * @param success Was the request completed successfully
- * @param message Message in case of failed request
- * @param data Data to be sent back to the client
- */
-/*export function set(
-  ctx: KaryaHTTPContext,
-  success: boolean,
-  message: string,
-  data: object | null,
-) {
-  const body: ResponseBody = { success, data, message };
-
-  ctx.status = 200;
-  ctx.set('Content-type', 'application/json; charset=UTF-8;');
-  ctx.body = body;
-}*/

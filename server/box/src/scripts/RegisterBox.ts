@@ -3,10 +3,10 @@
 
 import axios from 'axios';
 import * as fs from 'fs';
-import { boxInfo } from '../config/BoxInfo'
+import { boxInfo } from '../config/BoxInfo';
 import config from '../config/Index';
 import { knex } from '../db/Client';
-import { Box, BoxRecord } from '../db/TableInterfaces.auto';
+import { BoxRecord } from '../db/TableInterfaces.auto';
 import logger from '../utils/Logger';
 
 /**
@@ -52,14 +52,12 @@ async function runScript() {
   const box = await registerBoxWithServer();
 
   const boxRecord = (
-    await knex<BoxRecord>('box')
-      .insert(box)
-      .returning('*')
+    await knex<BoxRecord>('box').insert(box).returning('*')
   )[0];
 
   fs.writeFileSync(
     `${process.cwd()}/src/config/box_id.ts`,
-    `export default ${boxRecord.id};`,
+    `export default '${boxRecord.id}';`,
   );
   logger.info('Successfully inserted box into local DB');
 }
@@ -68,7 +66,7 @@ runScript()
   .then(() => {
     logger.info('Script completed successfully.');
   })
-  .catch(res => {
+  .catch((res) => {
     logger.error(res);
     logger.error('Script failed');
   })

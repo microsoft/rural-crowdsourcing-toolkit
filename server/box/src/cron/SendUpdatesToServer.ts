@@ -14,7 +14,7 @@ import {
 } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
 import { TableUpdates } from '../models/DbUpdatesModel';
-import { compress } from '../utils/CompressTools';
+import { compress } from '@karya/compression';
 import logger from '../utils/Logger';
 import { BackendFetch } from './HttpUtils';
 
@@ -34,7 +34,7 @@ export async function sendUpdatesToServer(sendTime: string) {
       'payout_info',
       'payment_request',
     ];
-    await BBPromise.mapSeries(payoutTables, async tableName => {
+    await BBPromise.mapSeries(payoutTables, async (tableName) => {
       const rows = await BasicModel.getCreatedSince(tableName, lastSentAt, {
         box_id,
       });
@@ -50,7 +50,7 @@ export async function sendUpdatesToServer(sendTime: string) {
       'microtask_group_assignment',
       'microtask_assignment',
     ];
-    await BBPromise.mapSeries(remainingTables, async tableName => {
+    await BBPromise.mapSeries(remainingTables, async (tableName) => {
       const rows = await BasicModel.getUpdatesSince(
         tableName,
         lastSentAt,
@@ -75,7 +75,7 @@ export async function sendUpdatesToServer(sendTime: string) {
     ];
 
     // Push all updates
-    tableList.forEach(tableName => {
+    tableList.forEach((tableName) => {
       const rows = updateMap[tableName];
       if (rows && rows.length > 0) {
         updates.push({ tableName, rows });

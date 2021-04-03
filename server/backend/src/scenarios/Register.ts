@@ -78,7 +78,7 @@ export async function registerScenarios() {
     if (scenario.name in dbRecordMap) {
       // Scenario is already in the database. Check if it needs to be updated
       const dbRecord = dbRecordMap[scenario.name];
-      scenarioById[dbRecord.id] = scenario;
+      scenarioById[Number.parseInt(dbRecord.id, 10)] = scenario;
 
       // Extract the last updated time for the scenario description file
       const scenarioDescriptionFile = `${process.cwd()}/src/scenarios/${
@@ -170,7 +170,7 @@ export async function registerScenarios() {
           'scenario',
           newScenarioObject,
         );
-        scenarioById[dbRecord.id] = scenario;
+        scenarioById[Number.parseInt(dbRecord.id, 10)] = scenario;
         logger.info(`Inserted scenario '${scenario.name}' into the DB`);
 
         // Insert the language resource records
@@ -211,11 +211,11 @@ export async function registerScenarios() {
   }
 }
 
-async function createScenarioPolicies(scenario: IScenario, scenarioId: number) {
+async function createScenarioPolicies(scenario: IScenario, scenarioId: string) {
   const policies: IPolicy[] = scenario.policies;
   let success = true;
   await bbPromise
-    .map(policies, async policy => {
+    .map(policies, async (policy) => {
       const policyObject: Policy = {
         name: policy.name,
         description: policy.description,
@@ -224,7 +224,7 @@ async function createScenarioPolicies(scenario: IScenario, scenarioId: number) {
       };
       await BasicModel.insertRecord('policy', policyObject);
     })
-    .catch(err => {
+    .catch((err) => {
       success = false;
     });
   return success;
@@ -232,12 +232,12 @@ async function createScenarioPolicies(scenario: IScenario, scenarioId: number) {
 
 async function updateScenarioPolicies(
   scenario: IScenario,
-  scenario_id: number,
+  scenario_id: string,
 ) {
   const policies: IPolicy[] = scenario.policies;
   let success = true;
   await bbPromise
-    .map(policies, async policy => {
+    .map(policies, async (policy) => {
       const updatedPolicyObject: Policy = {
         name: policy.name,
         description: policy.description,
@@ -250,7 +250,7 @@ async function updateScenarioPolicies(
         updatedPolicyObject,
       );
     })
-    .catch(err => {
+    .catch((err) => {
       success = false;
     });
   return success;

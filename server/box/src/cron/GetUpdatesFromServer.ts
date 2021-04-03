@@ -8,7 +8,7 @@
 import { this_box } from '../config/ThisBox';
 import { DbTableName } from '../db/TableInterfaces.auto';
 import { applyUpdatesFromServer, TableUpdates } from '../models/DbUpdatesModel';
-import { decompress } from '../utils/CompressTools';
+import { decompress } from '@karya/compression';
 import logger from '../utils/Logger';
 import { GET } from './HttpUtils';
 

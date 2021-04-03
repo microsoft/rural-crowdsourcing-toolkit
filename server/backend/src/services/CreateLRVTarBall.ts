@@ -20,7 +20,7 @@ import * as BasicModel from '../models/BasicModel';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 
 import { downloadBlob, getParts as getBlobParts } from '../utils/AzureBlob';
-import { BlobParameters, getBlobName } from '../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 import config from '../config/Index';
 import logger from '../utils/Logger';
@@ -41,7 +41,7 @@ export async function createLanguageLRVTarBall(language: LanguageRecord) {
   const lrRecords = await BasicModel.getRecords('language_resource', {
     type: 'file_resource',
   });
-  const fileLRIDs = lrRecords.map(lr => lr.id);
+  const fileLRIDs = lrRecords.map((lr) => lr.id);
 
   // Get all valid file language resource values for the specific language
   const lrvRecords = await BasicModel.getRecordsWhereIn(
@@ -137,7 +137,7 @@ async function createUpdateLRVTarBall(
   lrvRecords: LanguageResourceValueRecord[],
   folder: string,
   blobParams: BlobParameters,
-  currentFileID: number | null,
+  currentFileID: string | null,
 ): Promise<KaryaFileRecord | null> {
   // Create the folder
   try {
@@ -148,7 +148,7 @@ async function createUpdateLRVTarBall(
   }
 
   // Download all the LRV files into the language folder
-  const files = await BBPromise.map(lrvRecords, async lrv => {
+  const files = await BBPromise.map(lrvRecords, async (lrv) => {
     const blobURL = lrv.value;
     const { blobName } = getBlobParts(blobURL);
     const filepath = `${folder}/${blobName}`;

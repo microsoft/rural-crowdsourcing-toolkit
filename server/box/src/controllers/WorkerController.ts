@@ -10,7 +10,7 @@ import config from '../config/Index';
 import { Worker, WorkerRecord } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import logger, { requestLogger } from '../utils/Logger';
 import { KaryaHTTPContext } from './KoaContextType';
 

@@ -11,7 +11,7 @@ import {
   WorkerRecord,
 } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { requestLogger } from '../utils/Logger';
 
 /**
@@ -62,8 +62,7 @@ export const authenticateUser: KaryaMiddleware = async (ctx, next) => {
   if (header['auth-provider']) {
     // @ts-ignore
     authProvider = header['auth-provider'];
-    // @ts-ignore
-    idToken = header['id-token'];
+    idToken = header['id-token'] as string;
   } else {
     // no authentication information; Return immediately
     HttpResponse.BadRequest(ctx, ['Missing authenticaton information']);

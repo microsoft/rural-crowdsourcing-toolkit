@@ -19,7 +19,7 @@ let authHeader: {
 export async function SetBox() {
   this_box = await BasicModel.getSingle('box', { id: box_id });
   authHeader = {
-    'box-id': this_box.id.toString(),
+    'box-id': this_box.id,
     'id-token': this_box.key as string,
   };
 }

@@ -10,7 +10,11 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@karya/blobstore": "^2.0.0",
+    "@karya/compression": "^2.0.0",
+    "@karya/http-response": "^2.0.0",
     "@karya/logger": "^2.0.0",
+    "@karya/misc-utils": "^2.0.0",
     "@koa/cors": "^2.2.2",
     "axios": "^0.21.1",
     "bluebird": "^3.5.5",

@@ -14,7 +14,7 @@ import {
   WorkerUpdatableTables,
 } from '../models/DbUpdatesModel';
 import { assignMicrotasksForWorker } from '../scenarios/AssignmentService';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import logger, { requestLogger } from '../utils/Logger';
 import { KaryaHTTPContext } from './KoaContextType';
 

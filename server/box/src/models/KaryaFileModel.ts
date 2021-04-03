@@ -15,7 +15,7 @@ import {
   KaryaFileRecord,
 } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
-import { BlobParameters, getBlobName } from '../utils/BlobContainers';
+import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 /**
  * Insert a karya file created by the worker.
@@ -24,7 +24,7 @@ import { BlobParameters, getBlobName } from '../utils/BlobContainers';
  * @param filepath Path of the file to be uploaded
  */
 export async function insertWorkerFile(
-  worker_id: number,
+  worker_id: string,
   karyaFile: KaryaFile,
   blobParams: BlobParameters,
   filepath: string,

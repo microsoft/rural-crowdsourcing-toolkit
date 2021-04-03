@@ -12,7 +12,7 @@ import {
 } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import { getWorkProviderFilter } from './Task.extra';
 
@@ -23,7 +23,7 @@ import { getWorkProviderFilter } from './Task.extra';
  */
 export async function getRecordById(ctx: KaryaHTTPContext) {
   // extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
   // extract the current user from state
   const { current_user } = ctx.state;
 
@@ -64,8 +64,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     // set the microtask group filter
     const microTaskGroupFilter: MicrotaskGroup = {};
     if (ctx.request.query.task_id) {
-      // @ts-ignore
-      microTaskGroupFilter.task_id = ctx.request.query.task_id;
+      microTaskGroupFilter.task_id = ctx.request.query.task_id as string;
     }
 
     // generate a work provider filter if necessary
@@ -80,9 +79,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
         .where(microTaskGroupFilter)
         .whereIn(
           'task_id',
-          knex<TaskRecord>('task')
-            .select()
-            .where(workProviderFilter),
+          knex<TaskRecord>('task').select().where(workProviderFilter),
         );
     } else {
       records = await BasicModel.getRecords(

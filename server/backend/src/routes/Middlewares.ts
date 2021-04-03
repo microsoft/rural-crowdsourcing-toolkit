@@ -8,8 +8,8 @@ import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import { AuthProviderType, DbTableName } from '../db/TableInterfaces.auto';
 import * as BasicModel from '../models/BasicModel';
 import { requestLogger } from '../utils/Logger';
-
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
+import { setCookie } from '../controllers/Auth.extra';
 
 /**
  * Middleware to authenticate a request to the server. Depending on the path,
@@ -55,8 +55,7 @@ export const authenticateUser: KaryaMiddleware = async (ctx, next) => {
   if (ctx.path === '/api/work_provider/sign/in' && header['auth-provider']) {
     // @ts-ignore
     authProvider = header['auth-provider'];
-    // @ts-ignore
-    idToken = header['id-token'];
+    idToken = header['id-token'] as string;
   } else if (cookies.get('auth-provider') !== undefined) {
     authProvider = cookies.get('auth-provider') as AuthProviderType;
     idToken = cookies.get('id-token') as string;
@@ -86,15 +85,15 @@ export const authenticateUser: KaryaMiddleware = async (ctx, next) => {
   // Extend cookies if non-signout request
   if (ctx.state.current_user) {
     const { current_user } = ctx.state;
-    HttpResponse.setCookie(
+    setCookie(
       ctx,
       'auth-provider',
       current_user.auth_provider as AuthProviderType,
     );
-    HttpResponse.setCookie(ctx, 'id-token', current_user.id_token as string);
+    setCookie(ctx, 'id-token', current_user.id_token as string);
   } else {
-    HttpResponse.resetCookie(ctx, 'auth-provider');
-    HttpResponse.resetCookie(ctx, 'id-token');
+    setCookie(ctx, 'auth-provider', undefined);
+    setCookie(ctx, 'id-token', undefined);
   }
 };
 
@@ -117,13 +116,12 @@ export const authenticateBox: KaryaMiddleware = async (ctx, next) => {
   }
 
   // Retrieve auth information
-  const id = header['box-id'];
-  const key = header['id-token'];
+  const id = header['box-id'] as string;
+  const key = header['id-token'] as string;
 
   // Retrieve the box record
   // TODO: This is currently very rudimentary authentication. Need to make it stronger.
   try {
-    // @ts-ignore
     const box = await BasicModel.getSingle('box', { id, key });
     ctx.state.current_box = box;
     await next();
@@ -167,7 +165,7 @@ export const setGetFilter: KaryaMiddleware = async (ctx, next) => {
   const filterColumns: string[] = tableFilterColumns[tableName];
 
   const filter: { [id: string]: any } = {};
-  filterColumns.forEach(column => {
+  filterColumns.forEach((column) => {
     if (ctx.request.query[column]) {
       filter[column] = ctx.request.query[column];
     }

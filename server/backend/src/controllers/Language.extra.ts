@@ -8,7 +8,7 @@
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import { isLanguageSupported } from '../models/ScenarioLanguageModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**
@@ -17,7 +17,7 @@ import { KaryaHTTPContext } from './KoaContextType';
  */
 export async function updateSupported(ctx: KaryaHTTPContext) {
   // Extract ID from params
-  const id: number = ctx.params.id;
+  const id = ctx.params.id;
 
   try {
     const string_support = await isLanguageSupported(id, {

@@ -8,8 +8,8 @@
 import * as fs from 'fs';
 import config from '../config/Index';
 import { getControllerError } from '../errors/ControllerErrors';
-import { ContainerName, getBlobName } from '../utils/BlobContainers';
-import * as HttpResponse from '../utils/HttpResponse';
+import { ContainerName, getBlobName } from '@karya/blobstore';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 /**
@@ -18,19 +18,19 @@ import { KaryaHTTPContext } from './KoaContextType';
  * @param ctx Karya koa context
  */
 export async function getLRVFile(ctx: KaryaHTTPContext) {
-  const { language_id, language_resource_id } = ctx.request.query;
+  let { language_id_s, language_resource_id_s } = ctx.request.query;
+  const language_id = language_id_s as string;
+  const language_resource_id = language_resource_id_s as string;
   let blobName: string;
   let containerName: ContainerName;
 
   if (language_id) {
     containerName = 'l-lrvs';
-    // @ts-ignore
     blobName = getBlobName({ cname: containerName, language_id, ext: 'tar' });
   } else if (language_resource_id) {
     containerName = 'lr-lrvs';
     blobName = getBlobName({
       cname: containerName,
-      // @ts-ignore
       language_resource_id,
       ext: 'tar',
     });

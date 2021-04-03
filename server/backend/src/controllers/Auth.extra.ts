@@ -13,8 +13,31 @@ import {
 } from '../db/TableInterfaces.auto';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
-import * as HttpResponse from '../utils/HttpResponse';
+import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
+import config from '../config/Index';
+
+/**
+ * Helper to set a cookie in the HTTP response. Reset cookie if value is undefined
+ * @param ctx Koa context
+ * @param key key of the cookie
+ * @param value value of the cookie
+ */
+export function setCookie(
+  ctx: KaryaHTTPContext,
+  key: string,
+  value: string | undefined,
+) {
+  const { maxAge, ...cookieOptions } = config.cookieOptions;
+  if (value !== undefined) {
+    const addMilliseconds = maxAge || 15 * 60 * 1000;
+    const expires = new Date();
+    expires.setMilliseconds(expires.getMilliseconds() + addMilliseconds);
+    ctx.cookies.set(key, value, { ...cookieOptions, expires });
+  } else {
+    ctx.cookies.set(key, '', { ...cookieOptions, expires: new Date(0) });
+  }
+}
 
 /**
  * updates the work provider object via creation code === sign-up
@@ -52,12 +75,8 @@ export async function updateWithCreationCode(ctx: KaryaHTTPContext) {
       // Set the cookie with id_token
       const wp = authResponse.wp;
       // assert that the auth_provider and id_token are not null
-      HttpResponse.setCookie(
-        ctx,
-        'auth-provider',
-        wp.auth_provider as AuthProviderType,
-      );
-      HttpResponse.setCookie(ctx, 'id-token', wp.id_token as string);
+      setCookie(ctx, 'auth-provider', wp.auth_provider as AuthProviderType);
+      setCookie(ctx, 'id-token', wp.id_token as string);
       HttpResponse.OK(ctx, authResponse.wp);
     } else {
       HttpResponse.Unauthorized(ctx, authResponse.message);
