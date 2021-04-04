@@ -21,7 +21,7 @@ import prettier from 'prettier';
 /**
  * Function to generate and return the data for the table interfaces file
  */
-export function tableInterfacesFileData(excludedTables: string[]): string {
+export function tableInterfacesFileData(excludedTables: string[] = []): string {
   let filteredTableNames = tableNames;
   excludedTables.forEach((excludedTable) => {
     delete tables[excludedTable];

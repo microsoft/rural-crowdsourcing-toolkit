@@ -5,28 +5,23 @@
   "private": true,
   "scripts": {
     "build": "npm run clean && npm run compile",
-    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
-    "compile": "tsc -b tsconfig-local.json"
+    "clean": "rm -rf ./dist* && rm -rf tsconfig*.tsbuildinfo",
+    "compile": "tsc -b tsconfig-local.json && node ./dist-local/GenFiles.js && tsc -b tsconfig.json"
   },
   "license": "MIT",
-  "dependencies": {
-    "@types/prettier": "^2.0.0",
-    "@types/uppercamelcase": "^3.0.0",
-    "camelcase": "^6.0.0",
-    "fs": "0.0.1-security",
-    "prettier": "^2.0.4",
-    "ts-node": "^8.6.2",
-    "tslint": "^6.1.0",
-    "typescript": "^3.8.3",
-    "uppercamelcase": "^3.0.0",
-    "yaml": "^1.8.3"
-  },
-  "devDependencies": {
-    "@types/node": "^13.11.1",
-    "@types/yaml": "^1.2.0"
-  },
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.37",
+    "@types/prettier": "^2.2.3",
+    "@types/uppercamelcase": "^3.0.0",
+    "camelcase": "^6.2.0",
+    "fs": "^0.0.1-security",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.3",
+    "uppercamelcase": "^3.0.0",
+    "yaml": "^1.10.2"
   }
 }
