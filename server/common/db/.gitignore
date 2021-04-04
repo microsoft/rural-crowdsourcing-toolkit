@@ -2,4 +2,6 @@
 /scratch
 /logs
 /dist
+/dist-local
 /tools
+tsconfig-local.tsbuildinfo
