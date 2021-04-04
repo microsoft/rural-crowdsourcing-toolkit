@@ -14,6 +14,11 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
     var creationCodeAlreadyUsedMessage: String = ""
     var phoneNumberPromptMessage: String = ""
 
+    var otpPromptMessage: String = ""
+    var invalidOTPMessage: String = ""
+    var resendOTPMessage: String = ""
+
+
     var current_assistant_audio = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,10 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
         invalidCreationCodeMessage = getValueFromName(R.string.invalid_creation_code)
         creationCodeAlreadyUsedMessage = getValueFromName(R.string.creation_code_already_used)
         phoneNumberPromptMessage = getValueFromName(R.string.phone_number_prompt)
-        Log.i("STRING INIT", accessCodePromptMessage)
+
+        otpPromptMessage = getValueFromName(R.string.otp_prompt)
+        invalidOTPMessage = getValueFromName(R.string.invalid_otp)
+        resendOTPMessage = getValueFromName(R.string.resend_otp)
     }
 
     /**

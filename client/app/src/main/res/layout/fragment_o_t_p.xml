@@ -4,12 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    tools:context=".ui.registration.OTPActivity">
-
-    <include
-        android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+    android:animateLayoutChanges="true">
 
     <TextView
         android:id="@+id/otpPromptTv"
@@ -24,7 +19,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
         tools:text="@string/otp_prompt_desc" />
 
     <EditText

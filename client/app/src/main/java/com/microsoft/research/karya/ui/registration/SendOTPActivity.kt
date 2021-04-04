@@ -4,6 +4,8 @@
 package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.NetworkActivity
@@ -24,6 +26,7 @@ class SendOTPActivity : NetworkActivity(
      * Execute the network request
      */
     override suspend fun executeRequest() {
+
         val worker = JsonObject()
         worker.addProperty("creation_code", WorkerInformation.creation_code)
         worker.addProperty("phone_number", WorkerInformation.phone_number)
@@ -49,6 +52,7 @@ class SendOTPActivity : NetworkActivity(
      * Start the next activity
      */
     override fun startNextActivity() {
-        startActivity(Intent(applicationContext, OTPActivity::class.java))
+        setResult(RESULT_OK)
+        onBackPressed()
     }
 }

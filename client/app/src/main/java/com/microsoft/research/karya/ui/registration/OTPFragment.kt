@@ -1,31 +1,60 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_otp.*
+import kotlinx.android.synthetic.main.fragment_o_t_p.view.*
+import kotlinx.android.synthetic.main.fragment_o_t_p.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val OTP_LENGTH = 6
 
-class OTPActivity : BaseActivity(useAssistant = true) {
+class OTPFragment : Fragment() {
 
-    /** Android strings */
-    private var otpPromptMessage: String = ""
-    private var invalidOTPMessage: String = ""
-    private var resendOTPMessage: String = ""
+    private lateinit var registrationActivity: RegistrationActivity
+    private lateinit var baseActivity: BaseActivity
+    private lateinit var karyaAPI: KaryaAPIService
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_otp)
-        super.onCreate(savedInstanceState)
+    protected val ioScope = CoroutineScope(Dispatchers.IO)
+    protected val uiScope = CoroutineScope(Dispatchers.Main)
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+
+        registrationActivity = activity as RegistrationActivity
+        baseActivity = activity as BaseActivity
+        karyaAPI = baseActivity.karyaAPI
+
+        // Inflate the layout for this fragment
+        val fragmentView = inflater.inflate(R.layout.fragment_o_t_p, container, false)
+
+        /** Initialising Strings  **/
+        fragmentView.otpPromptTv.text = registrationActivity.otpPromptMessage
+        fragmentView.invalidOTPTv.text = registrationActivity.invalidOTPMessage
+        fragmentView.resendOTPBtn.text = registrationActivity.resendOTPMessage
+
+        return fragmentView
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
 
         /** Resend OTP handler */
         resendOTPBtn.setOnClickListener { resendOTP() }
@@ -42,33 +71,8 @@ class OTPActivity : BaseActivity(useAssistant = true) {
                     handleOTPNotReady()
             }
         })
-        requestSoftKeyFocus(otpEt)
-    }
+        baseActivity.requestSoftKeyFocus(otpEt)
 
-    /**
-     * Get strings for this activity
-     */
-    override suspend fun getStringsForActivity() {
-        otpPromptMessage = getValueFromName(R.string.otp_prompt)
-        invalidOTPMessage = getValueFromName(R.string.invalid_otp)
-        resendOTPMessage = getValueFromName(R.string.resend_otp)
-    }
-
-    /**
-     * Set initial UI strings
-     */
-    override suspend fun setInitialUIStrings() {
-        otpPromptTv.text = otpPromptMessage
-        invalidOTPTv.text = invalidOTPMessage
-        resendOTPBtn.text = resendOTPMessage
-    }
-
-    /**
-     * On assistant click, play the OTP prompt
-     */
-    override fun onAssistantClick() {
-        super.onAssistantClick()
-        playAssistantAudio(R.string.audio_otp_prompt)
     }
 
     /**
@@ -98,13 +102,13 @@ class OTPActivity : BaseActivity(useAssistant = true) {
             otpStatusIv.setImageResource(0)
             otpStatusIv.setImageResource(R.drawable.ic_check)
             invalidOTPTv.visibility = View.INVISIBLE
-            startActivity(Intent(applicationContext, ProfilePictureActivity::class.java))
+            startActivity(Intent(activity, ProfilePictureActivity::class.java))
         } else {
             invalidOTPTv.visibility = View.VISIBLE
             otpStatusIv.setImageResource(0)
             otpStatusIv.setImageResource(R.drawable.ic_quit_select)
             otpEt.isEnabled = true
-            requestSoftKeyFocus(otpEt)
+            baseActivity.requestSoftKeyFocus(otpEt)
         }
     }
 
