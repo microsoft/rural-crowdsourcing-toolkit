@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.SplashScreenBinding
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.viewBinding
@@ -14,13 +15,9 @@ import dataStore
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 
-class SplashScreenFragment : Fragment() {
+class SplashScreenFragment : Fragment(R.layout.splash_screen) {
 
     private val binding by viewBinding(SplashScreenBinding::bind)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
