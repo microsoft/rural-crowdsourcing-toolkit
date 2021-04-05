@@ -36,9 +36,9 @@ class SelectGenderFragment : Fragment() {
 
         /** Initialising Strings  **/
 
-        fragmentView.selectGenderPromptTv.text = registrationActivity.genderPromptMessage
-        fragmentView.maleTv.text = registrationActivity.maleLabel
-        fragmentView.femaleTv.text = registrationActivity.femaleLabel
+        fragmentView.selectGenderPromptTv.text = getString(R.string.s_gender_prompt)
+        fragmentView.maleTv.text = getString(R.string.s_male)
+        fragmentView.femaleTv.text = getString(R.string.s_female)
 
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_gender_prompt

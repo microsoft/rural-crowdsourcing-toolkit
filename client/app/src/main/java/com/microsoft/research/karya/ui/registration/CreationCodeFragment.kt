@@ -66,7 +66,7 @@ class CreationCodeFragment : Fragment() {
         /**
          * Set all initial UI strings
          */
-        fragmentView.creationCodePromptTv.text = registrationActivity.accessCodePromptMessage
+        fragmentView.creationCodePromptTv.text = getString(R.string.s_access_code_prompt)
 
         return fragmentView
     }
@@ -141,8 +141,8 @@ class CreationCodeFragment : Fragment() {
                 } else {
                     uiScope.launch {
                         creationCodeErrorTv.text = when (response.message) {
-                            "invalid_creation_code" -> registrationActivity.invalidCreationCodeMessage
-                            "creation_code_already_used" -> registrationActivity.creationCodeAlreadyUsedMessage
+                            "invalid_creation_code" -> getString(R.string.invalid_creation_code)
+                            "creation_code_already_used" -> getString(R.string.creation_code_already_used)
                             else -> "unknown error occurred"
                         }
                         creationCodeStatusIv.setImageResource(0)

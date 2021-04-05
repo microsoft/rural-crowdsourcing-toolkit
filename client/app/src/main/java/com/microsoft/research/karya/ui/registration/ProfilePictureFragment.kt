@@ -46,7 +46,7 @@ class ProfilePictureFragment : Fragment() {
         /**
          * Set all initial UI strings
          */
-        fragmentView.profilePicturePromptTv.text = registrationActivity.profilePicturePromptMessage
+        fragmentView.profilePicturePromptTv.text = getString(R.string.s_profile_picture_prompt)
 
         return fragmentView
 

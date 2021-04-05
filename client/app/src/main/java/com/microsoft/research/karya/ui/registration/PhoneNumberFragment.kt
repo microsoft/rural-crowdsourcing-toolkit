@@ -64,7 +64,7 @@ class PhoneNumberFragment : Fragment() {
         /**
          * Set all initial UI strings
          */
-        fragmentView.phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
+        fragmentView.phoneNumberPromptTv.text = getString(R.string.s_phone_number_prompt)
 
         return fragmentView
     }
@@ -73,7 +73,6 @@ class PhoneNumberFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
-        phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
 
         /** Set the phone number font size to the same value as the phantom text view font size */
         phantomPhoneNumberTv.addOnLayoutChangeListener { _: View, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->

@@ -43,9 +43,9 @@ class OTPFragment : Fragment() {
         val fragmentView = inflater.inflate(R.layout.fragment_o_t_p, container, false)
 
         /** Initialising Strings  **/
-        fragmentView.otpPromptTv.text = registrationActivity.otpPromptMessage
-        fragmentView.invalidOTPTv.text = registrationActivity.invalidOTPMessage
-        fragmentView.resendOTPBtn.text = registrationActivity.resendOTPMessage
+        fragmentView.otpPromptTv.text = getString(R.string.s_otp_prompt)
+        fragmentView.invalidOTPTv.text = getString(R.string.s_invalid_otp)
+        fragmentView.resendOTPBtn.text = getString(R.string.s_resend_otp)
 
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_otp_prompt

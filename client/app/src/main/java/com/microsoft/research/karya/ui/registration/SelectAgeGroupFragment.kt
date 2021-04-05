@@ -34,10 +34,12 @@ class SelectAgeGroupFragment : Fragment() {
 
         /** Initialising Strings  **/
 
-        val youthLabel = "18-25 ${registrationActivity.yearsString}"
-        val middleLabel = "26-50 ${registrationActivity.yearsString}"
-        val oldLabel = "50+ ${registrationActivity.yearsString}"
-        fragmentView.ageGroupPromptTv.text = registrationActivity.ageGroupPromptString
+        var yearsString = getString(R.string.s_years)
+
+        val youthLabel = "18-25 $yearsString"
+        val middleLabel = "26-50 $yearsString"
+        val oldLabel = "50+ $yearsString"
+        fragmentView.ageGroupPromptTv.text = getString(R.string.s_age_prompt)
         fragmentView.youthBtn.text = youthLabel
         fragmentView.middleAgeBtn.text = middleLabel
         fragmentView.oldAgeBtn.text = oldLabel
