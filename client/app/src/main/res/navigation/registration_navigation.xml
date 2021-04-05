@@ -23,10 +23,17 @@
         <action
             android:id="@+id/action_phoneNumberFragment_to_OTPFragment"
             app:destination="@id/OTPFragment" />
+        <action
+            android:id="@+id/action_phoneNumberFragment_to_sendOTPActivity2"
+            app:destination="@id/sendOTPActivity" />
     </fragment>
     <fragment
         android:id="@+id/OTPFragment"
         android:name="com.microsoft.research.karya.ui.registration.OTPFragment"
         android:label="fragment_o_t_p"
         tools:layout="@layout/fragment_o_t_p" />
+    <activity
+        android:id="@+id/sendOTPActivity"
+        android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
+        android:label="SendOTPActivity" />
 </navigation>
