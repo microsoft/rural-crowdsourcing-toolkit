@@ -11,7 +11,7 @@ import {
   MicrotaskRecord,
   Task,
   TaskRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';

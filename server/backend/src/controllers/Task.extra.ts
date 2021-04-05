@@ -7,7 +7,7 @@
 // be auto generated.
 
 import BBPromise from 'bluebird';
-import { Task, TaskRecord, TaskStatus } from '../db/TableInterfaces.auto';
+import { Task, TaskRecord, TaskStatus } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import {

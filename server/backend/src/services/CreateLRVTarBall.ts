@@ -14,7 +14,7 @@ import {
   LanguageRecord,
   LanguageResourceRecord,
   LanguageResourceValueRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 import * as BasicModel from '../models/BasicModel';
 import { upsertKaryaFile } from '../models/KaryaFileModel';

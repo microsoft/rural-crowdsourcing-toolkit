@@ -3,7 +3,7 @@
 
 // Parameter and task type definitions for the story-speech scenario
 
-import { TaskRecord } from '../../db/TableInterfaces.auto';
+import { TaskRecord } from '@karya/db';
 import { ParameterDefinition } from '../common/ParameterTypes';
 
 export const taskParams: ParameterDefinition[] = [

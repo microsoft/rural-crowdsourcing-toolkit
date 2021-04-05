@@ -16,7 +16,7 @@ import * as BasicModel from '../models/BasicModel';
 import {
   LanguageResource,
   LanguageResourceRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 import { scenarioMap } from '../scenarios/Index';
 import { registerScenarios } from '../scenarios/Register';

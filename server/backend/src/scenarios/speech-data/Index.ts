@@ -20,7 +20,7 @@ import {
   Microtask,
   MicrotaskAssignmentRecord,
   MicrotaskRecord,
-} from '../../db/TableInterfaces.auto';
+} from '@karya/db';
 import { knex } from '../../db/Client';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 import config from '../../config/Index';

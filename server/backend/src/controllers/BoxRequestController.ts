@@ -9,7 +9,7 @@ import { randomBytes } from 'crypto';
 import * as jwtSimple from 'jwt-simple';
 import RawBody from 'raw-body';
 import config from '../config/Index';
-import { Box, BoxRecord, KaryaFileRecord } from '../db/TableInterfaces.auto';
+import { Box, BoxRecord, KaryaFileRecord } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import * as BoxRequestModel from '../models/BoxRequestModel';

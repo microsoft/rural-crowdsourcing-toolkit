@@ -7,7 +7,7 @@
  * interface.
  */
 
-import { Language } from '../db/TableInterfaces.auto';
+import { Language } from '@karya/db';
 
 // Initial set of languages
 export const languages: Language[] = [

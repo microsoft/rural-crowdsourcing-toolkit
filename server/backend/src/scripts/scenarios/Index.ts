@@ -9,7 +9,7 @@
  * This file defines the resource spec type.
  */
 
-import { LanguageResource } from '../../db/TableInterfaces.auto';
+import { LanguageResource } from '@karya/db';
 
 /**
  * Resource specification type

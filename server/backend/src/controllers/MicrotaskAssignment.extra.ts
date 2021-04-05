@@ -12,7 +12,7 @@ import {
   KaryaFileRecord,
   MicrotaskAssignment,
   MicrotaskAssignmentRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import { getBlobSASURL } from '../utils/AzureBlob';

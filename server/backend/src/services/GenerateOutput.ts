@@ -5,7 +5,7 @@
  * Handler for task output generation
  */
 
-import { TaskRecord } from '../db/TableInterfaces.auto';
+import { TaskRecord } from '@karya/db';
 import { scenarioById } from '../scenarios/Index';
 
 /**

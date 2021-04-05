@@ -14,11 +14,7 @@ import { validateTask } from './TaskValidator';
 
 import * as BasicModel from '../../models/BasicModel';
 
-import {
-  MicrotaskAssignmentRecord,
-  MicrotaskRecord,
-  TaskRecord,
-} from '../../db/TableInterfaces.auto';
+import { MicrotaskAssignmentRecord, MicrotaskRecord } from '@karya/db';
 
 export const SpeechVerificationScenario: IScenario = {
   name: 'speech-verification',

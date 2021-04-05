@@ -8,7 +8,7 @@
 // that must necessarily be provided for a new policy, and 2) a set of
 // functions that should be implemented as part of the newly created scenario.
 
-import { Policy, Task } from '../../db/TableInterfaces.auto';
+import { Policy } from '@karya/db';
 
 import { PolicyParameterDefinition } from './ParameterTypes';
 

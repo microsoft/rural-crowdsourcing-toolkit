@@ -3,7 +3,7 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import { DbTableName } from './TableInterfaces.auto';
+import { DbTableName } from '@karya/db';
 
 export const tableColumns: { [key in DbTableName]: string[] } = {
   language: [

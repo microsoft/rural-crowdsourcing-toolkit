@@ -8,7 +8,7 @@ import {
   LanguageResource,
   LanguageResourceRecord,
   LanguageResourceValueRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import { logPGError } from '../errors/PostgreSQLErrors';
 
 /**

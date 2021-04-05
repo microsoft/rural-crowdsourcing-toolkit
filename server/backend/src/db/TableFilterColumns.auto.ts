@@ -3,7 +3,7 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import { DbRecordType, DbTableName } from './TableInterfaces.auto';
+import { DbRecordType, DbTableName } from '@karya/db';
 
 export const tableFilterColumns: {
   [key in DbTableName]: (keyof DbRecordType<key>)[];

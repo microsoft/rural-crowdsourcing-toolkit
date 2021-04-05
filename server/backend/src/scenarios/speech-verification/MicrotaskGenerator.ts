@@ -5,8 +5,6 @@
  * Microtask generator for speech data verification scenario
  */
 
-import * as BBPromise from 'bluebird';
-import { Microtask, MicrotaskGroup } from '../../db/TableInterfaces.auto';
 import { MicrotaskGeneratorResponse } from '../common/ScenarioInterface';
 import { SpeechVerificationTask } from './ParamDefinitions';
 

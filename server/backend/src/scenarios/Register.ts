@@ -12,7 +12,7 @@ import {
   Policy,
   Scenario,
   ScenarioRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import { IScenario, scenarioById, scenarioMap } from './Index';
 
 import * as BasicModel from '../models/BasicModel';

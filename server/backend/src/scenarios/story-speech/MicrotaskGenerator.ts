@@ -6,7 +6,7 @@
 // to a single microtask. The function assumes that the task has already been
 // validated.
 
-import { Microtask, MicrotaskGroup } from '../../db/TableInterfaces.auto';
+import { Microtask, MicrotaskGroup } from '@karya/db';
 import * as BlobStore from '../../utils/AzureBlob';
 import { MicrotaskGeneratorResponse } from '../common/ScenarioInterface';
 import { StorySpeechTask } from './ParamDefinitions';
@@ -19,7 +19,7 @@ export async function generateMicrotasks(
     const sentenceFileData = await BlobStore.downloadBlobAsText(sentenceFile);
     const stories: string[][] = JSON.parse(sentenceFileData);
 
-    const microtaskGroups = stories.map(story => {
+    const microtaskGroups = stories.map((story) => {
       // group info
       const mg_info: MicrotaskGroup = {
         task_id: task.id,
@@ -27,7 +27,7 @@ export async function generateMicrotasks(
         status: 'incomplete',
       };
 
-      const microtasks = story.map(sentence => {
+      const microtasks = story.map((sentence) => {
         const m_info: Microtask = {
           task_id: task.id,
           input: { data: sentence },

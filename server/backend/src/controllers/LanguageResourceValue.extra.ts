@@ -15,7 +15,7 @@ import {
   LanguageResourceRecord,
   LanguageResourceValue,
   LanguageResourceValueRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 
 import { languageLRVTarQueue, lrLRVTarQueue } from '../services/Index';

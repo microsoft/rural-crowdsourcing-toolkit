@@ -5,7 +5,7 @@
 
 import { OAuth2Client } from 'google-auth-library';
 
-import { WorkProvider } from '../../db/TableInterfaces.auto';
+import { WorkProvider } from '@karya/db';
 import {
   IAuthProvider,
   IDTokenVerificationResponse,

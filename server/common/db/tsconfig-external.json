@@ -5,5 +5,5 @@
     "rootDir": "./src"
   },
   "references": [],
-  "exclude": ["src-local"]
+  "exclude": ["src-local", "dist"]
 }

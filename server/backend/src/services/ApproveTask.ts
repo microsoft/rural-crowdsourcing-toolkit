@@ -15,7 +15,7 @@ import { taskLogger } from '../utils/Logger';
 
 import { scenarioMap } from '../scenarios/Index';
 
-import { TaskRecord } from '../db/TableInterfaces.auto';
+import { TaskRecord } from '@karya/db';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 /**

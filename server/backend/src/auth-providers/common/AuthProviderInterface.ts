@@ -4,7 +4,7 @@
 // Define the interaface that should be implemented for different auth
 // providers.
 
-import { AuthProviderType, WorkProvider } from '../../db/TableInterfaces.auto';
+import { AuthProviderType, WorkProvider } from '@karya/db';
 
 /**
  * Response type for the verify user function.

@@ -11,7 +11,7 @@ import { taskLogger } from '../utils/Logger';
 import * as BasicModel from '../models/BasicModel';
 
 // Types
-import { TaskRecord } from '../db/TableInterfaces.auto';
+import { TaskRecord } from '@karya/db';
 import { scenarioMap } from '../scenarios/Index';
 
 export async function validateTask(taskRecord: TaskRecord) {

@@ -9,7 +9,7 @@ import {
   MicrotaskAssignmentRecord,
   MicrotaskRecord,
   TaskRecord,
-} from '../../db/TableInterfaces.auto';
+} from '@karya/db';
 
 import { IScenario } from '../common/ScenarioInterface';
 import { estimateTaskBudget } from './BudgetEstimator';
@@ -18,7 +18,7 @@ import { StorySpeechTask, taskParams } from './ParamDefinitions';
 import { defaultPolicy } from './policy/default/Index';
 import { validateTask } from './TaskValidator';
 
-import * as BasicModel from '../../models/BasicModel'
+import * as BasicModel from '../../models/BasicModel';
 
 export const StorySpeechScenario: IScenario = {
   name: 'story-speech',

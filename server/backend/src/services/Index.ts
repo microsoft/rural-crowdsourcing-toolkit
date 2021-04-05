@@ -13,7 +13,7 @@ import {
   LanguageRecord,
   LanguageResourceRecord,
   TaskRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 // Basic model
 import * as BasicModel from '../models/BasicModel';

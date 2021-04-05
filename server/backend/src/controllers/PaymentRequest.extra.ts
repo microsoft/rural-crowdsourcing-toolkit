@@ -13,7 +13,7 @@ import {
   PaymentRequestRecord,
   PayoutInfo,
   PayoutInfoRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 /**
  * Function to retrieve payment request records. This request can have a

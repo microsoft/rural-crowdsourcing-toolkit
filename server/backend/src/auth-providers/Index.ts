@@ -6,11 +6,7 @@
  */
 
 /** Import necessary DB types */
-import {
-  AuthProviderType,
-  WorkProvider,
-  WorkProviderRecord,
-} from '../db/TableInterfaces.auto';
+import { AuthProviderType, WorkProvider, WorkProviderRecord } from '@karya/db';
 
 /** Imporet types from auth interaface */
 import {
@@ -22,7 +18,6 @@ import {
 import * as BasicModel from '../models/BasicModel';
 
 /** List of auth providers */
-import { sign } from 'crypto';
 import GoogleOauth2AP from './google-oauth-2/Index';
 
 /** Response type for auth requests; id_token must be part of response */

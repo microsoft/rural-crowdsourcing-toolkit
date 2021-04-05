@@ -4,7 +4,7 @@
 // Microtask generator for the speech-data scenario. The function assumes that
 // the task has already been validated.
 
-import { Microtask, Task } from '../../db/TableInterfaces.auto';
+import { Microtask, Task } from '@karya/db';
 import * as BlobStore from '../../utils/AzureBlob';
 import { MicrotaskGeneratorResponse } from '../common/ScenarioInterface';
 import { SpeechDataTask } from './ParamDefinitions';

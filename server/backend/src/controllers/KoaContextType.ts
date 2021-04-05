@@ -8,7 +8,7 @@ import {
   BoxRecord,
   DbTableName,
   WorkProviderRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 /** Karya state */
 type KaryaState = {

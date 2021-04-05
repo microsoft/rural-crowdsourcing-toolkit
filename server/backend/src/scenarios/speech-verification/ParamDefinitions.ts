@@ -5,7 +5,7 @@
  * Parameters for the speech data verification scenario.
  */
 
-import { TaskRecord } from '../../db/TableInterfaces.auto';
+import { TaskRecord } from '@karya/db';
 import { ParameterDefinition } from '../common/ParameterTypes';
 
 export const taskParams: ParameterDefinition[] = [

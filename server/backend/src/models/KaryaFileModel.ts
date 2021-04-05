@@ -10,7 +10,7 @@ import {
   ChecksumAlgorithm,
   KaryaFile,
   KaryaFileRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import { uploadBlobFromFile } from '../utils/AzureBlob';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 import * as BasicModel from './BasicModel';

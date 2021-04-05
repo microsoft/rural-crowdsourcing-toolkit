@@ -17,7 +17,7 @@ import {
   MicrotaskRecord,
   Scenario,
   TaskRecord,
-} from '../../db/TableInterfaces.auto';
+} from '@karya/db';
 
 import { ParameterDefinition } from './ParameterTypes';
 import { IPolicy } from './PolicyInterface';

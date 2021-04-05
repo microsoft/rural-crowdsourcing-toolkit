@@ -11,7 +11,7 @@ import {
   DbRecordType,
   DbTableName,
   MicrotaskAssignmentRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 import { tableList } from '../db/TableList.auto';
 
