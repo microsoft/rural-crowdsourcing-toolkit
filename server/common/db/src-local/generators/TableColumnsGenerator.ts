@@ -19,7 +19,7 @@ export function tableColumnListFileData(): string {
   const tableColumnsData = `
 ${openingComment}
 
-import { DbTableName } from './TableInterfaces.auto';
+import { DbTableName } from './TableInterfaces';
 
 export const tableColumns: { [key in DbTableName]: string[]} = ${JSON.stringify(
     tableColumns,

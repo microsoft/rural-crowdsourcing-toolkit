@@ -7,11 +7,11 @@
 
 import { Promise as BBPromise } from 'bluebird';
 import { knex } from '../db/Client';
-import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import {
   KaryaFileRecord,
   MicrotaskAssignment,
   MicrotaskAssignmentRecord,
+  tableFilterColumns,
 } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
@@ -27,7 +27,7 @@ import { KaryaHTTPContext } from './KoaContextType';
 export async function getRecords(ctx: KaryaHTTPContext) {
   try {
     const microtaskAssignmentFilter: MicrotaskAssignment = {};
-    tableFilterColumns['microtask_assignment'].forEach(col => {
+    tableFilterColumns['microtask_assignment'].forEach((col) => {
       if (ctx.request.query[col]) {
         // @ts-ignore
         microtaskAssignmentFilter[col] = ctx.request.query[col];
@@ -50,7 +50,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
     }
 
     const files = (
-      await BBPromise.map(records, async record => {
+      await BBPromise.map(records, async (record) => {
         if (record.output_file_id) {
           const file = await BasicModel.getSingle('karya_file', {
             id: record.output_file_id,

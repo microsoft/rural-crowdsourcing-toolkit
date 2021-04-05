@@ -4,8 +4,7 @@
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
-import { tableFilterColumns } from '../db/TableFilterColumns.auto';
-import { LanguageResource } from '@karya/db';
+import { LanguageResource, tableFilterColumns } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as ScenarioLanguageModel from '../models/ScenarioLanguageModel';
 
@@ -18,7 +17,7 @@ export async function getSupportedLanguages(ctx: KaryaHTTPContext) {
   // get the lr filter from query params
   const { query } = ctx.request;
   const lrFilter: LanguageResource = {};
-  tableFilterColumns['language_resource'].forEach(col => {
+  tableFilterColumns['language_resource'].forEach((col) => {
     if (query[col]) {
       // @ts-ignore
       lrFilter[col] = query[col];

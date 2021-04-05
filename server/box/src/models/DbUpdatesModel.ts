@@ -8,12 +8,7 @@
 import { Promise as BBPromise } from 'bluebird';
 import box_id from '../config/box_id';
 import { this_box } from '../config/ThisBox';
-import {
-  DbRecordType,
-  DbTableName,
-  WorkerRecord,
-} from '@karya/db';
-import { tableList } from '../db/TableList.auto';
+import { DbRecordType, DbTableName, WorkerRecord, tableList } from '@karya/db';
 import {
   handleMicrotaskAssignmentCompletion,
   handleMicrotaskGroupAssignmentCompletion,

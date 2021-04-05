@@ -22,7 +22,7 @@ export function tableFilterColumnsFileData(): string {
   const tableFilterColumnsData = `
 ${openingComment}
 
-import { DbRecordType, DbTableName } from './TableInterfaces.auto';
+import { DbRecordType, DbTableName } from './TableInterfaces';
 
 export const tableFilterColumns: { [key in DbTableName]: (keyof DbRecordType<key>)[]} = ${JSON.stringify(
     tableFilterColumns,

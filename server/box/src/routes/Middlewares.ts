@@ -4,11 +4,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AuthResponse, verifyIDToken } from '../auth-providers/Index';
 import { KaryaMiddleware } from '../controllers/KoaContextType';
-import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import {
   AuthProviderType,
   DbTableName,
   WorkerRecord,
+  tableFilterColumns,
 } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
@@ -112,7 +112,7 @@ export const setGetFilter: KaryaMiddleware = async (ctx, next) => {
   const filterColumns: string[] = tableFilterColumns[tableName];
 
   const filter: { [id: string]: any } = {};
-  filterColumns.forEach(column => {
+  filterColumns.forEach((column) => {
     if (ctx.request.query[column]) {
       filter[column] = ctx.request.query[column];
     }
@@ -121,7 +121,6 @@ export const setGetFilter: KaryaMiddleware = async (ctx, next) => {
   ctx.state.filter = filter;
   await next();
 };
-
 
 /**
  * Middleware for http logging

@@ -5,7 +5,6 @@
 // could not be autimatically implemented.
 
 import { knex } from '../db/Client';
-import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
@@ -15,6 +14,7 @@ import {
   LanguageResourceRecord,
   LanguageResourceValue,
   LanguageResourceValueRecord,
+  tableFilterColumns,
 } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 
@@ -40,7 +40,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
 
     // Check if there is a language resource filter
     const lrFilter: LanguageResource = {};
-    tableFilterColumns['language_resource'].forEach(col => {
+    tableFilterColumns['language_resource'].forEach((col) => {
       if (query[col]) {
         // @ts-ignore
         lrFilter[col] = query[col];
@@ -100,7 +100,7 @@ export async function createFileResourceValue(ctx: KaryaHTTPContext) {
   }
 
   // check if the file has an extension
-  const ext = (file as unknown as File).name.split('.').pop();
+  const ext = ((file as unknown) as File).name.split('.').pop();
   if (ext === undefined) {
     HttpResponse.BadRequest(
       ctx,
@@ -158,7 +158,7 @@ export async function updateFileResourceValue(ctx: KaryaHTTPContext) {
   }
 
   // check if the file has an extension
-  const ext = (file as unknown as File).name.split('.').pop();
+  const ext = ((file as unknown) as File).name.split('.').pop();
   if (ext === undefined) {
     HttpResponse.BadRequest(
       ctx,

@@ -4,8 +4,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AuthResponse, verifyIDToken } from '../auth-providers/Index';
 import { KaryaMiddleware } from '../controllers/KoaContextType';
-import { tableFilterColumns } from '../db/TableFilterColumns.auto';
-import { AuthProviderType, DbTableName } from '@karya/db';
+import { AuthProviderType, DbTableName, tableFilterColumns } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { requestLogger } from '../utils/Logger';
 import * as HttpResponse from '@karya/http-response';

@@ -14,7 +14,7 @@ export function tableListFileData(): string {
   const tableListData = `
 ${openingComment}
 
-import { DbTableName } from './TableInterfaces.auto';
+import { DbTableName } from './TableInterfaces';
 
 export const tableList: DbTableName[] = ${JSON.stringify(Object.keys(tables))}`;
 

@@ -4,13 +4,13 @@
 // Implements APIs on 'microtask_group' that could not be auto generated
 
 import { knex } from '../db/Client';
-import { tableFilterColumns } from '../db/TableFilterColumns.auto';
 import {
   Microtask,
   MicrotaskAssignmentRecord,
   MicrotaskRecord,
   Task,
   TaskRecord,
+  tableFilterColumns,
 } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';

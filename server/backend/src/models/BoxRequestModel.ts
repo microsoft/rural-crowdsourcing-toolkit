@@ -11,9 +11,8 @@ import {
   DbRecordType,
   DbTableName,
   MicrotaskAssignmentRecord,
+  tableList,
 } from '@karya/db';
-
-import { tableList } from '../db/TableList.auto';
 
 import { Promise as BBPromise } from 'bluebird';
 import { scenarioById } from '../scenarios/Index';
