@@ -31,9 +31,18 @@
         android:id="@+id/OTPFragment"
         android:name="com.microsoft.research.karya.ui.registration.OTPFragment"
         android:label="fragment_o_t_p"
-        tools:layout="@layout/fragment_o_t_p" />
+        tools:layout="@layout/fragment_o_t_p" >
+        <action
+            android:id="@+id/action_OTPFragment_to_profilePictureFragment"
+            app:destination="@id/profilePictureFragment" />
+    </fragment>
     <activity
         android:id="@+id/sendOTPActivity"
         android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
         android:label="SendOTPActivity" />
+    <fragment
+        android:id="@+id/profilePictureFragment"
+        android:name="com.microsoft.research.karya.ui.registration.ProfilePictureFragment"
+        android:label="ProfilePictureFragment"
+        tools:layout="@layout/fragment_profile_picture"/>
 </navigation>

@@ -13,6 +13,7 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
     var invalidCreationCodeMessage: String = ""
     var creationCodeAlreadyUsedMessage: String = ""
     var phoneNumberPromptMessage: String = ""
+    var profilePicturePromptMessage: String = ""
 
     var otpPromptMessage: String = ""
     var invalidOTPMessage: String = ""
@@ -47,6 +48,8 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
         otpPromptMessage = getValueFromName(R.string.otp_prompt)
         invalidOTPMessage = getValueFromName(R.string.invalid_otp)
         resendOTPMessage = getValueFromName(R.string.resend_otp)
+
+        profilePicturePromptMessage = getValueFromName(R.string.profile_picture_prompt)
     }
 
     /**
@@ -57,6 +60,6 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
         //  2) Make the fragment implement the base class
         //  3) Call the Fragment's method form here
 
-        // For now we have a workaround of doing this task in individual Fragment's OnViewCreated
+        // For now we have a workaround of doing this task in individual Fragment's OnCreateView
     }
 }

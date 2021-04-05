@@ -330,7 +330,7 @@ abstract class BaseActivity(
     /**
      * Assistant click handler
      */
-    protected open fun onAssistantClick() = Unit
+    open fun onAssistantClick() = Unit
 
     /**
      * Burger menu for showing Microsoft privacy policy

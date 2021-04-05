@@ -35,8 +35,6 @@ class CreationCodeFragment : Fragment() {
     /** Compute creation code text box length based on the creation code length */
     private val creationCodeEtMax = CREATION_CODE_LENGTH + (CREATION_CODE_LENGTH - 1) / 4
 
-    /** Android strings */
-
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
@@ -62,11 +60,14 @@ class CreationCodeFragment : Fragment() {
         // This Initialisation is only needed to be done once for the first fragment
         baseActivity.initialise()
 
+        /** Inflating the layout for this fragment **/
         val fragmentView = inflater.inflate(R.layout.fragment_creation_code, container, false)
 
+        /**
+         * Set all initial UI strings
+         */
         fragmentView.creationCodePromptTv.text = registrationActivity.accessCodePromptMessage
 
-        /** Inflating the layout for this fragment **/
         return fragmentView
     }
 

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.service.KaryaAPIService
@@ -102,7 +103,7 @@ class OTPFragment : Fragment() {
             otpStatusIv.setImageResource(0)
             otpStatusIv.setImageResource(R.drawable.ic_check)
             invalidOTPTv.visibility = View.INVISIBLE
-            startActivity(Intent(activity, ProfilePictureActivity::class.java))
+            findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
         } else {
             invalidOTPTv.visibility = View.VISIBLE
             otpStatusIv.setImageResource(0)
