@@ -78,7 +78,7 @@ class OTPFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        baseActivity.onAssistantClick()
+        registrationActivity.onAssistantClick()
     }
 
     /**

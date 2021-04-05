@@ -55,7 +55,7 @@ class ProfilePictureFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.profile_picture_prompt
+        registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
 
         mainProfilePictureIv.setOnClickListener { getProfilePicture() }
 

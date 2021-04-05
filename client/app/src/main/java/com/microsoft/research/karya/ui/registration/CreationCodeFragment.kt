@@ -102,6 +102,11 @@ class CreationCodeFragment : Fragment() {
         (activity as BaseActivity).requestSoftKeyFocus(creationCodeEt)
     }
 
+    override fun onResume() {
+        super.onResume()
+        registrationActivity.onAssistantClick()
+    }
+
     private fun handleFullCreationCode() {
         creationCodeEt.isEnabled = false
         val creationCode = creationCodeEt.text.toString().replace("-", "")
