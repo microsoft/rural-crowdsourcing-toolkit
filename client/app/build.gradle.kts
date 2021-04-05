@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -40,6 +38,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
     buildToolsVersion = "29.0.3"
 }
@@ -58,8 +57,9 @@ dependencies {
     implementation(Dependencies.AndroidX.multidex)
     implementation(Dependencies.AndroidX.work_runtime)
 
-    implementation(Dependencies.AndroidX.Lifecycle.extension)
-    implementation(Dependencies.AndroidX.Lifecycle.livedata)
+    implementation(Dependencies.AndroidX.Lifecycle.common)
+    implementation(Dependencies.AndroidX.Lifecycle.extensions)
+    implementation(Dependencies.AndroidX.Lifecycle.livedataKtx)
     implementation(Dependencies.AndroidX.Lifecycle.runtimeKtx)
     implementation(Dependencies.AndroidX.Lifecycle.saved_state)
     implementation(Dependencies.AndroidX.Lifecycle.viewModelKtx)

@@ -162,6 +162,7 @@
             android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".ui.consentForm.NgConsentFormActivity" />
 
     </application>
 </manifest>
