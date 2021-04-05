@@ -10,7 +10,7 @@ import {
   AuthProviderType,
   Worker,
   WorkerRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 /** Import types from auth interaface */
 import {

@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import { boxInfo } from '../config/BoxInfo';
 import config from '../config/Index';
 import { knex } from '../db/Client';
-import { BoxRecord } from '../db/TableInterfaces.auto';
+import { BoxRecord } from '@karya/db';
 import logger from '../utils/Logger';
 
 /**

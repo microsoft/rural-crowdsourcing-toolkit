@@ -7,7 +7,7 @@ import {
   LanguageRecord,
   Worker,
   WorkerRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { getCreationCode } from '@karya/misc-utils';
 import logger from '../utils/Logger';

@@ -10,7 +10,7 @@ import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import box_id from '../config/box_id';
 import config from '../config/Index';
-import { KaryaFileRecord } from '../db/TableInterfaces.auto';
+import { KaryaFileRecord } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import logger from '../utils/Logger';
 import { BackendFetch } from './HttpUtils';

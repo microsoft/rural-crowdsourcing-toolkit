@@ -9,7 +9,7 @@ import {
   AuthProviderType,
   DbTableName,
   WorkerRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { requestLogger } from '../utils/Logger';

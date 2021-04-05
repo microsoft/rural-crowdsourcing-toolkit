@@ -5,7 +5,7 @@ import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 import { tableFilterColumns } from '../db/TableFilterColumns.auto';
-import { LanguageResource } from '../db/TableInterfaces.auto';
+import { LanguageResource } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as ScenarioLanguageModel from '../models/ScenarioLanguageModel';
 

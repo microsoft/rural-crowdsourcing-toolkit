@@ -13,7 +13,7 @@ import {
   ChecksumAlgorithm,
   KaryaFile,
   KaryaFileRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 

@@ -3,7 +3,7 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import { DbRecordType, DbTableName } from './TableInterfaces.auto';
+import { DbRecordType, DbTableName } from '@karya/db';
 
 export const tableFilterColumns: {
   [key in DbTableName]: (keyof DbRecordType<key>)[];
@@ -49,4 +49,5 @@ export const tableFilterColumns: {
   payout_method: ['enabled'],
   payout_info: ['box_id', 'worker_id', 'method_id', 'status', 'enabled'],
   payment_request: ['box_id', 'status'],
+  work_provider: [],
 };

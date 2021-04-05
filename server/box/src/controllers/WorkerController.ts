@@ -7,7 +7,7 @@
 import { refreshIDToken, signUpUser } from '../auth-providers/Index';
 import { generateOTP, sendOTP } from '../auth-providers/phone-otp/OTPUtils';
 import config from '../config/Index';
-import { Worker, WorkerRecord } from '../db/TableInterfaces.auto';
+import { Worker, WorkerRecord } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';

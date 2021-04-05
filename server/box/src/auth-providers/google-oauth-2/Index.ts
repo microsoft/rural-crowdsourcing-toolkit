@@ -6,7 +6,7 @@
 import { OAuth2Client } from 'google-auth-library';
 
 import config from '../../config/Index';
-import { Worker, WorkerRecord } from '../../db/TableInterfaces.auto';
+import { Worker, WorkerRecord } from '@karya/db';
 import {
   IAuthProvider,
   IDTokenVerificationResponse,

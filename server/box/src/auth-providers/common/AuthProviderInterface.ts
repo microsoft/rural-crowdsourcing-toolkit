@@ -8,7 +8,7 @@ import {
   AuthProviderType,
   Worker,
   WorkerRecord,
-} from '../../db/TableInterfaces.auto';
+} from '@karya/db';
 
 /**
  * Response type for the verify user function.

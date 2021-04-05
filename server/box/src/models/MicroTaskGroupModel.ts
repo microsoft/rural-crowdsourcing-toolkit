@@ -10,7 +10,7 @@ import {
   MicrotaskRecord,
   TaskRecord,
   WorkerRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 
 /**
  * Get a list of microtask group records from the specified task that can

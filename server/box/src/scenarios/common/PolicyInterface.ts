@@ -18,7 +18,7 @@ import {
   TaskAssignmentRecord,
   TaskRecord,
   WorkerRecord,
-} from '../../db/TableInterfaces.auto';
+} from '@karya/db';
 
 export type GetAssignmentsResponse = {
   success: boolean;

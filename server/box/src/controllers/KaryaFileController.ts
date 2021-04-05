@@ -3,7 +3,7 @@
 
 import * as fs from 'fs';
 import config from '../config/Index';
-import { KaryaFile } from '../db/TableInterfaces.auto';
+import { KaryaFile } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import { insertWorkerFile } from '../models/KaryaFileModel';

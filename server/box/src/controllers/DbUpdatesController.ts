@@ -6,7 +6,7 @@
  */
 
 import config from '../config/Index';
-import { WorkerRecord } from '../db/TableInterfaces.auto';
+import { WorkerRecord } from '@karya/db';
 import {
   applyUpdatesFromWorker,
   getUpdatesForWorker,

@@ -4,7 +4,7 @@
 import {
   MicrotaskGroupRecord,
   MicrotaskRecord,
-} from '../../../../db/TableInterfaces.auto';
+} from '@karya/db';
 import * as MicroTaskGroupModel from '../../../../models/MicroTaskGroupModel';
 import { IPolicy } from '../../../common/PolicyInterface';
 import { StorySpeechDefaultPolicyParams } from './Index';

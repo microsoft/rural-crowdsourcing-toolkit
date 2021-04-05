@@ -12,7 +12,7 @@ import {
   TaskRecord,
   WorkerLanguageSkillRecord,
   WorkerRecord,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import * as MicrotaskGroupModel from '../models/MicroTaskGroupModel';
 import { hasIncompleteMicrotasks } from '../models/MicroTaskModel';

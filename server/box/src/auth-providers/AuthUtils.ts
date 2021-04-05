@@ -5,7 +5,7 @@
 
 import { randomBytes } from 'crypto';
 import * as jwt from 'jsonwebtoken';
-import { Worker, WorkerRecord } from '../db/TableInterfaces.auto';
+import { Worker, WorkerRecord } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { IDTokenVerificationResponse } from './common/AuthProviderInterface';
 

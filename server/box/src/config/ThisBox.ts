@@ -3,7 +3,7 @@
 
 /** Set this box */
 
-import { BoxRecord } from '../db/TableInterfaces.auto';
+import { BoxRecord } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import box_id from './box_id';
 

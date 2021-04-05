@@ -10,7 +10,7 @@ import axios from 'axios';
 import BBPromise from 'bluebird';
 import * as fs from 'fs';
 import config from '../config/Index';
-import { KaryaFileRecord } from '../db/TableInterfaces.auto';
+import { KaryaFileRecord } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { getChecksum } from '../models/KaryaFileModel';
 import logger from '../utils/Logger';

@@ -11,7 +11,7 @@ import {
   BoxUpdatableTables,
   DbRecordType,
   DbTableName,
-} from '../db/TableInterfaces.auto';
+} from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { TableUpdates } from '../models/DbUpdatesModel';
 import { compress } from '@karya/compression';

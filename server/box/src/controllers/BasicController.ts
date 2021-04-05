@@ -4,7 +4,7 @@
 // This file defines a basic set of controllers that can be used by all the
 // tables in the database.
 
-import { BoxUpdatableTables } from '../db/TableInterfaces.auto';
+import { BoxUpdatableTables } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';

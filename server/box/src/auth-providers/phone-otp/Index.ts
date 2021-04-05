@@ -3,7 +3,7 @@
 
 /** The file implements the phone-otp auth provider interface */
 
-import { Worker, WorkerRecord } from '../../db/TableInterfaces.auto';
+import { Worker, WorkerRecord } from '@karya/db';
 import { generateToken, verifyToken } from '../AuthUtils';
 import {
   IAuthProvider,

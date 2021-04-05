@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { Box } from '../db/TableInterfaces.auto';
+import { Box } from '@karya/db';
 
 export const boxInfo: Box = {
   location_name: '<Enter Box Location Name>',

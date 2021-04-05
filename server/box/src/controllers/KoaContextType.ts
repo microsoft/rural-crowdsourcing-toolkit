@@ -4,7 +4,7 @@
 /** Defining the Koa context type with the appropriate state */
 
 import { ParameterizedContext } from 'koa';
-import { DbTableName, WorkerRecord } from '../db/TableInterfaces.auto';
+import { DbTableName, WorkerRecord } from '@karya/db';
 
 /** Karya state */
 type KaryaState = {
