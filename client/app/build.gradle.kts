@@ -53,6 +53,7 @@ dependencies {
 
     implementation(Dependencies.AndroidX.appcompat)
     implementation(Dependencies.AndroidX.constraintLayout)
+    implementation(Dependencies.AndroidX.datastorePrefs)
     implementation(Dependencies.AndroidX.legacy_support)
     implementation(Dependencies.AndroidX.multidex)
     implementation(Dependencies.AndroidX.work_runtime)
@@ -63,6 +64,9 @@ dependencies {
     implementation(Dependencies.AndroidX.Lifecycle.runtimeKtx)
     implementation(Dependencies.AndroidX.Lifecycle.saved_state)
     implementation(Dependencies.AndroidX.Lifecycle.viewModelKtx)
+
+    implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
+    implementation(Dependencies.AndroidX.Navigation.uiKtx)
 
     implementation(Dependencies.AndroidX.Room.roomKtx)
     implementation(Dependencies.AndroidX.Room.roomRuntime)

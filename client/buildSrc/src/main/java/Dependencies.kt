@@ -37,6 +37,7 @@ object Dependencies {
         const val legacy_support = "androidx.legacy:legacy-support-v4:1.0.0"
         const val work_runtime = "androidx.work:work-runtime-ktx:2.5.0"
         const val multidex = "androidx.multidex:multidex:2.0.1"
+        const val datastorePrefs = "androidx.datastore:datastore-preferences:1.0.0-alpha08"
 
         object Hilt {
             const val dagger = "com.google.dagger:hilt-android:$DAGGER_HILT_VERSION"
@@ -57,6 +58,13 @@ object Dependencies {
             const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
             const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val saved_state = "androidx.lifecycle:lifecycle-viewmodel-savedstate:$version"
+        }
+
+        object Navigation {
+
+            private const val version = "2.3.3"
+            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
+            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
         }
 
         object Room {
