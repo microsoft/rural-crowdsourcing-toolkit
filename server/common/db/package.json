@@ -11,10 +11,6 @@
     "compile": "tsc -b tsconfig-local.json && node ./dist-local/GenerateFiles.js && tsc -b tsconfig-external.json"
   },
   "license": "MIT",
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
   "devDependencies": {
     "@types/node": "^14.14.35",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
