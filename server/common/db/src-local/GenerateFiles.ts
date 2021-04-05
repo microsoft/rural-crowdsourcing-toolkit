@@ -6,7 +6,7 @@
 import fs from 'fs';
 import { tableInterfacesFileData } from './generators/TableInterfacesGenerator';
 
-const SRC_FOLDER = `${process.cwd()}/src`;
+const SRC_FOLDER = `${process.cwd()}/src/auto`;
 
 // Write the table interfaces file. This file contains all the type definitions
 // for the karya database tables.
