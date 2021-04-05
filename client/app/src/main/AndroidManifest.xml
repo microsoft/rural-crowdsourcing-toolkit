@@ -61,54 +61,12 @@
             android:noHistory="true"
             />
 
-        <!-- Activity to get the creation code from the user -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.CreationCodeActivity"
-            android:configChanges="locale|keyboard"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan|adjustResize"
-            />
-
-        <!-- Activity to get the phone number from the user -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.PhoneNumberActivity"
-            android:configChanges="locale|keyboard"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan|adjustResize"
-            />
 
         <!-- Activity to send OTP to the user -->
         <activity
             android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            />
-
-        <!-- Activity to get one-time password from the user -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.OTPActivity"
-            android:configChanges="locale|keyboard"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan|adjustResize"
-            />
-
-        <!-- Activity to prompt user to click their profile picture -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.ProfilePictureActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <!-- Activity to let the user choose their gender -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.SelectGenderActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <!-- Activity to let the user choose their age group -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.SelectAgeGroupActivity"
-            android:configChanges="locale|keyboard"
-            android:screenOrientation="portrait"
             />
 
         <!-- Network activity to register the user -->
@@ -134,12 +92,6 @@
         <!-- Activity to list the set of languages in which skills can be specified  -->
         <activity
             android:name="com.microsoft.research.karya.ui.skillSpecification.SkilledLanguageList"
-            android:screenOrientation="portrait"
-            />
-
-        <!-- Activity to Synchronize the user database with the box server (single progress bar) -->
-        <activity
-            android:name=".boxSync.SyncWithBox"
             android:screenOrientation="portrait"
             />
 

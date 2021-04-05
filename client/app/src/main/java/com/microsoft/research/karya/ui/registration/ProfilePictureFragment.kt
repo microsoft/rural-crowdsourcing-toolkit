@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
@@ -119,7 +120,7 @@ class ProfilePictureFragment : Fragment() {
             val out = FileOutputStream("$imageFolder/$fileName")
             profilePic.compress(Bitmap.CompressFormat.PNG, 100, out)
         }
-        startActivity(Intent(activity, SelectGenderActivity::class.java))
+        findNavController().navigate(R.id.action_profilePictureFragment_to_selectGenderFragment)
     }
 
 
