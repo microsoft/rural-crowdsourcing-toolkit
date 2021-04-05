@@ -51,10 +51,11 @@ object Dependencies {
             private const val version = "2.3.0"
             private const val extension_version = "2.2.0"
 
+            const val common = "androidx.lifecycle:lifecycle-common-java8:$version"
             const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
-            const val extension = "androidx.lifecycle:lifecycle-extensions:$extension_version"
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:$extension_version"
             const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
-            const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
+            const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val saved_state = "androidx.lifecycle:lifecycle-viewmodel-savedstate:$version"
         }
 
