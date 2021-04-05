@@ -20,7 +20,7 @@ import { DataProps, withData } from '../hoc/WithData';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
-import { LanguageRecord } from '../../db/TableInterfaces.auto';
+import { LanguageRecord } from '@karya/db';
 
 /** LanugageList props */
 const dataWrapper = withData('language');

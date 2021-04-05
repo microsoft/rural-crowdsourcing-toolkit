@@ -20,7 +20,7 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 /** Import async ops and action creators */
-import { ScenarioRecord } from '../../db/TableInterfaces.auto';
+import { ScenarioRecord } from '@karya/db';
 
 /** Define Router match params props */
 /** Define own props */

@@ -19,7 +19,7 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 // DB Types
-import { Box, BoxRecord } from '../../db/TableInterfaces.auto';
+import { Box, BoxRecord } from '@karya/db';
 
 // HoCs
 import { BackendRequestInitAction } from '../../store/apis/APIs.auto';

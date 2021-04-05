@@ -22,7 +22,7 @@ import GoogleLogin from 'react-google-login';
 import config from '../../config/Index';
 
 /** Types needed for database tables */
-import { WorkProvider } from '../../db/TableInterfaces.auto';
+import { WorkProvider } from '@karya/db';
 
 /** Router props (for history) */
 type RouterProps = RouteComponentProps<{}>;

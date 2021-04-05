@@ -23,7 +23,7 @@ import {
   LanguageResourceValue,
   LanguageResourceValueRecord,
   ScenarioRecord,
-} from '../../db/TableInterfaces.auto';
+} from '@karya/db';
 
 // HoC
 import { DataProps, withData } from '../hoc/WithData';

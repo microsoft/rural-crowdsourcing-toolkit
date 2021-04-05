@@ -17,7 +17,7 @@ import { RootState } from '../../store/Index';
 
 // Store types and actions
 import { ParameterDefinition } from '../../db/ParameterTypes';
-import { LanguageRecord, ScenarioRecord, Task } from '../../db/TableInterfaces.auto';
+import { LanguageRecord, ScenarioRecord, Task } from '@karya/db';
 
 // HTML Helpers
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';

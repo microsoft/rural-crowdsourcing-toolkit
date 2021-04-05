@@ -22,7 +22,7 @@ import { TableColumnType, TableList } from '../templates/TableList';
 // HoC
 import { DataProps, withData } from '../hoc/WithData';
 
-import { LanguageResource, LanguageResourceRecord } from '../../db/TableInterfaces.auto';
+import { LanguageResource, LanguageResourceRecord } from '@karya/db';
 import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
 
 /** Define Router match params props */

@@ -40,7 +40,7 @@ import {
   TaskRecord,
   MicrotaskRecord,
   MicrotaskAssignment,
-} from '../../../db/TableInterfaces.auto';
+} from '@karya/db';
 import { ErrorMessage, ProgressBar } from '../../templates/Status';
 
 // List of verifiers

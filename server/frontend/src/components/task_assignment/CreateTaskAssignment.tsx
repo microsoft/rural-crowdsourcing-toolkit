@@ -18,7 +18,7 @@ import { RootState } from '../../store/Index';
 import { PolicyParameterDefinition } from '../../db/ParameterTypes';
 
 // HTML helpers
-import { BoxRecord, PolicyRecord, TaskAssignment, TaskRecord } from '../../db/TableInterfaces.auto';
+import { BoxRecord, PolicyRecord, TaskAssignment, TaskRecord } from '@karya/db';
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 

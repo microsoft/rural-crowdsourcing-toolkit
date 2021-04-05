@@ -3,7 +3,7 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import * as DBT from '../../db/TableInterfaces.auto';
+import * as DBT from '@karya/db';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<

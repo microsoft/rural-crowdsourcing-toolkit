@@ -10,7 +10,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // Store types and actions
-import { TaskRecord } from '../../db/TableInterfaces.auto';
+import { TaskRecord } from '@karya/db';
 import { taskStatus } from './TaskUtils';
 
 // HoCs

@@ -7,7 +7,7 @@
  * scenario.
  */
 
-import { Scenario } from '../../../db/TableInterfaces.auto';
+import { Scenario } from '@karya/db';
 
 export interface IScenario extends Scenario {
   name: string;

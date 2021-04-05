@@ -16,7 +16,7 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 import { AuthProviderName } from '../../db/Auth.extra';
-import { WorkProvider, WorkProviderRecord } from '../../db/TableInterfaces.auto';
+import { WorkProvider, WorkProviderRecord } from '@karya/db';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
 import { DataProps, withData } from '../hoc/WithData';

@@ -7,7 +7,7 @@
 
 import React, { FormEventHandler, ChangeEventHandler } from 'react';
 import { GenericVerifierComponentProps } from '../common/Verifier';
-import { MicrotaskRecord, MicrotaskAssignmentRecord } from '../../../db/TableInterfaces.auto';
+import { MicrotaskRecord, MicrotaskAssignmentRecord } from '@karya/db';
 
 import { ErrorMessage } from '../../templates/Status';
 

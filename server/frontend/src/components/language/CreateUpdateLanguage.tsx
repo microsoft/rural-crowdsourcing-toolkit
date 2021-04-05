@@ -9,7 +9,7 @@
 
 import React, { ChangeEventHandler, Component, FormEventHandler } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Language } from '../../db/TableInterfaces.auto';
+import { Language } from '@karya/db';
 
 import { SubmitOrCancel, TextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';

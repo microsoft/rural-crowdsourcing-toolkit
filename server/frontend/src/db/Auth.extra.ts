@@ -3,7 +3,7 @@
 
 /** Additional types needed for authentication */
 
-import { AuthProviderType } from './TableInterfaces.auto';
+import { AuthProviderType } from '@karya/db';
 
 /** Auth header to be attached to each request */
 export type AuthHeader = {
