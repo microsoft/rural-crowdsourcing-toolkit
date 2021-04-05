@@ -47,15 +47,15 @@ class OTPFragment : Fragment() {
         fragmentView.invalidOTPTv.text = registrationActivity.invalidOTPMessage
         fragmentView.resendOTPBtn.text = registrationActivity.resendOTPMessage
 
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
+
         return fragmentView
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
 
         /** Resend OTP handler */
         resendOTPBtn.setOnClickListener { resendOTP() }
@@ -74,6 +74,11 @@ class OTPFragment : Fragment() {
         })
         baseActivity.requestSoftKeyFocus(otpEt)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        baseActivity.onAssistantClick()
     }
 
     /**

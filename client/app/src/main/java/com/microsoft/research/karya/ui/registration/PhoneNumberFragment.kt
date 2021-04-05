@@ -104,6 +104,11 @@ class PhoneNumberFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        registrationActivity.onAssistantClick()
+    }
+
     /** Update UI when the phone number is ready */
     private fun handlePhoneNumberReady() {
         uiScope.launch {
