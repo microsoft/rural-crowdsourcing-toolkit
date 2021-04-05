@@ -5,3 +5,4 @@
 /dist-local
 /tools
 tsconfig-local.tsbuildinfo
+/src/TableInterfaces.ts
