@@ -3,12 +3,7 @@
 
 // This file defines basic model functions for all the tables in the database.
 
-import { knex } from '../db/Client';
-import {
-  DbObjectType,
-  DbRecordType,
-  DbTableName,
-} from '@karya/db';
+import { knex, DbObjectType, DbRecordType, DbTableName } from '@karya/db';
 import { logPGError } from '../errors/PostgreSQLErrors';
 
 /**
@@ -22,9 +17,7 @@ export async function insertRecord<TableName extends DbTableName>(
 ): Promise<DbRecordType<TableName>> {
   try {
     // attempt inserting the record into the table
-    const response = await knex(tableName)
-      .insert(object)
-      .returning('*');
+    const response = await knex(tableName).insert(object).returning('*');
 
     // on successful insertion, first element of response array contains
     // inserted object
@@ -47,9 +40,7 @@ export async function getRecords<TableName extends DbTableName>(
 ): Promise<DbRecordType<TableName>[]> {
   try {
     // attempt to retrieve the records from the database
-    const response = await knex(tableName)
-      .where(match)
-      .select();
+    const response = await knex(tableName).where(match).select();
 
     // return all retrived records
     const retrievedRecords: DbRecordType<TableName>[] = response;
@@ -73,9 +64,7 @@ export async function getSingle<TableName extends DbTableName>(
 ): Promise<DbRecordType<TableName>> {
   try {
     // get record from the db
-    const response = await knex(tableName)
-      .where(match)
-      .first();
+    const response = await knex(tableName).where(match).first();
 
     // if undefined response, throw error
     if (response === undefined) {
@@ -178,9 +167,7 @@ export async function removeRecords<TableName extends DbTableName>(
 ): Promise<number> {
   try {
     // delete records
-    const response = await knex(tableName)
-      .where(match)
-      .delete();
+    const response = await knex(tableName).where(match).delete();
     return response;
   } catch (e) {
     logPGError(e);

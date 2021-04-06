@@ -6,8 +6,8 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import { knex } from '../db/Client';
 import {
+  knex,
   KaryaFileRecord,
   MicrotaskAssignment,
   MicrotaskAssignmentRecord,

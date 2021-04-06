@@ -4,12 +4,12 @@
 // File containing controllers for the 'language_resource_value' table that
 // could not be autimatically implemented.
 
-import { knex } from '../db/Client';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 import {
+  knex,
   LanguageResource,
   LanguageResourceRecord,
   LanguageResourceValue,

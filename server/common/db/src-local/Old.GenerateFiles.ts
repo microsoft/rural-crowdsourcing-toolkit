@@ -51,10 +51,10 @@ for (const path of Object.keys(paths)) {
 const excludedTables: string[] = [''];
 if (target === 'backend') {
   /** Write all backend related files */
-  fs.writeFileSync(
-    paths.createTableFunctions,
-    createTableFunctionsFileData('backend', excludedTables),
-  );
+  // fs.writeFileSync(
+  //   paths.createTableFunctions,
+  //       createTableFunctionsFileData('backend', excludedTables),
+  // );
   fs.writeFileSync(
     paths.dropTableFunctions,
     dropTableFunctionsFileData(excludedTables),
@@ -77,10 +77,10 @@ if (target === 'backend') {
 } else if (target === 'box') {
   excludedTables.push('work_provider');
   /** Write box related files */
-  fs.writeFileSync(
-    paths.createTableFunctions,
-    createTableFunctionsFileData('box', excludedTables),
-  );
+  // fs.writeFileSync(
+  //   paths.createTableFunctions,
+  //   createTableFunctionsFileData('box', excludedTables),
+  // );
   fs.writeFileSync(
     paths.dropTableFunctions,
     dropTableFunctionsFileData(excludedTables),

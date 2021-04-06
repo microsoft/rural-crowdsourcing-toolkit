@@ -3,13 +3,13 @@
 
 // Implements APIs for 'payment_request' that could not be auto-generated
 
-import { knex } from '../db/Client';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
 import {
+  knex,
   PaymentRequestRecord,
   PayoutInfo,
   PayoutInfoRecord,

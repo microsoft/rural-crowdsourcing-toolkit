@@ -17,11 +17,11 @@ import * as tar from 'tar';
 import { Promise as BBPromise } from 'bluebird';
 
 import {
+  knex,
   Microtask,
   MicrotaskAssignmentRecord,
   MicrotaskRecord,
 } from '@karya/db';
-import { knex } from '../../db/Client';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 import config from '../../config/Index';
 import { downloadBlob } from '../../utils/AzureBlob';

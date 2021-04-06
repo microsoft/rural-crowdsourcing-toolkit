@@ -26,7 +26,6 @@
     "formidable": "^1.2.2",
     "google-auth-library": "^7.0.2",
     "jwt-simple": "^0.5.6",
-    "knex": "^0.21.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-router": "^7.4.0",
@@ -34,7 +33,6 @@
     "pg": "^8.0.3",
     "raw-body": "^2.4.1",
     "tar": "^6.0.5",
-    "typescript": "^3.9.7",
     "uuid": "^7.0.3"
   },
   "devDependencies": {
@@ -47,10 +45,7 @@
     "@types/md5-file": "^4.0.2",
     "@types/node": "^13.13.46",
     "@types/tar": "^4.0.3",
-    "@types/uuid": "^7.0.4"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
+    "@types/uuid": "^7.0.4",
+    "typescript": "^4.2.3"
   }
 }

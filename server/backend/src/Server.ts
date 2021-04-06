@@ -10,7 +10,7 @@ import logger from './utils/Logger';
 import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
 import router from './routes/Routes';
 
-import { setupDBConnection } from './db/Client';
+import { setupDbConnection } from '@karya/db';
 import { registerScenarios } from './scenarios/Register';
 import {
   createBlobContainers,
@@ -45,7 +45,7 @@ app.use(router.routes());
   }
 
   // Setup the database connection
-  setupDBConnection();
+  setupDbConnection(config.dbConfig);
 
   // Register scenarios
   logger.info(`Syncing scenarios with the database`);

@@ -3,8 +3,8 @@
 
 // Implements APIs on 'microtask_group' that could not be auto generated
 
-import { knex } from '../db/Client';
 import {
+  knex,
   Microtask,
   MicrotaskAssignmentRecord,
   MicrotaskRecord,

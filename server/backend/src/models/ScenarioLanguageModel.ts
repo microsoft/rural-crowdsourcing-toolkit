@@ -5,8 +5,8 @@
  * Model functions related to language support for scenarios
  */
 
-import { knex } from '../db/Client';
 import {
+  knex,
   LanguageRecord,
   LanguageResource,
   LanguageResourceRecord,

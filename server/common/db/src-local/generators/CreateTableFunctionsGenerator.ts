@@ -17,7 +17,7 @@ import { FieldInfo, tableNames, tables } from '../parsers/TableParser';
  * @param name name of the field
  * @param info Information regarding the field
  */
-function KnexField(name: string, info: FieldInfo, excludedTables: string[]) {
+function KnexField(name: string, info: FieldInfo) {
   /** Type string */
   const typeString =
     info.type === 'serial'
@@ -71,80 +71,60 @@ function KnexField(name: string, info: FieldInfo, excludedTables: string[]) {
         ? `.defaultTo('{}')`
         : option === 'filter'
         ? ''
-        : `unknown option '${option}'`,
+        : `unknown option '${option}'`
     )
     .join('');
 
   /** Foreign key string */
-  let refString = info.ref
-    ? `\ntable.foreign('${name}').references('${info.ref}.id')`
-    : '';
-  if (info.ref && excludedTables.indexOf(info.ref) != -1) {
-    refString = '';
-    optionString = '';
-  }
+  let refString = info.ref ? `\ntable.foreign('${name}').references('${info.ref}.id')` : '';
   return `table.${typeString}${optionString};${refString}`;
 }
 
-export function createTableFunctionsFileData(
-  server: 'backend' | 'box',
-  excludedTables: string[],
-): string {
-  /*Exclude tables that don't need to be created */
-  if (server == 'box') {
-    excludedTables.push('work_provider');
-  }
-  let filteredTableNames = tableNames;
-  excludedTables.forEach((excludedTable) => {
-    delete tables[excludedTable];
-    filteredTableNames = filteredTableNames.filter((tname) => {
-      return excludedTable.indexOf(tname) == -1;
-    });
-  });
+const withoutLocalId = `
+if (server == 'backend') {
+  table.specificType('id', 'BIGSERIAL').primary();
+} else {
+  table.bigInteger('id').primary();
+}
+`;
+
+const withLocalId = `
+if (server == 'backend') {
+  table.bigInteger('id').primary();
+  table.bigInteger('local_id');
+} else {
+  table.bigInteger('id').primary();
+  table.specificType('local_id', 'BIGSERIAL');
+}
+`;
+
+export function createTableFunctionsFileData(): string {
   /** Generate the create table function string for each table */
   const createTableStrings = Object.entries(tables).map(([tname, tinfo]) => {
     /** Update the types for local_id and id depending on server */
     const fields = { ...tinfo.fields };
-    if (server === 'backend' && tname !== 'karya_file') {
-      // all local_ids are int/bigint
-      if ('local_id' in fields) {
-        fields.local_id.type =
-          fields.local_id.type === 'serial'
-            ? 'int'
-            : fields.local_id.type === 'bigserial'
-            ? 'bigint'
-            : fields.local_id.type;
-      }
-    }
-    if (server === 'box') {
-      // all ids are int/bigint
-      fields.id.type =
-        fields.id.type === 'serial'
-          ? 'int'
-          : fields.id.type === 'bigserial'
-          ? 'bigint'
-          : fields.id.type;
-    }
+    const idString = 'local_id' in fields ? withLocalId : withoutLocalId;
+
+    const computeIDTrigger =
+      'local_id' in tinfo.fields || tname === 'karya_file' ? `await knex.raw(computeIDTrigger('${tname}'))` : '';
+
+    delete fields['id'];
+    delete fields['local_id'];
 
     /** Generrate the field strings */
     const fieldStrings = Object.entries(fields)
-      .map(([fname, finfo]) => KnexField(fname, finfo, excludedTables))
+      .map(([fname, finfo]) => KnexField(fname, finfo))
       .join('\n');
 
     /** Generate the unique constraints */
     const uniqueConstraintStrings = tinfo.unique
-      ? tinfo.unique
-          .map((cols) => `table.unique(['${cols.join(`', '`)}'])`)
-          .join('\n')
+      ? tinfo.unique.map((cols) => `table.unique(['${cols.join(`', '`)}'])`).join('\n')
       : '';
 
     /** Generate the create table function */
-    const computeIDTrigger =
-      (server === 'box' && 'local_id' in tinfo.fields) || tname === 'karya_file'
-        ? `await knex.raw(computeIDTrigger('${tname}'))`
-        : '';
-    return `export async function create${TableType(tname)}Table() {
+    return `export async function create${TableType(tname)}Table(server: 'backend' | 'box') {
       await knex.schema.createTable('${tname}', async table => {
+        ${idString}
         ${fieldStrings}
         ${uniqueConstraintStrings}
       });
@@ -154,26 +134,18 @@ export function createTableFunctionsFileData(
   });
 
   /** Function to create all tables */
-  const createTableCalls = filteredTableNames
-    .map((tname) => `await create${TableType(tname)}Table()`)
-    .join('\n');
-  const createAllTablesString = `export async function createAllTables() {
-    try {
+  const createTableCalls = tableNames.map((tname) => `await create${TableType(tname)}Table(server)`).join('\n');
+  const createAllTablesString = `export async function createAllTables(server: 'backend' | 'box') {
       await createCheckLastUpdatedFunction();
       await createComputeIDFunction();
       ${createTableCalls}
-    } catch(e) {
-      logger.error(e);
-    }
   }`;
 
   /** Generate the file data */
   const createTableFunctionsData = `\
   ${openingComment}
 
-  import { knex } from './Client';
-
-  import logger from '../utils/Logger';
+  import { knex } from '../client';
 
 /**
  * Create a trigger to check the last_updated_at column is increasing. Cannot

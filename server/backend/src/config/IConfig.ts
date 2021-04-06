@@ -3,7 +3,7 @@
 
 import { Options as CorsOptions } from '@koa/cors';
 import { SetOption as CookieOptions } from 'cookies';
-import { PgConnectionConfig } from 'knex';
+import { Knex } from 'knex';
 
 export default interface IConfig {
   // Name
@@ -16,7 +16,7 @@ export default interface IConfig {
   serverPort: number;
 
   // Config for the postgres database server
-  dbConfig: PgConnectionConfig & { password: string };
+  dbConfig: Knex.PgConnectionConfig & { password: string };
 
   // CORS config
   corsConfig: CorsOptions;

@@ -6,11 +6,7 @@
  */
 
 import md5File from 'md5-file';
-import {
-  ChecksumAlgorithm,
-  KaryaFile,
-  KaryaFileRecord,
-} from '@karya/db';
+import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord } from '@karya/db';
 import { uploadBlobFromFile } from '../utils/AzureBlob';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 import * as BasicModel from './BasicModel';

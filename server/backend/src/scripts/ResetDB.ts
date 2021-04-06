@@ -7,16 +7,16 @@
 
 import { Promise as BBPromise } from 'bluebird';
 
-import { knex, setupDBConnection } from '../db/Client';
-import { createAllTables } from '../db/CreateTableFunctions.auto';
-import { dropAllTables } from '../db/DropTableFunctions.auto';
+import {
+  knex,
+  setupDbConnection,
+  createAllTables,
+  dropAllTables,
+} from '@karya/db';
 
 import * as BasicModel from '../models/BasicModel';
 
-import {
-  LanguageResource,
-  LanguageResourceRecord,
-} from '@karya/db';
+import { LanguageResource, LanguageResourceRecord } from '@karya/db';
 
 import { scenarioMap } from '../scenarios/Index';
 import { registerScenarios } from '../scenarios/Register';
@@ -37,7 +37,7 @@ async function recreateAllTables() {
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
   await dropAllTables();
-  await createAllTables();
+  await createAllTables('backend');
   logger.info(`Tables recreated`);
 }
 
@@ -223,7 +223,7 @@ let scriptSequence = [
     await loadSecretsFromVault();
   }
 
-  setupDBConnection();
+  setupDbConnection(config.dbConfig);
 
   await BBPromise.mapSeries(scriptSequence, async (action) => {
     switch (action) {

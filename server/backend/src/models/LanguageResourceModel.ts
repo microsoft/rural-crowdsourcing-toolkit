@@ -3,8 +3,8 @@
 
 /** Extra model functions for the language resource table */
 
-import { knex } from '../db/Client';
 import {
+  knex,
   LanguageResource,
   LanguageResourceRecord,
   LanguageResourceValueRecord,
