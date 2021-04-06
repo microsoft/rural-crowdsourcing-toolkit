@@ -12,8 +12,8 @@ import {
   TaskRecord,
   WorkerLanguageSkillRecord,
   WorkerRecord,
+  BasicModel,
 } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
 import * as MicrotaskGroupModel from '../models/MicroTaskGroupModel';
 import { hasIncompleteMicrotasks } from '../models/MicroTaskModel';
 import { SkillSpecs } from '../scenarios/common/SkillSpecs';
@@ -24,10 +24,7 @@ import { scenarioMap } from '../scenarios/Index';
  * @param worker worker to whom assignments will be assigned
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
-export async function assignMicrotasksForWorker(
-  worker: WorkerRecord,
-  maxCredits: number,
-): Promise<void> {
+export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
   // Check if the worker has incomplete assignments. If so, return
   const hasCurrentAssignments = await hasIncompleteMicrotasks(worker.id);
   if (hasCurrentAssignments) {
@@ -60,11 +57,7 @@ export async function assignMicrotasksForWorker(
     });
 
     // match the skills required for the task's scenario and skills of the user
-    const doesWorkerSkillMatch = await matchSkills(
-      scenario.skills as SkillSpecs,
-      task,
-      worker,
-    );
+    const doesWorkerSkillMatch = await matchSkills(scenario.skills as SkillSpecs, task, worker);
 
     if (!doesWorkerSkillMatch) {
       return;
@@ -88,12 +81,7 @@ export async function assignMicrotasksForWorker(
 
     if (task.assignment_granularity === 'group') {
       // Get all assignable microtask groups
-      const assignableGroups = await policyObj.getAssignableMicrotaskGroups(
-        worker,
-        task,
-        taskAssignment,
-        policy,
-      );
+      const assignableGroups = await policyObj.getAssignableMicrotaskGroups(worker, task, taskAssignment, policy);
 
       // Reorder the groups based on assignment order
       reorder(assignableGroups, task.group_assignment_order);
@@ -123,12 +111,7 @@ export async function assignMicrotasksForWorker(
       });
     } else if (task.assignment_granularity === 'microtask') {
       // get all assignable microtasks
-      const assignableMicrotasks = await policyObj.getAssignableMicrotasks(
-        worker,
-        task,
-        taskAssignment,
-        policy,
-      );
+      const assignableMicrotasks = await policyObj.getAssignableMicrotasks(worker, task, taskAssignment, policy);
 
       // reorder according to task spec
       reorder(assignableMicrotasks, task.microtask_assignment_order);
@@ -173,9 +156,7 @@ export async function assignMicrotasksForWorker(
  * Handle microtask assignment completion
  * @param microtaskAssignment Microtask assignment record
  */
-export async function handleMicrotaskAssignmentCompletion(
-  microtaskAssignment: MicrotaskAssignmentRecord,
-) {
+export async function handleMicrotaskAssignmentCompletion(microtaskAssignment: MicrotaskAssignmentRecord) {
   // fetch the microtask using the microtask id stored in microtask assignment
   const microtask = await BasicModel.getSingle('microtask', {
     id: microtaskAssignment.microtask_id,
@@ -199,11 +180,7 @@ export async function handleMicrotaskAssignmentCompletion(
   const policyObj = scenarioMap[scenario.name].policyMap[policy.name];
 
   // Invoke handler for policy
-  await policyObj.handleMicrotaskAssignmentCompletion(
-    microtaskAssignment,
-    microtask,
-    taskAssignment,
-  );
+  await policyObj.handleMicrotaskAssignmentCompletion(microtaskAssignment, microtask, taskAssignment);
 }
 
 /**
@@ -211,7 +188,7 @@ export async function handleMicrotaskAssignmentCompletion(
  * @param microtaskGroupAssignment Microtask group assignment record
  */
 export async function handleMicrotaskGroupAssignmentCompletion(
-  microtaskGroupAssignment: MicrotaskGroupAssignmentRecord,
+  microtaskGroupAssignment: MicrotaskGroupAssignmentRecord
 ) {
   // fetch microtask group
   const microtaskGroup = await BasicModel.getSingle('microtask_group', {
@@ -236,11 +213,7 @@ export async function handleMicrotaskGroupAssignmentCompletion(
   const policyObj = scenarioMap[scenario.name].policyMap[policy.name];
 
   // Invoke handler for policy
-  await policyObj.handleMicrotaskGroupAssignmentCompletion(
-    microtaskGroupAssignment,
-    microtaskGroup,
-    taskAssignment,
-  );
+  await policyObj.handleMicrotaskGroupAssignmentCompletion(microtaskGroupAssignment, microtaskGroup, taskAssignment);
 }
 
 /**
@@ -249,11 +222,7 @@ export async function handleMicrotaskGroupAssignmentCompletion(
  * @param task Task (to retrieve language ID)
  * @param worker Current worker
  */
-async function matchSkills(
-  skillsRequired: SkillSpecs,
-  task: TaskRecord,
-  worker: WorkerRecord,
-): Promise<boolean> {
+async function matchSkills(skillsRequired: SkillSpecs, task: TaskRecord, worker: WorkerRecord): Promise<boolean> {
   // Get the skill record for the worker in the specific language
   let skill: WorkerLanguageSkillRecord;
   try {
@@ -271,29 +240,20 @@ async function matchSkills(
   // Skill score check
   if (
     l1Reqs.read > 0 &&
-    (!skill.can_read ||
-      !skill.read_score ||
-      skill.read_score < l1Reqs.read ||
-      skill.read_score - l1Reqs.read > 5)
+    (!skill.can_read || !skill.read_score || skill.read_score < l1Reqs.read || skill.read_score - l1Reqs.read > 5)
   ) {
     return false;
   }
 
   if (
     l1Reqs.speak > 0 &&
-    (!skill.can_speak ||
-      !skill.speak_score ||
-      skill.speak_score < l1Reqs.speak ||
-      skill.speak_score - l1Reqs.speak > 5)
+    (!skill.can_speak || !skill.speak_score || skill.speak_score < l1Reqs.speak || skill.speak_score - l1Reqs.speak > 5)
   ) {
     return false;
   }
   if (
     l1Reqs.type > 0 &&
-    (!skill.can_type ||
-      !skill.type_score ||
-      skill.type_score < l1Reqs.type ||
-      skill.type_score - l1Reqs.type > 5)
+    (!skill.can_type || !skill.type_score || skill.type_score < l1Reqs.type || skill.type_score - l1Reqs.type > 5)
   ) {
     return false;
   }
@@ -307,10 +267,7 @@ async function matchSkills(
  * Reorder elements of an array based on the sort order
  * @param array Array to be shuffled
  */
-function reorder<T extends { id: string }>(
-  array: T[],
-  order: AssignmentOrderType,
-) {
+function reorder<T extends { id: string }>(array: T[], order: AssignmentOrderType) {
   if (order === 'random') {
     let currentIndex = array.length;
     let temporaryValue: T;
@@ -323,9 +280,7 @@ function reorder<T extends { id: string }>(
       array[randomIndex] = temporaryValue;
     }
   } else if (order === 'sequential') {
-    array.sort(
-      (m1, m2) => Number.parseInt(m1.id, 10) - Number.parseInt(m2.id, 10),
-    );
+    array.sort((m1, m2) => Number.parseInt(m1.id, 10) - Number.parseInt(m2.id, 10));
   } else {
     throw new Error('Invalid assignment order');
   }

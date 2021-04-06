@@ -12,12 +12,12 @@ import {
   DbTableName,
   MicrotaskAssignmentRecord,
   tableList,
+  BasicModel,
 } from '@karya/db';
 
 import { Promise as BBPromise } from 'bluebird';
 import { scenarioById } from '../scenarios/Index';
 import { getBlobSASURL } from '../utils/AzureBlob';
-import * as BasicModel from './BasicModel';
 
 const boxUpdatableTables: BoxUpdatableTables[] = [
   'worker',

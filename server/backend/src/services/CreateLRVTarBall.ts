@@ -14,9 +14,9 @@ import {
   LanguageRecord,
   LanguageResourceRecord,
   LanguageResourceValueRecord,
+  BasicModel,
 } from '@karya/db';
 
-import * as BasicModel from '../models/BasicModel';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 
 import { downloadBlob, getParts as getBlobParts } from '../utils/AzureBlob';

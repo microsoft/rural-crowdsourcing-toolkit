@@ -6,12 +6,7 @@
  */
 
 import { taskLogger } from '../utils/Logger';
-
-// Basic model
-import * as BasicModel from '../models/BasicModel';
-
-// Types
-import { TaskRecord } from '@karya/db';
+import { TaskRecord, BasicModel } from '@karya/db';
 import { scenarioMap } from '../scenarios/Index';
 
 export async function validateTask(taskRecord: TaskRecord) {

@@ -15,17 +15,11 @@ import { GET } from './HttpUtils';
 export async function getUpdatesFromServer() {
   try {
     // Determine the last successful receive time
-    const lastReceivedAt = new Date(
-      this_box.last_received_from_server_at,
-    ).toISOString();
+    const lastReceivedAt = new Date(this_box.last_received_from_server_at).toISOString();
     logger.info(`Last successful receive at ${lastReceivedAt}`);
 
     // Send request for updates
-    const response = await GET(
-      '/rbox/updates',
-      { from: lastReceivedAt },
-      'arraybuffer',
-    );
+    const response = await GET('/rbox/updates', { from: lastReceivedAt }, 'arraybuffer');
 
     // Capture the response in a buffer
     const bufferLength = Buffer.byteLength(response);

@@ -7,12 +7,12 @@
 
 import { signUpUser } from '../auth-providers/Index';
 import {
+  BasicModel,
   AuthProviderType,
   WorkProvider,
   WorkProviderRecord,
 } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import config from '../config/Index';

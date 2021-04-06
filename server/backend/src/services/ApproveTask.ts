@@ -9,13 +9,12 @@
 import { Promise as BBPromise } from 'bluebird';
 import * as tar from 'tar';
 
-import * as BasicModel from '../models/BasicModel';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { taskLogger } from '../utils/Logger';
 
 import { scenarioMap } from '../scenarios/Index';
 
-import { TaskRecord } from '@karya/db';
+import { TaskRecord, BasicModel } from '@karya/db';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 /**

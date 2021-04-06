@@ -4,7 +4,6 @@
 // File containing controllers for the 'language_resource_value' table that
 // could not be autimatically implemented.
 
-import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
@@ -15,6 +14,7 @@ import {
   LanguageResourceValue,
   LanguageResourceValueRecord,
   tableFilterColumns,
+  BasicModel,
 } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 

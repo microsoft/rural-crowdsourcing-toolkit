@@ -6,7 +6,7 @@
  */
 
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
+import { BasicModel } from '@karya/db';
 import { isLanguageSupported } from '../models/ScenarioLanguageModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

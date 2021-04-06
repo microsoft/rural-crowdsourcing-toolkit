@@ -11,10 +11,11 @@ import { generateMicrotasks } from './MicrotaskGenerator';
 import { SpeechVerificationTask, taskParams } from './ParamDefinitions';
 import { defaultPolicy } from './policy/default/Index';
 import { validateTask } from './TaskValidator';
-
-import * as BasicModel from '../../models/BasicModel';
-
-import { MicrotaskAssignmentRecord, MicrotaskRecord } from '@karya/db';
+import {
+  MicrotaskAssignmentRecord,
+  MicrotaskRecord,
+  BasicModel,
+} from '@karya/db';
 
 export const SpeechVerificationScenario: IScenario = {
   name: 'speech-verification',

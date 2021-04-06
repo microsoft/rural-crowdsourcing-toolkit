@@ -4,8 +4,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AuthResponse, verifyIDToken } from '../auth-providers/Index';
 import { KaryaMiddleware } from '../controllers/KoaContextType';
-import { AuthProviderType, DbTableName, tableFilterColumns } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import {
+  AuthProviderType,
+  DbTableName,
+  tableFilterColumns,
+  BasicModel,
+} from '@karya/db';
 import { requestLogger } from '../utils/Logger';
 import * as HttpResponse from '@karya/http-response';
 import { setCookie } from '../controllers/Auth.extra';

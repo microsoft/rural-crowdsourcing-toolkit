@@ -9,12 +9,7 @@ import { promises as fsp } from 'fs';
 import md5File from 'md5-file';
 import box_id from '../config/box_id';
 import config from '../config/Index';
-import {
-  ChecksumAlgorithm,
-  KaryaFile,
-  KaryaFileRecord,
-} from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/db';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 
 /**
@@ -27,7 +22,7 @@ export async function insertWorkerFile(
   worker_id: string,
   karyaFile: KaryaFile,
   blobParams: BlobParameters,
-  filepath: string,
+  filepath: string
 ): Promise<KaryaFileRecord> {
   if (!karyaFile.algorithm) {
     throw new Error('Need checksum with a file upload');
@@ -48,10 +43,7 @@ export async function insertWorkerFile(
   karyaFile.in_box = true;
 
   // copy the file to the right location
-  await fsp.copyFile(
-    filepath,
-    `${config.filesFolder}/${karyaFile.container_name}/${karyaFile.name}`,
-  );
+  await fsp.copyFile(filepath, `${config.filesFolder}/${karyaFile.container_name}/${karyaFile.name}`);
 
   // Insert the record into the db
   const fileRecord = await BasicModel.insertRecord('karya_file', karyaFile);
@@ -65,10 +57,7 @@ export async function insertWorkerFile(
  *
  * @returns inserted karya file record
  */
-export async function insertLocalKaryaFile(
-  blobParams: BlobParameters,
-  filepath: string,
-): Promise<KaryaFileRecord> {
+export async function insertLocalKaryaFile(blobParams: BlobParameters, filepath: string): Promise<KaryaFileRecord> {
   const csAlgo: ChecksumAlgorithm = 'md5';
 
   // Get blob name
@@ -78,10 +67,7 @@ export async function insertLocalKaryaFile(
   const checksum = await getChecksum(filepath, csAlgo);
 
   // Copy file to the appropriate path
-  await fsp.copyFile(
-    filepath,
-    `${config.filesFolder}/${blobParams.cname}/${blobName}`,
-  );
+  await fsp.copyFile(filepath, `${config.filesFolder}/${blobParams.cname}/${blobName}`);
 
   // Create karya file object
   const kf: KaryaFile = {

@@ -12,10 +12,10 @@ import {
   Policy,
   Scenario,
   ScenarioRecord,
+  BasicModel,
 } from '@karya/db';
 import { IScenario, scenarioById, scenarioMap } from './Index';
 
-import * as BasicModel from '../models/BasicModel';
 import { updateLanguageResource } from '../models/LanguageResourceModel';
 
 import bbPromise from 'bluebird';

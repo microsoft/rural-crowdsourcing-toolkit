@@ -13,10 +13,8 @@ import {
   LanguageRecord,
   LanguageResourceRecord,
   TaskRecord,
+  BasicModel,
 } from '@karya/db';
-
-// Basic model
-import * as BasicModel from '../models/BasicModel';
 
 // Task action handlers
 import { approveTask } from './ApproveTask';
@@ -38,10 +36,10 @@ import { generateTaskOutput } from './GenerateOutput';
 export const taskValidationQueue = new Bull<TaskRecord>('validate_task');
 
 // Task validation handler
-taskValidationQueue.process(async job => validateTask(job.data));
+taskValidationQueue.process(async (job) => validateTask(job.data));
 
 // on failure, set status to invalid
-taskValidationQueue.on('failed', async job => {
+taskValidationQueue.on('failed', async (job) => {
   const task = job.data;
   const errors = [job.failedReason || 'Task validation failed'];
   await BasicModel.updateSingle(
@@ -57,10 +55,10 @@ taskValidationQueue.on('failed', async job => {
 export const taskApprovalQueue = new Bull<TaskRecord>('approve_task');
 
 // Task approval handler
-taskApprovalQueue.process(async job => approveTask(job.data));
+taskApprovalQueue.process(async (job) => approveTask(job.data));
 
 // On complete, set task status to 'approved'
-taskApprovalQueue.on('completed', async job => {
+taskApprovalQueue.on('completed', async (job) => {
   const task = job.data;
 
   await BasicModel.updateSingle(
@@ -72,7 +70,7 @@ taskApprovalQueue.on('completed', async job => {
 
 // On failure, reset task to 'validated'. This is a hack to enable approval
 // retry.
-taskApprovalQueue.on('failed', async job => {
+taskApprovalQueue.on('failed', async (job) => {
   const task = job.data;
   const errors = [job.failedReason || 'Task approval failed'];
   await BasicModel.updateSingle(
@@ -88,7 +86,7 @@ export const taskOutputGeneratorQueue = new Bull<TaskRecord>(
 );
 
 // output generator handler
-taskOutputGeneratorQueue.process(async job => generateTaskOutput(job.data));
+taskOutputGeneratorQueue.process(async (job) => generateTaskOutput(job.data));
 
 /** Queue and handlers for language LRV tarball creation */
 
@@ -96,10 +94,10 @@ taskOutputGeneratorQueue.process(async job => generateTaskOutput(job.data));
 export const languageLRVTarQueue = new Bull<LanguageRecord>('create_l_lrv');
 
 // Language lrv tar creation handler
-languageLRVTarQueue.process(async job => createLanguageLRVTarBall(job.data));
+languageLRVTarQueue.process(async (job) => createLanguageLRVTarBall(job.data));
 
 // On completion, log success and reset update_lrv flag
-languageLRVTarQueue.on('completed', async job => {
+languageLRVTarQueue.on('completed', async (job) => {
   const language = job.data;
   await BasicModel.updateSingle(
     'language',
@@ -112,7 +110,7 @@ languageLRVTarQueue.on('completed', async job => {
 });
 
 // On failure, just log error
-languageLRVTarQueue.on('failed', async job => {
+languageLRVTarQueue.on('failed', async (job) => {
   const language = job.data;
   await BasicModel.updateSingle(
     'language',
@@ -130,10 +128,12 @@ languageLRVTarQueue.on('failed', async job => {
 export const lrLRVTarQueue = new Bull<LanguageResourceRecord>('create_lr_lrv');
 
 // Language lrv tar creation handler
-lrLRVTarQueue.process(async job => createLanguageResourceLRVTarBall(job.data));
+lrLRVTarQueue.process(async (job) =>
+  createLanguageResourceLRVTarBall(job.data),
+);
 
 // On completion, log success and update reset the update_lrv flag
-lrLRVTarQueue.on('completed', async job => {
+lrLRVTarQueue.on('completed', async (job) => {
   const lrr = job.data;
   await BasicModel.updateSingle(
     'language_resource',
@@ -146,7 +146,7 @@ lrLRVTarQueue.on('completed', async job => {
 });
 
 // On failure, just log error
-lrLRVTarQueue.on('failed', async job => {
+lrLRVTarQueue.on('failed', async (job) => {
   const lrr = job.data;
   await BasicModel.updateSingle(
     'language_resource',

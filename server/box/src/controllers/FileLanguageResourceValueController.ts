@@ -35,10 +35,7 @@ export async function getLRVFile(ctx: KaryaHTTPContext) {
       ext: 'tar',
     });
   } else {
-    HttpResponse.BadRequest(
-      ctx,
-      'Need either language_id or language_resource_id parameter',
-    );
+    HttpResponse.BadRequest(ctx, 'Need either language_id or language_resource_id parameter');
     return;
   }
 

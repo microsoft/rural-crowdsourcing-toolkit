@@ -5,13 +5,8 @@
 
 import config from '../config/Index';
 import logger from '../utils/Logger';
-
-import * as BasicModel from '../models/BasicModel';
-
-import {
-  downloadPendingKaryaFiles,
-  getNewSASTokens,
-} from './DownloadFilesFromBlobStore';
+import { BasicModel } from '@karya/db';
+import { downloadPendingKaryaFiles, getNewSASTokens } from './DownloadFilesFromBlobStore';
 import { getUpdatesFromServer } from './GetUpdatesFromServer';
 import { sendUpdatesToServer } from './SendUpdatesToServer';
 import { uploadKaryaFilesToServer } from './UploadFilesToServer';
@@ -44,10 +39,7 @@ export async function syncWithServer() {
     if (!this_box.physical) {
       logger.info(`Fetching phone authentication information`);
       try {
-        const phoneOtp = await GET<{}, typeof config['phoneOtp']>(
-          '/rbox/phone-auth-info',
-          {},
-        );
+        const phoneOtp = await GET<{}, typeof config['phoneOtp']>('/rbox/phone-auth-info', {});
         config.phoneOtp = { ...phoneOtp };
         logger.info(`Phone auth available.`);
       } catch (e) {
@@ -70,11 +62,7 @@ export async function syncWithServer() {
     logger.info(`Sending database updates to the server`);
     const sendStatus = await sendUpdatesToServer(sendTime);
     if (sendStatus) {
-      await BasicModel.updateSingle(
-        'box',
-        { id: box_id },
-        { last_sent_to_server_at: sendTime },
-      );
+      await BasicModel.updateSingle('box', { id: box_id }, { last_sent_to_server_at: sendTime });
       logger.info(`Send stage finished successfully`);
     } else {
       logger.error(`Send stage failed with errors`);
@@ -89,11 +77,7 @@ export async function syncWithServer() {
     logger.info(`Receiving database updates from the server`);
     const receiveStatus = await getUpdatesFromServer();
     if (receiveStatus) {
-      await BasicModel.updateSingle(
-        'box',
-        { id: box_id },
-        { last_received_from_server_at: receiveTime },
-      );
+      await BasicModel.updateSingle('box', { id: box_id }, { last_received_from_server_at: receiveTime });
       logger.info(`Receive stage finished successfully`);
     } else {
       logger.error(`Receive stage failed with errors`);

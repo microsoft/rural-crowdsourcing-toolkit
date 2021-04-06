@@ -18,13 +18,8 @@ import { ErrorBody } from './HttpResponseTypes';
  * @param resource Endpoint to fetch from the backend
  * @param params Parameters of the request
  */
-export async function BackendFetch<ResponseType = any>(
-  resource: string,
-  params: RequestInit,
-): Promise<ResponseType> {
-  const headers = params.headers
-    ? { ...params.headers, ...authHeader }
-    : { ...authHeader };
+export async function BackendFetch<ResponseType = any>(resource: string, params: RequestInit): Promise<ResponseType> {
+  const headers = params.headers ? { ...params.headers, ...authHeader } : { ...authHeader };
   const response = await fetch(`${config.serverUrl}/api${resource}`, {
     ...params,
     headers,
@@ -54,7 +49,7 @@ export { axios };
 export async function POST<RequestType = any, ResponseType = any>(
   endpoint: string,
   obj: RequestType,
-  files?: { [id: string]: File },
+  files?: { [id: string]: File }
 ): Promise<ResponseType> {
   if (files === undefined) {
     // If no files, send directly
@@ -93,7 +88,7 @@ export async function PUT<RequestType = any, ResponseType = any>(
   endpoint: string,
   obj: RequestType,
   files?: { [id: string]: File },
-  contentType: string = 'application/json; charset=utf-8',
+  contentType: string = 'application/json; charset=utf-8'
 ): Promise<ResponseType> {
   if (files === undefined) {
     // If no files, send directly
@@ -131,7 +126,7 @@ export async function PUT<RequestType = any, ResponseType = any>(
 export async function GET<ParamsType = any, ResponseType = any>(
   endpoint: string,
   params?: ParamsType,
-  responseType: AxiosResponseType = 'json',
+  responseType: AxiosResponseType = 'json'
 ): Promise<ResponseType> {
   const response = await axios.get<ResponseType>(endpoint, {
     params,

@@ -10,7 +10,7 @@ import logger from './utils/Logger';
 import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
 import router from './routes/Routes';
 
-import { setupDbConnection } from '@karya/db';
+import { setupDbConnection, BasicModel } from '@karya/db';
 import { registerScenarios } from './scenarios/Register';
 import {
   createBlobContainers,
@@ -18,7 +18,6 @@ import {
   setupBlobStore,
 } from './utils/AzureBlob';
 
-import * as BasicModel from './models/BasicModel';
 import { scenarioById } from './scenarios/Index';
 import { taskOutputGeneratorQueue } from './services/Index';
 

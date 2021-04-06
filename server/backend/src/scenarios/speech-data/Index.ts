@@ -11,7 +11,6 @@ import { generateMicrotasks } from './MicrotaskGenerator';
 import { SpeechDataTask, taskParams } from './ParamDefinitions';
 import { defaultPolicy } from './policy/default/Index';
 import { validateTask } from './TaskValidator';
-import * as BasicModel from '../../models/BasicModel';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
 import { Promise as BBPromise } from 'bluebird';
@@ -21,6 +20,7 @@ import {
   Microtask,
   MicrotaskAssignmentRecord,
   MicrotaskRecord,
+  BasicModel,
 } from '@karya/db';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 import config from '../../config/Index';

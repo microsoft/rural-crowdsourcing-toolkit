@@ -6,20 +6,10 @@
  */
 
 /** Import necessary DB types */
-import {
-  AuthProviderType,
-  Worker,
-  WorkerRecord,
-} from '@karya/db';
+import { AuthProviderType, Worker, WorkerRecord, BasicModel } from '@karya/db';
 
 /** Import types from auth interaface */
-import {
-  IDTokenVerificationResponse,
-  UserSignUpResponse,
-} from './common/AuthProviderInterface';
-
-/** Basic model to work with DB tables */
-import * as BasicModel from '../models/BasicModel';
+import { IDTokenVerificationResponse, UserSignUpResponse } from './common/AuthProviderInterface';
 
 /** List of auth providers */
 import logger, { requestLogger } from '../utils/Logger';
@@ -27,14 +17,9 @@ import GoogleOauth2AP from './google-oauth-2/Index';
 import PhoneOTPAP from './phone-otp/Index';
 
 /** Response type for auth requests; id_token must be part of response */
-export type AuthResponse =
-  | { success: true; wp: WorkerRecord }
-  | { success: false; message: string; wp?: Worker };
+export type AuthResponse = { success: true; wp: WorkerRecord } | { success: false; message: string; wp?: Worker };
 
-export async function signUpUser(
-  userInfo: Worker,
-  ccRecord: WorkerRecord,
-): Promise<AuthResponse> {
+export async function signUpUser(userInfo: Worker, ccRecord: WorkerRecord): Promise<AuthResponse> {
   try {
     const authProvider = userInfo.auth_provider;
 
@@ -42,9 +27,7 @@ export async function signUpUser(
       return { success: false, message: 'No authentication type information' };
     }
 
-    const signUpResponse: UserSignUpResponse = await (async (
-      ap: AuthProviderType,
-    ) => {
+    const signUpResponse: UserSignUpResponse = await (async (ap: AuthProviderType) => {
       switch (ap) {
         case 'google_oauth':
           return GoogleOauth2AP.signUpUser(userInfo, ccRecord);
@@ -93,15 +76,13 @@ export async function signUpUser(
         last_received_from_server_at: eon,
         last_sent_to_box_at: eon,
         last_sent_to_server_at: eon,
-      },
+      }
     );
 
     /** Successful update */
     return { success: true, wp: updatedRecord };
   } catch (err) {
-    logger.error(
-      `Sign up authentication validation failed with error ${err.toString()}`,
-    );
+    logger.error(`Sign up authentication validation failed with error ${err.toString()}`);
     return { success: false, message: err.message };
   }
 }
@@ -112,14 +93,9 @@ export async function signUpUser(
  * @param authProvider Auth provider type extracted from the request header
  * @param idToken ID token extracted from the request header
  */
-export async function verifyIDToken(
-  authProvider: AuthProviderType,
-  idToken: string,
-): Promise<AuthResponse> {
+export async function verifyIDToken(authProvider: AuthProviderType, idToken: string): Promise<AuthResponse> {
   try {
-    const tokenResponse: IDTokenVerificationResponse = await (async (
-      ap: AuthProviderType,
-    ) => {
+    const tokenResponse: IDTokenVerificationResponse = await (async (ap: AuthProviderType) => {
       switch (ap) {
         case 'google_oauth':
           return GoogleOauth2AP.verifyIDToken(idToken);
@@ -144,10 +120,7 @@ export async function verifyIDToken(
     }
 
     /** Get the records with matching info */
-    const records = await BasicModel.getRecords(
-      'worker',
-      tokenResponse.matchInfo,
-    );
+    const records = await BasicModel.getRecords('worker', tokenResponse.matchInfo);
 
     /** If no worker */
     if (records.length !== 1) {
@@ -165,9 +138,7 @@ export async function verifyIDToken(
  * Refresh the ID token of a worker and return the new worker record.
  * @param worker Current worker record
  */
-export async function refreshIDToken(
-  worker: WorkerRecord,
-): Promise<WorkerRecord> {
+export async function refreshIDToken(worker: WorkerRecord): Promise<WorkerRecord> {
   // Get updated worker record
   const refreshedRecord = await (async (ap: AuthProviderType) => {
     switch (ap) {

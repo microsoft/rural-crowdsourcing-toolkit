@@ -5,8 +5,7 @@
 
 import { randomBytes } from 'crypto';
 import * as jwt from 'jsonwebtoken';
-import { Worker, WorkerRecord } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { Worker, WorkerRecord, BasicModel } from '@karya/db';
 import { IDTokenVerificationResponse } from './common/AuthProviderInterface';
 
 const audience = 'karya-box';
@@ -40,9 +39,7 @@ export function generateToken(id: string, worker: Worker) {
  * Verify an ID token
  * @param idToken Token to be verified
  */
-export async function verifyToken(
-  idToken: string,
-): Promise<IDTokenVerificationResponse> {
+export async function verifyToken(idToken: string): Promise<IDTokenVerificationResponse> {
   // decode the token
   const payload = jwt.decode(idToken, { json: true });
 

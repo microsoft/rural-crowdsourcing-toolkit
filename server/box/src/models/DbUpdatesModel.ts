@@ -8,13 +8,12 @@
 import { Promise as BBPromise } from 'bluebird';
 import box_id from '../config/box_id';
 import { this_box } from '../config/ThisBox';
-import { DbRecordType, DbTableName, WorkerRecord, tableList } from '@karya/db';
+import { DbRecordType, DbTableName, WorkerRecord, tableList, BasicModel } from '@karya/db';
 import {
   handleMicrotaskAssignmentCompletion,
   handleMicrotaskGroupAssignmentCompletion,
 } from '../scenarios/AssignmentService';
 import logger from '../utils/Logger';
-import * as BasicModel from './BasicModel';
 
 // Type for collecting table updates
 export type TableUpdates<TableName extends DbTableName> = {
@@ -39,9 +38,7 @@ const workerUpdatableTables: WorkerUpdatableTables[] = [
  * Gather all updates for a worker
  * @param worker Record corresponding to the worker
  */
-export async function getUpdatesForWorker(
-  worker: WorkerRecord,
-): Promise<TableUpdates<DbTableName>[]> {
+export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUpdates<DbTableName>[]> {
   const updates: TableUpdates<DbTableName>[] = [];
 
   // Extract from_box and from_server
@@ -71,26 +68,24 @@ export async function getUpdatesForWorker(
 
   // Reorder language_resource updates (string followed by files)
   updateMap['language_resource']?.sort((lr1, lr2) =>
-    lr1.type === 'string_resource' || lr2.type === 'file_resource' ? -1 : 1,
+    lr1.type === 'string_resource' || lr2.type === 'file_resource' ? -1 : 1
   );
 
   const worker_id = worker.id;
   const eon = new Date(0).toISOString();
 
   // Collect newly assigned microtask_group_assignment updates
-  const microtaskGroupAssignmentUpdates = await BasicModel.getUpdatesSince(
-    'microtask_group_assignment',
-    from_box,
-    { worker_id, status: 'assigned' },
-  );
+  const microtaskGroupAssignmentUpdates = await BasicModel.getUpdatesSince('microtask_group_assignment', from_box, {
+    worker_id,
+    status: 'assigned',
+  });
   updateMap['microtask_group_assignment'] = microtaskGroupAssignmentUpdates;
 
   // Collect newly assigned microtask_assignment updates
-  let microtaskAssignmentUpdates = await BasicModel.getUpdatesSince(
-    'microtask_assignment',
-    from_box,
-    { worker_id, status: 'assigned' },
-  );
+  let microtaskAssignmentUpdates = await BasicModel.getUpdatesSince('microtask_assignment', from_box, {
+    worker_id,
+    status: 'assigned',
+  });
   updateMap['microtask_assignment'] = microtaskAssignmentUpdates;
 
   // Get all verified microtask_assignments from
@@ -105,79 +100,44 @@ export async function getUpdatesForWorker(
     return a;
   });
 
-  updateMap['microtask_assignment'] = (
-    updateMap['microtask_assignment'] || []
-  ).concat(verifiedMicrotaskAssignments);
+  updateMap['microtask_assignment'] = (updateMap['microtask_assignment'] || []).concat(verifiedMicrotaskAssignments);
 
   // App reinstall
   if (from_box == eon) {
-    microtaskAssignmentUpdates = microtaskAssignmentUpdates.concat(
-      verifiedMicrotaskAssignments,
-    );
+    microtaskAssignmentUpdates = microtaskAssignmentUpdates.concat(verifiedMicrotaskAssignments);
   }
 
   // Get all microtask updates corresponding to microtask assignments
   const microtaskIds = microtaskAssignmentUpdates.map((t) => t.microtask_id);
-  const microtaskUpdates = await BasicModel.getRecordsWhereIn(
-    'microtask',
-    'id',
-    microtaskIds,
-  );
+  const microtaskUpdates = await BasicModel.getRecordsWhereIn('microtask', 'id', microtaskIds);
   updateMap['microtask'] = microtaskUpdates;
 
   // Get all microtask groups corresponding to microtask group assignments
-  const microtaskGroupIds = microtaskGroupAssignmentUpdates.map(
-    (g) => g.microtask_group_id,
-  );
-  updateMap['microtask_group'] = await BasicModel.getRecordsWhereIn(
-    'microtask_group',
-    'id',
-    microtaskGroupIds,
-  );
+  const microtaskGroupIds = microtaskGroupAssignmentUpdates.map((g) => g.microtask_group_id);
+  updateMap['microtask_group'] = await BasicModel.getRecordsWhereIn('microtask_group', 'id', microtaskGroupIds);
 
   let task_ids = microtaskUpdates.map((t) => t.task_id);
   task_ids = [...new Set(task_ids)];
 
   // Get all tasks updates
-  const taskUpdates = await BasicModel.getRecordsWhereIn(
-    'task',
-    'id',
-    task_ids,
-  );
+  const taskUpdates = await BasicModel.getRecordsWhereIn('task', 'id', task_ids);
   updateMap['task'] = taskUpdates;
 
   // Get all task assignment updates
-  const taskAssignmentUpdates = await BasicModel.getRecordsWhereIn(
-    'task_assignment',
-    'task_id',
-    task_ids,
-    { box_id },
-  );
+  const taskAssignmentUpdates = await BasicModel.getRecordsWhereIn('task_assignment', 'task_id', task_ids, { box_id });
   updateMap['task_assignment'] = taskAssignmentUpdates;
 
   // Get microtask input karya files
-  const karya_file_ids = microtaskUpdates
-    .map((m) => m.input_file_id)
-    .filter((f): f is string => f !== null);
-  const karyaFileUpdates = await BasicModel.getRecordsWhereIn(
-    'karya_file',
-    'id',
-    karya_file_ids,
-  );
+  const karya_file_ids = microtaskUpdates.map((m) => m.input_file_id).filter((f): f is string => f !== null);
+  const karyaFileUpdates = await BasicModel.getRecordsWhereIn('karya_file', 'id', karya_file_ids);
   updateMap['karya_file'] = karyaFileUpdates;
 
   // Get list of worker-generated karya files uploaded to server
-  const uploadedKaryaFiles = await BasicModel.getUpdatesSince(
-    'karya_file',
-    from_server,
-    {
-      worker_id,
-      in_server: true,
-    },
-  );
-  updateMap['karya_file'] = (updateMap['karya_file'] || []).concat(
-    uploadedKaryaFiles,
-  );
+  const uploadedKaryaFiles = await BasicModel.getUpdatesSince('karya_file', from_server, {
+    worker_id,
+    in_server: true,
+  });
+  updateMap['karya_file'] = (updateMap['karya_file'] || []).concat(uploadedKaryaFiles);
 
   // Collect worker udpates. Set last_received_from_server_at appropriately
   updateMap['worker'] = [
@@ -203,19 +163,14 @@ export async function getUpdatesForWorker(
  * Apply updates to different tables from the worker
  * @param updates Updates to tables
  */
-export async function applyUpdatesFromWorker(
-  worker: WorkerRecord,
-  updates: TableUpdates<WorkerUpdatableTables>[],
-) {
+export async function applyUpdatesFromWorker(worker: WorkerRecord, updates: TableUpdates<WorkerUpdatableTables>[]) {
   // check if there are tables that a worker cannot update
   const forbiddenTables = updates
     .filter((update) => !workerUpdatableTables.includes(update.tableName))
     .map((update) => update.tableName);
 
   if (forbiddenTables.length > 0) {
-    throw new Error(
-      `Worker cannot update tables '${forbiddenTables.join(' ,')}'`,
-    );
+    throw new Error(`Worker cannot update tables '${forbiddenTables.join(' ,')}'`);
   }
 
   // Check if all the rows are updatable by this worker
@@ -267,9 +222,7 @@ export async function applyUpdatesFromWorker(
  * Apply updates to different tables from the server
  * @param updates Updates to tables
  */
-export async function applyUpdatesFromServer(
-  updates: TableUpdates<DbTableName>[],
-): Promise<boolean> {
+export async function applyUpdatesFromServer(updates: TableUpdates<DbTableName>[]): Promise<boolean> {
   // Apply the updates
   let success: boolean = true;
   await BBPromise.mapSeries(updates, async (update) => {

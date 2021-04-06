@@ -4,8 +4,7 @@
 /** Script to bootstrap authentication */
 
 import config from '../config/Index';
-import { WorkProvider } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { WorkProvider, BasicModel } from '@karya/db';
 import { getCreationCode } from '@karya/misc-utils';
 
 /**

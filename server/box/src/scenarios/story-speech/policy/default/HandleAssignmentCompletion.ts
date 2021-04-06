@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import box_id from '../../../../config/box_id';
-import * as BasicModel from '../../../../models/BasicModel';
 import * as MicrotaskGroupModel from '../../../../models/MicroTaskGroupModel';
 import * as MicrotaskModel from '../../../../models/MicroTaskModel';
 import logger from '../../../../utils/Logger';
@@ -16,7 +14,7 @@ import { StorySpeechDefaultPolicyParams } from './Index';
 export const handleMicrotaskAssignmentCompletion: IPolicy['handleMicrotaskAssignmentCompletion'] = async (
   microtaskAssignment,
   microtask,
-  taskAssignment,
+  taskAssignment
 ) => {
   try {
     // get the number of recordings required for this task
@@ -24,19 +22,13 @@ export const handleMicrotaskAssignmentCompletion: IPolicy['handleMicrotaskAssign
     const numRecordings = taskAssignmentParams.numRecordings;
 
     // if all microtasks for this micro task group have been complete then mark it as complete
-    const completedMicroTaskAssignmentsCount = await MicrotaskModel.getCompletedAssignmentsCount(
-      microtask,
-    );
+    const completedMicroTaskAssignmentsCount = await MicrotaskModel.getCompletedAssignmentsCount(microtask);
 
     if (completedMicroTaskAssignmentsCount >= numRecordings) {
       await MicrotaskModel.markComplete(microtask);
     }
   } catch (err) {
-    logger.error(
-      `Failed to handle microtask assignment ${
-        microtaskAssignment.id
-      } completion: ${err.toString()}`,
-    );
+    logger.error(`Failed to handle microtask assignment ${microtaskAssignment.id} completion: ${err.toString()}`);
   }
 };
 
@@ -47,7 +39,7 @@ export const handleMicrotaskAssignmentCompletion: IPolicy['handleMicrotaskAssign
 export const handleMicrotaskGroupAssignmentCompletion: IPolicy['handleMicrotaskGroupAssignmentCompletion'] = async (
   microtaskGroupAssignment,
   microtaskGroup,
-  taskAssignment,
+  taskAssignment
 ) => {
   try {
     // get the number of recordings required for this task
@@ -55,18 +47,14 @@ export const handleMicrotaskGroupAssignmentCompletion: IPolicy['handleMicrotaskG
     const numRecordings = taskAssignmentParams.numRecordings;
 
     // if all microtasks for this micro task group have been complete then mark it as complete
-    const completedMicroTaskAssignmentsCount = await MicrotaskGroupModel.getCompletedAssignmentsCount(
-      microtaskGroup,
-    );
+    const completedMicroTaskAssignmentsCount = await MicrotaskGroupModel.getCompletedAssignmentsCount(microtaskGroup);
 
     if (completedMicroTaskAssignmentsCount >= numRecordings) {
       await MicrotaskGroupModel.markComplete(microtaskGroup);
     }
   } catch (e) {
     logger.error(
-      `Failed to handle microtask group assignment ${
-        microtaskGroupAssignment.id
-      } completion: ${e.toString()} `,
+      `Failed to handle microtask group assignment ${microtaskGroupAssignment.id} completion: ${e.toString()} `
     );
   }
 };

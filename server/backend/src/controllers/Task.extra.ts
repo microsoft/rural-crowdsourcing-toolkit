@@ -7,9 +7,8 @@
 // be auto generated.
 
 import BBPromise from 'bluebird';
-import { Task, TaskRecord, TaskStatus } from '@karya/db';
+import { Task, TaskRecord, TaskStatus, BasicModel } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
 import {
   ParameterParserResponse,
   parseTaskParameters,
@@ -38,7 +37,8 @@ export function getWorkProviderFilter(ctx: KaryaHTTPContext): Task {
 
   // first set the explicit ID if it is provided
   if (ctx.request.query.work_provider_id) {
-    workProviderFilter.work_provider_id = ctx.request.query.work_provider_id as string;
+    workProviderFilter.work_provider_id = ctx.request.query
+      .work_provider_id as string;
   }
   // if not admin, override with the implicit ID
   if (!current_user.admin) {
@@ -134,7 +134,7 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
     }
 
     // Upload all files to be uploaded
-    await BBPromise.map(Object.entries(uploadParams), async args => {
+    await BBPromise.map(Object.entries(uploadParams), async (args) => {
       try {
         const [param_id, info] = args;
         const blobURL = await BlobStore.uploadBlobFromFile(
@@ -299,7 +299,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
   try {
     // retrieve the records
     const records = await BasicModel.getRecords('task', workProviderFilter);
-    const recordsWithSAS = records.map(t => generateOutputSasURLs(t));
+    const recordsWithSAS = records.map((t) => generateOutputSasURLs(t));
     HttpResponse.OK(ctx, recordsWithSAS);
   } catch (e) {
     const message = getControllerError(e);

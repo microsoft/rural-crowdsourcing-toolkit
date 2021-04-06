@@ -6,16 +6,18 @@
  */
 
 /** Import necessary DB types */
-import { AuthProviderType, WorkProvider, WorkProviderRecord } from '@karya/db';
+import {
+  AuthProviderType,
+  WorkProvider,
+  WorkProviderRecord,
+  BasicModel,
+} from '@karya/db';
 
 /** Imporet types from auth interaface */
 import {
   IDTokenVerificationResponse,
   UserSignUpResponse,
 } from './common/AuthProviderInterface';
-
-/** Basic model to work with DB tables */
-import * as BasicModel from '../models/BasicModel';
 
 /** List of auth providers */
 import GoogleOauth2AP from './google-oauth-2/Index';

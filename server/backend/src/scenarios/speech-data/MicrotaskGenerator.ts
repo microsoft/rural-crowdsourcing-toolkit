@@ -4,7 +4,7 @@
 // Microtask generator for the speech-data scenario. The function assumes that
 // the task has already been validated.
 
-import { Microtask, Task } from '@karya/db';
+import { Microtask, Task, BasicModel } from '@karya/db';
 import * as BlobStore from '../../utils/AzureBlob';
 import { MicrotaskGeneratorResponse } from '../common/ScenarioInterface';
 import { SpeechDataTask } from './ParamDefinitions';
@@ -12,7 +12,6 @@ import {
   SpeechVerificationScenario,
   SpeechVerificationTask,
 } from '../speech-verification/Index';
-import * as BasicModel from '../../models/BasicModel';
 
 export async function generateMicrotasks(
   task: SpeechDataTask,

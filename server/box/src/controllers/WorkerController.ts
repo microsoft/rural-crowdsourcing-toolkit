@@ -7,9 +7,8 @@
 import { refreshIDToken, signUpUser } from '../auth-providers/Index';
 import { generateOTP, sendOTP } from '../auth-providers/phone-otp/OTPUtils';
 import config from '../config/Index';
-import { Worker, WorkerRecord } from '@karya/db';
+import { Worker, WorkerRecord, BasicModel } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import logger, { requestLogger } from '../utils/Logger';
 import { KaryaHTTPContext } from './KoaContextType';
@@ -69,7 +68,6 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
   // Extract worker object from the body
   const worker: Worker = ctx.request.body;
 
-
   // Check if the creation code is valid
   if (!worker.creation_code) {
     HttpResponse.BadRequest(ctx, 'Need to provide creation code');
@@ -88,10 +86,7 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
   }
 
   // Ensure that the creation code is not in use
-  if (
-    workerRecord.auth_provider &&
-    worker.phone_number != workerRecord.phone_number
-  ) {
+  if (workerRecord.auth_provider && worker.phone_number != workerRecord.phone_number) {
     HttpResponse.Unavailable(ctx, 'creation_code_already_used');
     return;
   }
@@ -106,10 +101,7 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
 
   // If phone auth is not available, return
   if (!config.phoneOtp.available && !phone_number.startsWith('00000')) {
-    HttpResponse.Unavailable(
-      ctx,
-      'Phone authentication is currently not available',
-    );
+    HttpResponse.Unavailable(ctx, 'Phone authentication is currently not available');
     return;
   }
 
@@ -156,7 +148,7 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
       workerRecord = await BasicModel.updateSingle(
         'worker',
         { id: workerRecord.id },
-        { params: { ...workerRecord.params, phone_number, otp } },
+        { params: { ...workerRecord.params, phone_number, otp } }
       );
     }
 

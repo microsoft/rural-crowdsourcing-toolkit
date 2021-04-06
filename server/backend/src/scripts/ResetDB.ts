@@ -12,11 +12,10 @@ import {
   setupDbConnection,
   createAllTables,
   dropAllTables,
+  BasicModel,
+  LanguageResource,
+  LanguageResourceRecord,
 } from '@karya/db';
-
-import * as BasicModel from '../models/BasicModel';
-
-import { LanguageResource, LanguageResourceRecord } from '@karya/db';
 
 import { scenarioMap } from '../scenarios/Index';
 import { registerScenarios } from '../scenarios/Register';

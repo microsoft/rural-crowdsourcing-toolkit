@@ -15,7 +15,4 @@ type KaryaState = {
 
 /** Karya-specific context for Koa */
 export type KaryaHTTPContext = ParameterizedContext<KaryaState>;
-export type KaryaMiddleware = (
-  ctx: KaryaHTTPContext,
-  next: () => Promise<any>,
-) => void;
+export type KaryaMiddleware = (ctx: KaryaHTTPContext, next: () => Promise<any>) => void;

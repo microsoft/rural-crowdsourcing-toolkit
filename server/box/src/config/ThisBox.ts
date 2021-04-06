@@ -3,8 +3,7 @@
 
 /** Set this box */
 
-import { BoxRecord } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { BoxRecord, BasicModel } from '@karya/db';
 import box_id from './box_id';
 
 let this_box: BoxRecord;

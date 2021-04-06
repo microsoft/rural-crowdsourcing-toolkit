@@ -9,9 +9,9 @@ import {
   MicrotaskGroupRecord,
   Task,
   TaskRecord,
+  BasicModel,
 } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import { getWorkProviderFilter } from './Task.extra';

@@ -13,3 +13,6 @@ export { knex, setupDbConnection } from './client';
 // Export table create/delete functions
 export { createAllTables } from './auto/CreateFunctions';
 export { dropAllTables } from './auto/DropFunctions';
+
+// Export basic models
+export * as BasicModel from './models/BasicModel';

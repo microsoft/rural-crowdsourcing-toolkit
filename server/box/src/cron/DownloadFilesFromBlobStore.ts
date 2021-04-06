@@ -10,8 +10,7 @@ import axios from 'axios';
 import BBPromise from 'bluebird';
 import * as fs from 'fs';
 import config from '../config/Index';
-import { KaryaFileRecord } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { KaryaFileRecord, BasicModel } from '@karya/db';
 import { getChecksum } from '../models/KaryaFileModel';
 import logger from '../utils/Logger';
 import { GET } from './HttpUtils';
@@ -33,7 +32,7 @@ export async function downloadPendingKaryaFiles() {
     logger.info(`Need to download ${pendingFiles.length} file(s)`);
 
     // Download each file
-    await BBPromise.mapSeries(pendingFiles, async karyaFile => {
+    await BBPromise.mapSeries(pendingFiles, async (karyaFile) => {
       try {
         // Need to request new SAS tokens for these files
         if (karyaFile.url === null) {
@@ -60,22 +59,12 @@ export async function downloadPendingKaryaFiles() {
         }
 
         // File downloaded successfully. Set the in_box field, reset URL.
-        await BasicModel.updateSingle(
-          'karya_file',
-          { id: karyaFile.id },
-          { in_box: true, url: null },
-        );
+        await BasicModel.updateSingle('karya_file', { id: karyaFile.id }, { in_box: true, url: null });
       } catch (err) {
         status = false;
         // Reset URL
-        await BasicModel.updateSingle(
-          'karya_file',
-          { id: karyaFile.id },
-          { url: null },
-        );
-        logger.error(
-          `Failed to download '${karyaFile.container_name}/${karyaFile.name}': ${err.message}`,
-        );
+        await BasicModel.updateSingle('karya_file', { id: karyaFile.id }, { url: null });
+        logger.error(`Failed to download '${karyaFile.container_name}/${karyaFile.name}': ${err.message}`);
       }
     });
   } catch (err) {
@@ -100,16 +89,10 @@ export async function getNewSASTokens() {
 
     logger.info(`Need to get SAS tokens for ${pendingFiles.length} file(s)`);
 
-    await BBPromise.map(pendingFiles, async karyaFile => {
+    await BBPromise.map(pendingFiles, async (karyaFile) => {
       try {
-        const response = await GET<{}, KaryaFileRecord>(
-          `/rbox/karya-file/${karyaFile.id}`,
-        );
-        await BasicModel.updateSingle(
-          'karya_file',
-          { id: response.id },
-          { url: response.url },
-        );
+        const response = await GET<{}, KaryaFileRecord>(`/rbox/karya-file/${karyaFile.id}`);
+        await BasicModel.updateSingle('karya_file', { id: response.id }, { url: response.url });
       } catch (e) {
         logger.error(`Failed to get SAS token`);
       }

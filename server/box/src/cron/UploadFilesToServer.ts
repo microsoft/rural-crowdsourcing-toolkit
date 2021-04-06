@@ -10,8 +10,7 @@ import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import box_id from '../config/box_id';
 import config from '../config/Index';
-import { KaryaFileRecord } from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { KaryaFileRecord, BasicModel } from '@karya/db';
 import logger from '../utils/Logger';
 import { BackendFetch } from './HttpUtils';
 
@@ -31,7 +30,7 @@ export async function uploadKaryaFilesToServer() {
   let status = true;
 
   // Upload all files
-  await BBPromise.mapSeries(fileRecords, async fileRecord => {
+  await BBPromise.mapSeries(fileRecords, async (fileRecord) => {
     // Attempt to read file from local storage
     // TODO: Convert this to file stream
     const filepath = `${config.filesFolder}/${fileRecord.container_name}/${fileRecord.name}`;
@@ -53,22 +52,17 @@ export async function uploadKaryaFilesToServer() {
       });
 
       // Upload file to server
-      const uploadedFileRecord = await BackendFetch<KaryaFileRecord>(
-        `/rbox/upload-file`,
-        {
-          method: 'PUT',
-          body: form.getBuffer(),
-          headers: { ...form.getHeaders() },
-        },
-      );
+      const uploadedFileRecord = await BackendFetch<KaryaFileRecord>(`/rbox/upload-file`, {
+        method: 'PUT',
+        body: form.getBuffer(),
+        headers: { ...form.getHeaders() },
+      });
 
       // If successful, update the url and in_server state
       await BasicModel.upsertRecord('karya_file', uploadedFileRecord);
     } catch (e) {
       status = false;
-      logger.error(
-        `Failed to upload karya file ${fileRecord.id} (${filepath})`,
-      );
+      logger.error(`Failed to upload karya file ${fileRecord.id} (${filepath})`);
     }
   });
 

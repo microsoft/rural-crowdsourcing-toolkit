@@ -3,9 +3,8 @@
 
 import * as fs from 'fs';
 import config from '../config/Index';
-import { KaryaFile } from '@karya/db';
+import { KaryaFile, BasicModel } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
 import { insertWorkerFile } from '../models/KaryaFileModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
@@ -28,10 +27,7 @@ export async function getInputFileForAssignment(ctx: KaryaHTTPContext) {
 
     // Check if the microtask assignment was made for this worker
     if (ctx.state.current_user.id != mtaRecord.worker_id) {
-      HttpResponse.Unauthorized(
-        ctx,
-        'Illegal access. Microtask assignment was not for this worker',
-      );
+      HttpResponse.Unauthorized(ctx, 'Illegal access. Microtask assignment was not for this worker');
       return;
     }
 
@@ -42,10 +38,7 @@ export async function getInputFileForAssignment(ctx: KaryaHTTPContext) {
 
     // If the microtask has no input file, then return
     if (!microtask.input_file_id) {
-      HttpResponse.BadRequest(
-        ctx,
-        'Microtask does not have a input file associated with it',
-      );
+      HttpResponse.BadRequest(ctx, 'Microtask does not have a input file associated with it');
       return;
     }
 
@@ -94,10 +87,7 @@ export async function uploadOutputFileForAssignment(ctx: KaryaHTTPContext) {
 
     // Check if the assignment was made for this worker
     if (ctx.state.current_user.id !== mtaRecord.worker_id) {
-      HttpResponse.Unauthorized(
-        ctx,
-        'Illegal access. Microtask assignment was not for this worker',
-      );
+      HttpResponse.Unauthorized(ctx, 'Illegal access. Microtask assignment was not for this worker');
       return;
     }
 
@@ -122,7 +112,7 @@ export async function uploadOutputFileForAssignment(ctx: KaryaHTTPContext) {
         ext: 'tgz',
       },
       // @ts-ignore
-      file.path,
+      file.path
     );
 
     HttpResponse.OK(ctx, fileRecord);

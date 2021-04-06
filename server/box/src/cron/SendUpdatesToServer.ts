@@ -7,12 +7,7 @@
 
 import { Promise as BBPromise } from 'bluebird';
 import { this_box } from '../config/ThisBox';
-import {
-  BoxUpdatableTables,
-  DbRecordType,
-  DbTableName,
-} from '@karya/db';
-import * as BasicModel from '../models/BasicModel';
+import { BoxUpdatableTables, DbRecordType, DbTableName, BasicModel } from '@karya/db';
 import { TableUpdates } from '../models/DbUpdatesModel';
 import { compress } from '@karya/compression';
 import logger from '../utils/Logger';
@@ -30,10 +25,7 @@ export async function sendUpdatesToServer(sendTime: string) {
     const updateMap: { [key in BoxUpdatableTables]?: DbRecordType<key>[] } = {};
 
     // Collect payment updates
-    const payoutTables: BoxUpdatableTables[] = [
-      'payout_info',
-      'payment_request',
-    ];
+    const payoutTables: BoxUpdatableTables[] = ['payout_info', 'payment_request'];
     await BBPromise.mapSeries(payoutTables, async (tableName) => {
       const rows = await BasicModel.getCreatedSince(tableName, lastSentAt, {
         box_id,
@@ -57,7 +49,7 @@ export async function sendUpdatesToServer(sendTime: string) {
         {
           box_id: this_box.id,
         },
-        sendTime,
+        sendTime
       );
       // @ts-ignore
       updateMap[tableName] = rows;

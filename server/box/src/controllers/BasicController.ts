@@ -4,9 +4,8 @@
 // This file defines a basic set of controllers that can be used by all the
 // tables in the database.
 
-import { BoxUpdatableTables } from '@karya/db';
+import { BoxUpdatableTables, BasicModel } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import * as BasicModel from '../models/BasicModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
@@ -48,11 +47,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
 
   try {
     // update record and return response
-    const updatedRecord = await BasicModel.updateSingle(
-      tableName,
-      match,
-      updates,
-    );
+    const updatedRecord = await BasicModel.updateSingle(tableName, match, updates);
     HttpResponse.OK(ctx, updatedRecord);
   } catch (e) {
     const message = getControllerError(e);
