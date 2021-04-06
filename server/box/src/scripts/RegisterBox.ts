@@ -5,8 +5,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import { boxInfo } from '../config/BoxInfo';
 import config from '../config/Index';
-import { knex } from '../db/Client';
-import { BoxRecord } from '@karya/db';
+import { knex, setupDbConnection, BoxRecord } from '@karya/db';
 import logger from '../utils/Logger';
 
 /**
@@ -15,13 +14,8 @@ import logger from '../utils/Logger';
  */
 async function registerBoxWithServer() {
   try {
-    const response = await axios.put<BoxRecord>(
-      `${config.serverUrl}/api/box/update/cc`,
-      boxInfo,
-    );
-    logger.info(
-      `Successfully registered box with the server. Box ID = ${response.data.id}`,
-    );
+    const response = await axios.put<BoxRecord>(`${config.serverUrl}/api/box/update/cc`, boxInfo);
+    logger.info(`Successfully registered box with the server. Box ID = ${response.data.id}`);
     return response.data;
   } catch (err) {
     logger.error(err);
@@ -46,19 +40,16 @@ async function verifyNoBox() {
  * await can be used in a script
  */
 async function runScript() {
+  setupDbConnection(config.dbConfig);
+
   // Ensure that there is no box
   await verifyNoBox();
 
   const box = await registerBoxWithServer();
 
-  const boxRecord = (
-    await knex<BoxRecord>('box').insert(box).returning('*')
-  )[0];
+  const boxRecord = (await knex<BoxRecord>('box').insert(box).returning('*'))[0];
 
-  fs.writeFileSync(
-    `${process.cwd()}/src/config/box_id.ts`,
-    `export default '${boxRecord.id}';`,
-  );
+  fs.writeFileSync(`${process.cwd()}/src/config/box_id.ts`, `export default '${boxRecord.id}';`);
   logger.info('Successfully inserted box into local DB');
 }
 

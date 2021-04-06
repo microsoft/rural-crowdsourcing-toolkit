@@ -5,11 +5,8 @@
  * Script to reset the database and initialize some basic tables
  */
 
-import { Promise as BBPromise } from 'bluebird';
-
-import { knex } from '../db/Client';
-import { createAllTables } from '../db/CreateTableFunctions.auto';
-import { dropAllTables } from '../db/DropTableFunctions.auto';
+import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/db';
+import config from '../config/Index';
 import logger from '../utils/Logger';
 
 /** Main Script to reset the DB */
@@ -18,7 +15,8 @@ import logger from '../utils/Logger';
 
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
+  setupDbConnection(config.dbConfig);
   await dropAllTables();
-  await createAllTables();
+  await createAllTables('box');
   logger.info(`Tables recreated`);
 })().finally(() => knex.destroy());

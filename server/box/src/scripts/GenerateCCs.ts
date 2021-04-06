@@ -2,12 +2,7 @@
 // Licensed under the MIT license.
 
 import box_id from '../config/box_id';
-import { knex } from '../db/Client';
-import {
-  LanguageRecord,
-  Worker,
-  WorkerRecord,
-} from '@karya/db';
+import { knex, setupDbConnection, LanguageRecord, Worker, WorkerRecord } from '@karya/db';
 import * as BasicModel from '../models/BasicModel';
 import { getCreationCode } from '@karya/misc-utils';
 import logger from '../utils/Logger';
@@ -16,7 +11,7 @@ import config from '../config/Index';
 export async function generateWorkerCCs(
   numCreationCodes: number,
   tags: string[] | undefined,
-  languageCode: string | undefined,
+  languageCode: string | undefined
 ): Promise<boolean> {
   // Check for valid request
   if (!(box_id && numCreationCodes)) {
@@ -27,9 +22,7 @@ export async function generateWorkerCCs(
   let language: LanguageRecord | undefined;
 
   try {
-    language = languageCode
-      ? await BasicModel.getSingle('language', { iso_639_3_code: languageCode })
-      : undefined;
+    language = languageCode ? await BasicModel.getSingle('language', { iso_639_3_code: languageCode }) : undefined;
   } catch (e) {
     logger.error(`Unknown language code '${languageCode}'`);
   }
@@ -55,10 +48,7 @@ export async function generateWorkerCCs(
     };
 
     try {
-      const workerRecord = await BasicModel.insertRecord(
-        'worker',
-        createWorker,
-      );
+      const workerRecord = await BasicModel.insertRecord('worker', createWorker);
       newWorkers.push(workerRecord);
       continuousErrors = 0;
     } catch (e) {
@@ -101,6 +91,8 @@ export async function generateWorkerCCs(
 
 // Main script
 (async () => {
+  setupDbConnection(config.dbConfig);
+
   const numCreationCodes = Number.parseInt(process.argv[2], 10);
   if (isNaN(numCreationCodes)) {
     logger.info(`Need valid input for number of creation codes.`);

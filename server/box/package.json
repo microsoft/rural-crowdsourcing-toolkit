@@ -23,7 +23,6 @@
     "formidable": "^1.2.2",
     "google-auth-library": "^7.0.2",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.20.15",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-router": "^7.4.0",
@@ -38,18 +37,12 @@
     "@types/bluebird": "^3.5.32",
     "@types/form-data": "^2.5.0",
     "@types/jsonwebtoken": "^8.5.0",
-    "@types/knex": "^0.16.1",
     "@types/koa": "^2.11.4",
     "@types/koa-router": "^7.4.1",
     "@types/koa__cors": "^3.0.2",
     "@types/node": "^13.13.25",
     "@types/node-cron": "^2.0.3",
     "@types/node-fetch": "^2.5.8",
-    "@types/uuid": "^8.3.0",
-    "typescript": "^3.9.7"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
+    "@types/uuid": "^8.3.0"
   }
 }

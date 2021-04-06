@@ -6,6 +6,7 @@ import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import Koa from 'koa';
 import config from './config/Index';
+import { setupDbConnection } from '@karya/db';
 import { SetBox, this_box } from './config/ThisBox';
 import { GET } from './cron/HttpUtils';
 import { authenticateRequest, httpRequestLogger } from './routes/Middlewares';
@@ -25,6 +26,8 @@ app.use(router.routes());
 
 // Main script to check for all dependencies and then start the box server.
 (async () => {
+  setupDbConnection(config.dbConfig);
+
   // Set this box
   await SetBox();
 
@@ -45,10 +48,7 @@ app.use(router.routes());
   if (!this_box.physical) {
     logger.info(`Fetching phone authentication information`);
     try {
-      const phoneOtp = await GET<{}, typeof config['phoneOtp']>(
-        '/rbox/phone-auth-info',
-        {},
-      );
+      const phoneOtp = await GET<{}, typeof config['phoneOtp']>('/rbox/phone-auth-info', {});
       config.phoneOtp = { ...phoneOtp };
       logger.info(`Phone auth available.`);
     } catch (e) {

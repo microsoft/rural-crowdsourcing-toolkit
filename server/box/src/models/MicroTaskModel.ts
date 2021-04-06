@@ -3,13 +3,7 @@
 
 /** Extra model functions for the language resource table */
 
-import { knex } from '../db/Client';
-import {
-  MicrotaskAssignmentRecord,
-  MicrotaskRecord,
-  TaskRecord,
-  WorkerRecord,
-} from '@karya/db';
+import { knex, MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/db';
 
 /**
  * Get a list of microtask records from the specified task that can
@@ -22,18 +16,14 @@ import {
 export async function getAssignableMicrotasks(
   task: TaskRecord,
   worker: WorkerRecord,
-  maxAssignments: number = Number.MAX_SAFE_INTEGER,
+  maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
-  const maxAssignedMicrotasks = knex<MicrotaskAssignmentRecord>(
-    'microtask_assignment',
-  )
+  const maxAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .groupBy('microtask_id')
     .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
     .pluck('microtask_id');
 
-  const workerAssignedMicrotasks = knex<MicrotaskAssignmentRecord>(
-    'microtask_assignment',
-  )
+  const workerAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('worker_id', worker.id)
     .pluck('microtask_id');
 
@@ -52,9 +42,7 @@ export async function getAssignableMicrotasks(
  * @param microtask Microtask record
  */
 export async function getCompletedAssignmentsCount(microtask: MicrotaskRecord) {
-  const completedAssignmentsCount = await knex<MicrotaskAssignmentRecord>(
-    'microtask_assignment',
-  )
+  const completedAssignmentsCount = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('microtask_id', microtask.id)
     .whereIn('status', ['completed', 'paid'])
     .count();
@@ -65,12 +53,8 @@ export async function getCompletedAssignmentsCount(microtask: MicrotaskRecord) {
  * Check if a worker has any incomplete microtasks
  * @param worker_id ID of the worker
  */
-export async function hasIncompleteMicrotasks(
-  worker_id: string,
-): Promise<boolean> {
-  const incompleteMicrotasks = await knex<MicrotaskAssignmentRecord>(
-    'microtask_assignment',
-  )
+export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolean> {
+  const incompleteMicrotasks = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('worker_id', worker_id)
     .whereIn('status', ['assigned', 'incomplete'])
     .select();
@@ -82,7 +66,5 @@ export async function hasIncompleteMicrotasks(
  * @param microtask Microtask to be marked complete
  */
 export async function markComplete(microtask: MicrotaskRecord) {
-  await knex<MicrotaskRecord>('microtask')
-    .where('id', microtask.id)
-    .update({ status: 'completed' });
+  await knex<MicrotaskRecord>('microtask').where('id', microtask.id).update({ status: 'completed' });
 }

@@ -4,13 +4,7 @@
 // This file defines basic model functions for all the tables in the database.
 
 import box_id from '../config/box_id';
-import { knex } from '../db/Client';
-import {
-  BoxUpdatableTables,
-  DbObjectType,
-  DbRecordType,
-  DbTableName,
-} from '@karya/db';
+import { knex, BoxUpdatableTables, DbObjectType, DbRecordType, DbTableName } from '@karya/db';
 import { logPGError } from '../errors/PostgreSQLErrors';
 
 /**
@@ -18,18 +12,14 @@ import { logPGError } from '../errors/PostgreSQLErrors';
  * @param tableName name of the table
  * @param record record to be inserted
  */
-export async function insertRecord<
-  TableName extends BoxUpdatableTables | 'box'
->(
+export async function insertRecord<TableName extends BoxUpdatableTables | 'box'>(
   tableName: TableName,
-  object: DbObjectType<TableName>,
+  object: DbObjectType<TableName>
 ): Promise<DbRecordType<TableName>> {
   const insertObject = tableName === 'box' ? object : { ...object, box_id };
   try {
     // attempt inserting the record into the table
-    const response = await knex(tableName)
-      .insert(insertObject)
-      .returning('*');
+    const response = await knex(tableName).insert(insertObject).returning('*');
 
     // on successful insertion, first element of response array contains
     // inserted object
@@ -48,13 +38,11 @@ export async function insertRecord<
  */
 export async function getRecords<TableName extends DbTableName>(
   tableName: TableName,
-  match: DbObjectType<TableName>,
+  match: DbObjectType<TableName>
 ): Promise<DbRecordType<TableName>[]> {
   try {
     // attempt to retrieve the records from the database
-    const response = await knex(tableName)
-      .where(match)
-      .select();
+    const response = await knex(tableName).where(match).select();
 
     // return all retrived records
     const retrievedRecords: DbRecordType<TableName>[] = response;
@@ -74,13 +62,11 @@ export async function getRecords<TableName extends DbTableName>(
  */
 export async function getSingle<TableName extends DbTableName>(
   tableName: TableName,
-  match: DbObjectType<TableName>,
+  match: DbObjectType<TableName>
 ): Promise<DbRecordType<TableName>> {
   try {
     // get record from the db
-    const response = await knex(tableName)
-      .where(match)
-      .first();
+    const response = await knex(tableName).where(match).first();
 
     // if undefined response, throw error
     if (response === undefined) {
@@ -106,12 +92,10 @@ export async function getSingle<TableName extends DbTableName>(
  * @param match object representing the match condition
  * @param updates object representing the required updates
  */
-export async function updateRecords<
-  TableName extends BoxUpdatableTables | 'box'
->(
+export async function updateRecords<TableName extends BoxUpdatableTables | 'box'>(
   tableName: TableName,
   match: DbObjectType<TableName>,
-  updates: DbObjectType<TableName>,
+  updates: DbObjectType<TableName>
 ): Promise<DbRecordType<TableName>[]> {
   const updatesObject = tableName === 'box' ? updates : { ...updates, box_id };
 
@@ -120,10 +104,7 @@ export async function updateRecords<
 
   try {
     // attempt to update the records
-    const response = await knex(tableName)
-      .where(match)
-      .update(updatesObject)
-      .returning('*');
+    const response = await knex(tableName).where(match).update(updatesObject).returning('*');
 
     // return all the updated records
     const updatedRecords: DbRecordType<TableName>[] = response;
@@ -141,22 +122,17 @@ export async function updateRecords<
  * @param match Match object pointing to the record to be updated
  * @param updates Updates for the object
  */
-export async function updateSingle<
-  TableName extends BoxUpdatableTables | 'box'
->(
+export async function updateSingle<TableName extends BoxUpdatableTables | 'box'>(
   tableName: TableName,
   match: DbObjectType<TableName>,
-  updates: DbObjectType<TableName>,
+  updates: DbObjectType<TableName>
 ): Promise<DbRecordType<TableName>> {
   // last_udpated_at from updates
   updates.last_updated_at = new Date().toISOString();
 
   try {
     // update the record
-    const response = await knex(tableName)
-      .where(match)
-      .update(updates)
-      .returning('*');
+    const response = await knex(tableName).where(match).update(updates).returning('*');
 
     // if undefined response, throw error
     if (response === undefined || response.length === 0) {
@@ -185,13 +161,11 @@ export async function updateSingle<
  */
 export async function removeRecords<TableName extends DbTableName>(
   tableName: TableName,
-  match: DbObjectType<TableName>,
+  match: DbObjectType<TableName>
 ): Promise<number> {
   try {
     // delete records
-    const response = await knex(tableName)
-      .where(match)
-      .delete();
+    const response = await knex(tableName).where(match).delete();
     return response;
   } catch (e) {
     logPGError(e);
@@ -210,15 +184,12 @@ export async function getUpdatesSince<TableName extends DbTableName>(
   tableName: TableName,
   from: string,
   match: DbObjectType<TableName> | {} = {},
-  to: string | undefined = undefined,
+  to: string | undefined = undefined
 ): Promise<DbRecordType<TableName>[]> {
   try {
     // Retrieve the records
     if (to == undefined) {
-      const response = await knex(tableName)
-        .where(match)
-        .where('last_updated_at', '>', from)
-        .select();
+      const response = await knex(tableName).where(match).where('last_updated_at', '>', from).select();
       return response as DbRecordType<TableName>[];
     } else {
       const response = await knex(tableName)
@@ -244,14 +215,11 @@ export async function getUpdatesSince<TableName extends DbTableName>(
 export async function getCreatedSince<TableName extends DbTableName>(
   tableName: TableName,
   from: string,
-  match: DbObjectType<TableName> | {} = {},
+  match: DbObjectType<TableName> | {} = {}
 ): Promise<DbRecordType<TableName>[]> {
   try {
     // Retrieve the records
-    const response = await knex(tableName)
-      .where(match)
-      .where('created_at', '>', from)
-      .select();
+    const response = await knex(tableName).where(match).where('created_at', '>', from).select();
     return response as DbRecordType<TableName>[];
   } catch (e) {
     logPGError(e);
@@ -272,14 +240,11 @@ export async function getRecordsWhereIn<
   tableName: TableName,
   column: ColumnType,
   values: DbRecordType<TableName>[ColumnType][],
-  filter: DbObjectType<TableName> | {} = {},
+  filter: DbObjectType<TableName> | {} = {}
 ): Promise<DbRecordType<TableName>[]> {
   try {
     // Retrieve the records
-    const response = await knex(tableName)
-      .whereIn(column, values)
-      .where(filter)
-      .select();
+    const response = await knex(tableName).whereIn(column, values).where(filter).select();
     return response as DbRecordType<TableName>[];
   } catch (e) {
     logPGError(e);
@@ -294,7 +259,7 @@ export async function getRecordsWhereIn<
  */
 export async function upsertRecord<TableName extends DbTableName>(
   tableName: TableName,
-  object: DbRecordType<TableName>,
+  object: DbRecordType<TableName>
 ): Promise<DbRecordType<TableName>> {
   const { id, ...updates } = object;
   const insertQuery = knex(tableName).insert(object);
@@ -302,10 +267,7 @@ export async function upsertRecord<TableName extends DbTableName>(
     .queryBuilder()
     .update(updates)
     .where({ [`${tableName}.id`]: id });
-  const upsertQuery = knex.raw(`? ON CONFLICT ("id") DO ? RETURNING *`, [
-    insertQuery,
-    updateQuery,
-  ]);
+  const upsertQuery = knex.raw(`? ON CONFLICT ("id") DO ? RETURNING *`, [insertQuery, updateQuery]);
   const upsertResponse = await upsertQuery;
   return upsertResponse.rows[0] as DbRecordType<TableName>;
 }
