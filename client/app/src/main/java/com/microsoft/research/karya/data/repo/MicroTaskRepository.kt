@@ -3,8 +3,9 @@ package com.microsoft.research.karya.data.repo
 import com.microsoft.research.karya.data.service.MicroTaskAPI
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
+import javax.inject.Inject
 
-class MicroTaskRepository(private val microTaskAPI: MicroTaskAPI) {
+class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTaskAPI) {
 
     fun downloadInputFile(authProvider: String, idToken: String, assignmentId: String) = flow {
         val response = microTaskAPI.getInputFileForAssignment(authProvider, idToken, assignmentId)

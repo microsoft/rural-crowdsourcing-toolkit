@@ -6,12 +6,12 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageS
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.data.service.WorkersAPI
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class WorkerRepository(private val workersAPI: WorkersAPI) {
+class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
 
     fun checkCreationCode(id: String) = flow {
         val response = workersAPI.checkCreationCode(id)
-
         val creationCodeResponse = response.body()
 
         if (!response.isSuccessful) {
@@ -28,7 +28,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
 
     fun sendOTP(worker: JsonObject) = flow {
         val response = workersAPI.sendOTP(worker)
-
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -46,7 +45,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
 
     fun resendOTP(worker: JsonObject) = flow {
         val response = workersAPI.resendOTP(worker)
-
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -62,7 +60,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
 
     fun updateWorkerUsingCreationCode(worker: WorkerObject) = flow {
         val response = workersAPI.updateWorkerUsingCreationCode(worker)
-
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -81,7 +78,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         idTokenHeader: String
     ) = flow {
         val response = workersAPI.refreshIdToken(authProvider, idTokenHeader)
-
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -100,9 +96,7 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
         authProvider: String,
         idTokenHeader: String
     ) = flow {
-
         val response = workersAPI.registerSkill(skillObject, authProvider, idTokenHeader)
-
         val workerLanguageSkillRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -128,7 +122,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
             idTokenHeader,
             workerLanguageSkillId
         )
-
         val workerLanguageSkillRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -152,7 +145,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
             idTokenHeader,
             worker
         )
-
         val jsonArray = response.body()
 
         if (!response.isSuccessful) {
@@ -177,7 +169,6 @@ class WorkerRepository(private val workersAPI: WorkersAPI) {
             idTokenHeader,
             microtaskAssignmentID
         )
-
         val responseBody = response.body()
 
         if (!response.isSuccessful) {
