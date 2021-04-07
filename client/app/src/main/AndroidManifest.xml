@@ -163,6 +163,7 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".ui.consentForm.NgConsentFormActivity" />
+        <activity android:name=".ui.splashScreen.NgSplashScreenActivity" />
 
     </application>
 </manifest>

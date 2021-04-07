@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_graph"
+    app:startDestination="@id/splashScreenFragment">
+
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreenFragment"
+        android:label="SplashScreenFragment" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_ngConsentFormActivity"
+            app:destination="@id/creationCodeFlow" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_placeholder"
+            app:destination="@id/userSelectionFlow" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_registrationActivity"
+            app:destination="@id/onboardingFlow" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_dashboardFlow"
+            app:destination="@id/dashboardFlow" />
+    </fragment>
+    <navigation android:id="@+id/creationCodeFlow"
+        app:startDestination="@id/ngConsentFormActivity">
+        <activity
+            android:id="@+id/ngConsentFormActivity"
+            android:name="com.microsoft.research.karya.ui.consentForm.NgConsentFormActivity"
+            android:label="NgConsentFormActivity" />
+        <action
+            android:id="@+id/action_global_registrationActivity"
+            app:destination="@id/onboardingFlow" />
+    </navigation>
+    <navigation android:id="@+id/userSelectionFlow"
+        app:startDestination="@id/userSelectionFragment">
+        <fragment android:id="@+id/userSelectionFragment" />
+        <action
+            android:id="@+id/action_global_creationCodeFlow"
+            app:destination="@id/creationCodeFlow" />
+        <action
+            android:id="@+id/action_global_onboardingFlow"
+            app:destination="@id/onboardingFlow" />
+        <action
+            android:id="@+id/action_global_dashboardFlow2"
+            app:destination="@id/dashboardFlow" />
+    </navigation>
+    <navigation android:id="@+id/onboardingFlow"
+        app:startDestination="@id/registrationActivity">
+        <fragment android:id="@+id/registrationActivity" />
+        <action
+            android:id="@+id/action_global_dashboardFlow"
+            app:destination="@id/dashboardFlow" />
+    </navigation>
+    <navigation android:id="@+id/dashboardFlow"
+        app:startDestination="@id/dashboardActivity">
+        <activity
+            android:id="@+id/dashboardActivity"
+            android:name="com.microsoft.research.karya.ui.dashboard.DashboardActivity"
+            android:label="activity_dashboard"
+            tools:layout="@layout/activity_dashboard" />
+    </navigation>
+</navigation>
