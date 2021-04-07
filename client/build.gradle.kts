@@ -14,6 +14,7 @@ buildscript {
             }
         }
     }
+
     dependencies {
         classpath(Plugins.agp)
         classpath(Plugins.hilt)
@@ -37,6 +38,7 @@ allprojects {
             content {
                 includeGroup("com.amitshekhar.android")
                 includeGroup("com.kofigyan.stateprogressbar")
+                includeGroup("org.jetbrains.trove4j")
             }
         }
     }
