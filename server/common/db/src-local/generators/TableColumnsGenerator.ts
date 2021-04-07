@@ -21,9 +21,7 @@ ${openingComment}
 
 import { DbTableName } from './TableInterfaces';
 
-export const tableColumns: { [key in DbTableName]: string[]} = ${JSON.stringify(
-    tableColumns,
-  )}`;
+export const tableColumns: { [key in DbTableName]: string[]} = ${JSON.stringify(tableColumns)}`;
 
   return prettier.format(tableColumnsData, prettierOptions);
 }

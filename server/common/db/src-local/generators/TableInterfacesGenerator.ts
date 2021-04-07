@@ -9,12 +9,7 @@
 import { enums, EnumTypes } from '../parsers/EnumParser';
 import { tableNames, tables } from '../parsers/TableParser';
 
-import {
-  openingComment,
-  PG2TSType,
-  prettierOptions,
-  TableType,
-} from '../parsers/Common';
+import { openingComment, PG2TSType, prettierOptions, TableType } from '../parsers/Common';
 
 import prettier from 'prettier';
 
@@ -31,8 +26,7 @@ export function tableInterfacesFileData(excludedTables: string[] = []): string {
   });
   /** Enum types */
   const enumTypeStrings = Object.entries(enums).map(
-    ([ename, values]) =>
-      `export type ${EnumTypes[ename]} = '${values.join(`' | '`)}'`,
+    ([ename, values]) => `export type ${EnumTypes[ename]} = '${values.join(`' | '`)}'`
   );
 
   const boxUpdatableTables: string[] = [];
@@ -62,16 +56,11 @@ export function tableInterfacesFileData(excludedTables: string[] = []): string {
 
   /** Table partial types */
   const tablePartialsTypeString = filteredTableNames
-    .map(
-      (tname) =>
-        `export type ${TableType(tname)} = Partial<${TableType(tname)}Record>`,
-    )
+    .map((tname) => `export type ${TableType(tname)} = Partial<${TableType(tname)}Record>`)
     .join('\n');
 
   /** Table name type */
-  const tableNameTypeString = `export type DbTableName = '${filteredTableNames.join(
-    `' | '`,
-  )}'`;
+  const tableNameTypeString = `export type DbTableName = '${filteredTableNames.join(`' | '`)}'`;
 
   /** Table name to type template */
   const tableNameToRecordTypeString = `export type DbRecordType<tableName extends DbTableName> = ${filteredTableNames
@@ -84,9 +73,7 @@ export function tableInterfacesFileData(excludedTables: string[] = []): string {
     .join(' : ')} : never`;
 
   /** Box updatable tables */
-  const boxUpdatableTablesString = `export type BoxUpdatableTables = '${boxUpdatableTables.join(
-    `' | '`,
-  )}'`;
+  const boxUpdatableTablesString = `export type BoxUpdatableTables = '${boxUpdatableTables.join(`' | '`)}'`;
 
   /** Table Interfaces data */
   const tableInterfaces = `\

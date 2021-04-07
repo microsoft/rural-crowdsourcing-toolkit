@@ -9,10 +9,7 @@
 import BBPromise from 'bluebird';
 import { Task, TaskRecord, TaskStatus, BasicModel } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
-import {
-  ParameterParserResponse,
-  parseTaskParameters,
-} from '../scenarios/common/ParameterParser';
+import { ParameterParserResponse, parseTaskParameters } from '../scenarios/common/ParameterParser';
 import { IScenario, scenarioMap } from '../scenarios/Index';
 import * as BlobStore from '../utils/AzureBlob';
 import * as HttpResponse from '@karya/http-response';
@@ -37,8 +34,7 @@ export function getWorkProviderFilter(ctx: KaryaHTTPContext): Task {
 
   // first set the explicit ID if it is provided
   if (ctx.request.query.work_provider_id) {
-    workProviderFilter.work_provider_id = ctx.request.query
-      .work_provider_id as string;
+    workProviderFilter.work_provider_id = ctx.request.query.work_provider_id as string;
   }
   // if not admin, override with the implicit ID
   if (!current_user.admin) {
@@ -144,7 +140,7 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
             param_id,
             ext: info.ext,
           },
-          info.file.path,
+          info.file.path
         );
         params[param_id] = blobURL;
       } catch (e) {
@@ -168,7 +164,7 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
         params,
         errors: errors.length > 0 ? { messages: errors } : {},
         actions: actions.length > 0 ? { uploads: actions } : {},
-      },
+      }
     );
 
     // successful response
@@ -200,11 +196,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
 
   try {
     // don't allow edit if the status of the task is beyond 'validated'
-    if (
-      task.status == 'approved' ||
-      task.status == 'assigned' ||
-      task.status == 'completed'
-    ) {
+    if (task.status == 'approved' || task.status == 'assigned' || task.status == 'completed') {
       HttpResponse.BadRequest(ctx, 'Task cannot be updated after approval');
       return;
     }
@@ -239,11 +231,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
     }
 
     task.status = 'submitted';
-    const taskRecord = await BasicModel.updateSingle(
-      'task',
-      { id: task_id },
-      task,
-    );
+    const taskRecord = await BasicModel.updateSingle('task', { id: task_id }, task);
 
     // successful response
     HttpResponse.OK(ctx, taskRecord);
@@ -335,10 +323,7 @@ export async function validateTask(ctx: KaryaHTTPContext) {
 
       // If validation failed, then return bad request
       if (updatedRecord === null) {
-        HttpResponse.BadRequest(
-          ctx,
-          'Task validation failed. Please fix the errors in your submission',
-        );
+        HttpResponse.BadRequest(ctx, 'Task validation failed. Please fix the errors in your submission');
         return;
       }
 
@@ -346,11 +331,7 @@ export async function validateTask(ctx: KaryaHTTPContext) {
     } else {
       await taskValidationQueue.add(taskRecord);
 
-      const updatedRecord = await BasicModel.updateSingle(
-        'task',
-        { id: taskRecord.id },
-        { status: 'validating' },
-      );
+      const updatedRecord = await BasicModel.updateSingle('task', { id: taskRecord.id }, { status: 'validating' });
 
       HttpResponse.OK(ctx, updatedRecord);
     }
@@ -377,11 +358,7 @@ export async function approveTask(ctx: KaryaHTTPContext) {
     await taskApprovalQueue.add(taskRecord);
 
     // update the task status to 'approving'
-    const updatedRecord = await BasicModel.updateSingle(
-      'task',
-      { id },
-      { status: 'approving' },
-    );
+    const updatedRecord = await BasicModel.updateSingle('task', { id }, { status: 'approving' });
 
     HttpResponse.OK(ctx, updatedRecord);
   } catch (e) {

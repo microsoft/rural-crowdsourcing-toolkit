@@ -29,7 +29,7 @@ export async function validateTask(taskRecord: TaskRecord) {
     await BasicModel.updateSingle(
       'task',
       { id: taskRecord.id },
-      { status: 'invalid', errors: { messages: response.message } },
+      { status: 'invalid', errors: { messages: response.message } }
     );
 
     return null;
@@ -46,7 +46,7 @@ export async function validateTask(taskRecord: TaskRecord) {
       errors: {},
       actions: {},
       budget: budgetResponse.budget,
-    },
+    }
   );
 
   return updatedRecord;

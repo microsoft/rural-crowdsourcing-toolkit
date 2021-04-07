@@ -6,26 +6,16 @@
  */
 
 /** Import necessary DB types */
-import {
-  AuthProviderType,
-  WorkProvider,
-  WorkProviderRecord,
-  BasicModel,
-} from '@karya/db';
+import { AuthProviderType, WorkProvider, WorkProviderRecord, BasicModel } from '@karya/db';
 
 /** Imporet types from auth interaface */
-import {
-  IDTokenVerificationResponse,
-  UserSignUpResponse,
-} from './common/AuthProviderInterface';
+import { IDTokenVerificationResponse, UserSignUpResponse } from './common/AuthProviderInterface';
 
 /** List of auth providers */
 import GoogleOauth2AP from './google-oauth-2/Index';
 
 /** Response type for auth requests; id_token must be part of response */
-export type AuthResponse =
-  | { success: true; wp: WorkProviderRecord }
-  | { success: false; message: string };
+export type AuthResponse = { success: true; wp: WorkProviderRecord } | { success: false; message: string };
 
 /**
  * Function to sign up a new user
@@ -33,9 +23,7 @@ export type AuthResponse =
  * @param authInfo contains user authorisation object
  * @returns returns the authorisation object
  */
-export async function signUpUser(
-  userInfo: WorkProvider,
-): Promise<AuthResponse> {
+export async function signUpUser(userInfo: WorkProvider): Promise<AuthResponse> {
   try {
     const authProvider = userInfo.auth_provider;
     const signUpResponse: UserSignUpResponse =
@@ -49,10 +37,7 @@ export async function signUpUser(
     }
 
     /** Check if a previous work provider with the given credentials exists */
-    const records = await BasicModel.getRecords(
-      'work_provider',
-      signUpResponse.matchInfo,
-    );
+    const records = await BasicModel.getRecords('work_provider', signUpResponse.matchInfo);
 
     if (records.length > 0) {
       return {
@@ -68,11 +53,7 @@ export async function signUpUser(
     delete updatedWP.admin;
 
     /** Run query to update */
-    const updatedRecord = await BasicModel.updateSingle(
-      'work_provider',
-      { id: userInfo.id },
-      updatedWP,
-    );
+    const updatedRecord = await BasicModel.updateSingle('work_provider', { id: userInfo.id }, updatedWP);
 
     /** Successful update */
     return { success: true, wp: updatedRecord };
@@ -87,10 +68,7 @@ export async function signUpUser(
  * @param authProvider Auth provider type extracted from the request header
  * @param idToken ID token extracted from the request header
  */
-export async function verifyIDToken(
-  authProvider: AuthProviderType,
-  idToken: string,
-): Promise<AuthResponse> {
+export async function verifyIDToken(authProvider: AuthProviderType, idToken: string): Promise<AuthResponse> {
   try {
     const tokenResponse: IDTokenVerificationResponse =
       authProvider === 'google_oauth'
@@ -103,10 +81,7 @@ export async function verifyIDToken(
     }
 
     /** Get the records with matching info */
-    const records = await BasicModel.getRecords(
-      'work_provider',
-      tokenResponse.matchInfo,
-    );
+    const records = await BasicModel.getRecords('work_provider', tokenResponse.matchInfo);
 
     /** If no work provider */
     if (records.length !== 1) {

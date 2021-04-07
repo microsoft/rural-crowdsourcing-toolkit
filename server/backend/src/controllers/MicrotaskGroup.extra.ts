@@ -3,14 +3,7 @@
 
 // Implements APIs on 'microtask_group' that could not be auto generated
 
-import {
-  knex,
-  MicrotaskGroup,
-  MicrotaskGroupRecord,
-  Task,
-  TaskRecord,
-  BasicModel,
-} from '@karya/db';
+import { knex, MicrotaskGroup, MicrotaskGroupRecord, Task, TaskRecord, BasicModel } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
@@ -77,15 +70,9 @@ export async function getRecords(ctx: KaryaHTTPContext) {
       records = await knex<MicrotaskGroupRecord>('microtask_group')
         .select()
         .where(microTaskGroupFilter)
-        .whereIn(
-          'task_id',
-          knex<TaskRecord>('task').select().where(workProviderFilter),
-        );
+        .whereIn('task_id', knex<TaskRecord>('task').select().where(workProviderFilter));
     } else {
-      records = await BasicModel.getRecords(
-        'microtask_group',
-        microTaskGroupFilter,
-      );
+      records = await BasicModel.getRecords('microtask_group', microTaskGroupFilter);
     }
 
     // send the records

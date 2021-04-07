@@ -7,13 +7,7 @@
 
 import * as fs from 'fs';
 
-import {
-  LanguageResource,
-  Policy,
-  Scenario,
-  ScenarioRecord,
-  BasicModel,
-} from '@karya/db';
+import { LanguageResource, Policy, Scenario, ScenarioRecord, BasicModel } from '@karya/db';
 import { IScenario, scenarioById, scenarioMap } from './Index';
 
 import { updateLanguageResource } from '../models/LanguageResourceModel';
@@ -48,14 +42,8 @@ export async function registerScenarios() {
   for (const record of dbRecords) {
     // if the record is not in the map, mark it as disabled and flag an error
     if (!(record.name in scenarioMap)) {
-      await BasicModel.updateRecords(
-        'scenario',
-        { name: record.name },
-        { enabled: false },
-      );
-      logger.error(
-        `Scenario DB record '${record.name}' does not have matching implementation`,
-      );
+      await BasicModel.updateRecords('scenario', { name: record.name }, { enabled: false });
+      logger.error(`Scenario DB record '${record.name}' does not have matching implementation`);
       continue;
     } else {
       scenarioMap[record.name].id = record.id;
@@ -81,12 +69,10 @@ export async function registerScenarios() {
       scenarioById[Number.parseInt(dbRecord.id, 10)] = scenario;
 
       // Extract the last updated time for the scenario description file
-      const scenarioDescriptionFile = `${process.cwd()}/src/scenarios/${
-        scenario.name
-      }/Index.ts`;
+      const scenarioDescriptionFile = `${process.cwd()}/src/scenarios/${scenario.name}/Index.ts`;
       if (!fs.existsSync(scenarioDescriptionFile)) {
         logger.error(
-          `Scenario description file '${scenarioDescriptionFile}' not present. Ensure appropriate file naming`,
+          `Scenario description file '${scenarioDescriptionFile}' not present. Ensure appropriate file naming`
         );
         continue;
       }
@@ -110,11 +96,7 @@ export async function registerScenarios() {
           };
 
           // sync scenario  with DB
-          await BasicModel.updateSingle(
-            'scenario',
-            { name: scenario.name },
-            updatedScenarioObject,
-          );
+          await BasicModel.updateSingle('scenario', { name: scenario.name }, updatedScenarioObject);
           logger.info(`Synced scenario '${scenario.name}' with DB`);
 
           // check if language resource needs to be synced
@@ -122,7 +104,7 @@ export async function registerScenarios() {
             // update the language resource for scenario name
             await updateLanguageResource(
               { scenario_id: dbRecord.id, name: 'scenario_name' },
-              { description: scenario.full_name },
+              { description: scenario.full_name }
             );
           }
 
@@ -130,15 +112,13 @@ export async function registerScenarios() {
             // update the language resource for scenario description
             await updateLanguageResource(
               { scenario_id: dbRecord.id, name: 'scenario_description' },
-              { description: scenario.description },
+              { description: scenario.description }
             );
           }
           // update policies
           const success = await updateScenarioPolicies(scenario, dbRecord.id);
           if (!success) {
-            throw new Error(
-              `Failed to update policies associated with '${scenario.name}'`,
-            );
+            throw new Error(`Failed to update policies associated with '${scenario.name}'`);
           }
         } catch (err) {
           logger.error(`Failed to sync scenario '${scenario.name}'`);
@@ -166,10 +146,7 @@ export async function registerScenarios() {
 
       // insert the record into the DB
       try {
-        const dbRecord = await BasicModel.insertRecord(
-          'scenario',
-          newScenarioObject,
-        );
+        const dbRecord = await BasicModel.insertRecord('scenario', newScenarioObject);
         scenarioById[Number.parseInt(dbRecord.id, 10)] = scenario;
         logger.info(`Inserted scenario '${scenario.name}' into the DB`);
 
@@ -196,9 +173,7 @@ export async function registerScenarios() {
 
         const success = await createScenarioPolicies(scenario, dbRecord.id);
         if (!success) {
-          throw new Error(
-            `Failed to insert policies associated with '${scenario.name}'`,
-          );
+          throw new Error(`Failed to insert policies associated with '${scenario.name}'`);
         } else {
           logger.info(`Inserted policy records for '${scenario.name}'`);
         }
@@ -230,10 +205,7 @@ async function createScenarioPolicies(scenario: IScenario, scenarioId: string) {
   return success;
 }
 
-async function updateScenarioPolicies(
-  scenario: IScenario,
-  scenario_id: string,
-) {
+async function updateScenarioPolicies(scenario: IScenario, scenario_id: string) {
   const policies: IPolicy[] = scenario.policies;
   let success = true;
   await bbPromise
@@ -244,11 +216,7 @@ async function updateScenarioPolicies(
         scenario_id,
         params: policy.params,
       };
-      await BasicModel.updateRecords(
-        'policy',
-        { name: policy.name, scenario_id },
-        updatedPolicyObject,
-      );
+      await BasicModel.updateRecords('policy', { name: policy.name, scenario_id }, updatedPolicyObject);
     })
     .catch((err) => {
       success = false;

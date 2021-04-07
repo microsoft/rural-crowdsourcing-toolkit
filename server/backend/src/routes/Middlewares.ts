@@ -4,12 +4,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AuthResponse, verifyIDToken } from '../auth-providers/Index';
 import { KaryaMiddleware } from '../controllers/KoaContextType';
-import {
-  AuthProviderType,
-  DbTableName,
-  tableFilterColumns,
-  BasicModel,
-} from '@karya/db';
+import { AuthProviderType, DbTableName, tableFilterColumns, BasicModel } from '@karya/db';
 import { requestLogger } from '../utils/Logger';
 import * as HttpResponse from '@karya/http-response';
 import { setCookie } from '../controllers/Auth.extra';
@@ -23,9 +18,7 @@ import { setCookie } from '../controllers/Auth.extra';
  */
 export const authenticateRequest: KaryaMiddleware = async (ctx, next) => {
   // Sign-up routes do not require any authentication
-  if (
-    ['/api/work_provider/update/cc', '/api/box/update/cc'].includes(ctx.path)
-  ) {
+  if (['/api/work_provider/update/cc', '/api/box/update/cc'].includes(ctx.path)) {
     await next();
     return;
   }
@@ -88,11 +81,7 @@ export const authenticateUser: KaryaMiddleware = async (ctx, next) => {
   // Extend cookies if non-signout request
   if (ctx.state.current_user) {
     const { current_user } = ctx.state;
-    setCookie(
-      ctx,
-      'auth-provider',
-      current_user.auth_provider as AuthProviderType,
-    );
+    setCookie(ctx, 'auth-provider', current_user.auth_provider as AuthProviderType);
     setCookie(ctx, 'id-token', current_user.id_token as string);
   } else {
     setCookie(ctx, 'auth-provider', undefined);
@@ -111,10 +100,7 @@ export const authenticateBox: KaryaMiddleware = async (ctx, next) => {
 
   // Check if the appropriate header information is provided
   if (!(header['box-id'] && header['id-token'])) {
-    HttpResponse.BadRequest(
-      ctx,
-      'Missing authentication information. Need box-id and id-token',
-    );
+    HttpResponse.BadRequest(ctx, 'Missing authentication information. Need box-id and id-token');
     return;
   }
 

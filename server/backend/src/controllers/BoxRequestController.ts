@@ -76,10 +76,7 @@ export async function uploadFile(ctx: KaryaHTTPContext) {
 
   // Check if request is valid
   if (!body.data || !files || !files.file) {
-    HttpResponse.BadRequest(
-      ctx,
-      'Invalid request. Need file record and file attachment',
-    );
+    HttpResponse.BadRequest(ctx, 'Invalid request. Need file record and file attachment');
     return;
   }
 
@@ -129,7 +126,7 @@ export async function uploadFile(ctx: KaryaHTTPContext) {
       fileRecord.container_name,
       fileRecord.name,
       // @ts-ignore
-      file.path,
+      file.path
     );
 
     // First upsert the record
@@ -142,7 +139,7 @@ export async function uploadFile(ctx: KaryaHTTPContext) {
       {
         url: blobURL,
         in_server: true,
-      },
+      }
     );
 
     HttpResponse.OK(ctx, serverRecord);
@@ -250,11 +247,7 @@ export async function updateWithCreationCode(ctx: KaryaHTTPContext) {
   delete box.physical;
 
   try {
-    const updatedRecord = await BasicModel.updateSingle(
-      'box',
-      { id: boxRecord.id },
-      box,
-    );
+    const updatedRecord = await BasicModel.updateSingle('box', { id: boxRecord.id }, box);
 
     // Don't send salt to the box
     updatedRecord.salt = null;

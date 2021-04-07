@@ -25,9 +25,7 @@ export async function getSupportedLanguages(ctx: KaryaHTTPContext) {
   });
 
   try {
-    const languageIds = await ScenarioLanguageModel.getSupportedLanguages(
-      lrFilter,
-    );
+    const languageIds = await ScenarioLanguageModel.getSupportedLanguages(lrFilter);
     HttpResponse.OK(ctx, languageIds);
   } catch (e) {
     const message = getControllerError(e);

@@ -74,10 +74,7 @@ Object.entries(apiInput).forEach(([table, info]) => {
     info.extra.forEach((route) => {
       const method = route.method;
       if (route.endpoint === undefined) {
-        route.endpoint =
-          method === 'GET_BY_ID' || method === 'UPDATE_BY_ID'
-            ? `/${table}/:id`
-            : `/${table}`;
+        route.endpoint = method === 'GET_BY_ID' || method === 'UPDATE_BY_ID' ? `/${table}/:id` : `/${table}`;
       }
 
       if (route.controller === undefined) {
@@ -94,9 +91,7 @@ Object.entries(apiInput).forEach(([table, info]) => {
       }
 
       if (route.controller === '') {
-        throw new Error(
-          `Undefined controller for ${table} route ${route.method}`,
-        );
+        throw new Error(`Undefined controller for ${table} route ${route.method}`);
       }
 
       const httpMethod: HTTPMethods =
@@ -127,9 +122,7 @@ Object.entries(apiInput).forEach(([table, info]) => {
         : undefined;
 
       if (label === undefined) {
-        throw new Error(
-          `Label not defined for route '${table}' '${route.method}'`,
-        );
+        throw new Error(`Label not defined for route '${table}' '${route.method}'`);
       }
 
       const response = route.response

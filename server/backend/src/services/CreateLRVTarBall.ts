@@ -33,9 +33,7 @@ import logger from '../utils/Logger';
  * @param language Language for which tarball should be created
  */
 export async function createLanguageLRVTarBall(language: LanguageRecord) {
-  logger.info(
-    `Creating LRV tar ball for language '${language.name}' (${language.id})`,
-  );
+  logger.info(`Creating LRV tar ball for language '${language.name}' (${language.id})`);
 
   // Get all the file language resources
   const lrRecords = await BasicModel.getRecords('language_resource', {
@@ -44,15 +42,10 @@ export async function createLanguageLRVTarBall(language: LanguageRecord) {
   const fileLRIDs = lrRecords.map((lr) => lr.id);
 
   // Get all valid file language resource values for the specific language
-  const lrvRecords = await BasicModel.getRecordsWhereIn(
-    'language_resource_value',
-    'language_resource_id',
-    fileLRIDs,
-    {
-      language_id: language.id,
-      valid: true,
-    },
-  );
+  const lrvRecords = await BasicModel.getRecordsWhereIn('language_resource_value', 'language_resource_id', fileLRIDs, {
+    language_id: language.id,
+    valid: true,
+  });
 
   // temp folder for the language
   const folder = `${config.tempFolder}/language/${language.id}`;
@@ -64,20 +57,11 @@ export async function createLanguageLRVTarBall(language: LanguageRecord) {
     ext: 'tar',
   };
 
-  const fileRecord = await createUpdateLRVTarBall(
-    lrvRecords,
-    folder,
-    llrvTarBlobParams,
-    language.lrv_file_id,
-  );
+  const fileRecord = await createUpdateLRVTarBall(lrvRecords, folder, llrvTarBlobParams, language.lrv_file_id);
 
   // update the file link in the language record
   if (fileRecord !== null) {
-    await BasicModel.updateSingle(
-      'language',
-      { id: language.id },
-      { lrv_file_id: fileRecord.id },
-    );
+    await BasicModel.updateSingle('language', { id: language.id }, { lrv_file_id: fileRecord.id });
   }
 }
 
@@ -89,12 +73,8 @@ export async function createLanguageLRVTarBall(language: LanguageRecord) {
  * @param language Language for which tarball should be created
  */
 
-export async function createLanguageResourceLRVTarBall(
-  lr: LanguageResourceRecord,
-) {
-  logger.info(
-    `Creating LRV tar ball for language resource '${lr.name}' (${lr.id})`,
-  );
+export async function createLanguageResourceLRVTarBall(lr: LanguageResourceRecord) {
+  logger.info(`Creating LRV tar ball for language resource '${lr.name}' (${lr.id})`);
 
   // if resource is not a file resource, return immediately
   if (lr.type !== 'file_resource') {
@@ -116,20 +96,11 @@ export async function createLanguageResourceLRVTarBall(
     ext: 'tar',
   };
 
-  const fileRecord = await createUpdateLRVTarBall(
-    lrvRecords,
-    folder,
-    lrBlobParams,
-    lr.lrv_file_id,
-  );
+  const fileRecord = await createUpdateLRVTarBall(lrvRecords, folder, lrBlobParams, lr.lrv_file_id);
 
   // If file was created, update the LR record with file ID
   if (fileRecord !== null) {
-    await BasicModel.updateSingle(
-      'language_resource',
-      { id: lr.id },
-      { lrv_file_id: fileRecord.id },
-    );
+    await BasicModel.updateSingle('language_resource', { id: lr.id }, { lrv_file_id: fileRecord.id });
   }
 }
 
@@ -137,7 +108,7 @@ async function createUpdateLRVTarBall(
   lrvRecords: LanguageResourceValueRecord[],
   folder: string,
   blobParams: BlobParameters,
-  currentFileID: string | null,
+  currentFileID: string | null
 ): Promise<KaryaFileRecord | null> {
   // Create the folder
   try {
@@ -169,12 +140,7 @@ async function createUpdateLRVTarBall(
     await tar.c({ C: folder, file: tarPath }, files);
 
     // insert file record for tar ball
-    const fileRecord = await upsertKaryaFile(
-      tarPath,
-      'md5',
-      blobParams,
-      currentFileID,
-    );
+    const fileRecord = await upsertKaryaFile(tarPath, 'md5', blobParams, currentFileID);
 
     return fileRecord;
   }

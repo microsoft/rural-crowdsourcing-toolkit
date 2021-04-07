@@ -24,12 +24,7 @@ export function androidTablesData(androidPath: string) {
     }
 
     const fileWriteData = getFileData(tname, tinfo, excludedTables, false);
-    const enumDeclarations = getEnumDeclarations(
-      tname,
-      tinfo,
-      excludedTables,
-      true,
-    );
+    const enumDeclarations = getEnumDeclarations(tname, tinfo, excludedTables, true);
     if (enumDeclarations) {
       Object.keys(enumDeclarations).map((key: string) => {
         if (!enumDataMap[key]) {
@@ -40,10 +35,7 @@ export function androidTablesData(androidPath: string) {
     const fileName = ucc(tname);
 
     // write file data
-    fs.writeFileSync(
-      `${androidPath}/${fileName}Record.kt`,
-      deleteTrailingWhitespace(fileWriteData),
-    );
+    fs.writeFileSync(`${androidPath}/${fileName}Record.kt`, deleteTrailingWhitespace(fileWriteData));
 
     // write partial data
     // saving all enums in different files
@@ -58,32 +50,17 @@ ${openingComment}
 
 package com.microsoft.research.karya.database.models
 ${value}
-`,
+`
         );
       }
     }
   });
 }
 
-function getFileData(
-  tname: string,
-  tinfo: TableInfo,
-  excludedTables: string[],
-  partialTableRecord: boolean,
-): string {
+function getFileData(tname: string, tinfo: TableInfo, excludedTables: string[], partialTableRecord: boolean): string {
   const androidImports = getAndroidImports(partialTableRecord);
-  const foreignKeyDeclaration = getForeignKeyDeclarations(
-    tname,
-    tinfo,
-    excludedTables,
-    partialTableRecord,
-  );
-  const tableDeclaration = getTableDeclarations(
-    tname,
-    tinfo,
-    excludedTables,
-    partialTableRecord,
-  );
+  const foreignKeyDeclaration = getForeignKeyDeclarations(tname, tinfo, excludedTables, partialTableRecord);
+  const tableDeclaration = getTableDeclarations(tname, tinfo, excludedTables, partialTableRecord);
   /** Table data */
   const fileWriteData = `\
 ${openingComment}\n
@@ -110,7 +87,7 @@ function getForeignKeyDeclarations(
   tname: string,
   tinfo: TableInfo,
   excludedTables: string[],
-  partialTableRecord: boolean,
+  partialTableRecord: boolean
 ) {
   if (partialTableRecord) {
     return '';
@@ -118,11 +95,7 @@ function getForeignKeyDeclarations(
   const foreignKeysIndex: string[] = [];
   const foreignKeys: string[] = [];
   Object.entries(tinfo.fields).map(([fname, finfo]) => {
-    if (
-      finfo.ref &&
-      excludedTables.indexOf(finfo.ref) == -1 &&
-      finfo.ref !== 'box'
-    ) {
+    if (finfo.ref && excludedTables.indexOf(finfo.ref) == -1 && finfo.ref !== 'box') {
       foreignKeysIndex.push(`Index("${fname}")`);
       foreignKeys.push(`ForeignKey(
             entity = ${ucc(finfo.ref)}Record::class,
@@ -146,17 +119,10 @@ function getTableDeclarations(
   tname: string,
   tinfo: TableInfo,
   excludedTables: string[],
-  partialTableRecord: boolean,
+  partialTableRecord: boolean
 ): string {
-  const fieldString = getColumnsForTable(
-    tname,
-    tinfo,
-    excludedTables,
-    partialTableRecord,
-  );
-  const tableDeclaration = `data class ${
-    !partialTableRecord ? ucc(tname) + 'Record' : ucc(tname)
-  }(
+  const fieldString = getColumnsForTable(tname, tinfo, excludedTables, partialTableRecord);
+  const tableDeclaration = `data class ${!partialTableRecord ? ucc(tname) + 'Record' : ucc(tname)}(
     ${fieldString}
     )`;
   return tableDeclaration;
@@ -166,7 +132,7 @@ function getColumnsForTable(
   tname: string,
   tinfo: TableInfo,
   excludedTables: string[],
-  partialTableRecord: boolean,
+  partialTableRecord: boolean
 ): string {
   /** Table types */
   let enumsString = '';
@@ -194,8 +160,7 @@ function getColumnsForTable(
         if (partialTableRecord) {
           datatype = datatype + '?';
         }
-        const typeDeclaration =
-          mandatoryFieldString + `\tvar ${fname}: ${datatype},`;
+        const typeDeclaration = mandatoryFieldString + `\tvar ${fname}: ${datatype},`;
         return typeDeclaration;
       } else {
         const datatype = getDataType(fname, finfo.type);
@@ -222,10 +187,7 @@ function getDataType(name: string, type: string): string {
   return datatype;
 }
 
-function getEnumStrings(
-  name: string,
-  type: string,
-): { isEnum: boolean; enumString: string } {
+function getEnumStrings(name: string, type: string): { isEnum: boolean; enumString: string } {
   if (type in EnumTypes) {
     const enumString = `\nenum class ${ucc(type)} {
     ${enums[type].join(', ')}
@@ -240,7 +202,7 @@ function getEnumDeclarations(
   tname: string,
   tinfo: TableInfo,
   excludedTables: string[],
-  partialTableRecord: boolean,
+  partialTableRecord: boolean
 ): any {
   /** Table types */
   const enumsMap: any = {};

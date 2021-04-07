@@ -33,9 +33,7 @@ export function backendAPISpecsFileData() {
         ? `headers: { 'auth-provider': DBT.AuthProviderType; 'id-token': string; };`
         : '';
       const pathParams =
-        route.method === 'GET_BY_ID' ||
-        route.method === 'UPDATE_BY_ID' ||
-        route.endpoint.indexOf(':id') > 0
+        route.method === 'GET_BY_ID' || route.method === 'UPDATE_BY_ID' || route.endpoint.indexOf(':id') > 0
           ? `id: number;`
           : '';
 
@@ -55,17 +53,11 @@ export function backendAPISpecsFileData() {
         queryParamsType.push(`Table extends ${store} ? '${route.params}'`);
       }
 
-      if (
-        !['CREATE', 'UPDATE_BY_ID', 'GET_BY_ID', 'GET_ALL'].includes(
-          route.label,
-        )
-      ) {
+      if (!['CREATE', 'UPDATE_BY_ID', 'GET_BY_ID', 'GET_ALL'].includes(route.label)) {
         let responseQuery: string;
         const header = route.auth_header ? 'action.headers' : '{}';
         const endpoint =
-          route.endpoint.indexOf(':id') > 0
-            ? `'${route.endpoint}'.replace(':id', action.id)`
-            : `'${route.endpoint}'`;
+          route.endpoint.indexOf(':id') > 0 ? `'${route.endpoint}'.replace(':id', action.id)` : `'${route.endpoint}'`;
         switch (route.httpMethod) {
           case 'POST':
             responseQuery = `await POST(${endpoint}, action.request, ${header}, action.files)`;
@@ -97,9 +89,7 @@ ${openingComment}
 import * as DBT from '../../db/TableInterfaces.auto';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
-export type DbParamsType<Table extends DBT.DbTableName> = ${queryParamsType.join(
-    ':',
-  )} : never;
+export type DbParamsType<Table extends DBT.DbTableName> = ${queryParamsType.join(':')} : never;
 
 export type BackendRequestInitAction = ${initActions.join(' | ')};
 

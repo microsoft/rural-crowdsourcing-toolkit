@@ -12,11 +12,7 @@ import router from './routes/Routes';
 
 import { setupDbConnection, BasicModel } from '@karya/db';
 import { registerScenarios } from './scenarios/Register';
-import {
-  createBlobContainers,
-  createLocalFolders,
-  setupBlobStore,
-} from './utils/AzureBlob';
+import { createBlobContainers, createLocalFolders, setupBlobStore } from './utils/AzureBlob';
 
 import { scenarioById } from './scenarios/Index';
 import { taskOutputGeneratorQueue } from './services/Index';
@@ -52,9 +48,7 @@ app.use(router.routes());
     await registerScenarios();
     logger.info(`Completed registration of scenarios`);
   } catch (e) {
-    logger.error(
-      'Failed to register scenarios. Check if the database is running',
-    );
+    logger.error('Failed to register scenarios. Check if the database is running');
     error = true;
   }
 

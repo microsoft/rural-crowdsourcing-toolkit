@@ -28,17 +28,7 @@ type FieldInfo = {
   type: string;
   len?: number;
   ref?: string;
-  options: (
-    | 'unique'
-    | 'not null'
-    | 'pk'
-    | 'now'
-    | 'false'
-    | 'true'
-    | 'eon'
-    | 'empty'
-    | 'filter'
-  )[];
+  options: ('unique' | 'not null' | 'pk' | 'now' | 'false' | 'true' | 'eon' | 'empty' | 'filter')[];
 };
 
 type Methods = 'post' | 'put' | 'getbyid' | 'get';
@@ -68,8 +58,7 @@ for (const table of tableNames) {
 
     const info: FieldInfo = { type: ftype, options: [] };
 
-    if (ftype == 'varchar')
-      info.len = Number.parseInt(params.shift() as string, 10);
+    if (ftype == 'varchar') info.len = Number.parseInt(params.shift() as string, 10);
     if (ftype == '>') {
       info.ref = params.shift() as string;
       // in case of self reference update the table prematurely to reflect keys
@@ -77,12 +66,7 @@ for (const table of tableNames) {
         tables[table] = { fields: fieldsInfo, ...other };
       }
       const refType = tables[info.ref].fields['id'].type;
-      info.type =
-        refType === 'serial'
-          ? 'int'
-          : refType === 'bigserial'
-          ? 'bigint'
-          : refType;
+      info.type = refType === 'serial' ? 'int' : refType === 'bigserial' ? 'bigint' : refType;
     }
 
     // @ts-ignore

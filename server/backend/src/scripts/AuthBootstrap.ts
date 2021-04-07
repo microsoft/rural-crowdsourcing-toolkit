@@ -17,9 +17,7 @@ export async function bootstrapAuth() {
   /** Ensure there are no records */
   const currentRecords = await BasicModel.getRecords('work_provider', {});
   if (currentRecords.length > 0) {
-    throw new Error(
-      'There are already work provider records. Not bootstrapping',
-    );
+    throw new Error('There are already work provider records. Not bootstrapping');
   }
 
   /** Get a creation code  */
@@ -38,10 +36,7 @@ export async function bootstrapAuth() {
   };
 
   /** Insert the new user */
-  const insertedRecord = await BasicModel.insertRecord(
-    'work_provider',
-    workProvider,
-  );
+  const insertedRecord = await BasicModel.insertRecord('work_provider', workProvider);
 
   if (insertedRecord === null) {
     throw new Error('Failed to create record');

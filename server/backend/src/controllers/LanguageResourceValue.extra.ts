@@ -51,23 +51,16 @@ export async function getRecords(ctx: KaryaHTTPContext) {
 
     // If there is a lr filter, complex path
     if (lrFilter !== {}) {
-      records = await knex<LanguageResourceValueRecord>(
-        'language_resource_value',
-      )
+      records = await knex<LanguageResourceValueRecord>('language_resource_value')
         .select()
         .where(languageFilter)
         .whereIn(
           'language_resource_id',
-          knex<LanguageResourceRecord>('language_resource')
-            .select('id')
-            .where(lrFilter),
+          knex<LanguageResourceRecord>('language_resource').select('id').where(lrFilter)
         );
     } else {
       // no scenario_id filter. simply return records with any language filter
-      records = await BasicModel.getRecords(
-        'language_resource_value',
-        languageFilter,
-      );
+      records = await BasicModel.getRecords('language_resource_value', languageFilter);
     }
 
     // return the list of retrieved records
@@ -102,10 +95,7 @@ export async function createFileResourceValue(ctx: KaryaHTTPContext) {
   // check if the file has an extension
   const ext = ((file as unknown) as File).name.split('.').pop();
   if (ext === undefined) {
-    HttpResponse.BadRequest(
-      ctx,
-      'Uploaded file needs to have an appropriate extension.',
-    );
+    HttpResponse.BadRequest(ctx, 'Uploaded file needs to have an appropriate extension.');
     return;
   }
 
@@ -120,15 +110,12 @@ export async function createFileResourceValue(ctx: KaryaHTTPContext) {
         ext,
       },
       // @ts-ignore
-      file.path,
+      file.path
     );
 
     // insert the record into the db
     lrv.value = blobURL;
-    const insertedRecord = await BasicModel.insertRecord(
-      'language_resource_value',
-      lrv,
-    );
+    const insertedRecord = await BasicModel.insertRecord('language_resource_value', lrv);
 
     // set lrv file flag
     await setLRVFileUpdateFlag(insertedRecord);
@@ -160,10 +147,7 @@ export async function updateFileResourceValue(ctx: KaryaHTTPContext) {
   // check if the file has an extension
   const ext = ((file as unknown) as File).name.split('.').pop();
   if (ext === undefined) {
-    HttpResponse.BadRequest(
-      ctx,
-      'Uploaded file needs to have an appropriate extension.',
-    );
+    HttpResponse.BadRequest(ctx, 'Uploaded file needs to have an appropriate extension.');
     return;
   }
 
@@ -171,10 +155,7 @@ export async function updateFileResourceValue(ctx: KaryaHTTPContext) {
 
   try {
     // get the current record
-    const lrvRecord = await BasicModel.getSingle(
-      'language_resource_value',
-      match,
-    );
+    const lrvRecord = await BasicModel.getSingle('language_resource_value', match);
 
     // replace the current blob with new file
     const { language_id, language_resource_id } = lrvRecord;
@@ -187,18 +168,14 @@ export async function updateFileResourceValue(ctx: KaryaHTTPContext) {
       },
       lrvRecord.value,
       //@ts-ignore
-      file.path,
+      file.path
     );
 
     // add blob URL to updates
     updates.value = blobURL;
 
     // update the record in the db
-    const updatedRecord = await BasicModel.updateSingle(
-      'language_resource_value',
-      match,
-      updates,
-    );
+    const updatedRecord = await BasicModel.updateSingle('language_resource_value', match, updates);
 
     // set update lrv file flag
     await setLRVFileUpdateFlag(updatedRecord);
@@ -226,7 +203,7 @@ async function setLRVFileUpdateFlag(lrv: LanguageResourceValueRecord) {
     const updatedLanguageRecord = await BasicModel.updateSingle(
       'language',
       { id: lrv.language_id },
-      { update_lrv_file: true },
+      { update_lrv_file: true }
     );
 
     languageLRVTarQueue.add(updatedLanguageRecord, { delay: 60000 });
@@ -242,7 +219,7 @@ async function setLRVFileUpdateFlag(lrv: LanguageResourceValueRecord) {
     const updatedLRR = await BasicModel.updateSingle(
       'language_resource',
       { id: lrv.language_resource_id },
-      { update_lrv_file: true },
+      { update_lrv_file: true }
     );
 
     lrLRVTarQueue.add(updatedLRR, { delay: 60000 });

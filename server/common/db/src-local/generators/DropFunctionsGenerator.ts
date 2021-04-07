@@ -14,9 +14,7 @@ import prettier from 'prettier';
 /**
  * Generate the data for the drop table functions file
  */
-export function dropTableFunctionsFileData(
-  excludedTables: string[] = [],
-): string {
+export function dropTableFunctionsFileData(excludedTables: string[] = []): string {
   let filteredTableNames = tableNames;
   excludedTables.forEach((excludedTable) => {
     filteredTableNames = filteredTableNames.filter((tname) => {
@@ -27,13 +25,11 @@ export function dropTableFunctionsFileData(
   const dropTableFunctionStrings = filteredTableNames.map(
     (tname) => `export async function drop${TableType(tname)}Table() {
     return knex.raw('DROP TABLE IF EXISTS ${tname} CASCADE');
-  }`,
+  }`
   );
 
   /** Function to drop all tables */
-  const dropTableCalls = filteredTableNames
-    .map((tname) => `await drop${TableType(tname)}Table();`)
-    .join('\n');
+  const dropTableCalls = filteredTableNames.map((tname) => `await drop${TableType(tname)}Table();`).join('\n');
 
   const dropAllTableFunction = `\
   export async function dropAllTables() {

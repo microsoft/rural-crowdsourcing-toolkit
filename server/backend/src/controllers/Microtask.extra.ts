@@ -79,10 +79,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
       records = await knex<MicrotaskRecord>('microtask')
         .select()
         .where(microtaskFilter)
-        .whereIn(
-          'task_id',
-          knex<TaskRecord>('task').select().where(workProviderFilter),
-        );
+        .whereIn('task_id', knex<TaskRecord>('task').select().where(workProviderFilter));
     } else {
       records = await BasicModel.getRecords('microtask', microtaskFilter);
     }
@@ -99,9 +96,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
  * Get all microtasks that have completed assignments
  * @param ctx Karya koa context
  */
-export async function getMicrotasksWithCompletedAssignments(
-  ctx: KaryaHTTPContext,
-) {
+export async function getMicrotasksWithCompletedAssignments(ctx: KaryaHTTPContext) {
   try {
     // generate microtask filter
     const microtaskFilter: Microtask = {};
@@ -119,7 +114,7 @@ export async function getMicrotasksWithCompletedAssignments(
       .whereExists(
         knex<MicrotaskAssignmentRecord>('microtask_assignment')
           .where({ status: 'completed' })
-          .whereRaw('microtask_id = m.id'),
+          .whereRaw('microtask_id = m.id')
       );
     HttpResponse.OK(ctx, microtasks);
   } catch (e) {

@@ -11,11 +11,7 @@ import { SpeechVerificationScenario } from './speech-verification/Index';
 import { StorySpeechScenario } from './story-speech/Index';
 
 // list of scenarios
-const scenarioList: IScenario[] = [
-  SpeechDataScenario,
-  StorySpeechScenario,
-  SpeechVerificationScenario,
-];
+const scenarioList: IScenario[] = [SpeechDataScenario, StorySpeechScenario, SpeechVerificationScenario];
 
 // create the scenario map
 export const scenarioMap: { [id: string]: IScenario } = {};
@@ -28,8 +24,4 @@ export const scenarioById: { [id: number]: IScenario } = {};
 
 // export types from scenario interface
 export { IScenario };
-export {
-  TaskValidatorResponse,
-  BudgetEstimatorResponse,
-  MicrotaskGeneratorResponse,
-} from './common/ScenarioInterface';
+export { TaskValidatorResponse, BudgetEstimatorResponse, MicrotaskGeneratorResponse } from './common/ScenarioInterface';

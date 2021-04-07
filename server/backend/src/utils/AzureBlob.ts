@@ -15,12 +15,7 @@ import {
 } from '@azure/storage-blob';
 
 // Container names and types
-import {
-  BlobParameters,
-  ContainerName,
-  containerNames,
-  getBlobName,
-} from '@karya/blobstore';
+import { BlobParameters, ContainerName, containerNames, getBlobName } from '@karya/blobstore';
 
 // Blue bird promise
 import { Promise as BBPromise } from 'bluebird';
@@ -63,9 +58,7 @@ function getContainerClient(name: ContainerName): ContainerClient {
  */
 export async function createBlobContainers() {
   // Get the list of containers that are already there
-  const containerIterator = mainClient
-    .listContainers({ includeMetadata: false })
-    .byPage();
+  const containerIterator = mainClient.listContainers({ includeMetadata: false }).byPage();
   let presentContainers: string[] = [];
   for await (const page of containerIterator) {
     const names = page.containerItems.map((item) => item.name);
@@ -73,9 +66,7 @@ export async function createBlobContainers() {
   }
 
   // Check containers that need to be created
-  const toCreate = containerNames.filter(
-    (name) => !presentContainers.includes(name),
-  );
+  const toCreate = containerNames.filter((name) => !presentContainers.includes(name));
 
   // Create containers that are not there
   if (toCreate.length > 0) {
@@ -84,11 +75,7 @@ export async function createBlobContainers() {
         await mainClient.createContainer(cname);
         logger.info(`Created container '${cname}'`);
       } catch (e) {
-        if (
-          e.details &&
-          e.details.Code &&
-          e.details.Code === 'ContainerAlreadyExists'
-        ) {
+        if (e.details && e.details.Code && e.details.Code === 'ContainerAlreadyExists') {
           logger.info(`Container '${cname}' already exists`);
         } else {
           logger.error(e.message);
@@ -126,9 +113,7 @@ export async function createLocalFolders() {
  *
  * @returns Object containing the container name and blob name
  */
-export function getParts(
-  blobURL: string,
-): { cname: ContainerName; blobName: string; ext: string } {
+export function getParts(blobURL: string): { cname: ContainerName; blobName: string; ext: string } {
   if (blobURL.indexOf(rootURL) !== 0) {
     throw Error(`Invalid blob URL ${blobURL}`);
   }
@@ -182,10 +167,7 @@ export function getBlobURL(params: BlobParameters): string {
  * @param params Parameters of the blob
  * @param filepath Local file path
  */
-export async function uploadBlobFromFile(
-  params: BlobParameters,
-  filepath: string,
-): Promise<string> {
+export async function uploadBlobFromFile(params: BlobParameters, filepath: string): Promise<string> {
   try {
     const blobName = getBlobName(params);
     const container = getContainerClient(params.cname);
@@ -211,11 +193,7 @@ function isContainerName(cname: string): cname is ContainerName {
  * @param blobName Blob name
  * @param filepath File path
  */
-export async function uploadBlobFromFileWithName(
-  cname: string,
-  blobName: string,
-  filepath: string,
-): Promise<string> {
+export async function uploadBlobFromFileWithName(cname: string, blobName: string, filepath: string): Promise<string> {
   // Check if the container name is valid
   if (!isContainerName(cname)) {
     throw new Error('Invalid container name');
@@ -240,7 +218,7 @@ export async function uploadBlobFromFileWithName(
 export async function replaceBlobWithFile(
   params: BlobParameters,
   currentBlobURL: string,
-  filepath: string,
+  filepath: string
 ): Promise<string> {
   try {
     const { cname, blobName, ext } = getParts(currentBlobURL);
@@ -293,11 +271,7 @@ export async function downloadBlobAsText(blobURL: string): Promise<string> {
  * @param perms 'r' | 'w' indicating the operation to be performed
  * @params age Age of the SAS in minutes
  */
-export function getBlobSASURL(
-  blobURL: string,
-  perms: 'r' | 'w',
-  age: number = 30,
-): string {
+export function getBlobSASURL(blobURL: string, perms: 'r' | 'w', age: number = 30): string {
   const { cname, blobName } = getParts(blobURL);
 
   // Create the start and expiry time for the URL
@@ -315,7 +289,7 @@ export function getBlobSASURL(
       startsOn,
       expiresOn,
     },
-    sharedKeyCredential,
+    sharedKeyCredential
   ).toString();
 
   // Generate and return the SAS URL
@@ -327,9 +301,7 @@ export function getBlobSASURL(
  * Helper function to convert downloaded blob to string
  * @param readableStream Readable stream from blob
  */
-async function streamToString(
-  readableStream: NodeJS.ReadableStream,
-): Promise<string> {
+async function streamToString(readableStream: NodeJS.ReadableStream): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: string[] = [];
     readableStream.on('data', (data) => {

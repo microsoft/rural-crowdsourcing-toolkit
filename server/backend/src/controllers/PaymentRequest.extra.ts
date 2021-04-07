@@ -7,13 +7,7 @@ import { getControllerError } from '../errors/ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
-import {
-  knex,
-  PaymentRequestRecord,
-  PayoutInfo,
-  PayoutInfoRecord,
-  BasicModel,
-} from '@karya/db';
+import { knex, PaymentRequestRecord, PayoutInfo, PayoutInfoRecord, BasicModel } from '@karya/db';
 
 /**
  * Function to retrieve payment request records. This request can have a
@@ -34,12 +28,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
       // retrieve the records
       records = await knex<PaymentRequestRecord>('payment_request')
         .select()
-        .whereIn(
-          'payout_info_id',
-          knex<PayoutInfoRecord>('payout_info')
-            .select('id')
-            .where(workerFilter),
-        );
+        .whereIn('payout_info_id', knex<PayoutInfoRecord>('payout_info').select('id').where(workerFilter));
     } else {
       records = await BasicModel.getRecords('payment_request', {});
     }

@@ -35,7 +35,7 @@ export async function updateSupported(ctx: KaryaHTTPContext) {
     const updatedLanguageRecord = await BasicModel.updateSingle(
       'language',
       { id },
-      { string_support, file_support, list_support },
+      { string_support, file_support, list_support }
     );
     HttpResponse.OK(ctx, updatedLanguageRecord);
   } catch (e) {

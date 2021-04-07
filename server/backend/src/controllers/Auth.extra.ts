@@ -6,12 +6,7 @@
  */
 
 import { signUpUser } from '../auth-providers/Index';
-import {
-  BasicModel,
-  AuthProviderType,
-  WorkProvider,
-  WorkProviderRecord,
-} from '@karya/db';
+import { BasicModel, AuthProviderType, WorkProvider, WorkProviderRecord } from '@karya/db';
 import { getControllerError } from '../errors/ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
@@ -23,11 +18,7 @@ import config from '../config/Index';
  * @param key key of the cookie
  * @param value value of the cookie
  */
-export function setCookie(
-  ctx: KaryaHTTPContext,
-  key: string,
-  value: string | undefined,
-) {
+export function setCookie(ctx: KaryaHTTPContext, key: string, value: string | undefined) {
   const { maxAge, ...cookieOptions } = config.cookieOptions;
   if (value !== undefined) {
     const addMilliseconds = maxAge || 15 * 60 * 1000;

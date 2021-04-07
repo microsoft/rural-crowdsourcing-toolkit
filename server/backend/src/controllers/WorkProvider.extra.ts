@@ -108,11 +108,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
 
   try {
     // attempt to update the record
-    const record = await BasicModel.updateSingle(
-      'work_provider',
-      { id },
-      updates,
-    );
+    const record = await BasicModel.updateSingle('work_provider', { id }, updates);
     HttpResponse.OK(ctx, record);
   } catch (e) {
     const message = getControllerError(e);

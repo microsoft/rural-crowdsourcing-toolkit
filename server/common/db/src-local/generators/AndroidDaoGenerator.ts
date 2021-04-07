@@ -19,21 +19,12 @@ export function tableDaosData(androidPath: string) {
     if (excludedTables.indexOf(tname) == -1) {
       const fileWriteData = getFileData(tname, tinfo, excludedTables, false);
       const fileName = ucc(tname);
-      fs.writeFileSync(
-        `${androidPath}/${fileName}Dao.kt`,
-        fileWriteData,
-        'utf-8',
-      );
+      fs.writeFileSync(`${androidPath}/${fileName}Dao.kt`, fileWriteData, 'utf-8');
     }
   });
 }
 
-function getFileData(
-  tname: string,
-  tinfo: TableInfo,
-  excludedTables: string[],
-  partialTableRecord: boolean,
-): string {
+function getFileData(tname: string, tinfo: TableInfo, excludedTables: string[], partialTableRecord: boolean): string {
   const className = ucc(tname) + 'Record';
   const androidExports = getAndroidExports(className);
   const DaoDeclaration = getDaoDeclarations(tname, tinfo, className);
@@ -55,11 +46,7 @@ import java.math.BigInteger
 `;
 }
 
-function getDaoDeclarations(
-  tname: string,
-  tinfo: TableInfo,
-  className: string,
-): string {
+function getDaoDeclarations(tname: string, tinfo: TableInfo, className: string): string {
   let dataTypeForId = '';
   Object.entries(tinfo.fields).forEach(([fname, finfo]) => {
     if (fname === 'id') {

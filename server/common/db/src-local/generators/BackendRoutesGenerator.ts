@@ -34,15 +34,11 @@ export function backendRoutesFileData(): string {
             handlers.push('setGetFilter');
           }
           if (route.httpMethod === 'POST' || route.httpMethod === 'PUT') {
-            handlers.push(
-              route.file ? 'BodyParser({multipart: true})' : 'BodyParser()',
-            );
+            handlers.push(route.file ? 'BodyParser({multipart: true})' : 'BodyParser()');
           }
           handlers.push(route.controller);
 
-          return `router.${method}('${route.endpoint}', ${handlers.join(
-            ', ',
-          )});`;
+          return `router.${method}('${route.endpoint}', ${handlers.join(', ')});`;
         })
         .join('\n');
 
@@ -53,12 +49,7 @@ export function backendRoutesFileData(): string {
 
   const extraControllerImportsString = extraControllerImports
     .sort()
-    .map(
-      (tname) =>
-        `import * as ${TableType(
-          tname,
-        )}Controller from '../controllers/${TableType(tname)}.extra'`,
-    )
+    .map((tname) => `import * as ${TableType(tname)}Controller from '../controllers/${TableType(tname)}.extra'`)
     .join('\n');
 
   /** Generate the router file data */

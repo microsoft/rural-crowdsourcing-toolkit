@@ -47,11 +47,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
 
   try {
     // update record and return response
-    const updatedRecord = await BasicModel.updateSingle(
-      tableName,
-      match,
-      updates,
-    );
+    const updatedRecord = await BasicModel.updateSingle(tableName, match, updates);
     HttpResponse.OK(ctx, updatedRecord);
   } catch (e) {
     const message = getControllerError(e);

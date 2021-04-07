@@ -15,7 +15,7 @@ export function tableFilterColumnsFileData(): string {
   const tableFilterColumns: { [id: string]: string[] } = {};
   Object.entries(tables).forEach(([tname, tinfo]) => {
     tableFilterColumns[tname] = Object.keys(tinfo.fields).filter((field) =>
-      tinfo.fields[field].options.includes('filter'),
+      tinfo.fields[field].options.includes('filter')
     );
   });
 
@@ -25,7 +25,7 @@ ${openingComment}
 import { DbRecordType, DbTableName } from './TableInterfaces';
 
 export const tableFilterColumns: { [key in DbTableName]: (keyof DbRecordType<key>)[]} = ${JSON.stringify(
-    tableFilterColumns,
+    tableFilterColumns
   )}
 `;
 

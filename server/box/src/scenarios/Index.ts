@@ -12,11 +12,7 @@ import { SpeechVerificationScenario } from './speech-verification/Index';
 import { StorySpeechScenario } from './story-speech/Index';
 
 // list of scenarios
-const scenarioList: IScenario[] = [
-  StorySpeechScenario,
-  SpeechDataScenario,
-  SpeechVerificationScenario,
-];
+const scenarioList: IScenario[] = [StorySpeechScenario, SpeechDataScenario, SpeechVerificationScenario];
 
 // create the scenario map
 export const scenarioMap: { [id: string]: IScenario } = {};

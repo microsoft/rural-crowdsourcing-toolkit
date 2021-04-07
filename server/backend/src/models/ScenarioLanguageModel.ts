@@ -5,13 +5,7 @@
  * Model functions related to language support for scenarios
  */
 
-import {
-  knex,
-  LanguageRecord,
-  LanguageResource,
-  LanguageResourceRecord,
-  LanguageResourceValueRecord,
-} from '@karya/db';
+import { knex, LanguageRecord, LanguageResource, LanguageResourceRecord, LanguageResourceValueRecord } from '@karya/db';
 import { logPGError } from '../errors/PostgreSQLErrors';
 
 /**
@@ -19,9 +13,7 @@ import { logPGError } from '../errors/PostgreSQLErrors';
  * supported for the given scenario.
  * @param scenario_id ID of the scenario
  */
-export async function getSupportedLanguages(
-  lrFilter: LanguageResource,
-): Promise<LanguageRecord[]> {
+export async function getSupportedLanguages(lrFilter: LanguageResource): Promise<LanguageRecord[]> {
   try {
     const languages = await knex<LanguageRecord>('language as l')
       .whereNotExists(
@@ -34,8 +26,8 @@ export async function getSupportedLanguages(
             knex<LanguageResourceValueRecord>('language_resource_value')
               .where({ valid: true })
               .whereRaw('language_id = l.id')
-              .whereRaw('language_resource_id = lr.id'),
-          ),
+              .whereRaw('language_resource_id = lr.id')
+          )
       )
       .select();
     return languages;
@@ -50,13 +42,8 @@ export async function getSupportedLanguages(
  * @param languageID ID of the language
  * @param lrFilter LR filter for the list of resources
  */
-export async function isLanguageSupported(
-  languageID: number,
-  lrFilter: LanguageResource,
-): Promise<boolean> {
-  const unsupporedLRs = await knex<LanguageResourceRecord>(
-    'language_resource as lr',
-  )
+export async function isLanguageSupported(languageID: number, lrFilter: LanguageResource): Promise<boolean> {
+  const unsupporedLRs = await knex<LanguageResourceRecord>('language_resource as lr')
     .where({
       required: true,
       ...lrFilter,
@@ -65,7 +52,7 @@ export async function isLanguageSupported(
       knex<LanguageResourceValueRecord>('language_resource_value')
         .where({ valid: true })
         .whereRaw(`language_id = ${languageID}`)
-        .whereRaw('language_resource_id = lr.id'),
+        .whereRaw('language_resource_id = lr.id')
     )
     .select();
   return unsupporedLRs.length == 0;

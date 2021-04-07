@@ -40,10 +40,7 @@ export type TableUpdates<TableName extends DbTableName> = {
  * Collect all updates for a specific box
  * @param box Record corresponding to the box
  */
-export async function getUpdatesForBox(
-  box: BoxRecord,
-  from: string,
-): Promise<TableUpdates<DbTableName>[]> {
+export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<TableUpdates<DbTableName>[]> {
   const box_id = box.id;
 
   const updates: TableUpdates<DbTableName>[] = [];
@@ -69,27 +66,17 @@ export async function getUpdatesForBox(
 
   // Reorder language_resource updates (string followed by files)
   updateMap['language_resource']?.sort((lr1, lr2) =>
-    lr1.type === 'string_resource' || lr2.type === 'file_resource' ? -1 : 1,
+    lr1.type === 'string_resource' || lr2.type === 'file_resource' ? -1 : 1
   );
 
   // Get task assignment updates
-  const task_assignment_updates = await BasicModel.getRecords(
-    'task_assignment',
-    { box_id, status: 'assigned' },
-  );
+  const task_assignment_updates = await BasicModel.getRecords('task_assignment', { box_id, status: 'assigned' });
 
-  updateMap[
-    'task_assignment'
-  ] = await BasicModel.getUpdatesSince('task_assignment', from, { box_id });
+  updateMap['task_assignment'] = await BasicModel.getUpdatesSince('task_assignment', from, { box_id });
 
   // Get all tasks corresponding to the task assignments
   const task_ids = task_assignment_updates.map((t) => t.task_id);
-  const task_updates = await BasicModel.getRecordsWhereInUpdatedSince(
-    'task',
-    'id',
-    task_ids,
-    from,
-  );
+  const task_updates = await BasicModel.getRecordsWhereInUpdatedSince('task', 'id', task_ids, from);
   updateMap['task'] = task_updates;
 
   // Get all microtask groups corresponding to the tasks
@@ -97,42 +84,27 @@ export async function getUpdatesForBox(
     'microtask_group',
     'task_id',
     task_ids,
-    from,
+    from
   );
   updateMap['microtask_group'] = microtask_group_updates;
 
   // Get all microtask corresponding to the tasks
-  const microtask_updates = await BasicModel.getRecordsWhereInUpdatedSince(
-    'microtask',
-    'task_id',
-    task_ids,
-    from,
-  );
+  const microtask_updates = await BasicModel.getRecordsWhereInUpdatedSince('microtask', 'task_id', task_ids, from);
   updateMap['microtask'] = microtask_updates;
 
   // Get all karya file updates
-  const language_file_ids = (updateMap['language'] || []).map(
-    (l) => l.lrv_file_id,
-  );
+  const language_file_ids = (updateMap['language'] || []).map((l) => l.lrv_file_id);
 
-  const lr_file_ids = (updateMap['language_resource'] || []).map(
-    (lr) => lr.lrv_file_id,
-  );
+  const lr_file_ids = (updateMap['language_resource'] || []).map((lr) => lr.lrv_file_id);
 
   const task_file_ids = task_updates.map((t) => t.input_file_id);
   const microtask_file_ids = microtask_updates.map((m) => m.input_file_id);
 
   let karya_file_ids: string[] = [];
-  [language_file_ids, lr_file_ids, task_file_ids, microtask_file_ids].forEach(
-    (idlist) => {
-      karya_file_ids = karya_file_ids.concat(
-        idlist.filter((id): id is string => id !== null),
-      );
-    },
-  );
-  const karya_file_updates = (
-    await BasicModel.getRecordsWhereIn('karya_file', 'id', karya_file_ids)
-  )
+  [language_file_ids, lr_file_ids, task_file_ids, microtask_file_ids].forEach((idlist) => {
+    karya_file_ids = karya_file_ids.concat(idlist.filter((id): id is string => id !== null));
+  });
+  const karya_file_updates = (await BasicModel.getRecordsWhereIn('karya_file', 'id', karya_file_ids))
     //@ts-ignore
     .filter((kf) => kf.last_updated_at.toISOString() > from);
 
@@ -140,9 +112,7 @@ export async function getUpdatesForBox(
   karya_file_updates.forEach((kf) => {
     kf.url = kf.url !== null ? getBlobSASURL(kf.url, 'r', 60) : null;
   });
-  updateMap['karya_file'] = (updateMap['karya_file'] || []).concat(
-    karya_file_updates,
-  );
+  updateMap['karya_file'] = (updateMap['karya_file'] || []).concat(karya_file_updates);
 
   // Collect updates from filter update tables
   const payoutTables: BoxUpdatableTables[] = ['payout_info', 'payment_request'];
@@ -155,14 +125,10 @@ export async function getUpdatesForBox(
   });
 
   // Collect verified microtask assigmnents
-  updateMap['microtask_assignment'] = await BasicModel.getUpdatesSince(
-    'microtask_assignment',
-    from,
-    {
-      box_id,
-      status: 'verified',
-    },
-  );
+  updateMap['microtask_assignment'] = await BasicModel.getUpdatesSince('microtask_assignment', from, {
+    box_id,
+    status: 'verified',
+  });
 
   // Push all updates
   tableList.forEach((t) => {
@@ -181,10 +147,7 @@ export async function getUpdatesForBox(
  * @param box Record for the box
  * @param updates Updates to different tables from the box
  */
-export async function applyUpdatesFromBox(
-  box: BoxRecord,
-  updates: TableUpdates<BoxUpdatableTables>[],
-) {
+export async function applyUpdatesFromBox(box: BoxRecord, updates: TableUpdates<BoxUpdatableTables>[]) {
   await BBPromise.mapSeries(updates, async (update) => {
     const { tableName, rows } = update;
     if (!boxUpdatableTables.includes(tableName)) {
@@ -209,17 +172,12 @@ export async function applyUpdatesFromBox(
         await BasicModel.upsertRecord(tableName, row);
 
         const mta = row as MicrotaskAssignmentRecord;
-        if (
-          (!currentMta || currentMta.status === 'assigned') &&
-          mta.status === 'completed'
-        ) {
+        if ((!currentMta || currentMta.status === 'assigned') && mta.status === 'completed') {
           const mt = await BasicModel.getSingle('microtask', {
             id: mta.microtask_id,
           });
           const task = await BasicModel.getSingle('task', { id: mt.task_id });
-          await scenarioById[
-            Number.parseInt(task.scenario_id, 10)
-          ].handleMicrotaskAssignmentCompletion(mta, mt, task);
+          await scenarioById[Number.parseInt(task.scenario_id, 10)].handleMicrotaskAssignmentCompletion(mta, mt, task);
         }
       } else {
         // @ts-ignore

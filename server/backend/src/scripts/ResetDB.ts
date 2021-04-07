@@ -50,11 +50,7 @@ async function initializeLanguages() {
       await BasicModel.insertRecord('language', language);
     } catch (err) {
       try {
-        await BasicModel.updateSingle(
-          'language',
-          { name: language.name },
-          language,
-        );
+        await BasicModel.updateSingle('language', { name: language.name }, language);
       } catch (e) {
         logger.error(`Failed to sync language '${language.name}'`);
       }
@@ -71,7 +67,7 @@ async function initializeCoreLRs() {
   await insertLanguageResources(
     true, // core
     null, // scenario_id
-    Core.resources,
+    Core.resources
   );
   logger.info(`Completed initializing core resources`);
 }
@@ -99,11 +95,9 @@ async function initializeScenarioLRs() {
     await insertLanguageResources(
       false, // core
       scenarioRecord.id, // scenario_id
-      scenarioLRs.resources,
+      scenarioLRs.resources
     );
-    logger.info(
-      `Completed initializing resources for scenario '${scenario_name}'`,
-    );
+    logger.info(`Completed initializing resources for scenario '${scenario_name}'`);
   });
 }
 
@@ -114,11 +108,7 @@ async function initializeScenarioLRs() {
  * @param string_resources List of string resources
  * @param file_resources Map of file resources: key is string resource name
  */
-async function insertLanguageResources(
-  core: boolean,
-  scenario_id: string | null,
-  resources: ResourceSpec[],
-) {
+async function insertLanguageResources(core: boolean, scenario_id: string | null, resources: ResourceSpec[]) {
   // Initialize the resources for the scenario
   await BBPromise.mapSeries(resources, async (res) => {
     const strLR: LanguageResource = {
@@ -139,11 +129,7 @@ async function insertLanguageResources(
       });
       // update if description has changed
       if (strLRR.description !== strLR.description) {
-        strLRR = await BasicModel.updateSingle(
-          'language_resource',
-          { id: strLRR.id },
-          strLR,
-        );
+        strLRR = await BasicModel.updateSingle('language_resource', { id: strLRR.id }, strLR);
       }
     } catch (e) {
       // insert
@@ -174,11 +160,7 @@ async function insertLanguageResources(
             fileLRR.description !== fileLR.description ||
             fileLRR.list_resource !== fileLR.list_resource
           ) {
-            await BasicModel.updateSingle(
-              'language_resource',
-              { id: fileLRR.id },
-              fileLR,
-            );
+            await BasicModel.updateSingle('language_resource', { id: fileLRR.id }, fileLR);
           }
         } catch (err) {
           await BasicModel.insertRecord('language_resource', fileLR);
@@ -207,9 +189,7 @@ let scriptSequence = [
   if (option !== 'all') {
     if (!scriptSequence.includes(option)) {
       logger.info(
-        `Unknown option '${option}' to ResetDB script. Option should be one of '${scriptSequence.join(
-          ' ',
-        )}'`,
+        `Unknown option '${option}' to ResetDB script. Option should be one of '${scriptSequence.join(' ')}'`
       );
       process.exit(1);
     }

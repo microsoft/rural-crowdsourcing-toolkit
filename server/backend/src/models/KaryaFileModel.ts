@@ -6,12 +6,7 @@
  */
 
 import md5File from 'md5-file';
-import {
-  ChecksumAlgorithm,
-  KaryaFile,
-  KaryaFileRecord,
-  BasicModel,
-} from '@karya/db';
+import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/db';
 import { uploadBlobFromFile } from '../utils/AzureBlob';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 
@@ -29,7 +24,7 @@ export async function upsertKaryaFile(
   path: string,
   csAlgo: ChecksumAlgorithm,
   blobParams: BlobParameters,
-  currentFileID?: string | null,
+  currentFileID?: string | null
 ): Promise<KaryaFileRecord> {
   // Upload file to blob store
   const blobName = getBlobName(blobParams);

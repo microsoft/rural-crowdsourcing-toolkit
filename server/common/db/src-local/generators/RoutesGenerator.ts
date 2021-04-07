@@ -15,9 +15,7 @@ import { tables } from '../parsers/TableParser';
 export function routesFileData(server: 'backend' | 'box'): string {
   /** Generate the route data */
   const tableRoutes = Object.entries(tables)
-    .filter(([tname, tinfo]) =>
-      server == 'backend' ? tinfo.apis : tinfo.boxapis,
-    )
+    .filter(([tname, tinfo]) => (server == 'backend' ? tinfo.apis : tinfo.boxapis))
     .map(([tname, tinfo]) => {
       /** If no apis return */
       if (!tinfo.apis && !tinfo.boxapis) return [];

@@ -63,8 +63,7 @@ export async function approveTask(taskRecord: TaskRecord) {
     const { mg_info, microtasks } = microtaskGroup;
 
     // if group is not null, insert group record
-    const groupRecord =
-      mg_info && (await BasicModel.insertRecord('microtask_group', mg_info));
+    const groupRecord = mg_info && (await BasicModel.insertRecord('microtask_group', mg_info));
     const group_id = groupRecord && groupRecord.id;
 
     // insert all microtasks
@@ -99,11 +98,7 @@ export async function approveTask(taskRecord: TaskRecord) {
         taskTarFiles.push(tarFileName);
 
         // Update the file link for the microtask Record
-        await BasicModel.updateSingle(
-          'microtask',
-          { id: microtaskRecord.id },
-          { input_file_id: kfRecord.id },
-        );
+        await BasicModel.updateSingle('microtask', { id: microtaskRecord.id }, { input_file_id: kfRecord.id });
       }
     });
   });
@@ -123,17 +118,9 @@ export async function approveTask(taskRecord: TaskRecord) {
     await tar.c({ file: taskTarFilePath, C: folder }, taskTarFiles);
 
     // Insert tar into karya file table
-    const tkfRecord = await upsertKaryaFile(
-      taskTarFilePath,
-      'md5',
-      taskBlobParams,
-    );
+    const tkfRecord = await upsertKaryaFile(taskTarFilePath, 'md5', taskBlobParams);
 
     // Update the file link in task record
-    await BasicModel.updateSingle(
-      'task',
-      { id: taskRecord.id },
-      { input_file_id: tkfRecord.id },
-    );
+    await BasicModel.updateSingle('task', { id: taskRecord.id }, { input_file_id: tkfRecord.id });
   }
 }

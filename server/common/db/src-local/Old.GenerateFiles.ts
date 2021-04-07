@@ -39,9 +39,7 @@ const target = process.argv[2];
 const rootFolder = process.argv[3];
 
 if (!target || !rootFolder) {
-  process.stdout.write(
-    `USAGE: ${process.argv[0]} ${process.argv[1]} <backend|frontend|box> <root-of-resp-repo>\n`,
-  );
+  process.stdout.write(`USAGE: ${process.argv[0]} ${process.argv[1]} <backend|frontend|box> <root-of-resp-repo>\n`);
   process.exit();
 }
 
@@ -55,25 +53,16 @@ if (target === 'backend') {
   //   paths.createTableFunctions,
   //       createTableFunctionsFileData('backend', excludedTables),
   // );
-  fs.writeFileSync(
-    paths.dropTableFunctions,
-    dropTableFunctionsFileData(excludedTables),
-  );
+  fs.writeFileSync(paths.dropTableFunctions, dropTableFunctionsFileData(excludedTables));
   fs.writeFileSync(paths.routes, backendRoutesFileData());
-  fs.writeFileSync(
-    paths.tableInterfaces,
-    tableInterfacesFileData(excludedTables),
-  );
+  fs.writeFileSync(paths.tableInterfaces, tableInterfacesFileData(excludedTables));
   fs.writeFileSync(paths.tableList, tableListFileData());
   fs.writeFileSync(paths.tableColumns, tableColumnListFileData());
   fs.writeFileSync(paths.tableFilterColumns, tableFilterColumnsFileData());
 } else if (target === 'frontend') {
   /** Write all front end related files */
   fs.writeFileSync(paths.apis, backendAPISpecsFileData());
-  fs.writeFileSync(
-    paths.tableInterfaces,
-    tableInterfacesFileData(excludedTables),
-  );
+  fs.writeFileSync(paths.tableInterfaces, tableInterfacesFileData(excludedTables));
 } else if (target === 'box') {
   excludedTables.push('work_provider');
   /** Write box related files */
@@ -81,15 +70,9 @@ if (target === 'backend') {
   //   paths.createTableFunctions,
   //   createTableFunctionsFileData('box', excludedTables),
   // );
-  fs.writeFileSync(
-    paths.dropTableFunctions,
-    dropTableFunctionsFileData(excludedTables),
-  );
+  fs.writeFileSync(paths.dropTableFunctions, dropTableFunctionsFileData(excludedTables));
   fs.writeFileSync(paths.routes, routesFileData('box'));
-  fs.writeFileSync(
-    paths.tableInterfaces,
-    tableInterfacesFileData(excludedTables),
-  );
+  fs.writeFileSync(paths.tableInterfaces, tableInterfacesFileData(excludedTables));
   fs.writeFileSync(paths.tableList, tableListFileData());
   fs.writeFileSync(paths.tableColumns, tableColumnListFileData());
   fs.writeFileSync(paths.tableFilterColumns, tableFilterColumnsFileData());

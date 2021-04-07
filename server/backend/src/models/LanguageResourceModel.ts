@@ -3,12 +3,7 @@
 
 /** Extra model functions for the language resource table */
 
-import {
-  knex,
-  LanguageResource,
-  LanguageResourceRecord,
-  LanguageResourceValueRecord,
-} from '@karya/db';
+import { knex, LanguageResource, LanguageResourceRecord, LanguageResourceValueRecord } from '@karya/db';
 import { logPGError } from '../errors/PostgreSQLErrors';
 
 /**
@@ -19,10 +14,7 @@ import { logPGError } from '../errors/PostgreSQLErrors';
  * @param match object specifying the match criterion
  * @param updates object specifying the updates to matched objects
  */
-export async function updateLanguageResource(
-  match: LanguageResource,
-  updates: LanguageResource,
-) {
+export async function updateLanguageResource(match: LanguageResource, updates: LanguageResource) {
   try {
     // Make the updates
     const updatedIds = await knex<LanguageResourceRecord>('language_resource')
