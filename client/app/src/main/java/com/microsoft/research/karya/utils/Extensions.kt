@@ -16,4 +16,3 @@ internal fun Activity.requestSoftKeyFocus(eT: EditText) {
 }
 
 internal val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
