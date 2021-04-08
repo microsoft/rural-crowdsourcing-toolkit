@@ -19,6 +19,8 @@
         android:theme="@style/ThemeGray"
         android:usesCleartextTraffic="true"
         >
+
+        <activity android:name=".ui.registration.RegistrationActivity" />
         <!--
         - Starting activity. Checks for registered user and moves to language selection or the
         - dashboard.

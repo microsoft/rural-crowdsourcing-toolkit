@@ -60,13 +60,6 @@ object Dependencies {
             const val saved_state = "androidx.lifecycle:lifecycle-viewmodel-savedstate:$version"
         }
 
-        object Navigation {
-
-            private const val version = "2.3.3"
-            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
-            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
-        }
-
         object Room {
             private const val version = "2.2.6"
 
@@ -74,6 +67,14 @@ object Dependencies {
             const val roomCompiler = "androidx.room:room-compiler:$version"
             const val roomKtx = "androidx.room:room-ktx:$version"
         }
+
+        object Navigation {
+            private const val version = "2.3.4"
+
+            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
+            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
+        }
+
     }
 
     object Google {

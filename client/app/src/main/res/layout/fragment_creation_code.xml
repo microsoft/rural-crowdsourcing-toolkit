@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_16sdp">
+
+    <TextView
+        android:id="@+id/creationCodePromptTv"
+        style="@style/multilineText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="@string/access_code_prompt_desc" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:orientation="horizontal">
+
+        <!-- Phantom text view just to determine font size for edit text -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/phantomCCTv"
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:autofillHints=""
+            android:background="@drawable/blue_rounded_border"
+            android:digits="0123456789"
+            android:fontFamily="monospace"
+            android:inputType="number"
+            android:maxLines="1"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/creation_code_hint"
+            android:visibility="visible"
+            app:autoSizeMaxTextSize="@dimen/_19ssp"
+            app:autoSizeMinTextSize="@dimen/_12ssp"
+            app:autoSizeStepGranularity="@dimen/_1ssp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintEnd_toStartOf="@id/creationCodeStatusIv"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/creationCodeStatusIv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/creationCodeEt"
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:autofillHints=""
+            android:background="@drawable/blue_rounded_border"
+            android:digits="0123456789"
+            android:fontFamily="monospace"
+            android:hint="@string/creation_code_hint"
+            android:inputType="number"
+            android:maxLength="19"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@id/creationCodeStatusIv"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/creationCodeStatusIv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/creationCodeStatusIv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.1"
+            app:layout_constraintDimensionRatio="1"
+            android:contentDescription="@string/status_check"
+            app:layout_constraintBottom_toBottomOf="@id/creationCodeEt"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/creationCodeEt"
+            app:srcCompat="@drawable/ic_check_grey" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/creationCodeErrorTv"
+        style="@style/multilineError"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        tools:text="@string/invalid_creation_code_desc" />
+</LinearLayout>

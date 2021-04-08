@@ -8,7 +8,7 @@ import android.text.method.ScrollingMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.ActivityConsentFormBinding
-import com.microsoft.research.karya.ui.registration.CreationCodeActivity
+import com.microsoft.research.karya.ui.registration.RegistrationActivity
 import com.microsoft.research.karya.utils.viewBinding
 
 class NgConsentFormActivity : AppCompatActivity() {
@@ -36,7 +36,7 @@ class NgConsentFormActivity : AppCompatActivity() {
             consentFormTv.movementMethod = ScrollingMovementMethod()
 
             agreeBtn.setOnClickListener {
-                startActivity(Intent(applicationContext, CreationCodeActivity::class.java))
+                    startActivity(Intent(applicationContext, RegistrationActivity::class.java))
                 finish()
             }
 
