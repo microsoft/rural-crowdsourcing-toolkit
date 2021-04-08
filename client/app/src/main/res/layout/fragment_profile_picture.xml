@@ -3,21 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.registration.ProfilePictureActivity">
-
-    <include
-        android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+    android:layout_height="match_parent">
 
     <com.kofigyan.stateprogressbar.StateProgressBar
         android:id="@+id/dottedScreenPb"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="26dp"
+        app:layout_constraintBottom_toTopOf="@+id/profilePicturePromptTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:layout_constraintTop_toTopOf="parent"
         app:spb_checkStateCompleted="true"
         app:spb_currentStateDescriptionColor="?attr/colorAccent"
         app:spb_currentStateNumber="one"

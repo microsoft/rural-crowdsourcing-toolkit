@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
-
 package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
@@ -8,24 +5,57 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
 import android.provider.MediaStore
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
-import kotlinx.android.synthetic.main.activity_profile_pic.*
+import kotlinx.android.synthetic.main.fragment_profile_picture.*
+import kotlinx.android.synthetic.main.fragment_profile_picture.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.io.FileOutputStream
 
 private const val REQUEST_IMAGE_CAPTURE = 101
 
-class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOnResume = false) {
+class ProfilePictureFragment : Fragment() {
 
-    /** Android strings */
-    private var profilePicturePromptMessage: String = ""
     private lateinit var profilePic: Bitmap
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.activity_profile_pic)
-        super.onCreate(savedInstanceState)
+    private lateinit var registrationActivity: RegistrationActivity
+    private lateinit var baseActivity: BaseActivity
+
+    protected val ioScope = CoroutineScope(Dispatchers.IO)
+    protected val uiScope = CoroutineScope(Dispatchers.Main)
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+
+        registrationActivity = activity as RegistrationActivity
+        baseActivity = activity as BaseActivity
+
+        // Inflate the layout for this fragment
+        var fragmentView =  inflater.inflate(R.layout.fragment_profile_picture, container, false)
+
+        /**
+         * Set all initial UI strings
+         */
+        fragmentView.profilePicturePromptTv.text = registrationActivity.profilePicturePromptMessage
+
+        return fragmentView
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
 
         mainProfilePictureIv.setOnClickListener { getProfilePicture() }
 
@@ -39,20 +69,7 @@ class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOn
         rotateRightIb.setOnClickListener { rotateRight() }
 
         disableRotateButton()
-    }
 
-    /**
-     * Get all strings for the activity
-     */
-    override suspend fun getStringsForActivity() {
-        profilePicturePromptMessage = getValueFromName(R.string.profile_picture_prompt)
-    }
-
-    /**
-     * Set all initial UI strings
-     */
-    override suspend fun setInitialUIStrings() {
-        profilePicturePromptTv.text = profilePicturePromptMessage
     }
 
     /**
@@ -61,16 +78,8 @@ class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOn
     override fun onResume() {
         super.onResume()
         if (!::profilePic.isInitialized) {
-            onAssistantClick()
+            baseActivity.onAssistantClick()
         }
-    }
-
-    /**
-     * On assistant click, play the profile picture prompt
-     */
-    override fun onAssistantClick() {
-        super.onAssistantClick()
-        playAssistantAudio(R.string.audio_profile_picture_prompt)
     }
 
     /**
@@ -80,10 +89,10 @@ class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOn
         super.onActivityResult(requestCode, resultCode, data)
 
         // Profile picture returned by the camera
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
             profilePic = data?.extras?.get("data") as Bitmap
             mainProfilePictureIv.setBackgroundResource(0)
-            ImageUtils.loadImageBitmap(this, profilePic, mainProfilePictureIv)
+            ImageUtils.loadImageBitmap(requireActivity(), profilePic, mainProfilePictureIv)
             enableRotateButton()
         }
     }
@@ -93,7 +102,7 @@ class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOn
      */
     private fun getProfilePicture() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(packageManager)?.also {
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
@@ -105,13 +114,14 @@ class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOn
     private fun submitProfilePicture() {
         if (::profilePic.isInitialized) {
             WorkerInformation.profile_picture = profilePic
-            val imageFolder = getDir("profile_picture", MODE_PRIVATE).path
+            val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
             val fileName = "pp.png"
             val out = FileOutputStream("$imageFolder/$fileName")
             profilePic.compress(Bitmap.CompressFormat.PNG, 100, out)
         }
-        startActivity(Intent(applicationContext, SelectGenderActivity::class.java))
+        startActivity(Intent(activity, SelectGenderActivity::class.java))
     }
+
 
     /**
      * Disable rotate button
@@ -139,7 +149,8 @@ class ProfilePictureActivity : BaseActivity(useAssistant = true, playAssistantOn
                 profilePic, 0, 0, profilePic.width, profilePic.height,
                 matrix, true
             )
-            ImageUtils.loadImageBitmap(this, profilePic, mainProfilePictureIv)
+            ImageUtils.loadImageBitmap(requireActivity(), profilePic, mainProfilePictureIv)
         }
     }
+
 }

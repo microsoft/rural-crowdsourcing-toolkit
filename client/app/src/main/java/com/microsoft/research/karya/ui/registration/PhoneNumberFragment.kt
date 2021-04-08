@@ -58,11 +58,14 @@ class PhoneNumberFragment : Fragment() {
         /** Initialising Strings  **/
         // TODO: Remove this implementation when we fetch strings from resource
 
+        /** Inflating the layout for this fragment **/
         val fragmentView = inflater.inflate(R.layout.fragment_phone_number, container, false)
 
+        /**
+         * Set all initial UI strings
+         */
         fragmentView.phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
 
-        /** Inflating the layout for this fragment **/
         return fragmentView
     }
 
@@ -99,6 +102,11 @@ class PhoneNumberFragment : Fragment() {
         }
         phoneNumberNextIv.isClickable = false
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registrationActivity.onAssistantClick()
     }
 
     /** Update UI when the phone number is ready */
