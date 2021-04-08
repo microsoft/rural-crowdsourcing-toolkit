@@ -39,7 +39,7 @@ export function dropTableFunctionsFileData(excludedTables: string[] = []): strin
   /** Drop table files data */
   const dropTableFunctionsData = `
   ${openingComment}\n
-  import { knex } from '../client';\n
+  import { knex } from '../Client';\n
   ${dropTableFunctionStrings.join('\n\n')}\n
   ${dropAllTableFunction}`;
 

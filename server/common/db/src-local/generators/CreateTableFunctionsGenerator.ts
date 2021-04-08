@@ -145,7 +145,7 @@ export function createTableFunctionsFileData(): string {
   const createTableFunctionsData = `\
   ${openingComment}
 
-  import { knex } from '../client';
+  import { knex } from '../Client';
 
 /**
  * Create a trigger to check the last_updated_at column is increasing. Cannot

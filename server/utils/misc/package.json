@@ -4,8 +4,8 @@
   "description": "This package implements a few misc utils for the backend and the box server.",
   "private": true,
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index.d.ts",
+  "main": "dist/Index",
+  "types": "dist/Index.d.ts",
   "files": [
     "dist"
   ],
