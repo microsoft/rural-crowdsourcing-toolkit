@@ -20,7 +20,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/otp_prompt_desc" />
+        android:text="@string/s_otp_prompt"/>
 
     <EditText
         android:id="@+id/otpEt"
@@ -64,7 +64,7 @@
         android:textAllCaps="false"
         app:layout_constraintStart_toStartOf="@id/otpEt"
         app:layout_constraintTop_toBottomOf="@id/otpEt"
-        tools:text="@string/resend_otp_desc" />
+        android:text="@string/s_resend_otp"/>
 
     <TextView
         android:id="@+id/invalidOTPTv"
@@ -83,6 +83,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resendOTPBtn"
-        tools:text="You have entered an invalid OTP" />
+        android:text="@string/s_invalid_otp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

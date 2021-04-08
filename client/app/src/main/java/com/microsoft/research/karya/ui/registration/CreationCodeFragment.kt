@@ -1,14 +1,12 @@
 package com.microsoft.research.karya.ui.registration
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.service.KaryaAPIService
@@ -16,10 +14,8 @@ import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import kotlinx.android.synthetic.main.fragment_creation_code.*
 import kotlinx.android.synthetic.main.fragment_creation_code.view.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * A simple [Fragment] subclass.
@@ -39,13 +35,6 @@ class CreationCodeFragment : Fragment() {
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
 
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,20 +44,8 @@ class CreationCodeFragment : Fragment() {
         baseActivity = activity as BaseActivity
         karyaAPI = baseActivity.karyaAPI
 
-        /** Initialising Strings  **/
-        // TODO: Remove this implementation when we fetch strings from resource
-        // This Initialisation is only needed to be done once for the first fragment
-        baseActivity.initialise()
-
         /** Inflating the layout for this fragment **/
-        val fragmentView = inflater.inflate(R.layout.fragment_creation_code, container, false)
-
-        /**
-         * Set all initial UI strings
-         */
-        fragmentView.creationCodePromptTv.text = registrationActivity.accessCodePromptMessage
-
-        return fragmentView
+        return inflater.inflate(R.layout.fragment_creation_code, container, false)
     }
 
 
@@ -105,6 +82,7 @@ class CreationCodeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         registrationActivity.onAssistantClick()
+        //TODO: Seperate out assistant functionality from BaseActivity
     }
 
     private fun handleFullCreationCode() {
@@ -125,24 +103,24 @@ class CreationCodeFragment : Fragment() {
      */
     private fun verifyCreationCode(creationCode: String) {
 
-        ioScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val callForCreationCodeCheck = karyaAPI.checkCreationCode(creationCode)
             if (callForCreationCodeCheck.isSuccessful) {
                 val response = callForCreationCodeCheck.body()!!
 
                 // Valid creation code
                 if (response.valid) {
-                    uiScope.launch {
+                    lifecycleScope.launch(Dispatchers.Main) {
                         creationCodeStatusIv.setImageResource(0)
                         creationCodeStatusIv.setImageResource(R.drawable.ic_baseline_check_circle_outline_24)
                         WorkerInformation.creation_code = creationCode
                         findNavController().navigate(R.id.action_creationCodeFragment_to_phoneNumberFragment)
                     }
                 } else {
-                    uiScope.launch {
+                    lifecycleScope.launch(Dispatchers.Main) {
                         creationCodeErrorTv.text = when (response.message) {
-                            "invalid_creation_code" -> registrationActivity.invalidCreationCodeMessage
-                            "creation_code_already_used" -> registrationActivity.creationCodeAlreadyUsedMessage
+                            "invalid_creation_code" -> getString(R.string.invalid_creation_code)
+                            "creation_code_already_used" -> getString(R.string.creation_code_already_used)
                             else -> "unknown error occurred"
                         }
                         creationCodeStatusIv.setImageResource(0)

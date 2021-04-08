@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.registration
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,14 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.fragment_o_t_p.view.*
 import kotlinx.android.synthetic.main.fragment_o_t_p.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -27,9 +25,6 @@ class OTPFragment : Fragment() {
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
 
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -39,23 +34,16 @@ class OTPFragment : Fragment() {
         baseActivity = activity as BaseActivity
         karyaAPI = baseActivity.karyaAPI
 
-        // Inflate the layout for this fragment
-        val fragmentView = inflater.inflate(R.layout.fragment_o_t_p, container, false)
-
-        /** Initialising Strings  **/
-        fragmentView.otpPromptTv.text = registrationActivity.otpPromptMessage
-        fragmentView.invalidOTPTv.text = registrationActivity.invalidOTPMessage
-        fragmentView.resendOTPBtn.text = registrationActivity.resendOTPMessage
-
-        /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
-
-        return fragmentView
+        /** Inflating the layout for this fragment **/
+        return inflater.inflate(R.layout.fragment_o_t_p, container, false)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
 
         /** Resend OTP handler */
         resendOTPBtn.setOnClickListener { resendOTP() }
@@ -123,7 +111,7 @@ class OTPFragment : Fragment() {
      */
     private fun resendOTP() {
         resendOTPBtn.visibility = View.GONE
-        ioScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val worker = JsonObject()
             worker.addProperty("creation_code", WorkerInformation.creation_code)
             worker.addProperty("phone_number", WorkerInformation.phone_number)

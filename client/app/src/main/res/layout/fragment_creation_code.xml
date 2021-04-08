@@ -12,7 +12,7 @@
         style="@style/multilineText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/access_code_prompt_desc" />
+        android:text="@string/s_access_code_prompt" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

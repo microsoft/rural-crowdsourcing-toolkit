@@ -5,21 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.fragment_phone_number.*
-import kotlinx.android.synthetic.main.fragment_phone_number.view.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -29,9 +26,6 @@ class PhoneNumberFragment : Fragment() {
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 //    private lateinit var startForResult: ActivityResultLauncher<Intent>
-
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
 
     /** Callback to move forward in navigation graph after successful OTP send */
     var startForResult =
@@ -55,25 +49,14 @@ class PhoneNumberFragment : Fragment() {
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
-        /** Initialising Strings  **/
-        // TODO: Remove this implementation when we fetch strings from resource
-
         /** Inflating the layout for this fragment **/
-        val fragmentView = inflater.inflate(R.layout.fragment_phone_number, container, false)
-
-        /**
-         * Set all initial UI strings
-         */
-        fragmentView.phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
-
-        return fragmentView
+        return inflater.inflate(R.layout.fragment_phone_number, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
-        phoneNumberPromptTv.text = registrationActivity.phoneNumberPromptMessage
 
         /** Set the phone number font size to the same value as the phantom text view font size */
         phantomPhoneNumberTv.addOnLayoutChangeListener { _: View, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->
@@ -111,7 +94,7 @@ class PhoneNumberFragment : Fragment() {
 
     /** Update UI when the phone number is ready */
     private fun handlePhoneNumberReady() {
-        uiScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             phoneNumberNextIv.setImageResource(0)
             phoneNumberNextIv.setImageResource(R.drawable.ic_next_enabled)
             phoneNumberNextIv.isClickable = true
@@ -120,7 +103,7 @@ class PhoneNumberFragment : Fragment() {
 
     /** Update UI when the phone number is ready */
     private fun handlePhoneNumberNotReady() {
-        uiScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             phoneNumberNextIv.setImageResource(0)
             phoneNumberNextIv.setImageResource(R.drawable.ic_next_disabled)
             phoneNumberNextIv.isClickable = false
