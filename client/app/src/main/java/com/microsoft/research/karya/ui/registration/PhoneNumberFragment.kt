@@ -1,14 +1,20 @@
 package com.microsoft.research.karya.ui.registration
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.fragment_phone_number.*
@@ -22,12 +28,23 @@ class PhoneNumberFragment : Fragment() {
     private val PHONE_NUMBER_LENGTH = 10
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
+//    private lateinit var startForResult: ActivityResultLauncher<Intent>
 
     protected val ioScope = CoroutineScope(Dispatchers.IO)
     protected val uiScope = CoroutineScope(Dispatchers.Main)
 
+    /** Callback to move forward in navigation graph after successful OTP send */
+    var startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -101,13 +118,14 @@ class PhoneNumberFragment : Fragment() {
             phoneNumberNextIv.isClickable = false
         }
     }
+
     /** On next click, hide keyboard. Send request to send OTP to the phone number */
     private fun handleNextClick() {
         baseActivity.hideKeyboard()
         WorkerInformation.phone_number = phoneNumberEt.text.toString()
-        startActivity(Intent(activity, SendOTPActivity::class.java))
-    }
 
+        startForResult.launch(Intent(activity, SendOTPActivity::class.java))
+    }
 
 
 }

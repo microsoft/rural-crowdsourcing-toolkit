@@ -12,11 +12,28 @@
         tools:layout="@layout/fragment_creation_code">
         <action
             android:id="@+id/action_creationCodeFragment_to_phoneNumberFragment"
-            app:destination="@id/phoneNumberFragment" />
+            app:destination="@id/phoneNumberFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
     <fragment
         android:id="@+id/phoneNumberFragment"
         android:name="com.microsoft.research.karya.ui.registration.PhoneNumberFragment"
         android:label="PhoneNumberFragment"
-        tools:layout="@layout/fragment_phone_number"/>
+        tools:layout="@layout/fragment_phone_number">
+        <action
+            android:id="@+id/action_phoneNumberFragment_to_OTPFragment"
+            app:destination="@id/OTPFragment" />
+        <action
+            android:id="@+id/action_phoneNumberFragment_to_sendOTPActivity2"
+            app:destination="@id/sendOTPActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/OTPFragment"
+        android:name="com.microsoft.research.karya.ui.registration.OTPFragment"
+        android:label="fragment_o_t_p"
+        tools:layout="@layout/fragment_o_t_p" />
+    <activity
+        android:id="@+id/sendOTPActivity"
+        android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
+        android:label="SendOTPActivity" />
 </navigation>
