@@ -16,8 +16,6 @@ import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
 import kotlinx.android.synthetic.main.fragment_profile_picture.*
 import kotlinx.android.synthetic.main.fragment_profile_picture.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import java.io.FileOutputStream
 
 private const val REQUEST_IMAGE_CAPTURE = 101
@@ -28,9 +26,6 @@ class ProfilePictureFragment : Fragment() {
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
-
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

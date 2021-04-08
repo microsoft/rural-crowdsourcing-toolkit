@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
@@ -26,9 +27,6 @@ class OTPFragment : Fragment() {
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
-
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,7 +121,7 @@ class OTPFragment : Fragment() {
      */
     private fun resendOTP() {
         resendOTPBtn.visibility = View.GONE
-        ioScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val worker = JsonObject()
             worker.addProperty("creation_code", WorkerInformation.creation_code)
             worker.addProperty("phone_number", WorkerInformation.phone_number)

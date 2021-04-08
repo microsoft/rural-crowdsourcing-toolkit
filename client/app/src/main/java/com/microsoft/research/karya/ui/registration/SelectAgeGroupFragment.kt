@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.registration
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,16 +10,11 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.fragment_select_age_group.*
 import kotlinx.android.synthetic.main.fragment_select_age_group.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 class SelectAgeGroupFragment : Fragment() {
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
-
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
