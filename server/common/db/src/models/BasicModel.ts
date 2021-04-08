@@ -4,7 +4,7 @@
 // This file defines basic model functions for all the tables in the database.
 
 import { DbObjectType, DbRecordType, DbTableName } from '../auto/TableInterfaces';
-import { knex } from '../client';
+import { knex } from '../Client';
 
 /**
  * Function to insert a new record into the table. Returns the inserted record

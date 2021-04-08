@@ -8,7 +8,7 @@ export * from './auto/TableColumns';
 export * from './auto/TableFilterColumns';
 
 // Export the client and setup function
-export { knex, setupDbConnection } from './client';
+export { knex, setupDbConnection } from './Client';
 
 // Export table create/delete functions
 export { createAllTables } from './auto/CreateFunctions';

@@ -4,8 +4,8 @@
   "description": "This package provided compression tools used by the backend and box servers",
   "private": true,
   "license": "MIT",
-  "main": "dist/index",
-  "types": "dist/index.d.ts",
+  "main": "dist/Index",
+  "types": "dist/Index.d.ts",
   "files": [
     "dist"
   ],
