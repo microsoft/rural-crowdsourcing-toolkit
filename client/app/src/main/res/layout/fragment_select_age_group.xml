@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.registration.SelectAgeGroupActivity">
-
-    <include
-        android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+    >
 
     <com.kofigyan.stateprogressbar.StateProgressBar
         android:id="@+id/dottedScreenPb"
@@ -17,7 +13,7 @@
         android:layout_marginTop="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:layout_constraintTop_toTopOf="parent"
         app:spb_checkStateCompleted="true"
         app:spb_currentStateDescriptionColor="?attr/colorAccent"
         app:spb_currentStateNumber="three"

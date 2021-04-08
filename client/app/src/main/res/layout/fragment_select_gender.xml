@@ -3,30 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.registration.SelectGenderActivity">
-
-    <include
-        android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
-
-    <com.kofigyan.stateprogressbar.StateProgressBar
-        android:id="@+id/dottedScreenPb"
-        android:layout_width="@dimen/_0sdp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
-        app:spb_checkStateCompleted="true"
-        app:spb_currentStateDescriptionColor="?attr/colorAccent"
-        app:spb_currentStateNumber="two"
-        app:spb_maxStateNumber="three"
-        app:spb_stateBackgroundColor="#BDBDBD"
-        app:spb_stateDescriptionColor="#808080"
-        app:spb_stateForegroundColor="?attr/colorAccent"
-        app:spb_stateNumberBackgroundColor="#808080"
-        app:spb_stateNumberForegroundColor="#eeeeee" />
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/selectGenderPromptTv"
@@ -103,17 +80,34 @@
 
     <ImageButton
         android:id="@+id/submitGenderIb"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/_30sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="@dimen/_55sdp"
+        android:layout_marginTop="@dimen/_100sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/ic_next_enabled"
         android:contentDescription="@string/next"
-        android:padding="@dimen/_25sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.1"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/femaleBtn" />
+
+    <com.kofigyan.stateprogressbar.StateProgressBar
+        android:id="@+id/dottedScreenPb"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="39dp"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintBottom_toTopOf="@+id/selectGenderPromptTv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:spb_checkStateCompleted="true"
+        app:spb_currentStateDescriptionColor="?attr/colorAccent"
+        app:spb_currentStateNumber="two"
+        app:spb_maxStateNumber="three"
+        app:spb_stateBackgroundColor="#BDBDBD"
+        app:spb_stateDescriptionColor="#808080"
+        app:spb_stateForegroundColor="?attr/colorAccent"
+        app:spb_stateNumberBackgroundColor="#808080"
+        app:spb_stateNumberForegroundColor="#eeeeee" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

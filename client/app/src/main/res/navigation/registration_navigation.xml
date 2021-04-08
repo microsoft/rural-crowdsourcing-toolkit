@@ -39,10 +39,38 @@
     <activity
         android:id="@+id/sendOTPActivity"
         android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
-        android:label="SendOTPActivity" />
+        android:label="SendOTPActivity"
+        tools:layout="@layout/activity_network_activity"/>
     <fragment
         android:id="@+id/profilePictureFragment"
         android:name="com.microsoft.research.karya.ui.registration.ProfilePictureFragment"
         android:label="ProfilePictureFragment"
-        tools:layout="@layout/fragment_profile_picture"/>
+        tools:layout="@layout/fragment_profile_picture">
+        <action
+            android:id="@+id/action_profilePictureFragment_to_selectGenderFragment"
+            app:destination="@id/selectGenderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectGenderFragment"
+        android:name="com.microsoft.research.karya.ui.registration.SelectGenderFragment"
+        android:label="fragment_select_gender"
+        tools:layout="@layout/fragment_select_gender" >
+        <action
+            android:id="@+id/action_selectGenderFragment_to_selectAgeGroupFragment"
+            app:destination="@id/selectAgeGroupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectAgeGroupFragment"
+        android:name="com.microsoft.research.karya.ui.registration.SelectAgeGroupFragment"
+        android:label="SelectAgeGroupFragment"
+        tools:layout="@layout/fragment_select_age_group">
+        <action
+            android:id="@+id/action_selectAgeGroupFragment_to_registerWorker"
+            app:destination="@id/registerWorker" />
+    </fragment>
+    <activity
+        android:id="@+id/registerWorker"
+        android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
+        android:label="RegisterWorker"
+        tools:layout="@layout/activity_network_activity"/>
 </navigation>

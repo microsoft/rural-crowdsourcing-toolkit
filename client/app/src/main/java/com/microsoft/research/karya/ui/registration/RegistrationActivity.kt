@@ -19,6 +19,13 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
     var invalidOTPMessage: String = ""
     var resendOTPMessage: String = ""
 
+    var genderPromptMessage: String = ""
+    var maleLabel: String = ""
+    var femaleLabel: String = ""
+
+   var ageGroupPromptString: String = ""
+   var yearsString: String = ""
+
 
     var current_assistant_audio = -1
 
@@ -50,6 +57,13 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
         resendOTPMessage = getValueFromName(R.string.resend_otp)
 
         profilePicturePromptMessage = getValueFromName(R.string.profile_picture_prompt)
+
+        genderPromptMessage = getValueFromName(R.string.gender_prompt)
+        maleLabel = getValueFromName(R.string.male)
+        femaleLabel = getValueFromName(R.string.female)
+
+        ageGroupPromptString = getValueFromName(R.string.age_prompt)
+        yearsString = getValueFromName(R.string.years)
     }
 
     /**
