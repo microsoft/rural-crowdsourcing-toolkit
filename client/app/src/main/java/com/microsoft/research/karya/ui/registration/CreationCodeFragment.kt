@@ -10,10 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.service.KaryaAPIService
+import com.microsoft.research.karya.databinding.FragmentCreationCodeBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
-import kotlinx.android.synthetic.main.fragment_creation_code.*
-import kotlinx.android.synthetic.main.fragment_creation_code.view.*
+import com.microsoft.research.karya.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 private const val CREATION_CODE_LENGTH = 16
 
-class CreationCodeFragment : Fragment() {
+class CreationCodeFragment : Fragment(R.layout.fragment_creation_code) {
 
     /** Compute creation code text box length based on the creation code length */
     private val creationCodeEtMax = CREATION_CODE_LENGTH + (CREATION_CODE_LENGTH - 1) / 4
@@ -35,48 +35,40 @@ class CreationCodeFragment : Fragment() {
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private val binding by viewBinding(FragmentCreationCodeBinding::bind)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
         karyaAPI = baseActivity.karyaAPI
 
-        /** Inflating the layout for this fragment **/
-        return inflater.inflate(R.layout.fragment_creation_code, container, false)
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_access_code_prompt
 
         /** Set the creation code font size to the same value as the phantom text view font size */
-        phantomCCTv.addOnLayoutChangeListener { _: View, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->
-            creationCodeEt.setTextSize(TypedValue.COMPLEX_UNIT_PX, phantomCCTv.textSize)
+        binding.phantomCCTv.addOnLayoutChangeListener { _: View, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->
+            binding.creationCodeEt.setTextSize(TypedValue.COMPLEX_UNIT_PX, binding.phantomCCTv.textSize)
         }
 
         /** Add text change listener to creation code */
-        creationCodeEt.addTextChangedListener(object : SeparatorTextWatcher('-', 4) {
+        binding.creationCodeEt.addTextChangedListener(object : SeparatorTextWatcher('-', 4) {
             override fun onAfterTextChanged(text: String, position: Int) {
-                creationCodeEt.run {
+                binding.creationCodeEt.run {
                     setText(text)
                     setSelection(position)
                 }
 
                 /** If creation code length has reached max, call handler */
-                if (creationCodeEt.length() == creationCodeEtMax) {
+                if (binding.creationCodeEt.length() == creationCodeEtMax) {
                     handleFullCreationCode()
                 } else {
                     clearErrorMessages()
                 }
             }
         })
-        (activity as BaseActivity).requestSoftKeyFocus(creationCodeEt)
+        (activity as BaseActivity).requestSoftKeyFocus(binding.creationCodeEt)
     }
 
     override fun onResume() {
@@ -86,15 +78,15 @@ class CreationCodeFragment : Fragment() {
     }
 
     private fun handleFullCreationCode() {
-        creationCodeEt.isEnabled = false
-        val creationCode = creationCodeEt.text.toString().replace("-", "")
+        binding.creationCodeEt.isEnabled = false
+        val creationCode = binding.creationCodeEt.text.toString().replace("-", "")
         verifyCreationCode(creationCode)
     }
 
     private fun clearErrorMessages() {
-        creationCodeErrorTv.text = ""
-        creationCodeStatusIv.setImageResource(0)
-        creationCodeStatusIv.setImageResource(R.drawable.ic_check_grey)
+        binding.creationCodeErrorTv.text = ""
+        binding.creationCodeStatusIv.setImageResource(0)
+        binding.creationCodeStatusIv.setImageResource(R.drawable.ic_check_grey)
     }
 
     /**
@@ -111,22 +103,22 @@ class CreationCodeFragment : Fragment() {
                 // Valid creation code
                 if (response.valid) {
                     lifecycleScope.launch(Dispatchers.Main) {
-                        creationCodeStatusIv.setImageResource(0)
-                        creationCodeStatusIv.setImageResource(R.drawable.ic_baseline_check_circle_outline_24)
+                        binding.creationCodeStatusIv.setImageResource(0)
+                        binding.creationCodeStatusIv.setImageResource(R.drawable.ic_baseline_check_circle_outline_24)
                         WorkerInformation.creation_code = creationCode
                         findNavController().navigate(R.id.action_creationCodeFragment_to_phoneNumberFragment)
                     }
                 } else {
                     lifecycleScope.launch(Dispatchers.Main) {
-                        creationCodeErrorTv.text = when (response.message) {
+                        binding.creationCodeErrorTv.text = when (response.message) {
                             "invalid_creation_code" -> getString(R.string.invalid_creation_code)
                             "creation_code_already_used" -> getString(R.string.creation_code_already_used)
                             else -> "unknown error occurred"
                         }
-                        creationCodeStatusIv.setImageResource(0)
-                        creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
-                        creationCodeEt.isEnabled = true
-                        baseActivity.requestSoftKeyFocus(creationCodeEt)
+                        binding.creationCodeStatusIv.setImageResource(0)
+                        binding.creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
+                        binding.creationCodeEt.isEnabled = true
+                        baseActivity.requestSoftKeyFocus(binding.creationCodeEt)
                     }
                 }
             }
