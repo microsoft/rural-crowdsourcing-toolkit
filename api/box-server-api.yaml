@@ -31,37 +31,59 @@ paths:
         404:
           description: Access token already attached to another phone number.
 
-  /worker/{id}:
+  /worker/{id}/otp:
     put:
-      description: Update information about worker. The worker can identify
-        themselves using their unique access code or the id token previously
-        received from the server. Depending on the identification mechanism and
-        the parameters, this request can trigger different types of actions.
-
-        If generate_otp = true, the phone number should be provided as part of
-        the request body. The server generates an OTP for the worker. The
-        identification mechanism will be the access code, if the request is
-        generated for the first time.
-
-        If verify_otp = true, the OTP should be provided as part of the header.
-        The server verifies the OTP and generates an ID token for the worker
-        that are used as part of subsequent requests.
-
-        If neither of the OTP parameters are true, this request updates the
-        "updatable" parameters of the worker, (e.g., gender, age group).
+      description: Generate/resend/verify OTP for a worker. The worker can
+        identify themselves using their unique access code or the id token
+        previously received from the server. The "action" query parameter should
+        be "generate" | "resend" | "verify". In case of "verify", the OTP should
+        be included in the header.
 
       parameters:
-        - name: generate_otp
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: action
           in: query
-          required: false
-          schema: { type: boolean }
-        - name: verify_otp
-          in: query
-          required: false
-          schema: { type: boolean }
+          required: true
+          schema: { type: string }
+        - name: x-phone-number
+          in: header
+          required: true
+          schema: { type: string }
         - name: x-otp
           in: header
           required: false
+          schema: { type: string }
+
+      responses:
+        200:
+          description: Request executed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Worker'
+
+        400:
+          description: Request did not have appropriate details.
+
+        401:
+          description: Invalid access code or id token.
+
+        404:
+          description: Access token already attached to another phone number.
+
+  /worker/{id}:
+    put:
+      description: Update the "updatable" parameters of a worker. The worker can
+        identify themselves using their unique access code or the id token
+        previously received from the server. 
+
+      parameters:
+        - name: id
+          in: path
+          required: true
           schema: { type: string }
 
       requestBody:
