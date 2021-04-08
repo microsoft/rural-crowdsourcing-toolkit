@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.registration
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,9 +13,7 @@ import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.fragment_o_t_p.view.*
 import kotlinx.android.synthetic.main.fragment_o_t_p.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -37,23 +34,16 @@ class OTPFragment : Fragment() {
         baseActivity = activity as BaseActivity
         karyaAPI = baseActivity.karyaAPI
 
-        // Inflate the layout for this fragment
-        val fragmentView = inflater.inflate(R.layout.fragment_o_t_p, container, false)
-
-        /** Initialising Strings  **/
-        fragmentView.otpPromptTv.text = getString(R.string.s_otp_prompt)
-        fragmentView.invalidOTPTv.text = getString(R.string.s_invalid_otp)
-        fragmentView.resendOTPBtn.text = getString(R.string.s_resend_otp)
-
-        /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
-
-        return fragmentView
+        /** Inflating the layout for this fragment **/
+        return inflater.inflate(R.layout.fragment_o_t_p, container, false)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
 
         /** Resend OTP handler */
         resendOTPBtn.setOnClickListener { resendOTP() }

@@ -17,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.fragment_phone_number.*
-import kotlinx.android.synthetic.main.fragment_phone_number.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -51,14 +50,7 @@ class PhoneNumberFragment : Fragment() {
         baseActivity = activity as BaseActivity
 
         /** Inflating the layout for this fragment **/
-        val fragmentView = inflater.inflate(R.layout.fragment_phone_number, container, false)
-
-        /**
-         * Set all initial UI strings
-         */
-        fragmentView.phoneNumberPromptTv.text = getString(R.string.s_phone_number_prompt)
-
-        return fragmentView
+        return inflater.inflate(R.layout.fragment_phone_number, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

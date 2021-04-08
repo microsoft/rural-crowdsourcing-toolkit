@@ -35,10 +35,6 @@ class CreationCodeFragment : Fragment() {
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,14 +45,7 @@ class CreationCodeFragment : Fragment() {
         karyaAPI = baseActivity.karyaAPI
 
         /** Inflating the layout for this fragment **/
-        val fragmentView = inflater.inflate(R.layout.fragment_creation_code, container, false)
-
-        /**
-         * Set all initial UI strings
-         */
-        fragmentView.creationCodePromptTv.text = getString(R.string.s_access_code_prompt)
-
-        return fragmentView
+        return inflater.inflate(R.layout.fragment_creation_code, container, false)
     }
 
 

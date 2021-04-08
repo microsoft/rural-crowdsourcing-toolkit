@@ -35,10 +35,6 @@ class RegistrationActivity : BaseActivity(useAssistant = true) {
      * Set the initial UI strings
      */
     override suspend fun setInitialUIStrings() {
-        // TODO: 1) Create a Base Fragment class with this method.
-        //  2) Make the fragment implement the base class
-        //  3) Call the Fragment's method form here
-
-        // For now we have a workaround of doing this task in individual Fragment's OnCreateView
+        // Nothing here, since we are setting the UI strings in resources
     }
 }

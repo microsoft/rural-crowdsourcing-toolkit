@@ -16,6 +16,12 @@ class SelectAgeGroupFragment : Fragment() {
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 
+    enum class ageGroup(val range: String) {
+        YOUTH_AGE("18-25"),
+        MIDDLE_AGE("26-50"),
+        OLD_AGE("50+")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -23,23 +29,20 @@ class SelectAgeGroupFragment : Fragment() {
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
-        // Inflate the layout for this fragment
+        /** Inflating the layout for this fragment **/
         val fragmentView = inflater.inflate(R.layout.fragment_select_age_group, container, false)
 
         /** Initialising Strings  **/
 
         var yearsString = getString(R.string.s_years)
 
-        val youthLabel = "18-25 $yearsString"
-        val middleLabel = "26-50 $yearsString"
-        val oldLabel = "50+ $yearsString"
-        fragmentView.ageGroupPromptTv.text = getString(R.string.s_age_prompt)
+        val youthLabel = ageGroup.YOUTH_AGE.range + " " + yearsString
+        val middleLabel = ageGroup.MIDDLE_AGE.range + " " + yearsString
+        val oldLabel = ageGroup.OLD_AGE.range + " " + yearsString
+
         fragmentView.youthBtn.text = youthLabel
         fragmentView.middleAgeBtn.text = middleLabel
         fragmentView.oldAgeBtn.text = oldLabel
-
-        /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.audio_age_prompt
 
         return fragmentView
     }
@@ -47,9 +50,12 @@ class SelectAgeGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        youthBtn.setOnClickListener { handleAgeGroupClick("18-25") }
-        middleAgeBtn.setOnClickListener { handleAgeGroupClick("26-50") }
-        oldAgeBtn.setOnClickListener { handleAgeGroupClick("50+") }
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_age_prompt
+
+        youthBtn.setOnClickListener { handleAgeGroupClick(ageGroup.YOUTH_AGE) }
+        middleAgeBtn.setOnClickListener { handleAgeGroupClick(ageGroup.MIDDLE_AGE) }
+        oldAgeBtn.setOnClickListener { handleAgeGroupClick(ageGroup.OLD_AGE) }
 
         submitAgeGroupIb.setOnClickListener {
             submitAgeGroupIb.visibility = View.INVISIBLE
@@ -68,19 +74,19 @@ class SelectAgeGroupFragment : Fragment() {
     /**
      * Handle choice of age group
      */
-    private fun handleAgeGroupClick(ageGroup: String) {
-        WorkerInformation.age_group = ageGroup
+    private fun handleAgeGroupClick(item: ageGroup) {
+        WorkerInformation.age_group = item.range
         youthBtn.isSelected = false
         middleAgeBtn.isSelected = false
         oldAgeBtn.isSelected = false
-        when (ageGroup) {
-            "18-25" -> {
+        when (item) {
+            ageGroup.YOUTH_AGE -> {
                 youthBtn.isSelected = true
             }
-            "26-50" -> {
+            ageGroup.MIDDLE_AGE -> {
                 middleAgeBtn.isSelected = true
             }
-            "50+" -> {
+            ageGroup.OLD_AGE -> {
                 oldAgeBtn.isSelected = true
             }
         }

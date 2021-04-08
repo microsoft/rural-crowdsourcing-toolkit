@@ -15,7 +15,6 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
 import kotlinx.android.synthetic.main.fragment_profile_picture.*
-import kotlinx.android.synthetic.main.fragment_profile_picture.view.*
 import java.io.FileOutputStream
 
 private const val REQUEST_IMAGE_CAPTURE = 101
@@ -35,15 +34,8 @@ class ProfilePictureFragment : Fragment() {
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
-        // Inflate the layout for this fragment
-        var fragmentView =  inflater.inflate(R.layout.fragment_profile_picture, container, false)
-
-        /**
-         * Set all initial UI strings
-         */
-        fragmentView.profilePicturePromptTv.text = getString(R.string.s_profile_picture_prompt)
-
-        return fragmentView
+        /** Inflating the layout for this fragment **/
+        return inflater.inflate(R.layout.fragment_profile_picture, container, false)
 
     }
 

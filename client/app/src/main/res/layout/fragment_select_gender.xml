@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginRight="@dimen/_16sdp"
-        android:text="@string/gender_prompt_desc"
+        android:text="@string/s_gender_prompt"
         android:textColor="?attr/appLanguageTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -60,7 +60,7 @@
         app:layout_constraintRight_toRightOf="@+id/maleBtn"
         app:layout_constraintStart_toStartOf="@+id/maleBtn"
         app:layout_constraintTop_toBottomOf="@+id/maleBtn"
-        tools:text="@string/male_desc" />
+        android:text="@string/s_male"/>
 
 
     <TextView
@@ -76,7 +76,7 @@
         app:layout_constraintStart_toStartOf="@+id/femaleBtn"
         app:layout_constraintTop_toBottomOf="@+id/femaleBtn"
         tools:layout_editor_absoluteX="229dp"
-        tools:text="@string/female_desc" />
+        android:text="@string/s_female" />
 
     <ImageButton
         android:id="@+id/submitGenderIb"

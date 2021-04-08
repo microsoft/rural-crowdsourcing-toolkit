@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.fragment_select_gender.*
-import kotlinx.android.synthetic.main.fragment_select_gender.view.*
 
 class SelectGenderFragment : Fragment() {
 
@@ -24,24 +23,16 @@ class SelectGenderFragment : Fragment() {
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
-        // Inflate the layout for this fragment
-        val fragmentView = inflater.inflate(R.layout.fragment_select_gender, container, false)
-
-        /** Initialising Strings  **/
-
-        fragmentView.selectGenderPromptTv.text = getString(R.string.s_gender_prompt)
-        fragmentView.maleTv.text = getString(R.string.s_male)
-        fragmentView.femaleTv.text = getString(R.string.s_female)
-
-        /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.audio_gender_prompt
-
-        return fragmentView
+        /** Inflating the layout for this fragment **/
+        return inflater.inflate(R.layout.fragment_select_gender, container, false)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /** Initialise assistant audio **/
+        registrationActivity.current_assistant_audio = R.string.audio_gender_prompt
 
         WorkerInformation.gender = "not_specified"
 

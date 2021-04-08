@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dottedScreenPb"
         app:layout_constraintVertical_bias="0.040"
-        tools:text="Choose your age group" />
+        android:text="@string/s_age_prompt" />
 
     <Button
         android:id="@+id/youthBtn"
@@ -64,7 +64,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ageGroupPromptTv"
-        tools:text="18 - 25 years" />
+        android:text="@string/s_age_prompt" />
 
     <Button
         android:id="@+id/middleAgeBtn"
