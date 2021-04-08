@@ -10,7 +10,7 @@ import * as jwtSimple from 'jwt-simple';
 import RawBody from 'raw-body';
 import config from '../config/Index';
 import { Box, BoxRecord, KaryaFileRecord, BasicModel } from '@karya/db';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import * as BoxRequestModel from '../models/BoxRequestModel';
 import { getChecksum } from '../models/KaryaFileModel';
 import * as BS from '../utils/AzureBlob';

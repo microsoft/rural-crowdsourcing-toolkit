@@ -4,7 +4,7 @@
 // Implements APIs on 'microtask_group' that could not be auto generated
 
 import { knex, MicrotaskGroup, MicrotaskGroupRecord, Task, TaskRecord, BasicModel } from '@karya/db';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import { getWorkProviderFilter } from './Task.extra';

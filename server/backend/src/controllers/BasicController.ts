@@ -4,7 +4,7 @@
 // This file defines a basic set of controllers that can be used by all the
 // tables in the database.
 
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import { BasicModel } from '@karya/db';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

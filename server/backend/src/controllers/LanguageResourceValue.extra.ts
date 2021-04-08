@@ -16,7 +16,7 @@ import {
   tableFilterColumns,
   BasicModel,
 } from '@karya/db';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 
 import { languageLRVTarQueue, lrLRVTarQueue } from '../services/Index';
 

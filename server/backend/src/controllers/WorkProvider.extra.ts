@@ -5,7 +5,7 @@
 // ensure that a work provider is allowed to access only there records.
 
 import { WorkProvider, BasicModel } from '@karya/db';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import { getCreationCode } from '@karya/misc-utils';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

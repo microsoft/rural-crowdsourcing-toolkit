@@ -3,7 +3,7 @@
 
 // Implements APIs for 'payment_request' that could not be auto-generated
 
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 

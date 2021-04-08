@@ -8,7 +8,7 @@
 
 import BBPromise from 'bluebird';
 import { Task, TaskRecord, TaskStatus, BasicModel } from '@karya/db';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import { ParameterParserResponse, parseTaskParameters } from '../scenarios/common/ParameterParser';
 import { IScenario, scenarioMap } from '../scenarios/Index';
 import * as BlobStore from '../utils/AzureBlob';

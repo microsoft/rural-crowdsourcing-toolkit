@@ -5,7 +5,7 @@
  * Controller for extra language routes
  */
 
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import { BasicModel } from '@karya/db';
 import { isLanguageSupported } from '../models/ScenarioLanguageModel';
 import * as HttpResponse from '@karya/http-response';
