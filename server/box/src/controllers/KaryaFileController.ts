@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import config from '../config/Index';
 import { KaryaFile, BasicModel } from '@karya/db';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import { insertWorkerFile } from '../models/KaryaFileModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

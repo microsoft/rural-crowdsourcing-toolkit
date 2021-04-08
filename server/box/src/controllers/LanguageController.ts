@@ -4,7 +4,7 @@
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import * as ScenarioLanguageModel from '../models/ScenarioLanguageModel';
 
 /**

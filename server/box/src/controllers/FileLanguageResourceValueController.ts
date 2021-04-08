@@ -7,7 +7,7 @@
 
 import * as fs from 'fs';
 import config from '../config/Index';
-import { getControllerError } from '../errors/ControllerErrors';
+import { getControllerError } from './ControllerErrors';
 import { ContainerName, getBlobName } from '@karya/blobstore';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
