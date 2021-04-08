@@ -27,9 +27,7 @@ export async function sendUpdatesToServer(sendTime: string) {
     // Collect payment updates
     const payoutTables: BoxUpdatableTables[] = ['payout_info', 'payment_request'];
     await BBPromise.mapSeries(payoutTables, async (tableName) => {
-      const rows = await BasicModel.getCreatedSince(tableName, lastSentAt, {
-        box_id,
-      });
+      const rows = await BasicModel.getRecords(tableName, { box_id }, {}, { from: lastSentAt });
       // @ts-ignore
       updateMap[tableName] = rows;
     });
@@ -43,14 +41,7 @@ export async function sendUpdatesToServer(sendTime: string) {
       'microtask_assignment',
     ];
     await BBPromise.mapSeries(remainingTables, async (tableName) => {
-      const rows = await BasicModel.getUpdatesSince(
-        tableName,
-        lastSentAt,
-        {
-          box_id: this_box.id,
-        },
-        sendTime
-      );
+      const rows = await BasicModel.getRecords(tableName, { box_id: this_box.id }, { from: lastSentAt, to: sendTime });
       // @ts-ignore
       updateMap[tableName] = rows;
     });

@@ -42,10 +42,13 @@ export async function createLanguageLRVTarBall(language: LanguageRecord) {
   const fileLRIDs = lrRecords.map((lr) => lr.id);
 
   // Get all valid file language resource values for the specific language
-  const lrvRecords = await BasicModel.getRecordsWhereIn('language_resource_value', 'language_resource_id', fileLRIDs, {
-    language_id: language.id,
-    valid: true,
-  });
+  const lrvRecords = await BasicModel.getRecords(
+    'language_resource_value',
+    { language_id: language.id, valid: true },
+    {},
+    {},
+    [['language_resource_id', fileLRIDs]]
+  );
 
   // temp folder for the language
   const folder = `${config.tempFolder}/language/${language.id}`;

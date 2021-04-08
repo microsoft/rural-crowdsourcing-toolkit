@@ -15,13 +15,7 @@ import { promises as fsp } from 'fs';
 import * as tar from 'tar';
 import { Promise as BBPromise } from 'bluebird';
 
-import {
-  knex,
-  Microtask,
-  MicrotaskAssignmentRecord,
-  MicrotaskRecord,
-  BasicModel,
-} from '@karya/db';
+import { knex, Microtask, MicrotaskAssignmentRecord, MicrotaskRecord, BasicModel } from '@karya/db';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
 import config from '../../config/Index';
 import { downloadBlob } from '../../utils/AzureBlob';
@@ -60,10 +54,7 @@ export const SpeechDataScenario: IScenario = {
  * @param mt Completed microtask record
  * @param task Corresponding task record
  */
-async function handleMicrotaskCompletion(
-  mt: MicrotaskRecord,
-  task: SpeechDataTask,
-) {}
+async function handleMicrotaskCompletion(mt: MicrotaskRecord, task: SpeechDataTask) {}
 
 /**
  * Handle completion of a speech data microtask assignment at the server
@@ -74,7 +65,7 @@ async function handleMicrotaskCompletion(
 async function handleMicrotaskAssignmentCompletion(
   mta: MicrotaskAssignmentRecord,
   mt: MicrotaskRecord,
-  task: SpeechDataTask,
+  task: SpeechDataTask
 ) {
   // If the task requires verification, then create appropriate verification microtask.
   if (task.params.needVerification) {
@@ -99,11 +90,7 @@ async function handleMicrotaskAssignmentCompletion(
     await BasicModel.insertRecord('microtask', verificationMT);
   } else {
     // Else, mark the task as autoverified.
-    await BasicModel.updateSingle(
-      'microtask_assignment',
-      { id: mta.id },
-      { status: 'verified', credits: mt.credits },
-    );
+    await BasicModel.updateSingle('microtask_assignment', { id: mta.id }, { status: 'verified', credits: mt.credits });
   }
 }
 
@@ -128,13 +115,10 @@ async function outputGenerator(task: SpeechDataTask) {
   // get current time
   const currentTime = new Date().toISOString();
 
-  taskLogger.info(
-    `Generating output for ${task.id} from ${lastGenerated} to ${currentTime}`,
-  );
+  taskLogger.info(`Generating output for ${task.id} from ${lastGenerated} to ${currentTime}`);
 
   // If difference is less than 23 hours?, return
-  const diff =
-    new Date(currentTime).getTime() - new Date(lastGenerated).getTime();
+  const diff = new Date(currentTime).getTime() - new Date(lastGenerated).getTime();
   if (diff < 12 * 60 * 60 * 1000) {
     taskLogger.info(`Output for ${task.id}: Only recently generated`);
     return;
@@ -142,16 +126,10 @@ async function outputGenerator(task: SpeechDataTask) {
 
   // Update the task params with current time
   task.params.outputFiles.push([currentTime, 'generating', null]);
-  await BasicModel.updateSingle(
-    'task',
-    { id: task.id },
-    { params: task.params },
-  );
+  await BasicModel.updateSingle('task', { id: task.id }, { params: task.params });
 
   // Get all verified microtasks in the given duration
-  const mts = await knex<MicrotaskRecord>('microtask')
-    .where('task_id', task.id)
-    .pluck('id');
+  const mts = await knex<MicrotaskRecord>('microtask').where('task_id', task.id).pluck('id');
   const mtas = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .select()
     .where('status', 'verified')
@@ -163,11 +141,7 @@ async function outputGenerator(task: SpeechDataTask) {
   if (mtas.length === 0) {
     task.params.outputFiles.pop();
     task.params.outputFiles.push([currentTime, 'none', null]);
-    await BasicModel.updateSingle(
-      'task',
-      { id: task.id },
-      { params: task.params },
-    );
+    await BasicModel.updateSingle('task', { id: task.id }, { params: task.params });
     taskLogger.info(`Output for ${task.id}: No files`);
     return;
   }
@@ -230,10 +204,7 @@ async function outputGenerator(task: SpeechDataTask) {
       await fsp.unlink(tgzPath);
 
       // Write the report
-      await fsp.writeFile(
-        `${outputFolderPath}/${reportName}`,
-        JSON.stringify(json, null, 2) + '\n',
-      );
+      await fsp.writeFile(`${outputFolderPath}/${reportName}`, JSON.stringify(json, null, 2) + '\n');
 
       files.push(recordingName);
       files.push(reportName);
@@ -242,20 +213,12 @@ async function outputGenerator(task: SpeechDataTask) {
 
   // Tar the folder and upload
   await tar.c({ file: outputTgzPath, C: outputFolderPath, gzip: true }, files);
-  const kfRecord = await upsertKaryaFile(
-    outputTgzPath,
-    'md5',
-    outputBlobParams,
-  );
+  const kfRecord = await upsertKaryaFile(outputTgzPath, 'md5', outputBlobParams);
 
   // Update the task params
   task.params.outputFiles.pop();
   task.params.outputFiles.push([currentTime, 'generated', kfRecord.url]);
-  await BasicModel.updateSingle(
-    'task',
-    { id: task.id },
-    { params: task.params },
-  );
+  await BasicModel.updateSingle('task', { id: task.id }, { params: task.params });
 
   // Delete all unnecessary files
   try {
@@ -264,9 +227,7 @@ async function outputGenerator(task: SpeechDataTask) {
     await fsp.unlink(outputTgzPath);
   } catch (e) {}
 
-  taskLogger.info(
-    `Generated output for ${task.id}: ${mtas.length} files included`,
-  );
+  taskLogger.info(`Generated output for ${task.id}: ${mtas.length} files included`);
 }
 
 export { SpeechDataTask };
