@@ -7,10 +7,8 @@
 
 import * as fs from 'fs';
 
-import { LanguageResource, Policy, Scenario, ScenarioRecord, BasicModel } from '@karya/db';
+import { Policy, Scenario, ScenarioRecord, BasicModel } from '@karya/db';
 import { IScenario, scenarioById, scenarioMap } from './Index';
-
-import { updateLanguageResource } from '../models/LanguageResourceModel';
 
 import bbPromise from 'bluebird';
 import logger from '../utils/Logger';
@@ -99,22 +97,6 @@ export async function registerScenarios() {
           await BasicModel.updateSingle('scenario', { name: scenario.name }, updatedScenarioObject);
           logger.info(`Synced scenario '${scenario.name}' with DB`);
 
-          // check if language resource needs to be synced
-          if (scenario.full_name !== dbRecord.full_name) {
-            // update the language resource for scenario name
-            await updateLanguageResource(
-              { scenario_id: dbRecord.id, name: 'scenario_name' },
-              { description: scenario.full_name }
-            );
-          }
-
-          if (scenario.description !== dbRecord.description) {
-            // update the language resource for scenario description
-            await updateLanguageResource(
-              { scenario_id: dbRecord.id, name: 'scenario_description' },
-              { description: scenario.description }
-            );
-          }
           // update policies
           const success = await updateScenarioPolicies(scenario, dbRecord.id);
           if (!success) {
@@ -149,27 +131,6 @@ export async function registerScenarios() {
         const dbRecord = await BasicModel.insertRecord('scenario', newScenarioObject);
         scenarioById[Number.parseInt(dbRecord.id, 10)] = scenario;
         logger.info(`Inserted scenario '${scenario.name}' into the DB`);
-
-        // Insert the language resource records
-        // scenario name
-        const lrNameRecord: LanguageResource = {
-          scenario_id: dbRecord.id,
-          type: 'string_resource',
-          name: 'scenario_name',
-          description: scenario.full_name,
-          required: true,
-        };
-        await BasicModel.insertRecord('language_resource', lrNameRecord);
-
-        // scenario description
-        const lrDescRecord: LanguageResource = {
-          scenario_id: dbRecord.id,
-          type: 'string_resource',
-          name: 'scenario_description',
-          description: scenario.description,
-          required: true,
-        };
-        await BasicModel.insertRecord('language_resource', lrDescRecord);
 
         const success = await createScenarioPolicies(scenario, dbRecord.id);
         if (!success) {

@@ -6,26 +6,10 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-
-import {
-  knex,
-  setupDbConnection,
-  createAllTables,
-  dropAllTables,
-  BasicModel,
-  LanguageResource,
-  LanguageResourceRecord,
-} from '@karya/db';
-
-import { scenarioMap } from '../scenarios/Index';
+import { knex, setupDbConnection, createAllTables, dropAllTables, BasicModel } from '@karya/db';
 import { registerScenarios } from '../scenarios/Register';
-
 import { languages } from './InitLanguages';
-import * as Core from './scenarios/core/Resources';
-import { ResourceSpec } from './scenarios/Index';
-
 import { bootstrapAuth } from './AuthBootstrap';
-
 import config, { loadSecretsFromVault } from '../config/Index';
 import logger from '../utils/Logger';
 
@@ -59,126 +43,8 @@ async function initializeLanguages() {
   logger.info(`Completed initializing languages`);
 }
 
-/**
- * Function to initialize core language resources
- */
-async function initializeCoreLRs() {
-  logger.info(`Initializing core resources`);
-  await insertLanguageResources(
-    true, // core
-    null, // scenario_id
-    Core.resources
-  );
-  logger.info(`Completed initializing core resources`);
-}
-
-/**
- * Function to initialize scenario language resources
- */
-async function initializeScenarioLRs() {
-  await BBPromise.mapSeries(Object.keys(scenarioMap), async (scenario_name) => {
-    logger.info(`Initializing resources for scenario '${scenario_name}'`);
-    let scenarioLRs;
-    try {
-      scenarioLRs = await import(`./scenarios/${scenario_name}/Resources`);
-    } catch (e) {
-      logger.error(`No resource folder for scenario ${scenario_name}`);
-      return;
-    }
-
-    // get the scenario record
-    const scenarioRecord = await BasicModel.getSingle('scenario', {
-      name: scenario_name,
-    });
-
-    // Initialize the scenario specific language resources
-    await insertLanguageResources(
-      false, // core
-      scenarioRecord.id, // scenario_id
-      scenarioLRs.resources
-    );
-    logger.info(`Completed initializing resources for scenario '${scenario_name}'`);
-  });
-}
-
-/**
- *
- * @param core Core field of the LRs
- * @param scenario_id Scenario ID of the LRs
- * @param string_resources List of string resources
- * @param file_resources Map of file resources: key is string resource name
- */
-async function insertLanguageResources(core: boolean, scenario_id: string | null, resources: ResourceSpec[]) {
-  // Initialize the resources for the scenario
-  await BBPromise.mapSeries(resources, async (res) => {
-    const strLR: LanguageResource = {
-      core,
-      scenario_id,
-      type: 'string_resource',
-      string_resource_id: null,
-      required: true,
-      ...res.str,
-    };
-
-    let strLRR: LanguageResourceRecord;
-    try {
-      strLRR = await BasicModel.getSingle('language_resource', {
-        core,
-        scenario_id,
-        name: strLR.name,
-      });
-      // update if description has changed
-      if (strLRR.description !== strLR.description) {
-        strLRR = await BasicModel.updateSingle('language_resource', { id: strLRR.id }, strLR);
-      }
-    } catch (e) {
-      // insert
-      strLRR = await BasicModel.insertRecord('language_resource', strLR);
-    }
-
-    if (res.files) {
-      await BBPromise.mapSeries(res.files, async (fLR) => {
-        const fileLR: LanguageResource = {
-          core,
-          scenario_id,
-          type: 'file_resource',
-          string_resource_id: strLRR.id,
-          required: true,
-          list_resource: strLRR.list_resource,
-          ...fLR,
-        };
-
-        try {
-          const fileLRR = await BasicModel.getSingle('language_resource', {
-            core,
-            scenario_id,
-            name: fileLR.name,
-          });
-          // update if file LR has changed
-          if (
-            fileLRR.string_resource_id !== fileLR.string_resource_id ||
-            fileLRR.description !== fileLR.description ||
-            fileLRR.list_resource !== fileLR.list_resource
-          ) {
-            await BasicModel.updateSingle('language_resource', { id: fileLRR.id }, fileLR);
-          }
-        } catch (err) {
-          await BasicModel.insertRecord('language_resource', fileLR);
-        }
-      });
-    }
-  });
-}
-
 /** Script sequence */
-let scriptSequence = [
-  'recreate-tables',
-  'init-languages',
-  'init-core-lrs',
-  'register-scenarios',
-  'init-scenario-lrs',
-  'auth-bootstrap',
-];
+let scriptSequence = ['recreate-tables', 'init-languages', 'register-scenarios', 'auth-bootstrap'];
 
 /** Main Script to reset the DB */
 (async () => {
@@ -212,14 +78,8 @@ let scriptSequence = [
       case 'init-languages':
         await initializeLanguages();
         break;
-      case 'init-core-lrs':
-        await initializeCoreLRs();
-        break;
       case 'register-scenarios':
         await registerScenarios();
-        break;
-      case 'init-scenario-lrs':
-        await initializeScenarioLRs();
         break;
       case 'auth-bootstrap':
         const cc = await bootstrapAuth();

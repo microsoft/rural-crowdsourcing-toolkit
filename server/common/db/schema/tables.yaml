@@ -41,54 +41,6 @@ scenario:
   boxapis:
     get: wp
 
-language_resource:
-  fields:
-    - id, bigserial, pk
-    - core, boolean, not null, false, filter
-    - scenario_id, >, scenario, filter
-    - string_resource_id, >, language_resource
-    - type, language_resource_type, not null, filter
-    - list_resource, boolean, not null, false, filter
-    - name, varchar, 48, not null
-    - description, text, not null
-    - required, boolean, not null, true, filter
-    - update_lrv_file, boolean, not null, false
-    - lrv_file_id, bigint
-    - params, json
-  unique:
-    - - scenario_id
-      - name
-  apis:
-    post: admin
-    put: admin
-    getbyid: admin
-    get: admin
-  getfilter:
-    - scenario_id
-  boxapis:
-    get: wp
-    getbyid: wp
-
-language_resource_value:
-  fields:
-    - id, bigserial, pk
-    - language_id, >, language, not null, filter
-    - language_resource_id, >, language_resource, not null, filter
-    - value, text, not null
-    - valid, boolean, not null, true, filter
-    - need_update, boolean, not null, false, filter
-    - params, json
-  unique:
-    - - language_id
-      - language_resource_id
-  apis:
-    post: admin
-    put: admin
-    getbyid: admin
-  boxapis:
-    get: wp
-    getbyid: wp
-
 work_provider:
   fields:
     - id, bigserial, pk
@@ -344,27 +296,13 @@ microtask_assignment:
     - microtask_id
     - worker_id
 
-payout_method:
-  fields:
-    - id, bigserial, pk
-    - name, varchar, 48, unique, not null
-    - description, text, not null
-    - required_info, json, not null
-    - enabled, boolean, not null, false, filter
-  apis:
-    getbyid: admin
-    get: admin
-  boxapis:
-    getbyid: wp
-    get: wp
-
 payout_info:
   fields:
     - id, bigint, pk
     - local_id, bigserial
     - box_id, >, box, not null, filter
     - worker_id, >, worker, not null, filter
-    - method_id, >, payout_method, not null, filter
+    - method_id, bigint, not null, filter
     - info, json, not null
     - status, payout_info_status, not null, filter
     - enabled, boolean, not null, false, filter

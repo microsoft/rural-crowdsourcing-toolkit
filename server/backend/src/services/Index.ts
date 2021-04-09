@@ -9,17 +9,11 @@
 import Bull from 'bull';
 
 // Db types
-import { LanguageRecord, LanguageResourceRecord, TaskRecord, BasicModel } from '@karya/db';
+import { TaskRecord, BasicModel } from '@karya/db';
 
 // Task action handlers
 import { approveTask } from './ApproveTask';
 import { validateTask } from './ValidateTask';
-
-// Language resesource tarball creation handlers
-import { createLanguageLRVTarBall, createLanguageResourceLRVTarBall } from './CreateLRVTarBall';
-
-// logger
-import logger from '../utils/Logger';
 import { generateTaskOutput } from './GenerateOutput';
 
 /** Queue and handlers for task validation */
@@ -65,47 +59,3 @@ export const taskOutputGeneratorQueue = new Bull<TaskRecord>('output_generator')
 
 // output generator handler
 taskOutputGeneratorQueue.process(async (job) => generateTaskOutput(job.data));
-
-/** Queue and handlers for language LRV tarball creation */
-
-// Language tarball creation queue
-export const languageLRVTarQueue = new Bull<LanguageRecord>('create_l_lrv');
-
-// Language lrv tar creation handler
-languageLRVTarQueue.process(async (job) => createLanguageLRVTarBall(job.data));
-
-// On completion, log success and reset update_lrv flag
-languageLRVTarQueue.on('completed', async (job) => {
-  const language = job.data;
-  await BasicModel.updateSingle('language', { id: language.id }, { update_lrv_file: false });
-  logger.info(`Created LRV tarball for language '${job.data.name}' (${job.data.id})`);
-});
-
-// On failure, just log error
-languageLRVTarQueue.on('failed', async (job) => {
-  const language = job.data;
-  await BasicModel.updateSingle('language', { id: language.id }, { update_lrv_file: false });
-  logger.error(`Failed to create LRV tarball for language '${job.data.name}' (${job.data.id})`);
-});
-
-/** Queue and handlers for language LRV tarball creation */
-
-// Language tarball creation queue
-export const lrLRVTarQueue = new Bull<LanguageResourceRecord>('create_lr_lrv');
-
-// Language lrv tar creation handler
-lrLRVTarQueue.process(async (job) => createLanguageResourceLRVTarBall(job.data));
-
-// On completion, log success and update reset the update_lrv flag
-lrLRVTarQueue.on('completed', async (job) => {
-  const lrr = job.data;
-  await BasicModel.updateSingle('language_resource', { id: lrr.id }, { update_lrv_file: false });
-  logger.info(`Created LRV tarball for language '${job.data.name}' (${job.data.id})`);
-});
-
-// On failure, just log error
-lrLRVTarQueue.on('failed', async (job) => {
-  const lrr = job.data;
-  await BasicModel.updateSingle('language_resource', { id: lrr.id }, { update_lrv_file: false });
-  logger.error(`Failed to create LRV tarball for language '${job.data.name}' (${job.data.id})`);
-});

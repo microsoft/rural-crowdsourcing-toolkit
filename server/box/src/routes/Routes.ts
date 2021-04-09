@@ -4,13 +4,9 @@
 import BodyParser from 'koa-body';
 import * as BoxRequestController from '../controllers/DbUpdatesController';
 import * as FileLRVController from '../controllers/FileLanguageResourceValueController';
-import {
-  getInputFileForAssignment,
-  uploadOutputFileForAssignment,
-} from '../controllers/KaryaFileController';
-import { getSupportedLanguages } from '../controllers/LanguageController';
+import { getInputFileForAssignment, uploadOutputFileForAssignment } from '../controllers/KaryaFileController';
 import * as WorkerController from '../controllers/WorkerController';
-import * as WLSController from '../controllers/WorkerLanguageSkillController'
+import * as WLSController from '../controllers/WorkerLanguageSkillController';
 
 // Import router from the automatically created routes
 // This router includes basic APIs that perform CRU operations on the tables
@@ -30,13 +26,14 @@ router.put('/worker/refresh_token', WorkerController.refreshIdToken);
 router.post('/worker_language_skill/', BodyParser(), WLSController.insertRecord);
 
 router.post('/db/updates-for-worker', BodyParser(), BoxRequestController.sendUpdatesForWorker);
-router.post('/db/updates-from-worker', BodyParser({ jsonLimit: '10mb', textLimit: '10mb'}), BoxRequestController.receiveUpdatesFromWorker);
-
-// GET languages supported
-router.get('/supported_languages', getSupportedLanguages);
+router.post(
+  '/db/updates-from-worker',
+  BodyParser({ jsonLimit: '10mb', textLimit: '10mb' }),
+  BoxRequestController.receiveUpdatesFromWorker
+);
 
 // Controller to send/receive input/output files for assignment
 router.get('/microtask_assignment/:id/input_file', getInputFileForAssignment);
-router.post('/microtask_assignment/:id/output_file', BodyParser({ multipart: true }), uploadOutputFileForAssignment)
+router.post('/microtask_assignment/:id/output_file', BodyParser({ multipart: true }), uploadOutputFileForAssignment);
 
 export default router;
