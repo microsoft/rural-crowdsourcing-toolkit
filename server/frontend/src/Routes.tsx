@@ -22,15 +22,8 @@ import CreateUpdateLanguage from './components/language/CreateUpdateLanguage';
 import LanguageList from './components/language/LanguageList';
 
 /** scenario components */
-import Verifier from './components/scenario/common/Verifier'
 import ScenarioDetail from './components/scenario/ScenarioDetail';
 import ScenarioList from './components/scenario/ScenarioList';
-
-/** language_resource components */
-import LanguageResourceList from './components/language_resource/LanguageResourceList';
-
-/** language_resource_value components */
-import LanguageResourceValueList from './components/language_resource_value/LanguageResourceValueList';
 
 /** task components */
 import CreateTask from './components/task/CreateTask';
@@ -71,12 +64,6 @@ const Routes = (
     <WorkProviderRoute exact path='/scenario' component={ScenarioList} />
     <WorkProviderRoute exact path='/scenario/:id' component={ScenarioDetail} />
 
-    {/** Language resource routes */}
-    <AdminRoute exact path='/scenario/:id/resources' component={LanguageResourceList} />
-
-    {/** Language resource value routes */}
-    <AdminRoute exact path='/language-support/' component={LanguageResourceValueList} />
-
     {/** Task routes */}
     <WorkProviderRoute exact path='/task/create' component={CreateTask} />
     <WorkProviderRoute exact path='/task' component={TaskList} />
@@ -94,9 +81,6 @@ const Routes = (
 
     {/** Microtask lists */}
     <WorkProviderRoute exact path='/task/:task_id/microtasks' component={MicrotaskList} />
-
-    {/** Verifier */}
-    <AdminRoute exact path='/task/:id/verify' component={Verifier} />
 
   </Switch>
 );

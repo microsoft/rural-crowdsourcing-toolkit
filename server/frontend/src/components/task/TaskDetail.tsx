@@ -51,7 +51,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
-  const id = Number.parseInt(ownProps.match.params.id, 10);
+  const id = ownProps.match.params.id;
   return {
     getTask: () => {
       const action: BackendRequestInitAction = {

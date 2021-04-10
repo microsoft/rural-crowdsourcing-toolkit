@@ -66,11 +66,7 @@ router.get('/microtask_group', MicrotaskGroupController.getRecords);
 
 router.get('/microtask/:id', MicrotaskController.getRecordById);
 router.get('/microtask', MicrotaskController.getRecords);
-router.get(
-  '/microtasks_with_completed_assignments/',
-  checkAdmin,
-  MicrotaskController.getMicrotasksWithCompletedAssignments
-);
+router.get('/microtasks_with_completed_assignments/', checkAdmin, MicrotaskController.getMicrotasksWithCompletedAssignments);
 
 router.get('/policy/:id', checkAdmin, setTableName, getRecordById);
 router.get('/policy', checkAdmin, setTableName, setGetFilter, getRecords);

@@ -25,7 +25,7 @@ type RouterProps = RouteComponentProps<RouteParams>;
 
 /** Load chosen language from URL params to props. Empty if no update ID */
 const mapStateToProps = (state: RootState, ownProps: RouterProps) => {
-  const update_id = Number.parseInt(ownProps.match.params.id || '0', 10);
+  const update_id = ownProps.match.params.id || '0';
   const language = update_id ? state.all.language.data.find((l) => l.id === update_id) || {} : {};
   const { data, ...request } = state.all.language;
   return { language, request };
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch: any) => {
       };
       dispatch(action);
     },
-    updateLanguage: (id: number, language: Language) => {
+    updateLanguage: (id: string, language: Language) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'language',

@@ -38,7 +38,7 @@ class ScenarioList extends React.Component<ScenarioListProps> {
 
     // push core scenario
     const coreScenario: ScenarioRecord = {
-      id: 0,
+      id: '0',
       name: 'core',
       full_name: 'Core',
       description: 'This is not a real scenario. Just a stub for the core platform.',
@@ -70,7 +70,7 @@ class ScenarioList extends React.Component<ScenarioListProps> {
       ) : null;
 
     const scenarioDetailsLink = (scenario: ScenarioRecord) =>
-      scenario.id === 0 ? null : (
+      scenario.id === '0' ? null : (
         <Link to={`/scenario/${scenario.id}`}>
           <i className='material-icons'>list</i>
         </Link>

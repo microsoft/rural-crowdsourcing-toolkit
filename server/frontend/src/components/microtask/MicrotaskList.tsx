@@ -34,7 +34,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
-  const task_id = Number.parseInt(ownProps.match.params.task_id, 10);
+  const task_id = ownProps.match.params.task_id;
   return {
     getMicrotasks: () => {
       const action: BackendRequestInitAction = {

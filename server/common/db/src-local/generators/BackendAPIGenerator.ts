@@ -34,7 +34,7 @@ export function backendAPISpecsFileData() {
         : '';
       const pathParams =
         route.method === 'GET_BY_ID' || route.method === 'UPDATE_BY_ID' || route.endpoint.indexOf(':id') > 0
-          ? `id: number;`
+          ? `id: string;`
           : '';
 
       initActions.push(`{

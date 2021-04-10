@@ -112,7 +112,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
   // Handle change in scenario or language
   handleScenarioChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const scenario_id = Number.parseInt(e.currentTarget.value, 10);
+    const scenario_id = e.currentTarget.value;
     const scenario = this.props.scenario.data.find((s) => s.id === scenario_id) as ScenarioRecord;
     this.setState({ scenario });
     const task: Task = {
@@ -130,7 +130,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
   // Handle language change
   handleLanguageChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const language_id = Number.parseInt(e.currentTarget.value, 10);
+    const language_id = e.currentTarget.value;
     const language = this.props.language.data.find((l) => l.id === language_id) as LanguageRecord;
     const task: Task = { ...this.state.task, primary_language_name: '', primary_language_description: '' };
     this.setState({ language, task });

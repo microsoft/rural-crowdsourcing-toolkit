@@ -31,7 +31,7 @@ type OwnProps = RouterProps;
 
 /** map relevant state to props */
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
-  const scenario_id = Number.parseInt(ownProps.match.params.id, 10);
+  const scenario_id = ownProps.match.params.id;
   return {
     /** Scenario object corresponding to this scenario */
     scenario: state.all.scenario.data.find((s) => s.id === scenario_id),
@@ -41,7 +41,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
   return {
-    getScenario: (id: number) => {
+    getScenario: (id: string) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'scenario',
@@ -64,7 +64,7 @@ class ScenarioDetail extends React.Component<ScenarioDetailProps> {
   // On mount, dispatch actions
   componentDidMount() {
     if (this.props.scenario === undefined) {
-      const id = Number.parseInt(this.props.match.params.id, 10);
+      const id = this.props.match.params.id;
       this.props.getScenario(id);
     }
   }

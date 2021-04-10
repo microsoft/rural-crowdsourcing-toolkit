@@ -3,7 +3,7 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import * as DBT from '@karya/db';
+import * as DBT from '../../db/TableInterfaces.auto';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<
@@ -12,10 +12,6 @@ export type DbParamsType<
   ? 'DBT.Language'
   : Table extends 'scenario'
   ? 'DBT.Scenario'
-  : Table extends 'language_resource'
-  ? 'DBT.LanguageResource'
-  : Table extends 'language_resource_value'
-  ? 'DBT.LanguageResource & DBT.LanguageResourceValue'
   : Table extends 'work_provider'
   ? 'DBT.WorkProvider'
   : Table extends 'box'
@@ -40,8 +36,6 @@ export type DbParamsType<
   ? 'DBT.MicrotaskGroupAssignment'
   : Table extends 'microtask_assignment'
   ? 'DBT.MicrotaskAssignment & { limit?: number; }'
-  : Table extends 'payout_method'
-  ? 'DBT.PayoutMethod'
   : Table extends 'payout_info'
   ? 'DBT.PayoutInfo'
   : Table extends 'payment_request'
@@ -49,14 +43,6 @@ export type DbParamsType<
   : never;
 
 export type BackendRequestInitAction =
-  | {
-      type: 'BR_INIT';
-      store: 'language';
-      label: 'UPDATE_SUPPORTED';
-      id: number;
-      request: {};
-      files?: undefined;
-    }
   | {
       type: 'BR_INIT';
       store: 'language';
@@ -68,7 +54,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'language';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.Language;
       files?: undefined;
     }
@@ -76,7 +62,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'language';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -88,7 +74,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'scenario';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -98,84 +84,15 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
-      store: 'language_resource';
-      label: 'CREATE';
-      request: DBT.LanguageResource;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource';
-      label: 'UPDATE_BY_ID';
-      id: number;
-      request: DBT.LanguageResource;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource';
-      label: 'GET_BY_ID';
-      id: number;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource';
-      label: 'GET_ALL';
-      params: DBT.LanguageResource;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource_value';
-      label: 'GET_ALL';
-      params: DBT.LanguageResource & DBT.LanguageResourceValue;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource_value';
-      label: 'FILE_CREATE';
-      request: DBT.LanguageResourceValue;
-      files: { [id: string]: File };
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource_value';
-      label: 'FILE_UPDATE_BY_ID';
-      id: number;
-      request: DBT.LanguageResourceValue;
-      files: { [id: string]: File };
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource_value';
-      label: 'CREATE';
-      request: DBT.LanguageResourceValue;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource_value';
-      label: 'UPDATE_BY_ID';
-      id: number;
-      request: DBT.LanguageResourceValue;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language_resource_value';
-      label: 'GET_BY_ID';
-      id: number;
-    }
-  | {
-      type: 'BR_INIT';
       store: 'work_provider';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
       store: 'work_provider';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.WorkProvider;
       files?: undefined;
     }
@@ -232,7 +149,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'box';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.Box;
       files?: undefined;
     }
@@ -240,7 +157,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'box';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -252,7 +169,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'worker';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.Worker;
       files?: undefined;
     }
@@ -260,7 +177,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'worker';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -279,7 +196,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'karya_file';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.KaryaFile;
       files?: undefined;
     }
@@ -287,7 +204,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'karya_file';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -306,13 +223,13 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'task';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
       store: 'task';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.Task;
       files: { [id: string]: File };
     }
@@ -326,7 +243,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'task';
       label: 'VALIDATE';
-      id: number;
+      id: string;
       request: {};
       files?: undefined;
     }
@@ -334,7 +251,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'task';
       label: 'APPROVE';
-      id: number;
+      id: string;
       request: {};
       files?: undefined;
     }
@@ -342,7 +259,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_group';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -354,7 +271,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -372,7 +289,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'policy';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -391,7 +308,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'task_assignment';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.TaskAssignment;
       files?: undefined;
     }
@@ -399,7 +316,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'task_assignment';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -411,7 +328,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'worker_language_skill';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.WorkerLanguageSkill;
       files?: undefined;
     }
@@ -419,7 +336,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'worker_language_skill';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -431,7 +348,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_group_assignment';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.MicrotaskGroupAssignment;
       files?: undefined;
     }
@@ -439,7 +356,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_group_assignment';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -457,7 +374,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_assignment';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.MicrotaskAssignment;
       files?: undefined;
     }
@@ -465,25 +382,13 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_assignment';
       label: 'GET_BY_ID';
-      id: number;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payout_method';
-      label: 'GET_BY_ID';
-      id: number;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payout_method';
-      label: 'GET_ALL';
-      params: DBT.PayoutMethod;
+      id: string;
     }
   | {
       type: 'BR_INIT';
       store: 'payout_info';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.PayoutInfo;
       files?: undefined;
     }
@@ -491,7 +396,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'payout_info';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     }
   | {
       type: 'BR_INIT';
@@ -509,7 +414,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'payment_request';
       label: 'UPDATE_BY_ID';
-      id: number;
+      id: string;
       request: DBT.PaymentRequest;
       files?: undefined;
     }
@@ -517,18 +422,12 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'payment_request';
       label: 'GET_BY_ID';
-      id: number;
+      id: string;
     };
 
 export type StoreList = BackendRequestInitAction['store'];
 
 export type BackendRequestSuccessAction =
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language';
-      label: 'UPDATE_SUPPORTED';
-      response: DBT.LanguageRecord;
-    }
   | {
       type: 'BR_SUCCESS';
       store: 'language';
@@ -564,66 +463,6 @@ export type BackendRequestSuccessAction =
       store: 'scenario';
       label: 'GET_ALL';
       response: DBT.ScenarioRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource';
-      label: 'CREATE';
-      response: DBT.LanguageResourceRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource';
-      label: 'UPDATE_BY_ID';
-      response: DBT.LanguageResourceRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource';
-      label: 'GET_BY_ID';
-      response: DBT.LanguageResourceRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource';
-      label: 'GET_ALL';
-      response: DBT.LanguageResourceRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource_value';
-      label: 'GET_ALL';
-      response: DBT.LanguageResourceValueRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource_value';
-      label: 'FILE_CREATE';
-      response: DBT.LanguageResourceValueRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource_value';
-      label: 'FILE_UPDATE_BY_ID';
-      response: DBT.LanguageResourceValueRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource_value';
-      label: 'CREATE';
-      response: DBT.LanguageResourceValueRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource_value';
-      label: 'UPDATE_BY_ID';
-      response: DBT.LanguageResourceValueRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language_resource_value';
-      label: 'GET_BY_ID';
-      response: DBT.LanguageResourceValueRecord;
     }
   | {
       type: 'BR_SUCCESS';
@@ -900,18 +739,6 @@ export type BackendRequestSuccessAction =
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'payout_method';
-      label: 'GET_BY_ID';
-      response: DBT.PayoutMethodRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payout_method';
-      label: 'GET_ALL';
-      response: DBT.PayoutMethodRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
       store: 'payout_info';
       label: 'UPDATE_BY_ID';
       response: DBT.PayoutInfoRecord;
@@ -1001,49 +828,6 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    if (action.store === 'language' && action.label === 'UPDATE_SUPPORTED') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await PUT(
-          '/language/:id/updated_support'.replace(':id', action.id),
-          action.request,
-          action.files,
-        ),
-      } as BackendRequestSuccessAction;
-    }
-    if (
-      action.store === 'language_resource_value' &&
-      action.label === 'FILE_CREATE'
-    ) {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await POST(
-          '/file_language_resource_value/',
-          action.request,
-          {},
-          action.files,
-        ),
-      } as BackendRequestSuccessAction;
-    }
-    if (
-      action.store === 'language_resource_value' &&
-      action.label === 'FILE_UPDATE_BY_ID'
-    ) {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await PUT(
-          '/file_language_resource_value/:id/'.replace(':id', action.id),
-          action.request,
-          action.files,
-        ),
-      } as BackendRequestSuccessAction;
-    }
     if (action.store === 'work_provider' && action.label === 'GENERATE_CC') {
       return {
         type: 'BR_SUCCESS',
