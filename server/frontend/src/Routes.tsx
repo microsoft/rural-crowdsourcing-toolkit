@@ -21,10 +21,6 @@ import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard'
 import CreateUpdateLanguage from './components/language/CreateUpdateLanguage';
 import LanguageList from './components/language/LanguageList';
 
-/** scenario components */
-import ScenarioDetail from './components/scenario/ScenarioDetail';
-import ScenarioList from './components/scenario/ScenarioList';
-
 /** task components */
 import CreateTask from './components/task/CreateTask';
 import TaskDetail from './components/task/TaskDetail';
@@ -59,10 +55,6 @@ const Routes = (
     <WorkProviderRoute exact path='/language' component={LanguageList} />
     <AdminRoute exact path='/language/create' component={CreateUpdateLanguage} />
     <AdminRoute exact path='/language/update/:id' component={CreateUpdateLanguage} />
-
-    {/** Scenario routes */}
-    <WorkProviderRoute exact path='/scenario' component={ScenarioList} />
-    <WorkProviderRoute exact path='/scenario/:id' component={ScenarioDetail} />
 
     {/** Task routes */}
     <WorkProviderRoute exact path='/task/create' component={CreateTask} />

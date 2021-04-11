@@ -20,12 +20,6 @@ const SidePane = () => {
         <NavLink to='/language'>Languages</NavLink>
       </li>
       <li>
-        <NavLink to='/language-support'>Language Support</NavLink>
-      </li>
-      <li>
-        <NavLink to='/scenario'>Scenarios</NavLink>
-      </li>
-      <li>
         <NavLink to='/work_provider'>Work Providers</NavLink>
       </li>
       <li>
