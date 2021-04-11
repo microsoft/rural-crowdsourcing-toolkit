@@ -1,3 +1,5 @@
+// TODO: REMOVE THIS RESOURCE
+
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
