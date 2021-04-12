@@ -28,8 +28,6 @@ import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
-import com.microsoft.research.karya.ui.selectAppLanguage.SelectAppLanguage
-import com.microsoft.research.karya.ui.skillSpecification.SkilledLanguageList
 import com.microsoft.research.karya.utils.AppConstants
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.jtar.TarEntry
@@ -116,31 +114,6 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
         tasksRv.adapter = taskListAdapter
 
         /**
-         * Listeners for update app language and update skills buttons at the bottom
-         */
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_language -> {
-                    val nextIntent = Intent(applicationContext, SelectAppLanguage::class.java)
-                    nextIntent.putExtra(
-                        AppConstants.SELECT_APP_LANGUAGE_CALLER,
-                        AppConstants.DASHBOARD
-                    )
-                    startActivity(nextIntent)
-                }
-                R.id.navigation_skills -> {
-                    val nextIntent = Intent(applicationContext, SkilledLanguageList::class.java)
-                    nextIntent.putExtra(
-                        AppConstants.SKILLED_LANGUAGE_LIST_CALLER,
-                        AppConstants.DASHBOARD
-                    )
-                    startActivity(nextIntent)
-                }
-            }
-            true
-        }
-
-        /**
          * Sync card click listener
          */
         syncCv.setOnClickListener {
@@ -179,8 +152,6 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
      * Set initial UI strings
      */
     override suspend fun setInitialUIStrings() {
-        bottomNavigationView.menu.getItem(0).title = updateAppLanguageString
-        bottomNavigationView.menu.getItem(1).title = updateSkillsString
 
         val syncText =
             "$getNewTasksString - $submitCompletedTasksString - $getVerifiedTasksString - $updateEarningString"

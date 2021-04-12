@@ -8,7 +8,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.AuthProviderType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.ui.base.NetworkActivity
-import com.microsoft.research.karya.ui.skillSpecification.SkillSpecification
+import com.microsoft.research.karya.ui.dashboard.DashboardActivity
 import com.microsoft.research.karya.utils.AppConstants
 
 class RegisterWorker : NetworkActivity(
@@ -55,7 +55,7 @@ class RegisterWorker : NetworkActivity(
      * Call the skill selection activity
      */
     override fun startNextActivity() {
-        val nextIntent = Intent(applicationContext, SkillSpecification::class.java)
+        val nextIntent = Intent(applicationContext, DashboardActivity::class.java)
         nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         nextIntent.putExtra(AppConstants.LANGUAGE_ID_FOR_SKILLS, WorkerInformation.app_language)
         nextIntent.putExtra(AppConstants.SKILL_SPECIFICATION_CALLER, AppConstants.REGISTER_WORKER)
