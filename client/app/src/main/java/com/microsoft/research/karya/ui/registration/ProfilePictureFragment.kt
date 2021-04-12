@@ -6,55 +6,46 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
-import kotlinx.android.synthetic.main.fragment_profile_picture.*
+import com.microsoft.research.karya.utils.viewBinding
 import java.io.FileOutputStream
 
 private const val REQUEST_IMAGE_CAPTURE = 101
 
-class ProfilePictureFragment : Fragment() {
+class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
+
+    private val binding by viewBinding(FragmentProfilePictureBinding::bind)
 
     private lateinit var profilePic: Bitmap
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
-        /** Inflating the layout for this fragment **/
-        return inflater.inflate(R.layout.fragment_profile_picture, container, false)
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
 
-        mainProfilePictureIv.setOnClickListener { getProfilePicture() }
+        binding.mainProfilePictureIv.setOnClickListener { getProfilePicture() }
 
-        profilePictureNextIv.setOnClickListener {
-            mainProfilePictureIv.isClickable = false
-            rotateRightIb.isClickable = false
-            profilePictureNextIv.visibility = View.INVISIBLE
+        binding.profilePictureNextIv.setOnClickListener {
+            binding.mainProfilePictureIv.isClickable = false
+            binding.rotateRightIb.isClickable = false
+            binding.profilePictureNextIv.visibility = View.INVISIBLE
             submitProfilePicture()
         }
 
-        rotateRightIb.setOnClickListener { rotateRight() }
+        binding.rotateRightIb.setOnClickListener { rotateRight() }
 
         disableRotateButton()
 
@@ -79,8 +70,8 @@ class ProfilePictureFragment : Fragment() {
         // Profile picture returned by the camera
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
             profilePic = data?.extras?.get("data") as Bitmap
-            mainProfilePictureIv.setBackgroundResource(0)
-            ImageUtils.loadImageBitmap(requireActivity(), profilePic, mainProfilePictureIv)
+            binding.mainProfilePictureIv.setBackgroundResource(0)
+            ImageUtils.loadImageBitmap(requireActivity(), profilePic, binding.mainProfilePictureIv)
             enableRotateButton()
         }
     }
@@ -115,15 +106,15 @@ class ProfilePictureFragment : Fragment() {
      * Disable rotate button
      */
     private fun disableRotateButton() {
-        rotateRightIb.visibility = View.INVISIBLE
+        binding.rotateRightIb.visibility = View.INVISIBLE
     }
 
     /**
      * Enable rotate button
      */
     private fun enableRotateButton() {
-        rotateRightIb.visibility = View.VISIBLE
-        rotateRightIb.isClickable = true
+        binding.rotateRightIb.visibility = View.VISIBLE
+        binding.rotateRightIb.isClickable = true
     }
 
     /**
@@ -137,7 +128,7 @@ class ProfilePictureFragment : Fragment() {
                 profilePic, 0, 0, profilePic.width, profilePic.height,
                 matrix, true
             )
-            ImageUtils.loadImageBitmap(requireActivity(), profilePic, mainProfilePictureIv)
+            ImageUtils.loadImageBitmap(requireActivity(), profilePic, binding.mainProfilePictureIv)
         }
     }
 

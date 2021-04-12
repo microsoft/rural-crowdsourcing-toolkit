@@ -2,54 +2,45 @@ package com.microsoft.research.karya.ui.registration
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.fragment_select_gender.*
+import com.microsoft.research.karya.utils.viewBinding
 
-class SelectGenderFragment : Fragment() {
+class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
+
+    private val binding by viewBinding(FragmentSelectGenderBinding::bind)
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
-
-        /** Inflating the layout for this fragment **/
-        return inflater.inflate(R.layout.fragment_select_gender, container, false)
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_gender_prompt
 
         WorkerInformation.gender = "not_specified"
 
-        maleBtn.setOnClickListener {
+        binding.maleBtn.setOnClickListener {
             WorkerInformation.gender = "male"
-            maleBtn.isSelected = true
-            femaleBtn.isSelected = false
+            binding.maleBtn.isSelected = true
+            binding.femaleBtn.isSelected = false
         }
 
-        femaleBtn.setOnClickListener {
+        binding.femaleBtn.setOnClickListener {
             WorkerInformation.gender = "female"
-            femaleBtn.isSelected = true
-            maleBtn.isSelected = false
+            binding.femaleBtn.isSelected = true
+            binding.maleBtn.isSelected = false
         }
 
-        submitGenderIb.setOnClickListener {
-            submitGenderIb.visibility = View.INVISIBLE
+        binding.submitGenderIb.setOnClickListener {
+            binding.submitGenderIb.visibility = View.INVISIBLE
             findNavController().navigate(R.id.action_selectGenderFragment_to_selectAgeGroupFragment)
         }
 

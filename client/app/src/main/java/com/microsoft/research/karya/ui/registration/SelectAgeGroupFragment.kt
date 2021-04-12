@@ -2,16 +2,16 @@ package com.microsoft.research.karya.ui.registration
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.databinding.FragmentSelectAgeGroupBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
-import kotlinx.android.synthetic.main.fragment_select_age_group.*
-import kotlinx.android.synthetic.main.fragment_select_age_group.view.*
+import com.microsoft.research.karya.utils.viewBinding
 
-class SelectAgeGroupFragment : Fragment() {
+class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
+
+    private val binding by viewBinding(FragmentSelectAgeGroupBinding::bind)
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
@@ -22,43 +22,32 @@ class SelectAgeGroupFragment : Fragment() {
         OLD_AGE("50+")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
-        /** Inflating the layout for this fragment **/
-        val fragmentView = inflater.inflate(R.layout.fragment_select_age_group, container, false)
-
-        /** Initialising Strings  **/
-
+        /** Setup the UI Strings **/
         var yearsString = getString(R.string.s_years)
 
         val youthLabel = ageGroup.YOUTH_AGE.range + " " + yearsString
         val middleLabel = ageGroup.MIDDLE_AGE.range + " " + yearsString
         val oldLabel = ageGroup.OLD_AGE.range + " " + yearsString
 
-        fragmentView.youthBtn.text = youthLabel
-        fragmentView.middleAgeBtn.text = middleLabel
-        fragmentView.oldAgeBtn.text = oldLabel
-
-        return fragmentView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        binding.youthBtn.text = youthLabel
+        binding.middleAgeBtn.text = middleLabel
+        binding.oldAgeBtn.text = oldLabel
 
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_age_prompt
 
-        youthBtn.setOnClickListener { handleAgeGroupClick(ageGroup.YOUTH_AGE) }
-        middleAgeBtn.setOnClickListener { handleAgeGroupClick(ageGroup.MIDDLE_AGE) }
-        oldAgeBtn.setOnClickListener { handleAgeGroupClick(ageGroup.OLD_AGE) }
+        binding.youthBtn.setOnClickListener { handleAgeGroupClick(ageGroup.YOUTH_AGE) }
+        binding.middleAgeBtn.setOnClickListener { handleAgeGroupClick(ageGroup.MIDDLE_AGE) }
+        binding.oldAgeBtn.setOnClickListener { handleAgeGroupClick(ageGroup.OLD_AGE) }
 
-        submitAgeGroupIb.setOnClickListener {
-            submitAgeGroupIb.visibility = View.INVISIBLE
+        binding.submitAgeGroupIb.setOnClickListener {
+            binding.submitAgeGroupIb.visibility = View.INVISIBLE
             submitAgeGroup()
         }
 
@@ -76,18 +65,18 @@ class SelectAgeGroupFragment : Fragment() {
      */
     private fun handleAgeGroupClick(item: ageGroup) {
         WorkerInformation.age_group = item.range
-        youthBtn.isSelected = false
-        middleAgeBtn.isSelected = false
-        oldAgeBtn.isSelected = false
+        binding.youthBtn.isSelected = false
+        binding.middleAgeBtn.isSelected = false
+        binding.oldAgeBtn.isSelected = false
         when (item) {
             ageGroup.YOUTH_AGE -> {
-                youthBtn.isSelected = true
+                binding.youthBtn.isSelected = true
             }
             ageGroup.MIDDLE_AGE -> {
-                middleAgeBtn.isSelected = true
+                binding.middleAgeBtn.isSelected = true
             }
             ageGroup.OLD_AGE -> {
-                oldAgeBtn.isSelected = true
+                binding.oldAgeBtn.isSelected = true
             }
         }
         enableAgeGroupSubmitButton()
@@ -97,16 +86,16 @@ class SelectAgeGroupFragment : Fragment() {
      * Disable age group submit button
      */
     private fun disableAgeGroupSubmitButton() {
-        submitAgeGroupIb.isClickable = false
-        submitAgeGroupIb.setBackgroundResource(R.drawable.ic_next_disabled)
+        binding.submitAgeGroupIb.isClickable = false
+        binding.submitAgeGroupIb.setBackgroundResource(R.drawable.ic_next_disabled)
     }
 
     /**
      * Enable age group submit button
      */
     private fun enableAgeGroupSubmitButton() {
-        submitAgeGroupIb.isClickable = true
-        submitAgeGroupIb.setBackgroundResource(R.drawable.ic_next_enabled)
+        binding.submitAgeGroupIb.isClickable = true
+        binding.submitAgeGroupIb.setBackgroundResource(R.drawable.ic_next_enabled)
     }
 
     /**
