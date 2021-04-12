@@ -16,7 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
-interface WorkersAPI {
+interface WorkerAPI {
     @GET("/worker/cc/{creation_code}")
     suspend fun checkCreationCode(@Path("creation_code") id: String): Response<CreationCodeResponse>
 

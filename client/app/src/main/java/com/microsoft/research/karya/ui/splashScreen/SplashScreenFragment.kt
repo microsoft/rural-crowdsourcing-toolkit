@@ -1,32 +1,41 @@
 package com.microsoft.research.karya.ui.splashScreen
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.SplashScreenBinding
+import com.microsoft.research.karya.databinding.FragmentSplashScreenBinding
 import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.viewBinding
-import dataStore
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class SplashScreenFragment : Fragment(R.layout.splash_screen) {
+class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
-    private val binding by viewBinding(SplashScreenBinding::bind)
+    private val binding by viewBinding(FragmentSplashScreenBinding::bind)
+    private val viewModel by viewModels<SplashViewModel>()
+    private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launchWhenResumed {
+        navController = findNavController()
+        binding.progressBar.isIndeterminate = true
+
+        lifecycleScope.launch {
             val isFirstRun = isFirstRun()
             if (isFirstRun) {
                 navigateToCreationCodeScreen()
-                return@launchWhenResumed
+                return@launch
             }
 
             val loggedInUsers = getLoggedInUsers()
@@ -35,37 +44,36 @@ class SplashScreenFragment : Fragment(R.layout.splash_screen) {
                 1 -> navigateToUserAuthScreen()
                 else -> navigateToUserSelectScreen()
             }
-            return@launchWhenResumed
+
         }
     }
 
-    fun navigateToUserSelectScreen() {
-
+    private fun navigateToUserSelectScreen() {
+        navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
     }
 
-    fun navigateToUserAuthScreen() {
-
+    private fun navigateToUserAuthScreen() {
+        navController.navigate(R.id.action_splashScreenFragment_to_onboardingFlow)
     }
 
-    fun navigateToCreationCodeScreen() {
-
+    private fun navigateToCreationCodeScreen() {
+        navController.navigate(R.id.action_splashScreenFragment_to_creationCodeFlow)
     }
 
-    suspend fun getLoggedInUsers(): Int {
-        // TODO: Get users from viewmodel
-        return 0
+    private fun navigateToDashboardScreen() {
+        navController.navigate(R.id.action_splashScreenFragment_to_dashboardFlow)
     }
 
-    private suspend fun isFirstRun(): Boolean {
-        var firstRunBoolean = false
+    private suspend fun getLoggedInUsers(): Int {
+        val workers = viewModel.getLoggedInUsers()
+
+        return workers.size
+    }
+
+    private suspend fun isFirstRun(): Boolean = withContext(Dispatchers.IO) {
         val firstRunKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_RUN)
+        val data = requireContext().dataStore.data.first()
 
-        requireContext().dataStore.data.map { preferences ->
-            preferences[firstRunKey] ?: false
-        }.collect {
-            firstRunBoolean = it
-        }
-
-        return firstRunBoolean
+        return@withContext data[firstRunKey] ?: true
     }
 }
