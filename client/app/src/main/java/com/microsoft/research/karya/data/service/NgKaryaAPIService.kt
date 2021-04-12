@@ -34,14 +34,14 @@ import retrofit2.http.Query
 interface NgKaryaAPIService {
     @GET("/getWorker")
     suspend fun getWorker(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String
     ): Response<Worker>
 
     @PUT("/worker/{id}/otp")
     suspend fun getOrVerifyOTP(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String,
         @Header("x-phone-number") phoneNumber: String,
         @Header("x-otp") otp: String,
         @Query("action") action: String, //TODO: Make this an enum class
@@ -50,8 +50,8 @@ interface NgKaryaAPIService {
 
     @PUT("/worker/{id}")
     suspend fun updateWorker(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String,
         @Path("id") workerRecordId: String
     ): Response<Worker>
 
@@ -61,30 +61,30 @@ interface NgKaryaAPIService {
     @Multipart
     @POST("/karya_files")
     suspend fun uploadKaryaFile(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String,
         @Part json: MultipartBody.Part,
         @Part file: MultipartBody.Part
     ): Response<JsonObject>
 
     @GET("/karya_file/{id}")
     suspend fun getKaryaFile(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String,
         @Path("id") karyaFileId: String
     ): Response<ResponseBody>
 
     @PUT("/assignments")
     suspend fun submitAssignments(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String,
         @Body updates: JsonArray
     ): Response<JsonArray>
 
     @GET("/assignments")
     suspend fun getAssignments(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("x-id-token") idToken: String,
+        @Header("x-access-code") accessCode: String,
         @Query("type") type: String, //TODO: Make this an enum class
         @Query("from") from: String,
     ): Response<JSONArray> // TODO: Modify this output type according to response type
