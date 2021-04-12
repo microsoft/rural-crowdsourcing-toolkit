@@ -3,6 +3,7 @@ package com.microsoft.research.karya.injection
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAPI
+import com.microsoft.research.karya.data.service.WorkerAPI
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -10,6 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,5 +54,11 @@ class RetrofitModule {
     @Reusable
     fun provideMicroTaskAPI(retrofit: Retrofit): MicroTaskAPI {
         return retrofit.create(MicroTaskAPI::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideWorkerAPI(retrofit: Retrofit): WorkerAPI {
+        return retrofit.create()
     }
 }
