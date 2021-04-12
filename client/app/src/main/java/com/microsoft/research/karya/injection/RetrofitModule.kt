@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.service.KaryaAPIService
+import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAPI
 import dagger.Module
@@ -52,5 +53,11 @@ class RetrofitModule {
     @Reusable
     fun provideMicroTaskAPI(retrofit: Retrofit): MicroTaskAPI {
         return retrofit.create(MicroTaskAPI::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun karyaFileAPI(retrofit: Retrofit): KaryaFileAPI {
+        return retrofit.create(KaryaFileAPI::class.java)
     }
 }
