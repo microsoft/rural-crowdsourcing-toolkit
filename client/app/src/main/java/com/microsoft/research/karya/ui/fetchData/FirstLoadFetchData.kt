@@ -13,7 +13,7 @@ package com.microsoft.research.karya.ui.fetchData
 import android.content.Intent
 import com.microsoft.research.karya.data.model.karya.LanguageResourceType
 import com.microsoft.research.karya.ui.base.NetworkActivity
-import com.microsoft.research.karya.ui.selectAppLanguage.SelectAppLanguage
+import com.microsoft.research.karya.ui.creationcode.NgCreationCodeActivity
 import com.microsoft.research.karya.utils.AppConstants
 import com.microsoft.research.karya.utils.FileUtils
 import kotlinx.android.synthetic.main.activity_network_activity.*
@@ -165,7 +165,7 @@ class FirstLoadFetchData : NetworkActivity(
      * Start the select app language activity
      */
     override fun startNextActivity() {
-        val nextIntent = Intent(applicationContext, SelectAppLanguage::class.java)
+        val nextIntent = Intent(applicationContext, NgCreationCodeActivity::class.java)
         nextIntent.putExtra(
             AppConstants.SELECT_APP_LANGUAGE_CALLER,
             AppConstants.FETCH_DATA_ON_INIT

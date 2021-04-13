@@ -15,7 +15,6 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.ui.dashboard.DashboardActivity
 import com.microsoft.research.karya.ui.fetchData.FirstLoadFetchData
-import com.microsoft.research.karya.ui.skillSpecification.SkillSpecification
 import com.microsoft.research.karya.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_splash_screen.*
 import kotlinx.coroutines.launch
@@ -83,7 +82,7 @@ class SplashScreen : BaseActivity() {
                 /** If worker has not registered skills in the app language, go to skill selection page */
                 if (appLanguageSkill == null) {
                     updateSplashScreenProgress(SplashScreenState.SPLASH_END)
-                    val nextIntent = Intent(applicationContext, SkillSpecification::class.java)
+                    val nextIntent = Intent(applicationContext, DashboardActivity::class.java)
                     nextIntent.putExtra(AppConstants.LANGUAGE_ID_FOR_SKILLS, worker.app_language)
                     nextIntent.putExtra(
                         AppConstants.SKILL_SPECIFICATION_CALLER,
