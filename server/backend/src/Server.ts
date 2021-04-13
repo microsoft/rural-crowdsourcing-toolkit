@@ -12,7 +12,7 @@ import router from './routes/Routes';
 
 import { setupDbConnection, BasicModel } from '@karya/db';
 import { registerScenarios } from './scenarios/Register';
-import { createBlobContainers, createLocalFolders, setupBlobStore } from './utils/AzureBlob';
+import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/blobstore';
 
 import { scenarioById } from './scenarios/Index';
 import { taskOutputGeneratorQueue } from './services/Index';
@@ -53,7 +53,7 @@ app.use(router.routes());
   }
 
   // Setup the blob store connection
-  setupBlobStore();
+  setupBlobStore(config.blob);
 
   // Create blob containers
   logger.info(`Creating blob containers if not present`);
@@ -68,7 +68,7 @@ app.use(router.routes());
   // Create local folders
   logger.info(`Creating local folders for the containers`);
   try {
-    await createLocalFolders();
+    await createLocalFolders(config.localFolder);
     logger.info(`Created all local folders`);
   } catch (e) {
     logger.error('Failed to create local folders');

@@ -5,17 +5,12 @@
 // the task has already been validated.
 
 import { Microtask, Task, BasicModel } from '@karya/db';
-import * as BlobStore from '../../utils/AzureBlob';
+import * as BlobStore from '@karya/blobstore';
 import { MicrotaskGeneratorResponse } from '../common/ScenarioInterface';
 import { SpeechDataTask } from './ParamDefinitions';
-import {
-  SpeechVerificationScenario,
-  SpeechVerificationTask,
-} from '../speech-verification/Index';
+import { SpeechVerificationScenario, SpeechVerificationTask } from '../speech-verification/Index';
 
-export async function generateMicrotasks(
-  task: SpeechDataTask,
-): Promise<MicrotaskGeneratorResponse> {
+export async function generateMicrotasks(task: SpeechDataTask): Promise<MicrotaskGeneratorResponse> {
   try {
     const { sentenceFile, creditsPerRecording, needVerification } = task.params;
     const sentenceFileData = await BlobStore.downloadBlobAsText(sentenceFile);
@@ -45,18 +40,11 @@ export async function generateMicrotasks(
         status: 'approved',
       };
 
-      const verificationTaskRecord = await BasicModel.insertRecord(
-        'task',
-        verificationTask,
-      );
+      const verificationTaskRecord = await BasicModel.insertRecord('task', verificationTask);
       const taskParams = task.params;
       taskParams.verificationTaskId = verificationTaskRecord.id;
       taskParams.outputFiles = [];
-      await BasicModel.updateSingle(
-        'task',
-        { id: task.id },
-        { params: taskParams },
-      );
+      await BasicModel.updateSingle('task', { id: task.id }, { params: taskParams });
     }
 
     const microtasks = sentences.map((sentence) => {

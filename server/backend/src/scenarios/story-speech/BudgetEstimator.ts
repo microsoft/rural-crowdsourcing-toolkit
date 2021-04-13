@@ -5,13 +5,11 @@
 // the cost is constant per recording. This parameter is provided as part of the
 // autoBudgetParams. The function assumes that the task is already validated.
 
-import * as BlobStore from '../../utils/AzureBlob';
+import * as BlobStore from '@karya/blobstore';
 import { BudgetEstimatorResponse } from '../common/ScenarioInterface';
 import { StorySpeechTask } from './ParamDefinitions';
 
-export async function estimateTaskBudget(
-  task: StorySpeechTask,
-): Promise<BudgetEstimatorResponse> {
+export async function estimateTaskBudget(task: StorySpeechTask): Promise<BudgetEstimatorResponse> {
   try {
     // extract parameters
     const { sentenceFile, numRecordings, creditsPerRecording } = task.params;

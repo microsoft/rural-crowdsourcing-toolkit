@@ -7,13 +7,11 @@
 // validated.
 
 import { Microtask, MicrotaskGroup } from '@karya/db';
-import * as BlobStore from '../../utils/AzureBlob';
+import * as BlobStore from '@karya/blobstore';
 import { MicrotaskGeneratorResponse } from '../common/ScenarioInterface';
 import { StorySpeechTask } from './ParamDefinitions';
 
-export async function generateMicrotasks(
-  task: StorySpeechTask,
-): Promise<MicrotaskGeneratorResponse> {
+export async function generateMicrotasks(task: StorySpeechTask): Promise<MicrotaskGeneratorResponse> {
   try {
     const { sentenceFile, creditsPerRecording } = task.params;
     const sentenceFileData = await BlobStore.downloadBlobAsText(sentenceFile);

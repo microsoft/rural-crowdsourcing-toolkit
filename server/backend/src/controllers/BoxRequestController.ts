@@ -13,7 +13,7 @@ import { Box, BoxRecord, KaryaFileRecord, BasicModel } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
 import * as BoxRequestModel from '../models/BoxRequestModel';
 import { getChecksum } from '../models/KaryaFileModel';
-import * as BS from '../utils/AzureBlob';
+import * as BS from '@karya/blobstore';
 import { compress, decompress } from '@karya/compression';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

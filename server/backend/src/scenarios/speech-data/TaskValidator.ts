@@ -4,20 +4,16 @@
 // Task validator function for speech-data scenario. A valid task is
 // accompanied with a sentence array.
 
-import * as BlobStore from '../../utils/AzureBlob';
+import * as BlobStore from '@karya/blobstore';
 import { TaskValidatorResponse } from '../common/ScenarioInterface';
 import { SpeechDataTask } from './ParamDefinitions';
 
-export async function validateTask(
-  task: SpeechDataTask,
-): Promise<TaskValidatorResponse> {
+export async function validateTask(task: SpeechDataTask): Promise<TaskValidatorResponse> {
   let sentenceFileData: string;
 
   // Read the sentence file
   try {
-    sentenceFileData = await BlobStore.downloadBlobAsText(
-      task.params.sentenceFile,
-    );
+    sentenceFileData = await BlobStore.downloadBlobAsText(task.params.sentenceFile);
   } catch (e) {
     return {
       success: false,

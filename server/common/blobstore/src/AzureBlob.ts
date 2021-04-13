@@ -15,25 +15,18 @@ import {
 } from '@azure/storage-blob';
 
 // Container names and types
-import { BlobParameters, ContainerName, containerNames, getBlobName } from '@karya/blobstore';
+import { BlobParameters, ContainerName, containerNames, getBlobName } from './BlobContainer';
 
 // Blue bird promise
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 
-// config
-import config from '../config/Index';
-
-// logger
-import logger from './Logger';
-
 let mainClient: BlobServiceClient;
 let rootURL: string;
 let sharedKeyCredential: StorageSharedKeyCredential;
 
-export function setupBlobStore() {
+export function setupBlobStore(blobStore: { account: string; key: string }) {
   // Azure blob store account and key
-  const blobStore = config.blob;
   const account = blobStore.account;
   const accountKey = blobStore.key;
 
@@ -70,35 +63,17 @@ export async function createBlobContainers() {
 
   // Create containers that are not there
   if (toCreate.length > 0) {
-    await BBPromise.map(toCreate, async (cname) => {
-      try {
-        await mainClient.createContainer(cname);
-        logger.info(`Created container '${cname}'`);
-      } catch (e) {
-        if (e.details && e.details.Code && e.details.Code === 'ContainerAlreadyExists') {
-          logger.info(`Container '${cname}' already exists`);
-        } else {
-          logger.error(e.message);
-        }
-      }
+    await BBPromise.map(toCreate, async (cname: ContainerName) => {
+      await mainClient.createContainer(cname);
     });
-  } else {
-    logger.info('All containers present');
-  }
-
-  // Show extraneous containers
-  const extraneous = presentContainers.filter((name) => !isContainerName(name));
-  if (extraneous.length > 0) {
-    logger.info(`Extraneous containers found: ${extraneous.join(', ')}`);
   }
 }
 
 /**
  * Create local folders for each container
  */
-export async function createLocalFolders() {
-  await BBPromise.map(containerNames, async (cname) => {
-    const localFolder = config.localFolder;
+export async function createLocalFolders(localFolder: string) {
+  await BBPromise.map(containerNames, async (cname: ContainerName) => {
     try {
       await fsp.mkdir(`${localFolder}/${cname}`, { recursive: true });
     } catch (e) {

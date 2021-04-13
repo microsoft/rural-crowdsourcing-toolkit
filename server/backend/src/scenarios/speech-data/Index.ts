@@ -16,9 +16,8 @@ import * as tar from 'tar';
 import { Promise as BBPromise } from 'bluebird';
 
 import { knex, Microtask, MicrotaskAssignmentRecord, MicrotaskRecord, BasicModel } from '@karya/db';
-import { BlobParameters, getBlobName } from '@karya/blobstore';
+import { BlobParameters, getBlobName, downloadBlob } from '@karya/blobstore';
 import config from '../../config/Index';
-import { downloadBlob } from '../../utils/AzureBlob';
 import { gunzipFile } from '@karya/compression';
 import { upsertKaryaFile } from '../../models/KaryaFileModel';
 import { taskLogger } from '../../utils/Logger';

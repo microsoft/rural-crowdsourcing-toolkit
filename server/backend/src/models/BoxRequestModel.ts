@@ -17,7 +17,7 @@ import {
 
 import { Promise as BBPromise } from 'bluebird';
 import { scenarioById } from '../scenarios/Index';
-import { getBlobSASURL } from '../utils/AzureBlob';
+import { getBlobSASURL } from '@karya/blobstore';
 
 const boxUpdatableTables: BoxUpdatableTables[] = [
   'worker',

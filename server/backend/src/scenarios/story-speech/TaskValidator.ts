@@ -6,20 +6,16 @@
 // level array is a list of stories. Each story is a list of sentences. Each
 // sentence is a string.
 
-import * as BlobStore from '../../utils/AzureBlob';
+import * as BlobStore from '@karya/blobstore';
 import { TaskValidatorResponse } from '../common/ScenarioInterface';
 import { StorySpeechTask } from './ParamDefinitions';
 
-export async function validateTask(
-  task: StorySpeechTask,
-): Promise<TaskValidatorResponse> {
+export async function validateTask(task: StorySpeechTask): Promise<TaskValidatorResponse> {
   let sentenceFileData: string;
 
   // Read the sentence file
   try {
-    sentenceFileData = await BlobStore.downloadBlobAsText(
-      task.params.sentenceFile,
-    );
+    sentenceFileData = await BlobStore.downloadBlobAsText(task.params.sentenceFile);
   } catch (e) {
     return {
       success: false,

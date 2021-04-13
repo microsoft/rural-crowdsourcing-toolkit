@@ -15,7 +15,7 @@ import {
   BasicModel,
 } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
-import { getBlobSASURL } from '../utils/AzureBlob';
+import { getBlobSASURL } from '@karya/blobstore';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 

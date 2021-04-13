@@ -11,7 +11,7 @@ import { Task, TaskRecord, TaskStatus, BasicModel } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
 import { ParameterParserResponse, parseTaskParameters } from '../scenarios/common/ParameterParser';
 import { IScenario, scenarioMap } from '../scenarios/Index';
-import * as BlobStore from '../utils/AzureBlob';
+import * as BlobStore from '@karya/blobstore';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
