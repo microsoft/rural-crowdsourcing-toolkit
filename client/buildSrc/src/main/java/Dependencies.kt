@@ -34,6 +34,7 @@ object Dependencies {
 
         const val appcompat = "androidx.appcompat:appcompat:1.3.0-beta01"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
+        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.2"
         const val legacy_support = "androidx.legacy:legacy-support-v4:1.0.0"
         const val work_runtime = "androidx.work:work-runtime-ktx:2.5.0"
         const val multidex = "androidx.multidex:multidex:2.0.1"
@@ -49,7 +50,7 @@ object Dependencies {
         }
 
         object Lifecycle {
-            private const val version = "2.3.0"
+            private const val version = "2.4.0-alpha01"
             private const val extension_version = "2.2.0"
 
             const val common = "androidx.lifecycle:lifecycle-common-java8:$version"

@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.registration
+package com.microsoft.research.karya.ui.creationcode
 
 import android.os.Bundle
 import android.util.TypedValue
@@ -9,7 +9,7 @@ import com.microsoft.research.karya.databinding.ActivityCreationCodeBinding
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.viewBinding
 import kotlinx.android.synthetic.main.activity_creation_code.*
-import requestSoftKeyFocus
+import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 
 class NgCreationCodeActivity : AppCompatActivity() {
 

@@ -1,17 +1,20 @@
 package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonObject
+import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
-import com.microsoft.research.karya.data.service.WorkersAPI
+import com.microsoft.research.karya.data.service.WorkerAPI
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
+class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
 
     fun checkCreationCode(id: String) = flow {
-        val response = workersAPI.checkCreationCode(id)
+        val response = workerAPI.checkCreationCode(id)
         val creationCodeResponse = response.body()
 
         if (!response.isSuccessful) {
@@ -23,11 +26,10 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         } else {
             error("Request failed, response body was null")
         }
-
     }
 
     fun sendOTP(worker: JsonObject) = flow {
-        val response = workersAPI.sendOTP(worker)
+        val response = workerAPI.sendOTP(worker)
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -39,12 +41,10 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         } else {
             error("Request failed, response body was null")
         }
-
-
     }
 
     fun resendOTP(worker: JsonObject) = flow {
-        val response = workersAPI.resendOTP(worker)
+        val response = workerAPI.resendOTP(worker)
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -59,7 +59,7 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
     }
 
     fun updateWorkerUsingCreationCode(worker: WorkerObject) = flow {
-        val response = workersAPI.updateWorkerUsingCreationCode(worker)
+        val response = workerAPI.updateWorkerUsingCreationCode(worker)
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -77,7 +77,7 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         authProvider: String,
         idTokenHeader: String
     ) = flow {
-        val response = workersAPI.refreshIdToken(authProvider, idTokenHeader)
+        val response = workerAPI.refreshIdToken(authProvider, idTokenHeader)
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -96,7 +96,7 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         authProvider: String,
         idTokenHeader: String
     ) = flow {
-        val response = workersAPI.registerSkill(skillObject, authProvider, idTokenHeader)
+        val response = workerAPI.registerSkill(skillObject, authProvider, idTokenHeader)
         val workerLanguageSkillRecord = response.body()
 
         if (!response.isSuccessful) {
@@ -116,7 +116,7 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         idTokenHeader: String,
         workerLanguageSkillId: String
     ) = flow {
-        val response = workersAPI.updateSkill(
+        val response = workerAPI.updateSkill(
             skillObject,
             authProvider,
             idTokenHeader,
@@ -140,7 +140,7 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         idTokenHeader: String,
         worker: WorkerRecord
     ) = flow {
-        val response = workersAPI.getUpdates(
+        val response = workerAPI.getUpdates(
             authProvider,
             idTokenHeader,
             worker
@@ -164,7 +164,7 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         idTokenHeader: String,
         microtaskAssignmentID: String
     ) = flow {
-        val response = workersAPI.getInputFileForAssignment(
+        val response = workerAPI.getInputFileForAssignment(
             authProvider,
             idTokenHeader,
             microtaskAssignmentID
@@ -182,5 +182,12 @@ class WorkerRepository @Inject constructor(private val workersAPI: WorkersAPI) {
         }
     }
 
+    suspend fun getAllWorkers() = withContext(Dispatchers.IO) {
+        return@withContext workerDao.getAll()
+    }
+
+    suspend fun getWorkerById(id: String) = withContext(Dispatchers.IO) {
+        return@withContext workerDao.getById(id)
+    }
 
 }

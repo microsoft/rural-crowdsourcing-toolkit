@@ -1,11 +1,12 @@
 package com.microsoft.research.karya.injection
 
+import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.repo.LanguageRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAPI
-import com.microsoft.research.karya.data.service.WorkersAPI
+import com.microsoft.research.karya.data.service.WorkerAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +31,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideWorkerRepository(workersAPI: WorkersAPI): WorkerRepository {
-        return WorkerRepository(workersAPI)
+    fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao): WorkerRepository {
+        return WorkerRepository(workerAPI, workerDao)
     }
 }

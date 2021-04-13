@@ -17,7 +17,7 @@ import com.microsoft.research.karya.ui.dashboard.DashboardActivity
 import com.microsoft.research.karya.ui.fetchData.FirstLoadFetchData
 import com.microsoft.research.karya.ui.skillSpecification.SkillSpecification
 import com.microsoft.research.karya.utils.AppConstants
-import kotlinx.android.synthetic.main.splash_screen.*
+import kotlinx.android.synthetic.main.fragment_splash_screen.*
 import kotlinx.coroutines.launch
 
 class SplashScreen : BaseActivity() {
@@ -36,11 +36,11 @@ class SplashScreen : BaseActivity() {
      * in this particular view.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        setContentView(R.layout.splash_screen)
+        setContentView(R.layout.fragment_splash_screen)
         super.onCreate(savedInstanceState)
 
         /** Set the initial state of the progress bar */
-        splashScreenPb.max = SplashScreenState.SPLASH_END.ordinal
+        progressBar.max = SplashScreenState.SPLASH_END.ordinal
         updateSplashScreenProgress(SplashScreenState.SPLASH_START)
     }
 
@@ -106,6 +106,6 @@ class SplashScreen : BaseActivity() {
     private fun updateSplashScreenProgress(
         state: SplashScreenState
     ) = uiScope.launch {
-        splashScreenPb.progress = state.ordinal
+        progressBar.progress = state.ordinal
     }
 }

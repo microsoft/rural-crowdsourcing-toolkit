@@ -10,13 +10,13 @@
         android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreenFragment"
         android:label="SplashScreenFragment" >
         <action
-            android:id="@+id/action_splashScreenFragment_to_ngConsentFormActivity"
+            android:id="@+id/action_splashScreenFragment_to_creationCodeFlow"
             app:destination="@id/creationCodeFlow" />
         <action
-            android:id="@+id/action_splashScreenFragment_to_placeholder"
+            android:id="@+id/action_splashScreenFragment_to_userSelectionFlow"
             app:destination="@id/userSelectionFlow" />
         <action
-            android:id="@+id/action_splashScreenFragment_to_registrationActivity"
+            android:id="@+id/action_splashScreenFragment_to_onboardingFlow"
             app:destination="@id/onboardingFlow" />
         <action
             android:id="@+id/action_splashScreenFragment_to_dashboardFlow"
