@@ -30,32 +30,16 @@ paths:
 
         404:
           description: Access token already attached to another phone number.
-
-  /worker/{id}/otp:
     put:
-      description: Generate/resend/verify OTP for a worker. The worker can
-        identify themselves using their unique access code or the id token
-        previously received from the server. The "action" query parameter should
-        be "generate" | "resend" | "verify". In case of "verify", the OTP should
-        be included in the header.
+      description: Update the "updatable" parameters of a worker. The worker can
+        identify themselves using id token that is sent after the registration. 
 
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-        - name: action
-          in: query
-          required: true
-          schema: { type: string }
-        - name: x-phone-number
-          in: header
-          required: true
-          schema: { type: string }
-        - name: x-otp
-          in: header
-          required: false
-          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Worker'
 
       responses:
         200:
@@ -74,24 +58,27 @@ paths:
         404:
           description: Access token already attached to another phone number.
 
-  /worker/{id}:
+  /worker/otp:
     put:
-      description: Update the "updatable" parameters of a worker. The worker can
-        identify themselves using their unique access code or the id token
-        previously received from the server. 
+      description: Generate/resend/verify OTP for a worker. The worker can
+        identify themselves using their unique access code. The "action" query parameter should
+        be "generate" | "resend" | "verify". In case of "verify", the OTP should
+        be included in the header. The return type for resend and generate is empty
+        Json-object and for verify it would be a WorkerRecord 
 
       parameters:
-        - name: id
-          in: path
+        - name: action
+          in: query
           required: true
           schema: { type: string }
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Worker'
+        - name: x-phone-number
+          in: header
+          required: true
+          schema: { type: string }
+        - name: x-otp
+          in: header
+          required: false
+          schema: { type: string }
 
       responses:
         200:
@@ -130,7 +117,7 @@ paths:
   /karya_files:
     post:
       description: Upload a karya file to the server. This can be either an
-        output tar ball for an assignment or a log file.
+        output tar ball for an assignment or a log file. The API needs id-token for authorisation
 
       requestBody:
         content:
@@ -162,7 +149,7 @@ paths:
   /karya_file/{id}:
     get:
       description: Get a karya file from the server. This can be an input to a
-        microtask, or a language asset.
+        microtask, or a language asset.  The API needs id-token for authorisation
 
       parameters:
         - name: id
@@ -191,7 +178,7 @@ paths:
 
   /assignments:
     put:
-      description: Submit all completed and skipped assignments.
+      description: Submit all completed and skipped assignments.  The API needs id-token for authorisation
 
       requestBody:
         content:
@@ -224,7 +211,7 @@ paths:
         For new assignments, the response includes all the microtask records and
         the task information associated with the assignments.
         For verified assignments, the response only includes the relevant
-        information from the list of assignments.
+        information from the list of assignments.  The API needs id-token for authorisation
 
       parameters:
         - name: type
@@ -427,7 +414,6 @@ components:
       description: Unique access code provided to each worker. This access code
         can be used only once to associate a worker record with a specific phone
         number. After that, this authentication method will be rejected by the
-        server.
       in: header
 
     id_token:
