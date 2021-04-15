@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonArray
+import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
 import com.microsoft.research.karya.data.service.MicroTaskAPI
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
@@ -32,7 +33,7 @@ class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTas
     fun submitAssignments(
         idToken: String,
         accessCode: String,
-        updates: JsonArray
+        updates: List<MicrotaskAssignmentRecord>
     ) = flow {
         val response = microTaskAPI.submitAssignments(idToken, updates)
         val successAssignmentIDS = response.body()

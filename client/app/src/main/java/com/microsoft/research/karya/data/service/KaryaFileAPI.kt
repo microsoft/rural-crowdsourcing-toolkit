@@ -19,6 +19,7 @@ interface KaryaFileAPI {
 
     @GET("/karya_file/{id}")
     suspend fun getKaryaFile(
+        @Header("access-code") accessCode: String,
         @Header("id-token") idToken: String,
         @Path("id") karyaFileId: String
     ): Response<ResponseBody>

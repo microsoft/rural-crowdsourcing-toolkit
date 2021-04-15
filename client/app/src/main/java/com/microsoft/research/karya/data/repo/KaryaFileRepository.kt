@@ -23,9 +23,9 @@ class KaryaFileRepository @Inject constructor(private val karyaFileAPI: KaryaFil
         }
     }
 
-    fun getKaryaFile(idToken: String, karyaFileId: String) = flow {
+    fun getKaryaFile(accessCode: String, idToken: String, karyaFileId: String) = flow {
 
-        val response = karyaFileAPI.getKaryaFile(idToken, karyaFileId)
+        val response = karyaFileAPI.getKaryaFile(accessCode, idToken, karyaFileId)
         val file = response.body()
 
         if (!response.isSuccessful) {
