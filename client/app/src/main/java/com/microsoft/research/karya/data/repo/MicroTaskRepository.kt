@@ -15,7 +15,7 @@ class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTas
             error("Either Access Code or ID Token is required")
         }
 
-        val response = microTaskAPI.getAssignments(idToken, accessCode, type, from)
+        val response = microTaskAPI.getAssignments(idToken, type, from)
         val assignments = response.body()
 
         if (!response.isSuccessful) {
@@ -34,7 +34,7 @@ class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTas
         accessCode: String,
         updates: JsonArray
     ) = flow {
-        val response = microTaskAPI.submitAssignments(idToken, accessCode, updates)
+        val response = microTaskAPI.submitAssignments(idToken, updates)
         val successAssignmentIDS = response.body()
 
         if (!response.isSuccessful) {
