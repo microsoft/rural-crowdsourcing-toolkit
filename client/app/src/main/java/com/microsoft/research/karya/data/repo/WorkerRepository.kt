@@ -23,7 +23,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
         accessCode: String,
         phoneNumber: String,
         otp: String,
-        action: String
+        action: String,
     ) = flow {
         val response = workerAPI.getOrVerifyOTP(
             accessCode,
@@ -60,7 +60,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     }
 
     fun getWorkerUsingIdToken(
-        idToken: String
+        idToken: String,
     ) = flow {
         val response = workerAPI.getWorkerUsingIdToken(idToken)
         val workerRecord = response.body()
@@ -79,7 +79,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     fun updateWorker(
         idToken: String,
         workerRecordId: String,
-        worker: WorkerRecord
+        worker: WorkerRecord,
     ) = flow {
         val response = workerAPI.updateWorker(idToken, worker)
         val workerRecord = response.body()
@@ -103,7 +103,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
         return@withContext workerDao.getById(id)
     }
 
-        suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) {
+    suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) {
         workerDao.upsert(worker)
     }
 

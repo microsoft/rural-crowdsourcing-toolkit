@@ -8,6 +8,7 @@ import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.data.remote.response.CreationCodeResponse
+import com.microsoft.research.karya.data.remote.response.ValidAccessCodeResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -28,7 +29,7 @@ interface WorkerAPI {
     @GET("/getWorker")
     suspend fun getWorkerUsingAccessCode(
         @Header("access-code") accessCode: String
-    ): Response<JsonObject>
+    ): Response<ValidAccessCodeResponse>
 
     /*
     * This API would be used whenever needed after the successful OTP verification

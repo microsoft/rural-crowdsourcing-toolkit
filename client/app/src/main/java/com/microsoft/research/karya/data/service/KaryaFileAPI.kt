@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.data.service
 
 import com.google.gson.JsonObject
+import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -9,12 +10,12 @@ import retrofit2.http.*
 interface KaryaFileAPI {
 
     @Multipart
-    @POST("/karya_files")
+    @POST("/karya_file")
     suspend fun uploadKaryaFile(
         @Header("id-token") idToken: String,
         @Part json: MultipartBody.Part,
         @Part file: MultipartBody.Part
-    ): Response<JsonObject>
+    ): Response<KaryaFileRecord>
 
     @GET("/karya_file/{id}")
     suspend fun getKaryaFile(
