@@ -11,14 +11,14 @@ interface KaryaFileAPI {
     @Multipart
     @POST("/karya_files")
     suspend fun uploadKaryaFile(
-        @Header("x-id-token") idToken: String,
+        @Header("id-token") idToken: String,
         @Part json: MultipartBody.Part,
         @Part file: MultipartBody.Part
     ): Response<JsonObject>
 
     @GET("/karya_file/{id}")
     suspend fun getKaryaFile(
-        @Header("x-id-token") idToken: String,
+        @Header("id-token") idToken: String,
         @Path("id") karyaFileId: String
     ): Response<ResponseBody>
 

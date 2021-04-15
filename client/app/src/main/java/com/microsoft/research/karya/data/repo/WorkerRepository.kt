@@ -6,26 +6,30 @@ import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.data.service.WorkerAPI
+import com.microsoft.research.karya.ui.registration.WorkerInformation
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
 
+    enum class OtpAction {
+        GENERATE, RESEND, VERIFY
+    }
+
     fun getOrVerifyOTP(
         accessCode: String,
         phoneNumber: String,
         otp: String,
-        action: String,
-        workerRecordId: String
+        action: String
     ) = flow {
         val response = workerAPI.getOrVerifyOTP(
             accessCode,
             phoneNumber,
             otp,
-            action,
-            workerRecordId
+            action
         )
         val workerRecord = response.body()
 
@@ -97,6 +101,10 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
 
     suspend fun getWorkerById(id: String) = withContext(Dispatchers.IO) {
         return@withContext workerDao.getById(id)
+    }
+
+        suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) {
+        workerDao.upsert(worker)
     }
 
 }

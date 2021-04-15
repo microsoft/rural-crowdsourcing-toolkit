@@ -12,15 +12,13 @@ interface MicroTaskAPI {
 
     @PUT("/assignments")
     suspend fun submitAssignments(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("id-token") idTokenHeader: String,
         @Body updates: JsonArray
     ): Response<JsonArray>
 
     @GET("/assignments")
     suspend fun getAssignments(
-        @Header("x-id-token") idTokenHeader: String,
-        @Header("x-access-code") accessCodeHeader: String,
+        @Header("id-token") idTokenHeader: String,
         @Query("type") type: String, //TODO: Make this an enum class
         @Query("from") from: String,
     ): Response<JSONArray> // TODO: Modify this output type according to response type

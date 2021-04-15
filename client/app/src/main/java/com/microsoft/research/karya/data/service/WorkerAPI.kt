@@ -14,13 +14,12 @@ import retrofit2.http.*
 
 interface WorkerAPI {
 
-    @PUT("/worker/{id}/otp")
+    @PUT("/worker/otp")
     suspend fun getOrVerifyOTP(
-        @Header("x-access-code") accessCode: String,
-        @Header("x-phone-number") phoneNumber: String,
-        @Header("x-otp") otp: String,
+        @Header("access-code") accessCode: String,
+        @Header("phone-number") phoneNumber: String,
+        @Header("otp") otp: String,
         @Query("action") action: String, //TODO: Make this an enum class
-        @Path("id") workerRecordId: String
     ): Response<WorkerRecord>
 
     /*
@@ -28,7 +27,7 @@ interface WorkerAPI {
     * */
     @GET("/getWorker")
     suspend fun getWorkerUsingAccessCode(
-        @Header("x-access-code") accessCode: String
+        @Header("access-code") accessCode: String
     ): Response<JsonObject>
 
     /*
@@ -36,13 +35,12 @@ interface WorkerAPI {
     * */
     @GET("/getWorker")
     suspend fun getWorkerUsingIdToken(
-        @Header("x-id-token") idToken: String
+        @Header("id-token") idToken: String
     ): Response<WorkerRecord>
 
-    @PUT("/worker/{id}")
+    @PUT("/worker")
     suspend fun updateWorker(
-        @Header("x-id-token") idToken: String,
-        @Path("id") workerRecordId: String,
+        @Header("id-token") idToken: String,
         @Body worker: WorkerRecord
     ): Response<WorkerRecord>
 

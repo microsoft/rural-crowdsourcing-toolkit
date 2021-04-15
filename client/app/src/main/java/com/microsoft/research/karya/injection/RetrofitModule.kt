@@ -59,16 +59,7 @@ class RetrofitModule {
 
     @Provides
     @Reusable
-<<<<<<< HEAD
     fun provideWorkerAPI(retrofit: Retrofit): WorkerAPI {
         return retrofit.create(WorkerAPI::class.java)
-    }
-
-    @Provides
-    @Reusable
-=======
->>>>>>> c7b7806... Fix types
-    fun provideKaryaFileAPI(retrofit: Retrofit): KaryaFileAPI {
-        return retrofit.create(KaryaFileAPI::class.java)
     }
 }
