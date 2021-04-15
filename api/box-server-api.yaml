@@ -32,7 +32,7 @@ paths:
           description: Access token already attached to another phone number.
     put:
       description: Update the "updatable" parameters of a worker. The worker can
-        identify themselves using id token that is sent after the registration. 
+        identify themselves using id token that is sent after the registration.
 
       requestBody:
         required: true
@@ -64,7 +64,7 @@ paths:
         identify themselves using their unique access code. The "action" query parameter should
         be "generate" | "resend" | "verify". In case of "verify", the OTP should
         be included in the header. The return type for resend and generate is empty
-        Json-object and for verify it would be a WorkerRecord 
+        Json-object and for verify it would be a WorkerRecord
 
       parameters:
         - name: action
@@ -392,18 +392,232 @@ components:
   schemas:
     Worker:
       type: object
+      properties:
+        id:
+          type: string
+        local_id:
+          type: string
+        box_id:
+          type: string
+        creation_code:
+          type: string
+        auth_provider:
+          type: string
+        username:
+          type: string
+        salt:
+          type: string
+        passwd_hash:
+          type: string
+        phone_number:
+          type: string
+        email:
+          type: string
+        oauth_id:
+          type: string
+        id_token:
+          type: string
+        full_name:
+          type: string
+        profile_picture:
+          type: string
+        age:
+          type: string
+        gender:
+          type: string
+        app_language:
+          type: string
+        last_sent_to_box_at:
+          type: string
+        last_received_from_box_at:
+          type: string
+        last_sent_to_server_at:
+          type: string
+        last_received_from_server_at:
+          type: string
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     Language:
       type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        primary_language_name:
+          type: string
+        locale:
+          type: string
+        iso_639_3_code:
+          type: string
+        script:
+          type: string
+        string_support:
+          type: boolean
+        file_support:
+          type: boolean
+        list_support:
+          type: boolean
+        update_lrv_file:
+          type: boolean
+        lrv_file_id:
+          type: boolean
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     KaryaFile:
       type: object
+      properties:
+        id:
+          type: string
+        local_id:
+          type: string
+        box_id:
+          type: string
+        container_name:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        creator:
+          type: string
+        worker_id:
+          type: string
+        algorithm:
+          type: string
+        checksum:
+          type: string
+        in_box:
+          type: boolean
+        in_server:
+          type: boolean
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     MicrotaskAssignment:
       type: object
+      properties:
+        id:
+          type: string
+        local_id:
+          type: string
+        box_id:
+          type: string
+        microtask_id:
+          type: string
+        worker_id:
+          type: string
+        deadline:
+          type: string
+        status:
+          type: string
+        completed_at:
+          type: string
+        output:
+          type: object
+        output_file_id:
+          type: string
+        credits:
+          type: number
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     Microtask:
       type: object
+      properties:
+        id:
+          type: string
+        task_id:
+          type: string
+        group_id:
+          type: string
+        input:
+          type: object
+        input_file_id:
+          type: string
+        deadline:
+          type: string
+        credits:
+          type: number
+        status:
+          type: string
+        output:
+          type: object
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
+
     Task:
       type: object
+      properties:
+        id:
+          type: string
+        work_provider_id:
+          type: string
+        language_id:
+          type: string
+        scenario_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        primary_language_name:
+          type: string
+        primary_language_description:
+          type: string
+        params:
+          type: object
+        errors:
+          type: object
+        actions:
+          type: object
+        input_file_id:
+          type: string
+        output_file_id:
+          type: string
+        budget:
+          type: number
+        deadline:
+          type: string
+        assignment_granularity:
+          type: string
+        group_assignment_order:
+          type: string
+        microtask_assignment_order:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     PaymentMethod:
       type: object
+
     Payment:
       type: object
 
