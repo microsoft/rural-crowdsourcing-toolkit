@@ -13,7 +13,7 @@ class KaryaFileRepository @Inject constructor(private val karyaFileAPI: KaryaFil
         val responseBody = response.body()
 
         if (!response.isSuccessful) {
-            error("Failed to get assignments")
+            error("Failed to upload file")
         }
 
         if (responseBody != null) {
@@ -26,17 +26,12 @@ class KaryaFileRepository @Inject constructor(private val karyaFileAPI: KaryaFil
     fun getKaryaFile(accessCode: String, idToken: String, karyaFileId: String) = flow {
 
         val response = karyaFileAPI.getKaryaFile(accessCode, idToken, karyaFileId)
-        val file = response.body()
 
         if (!response.isSuccessful) {
-            error("Failed to get assignments")
+            error("Failed to get file")
         }
 
-        if (file != null) {
-            emit(file)
-        } else {
-            error("Request failed, response body was null")
-        }
+        emit(response)
     }
 
 }
