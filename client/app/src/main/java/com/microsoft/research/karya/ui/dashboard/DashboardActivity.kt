@@ -190,6 +190,7 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
             /** Get all tasks and their microtask information */
             val tasks = karyaDb.taskDao().getAll()
             val taskInfoList: List<TaskInfo> = tasks.map {
+                // get rid of it
                 var scenarioName = karyaDb.languageResourceValueDaoExtra()
                     .getValueFromNameAndScenario(
                         it.language_id,

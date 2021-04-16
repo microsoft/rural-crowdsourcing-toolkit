@@ -9,6 +9,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 /**
  * Request focus on a text field and show the keyboard
  */
@@ -26,4 +28,14 @@ fun Activity.hideKeyboard() {
 
 fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.invisible() {
+    this.visibility = View.INVISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
