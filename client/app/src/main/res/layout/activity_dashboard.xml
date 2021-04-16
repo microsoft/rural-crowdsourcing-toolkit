@@ -57,7 +57,6 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:textSize="@dimen/_10ssp"
-                    android:text=""
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/syncButton"
                     app:layout_constraintRight_toRightOf="parent"
