@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface LanguageAPI {
 
-    @GET("/language")
+    @GET("/languages")
     suspend fun getLanguages(): Response<List<LanguageRecord>>
 }
