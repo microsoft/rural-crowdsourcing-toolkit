@@ -15,9 +15,12 @@
     "compile": "tsc -b tsconfig.json"
   },
   "devDependencies": {
+    "@types/joi": "^17.2.3",
     "@types/node": "^14.14.35",
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "@karya/db": "^2.0.0",
+    "joi": "^17.4.0"
   }
 }
