@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.service.KaryaAPIService
+import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
@@ -59,6 +60,12 @@ class RetrofitModule {
     @Provides
     @Reusable
     fun provideWorkerAPI(retrofit: Retrofit): WorkerAPI {
-        return retrofit.create()
+        return retrofit.create(WorkerAPI::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideKaryaFileAPIService(retrofit: Retrofit): KaryaFileAPI {
+        return retrofit.create(KaryaFileAPI::class.java)
     }
 }

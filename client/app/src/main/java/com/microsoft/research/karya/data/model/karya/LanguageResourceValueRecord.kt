@@ -1,3 +1,5 @@
+// TODO: REMOVE THIS RESOURCE
+
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
@@ -7,6 +9,7 @@
  */
 
 package com.microsoft.research.karya.data.model.karya
+
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
