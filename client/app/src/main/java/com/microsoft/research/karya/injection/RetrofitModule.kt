@@ -62,4 +62,10 @@ class RetrofitModule {
     fun provideWorkerAPI(retrofit: Retrofit): WorkerAPI {
         return retrofit.create(WorkerAPI::class.java)
     }
+
+    @Provides
+    @Reusable
+    fun provideKaryaFileAPIService(retrofit: Retrofit): KaryaFileAPI {
+        return retrofit.create(KaryaFileAPI::class.java)
+    }
 }
