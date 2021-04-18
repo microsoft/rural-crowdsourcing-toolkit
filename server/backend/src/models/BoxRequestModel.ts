@@ -75,6 +75,7 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
 
   // Get all microtask corresponding to the tasks
   const microtask_updates = await BasicModel.getRecords('microtask', {}, { from }, {}, [['task_id', task_ids]]);
+  updateMap['microtask'] = microtask_updates;
 
   // Get all karya file updates
   const language_file_ids = (updateMap['language'] || []).map((l) => l.lrv_file_id);
