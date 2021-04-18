@@ -4,47 +4,11 @@ language:
     UPDATE_BY_ID: admin
     GET_BY_ID: wp
     GET_ALL: wp
-  extra:
-    - method: PUT
-      actor: admin
-      label: UPDATE_SUPPORTED
-      endpoint: /language/:id/updated_support
-      request: '{}'
-      controller: updateSupported
 
 scenario:
   auto:
     GET_BY_ID: wp
     GET_ALL: wp
-
-language_resource:
-  auto:
-    CREATE: admin
-    UPDATE_BY_ID: admin
-    GET_BY_ID: admin
-    GET_ALL: admin
-
-language_resource_value:
-  auto:
-    CREATE: admin
-    UPDATE_BY_ID: admin
-    GET_BY_ID: admin
-  extra:
-    - method: GET_ALL
-      actor: admin
-      params: DBT.LanguageResource & DBT.LanguageResourceValue
-    - method: CREATE
-      label: FILE_CREATE
-      actor: admin
-      endpoint: '/file_language_resource_value/'
-      file: true
-      controller: createFileResourceValue
-    - method: UPDATE_BY_ID
-      label: FILE_UPDATE_BY_ID
-      actor: admin
-      endpoint: '/file_language_resource_value/:id/'
-      file: true
-      controller: updateFileResourceValue
 
 work_provider:
   auto:
@@ -195,11 +159,6 @@ microtask_assignment:
       actor: admin
       params: 'DBT.MicrotaskAssignment & { limit?: number; }'
       response: '{ assignments: DBT.MicrotaskAssignmentRecord[]; files: DBT.KaryaFileRecord[] }'
-
-payout_method:
-  auto:
-    GET_BY_ID: admin
-    GET_ALL: admin
 
 payout_info:
   auto:

@@ -51,25 +51,13 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
   } = {};
 
   // Get all updates from the following tables
-  const allUpdatesTables: DbTableName[] = [
-    'language',
-    'scenario',
-    'language_resource',
-    'language_resource_value',
-    'payout_method',
-    'policy',
-  ];
+  const allUpdatesTables: DbTableName[] = ['language', 'scenario', 'policy'];
 
   // Collect updates for tables which the server could have updated
   await BBPromise.mapSeries(allUpdatesTables, async (table) => {
     // @ts-ignore
     updateMap[table] = await BasicModel.getUpdatesSince(table, from_server);
   });
-
-  // Reorder language_resource updates (string followed by files)
-  updateMap['language_resource']?.sort((lr1, lr2) =>
-    lr1.type === 'string_resource' || lr2.type === 'file_resource' ? -1 : 1
-  );
 
   const worker_id = worker.id;
   const eon = new Date(0).toISOString();

@@ -12,8 +12,6 @@ import { getRecordById, getRecords, insertRecord, updateRecordById } from '../co
 
 import * as AuthController from '../controllers/Auth.extra';
 import * as BoxController from '../controllers/Box.extra';
-import * as LanguageController from '../controllers/Language.extra';
-import * as LanguageResourceValueController from '../controllers/LanguageResourceValue.extra';
 import * as MicrotaskController from '../controllers/Microtask.extra';
 import * as MicrotaskAssignmentController from '../controllers/MicrotaskAssignment.extra';
 import * as MicrotaskGroupController from '../controllers/MicrotaskGroup.extra';
@@ -24,7 +22,6 @@ import * as WorkProviderController from '../controllers/WorkProvider.extra';
 // create a new router
 const router = new Router({ prefix: '/api' });
 
-router.put('/language/:id/updated_support', checkAdmin, BodyParser(), LanguageController.updateSupported);
 router.post('/language', checkAdmin, setTableName, BodyParser(), insertRecord);
 router.put('/language/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
 router.get('/language/:id', setTableName, getRecordById);
@@ -32,18 +29,6 @@ router.get('/language', setTableName, setGetFilter, getRecords);
 
 router.get('/scenario/:id', setTableName, getRecordById);
 router.get('/scenario', setTableName, setGetFilter, getRecords);
-
-router.post('/language_resource', checkAdmin, setTableName, BodyParser(), insertRecord);
-router.put('/language_resource/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
-router.get('/language_resource/:id', checkAdmin, setTableName, getRecordById);
-router.get('/language_resource', checkAdmin, setTableName, setGetFilter, getRecords);
-
-router.get('/language_resource_value', checkAdmin, LanguageResourceValueController.getRecords);
-router.post('/file_language_resource_value/', checkAdmin, BodyParser({ multipart: true }), LanguageResourceValueController.createFileResourceValue);
-router.put('/file_language_resource_value/:id/', checkAdmin, BodyParser({ multipart: true }), LanguageResourceValueController.updateFileResourceValue);
-router.post('/language_resource_value', checkAdmin, setTableName, BodyParser(), insertRecord);
-router.put('/language_resource_value/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
-router.get('/language_resource_value/:id', checkAdmin, setTableName, getRecordById);
 
 router.get('/work_provider/:id', WorkProviderController.getRecordById);
 router.put('/work_provider/:id', BodyParser(), WorkProviderController.updateRecordById);
@@ -102,9 +87,6 @@ router.get('/microtask_group_assignment', checkAdmin, setTableName, setGetFilter
 router.get('/microtask_assignment', checkAdmin, MicrotaskAssignmentController.getRecords);
 router.put('/microtask_assignment/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
 router.get('/microtask_assignment/:id', checkAdmin, setTableName, getRecordById);
-
-router.get('/payout_method/:id', checkAdmin, setTableName, getRecordById);
-router.get('/payout_method', checkAdmin, setTableName, setGetFilter, getRecords);
 
 router.put('/payout_info/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
 router.get('/payout_info/:id', checkAdmin, setTableName, getRecordById);

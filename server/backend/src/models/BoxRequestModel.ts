@@ -49,25 +49,13 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
 
   // Get all updates from the following tables. Records in these tables can be
   // created and updated only by the server
-  const allUpdatesTables: DbTableName[] = [
-    'language',
-    'scenario',
-    'language_resource',
-    'language_resource_value',
-    'policy',
-    'payout_method',
-  ];
+  const allUpdatesTables: DbTableName[] = ['language', 'scenario', 'policy'];
 
   await BBPromise.mapSeries(allUpdatesTables, async (table) => {
     const tableUpdates = await BasicModel.getRecords(table, {}, { from });
     // @ts-ignore
     updateMap[table] = tableUpdates;
   });
-
-  // Reorder language_resource updates (string followed by files)
-  updateMap['language_resource']?.sort((lr1, lr2) =>
-    lr1.type === 'string_resource' || lr2.type === 'file_resource' ? -1 : 1
-  );
 
   // Get task assignment updates
   const task_assignment_updates = await BasicModel.getRecords('task_assignment', { box_id, status: 'assigned' });
@@ -87,17 +75,16 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
 
   // Get all microtask corresponding to the tasks
   const microtask_updates = await BasicModel.getRecords('microtask', {}, { from }, {}, [['task_id', task_ids]]);
+  updateMap['microtask'] = microtask_updates;
 
   // Get all karya file updates
   const language_file_ids = (updateMap['language'] || []).map((l) => l.lrv_file_id);
-
-  const lr_file_ids = (updateMap['language_resource'] || []).map((lr) => lr.lrv_file_id);
 
   const task_file_ids = task_updates.map((t) => t.input_file_id);
   const microtask_file_ids = microtask_updates.map((m) => m.input_file_id);
 
   let karya_file_ids: string[] = [];
-  [language_file_ids, lr_file_ids, task_file_ids, microtask_file_ids].forEach((idlist) => {
+  [language_file_ids, task_file_ids, microtask_file_ids].forEach((idlist) => {
     karya_file_ids = karya_file_ids.concat(idlist.filter((id): id is string => id !== null));
   });
   const karya_file_updates = (await BasicModel.getRecords('karya_file', {}, {}, {}, [['id', karya_file_ids]]))

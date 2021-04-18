@@ -11,9 +11,12 @@ import config from '../config/Index';
 import logger from '../utils/Logger';
 
 import { syncWithServer } from './SyncWithServer';
+import { setupDbConnection } from '@karya/db';
 
 // Status of active cron job
 let cronRunning = false;
+
+setupDbConnection(config.dbConfig);
 
 /** Cron job to sync with server */
 cron.schedule(config.cronInterval, async () => {

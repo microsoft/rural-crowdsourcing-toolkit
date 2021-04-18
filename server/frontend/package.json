@@ -19,10 +19,10 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "redux": "^4.0.5",
-    "tar-stream": "^2.1.4",
-    "typescript": "^3.9.7"
+    "tar-stream": "^2.1.4"
   },
   "scripts": {
+    "compile": "tsc -b tsconfig.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -50,7 +50,8 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.6",
-    "@types/tar-stream": "^2.1.0"
+    "@types/tar-stream": "^2.1.0",
+    "typescript": "^4.2.4"
   },
   "prettier": {
     "singleQuote": true,

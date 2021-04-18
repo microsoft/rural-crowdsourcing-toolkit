@@ -100,14 +100,14 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
 
   // Change box
   handleBoxChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const box_id = Number.parseInt(e.currentTarget.value, 10);
+    const box_id = e.currentTarget.value;
     const box = this.props.box.data.find((b) => b.id === box_id) as BoxRecord;
     this.setState({ box });
   };
 
   // Change policy
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const policy_id = Number.parseInt(e.currentTarget.value, 10);
+    const policy_id = e.currentTarget.value;
     const policy = this.props.policy.data.find((p) => p.id === policy_id);
     this.setState({ policy, params: {} });
   };
