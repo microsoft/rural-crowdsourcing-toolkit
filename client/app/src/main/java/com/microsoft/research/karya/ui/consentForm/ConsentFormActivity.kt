@@ -20,7 +20,7 @@ import com.microsoft.research.karya.ui.registration.RegistrationActivity
 import kotlinx.android.synthetic.main.activity_consent_form.*
 import kotlinx.coroutines.launch
 
-class ConsentFormActivity : BaseActivity(useAssistant = true) {
+class ConsentFormActivity : BaseActivity() {
 
     /** UI Strings */
     private lateinit var agreeText: String

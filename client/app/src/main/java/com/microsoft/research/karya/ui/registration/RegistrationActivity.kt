@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class RegistrationActivity : BaseActivity(useAssistant = true) {
+@AndroidEntryPoint
+class RegistrationActivity : BaseActivity() {
     /** Compute creation code text box length based on the creation code length */
 
 

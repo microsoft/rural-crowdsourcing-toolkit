@@ -3,8 +3,12 @@ package com.microsoft.research.karya.ui.registration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.gson.JsonObject
@@ -15,16 +19,70 @@ import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.microsoft.research.karya.ui.registration.RegistrationViewModel.OtpVerifyState
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val OTP_LENGTH = 6
 
+@AndroidEntryPoint
 class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
 
     private val binding by viewBinding(FragmentOTPBinding::bind)
+    private val viewModel by viewModels<RegistrationViewModel>()
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View? = super.onCreateView(inflater, container, savedInstanceState)
+
+        viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner, Observer { openDashBoard ->
+            if (openDashBoard) {
+                findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
+                viewModel.openDashBoardFromOTP.value = false
+                // TODO: Make openDashboardFromOTP private and make a function call to do the above
+            }
+        })
+
+        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner, Observer { openProfilePictureFragment ->
+            if (openProfilePictureFragment) {
+                findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
+                viewModel.openProfilePictureFragmentFromOTP.value = false
+                // TODO: Make openProfilePictureFragmentFromOTP private and make a function call to do the above
+            }
+        })
+
+        viewModel.OtpVerifyCurrentState.observe(viewLifecycleOwner, Observer { state ->
+            when (state) {
+                OtpVerifyState.SUCCESS -> setSuccessVerifyUI()
+                OtpVerifyState.FAIL -> setFailVerifyUI()
+                OtpVerifyState.NOT_ENTERED -> setOtpNotSentUI()
+            }
+        })
+
+
+
+        return view
+    }
+
+    private fun setSuccessVerifyUI() {
+        binding.otpStatusIv.setImageResource(0)
+        binding.otpStatusIv.setImageResource(R.drawable.ic_check)
+        binding.invalidOTPTv.visibility = View.INVISIBLE
+    }
+
+    private fun setFailVerifyUI() {
+        binding.invalidOTPTv.visibility = View.VISIBLE
+        binding.otpStatusIv.setImageResource(0)
+        binding.otpStatusIv.setImageResource(R.drawable.ic_quit_select)
+        binding.otpEt.isEnabled = true
+        baseActivity.requestSoftKeyFocus(binding.otpEt)
+    }
+
+    private fun setOtpNotSentUI() {
+        // No Action has to take place since OTP is not sent
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,7 +123,7 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
      */
     private fun handleOTPReady() {
         binding.otpEt.isEnabled = false
-        verifyOTP(binding.otpEt.text.toString())
+        viewModel.verifyOTP(binding.otpEt.text.toString())
     }
 
     /**
@@ -79,34 +137,10 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
     }
 
     /**
-     * Verify if the user has entered a valid OTP. If so, move to the next activity. Else,
-     * show the invalid OTP message and enable the text box.
-     */
-    private fun verifyOTP(otp: String) {
-        if (otp == WorkerInformation.otp) {
-            binding.otpStatusIv.setImageResource(0)
-            binding.otpStatusIv.setImageResource(R.drawable.ic_check)
-            binding.invalidOTPTv.visibility = View.INVISIBLE
-            findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
-        } else {
-            binding.invalidOTPTv.visibility = View.VISIBLE
-            binding.otpStatusIv.setImageResource(0)
-            binding.otpStatusIv.setImageResource(R.drawable.ic_quit_select)
-            binding.otpEt.isEnabled = true
-            baseActivity.requestSoftKeyFocus(binding.otpEt)
-        }
-    }
-
-    /**
      * Resend OTP
      */
     private fun resendOTP() {
         binding.resendOTPBtn.visibility = View.GONE
-        lifecycleScope.launch(Dispatchers.IO) {
-            val worker = JsonObject()
-            worker.addProperty("creation_code", WorkerInformation.creation_code)
-            worker.addProperty("phone_number", WorkerInformation.phone_number)
-            karyaAPI.resendOTP(worker)
-        }
+        viewModel.resendOTP()
     }
 }
