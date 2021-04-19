@@ -20,6 +20,7 @@ import com.microsoft.research.karya.utils.viewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.microsoft.research.karya.ui.registration.RegistrationViewModel.OtpVerifyState
+import com.microsoft.research.karya.ui.registration.RegistrationViewModel.OtpSendState
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val OTP_LENGTH = 6
@@ -39,25 +40,30 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
 
         viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner, Observer { openDashBoard ->
             if (openDashBoard) {
-                findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
-                viewModel.openDashBoardFromOTP.value = false
+                navigateToDashBoard()
                 // TODO: Make openDashboardFromOTP private and make a function call to do the above
             }
         })
 
-        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner, Observer { openProfilePictureFragment ->
+        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner, { openProfilePictureFragment ->
             if (openProfilePictureFragment) {
-                findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
-                viewModel.openProfilePictureFragmentFromOTP.value = false
+                navigateToProfilePicture()
                 // TODO: Make openProfilePictureFragmentFromOTP private and make a function call to do the above
             }
         })
 
-        viewModel.OtpVerifyCurrentState.observe(viewLifecycleOwner, Observer { state ->
+        viewModel.currOtpVerifyState.observe(viewLifecycleOwner, { state ->
             when (state) {
-                OtpVerifyState.SUCCESS -> setSuccessVerifyUI()
-                OtpVerifyState.FAIL -> setFailVerifyUI()
+                OtpVerifyState.SUCCESS -> onOtpVerifySuccess()
+                OtpVerifyState.FAIL -> onOtpVerifyOrResendFailure()
                 OtpVerifyState.NOT_ENTERED -> setOtpNotSentUI()
+            }
+        })
+
+        viewModel.currOtpResendState.observe(viewLifecycleOwner, { state ->
+            when (state) {
+                // TODO: Maybe indicate user after successful otp sent
+                OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
             }
         })
 
@@ -66,14 +72,25 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
         return view
     }
 
-    private fun setSuccessVerifyUI() {
+    private fun navigateToDashBoard() {
+        findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
+        viewModel.afterNavigateToDashboard()
+    }
+
+    private fun navigateToProfilePicture() {
+        findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
+        viewModel.afterNavigateToProfilePicture()
+    }
+
+    private fun onOtpVerifySuccess() {
         binding.otpStatusIv.setImageResource(0)
         binding.otpStatusIv.setImageResource(R.drawable.ic_check)
         binding.invalidOTPTv.visibility = View.INVISIBLE
     }
 
-    private fun setFailVerifyUI() {
+    private fun onOtpVerifyOrResendFailure() {
         binding.invalidOTPTv.visibility = View.VISIBLE
+        binding.invalidOTPTv.text = getString(viewModel.otpFragmentErrorId) // TODO: Change TextView id
         binding.otpStatusIv.setImageResource(0)
         binding.otpStatusIv.setImageResource(R.drawable.ic_quit_select)
         binding.otpEt.isEnabled = true

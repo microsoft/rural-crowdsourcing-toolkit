@@ -38,17 +38,26 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
         viewModel.currOtpSendState.observe(viewLifecycleOwner, { sent ->
             if (sent == OtpSendState.SUCCESS) {
-                findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
-                viewModel.currOtpSendState.value = OtpSendState.NOT_SENT
+                onSendOtpSuccess()
             }
 
             if (sent == OtpSendState.FAIL) {
-                Toast.makeText(context, viewModel.sendOtpErrorMesssage.value, Toast.LENGTH_LONG).show()
-                // TODO: Discuss the UI for displaying error on unsuccessful request
+                onSendOtpFailure()
             }
         })
 
         return view
+    }
+
+    private fun onSendOtpSuccess() {
+        binding.failToSendOtpTv.visibility = View.INVISIBLE
+        findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
+        viewModel.resetOtpSendState()
+    }
+
+    private fun onSendOtpFailure() {
+        binding.failToSendOtpTv.visibility = View.VISIBLE
+        binding.failToSendOtpTv.text = getString(viewModel.phoneNumberFragmentErrorId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
