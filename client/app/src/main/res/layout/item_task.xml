@@ -89,9 +89,9 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="#F66"
                 android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_available"
                 app:layout_constraintBaseline_toBaselineOf="@id/numIncompleteTv"
-                app:layout_constraintStart_toEndOf="@id/numIncompleteTv"
-                tools:text="tasks available" />
+                app:layout_constraintStart_toEndOf="@id/numIncompleteTv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,9 +119,9 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="#6C6"
                 android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_completed"
                 app:layout_constraintBaseline_toBaselineOf="@id/numCompletedTv"
-                app:layout_constraintStart_toEndOf="@id/numCompletedTv"
-                tools:text="tasks completed" />
+                app:layout_constraintStart_toEndOf="@id/numCompletedTv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -148,9 +148,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_submitted"
                 app:layout_constraintBaseline_toBaselineOf="@id/numSubmittedTv"
-                app:layout_constraintStart_toEndOf="@id/numSubmittedTv"
-                tools:text="tasks submitted" />
+                app:layout_constraintStart_toEndOf="@id/numSubmittedTv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -178,9 +178,9 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="#000"
                 android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_verified"
                 app:layout_constraintBaseline_toBaselineOf="@id/numVerifiedTv"
-                app:layout_constraintStart_toEndOf="@id/numVerifiedTv"
-                tools:text="tasks verified" />
+                app:layout_constraintStart_toEndOf="@id/numVerifiedTv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
