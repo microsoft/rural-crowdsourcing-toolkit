@@ -1,24 +1,22 @@
 package com.microsoft.research.karya.ui.consentForm
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.ScrollingMovementMethod
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import androidx.fragment.app.Fragment
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.ActivityConsentFormBinding
-import com.microsoft.research.karya.ui.registration.RegistrationActivity
+import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
 import com.microsoft.research.karya.utils.viewBinding
 
-class NgConsentFormActivity : AppCompatActivity() {
+class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
 
-    private val binding by viewBinding(ActivityConsentFormBinding::inflate)
+    private val binding by viewBinding(FragmentConsentFormBinding::bind)
 
     // TODO: add assistant
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupViews()
     }
 
@@ -36,12 +34,16 @@ class NgConsentFormActivity : AppCompatActivity() {
             consentFormTv.movementMethod = ScrollingMovementMethod()
 
             agreeBtn.setOnClickListener {
-                    startActivity(Intent(applicationContext, RegistrationActivity::class.java))
-                finish()
+                // TODO(aditya-navana): Uncomment this once the new apis are available.
+                // if (ResourceManager.isResourceAvailable(successResult.value)) {
+                //     navigateToRegistrationFlow()
+                // } else {
+                //     navigateToResourceDownload()
+                // }
             }
 
             disagreeBtn.setOnClickListener {
-                finish()
+                requireActivity().finish()
             }
         }
     }

@@ -2,12 +2,12 @@ package com.microsoft.research.karya.ui.splashScreen
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.microsoft.research.karya.databinding.NgSplashScreenBinding
+import com.microsoft.research.karya.databinding.ActivitySplashScreenBinding
 import com.microsoft.research.karya.utils.viewBinding
 
-class NgSplashScreenActivity : AppCompatActivity() {
+class SplashScreenActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(NgSplashScreenBinding::inflate)
+    private val binding by viewBinding(ActivitySplashScreenBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

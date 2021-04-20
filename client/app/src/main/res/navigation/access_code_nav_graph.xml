@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/access_code_nav_graph"
+    app:startDestination="@id/accessCodeFragment">
+
+    <fragment
+        android:id="@+id/accessCodeFragment"
+        android:name="com.microsoft.research.karya.ui.accesscode.AccessCodeFragment"
+        android:label="AccessCodeFragment"
+        tools:layout="@layout/fragment_access_code">
+        <action
+            android:id="@+id/action_accessCodeFragment_to_consentFormFragment"
+            app:destination="@id/consentFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/consentFormFragment"
+        android:name="com.microsoft.research.karya.ui.consentForm.ConsentFormFragment"
+        android:label="ConsentFormFragment"
+        tools:layout="@layout/fragment_consent_form"/>
+</navigation>

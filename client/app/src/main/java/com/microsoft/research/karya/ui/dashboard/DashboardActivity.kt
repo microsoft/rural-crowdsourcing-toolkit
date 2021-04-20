@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.activity_network_activity.*
 import kotlinx.coroutines.*
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.BufferedOutputStream
@@ -491,7 +492,7 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
             val tarBallPath = getAssignmentTarBallPath(assignment)
 
             val requestFile = RequestBody.create(
-                MediaType.parse("application/tgz"),
+                "application/tgz".toMediaTypeOrNull(),
                 File(tarBallPath)
             )
 

@@ -1,17 +1,13 @@
 package com.microsoft.research.karya.data.service
 
-import androidx.work.Worker
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.microsoft.research.karya.data.model.karya.WorkerLanguageSkillRecord
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
-import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
-import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
-import com.microsoft.research.karya.data.remote.response.CreationCodeResponse
 import com.microsoft.research.karya.data.remote.response.ValidAccessCodeResponse
-import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.PUT
+import retrofit2.http.Query
 
 interface WorkerAPI {
 

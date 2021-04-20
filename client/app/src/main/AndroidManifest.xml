@@ -7,7 +7,6 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -18,8 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ThemeGray"
-        android:usesCleartextTraffic="true"
-        >
+        android:usesCleartextTraffic="true">
 
         <activity android:name=".ui.registration.RegistrationActivity" />
         <!--
@@ -28,9 +26,7 @@
         -->
         <activity
             android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreen"
-            android:noHistory="true"
-            >
-        </activity>
+            android:noHistory="true" />
 
         <!-- Activity to fetch data on initial load -->
         <activity
@@ -45,42 +41,38 @@
             android:noHistory="true"
             />
 
-
         <!-- Network activity to register the user -->
         <activity
             android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
-            android:screenOrientation="portrait"
             android:noHistory="true"
-            />
+            android:screenOrientation="portrait" />
 
         <!-- Activity to display the user dashboard -->
         <activity
             android:name="com.microsoft.research.karya.ui.dashboard.DashboardActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <!-- Microtask rendering activities -->
         <activity
             android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.consentForm.NgConsentFormActivity" />
-        <activity android:name=".ui.splashScreen.NgSplashScreenActivity">
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".ui.splashScreen.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.accesscode.AccessCodeActivity" />
 
     </application>
 </manifest>

@@ -95,6 +95,7 @@ object Dependencies {
         const val debugDB = "com.amitshekhar.android:debug-db:1.0.6"
         const val glide = "com.github.bumptech.glide:glide:4.11.0"
         const val stateProgressBar = "com.kofigyan.stateprogressbar:stateprogressbar:1.0.0"
+        const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.1"
         const val okhttp = "com.squareup.okhttp3:okhttp:3.14.9"
 
         object Retrofit {

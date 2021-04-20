@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.BufferedOutputStream
@@ -186,7 +187,7 @@ class BoxSyncWorker(context: Context, workerParams: WorkerParameters) : Coroutin
         val tarBallPath = getAssignmentTarBallPath(assignment)
 
         val requestFile = RequestBody.create(
-            MediaType.parse("application/tgz"),
+            "application/tgz".toMediaTypeOrNull(),
             File(tarBallPath)
         )
 

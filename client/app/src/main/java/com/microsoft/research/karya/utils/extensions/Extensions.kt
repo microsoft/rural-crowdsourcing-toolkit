@@ -8,6 +8,7 @@ import android.widget.EditText
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.fragment.app.Fragment
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -23,6 +24,18 @@ fun Activity.requestSoftKeyFocus(editText: EditText) {
 fun Activity.hideKeyboard() {
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     val view = currentFocus ?: View(this)
+    imm.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun Fragment.requestSoftKeyFocus(editText: EditText) {
+    editText.requestFocus()
+    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+}
+
+fun Fragment.hideKeyboard() {
+    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val view = requireActivity().currentFocus ?: View(requireContext())
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 

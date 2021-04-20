@@ -95,12 +95,11 @@ dependencies {
 
     implementation(Dependencies.ThirdParty.glide)
     implementation(Dependencies.ThirdParty.okhttp)
+    implementation(Dependencies.ThirdParty.loggingInterceptor)
     implementation(Dependencies.ThirdParty.stateProgressBar)
 
     implementation(Dependencies.ThirdParty.Retrofit.retrofit)
     implementation(Dependencies.ThirdParty.Retrofit.gsonConverter)
-
-
 
     debugImplementation(Dependencies.ThirdParty.debugDB)
 }

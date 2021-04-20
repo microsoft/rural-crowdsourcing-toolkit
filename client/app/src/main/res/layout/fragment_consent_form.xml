@@ -55,6 +55,4 @@
             tools:text="I Agree" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,9 +10,10 @@ import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,8 +33,25 @@ class RetrofitModule {
 
     @Provides
     @Reusable
-    fun provideRetrofitInstance(baseUrl: String, converterFactory: GsonConverterFactory): Retrofit {
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Provides
+    @Reusable
+    fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder().addNetworkInterceptor(httpLoggingInterceptor).build()
+    }
+
+    @Provides
+    @Reusable
+    fun provideRetrofitInstance(
+        baseUrl: String,
+        converterFactory: GsonConverterFactory,
+        okHttpClient: OkHttpClient
+    ): Retrofit {
         return Retrofit.Builder()
+            .client(okHttpClient)
             .baseUrl(baseUrl)
             .addConverterFactory(converterFactory)
             .build()
