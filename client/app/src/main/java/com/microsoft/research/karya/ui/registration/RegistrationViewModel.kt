@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.ui.registration
 
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,10 +15,13 @@ import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
 import com.microsoft.research.karya.data.repo.WorkerRepository
+import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
+import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.io.FileOutputStream
 import java.lang.Exception
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -30,55 +35,43 @@ class RegistrationViewModel @Inject constructor(
     private val karyaFileRepository: KaryaFileRepository,
 ) : ViewModel() {
 
-    enum class OtpVerifyState {
-        NOT_ENTERED,
-        SUCCESS,
-        FAIL
-    }
-
-    enum class OtpSendState {
-        NOT_SENT,
-        SUCCESS,
-        FAIL
-    }
-
-    private val _openDashBoardFromOTP = MutableLiveData<Boolean>()
+    private val _openDashBoardFromOTP = MutableLiveData<Boolean>(false)
     val openDashBoardFromOTP: LiveData<Boolean>
         get() =_openDashBoardFromOTP
 
-    private val _openProfilePictureFragmentFromOTP = MutableLiveData<Boolean>()
+    private val _openProfilePictureFragmentFromOTP = MutableLiveData<Boolean>(false)
     val openProfilePictureFragmentFromOTP: LiveData<Boolean>
         get() = _openProfilePictureFragmentFromOTP
 
-    private val _currOtpVerifyState = MutableLiveData<OtpVerifyState>()
+    private val _openSelectGenderFragmentFromProfilePicture = MutableLiveData<Boolean>(false)
+    val openSelectGenderFragmentFromProfilePicture: LiveData<Boolean>
+        get() = _openSelectGenderFragmentFromProfilePicture
+
+    private val _currOtpVerifyState = MutableLiveData<OtpVerifyState>(OtpVerifyState.NOT_ENTERED)
     val currOtpVerifyState: LiveData<OtpVerifyState>
         get() = _currOtpVerifyState
 
-    private val _currOtpSendState = MutableLiveData<OtpSendState>()
+    private val _currOtpSendState = MutableLiveData<OtpSendState>(OtpSendState.NOT_SENT)
     val currOtpSendState: LiveData<OtpSendState>
         get() = _currOtpSendState
 
-    private val _currOtpResendState = MutableLiveData<OtpSendState>()
+    private val _currOtpResendState = MutableLiveData<OtpSendState>(OtpSendState.NOT_SENT)
     val currOtpResendState: LiveData<OtpSendState>
         get() = _currOtpResendState
+
+    private val _loadImageBitmap = MutableLiveData<Boolean>(false)
+    val loadImageBitmap: LiveData<Boolean>
+        get() = _loadImageBitmap
+
 
     var phoneNumberFragmentErrorId by Delegates.notNull<Int>()
     var otpFragmentErrorId by Delegates.notNull<Int>()
 
-    init {
-        _openDashBoardFromOTP.value = false
-        _openProfilePictureFragmentFromOTP.value = false
-
-        _currOtpVerifyState.value = OtpVerifyState.NOT_ENTERED
-        _currOtpSendState.value = OtpSendState.NOT_SENT
-        _currOtpResendState.value = OtpSendState.NOT_SENT
-    }
-
     fun sendOTP(phoneNumber: String) {
         WorkerInformation.phone_number = phoneNumber
+        // TODO: Remove the hard coded initialization
         WorkerInformation.creation_code = "4337334745315309"
         WorkerInformation.app_language = 1
-        Log.i("SEND_OTP", WorkerInformation.phone_number!! + " " + WorkerInformation.creation_code!!)
         workerRepository.getOrVerifyOTP(
             WorkerInformation.creation_code!!,
             WorkerInformation.phone_number!!,
@@ -172,6 +165,43 @@ class RegistrationViewModel @Inject constructor(
 
     fun resetOtpSendState() {
         _currOtpSendState.value = OtpSendState.NOT_SENT
+    }
+
+
+    /**
+     * Methods for Profile Picture Fragment
+     * ====================================
+     */
+
+    /**
+     * Handle submit profile picture click.
+     */
+    fun submitProfilePicture(profilePic: Bitmap, imageFolder: String) {
+
+        WorkerInformation.profile_picture = profilePic
+        val fileName = "pp.png"
+        val out = FileOutputStream("$imageFolder/$fileName")
+        profilePic.compress(Bitmap.CompressFormat.PNG, 100, out)
+        _openSelectGenderFragmentFromProfilePicture.value = true
+    }
+
+    fun rotateRight(profilePic: Bitmap): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(90.toFloat())
+        val rotated = Bitmap.createBitmap(
+            profilePic, 0, 0, profilePic.width, profilePic.height,
+            matrix, true
+        )
+        _loadImageBitmap.value = true
+        return rotated
+    }
+
+    fun afterNavigateToSelectGender() {
+        _openSelectGenderFragmentFromProfilePicture.value = false
+    }
+
+    fun afterLoadingBitmap() {
+        _loadImageBitmap.value = false
     }
 
 

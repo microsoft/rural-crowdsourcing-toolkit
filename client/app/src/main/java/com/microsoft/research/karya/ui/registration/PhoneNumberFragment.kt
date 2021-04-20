@@ -15,9 +15,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
-import com.microsoft.research.karya.ui.registration.RegistrationViewModel.OtpSendState
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +114,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     /** Update UI when the phone number is ready */
     private fun handlePhoneNumberNotReady() {
         lifecycleScope.launch(Dispatchers.Main) {
+            binding.phoneNumberNextIv.visibility = View.VISIBLE
             binding.phoneNumberNextIv.setImageResource(0)
             binding.phoneNumberNextIv.setImageResource(R.drawable.ic_next_disabled)
             binding.phoneNumberNextIv.isClickable = false

@@ -9,18 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
+import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.databinding.FragmentOTPBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.viewBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import com.microsoft.research.karya.ui.registration.RegistrationViewModel.OtpVerifyState
-import com.microsoft.research.karya.ui.registration.RegistrationViewModel.OtpSendState
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val OTP_LENGTH = 6

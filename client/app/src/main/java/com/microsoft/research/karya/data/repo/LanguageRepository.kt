@@ -29,7 +29,7 @@ class LanguageRepository @Inject constructor(
 
     }
 
-    suspend fun getById(id: Int) = withContext(Dispatchers.IO) {
+    suspend fun getLanguageById(id: Int) = withContext(Dispatchers.IO) {
         languageDao.getById(id)
     }
 
