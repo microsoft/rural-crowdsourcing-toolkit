@@ -32,13 +32,6 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViews()
-        observe()
-    }
-
-    private fun observe() {
-        viewModel.stateFlow.observe(lifecycle, lifecycleScope) {
-            println(it)
-        }
     }
 
     private fun setupViews() {
