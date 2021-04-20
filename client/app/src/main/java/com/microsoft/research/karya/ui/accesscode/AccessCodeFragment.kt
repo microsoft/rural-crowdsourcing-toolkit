@@ -20,7 +20,6 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.visible
 import com.microsoft.research.karya.utils.viewBinding
-import kotlinx.android.synthetic.main.fragment_creation_code.*
 import kotlinx.coroutines.launch
 
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
