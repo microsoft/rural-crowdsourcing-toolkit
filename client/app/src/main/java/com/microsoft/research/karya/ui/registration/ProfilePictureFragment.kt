@@ -5,9 +5,14 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
@@ -21,11 +26,42 @@ private const val REQUEST_IMAGE_CAPTURE = 101
 class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
 
     private val binding by viewBinding(FragmentProfilePictureBinding::bind)
+    private val viewModel by activityViewModels<RegistrationViewModel>()
 
     private lateinit var profilePic: Bitmap
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+
+        viewModel.openSelectGenderFragmentFromProfilePicture.observe(viewLifecycleOwner, { navigate->
+            if (navigate) {
+                navigateToSelectGenderFragment()
+            }
+        })
+
+        viewModel.loadImageBitmap.observe(viewLifecycleOwner, { shouldLoad ->
+            if (shouldLoad) {
+                loadBitmap()
+            }
+        })
+
+        return view
+    }
+
+    private fun loadBitmap() {
+        ImageUtils.loadImageBitmap(requireActivity(), profilePic, binding.mainProfilePictureIv)
+        viewModel.afterLoadingBitmap()
+    }
+
+    private fun navigateToSelectGenderFragment() {
+        findNavController().navigate(R.id.action_profilePictureFragment_to_selectGenderFragment)
+        viewModel.afterNavigateToSelectGender()
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,10 +78,18 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
             binding.mainProfilePictureIv.isClickable = false
             binding.rotateRightIb.isClickable = false
             binding.profilePictureNextIv.visibility = View.INVISIBLE
-            submitProfilePicture()
+            val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
+
+            if (::profilePic.isInitialized) {
+                viewModel.submitProfilePicture(profilePic, imageFolder)
+            }
         }
 
-        binding.rotateRightIb.setOnClickListener { rotateRight() }
+        binding.rotateRightIb.setOnClickListener {
+            if (::profilePic.isInitialized) {
+                profilePic = viewModel.rotateRight(profilePic)
+            }
+        }
 
         disableRotateButton()
 
@@ -56,9 +100,10 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
      */
     override fun onResume() {
         super.onResume()
-        if (!::profilePic.isInitialized) {
-            baseActivity.onAssistantClick()
-        }
+//        if (!::profilePic.isInitialized) {
+//            baseActivity.onAssistantClick()
+//        }
+        // TODO: Add Assistant
     }
 
     /**
@@ -87,19 +132,19 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
         }
     }
 
-    /**
-     * Handle submit profile picture click.
-     */
-    private fun submitProfilePicture() {
-        if (::profilePic.isInitialized) {
-            WorkerInformation.profile_picture = profilePic
-            val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
-            val fileName = "pp.png"
-            val out = FileOutputStream("$imageFolder/$fileName")
-            profilePic.compress(Bitmap.CompressFormat.PNG, 100, out)
-        }
-        findNavController().navigate(R.id.action_profilePictureFragment_to_selectGenderFragment)
-    }
+//    /**
+//     * Handle submit profile picture click.
+//     */
+//    private fun submitProfilePicture() {
+//        if (::profilePic.isInitialized) {
+//            WorkerInformation.profile_picture = profilePic
+//            val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
+//            val fileName = "pp.png"
+//            val out = FileOutputStream("$imageFolder/$fileName")
+//            profilePic.compress(Bitmap.CompressFormat.PNG, 100, out)
+//        }
+//        findNavController().navigate(R.id.action_profilePictureFragment_to_selectGenderFragment)
+//    }
 
 
     /**
@@ -128,7 +173,7 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
                 profilePic, 0, 0, profilePic.width, profilePic.height,
                 matrix, true
             )
-            ImageUtils.loadImageBitmap(requireActivity(), profilePic, binding.mainProfilePictureIv)
+
         }
     }
 

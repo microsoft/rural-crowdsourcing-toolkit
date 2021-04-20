@@ -7,14 +7,14 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.service.KaryaAPIService
-import com.microsoft.research.karya.databinding.FragmentOTPBinding
+import com.microsoft.research.karya.databinding.FragmentOtpBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,10 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val OTP_LENGTH = 6
 
 @AndroidEntryPoint
-class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
+class OTPFragment : Fragment(R.layout.fragment_otp) {
 
-    private val binding by viewBinding(FragmentOTPBinding::bind)
-    private val viewModel by viewModels<RegistrationViewModel>()
+    private val binding by viewBinding(FragmentOtpBinding::bind)
+    private val viewModel by activityViewModels<RegistrationViewModel>()
 
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
@@ -33,18 +33,20 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View? = super.onCreateView(inflater, container, savedInstanceState)
+        setupObservers()
+        return view
+    }
 
+    private fun setupObservers() {
         viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner, Observer { openDashBoard ->
             if (openDashBoard) {
                 navigateToDashBoard()
-                // TODO: Make openDashboardFromOTP private and make a function call to do the above
             }
         })
 
         viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner, { openProfilePictureFragment ->
             if (openProfilePictureFragment) {
                 navigateToProfilePicture()
-                // TODO: Make openProfilePictureFragmentFromOTP private and make a function call to do the above
             }
         })
 
@@ -62,10 +64,6 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
                 OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
             }
         })
-
-
-
-        return view
     }
 
     private fun navigateToDashBoard() {
@@ -85,12 +83,14 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
     }
 
     private fun onOtpVerifyOrResendFailure() {
-        binding.invalidOTPTv.visibility = View.VISIBLE
-        binding.invalidOTPTv.text = getString(viewModel.otpFragmentErrorId) // TODO: Change TextView id
-        binding.otpStatusIv.setImageResource(0)
-        binding.otpStatusIv.setImageResource(R.drawable.ic_quit_select)
-        binding.otpEt.isEnabled = true
-        baseActivity.requestSoftKeyFocus(binding.otpEt)
+        with(binding) {
+            invalidOTPTv.visibility = View.VISIBLE
+            invalidOTPTv.text = getString(viewModel.otpFragmentErrorId) // TODO: Change TextView id
+            otpStatusIv.setImageResource(0)
+            otpStatusIv.setImageResource(R.drawable.ic_quit_select)
+            otpEt.isEnabled = true
+            baseActivity.requestSoftKeyFocus(binding.otpEt)
+        }
     }
 
     private fun setOtpNotSentUI() {
