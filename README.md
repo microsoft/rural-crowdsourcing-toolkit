@@ -72,6 +72,10 @@ the following people.
 - Mrinal Das
 - Anurag Shukla
 
+Currently, the code is also being developed by Navana Tech with contributions from the following people.
+ 
+- Aditya Wasan (https://github.com/skrilltrax) 
+
 ## Microsoft Open Source Code of Conduct
 
 This project has adopted the Microsoft Open Source Code of Conduct. Please visit
