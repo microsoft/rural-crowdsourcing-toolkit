@@ -24,6 +24,8 @@ jobs:
       env:
         FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
       run: echo $FIREBASE_CONFIG > ./app/google-services.json
+    - name: Accept licenses  
+      run: yes | sdkmanager --licenses
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
