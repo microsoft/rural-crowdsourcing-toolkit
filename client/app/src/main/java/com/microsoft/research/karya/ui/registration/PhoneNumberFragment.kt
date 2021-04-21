@@ -1,7 +1,5 @@
 package com.microsoft.research.karya.ui.registration
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,8 +8,7 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
@@ -27,15 +24,13 @@ import kotlinx.coroutines.launch
 class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
     private val binding by viewBinding(FragmentPhoneNumberBinding::bind)
-    private val viewModel by viewModels<RegistrationViewModel>()
+    private val viewModel by activityViewModels<RegistrationViewModel>()
 
     private val PHONE_NUMBER_LENGTH = 10
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View? = super.onCreateView(inflater, container, savedInstanceState)
-
+    private fun setupObservers() {
         viewModel.currOtpSendState.observe(viewLifecycleOwner, { sent ->
             if (sent == OtpSendState.SUCCESS) {
                 onSendOtpSuccess()
@@ -45,8 +40,6 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
                 onSendOtpFailure()
             }
         })
-
-        return view
     }
 
     private fun onSendOtpSuccess() {
@@ -62,6 +55,8 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupObservers()
 
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity

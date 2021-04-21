@@ -69,7 +69,7 @@ import com.microsoft.research.karya.data.model.karya.WorkerRecord
         PayoutMethodRecord::class,
         PayoutInfoRecord::class,
         PaymentRequestRecord::class
-    ], version = 4, exportSchema = false
+    ], version = 5, exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {

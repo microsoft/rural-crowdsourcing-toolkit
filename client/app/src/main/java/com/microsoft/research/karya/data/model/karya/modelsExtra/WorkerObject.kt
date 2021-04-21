@@ -11,5 +11,5 @@ data class WorkerObject(
     var phone_number: String,
     var age: String,
     var gender: String,
-    var app_language: Int
+    var app_language: Int? = null
 )

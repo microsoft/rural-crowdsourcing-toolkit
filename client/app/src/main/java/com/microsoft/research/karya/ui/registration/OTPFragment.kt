@@ -31,12 +31,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     private lateinit var baseActivity: BaseActivity
     private lateinit var karyaAPI: KaryaAPIService
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View? = super.onCreateView(inflater, container, savedInstanceState)
-        setupObservers()
-        return view
-    }
-
     private fun setupObservers() {
         viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner, Observer { openDashBoard ->
             if (openDashBoard) {
@@ -99,6 +93,8 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupObservers()
 
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity

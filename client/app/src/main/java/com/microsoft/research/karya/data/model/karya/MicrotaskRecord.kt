@@ -20,11 +20,7 @@ import com.google.gson.JsonObject
             entity = TaskRecord::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("task_id")
-        ), ForeignKey(
-            entity = MicrotaskGroupRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("group_id")
-        ), ForeignKey(
+        ),ForeignKey(
             entity = KaryaFileRecord::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("input_file_id")
