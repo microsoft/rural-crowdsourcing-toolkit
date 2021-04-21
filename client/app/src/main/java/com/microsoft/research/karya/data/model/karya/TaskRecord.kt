@@ -2,10 +2,9 @@
 // Licensed under the MIT license.
 
 /**
- * This file was auto-generated using specs and scripts in the db-schema
- * repository. DO NOT EDIT DIRECTLY.
+ * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
+ * DIRECTLY.
  */
-
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
@@ -15,31 +14,33 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "task", foreignKeys = arrayOf(
-        ForeignKey(
-            entity = LanguageRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("language_id")
-        ), ForeignKey(
-            entity = ScenarioRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("scenario_id")
-        ), ForeignKey(
-            entity = KaryaFileRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("input_file_id")
-        ), ForeignKey(
-            entity = KaryaFileRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("output_file_id")
-        )
-    ), indices = arrayOf(Index("language_id"), Index("scenario_id"), Index("input_file_id"), Index("output_file_id"))
-)
-
+    tableName = "task",
+    foreignKeys =
+        arrayOf(
+            ForeignKey(
+                entity = LanguageRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("language_id")),
+            ForeignKey(
+                entity = ScenarioRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("scenario_id")),
+            ForeignKey(
+                entity = KaryaFileRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("input_file_id")),
+            ForeignKey(
+                entity = KaryaFileRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("output_file_id"))),
+    indices =
+        arrayOf(
+            Index("language_id"),
+            Index("scenario_id"),
+            Index("input_file_id"),
+            Index("output_file_id")))
 data class TaskRecord(
-    @PrimaryKey
-    var id: String,
-
+    @PrimaryKey var id: String,
     var language_id: Int,
     var scenario_id: Int,
     var name: String,

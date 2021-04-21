@@ -10,6 +10,6 @@ import com.microsoft.research.karya.data.model.karya.TaskRecord
 @Dao
 interface TaskDaoExtra {
 
-    @Query("SELECT t.* from task as t inner join task_assignment as ta on ta.task_id=t.id")
-    suspend fun getAllTasksFromTaskAssignments(): List<TaskRecord>
+  @Query("SELECT t.* from task as t inner join task_assignment as ta on ta.task_id=t.id")
+  suspend fun getAllTasksFromTaskAssignments(): List<TaskRecord>
 }

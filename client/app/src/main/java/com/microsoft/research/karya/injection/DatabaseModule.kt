@@ -14,9 +14,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
 
-    @Provides
-    @Singleton
-    fun providesKaryaDatabase(@ApplicationContext context: Context): KaryaDatabase {
-        return Room.databaseBuilder(context, KaryaDatabase::class.java, "karya.db").build()
-    }
+  @Provides
+  @Singleton
+  fun providesKaryaDatabase(@ApplicationContext context: Context): KaryaDatabase {
+    return Room.databaseBuilder(context, KaryaDatabase::class.java, "karya.db").build()
+  }
 }

@@ -13,36 +13,35 @@ import com.microsoft.research.karya.utils.viewBinding
 
 class NgConsentFormActivity : AppCompatActivity() {
 
-    private val binding by viewBinding(ActivityConsentFormBinding::inflate)
+  private val binding by viewBinding(ActivityConsentFormBinding::inflate)
 
-    // TODO: add assistant
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        setupViews()
-    }
+  // TODO: add assistant
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(binding.root)
+    setupViews()
+  }
 
-    private fun setupViews() {
-        val consentFormText = getString(R.string.s_consent_form_text)
+  private fun setupViews() {
+    val consentFormText = getString(R.string.s_consent_form_text)
 
-        val spannedText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(consentFormText, Html.FROM_HTML_MODE_COMPACT)
+    val spannedText =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+          Html.fromHtml(consentFormText, Html.FROM_HTML_MODE_COMPACT)
         } else {
-            Html.fromHtml(consentFormText)
+          Html.fromHtml(consentFormText)
         }
 
-        with(binding) {
-            consentFormTv.text = spannedText
-            consentFormTv.movementMethod = ScrollingMovementMethod()
+    with(binding) {
+      consentFormTv.text = spannedText
+      consentFormTv.movementMethod = ScrollingMovementMethod()
 
-            agreeBtn.setOnClickListener {
-                    startActivity(Intent(applicationContext, RegistrationActivity::class.java))
-                finish()
-            }
+      agreeBtn.setOnClickListener {
+        startActivity(Intent(applicationContext, RegistrationActivity::class.java))
+        finish()
+      }
 
-            disagreeBtn.setOnClickListener {
-                finish()
-            }
-        }
+      disagreeBtn.setOnClickListener { finish() }
     }
+  }
 }

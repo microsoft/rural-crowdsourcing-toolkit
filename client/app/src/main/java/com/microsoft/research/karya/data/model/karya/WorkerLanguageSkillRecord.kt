@@ -2,10 +2,9 @@
 // Licensed under the MIT license.
 
 /**
- * This file was auto-generated using specs and scripts in the db-schema
- * repository. DO NOT EDIT DIRECTLY.
+ * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
+ * DIRECTLY.
  */
-
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
@@ -15,22 +14,20 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "worker_language_skill", foreignKeys = arrayOf(
-        ForeignKey(
-            entity = WorkerRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("worker_id")
-        ), ForeignKey(
-            entity = LanguageRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("language_id")
-        )
-    ), indices = arrayOf(Index("worker_id"), Index("language_id"))
-)
-
+    tableName = "worker_language_skill",
+    foreignKeys =
+        arrayOf(
+            ForeignKey(
+                entity = WorkerRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("worker_id")),
+            ForeignKey(
+                entity = LanguageRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("language_id"))),
+    indices = arrayOf(Index("worker_id"), Index("language_id")))
 data class WorkerLanguageSkillRecord(
-    @PrimaryKey
-    var id: String,
+    @PrimaryKey var id: String,
     var local_id: String,
     var box_id: Int,
     var worker_id: String,

@@ -18,54 +18,51 @@ import retrofit2.create
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
 
-    @Provides
-    @Reusable
-    fun provideGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create()
-    }
+  @Provides
+  @Reusable
+  fun provideGsonConverterFactory(): GsonConverterFactory {
+    return GsonConverterFactory.create()
+  }
 
-    @Provides
-    @Reusable
-    fun provideBaseUrl(): String {
-        return "http://192.168.0.105:4040"
-    }
+  @Provides
+  @Reusable
+  fun provideBaseUrl(): String {
+    return "http://192.168.0.105:4040"
+  }
 
-    @Provides
-    @Reusable
-    fun provideRetrofitInstance(baseUrl: String, converterFactory: GsonConverterFactory): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(converterFactory)
-            .build()
-    }
+  @Provides
+  @Reusable
+  fun provideRetrofitInstance(baseUrl: String, converterFactory: GsonConverterFactory): Retrofit {
+    return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(converterFactory).build()
+  }
 
-    @Provides
-    @Reusable
-    fun provideKaryaAPIService(retrofit: Retrofit): KaryaAPIService {
-        return retrofit.create(KaryaAPIService::class.java)
-    }
+  @Provides
+  @Reusable
+  fun provideKaryaAPIService(retrofit: Retrofit): KaryaAPIService {
+    return retrofit.create(KaryaAPIService::class.java)
+  }
 
-    @Provides
-    @Reusable
-    fun provideLanguageAPI(retrofit: Retrofit): LanguageAPI {
-        return retrofit.create(LanguageAPI::class.java)
-    }
+  @Provides
+  @Reusable
+  fun provideLanguageAPI(retrofit: Retrofit): LanguageAPI {
+    return retrofit.create(LanguageAPI::class.java)
+  }
 
-    @Provides
-    @Reusable
-    fun provideMicroTaskAPI(retrofit: Retrofit): MicroTaskAPI {
-        return retrofit.create(MicroTaskAPI::class.java)
-    }
+  @Provides
+  @Reusable
+  fun provideMicroTaskAPI(retrofit: Retrofit): MicroTaskAPI {
+    return retrofit.create(MicroTaskAPI::class.java)
+  }
 
-    @Provides
-    @Reusable
-    fun provideWorkerAPI(retrofit: Retrofit): WorkerAPI {
-        return retrofit.create(WorkerAPI::class.java)
-    }
+  @Provides
+  @Reusable
+  fun provideWorkerAPI(retrofit: Retrofit): WorkerAPI {
+    return retrofit.create(WorkerAPI::class.java)
+  }
 
-    @Provides
-    @Reusable
-    fun provideKaryaFileAPIService(retrofit: Retrofit): KaryaFileAPI {
-        return retrofit.create(KaryaFileAPI::class.java)
-    }
+  @Provides
+  @Reusable
+  fun provideKaryaFileAPIService(retrofit: Retrofit): KaryaFileAPI {
+    return retrofit.create(KaryaFileAPI::class.java)
+  }
 }

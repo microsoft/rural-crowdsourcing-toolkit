@@ -11,54 +11,47 @@ import com.microsoft.research.karya.ui.base.NetworkActivity
 import com.microsoft.research.karya.ui.dashboard.DashboardActivity
 import com.microsoft.research.karya.utils.AppConstants
 
-class RegisterWorker : NetworkActivity(
-    indeterminateProgress = true,
-    noMessage = false,
-    allowRetry = true
-) {
+class RegisterWorker :
+    NetworkActivity(indeterminateProgress = true, noMessage = false, allowRetry = true) {
 
-    /**
-     * Get all UI strings for the string
-     */
-    override suspend fun getStringsForActivity() {
-        networkRequestMessage = getValueFromName(R.string.registering_worker)
-    }
+  /** Get all UI strings for the string */
+  override suspend fun getStringsForActivity() {
+    networkRequestMessage = getValueFromName(R.string.registering_worker)
+  }
 
-    override suspend fun executeRequest() {
-        /** Generate the worker record to be submitted */
-        val worker = WorkerObject(
+  override suspend fun executeRequest() {
+    /** Generate the worker record to be submitted */
+    val worker =
+        WorkerObject(
             creation_code = WorkerInformation.creation_code!!,
             auth_provider = AuthProviderType.phone_otp,
             phone_number = WorkerInformation.phone_number!!,
             age = WorkerInformation.age_group!!,
             gender = WorkerInformation.gender!!,
-            app_language = WorkerInformation.app_language!!
-        )
+            app_language = WorkerInformation.app_language!!)
 
-        val registerWorkerResponse = karyaAPI.updateWorkerUsingCreationCode(worker)
-        if (registerWorkerResponse.isSuccessful) {
-            val workerRecord = registerWorkerResponse.body()!!
-            karyaDb.workerDao().upsert(workerRecord)
-        } else {
-            networkErrorMessage = getString(
-                when (registerWorkerResponse.code()) {
-                    409 -> R.string.phone_number_already_used
-                    404 -> R.string.unknown_error
-                    else -> R.string.unknown_error
-                }
-            )
-            throw Exception()
-        }
+    val registerWorkerResponse = karyaAPI.updateWorkerUsingCreationCode(worker)
+    if (registerWorkerResponse.isSuccessful) {
+      val workerRecord = registerWorkerResponse.body()!!
+      karyaDb.workerDao().upsert(workerRecord)
+    } else {
+      networkErrorMessage =
+          getString(
+              when (registerWorkerResponse.code()) {
+                409 -> R.string.phone_number_already_used
+                404 -> R.string.unknown_error
+                else -> R.string.unknown_error
+              })
+      throw Exception()
     }
+  }
 
-    /**
-     * Call the skill selection activity
-     */
-    override fun startNextActivity() {
-        val nextIntent = Intent(applicationContext, DashboardActivity::class.java)
-        nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        nextIntent.putExtra(AppConstants.LANGUAGE_ID_FOR_SKILLS, WorkerInformation.app_language)
-        nextIntent.putExtra(AppConstants.SKILL_SPECIFICATION_CALLER, AppConstants.REGISTER_WORKER)
-        startActivity(nextIntent)
-    }
+  /** Call the skill selection activity */
+  override fun startNextActivity() {
+    val nextIntent = Intent(applicationContext, DashboardActivity::class.java)
+    nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    nextIntent.putExtra(AppConstants.LANGUAGE_ID_FOR_SKILLS, WorkerInformation.app_language)
+    nextIntent.putExtra(AppConstants.SKILL_SPECIFICATION_CALLER, AppConstants.REGISTER_WORKER)
+    startActivity(nextIntent)
+  }
 }
