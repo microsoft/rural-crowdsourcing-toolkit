@@ -85,6 +85,7 @@ dependencies {
     implementation(Dependencies.Google.gson)
     implementation(Dependencies.Google.material)
 
+    implementation(platform(Dependencies.Google.Firebase.bom))
     implementation(Dependencies.Google.Firebase.crashlytics)
     implementation(Dependencies.Google.Firebase.analytics)
 

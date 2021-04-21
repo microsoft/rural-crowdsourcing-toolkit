@@ -1,7 +1,7 @@
 private const val AGP_VERSION = "4.1.3"
-private const val ANDROIDX_HILT_VERSION = "1.0.0-alpha03"
+private const val ANDROIDX_HILT_VERSION = "1.0.0-beta01"
 private const val CRASHLYTICS_VERSION = "2.5.2"
-private const val DAGGER_HILT_VERSION = "2.32-alpha"
+private const val DAGGER_HILT_VERSION = "2.34.1-beta"
 private const val GMS_VERSION = "4.3.5"
 private const val KOTLIN_VERSION = "1.4.30"
 private const val LINT_VERSION = "27.3.0-alpha04"
@@ -23,7 +23,7 @@ object Dependencies {
     object Kotlin {
 
         object Coroutines {
-            private const val version = "1.4.1"
+            private const val version = "1.4.3"
 
             const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
             const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
@@ -32,13 +32,13 @@ object Dependencies {
 
     object AndroidX {
 
-        const val appcompat = "androidx.appcompat:appcompat:1.3.0-beta01"
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
-        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.2"
+        const val appcompat = "androidx.appcompat:appcompat:1.3.0-rc01"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.0-beta01"
+        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.3"
         const val legacy_support = "androidx.legacy:legacy-support-v4:1.0.0"
-        const val work_runtime = "androidx.work:work-runtime-ktx:2.5.0"
+        const val work_runtime = "androidx.work:work-runtime-ktx:2.7.0-alpha03"
         const val multidex = "androidx.multidex:multidex:2.0.1"
-        const val datastorePrefs = "androidx.datastore:datastore-preferences:1.0.0-alpha08"
+        const val datastorePrefs = "androidx.datastore:datastore-preferences:1.0.0-beta01"
 
         object Hilt {
             const val dagger = "com.google.dagger:hilt-android:$DAGGER_HILT_VERSION"
@@ -62,7 +62,7 @@ object Dependencies {
         }
 
         object Room {
-            private const val version = "2.2.6"
+            private const val version = "2.4.0-alpha01"
 
             const val roomRuntime = "androidx.room:room-runtime:$version"
             const val roomCompiler = "androidx.room:room-compiler:$version"
@@ -70,7 +70,7 @@ object Dependencies {
         }
 
         object Navigation {
-            private const val version = "2.3.4"
+            private const val version = "2.3.5"
 
             const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
             const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
@@ -81,21 +81,21 @@ object Dependencies {
     object Google {
 
         const val gson = "com.google.code.gson:gson:2.8.6"
-        const val material = "com.google.android.material:material:1.3.0"
+        const val material = "com.google.android.material:material:1.4.0-alpha02"
 
         object Firebase {
-
-            const val crashlytics = "com.google.firebase:firebase-crashlytics:17.4.0"
-            const val analytics = "com.google.firebase:firebase-analytics:18.0.2"
+            const val bom = "com.google.firebase:firebase-bom:27.1.0"
+            const val crashlytics = "com.google.firebase:firebase-crashlytics"
+            const val analytics = "com.google.firebase:firebase-analytics"
         }
     }
 
     object ThirdParty {
 
         const val debugDB = "com.amitshekhar.android:debug-db:1.0.6"
-        const val glide = "com.github.bumptech.glide:glide:4.11.0"
+        const val glide = "com.github.bumptech.glide:glide:4.12.0"
         const val stateProgressBar = "com.kofigyan.stateprogressbar:stateprogressbar:1.0.0"
-        const val okhttp = "com.squareup.okhttp3:okhttp:3.14.9"
+        const val okhttp = "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
 
         object Retrofit {
             private const val version = "2.9.0"
