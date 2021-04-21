@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.data.service
 
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.remote.response.ValidAccessCodeResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -38,7 +39,8 @@ interface WorkerAPI {
     @PUT("/worker")
     suspend fun updateWorker(
         @Header("id-token") idToken: String,
-        @Body worker: WorkerRecord
+        @Header("access-code") accessCode: String,
+        @Body registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest
     ): Response<WorkerRecord>
 
 }

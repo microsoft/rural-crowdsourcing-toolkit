@@ -27,27 +27,30 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
         WorkerInformation.gender = "not_specified"
 
-        binding.maleBtn.setOnClickListener {
-            WorkerInformation.gender = "male"
-            binding.maleBtn.isSelected = true
-            binding.femaleBtn.isSelected = false
-        }
+        with(binding) {
+            maleBtn.setOnClickListener {
+                WorkerInformation.gender = "male"
+                maleBtn.isSelected = true
+                femaleBtn.isSelected = false
+            }
 
-        binding.femaleBtn.setOnClickListener {
-            WorkerInformation.gender = "female"
-            binding.femaleBtn.isSelected = true
-            binding.maleBtn.isSelected = false
-        }
+            femaleBtn.setOnClickListener {
+                WorkerInformation.gender = "female"
+                femaleBtn.isSelected = true
+                maleBtn.isSelected = false
+            }
 
-        binding.submitGenderIb.setOnClickListener {
-            binding.submitGenderIb.visibility = View.INVISIBLE
-            findNavController().navigate(R.id.action_selectGenderFragment_to_selectAgeGroupFragment)
+            submitGenderIb.setOnClickListener {
+                submitGenderIb.visibility = View.INVISIBLE
+                findNavController().navigate(R.id.action_selectGenderFragment_to_selectAgeGroupFragment)
+            }
         }
 
     }
 
     override fun onResume() {
         super.onResume()
-        registrationActivity.onAssistantClick()
+//        registrationActivity.onAssistantClick()
+        // TODO: Add Assistant
     }
 }

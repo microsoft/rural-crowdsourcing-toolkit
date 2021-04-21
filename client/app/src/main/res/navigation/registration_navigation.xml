@@ -50,17 +50,9 @@
         android:label="SelectAgeGroupFragment"
         tools:layout="@layout/fragment_select_age_group">
         <action
-            android:id="@+id/action_selectAgeGroupFragment_to_registerWorker"
-            app:destination="@id/registerWorker" />
-        <action
             android:id="@+id/action_selectAgeGroupFragment_to_dashboardActivity2"
             app:destination="@id/dashboardActivity2" />
     </fragment>
-    <activity
-        android:id="@+id/registerWorker"
-        android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
-        android:label="RegisterWorker"
-        tools:layout="@layout/activity_network_activity"/>
     <activity
         android:id="@+id/dashboardActivity2"
         android:name="com.microsoft.research.karya.ui.dashboard.DashboardActivity"

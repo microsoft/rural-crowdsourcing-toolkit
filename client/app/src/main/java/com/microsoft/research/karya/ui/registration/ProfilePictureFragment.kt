@@ -72,22 +72,27 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
 
-        binding.mainProfilePictureIv.setOnClickListener { getProfilePicture() }
+        with(binding) {
 
-        binding.profilePictureNextIv.setOnClickListener {
-            binding.mainProfilePictureIv.isClickable = false
-            binding.rotateRightIb.isClickable = false
-            binding.profilePictureNextIv.visibility = View.INVISIBLE
-            val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
+            binding.mainProfilePictureIv.setOnClickListener { getProfilePicture() }
 
-            if (::profilePic.isInitialized) {
-                viewModel.submitProfilePicture(profilePic, imageFolder)
+            binding.profilePictureNextIv.setOnClickListener {
+                binding.mainProfilePictureIv.isClickable = false
+                binding.rotateRightIb.isClickable = false
+                binding.profilePictureNextIv.visibility = View.INVISIBLE
+                val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
+
+                if (::profilePic.isInitialized) {
+                    viewModel.submitProfilePicture(profilePic, imageFolder)
+                } else {
+                    navigateToSelectGenderFragment()
+                }
             }
-        }
 
-        binding.rotateRightIb.setOnClickListener {
-            if (::profilePic.isInitialized) {
-                profilePic = viewModel.rotateRight(profilePic)
+            binding.rotateRightIb.setOnClickListener {
+                if (::profilePic.isInitialized) {
+                    profilePic = viewModel.rotateRight(profilePic)
+                }
             }
         }
 

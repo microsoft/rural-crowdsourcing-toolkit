@@ -90,5 +90,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberEt"
-        android:text="@string/s_invalid_otp" />
+        android:text="@string/s_phone_number_already_used" />
 </androidx.constraintlayout.widget.ConstraintLayout>
