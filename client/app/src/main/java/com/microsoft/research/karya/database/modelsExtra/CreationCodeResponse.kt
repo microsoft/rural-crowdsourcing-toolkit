@@ -3,7 +3,4 @@
 
 package com.microsoft.research.karya.database.modelsExtra
 
-data class CreationCodeResponse(
-    var valid: Boolean,
-    var message: String
-)
+data class CreationCodeResponse(var valid: Boolean, var message: String)

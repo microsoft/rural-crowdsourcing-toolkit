@@ -2,11 +2,11 @@
 // Licensed under the MIT license.
 
 /**
- * This file was auto-generated using specs and scripts in the db-schema
- * repository. DO NOT EDIT DIRECTLY.
+ * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
+ * DIRECTLY.
  */
-
 package com.microsoft.research.karya.database.daos
+
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -15,27 +15,22 @@ import com.microsoft.research.karya.database.models.PayoutMethodRecord
 @Dao
 interface PayoutMethodDao : BasicDao<PayoutMethodRecord> {
 
-    @Query("SELECT * FROM payout_method")
-    suspend fun getAll(): List<PayoutMethodRecord>
+  @Query("SELECT * FROM payout_method") suspend fun getAll(): List<PayoutMethodRecord>
 
-    @Query("SELECT * FROM payout_method WHERE id == :id")
-    suspend fun getById(id: Int): PayoutMethodRecord
+  @Query("SELECT * FROM payout_method WHERE id == :id")
+  suspend fun getById(id: Int): PayoutMethodRecord
 
-    /**
-     * Upsert a [record] in the table
-     */
-    @Transaction
-    suspend fun upsert(record: PayoutMethodRecord) {
-        insertForUpsert(record)
-        updateForUpsert(record)
-    }
+  /** Upsert a [record] in the table */
+  @Transaction
+  suspend fun upsert(record: PayoutMethodRecord) {
+    insertForUpsert(record)
+    updateForUpsert(record)
+  }
 
-    /**
-     * Upsert a list of [records] in the table
-     */
-    @Transaction
-    suspend fun upsert(records: List<PayoutMethodRecord>) {
-        insertForUpsert(records)
-        updateForUpsert(records)
-    }
+  /** Upsert a list of [records] in the table */
+  @Transaction
+  suspend fun upsert(records: List<PayoutMethodRecord>) {
+    insertForUpsert(records)
+    updateForUpsert(records)
+  }
 }

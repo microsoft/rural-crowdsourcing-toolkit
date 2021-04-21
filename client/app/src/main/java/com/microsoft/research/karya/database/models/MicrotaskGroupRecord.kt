@@ -2,11 +2,11 @@
 // Licensed under the MIT license.
 
 /**
- * This file was auto-generated using specs and scripts in the db-schema
- * repository. DO NOT EDIT DIRECTLY.
+ * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
+ * DIRECTLY.
  */
-
 package com.microsoft.research.karya.database.models
+
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -14,18 +14,16 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "microtask_group", foreignKeys = arrayOf(
-    ForeignKey(
-            entity = TaskRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("task_id")
-        )
-    ), indices = arrayOf(Index("task_id"))
-)
-
+    tableName = "microtask_group",
+    foreignKeys =
+        arrayOf(
+            ForeignKey(
+                entity = TaskRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("task_id"))),
+    indices = arrayOf(Index("task_id")))
 data class MicrotaskGroupRecord(
-    @PrimaryKey
-    var id: String,
+    @PrimaryKey var id: String,
     var task_id: String,
     var microtask_assignment_order: AssignmentOrderType,
     var status: MicrotaskGroupStatus,

@@ -9,9 +9,9 @@ import com.microsoft.research.karya.database.models.LanguageRecord
 
 @Dao
 interface LanguageDaoExtra {
-    @Query("SELECT * FROM language WHERE string_support=:support")
-    suspend fun getStringSupported(support: Boolean = true): List<LanguageRecord>
+  @Query("SELECT * FROM language WHERE string_support=:support")
+  suspend fun getStringSupported(support: Boolean = true): List<LanguageRecord>
 
-    @Query("SELECT * FROM language WHERE list_support=:support")
-    suspend fun getListSupported(support: Boolean = true): List<LanguageRecord>
+  @Query("SELECT * FROM language WHERE list_support=:support")
+  suspend fun getListSupported(support: Boolean = true): List<LanguageRecord>
 }
