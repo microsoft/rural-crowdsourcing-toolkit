@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
         applicationId = "com.microsoft.research.karya"
         minSdkVersion(21)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         multiDexEnabled = true
         versionCode = 24
         versionName = "1"
@@ -43,7 +43,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
-    buildToolsVersion = "29.0.3"
+    buildToolsVersion = "31.0.0-rc3"
 }
 
 dependencyLocking {
