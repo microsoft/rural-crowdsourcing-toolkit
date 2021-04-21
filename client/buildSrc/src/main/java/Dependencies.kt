@@ -5,6 +5,7 @@ private const val DAGGER_HILT_VERSION = "2.32-alpha"
 private const val GMS_VERSION = "4.3.5"
 private const val KOTLIN_VERSION = "1.4.30"
 private const val LINT_VERSION = "27.3.0-alpha04"
+private const val KTLINT_VERSION = "0.5.0"
 
 object Plugins {
 
@@ -16,6 +17,7 @@ object Plugins {
     const val gms = "com.google.gms:google-services:$GMS_VERSION"
     const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     const val hilt = "com.google.dagger:hilt-android-gradle-plugin:$DAGGER_HILT_VERSION"
+    const val ktlint = "com.ncorti.ktfmt.gradle:$KTLINT_VERSION"
 }
 
 object Dependencies {
