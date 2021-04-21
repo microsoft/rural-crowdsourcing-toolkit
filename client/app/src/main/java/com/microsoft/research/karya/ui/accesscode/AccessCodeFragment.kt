@@ -72,7 +72,8 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
         showSuccessMessage()
         lifecycleScope.launch { updateLanguagePreference(successResult.value) }
         WorkerInformation.creation_code = accessCode
-        findNavController().navigate(R.id.action_accessCodeFragment_to_consentFormFragment)
+
+        navigateToConsentFormFragment()
     }
 
     private fun onAccessCodeFailure(message: String) {
@@ -87,6 +88,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     }
 
     private fun navigateToConsentFormFragment() {
+        findNavController().navigate(R.id.action_accessCodeFragment_to_consentFormFragment)
     }
 
     private fun handleFullCreationCode() {
