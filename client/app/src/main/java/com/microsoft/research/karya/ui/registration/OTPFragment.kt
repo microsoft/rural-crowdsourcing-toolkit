@@ -1,12 +1,11 @@
 package com.microsoft.research.karya.ui.registration
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -56,6 +55,16 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
             when (state) {
                 // TODO: Maybe indicate user after successful otp sent
                 OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
+            }
+        })
+
+        viewModel.idTokenLiveData.observe(viewLifecycleOwner, { idToken ->
+            if (!idToken.isNullOrEmpty()) {
+                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                with (sharedPref.edit()) {
+                    putString(getString(R.string.id_token_key), idToken)
+                    apply()
+                }
             }
         })
     }

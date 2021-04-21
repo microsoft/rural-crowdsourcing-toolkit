@@ -6,7 +6,6 @@ package com.microsoft.research.karya.ui.registration
 import android.graphics.Bitmap
 
 object WorkerInformation {
-    var id_token: String? = null // TODO: Save it in shared preferences
     var app_language: Int? = null
     var creation_code: String? = null
     var phone_number: String? = null

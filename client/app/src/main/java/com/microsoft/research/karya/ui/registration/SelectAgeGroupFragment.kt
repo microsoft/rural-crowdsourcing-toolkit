@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AgeGroup
 import com.microsoft.research.karya.data.model.karya.enums.RegisterWorkerState
-import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.databinding.FragmentSelectAgeGroupBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.viewBinding

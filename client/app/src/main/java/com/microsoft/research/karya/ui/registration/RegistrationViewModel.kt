@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.registration
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -63,6 +62,10 @@ class RegistrationViewModel @Inject constructor(
     val loadImageBitmap: LiveData<Boolean>
         get() = _loadImageBitmap
 
+    private val _idTokenLiveData = MutableLiveData<String>("")
+    val idTokenLiveData: LiveData<String>
+        get() = _idTokenLiveData
+
 
     var phoneNumberFragmentErrorId by Delegates.notNull<Int>()
     var otpFragmentErrorId by Delegates.notNull<Int>()
@@ -94,7 +97,8 @@ class RegistrationViewModel @Inject constructor(
         ).onEach { workerRecord ->
 
             _currOtpVerifyState.value = OtpVerifyState.SUCCESS
-            WorkerInformation.id_token = workerRecord.id_token
+            _idTokenLiveData.value = workerRecord.id_token!!
+
 
             if (workerRecord.age.isNullOrEmpty()) {
                 // First time registration, go on with the regular registration flow
