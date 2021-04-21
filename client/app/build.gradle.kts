@@ -6,6 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("dagger.hilt.android.plugin")
+    id("com.ncorti.ktfmt.gradle") version "0.5.0"
 }
 
 android {
