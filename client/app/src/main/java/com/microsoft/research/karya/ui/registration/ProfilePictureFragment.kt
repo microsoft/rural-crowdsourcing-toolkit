@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.registration
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
 import com.microsoft.research.karya.utils.viewBinding
-import java.io.FileOutputStream
 
 private const val REQUEST_IMAGE_CAPTURE = 101
 
@@ -135,21 +133,6 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
         }
     }
 
-//    /**
-//     * Handle submit profile picture click.
-//     */
-//    private fun submitProfilePicture() {
-//        if (::profilePic.isInitialized) {
-//            WorkerInformation.profile_picture = profilePic
-//            val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
-//            val fileName = "pp.png"
-//            val out = FileOutputStream("$imageFolder/$fileName")
-//            profilePic.compress(Bitmap.CompressFormat.PNG, 100, out)
-//        }
-//        findNavController().navigate(R.id.action_profilePictureFragment_to_selectGenderFragment)
-//    }
-
-
     /**
      * Disable rotate button
      */
@@ -163,21 +146,6 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
     private fun enableRotateButton() {
         binding.rotateRightIb.visibility = View.VISIBLE
         binding.rotateRightIb.isClickable = true
-    }
-
-    /**
-     * Rotate right
-     */
-    private fun rotateRight() {
-        if (::profilePic.isInitialized) {
-            val matrix = Matrix()
-            matrix.postRotate(90.toFloat())
-            profilePic = Bitmap.createBitmap(
-                profilePic, 0, 0, profilePic.width, profilePic.height,
-                matrix, true
-            )
-
-        }
     }
 
 }
