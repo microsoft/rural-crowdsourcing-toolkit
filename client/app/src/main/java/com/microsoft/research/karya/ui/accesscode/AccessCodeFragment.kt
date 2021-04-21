@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
@@ -20,11 +21,13 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.visible
 import com.microsoft.research.karya.utils.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     private val binding by viewBinding(FragmentAccessCodeBinding::bind)
-    private val viewModel by activityViewModels<AccessCodeViewModel>()
+    private val viewModel by hiltNavGraphViewModels<AccessCodeViewModel>(R.id.access_code_nav_graph)
 
     private val creationCodeLength = 16
     private val creationCodeEtMax = creationCodeLength + (creationCodeLength - 1) / 4
@@ -81,6 +84,9 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     }
 
     private suspend fun updateLanguagePreference(newLanguage: Int) {
+        // TODO: Remove this
+        WorkerInformation.app_language = newLanguage
+
         val languagePrefKey = intPreferencesKey(PreferenceKeys.APP_LANGUAGE)
         requireContext().dataStore.edit { prefs ->
             prefs[languagePrefKey] = newLanguage

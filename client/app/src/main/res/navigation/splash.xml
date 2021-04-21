@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash"
+    app:startDestination="@id/splashScreenFragment">
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreenFragment"
+        android:label="SplashScreenFragment"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_access_code_nav_graph"
+            app:destination="@id/accessCodeActivity" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_registration_navigation"
+            app:destination="@id/registrationActivity" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_ngDashboardActivity"
+            app:destination="@id/ngDashboardActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/ngDashboardActivity"
+        android:name="com.microsoft.research.karya.ui.dashboard.NgDashboardActivity"
+        android:label="NgDashboardActivity" />
+    <activity
+        android:id="@+id/accessCodeActivity"
+        android:name="com.microsoft.research.karya.ui.accesscode.AccessCodeActivity"
+        android:label="AccessCodeActivity" />
+    <activity
+        android:id="@+id/registrationActivity"
+        android:name="com.microsoft.research.karya.ui.registration.RegistrationActivity"
+        android:label="RegistrationActivity"
+        tools:layout="@layout/activity_registration" />
+</navigation>

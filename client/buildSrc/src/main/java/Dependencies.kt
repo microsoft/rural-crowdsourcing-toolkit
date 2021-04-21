@@ -47,6 +47,7 @@ object Dependencies {
             const val hiltLifecycleViewModel =
                 "androidx.hilt:hilt-lifecycle-viewmodel:$ANDROIDX_HILT_VERSION"
             const val hiltNavigation = "androidx.hilt:hilt-navigation:$ANDROIDX_HILT_VERSION"
+            const val hiltNavigationFragment = "androidx.hilt:hilt-navigation-fragment:1.0.0-beta01"
         }
 
         object Lifecycle {
