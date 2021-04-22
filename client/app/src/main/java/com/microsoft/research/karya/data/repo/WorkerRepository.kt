@@ -7,12 +7,8 @@ import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedExcept
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
-import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
-import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerObject
 import com.microsoft.research.karya.data.service.WorkerAPI
-import com.microsoft.research.karya.ui.registration.WorkerInformation
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

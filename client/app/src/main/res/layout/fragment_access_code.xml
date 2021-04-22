@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.accesscode.AccessCodeActivity">
+
+    <include
+        android:id="@+id/appTb"
+        layout="@layout/app_toolbar" />
+
+    <TextView
+        android:id="@+id/creationCodePromptTv"
+        style="@style/multilineText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:text="@string/s_access_code_prompt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        tools:text="@string/access_code_prompt_desc" />
+
+
+    <EditText
+        android:id="@+id/creationCodeEt"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_margin="@dimen/_16sdp"
+        android:background="@drawable/blue_rounded_border"
+        android:digits="0123456789"
+        android:fontFamily="monospace"
+        android:hint="@string/creation_code_hint"
+        android:inputType="number"
+        android:maxLength="19"
+        android:paddingVertical="@dimen/_10sdp"
+        android:textAlignment="center"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintEnd_toStartOf="@id/creationCodeStatusIv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv"
+        android:importantForAutofill="no" />
+
+    <ImageView
+        android:id="@+id/creationCodeStatusIv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:contentDescription="@string/status_check"
+        app:layout_constraintBottom_toBottomOf="@id/creationCodeEt"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/creationCodeEt"
+        app:layout_constraintWidth_percent="0.1"
+        app:srcCompat="@drawable/ic_check_grey" />
+
+
+    <TextView
+        android:id="@+id/creationCodeErrorTv"
+        style="@style/multilineError"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="@id/creationCodeEt"
+        app:layout_constraintStart_toStartOf="@id/creationCodeEt"
+        app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
+        tools:text="@string/invalid_creation_code_desc" />
+
+    <ProgressBar
+        android:id="@+id/loadingPb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/creationCodeErrorTv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
