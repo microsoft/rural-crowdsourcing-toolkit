@@ -14,8 +14,7 @@ class AccessCodeViewModel @Inject constructor(private val workerRepository: Work
 
     fun checkAccessCode(accessCode: String): Flow<Result> {
         return workerRepository.getWorkerUsingAccessCode(accessCode)
-            .map { response ->
-                response.languageId
-            }.mapToResult()
+            .map { response -> response.appLanguage }
+            .mapToResult()
     }
 }

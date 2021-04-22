@@ -35,12 +35,6 @@
             android:noHistory="true"
             />
 
-        <!-- Activity to receive user consent for collecting data via the application -->
-        <activity android:name="com.microsoft.research.karya.ui.consentForm.ConsentFormActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
-
         <!-- Network activity to register the user -->
         <activity
             android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
