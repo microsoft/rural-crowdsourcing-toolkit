@@ -40,5 +40,5 @@ data class MicrotaskGroupAssignmentRecord(
     var status: MicrotaskGroupAssignmentStatus,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

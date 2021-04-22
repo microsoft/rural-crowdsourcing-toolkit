@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
-import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,7 +29,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     private lateinit var baseActivity: BaseActivity
 
     private fun setupObservers() {
-        viewModel.currOtpSendState.observe(viewLifecycleOwner, { sent ->
+        viewModel.currOtpSendState.observe(viewLifecycleOwner) { sent ->
             if (sent == OtpSendState.SUCCESS) {
                 onSendOtpSuccess()
             }
@@ -39,7 +37,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
             if (sent == OtpSendState.FAIL) {
                 onSendOtpFailure()
             }
-        })
+        }
     }
 
     private fun onSendOtpSuccess() {

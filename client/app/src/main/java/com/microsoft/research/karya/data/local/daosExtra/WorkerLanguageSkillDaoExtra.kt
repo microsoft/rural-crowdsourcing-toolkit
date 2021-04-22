@@ -15,7 +15,7 @@ interface WorkerLanguageSkillDaoExtra {
         canRead: Boolean,
         canSpeak: Boolean,
         canType: Boolean,
-        updatedAt: String
+        updatedAt: String,
     )
 
     @Query("SELECT * FROM worker_language_skill WHERE language_id=:languageId")

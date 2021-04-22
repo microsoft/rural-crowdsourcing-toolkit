@@ -6,6 +6,7 @@ import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedExcept
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.service.WorkerAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -33,7 +34,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
-            throw when(response.code()) {
+            throw when (response.code()) {
                 404 -> IncorrectOtpException("Incorrect OTP")
                 403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
                 401 -> IncorrectAccessCodeException("Access Code is incorrect")
@@ -82,14 +83,17 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
 
     fun updateWorker(
         idToken: String,
-        workerRecordId: String,
-        worker: WorkerRecord,
+        accessCode: String,
+        registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
     ) = flow {
-        val response = workerAPI.updateWorker(idToken, worker)
+        val response = workerAPI.updateWorker(idToken, accessCode, registerOrUpdateWorkerRequest)
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
-            error("Request failed, response code: ${response.code()}")
+            throw when (response.code()) {
+                401 -> IncorrectAccessCodeException("Access Code is incorrect")
+                else -> UnknownException("Something went wrong")
+            }
         }
 
         if (workerRecord != null) {

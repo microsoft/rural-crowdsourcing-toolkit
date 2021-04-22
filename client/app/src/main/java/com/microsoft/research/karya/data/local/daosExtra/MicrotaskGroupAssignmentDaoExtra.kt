@@ -15,7 +15,7 @@ interface MicrotaskGroupAssignmentDaoExtra {
      */
     @Query("SELECT * FROM microtask_group_assignment WHERE status=:status")
     suspend fun getCompletedGroupAssignments(
-        status: MicrotaskGroupAssignmentStatus = MicrotaskGroupAssignmentStatus.completed
+        status: MicrotaskGroupAssignmentStatus = MicrotaskGroupAssignmentStatus.completed,
     ): List<MicrotaskGroupAssignmentRecord>
 
     /**
@@ -24,6 +24,6 @@ interface MicrotaskGroupAssignmentDaoExtra {
     @Query("UPDATE microtask_group_assignment SET status=:status WHERE id=:id")
     suspend fun markSubmitted(
         id: String,
-        status: MicrotaskGroupAssignmentStatus = MicrotaskGroupAssignmentStatus.submitted
+        status: MicrotaskGroupAssignmentStatus = MicrotaskGroupAssignmentStatus.submitted,
     )
 }

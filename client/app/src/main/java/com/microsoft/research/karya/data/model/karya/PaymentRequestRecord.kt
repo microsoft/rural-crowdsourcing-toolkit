@@ -35,5 +35,5 @@ data class PaymentRequestRecord(
     var reference: String?,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

@@ -47,7 +47,7 @@ interface MicrotaskAssignmentDaoExtra {
     )
     suspend fun getIDsForTask(
         taskId: String,
-        statuses: List<MicrotaskAssignmentStatus>
+        statuses: List<MicrotaskAssignmentStatus>,
     ): List<String>
 
     /**
@@ -82,7 +82,7 @@ interface MicrotaskAssignmentDaoExtra {
         id: String,
         output: JsonObject,
         status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.completed,
-        date: String
+        date: String,
     )
 
     /**
@@ -91,7 +91,7 @@ interface MicrotaskAssignmentDaoExtra {
     @Query("UPDATE microtask_assignment SET status=:status WHERE id=:id")
     suspend fun markSubmitted(
         id: String,
-        status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.submitted
+        status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.submitted,
     )
 
     /**

@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class LanguageRepository @Inject constructor(
     private val languageAPI: LanguageAPI,
-    private val languageDao: LanguageDao
+    private val languageDao: LanguageDao,
 ) {
     fun getLanguages(accessCode: String) = flow {
         val response = languageAPI.getLanguages(accessCode)

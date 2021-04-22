@@ -10,5 +10,5 @@ data class TaskInfo(
     val incompleteMicrotasks: Int,
     val completedMicrotasks: Int,
     val submittedMicrotasks: Int,
-    val verifiedMicrotasks: Int
+    val verifiedMicrotasks: Int,
 )

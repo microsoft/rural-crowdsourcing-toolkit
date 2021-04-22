@@ -18,7 +18,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.StringRes
@@ -125,7 +124,7 @@ abstract class BaseActivity() : AppCompatActivity() {
             setAppLanguageJob.join()
             if (appLanguageChanged) {
 
-                salutation = getValueFromName(R.string.salutation)
+//                salutation = getValueFromName(R.string.salutation)
                 // Set various Strings for the Activity
                 getStringsForActivity()
             }
@@ -244,10 +243,10 @@ abstract class BaseActivity() : AppCompatActivity() {
      * By value we mean what a particular word is known in a particular language
      */
     suspend fun getValueFromName(@StringRes resId: Int, languageId: Int = appLanguageId!!): String {
-        val name = getString(resId)
-        val value = karyaDb.languageResourceValueDaoExtra().getValueFromName(languageId, name)
-            .trim()  // getting language resource value
-        return value
+//        val name = getString(resId)
+//        val value = karyaDb.languageResourceValueDaoExtra().getValueFromName(languageId, name)
+//            .trim()  // getting language resource value
+        return ""
     }
 
     /**
@@ -257,7 +256,7 @@ abstract class BaseActivity() : AppCompatActivity() {
         @StringRes resId: Int,
         languageId: Int? = null,
         uiCue: (() -> Unit)? = null,
-        onCompletionListener: (() -> Unit)? = null
+        onCompletionListener: (() -> Unit)? = null,
     ) {
 //        /** If player is not initialized, return */
 //        if (!::assistantPlayer.isInitialized || !assistantAvailable) {

@@ -11,5 +11,5 @@ data class WorkerLanguageSkillObject(
     var can_read: Boolean,
     var speak_score: Float,
     var type_score: Float,
-    var read_score: Float
+    var read_score: Float,
 )

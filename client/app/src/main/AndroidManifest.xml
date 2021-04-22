@@ -28,16 +28,10 @@
             android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreen"
             android:noHistory="true" />
 
+
         <!-- Activity to fetch data on initial load -->
         <activity
             android:name="com.microsoft.research.karya.ui.fetchData.FirstLoadFetchData"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
-
-        <!-- Network activity to register the user -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
             android:noHistory="true"
             android:screenOrientation="portrait" />
 

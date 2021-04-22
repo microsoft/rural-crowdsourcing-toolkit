@@ -8,5 +8,5 @@ data class UploadFileRequest(
     var container_name: String,
     var name: String,
     var algorithm: String,
-    var checksum: String
+    var checksum: String,
 )

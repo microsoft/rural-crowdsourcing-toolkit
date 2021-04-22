@@ -18,7 +18,6 @@ package com.microsoft.research.karya.utils.jtar;
 
 /**
  * @author Kamran Zafar
- *
  */
 public class Octal {
 
@@ -26,13 +25,9 @@ public class Octal {
      * Parse an octal string from a header buffer. This is used for the file
      * permission mode value.
      *
-     * @param header
-     *            The header buffer from which to parse.
-     * @param offset
-     *            The offset into the buffer from which to parse.
-     * @param length
-     *            The number of header bytes to parse.
-     *
+     * @param header The header buffer from which to parse.
+     * @param offset The offset into the buffer from which to parse.
+     * @param length The number of header bytes to parse.
      * @return The long value of the octal string.
      */
     public static long parseOctal(byte[] header, int offset, int length) {
@@ -63,15 +58,10 @@ public class Octal {
     /**
      * Write an octal integer to a header buffer.
      *
-     * @param value
-     *            The value to write.
-     * @param buf
-     *            The header buffer from which to parse.
-     * @param offset
-     *            The offset into the buffer from which to parse.
-     * @param length
-     *            The number of header bytes to parse.
-     *
+     * @param value  The value to write.
+     * @param buf    The header buffer from which to parse.
+     * @param offset The offset into the buffer from which to parse.
+     * @param length The number of header bytes to parse.
      * @return The integer value of the octal bytes.
      */
     public static int getOctalBytes(long value, byte[] buf, int offset, int length) {
@@ -102,14 +92,10 @@ public class Octal {
     /**
      * Write the checksum octal integer to a header buffer.
      *
-     * @param value
-     *            The value to write.
-     * @param buf
-     *            The header buffer from which to parse.
-     * @param offset
-     *            The offset into the buffer from which to parse.
-     * @param length
-     *            The number of header bytes to parse.
+     * @param value  The value to write.
+     * @param buf    The header buffer from which to parse.
+     * @param offset The offset into the buffer from which to parse.
+     * @param length The number of header bytes to parse.
      * @return The integer value of the entry's checksum.
      */
     public static int getCheckSumOctalBytes(long value, byte[] buf, int offset, int length) {
@@ -122,15 +108,10 @@ public class Octal {
     /**
      * Write an octal long integer to a header buffer.
      *
-     * @param value
-     *            The value to write.
-     * @param buf
-     *            The header buffer from which to parse.
-     * @param offset
-     *            The offset into the buffer from which to parse.
-     * @param length
-     *            The number of header bytes to parse.
-     *
+     * @param value  The value to write.
+     * @param buf    The header buffer from which to parse.
+     * @param offset The offset into the buffer from which to parse.
+     * @param length The number of header bytes to parse.
      * @return The long value of the octal bytes.
      */
     public static int getLongOctalBytes(long value, byte[] buf, int offset, int length) {

@@ -1,7 +1,6 @@
 package com.microsoft.research.karya.ui.registration
 
 import android.os.Bundle
-import android.util.Log
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint

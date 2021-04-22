@@ -20,7 +20,7 @@ import com.google.gson.JsonObject
             entity = TaskRecord::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("task_id")
-        ),ForeignKey(
+        ), ForeignKey(
             entity = KaryaFileRecord::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("input_file_id")
@@ -41,5 +41,5 @@ data class MicrotaskRecord(
     var output: JsonObject,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

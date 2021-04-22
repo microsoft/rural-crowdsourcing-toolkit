@@ -13,9 +13,7 @@ import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ACTIVE
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.DISABLED
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ENABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.*
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +25,7 @@ import kotlinx.coroutines.runBlocking
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
+import java.lang.Runnable
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -42,7 +41,7 @@ open class SpeechDataMain(
     includeCompleted: Boolean = false,
     finishOnGroupBoundary: Boolean = false,
     prerecordingTime: Int = 250,
-    private val postRecordingTime: Int = 250
+    private val postRecordingTime: Int = 250,
 ) : MicrotaskRenderer(
     activityName = "SPEECH_DATA",
     includeCompleted = includeCompleted,
@@ -239,7 +238,8 @@ open class SpeechDataMain(
                 ActivityState.NEW_PLAYING,
                 ActivityState.NEW_PAUSED,
                 ActivityState.OLD_PLAYING,
-                ActivityState.OLD_PAUSED -> {
+                ActivityState.OLD_PAUSED,
+                -> {
                     releasePlayer()
                 }
 
@@ -259,7 +259,8 @@ open class SpeechDataMain(
                 ActivityState.ENCODING_NEXT,
                 ActivityState.ENCODING_BACK,
                 ActivityState.ASSISTANT_PLAYING,
-                ActivityState.ACTIVITY_STOPPED -> {
+                ActivityState.ACTIVITY_STOPPED,
+                -> {
                     // Do nothing
                 }
             }
@@ -285,7 +286,8 @@ open class SpeechDataMain(
             ActivityState.OLD_PLAYING,
             ActivityState.ENCODING_NEXT,
             ActivityState.ENCODING_BACK,
-            ActivityState.ASSISTANT_PLAYING -> {
+            ActivityState.ASSISTANT_PLAYING,
+            -> {
                 resetMicrotask()
             }
 
@@ -294,7 +296,8 @@ open class SpeechDataMain(
              */
             ActivityState.RECORDED,
             ActivityState.FIRST_PLAYBACK,
-            ActivityState.FIRST_PLAYBACK_PAUSED -> {
+            ActivityState.FIRST_PLAYBACK_PAUSED,
+            -> {
                 setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
                 setActivityState(ActivityState.FIRST_PLAYBACK)
             }
@@ -304,7 +307,8 @@ open class SpeechDataMain(
              */
             ActivityState.COMPLETED,
             ActivityState.NEW_PAUSED,
-            ActivityState.NEW_PLAYING -> {
+            ActivityState.NEW_PLAYING,
+            -> {
                 setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
                 setActivityState(ActivityState.COMPLETED)
             }
@@ -793,7 +797,8 @@ open class SpeechDataMain(
              * recording.
              */
             ActivityState.OLD_PLAYING, ActivityState.OLD_PAUSED,
-            ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
+            ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED,
+            -> {
                 setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED)
 
                 releasePlayer()
@@ -824,7 +829,8 @@ open class SpeechDataMain(
             ActivityState.SIMPLE_BACK,
             ActivityState.SIMPLE_NEXT,
             ActivityState.ASSISTANT_PLAYING,
-            ActivityState.ACTIVITY_STOPPED -> {
+            ActivityState.ACTIVITY_STOPPED,
+            -> {
                 // throw Exception("Record button should not be clicked in '$activityState' state")
             }
         }
@@ -915,7 +921,8 @@ open class SpeechDataMain(
             ActivityState.SIMPLE_BACK,
             ActivityState.SIMPLE_NEXT,
             ActivityState.ASSISTANT_PLAYING,
-            ActivityState.ACTIVITY_STOPPED -> {
+            ActivityState.ACTIVITY_STOPPED,
+            -> {
                 // throw Exception("Play button should not be clicked in '$activityState' state")
             }
         }
@@ -938,13 +945,15 @@ open class SpeechDataMain(
 
             ActivityState.COMPLETED_PRERECORDING,
             ActivityState.OLD_PLAYING,
-            ActivityState.OLD_PAUSED -> {
+            ActivityState.OLD_PAUSED,
+            -> {
                 setActivityState(ActivityState.SIMPLE_NEXT)
             }
 
             ActivityState.COMPLETED,
             ActivityState.NEW_PLAYING,
-            ActivityState.NEW_PAUSED -> {
+            ActivityState.NEW_PAUSED,
+            -> {
                 setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
                 setActivityState(ActivityState.ENCODING_NEXT)
             }
@@ -960,7 +969,8 @@ open class SpeechDataMain(
             ActivityState.SIMPLE_NEXT,
             ActivityState.SIMPLE_BACK,
             ActivityState.ASSISTANT_PLAYING,
-            ActivityState.ACTIVITY_STOPPED -> {
+            ActivityState.ACTIVITY_STOPPED,
+            -> {
                 // throw Exception("Next button should not be clicked in '$activityState' state")
             }
         }
@@ -984,13 +994,15 @@ open class SpeechDataMain(
             ActivityState.PRERECORDING,
             ActivityState.COMPLETED_PRERECORDING,
             ActivityState.OLD_PLAYING,
-            ActivityState.OLD_PAUSED -> {
+            ActivityState.OLD_PAUSED,
+            -> {
                 setActivityState(ActivityState.SIMPLE_BACK)
             }
 
             ActivityState.COMPLETED,
             ActivityState.NEW_PLAYING,
-            ActivityState.NEW_PAUSED -> {
+            ActivityState.NEW_PAUSED,
+            -> {
                 setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
                 setActivityState(ActivityState.ENCODING_BACK)
             }
@@ -1005,7 +1017,8 @@ open class SpeechDataMain(
             ActivityState.SIMPLE_NEXT,
             ActivityState.SIMPLE_BACK,
             ActivityState.ASSISTANT_PLAYING,
-            ActivityState.ACTIVITY_STOPPED -> {
+            ActivityState.ACTIVITY_STOPPED,
+            -> {
                 // throw Exception("Back button should not be clicked in '$activityState' state")
             }
         }
@@ -1031,13 +1044,15 @@ open class SpeechDataMain(
             ActivityState.OLD_PAUSED,
             ActivityState.SIMPLE_NEXT,
             ActivityState.SIMPLE_BACK,
-            ActivityState.ASSISTANT_PLAYING -> {
+            ActivityState.ASSISTANT_PLAYING,
+            -> {
                 finish()
             }
 
             ActivityState.COMPLETED,
             ActivityState.NEW_PLAYING,
-            ActivityState.NEW_PAUSED -> {
+            ActivityState.NEW_PAUSED,
+            -> {
                 runBlocking {
                     encodeRecording()
                     completeAndSaveCurrentMicrotask()
@@ -1046,7 +1061,8 @@ open class SpeechDataMain(
             }
 
             ActivityState.ENCODING_NEXT,
-            ActivityState.ENCODING_BACK -> {
+            ActivityState.ENCODING_BACK,
+            -> {
                 runBlocking {
                     encodingJob?.join()
                     finish()

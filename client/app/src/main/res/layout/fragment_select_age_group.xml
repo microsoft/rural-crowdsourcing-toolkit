@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <com.kofigyan.stateprogressbar.StateProgressBar
         android:id="@+id/dottedScreenPb"
@@ -33,6 +32,7 @@
         android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginRight="@dimen/_16sdp"
         android:gravity="center|center_vertical"
+        android:text="@string/s_age_prompt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -40,8 +40,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dottedScreenPb"
-        app:layout_constraintVertical_bias="0.040"
-        android:text="@string/s_age_prompt" />
+        app:layout_constraintVertical_bias="0.040" />
 
     <Button
         android:id="@+id/youthBtn"
@@ -54,6 +53,7 @@
         android:layout_marginRight="@dimen/_40sdp"
         android:background="@drawable/age_selector"
         android:padding="@dimen/_10sdp"
+        android:text="@string/s_age_prompt"
         android:textAllCaps="false"
         android:textColor="@drawable/gender_text_color_selector"
         android:textSize="@dimen/_20ssp"
@@ -63,8 +63,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ageGroupPromptTv"
-        android:text="@string/s_age_prompt" />
+        app:layout_constraintTop_toBottomOf="@+id/ageGroupPromptTv" />
 
     <Button
         android:id="@+id/middleAgeBtn"
@@ -122,5 +121,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/oldAgeBtn" />
+
+    <TextView
+        android:id="@+id/failToRegisterTv"
+        style="@style/multilineError"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:text="@string/s_invalid_otp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submitAgeGroupIb" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

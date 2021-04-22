@@ -3,12 +3,12 @@ package com.microsoft.research.karya.ui.registration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
@@ -16,8 +16,12 @@ import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
+import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val OTP_LENGTH = 6
 
@@ -32,32 +36,43 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     private lateinit var karyaAPI: KaryaAPIService
 
     private fun setupObservers() {
-        viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner, Observer { openDashBoard ->
+        viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner) { openDashBoard ->
             if (openDashBoard) {
                 navigateToDashBoard()
             }
-        })
+        }
 
-        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner, { openProfilePictureFragment ->
+        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner) { openProfilePictureFragment ->
             if (openProfilePictureFragment) {
                 navigateToProfilePicture()
             }
-        })
+        }
 
-        viewModel.currOtpVerifyState.observe(viewLifecycleOwner, { state ->
+        viewModel.currOtpVerifyState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 OtpVerifyState.SUCCESS -> onOtpVerifySuccess()
                 OtpVerifyState.FAIL -> onOtpVerifyOrResendFailure()
                 OtpVerifyState.NOT_ENTERED -> setOtpNotSentUI()
             }
-        })
+        }
 
-        viewModel.currOtpResendState.observe(viewLifecycleOwner, { state ->
+        viewModel.currOtpResendState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 // TODO: Maybe indicate user after successful otp sent
                 OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
             }
-        })
+        }
+
+        viewModel.idTokenLiveData.observe(viewLifecycleOwner) { idToken ->
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (!idToken.isNullOrEmpty()) {
+                    val idTokenKey = stringPreferencesKey(PreferenceKeys.ID_TOKEN_KEY)
+                    requireContext().dataStore.edit { settings ->
+                        settings[idTokenKey] = idToken
+                    }
+                }
+            }
+        }
     }
 
     private fun navigateToDashBoard() {

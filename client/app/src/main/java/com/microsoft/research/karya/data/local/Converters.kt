@@ -24,7 +24,7 @@ import com.microsoft.research.karya.data.model.karya.TaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.TaskStatus
 import java.math.BigInteger
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class Converters {
 

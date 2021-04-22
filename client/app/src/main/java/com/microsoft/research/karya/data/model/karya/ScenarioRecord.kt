@@ -29,5 +29,5 @@ data class ScenarioRecord(
     var skills: JsonObject,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

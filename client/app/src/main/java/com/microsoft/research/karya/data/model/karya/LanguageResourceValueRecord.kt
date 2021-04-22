@@ -41,5 +41,5 @@ data class LanguageResourceValueRecord(
     var need_update: Boolean,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

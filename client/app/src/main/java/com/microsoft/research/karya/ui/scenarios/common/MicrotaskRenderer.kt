@@ -34,7 +34,7 @@ abstract class MicrotaskRenderer(
     private val activityName: String,
     private val includeCompleted: Boolean,
     private val finishOnGroupBoundary: Boolean,
-    useAssistant: Boolean = false
+    useAssistant: Boolean = false,
 ) : BaseActivity() {
 
     protected lateinit var task: TaskRecord
@@ -396,7 +396,7 @@ abstract class MicrotaskRenderer(
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 

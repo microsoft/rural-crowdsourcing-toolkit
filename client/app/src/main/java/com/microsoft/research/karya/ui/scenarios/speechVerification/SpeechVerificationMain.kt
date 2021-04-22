@@ -123,13 +123,15 @@ class SpeechVerificationMain : MicrotaskRenderer(
             ActivityState.INIT,
             ActivityState.WAIT_FOR_PLAY,
             ActivityState.FIRST_PLAYBACK,
-            ActivityState.FIRST_PLAYBACK_PAUSED -> {
+            ActivityState.FIRST_PLAYBACK_PAUSED,
+            -> {
                 resetMicrotask()
             }
 
             ActivityState.REVIEW_ENABLED,
             ActivityState.PLAYBACK_PAUSED,
-            ActivityState.PLAYBACK -> {
+            ActivityState.PLAYBACK,
+            -> {
                 setActivityState(ActivityState.REVIEW_ENABLED)
             }
 
@@ -368,7 +370,7 @@ class SpeechVerificationMain : MicrotaskRenderer(
     private fun setButtonStates(
         backState: ButtonState,
         playState: ButtonState,
-        nextState: ButtonState
+        nextState: ButtonState,
     ) {
         backBtnState = backState
         playBtnState = playState
