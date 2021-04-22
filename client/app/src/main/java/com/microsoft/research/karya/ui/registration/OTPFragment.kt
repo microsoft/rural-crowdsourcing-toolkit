@@ -1,12 +1,14 @@
 package com.microsoft.research.karya.ui.registration
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
@@ -14,8 +16,12 @@ import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
+import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private const val OTP_LENGTH = 6
 
@@ -58,11 +64,12 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
         }
 
         viewModel.idTokenLiveData.observe(viewLifecycleOwner) { idToken ->
-            if (!idToken.isNullOrEmpty()) {
-                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                with(sharedPref.edit()) {
-                    putString(getString(R.string.id_token_key), idToken)
-                    apply()
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (!idToken.isNullOrEmpty()) {
+                    val idTokenKey = stringPreferencesKey(PreferenceKeys.ID_TOKEN_KEY)
+                    requireContext().dataStore.edit { settings ->
+                        settings[idTokenKey] = idToken
+                    }
                 }
             }
         }

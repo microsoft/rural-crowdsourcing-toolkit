@@ -56,9 +56,9 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
         /** Setup the UI Strings **/
         val yearsString = getString(R.string.s_years)
 
-        val youthLabel = "${AgeGroup.YOUTH_AGE.range} $yearsString"
-        val middleLabel = "${AgeGroup.MIDDLE_AGE.range} $yearsString"
-        val oldLabel = "${AgeGroup.OLD_AGE.range} $yearsString"
+        val youthLabel = "${AgeGroup.YOUNG.range} $yearsString"
+        val middleLabel = "${AgeGroup.MIDDLE.range} $yearsString"
+        val oldLabel = "${AgeGroup.OLD.range} $yearsString"
 
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_age_prompt
@@ -68,9 +68,9 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
             middleAgeBtn.text = middleLabel
             oldAgeBtn.text = oldLabel
 
-            youthBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.YOUTH_AGE) }
-            middleAgeBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.MIDDLE_AGE) }
-            oldAgeBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.OLD_AGE) }
+            youthBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.YOUNG) }
+            middleAgeBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.MIDDLE) }
+            oldAgeBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.OLD) }
 
             submitAgeGroupIb.setOnClickListener {
                 submitAgeGroupIb.visibility = View.INVISIBLE
@@ -91,13 +91,13 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
         binding.middleAgeBtn.isSelected = false
         binding.oldAgeBtn.isSelected = false
         when (item) {
-            AgeGroup.YOUTH_AGE -> {
+            AgeGroup.YOUNG -> {
                 binding.youthBtn.isSelected = true
             }
-            AgeGroup.MIDDLE_AGE -> {
+            AgeGroup.MIDDLE -> {
                 binding.middleAgeBtn.isSelected = true
             }
-            AgeGroup.OLD_AGE -> {
+            AgeGroup.OLD -> {
                 binding.oldAgeBtn.isSelected = true
             }
         }
