@@ -40,7 +40,6 @@ const initState: AllState = {
   language: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   work_provider: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  worker_language_skill: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },

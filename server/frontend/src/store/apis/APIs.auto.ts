@@ -24,8 +24,6 @@ export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'languag
   ? 'DBT.Microtask'
   : Table extends 'task_assignment'
   ? 'DBT.TaskAssignment'
-  : Table extends 'worker_language_skill'
-  ? 'DBT.WorkerLanguageSkill'
   : Table extends 'microtask_group_assignment'
   ? 'DBT.MicrotaskGroupAssignment'
   : Table extends 'microtask_assignment'
@@ -293,26 +291,6 @@ export type BackendRequestInitAction =
       store: 'task_assignment';
       label: 'GET_ALL';
       params: DBT.TaskAssignment;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'worker_language_skill';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.WorkerLanguageSkill;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'worker_language_skill';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'worker_language_skill';
-      label: 'GET_ALL';
-      params: DBT.WorkerLanguageSkill;
     }
   | {
       type: 'BR_INIT';
@@ -625,24 +603,6 @@ export type BackendRequestSuccessAction =
       store: 'task_assignment';
       label: 'GET_ALL';
       response: DBT.TaskAssignmentRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'worker_language_skill';
-      label: 'UPDATE_BY_ID';
-      response: DBT.WorkerLanguageSkillRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'worker_language_skill';
-      label: 'GET_BY_ID';
-      response: DBT.WorkerLanguageSkillRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'worker_language_skill';
-      label: 'GET_ALL';
-      response: DBT.WorkerLanguageSkillRecord[];
     }
   | {
       type: 'BR_SUCCESS';

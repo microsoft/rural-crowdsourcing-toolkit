@@ -18,18 +18,9 @@ export type TableUpdates<TableName extends DbTableName> = {
   rows: DbRecordType<TableName>[];
 };
 
-export type WorkerUpdatableTables =
-  | 'worker'
-  | 'worker_language_skill'
-  | 'microtask_group_assignment'
-  | 'microtask_assignment';
+export type WorkerUpdatableTables = 'worker' | 'microtask_group_assignment' | 'microtask_assignment';
 
-const workerUpdatableTables: WorkerUpdatableTables[] = [
-  'worker',
-  'worker_language_skill',
-  'microtask_group_assignment',
-  'microtask_assignment',
-];
+const workerUpdatableTables: WorkerUpdatableTables[] = ['worker', 'microtask_group_assignment', 'microtask_assignment'];
 
 /**
  * Gather all updates for a worker

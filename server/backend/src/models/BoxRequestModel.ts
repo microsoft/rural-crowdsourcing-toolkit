@@ -14,7 +14,6 @@ const boxUpdatableTables: BoxUpdatableTables[] = [
   'worker',
   'karya_file',
   'task_assignment',
-  'worker_language_skill',
   'microtask_group_assignment',
   'microtask_assignment',
   'payout_info',

@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import box_id from '../config/box_id';
-import { knex, setupDbConnection, LanguageRecord, Worker, WorkerRecord, BasicModel } from '@karya/db';
+import { knex, setupDbConnection, Worker, WorkerRecord, BasicModel } from '@karya/db';
 import { getCreationCode } from '@karya/misc-utils';
 import logger from '../utils/Logger';
 import config from '../config/Index';
@@ -16,14 +16,6 @@ export async function generateWorkerCCs(
   if (!(box_id && numCreationCodes)) {
     logger.info('Need to specify box ID and number of codes');
     return false;
-  }
-
-  let language: LanguageRecord | undefined;
-
-  try {
-    language = languageCode ? await BasicModel.getSingle('language', { iso_639_3_code: languageCode }) : undefined;
-  } catch (e) {
-    logger.error(`Unknown language code '${languageCode}'`);
   }
 
   const params = tags ? { tags } : {};
@@ -59,25 +51,6 @@ export async function generateWorkerCCs(
     if (continuousErrors == 3) {
       logger.info('Request failed');
       return false;
-    }
-  }
-
-  /**
-   * If language is specified, mark the new users as experts
-   */
-  if (language) {
-    for (const worker of newWorkers) {
-      await BasicModel.insertRecord('worker_language_skill', {
-        worker_id: worker.id,
-        language_id: language.id,
-        can_read: true,
-        can_speak: true,
-        can_type: true,
-        can_listen: true,
-        speak_score: 10,
-        read_score: 10,
-        type_score: 10,
-      });
     }
   }
 

@@ -36,7 +36,6 @@ export async function sendUpdatesToServer(sendTime: string) {
     const remainingTables: BoxUpdatableTables[] = [
       'worker',
       'task_assignment',
-      'worker_language_skill',
       'microtask_group_assignment',
       'microtask_assignment',
     ];
@@ -50,7 +49,6 @@ export async function sendUpdatesToServer(sendTime: string) {
       'worker',
       'karya_file',
       'task_assignment',
-      'worker_language_skill',
       'microtask_group_assignment',
       'microtask_assignment',
       'payout_info',

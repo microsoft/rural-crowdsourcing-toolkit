@@ -181,38 +181,6 @@ task_assignment:
     - task_id
     - box_id
 
-worker_language_skill:
-  fields:
-    - id, bigint, pk
-    - local_id, bigserial
-    - box_id, >, box, not null, filter
-    - worker_id, >, worker, not null, filter
-    - language_id, >, language, not null, filter
-    - can_speak, boolean, not null, false
-    - can_type, boolean, not null, false
-    - can_read, boolean, not null, false
-    - can_listen, boolean, not null, false
-    - speak_score, float
-    - type_score, float
-    - read_score, float
-    - listen_score, float
-    - params, json
-  unique:
-    - - worker_id
-      - language_id
-  apis:
-    put: admin
-    getbyid: admin
-    get: admin
-  getfilter:
-    - box_id
-    - worker_id
-    - language_id
-  boxapis:
-    getbyid: wp
-    get: wp
-    put: wp
-
 microtask_group_assignment:
   fields:
     - id, bigint, pk

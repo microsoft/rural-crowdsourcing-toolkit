@@ -128,12 +128,6 @@ task_assignment:
     GET_BY_ID: admin
     GET_ALL: admin
 
-worker_language_skill:
-  auto:
-    UPDATE_BY_ID: admin
-    GET_BY_ID: admin
-    GET_ALL: admin
-
 microtask_group_assignment:
   auto:
     UPDATE_BY_ID: admin
