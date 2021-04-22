@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.injection
 
+import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
@@ -40,7 +41,11 @@ class RetrofitModule {
     @Provides
     @Reusable
     fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder().addNetworkInterceptor(httpLoggingInterceptor).build()
+        return OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                addNetworkInterceptor(httpLoggingInterceptor)
+            }
+        }.build()
     }
 
     @Provides
