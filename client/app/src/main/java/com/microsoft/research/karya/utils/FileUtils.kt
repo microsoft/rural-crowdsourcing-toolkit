@@ -11,6 +11,7 @@ import com.microsoft.research.karya.utils.jtar.TarInputStream
 import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.BufferedInputStream
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.GZIPInputStream
@@ -20,18 +21,37 @@ object FileUtils {
     /**
      * Download HTTP response stream to a local file path
      */
-    fun downloadFileToLocalPath(response: Response<ResponseBody>, filePath: String) {
-        val inputStream = response.body()!!.byteStream()
-        val outputStream = FileOutputStream(filePath)
-        inputStream.copyTo(outputStream)
-        outputStream.close()
-        inputStream.close()
+    fun downloadFileToLocalPath(response: Response<ResponseBody>, filePath: String): Boolean {
+        val downloadedFile = File(filePath)
+        val parentDir = downloadedFile.parentFile
+
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) return false
+        }
+
+        if (downloadedFile.exists() && !downloadedFile.delete()) {
+            return false
+        }
+
+        response.body()!!.byteStream().use { inputStream ->
+            FileOutputStream(filePath).use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+
+        return true
     }
 
     /**
      * Extract files in a tar ball into a directory. Delete the tar ball after extraction.
      */
-    fun extractTarBallIntoDirectory(tarBallPath: String, directoryPath: String) {
+    fun extractTarBallIntoDirectory(tarBallPath: String, directoryPath: String): Boolean {
+        val directory = File(directoryPath)
+
+        if (!directory.exists() && !directory.mkdirs()) {
+            return false
+        }
+
         val fis = FileInputStream(tarBallPath)
         val bufferedStream = BufferedInputStream(fis)
         val tarStream = TarInputStream(bufferedStream)
@@ -51,6 +71,8 @@ object FileUtils {
 
         // Commenting this out for now.
         // File(tarBallPath).delete()
+
+        return true
     }
 
     /**

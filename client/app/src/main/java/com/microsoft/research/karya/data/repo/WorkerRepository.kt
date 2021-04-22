@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.data.repo
 
-import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException

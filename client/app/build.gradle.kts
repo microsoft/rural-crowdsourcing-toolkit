@@ -87,8 +87,11 @@ dependencies {
     implementation(Dependencies.Google.Firebase.analytics)
 
     implementation(Dependencies.AndroidX.Hilt.dagger)
+    implementation(Dependencies.AndroidX.Hilt.hiltNavigationFragment)
+
     kapt(Dependencies.AndroidX.Hilt.daggerCompiler)
     kapt(Dependencies.AndroidX.Hilt.daggerHiltCompiler)
+
 
     implementation(Dependencies.Kotlin.Coroutines.core)
     implementation(Dependencies.Kotlin.Coroutines.coroutines)

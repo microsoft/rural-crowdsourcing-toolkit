@@ -1,11 +1,11 @@
 package com.microsoft.research.karya.ui.splashScreen
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -14,15 +14,17 @@ import com.microsoft.research.karya.databinding.FragmentSplashScreenBinding
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
     private val binding by viewBinding(FragmentSplashScreenBinding::bind)
-    private val viewModel by viewModels<SplashViewModel>()
+    private val viewModel by hiltNavGraphViewModels<SplashViewModel>(R.navigation.splash)
     private lateinit var navController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,34 +36,38 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
         lifecycleScope.launch {
             val isFirstRun = isFirstRun()
             if (isFirstRun) {
-                navigateToCreationCodeScreen()
+                navigateToAccessCodeScreen()
                 return@launch
             }
 
             val loggedInUsers = getLoggedInUsers()
+
             when (loggedInUsers) {
-                0 -> navigateToCreationCodeScreen()
+                0 -> navigateToAccessCodeScreen()
                 1 -> navigateToUserAuthScreen()
                 else -> navigateToUserSelectScreen()
             }
-
         }
     }
 
     private fun navigateToUserSelectScreen() {
-        navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
+        // navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
+        requireActivity().finish()
     }
 
     private fun navigateToUserAuthScreen() {
-        navController.navigate(R.id.action_splashScreenFragment_to_onboardingFlow)
+        navController.navigate(R.id.action_splashScreenFragment_to_registration_navigation)
+        requireActivity().finish()
     }
 
-    private fun navigateToCreationCodeScreen() {
-        navController.navigate(R.id.action_splashScreenFragment_to_creationCodeFlow)
+    private fun navigateToAccessCodeScreen() {
+        navController.navigate(R.id.action_splashScreenFragment_to_access_code_nav_graph)
+        requireActivity().finish()
     }
 
     private fun navigateToDashboardScreen() {
-        navController.navigate(R.id.action_splashScreenFragment_to_dashboardFlow)
+        navController.navigate(R.id.action_splashScreenFragment_to_ngDashboardActivity)
+        requireActivity().finish()
     }
 
     private suspend fun getLoggedInUsers(): Int {
