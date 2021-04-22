@@ -82,12 +82,6 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-//        registrationActivity.onAssistantClick()
-        // TODO: Add Assistant
-    }
-
     /**
      * Handle choice of age group
      */

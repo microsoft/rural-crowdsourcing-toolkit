@@ -18,7 +18,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.StringRes
@@ -257,7 +256,7 @@ abstract class BaseActivity() : AppCompatActivity() {
         @StringRes resId: Int,
         languageId: Int? = null,
         uiCue: (() -> Unit)? = null,
-        onCompletionListener: (() -> Unit)? = null
+        onCompletionListener: (() -> Unit)? = null,
     ) {
 //        /** If player is not initialized, return */
 //        if (!::assistantPlayer.isInitialized || !assistantAvailable) {

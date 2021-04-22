@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.item_task.view.*
 class TaskListAdapter(
     val context: Context,
     private val onDashboardTaskAdapterClick: OnDashboardTaskAdapterClick,
-    val activity: DashboardActivity
+    val activity: DashboardActivity,
 ) : RecyclerView.Adapter<TaskViewHolder>() {
 
     private var tasks: List<TaskInfo> = mutableListOf()
@@ -84,7 +84,7 @@ class TaskListAdapter(
         incompleteLabel: String,
         completedLabel: String,
         submittedLabel: String,
-        verifiedLabel: String
+        verifiedLabel: String,
     ) {
         incompleteMicrotasksLabel = incompleteLabel
         completedMicrotasksLabel = completedLabel

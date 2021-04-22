@@ -27,7 +27,6 @@ import java.util.Date;
 
 /**
  * @author Kamran Zafar
- *
  */
 public class TarEntry {
     protected File file;
@@ -51,7 +50,7 @@ public class TarEntry {
 
     /**
      * Constructor to create an entry from an existing TarHeader object.
-     *
+     * <p>
      * This method is useful to add new entries programmatically (e.g. for
      * adding files or directories that do not exist in the file system).
      */

@@ -20,7 +20,7 @@
         android:id="@+id/OTPFragment"
         android:name="com.microsoft.research.karya.ui.registration.OTPFragment"
         android:label="fragment_o_t_p"
-        tools:layout="@layout/fragment_otp" >
+        tools:layout="@layout/fragment_otp">
         <action
             android:id="@+id/action_OTPFragment_to_profilePictureFragment"
             app:destination="@id/profilePictureFragment"
@@ -47,7 +47,7 @@
         android:id="@+id/selectGenderFragment"
         android:name="com.microsoft.research.karya.ui.registration.SelectGenderFragment"
         android:label="fragment_select_gender"
-        tools:layout="@layout/fragment_select_gender" >
+        tools:layout="@layout/fragment_select_gender">
         <action
             android:id="@+id/action_selectGenderFragment_to_selectAgeGroupFragment"
             app:destination="@id/selectAgeGroupFragment"

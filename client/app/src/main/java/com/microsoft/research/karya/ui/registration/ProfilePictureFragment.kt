@@ -92,17 +92,6 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
     }
 
     /**
-     * On resume, play assistant audio if a profile pic is not already taken
-     */
-    override fun onResume() {
-        super.onResume()
-//        if (!::profilePic.isInitialized) {
-//            baseActivity.onAssistantClick()
-//        }
-        // TODO: Add Assistant
-    }
-
-    /**
      * Handle camera completion
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

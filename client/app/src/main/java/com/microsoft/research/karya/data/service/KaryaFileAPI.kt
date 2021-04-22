@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.data.service
 
-import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
@@ -14,14 +13,14 @@ interface KaryaFileAPI {
     suspend fun uploadKaryaFile(
         @Header("id-token") idToken: String,
         @Part json: MultipartBody.Part,
-        @Part file: MultipartBody.Part
+        @Part file: MultipartBody.Part,
     ): Response<KaryaFileRecord>
 
     @GET("/karya_file/{id}")
     suspend fun getKaryaFile(
         @Header("access-code") accessCode: String,
         @Header("id-token") idToken: String,
-        @Path("id") karyaFileId: String
+        @Path("id") karyaFileId: String,
     ): Response<ResponseBody>
 
 }

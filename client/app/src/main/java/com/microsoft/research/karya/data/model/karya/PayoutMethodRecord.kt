@@ -23,5 +23,5 @@ data class PayoutMethodRecord(
     var required_info: JsonObject,
     var enabled: Boolean,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

@@ -26,7 +26,6 @@ import java.io.RandomAccessFile;
 
 /**
  * @author Kamran Zafar
- *
  */
 public class TarOutputStream extends OutputStream {
     private final OutputStream out;

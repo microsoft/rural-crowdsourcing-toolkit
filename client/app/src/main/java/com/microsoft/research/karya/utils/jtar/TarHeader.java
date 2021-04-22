@@ -33,8 +33,8 @@ import java.io.File;
  * 156     1        Link indicator (file type)
  * 157     100      Name of linked file
  * </pre>
- *
- *
+ * <p>
+ * <p>
  * File Types
  *
  * <pre>
@@ -49,9 +49,9 @@ import java.io.File;
  * '6'          FIFO
  * '7'          Contigous
  * </pre>
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
  * Ustar header
  *
  * <pre>
@@ -142,12 +142,9 @@ public class TarHeader {
     /**
      * Parse an entry name from a header buffer.
      *
-     * @param header
-     *            The header buffer from which to parse.
-     * @param offset
-     *            The offset into the buffer from which to parse.
-     * @param length
-     *            The number of header bytes to parse.
+     * @param header The header buffer from which to parse.
+     * @param offset The offset into the buffer from which to parse.
+     * @param length The number of header bytes to parse.
      * @return The header's entry name.
      */
     public static StringBuffer parseName(byte[] header, int offset, int length) {
@@ -166,12 +163,9 @@ public class TarHeader {
     /**
      * Determine the number of bytes in an entry name.
      *
-     * @param name
-     *            The header buffer from which to parse.
-     * @param offset
-     *            The offset into the buffer from which to parse.
-     * @param length
-     *            The number of header bytes to parse.
+     * @param name   The header buffer from which to parse.
+     * @param offset The offset into the buffer from which to parse.
+     * @param length The number of header bytes to parse.
      * @return The number of bytes in a header's entry name.
      */
     public static int getNameBytes(StringBuffer name, byte[] buf, int offset, int length) {
@@ -191,15 +185,10 @@ public class TarHeader {
     /**
      * Creates a new header for a file/directory entry.
      *
-     *
-     * @param entryName
-     *            File name
-     * @param size
-     *            File size in bytes
-     * @param modTime
-     *            Last modification time in numeric Unix time format
-     * @param dir
-     *            Is directory
+     * @param entryName File name
+     * @param size      File size in bytes
+     * @param modTime   Last modification time in numeric Unix time format
+     * @param dir       Is directory
      */
     public static TarHeader createHeader(String entryName, long size, long modTime, boolean dir, int permissions) {
         String name = entryName;

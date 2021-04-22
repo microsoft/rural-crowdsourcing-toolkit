@@ -9,8 +9,6 @@
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
@@ -44,5 +42,5 @@ data class WorkerRecord(
     var last_received_from_server_at: String,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

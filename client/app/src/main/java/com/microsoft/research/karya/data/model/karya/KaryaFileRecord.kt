@@ -30,5 +30,5 @@ data class KaryaFileRecord(
     var in_server: Boolean,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

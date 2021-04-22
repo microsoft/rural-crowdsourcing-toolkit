@@ -5,5 +5,5 @@ package com.microsoft.research.karya.data.remote.response
 
 data class CreationCodeResponse(
     var valid: Boolean,
-    var message: String
+    var message: String,
 )

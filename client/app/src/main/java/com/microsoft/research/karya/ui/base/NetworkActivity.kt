@@ -24,7 +24,7 @@ abstract class NetworkActivity(
     private val indeterminateProgress: Boolean = true,
     private val noMessage: Boolean = false,
     private val allowRetry: Boolean = false,
-    private val needIdToken: Boolean = false
+    private val needIdToken: Boolean = false,
 ) : BaseActivity() {
 
     protected var networkRequestMessage: String = ""

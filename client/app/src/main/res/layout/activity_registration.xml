@@ -9,12 +9,13 @@
     <include
         android:id="@+id/appTb"
         layout="@layout/app_toolbar" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/registration_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/registration_navigation"
-        app:layout_constraintTop_toBottomOf="@id/appTb" />
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:navGraph="@navigation/registration_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

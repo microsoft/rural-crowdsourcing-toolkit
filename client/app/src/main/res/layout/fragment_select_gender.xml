@@ -54,13 +54,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
+        android:text="@string/s_male"
         android:textSize="@dimen/_20ssp"
         app:layout_constraintEnd_toEndOf="@+id/maleBtn"
         app:layout_constraintLeft_toLeftOf="@+id/maleBtn"
         app:layout_constraintRight_toRightOf="@+id/maleBtn"
         app:layout_constraintStart_toStartOf="@+id/maleBtn"
-        app:layout_constraintTop_toBottomOf="@+id/maleBtn"
-        android:text="@string/s_male"/>
+        app:layout_constraintTop_toBottomOf="@+id/maleBtn" />
 
 
     <TextView
@@ -69,14 +69,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
+        android:text="@string/s_female"
         android:textSize="@dimen/_20ssp"
         app:layout_constraintEnd_toEndOf="@+id/femaleBtn"
         app:layout_constraintLeft_toLeftOf="@+id/femaleBtn"
         app:layout_constraintRight_toRightOf="@+id/femaleBtn"
         app:layout_constraintStart_toStartOf="@+id/femaleBtn"
         app:layout_constraintTop_toBottomOf="@+id/femaleBtn"
-        tools:layout_editor_absoluteX="229dp"
-        android:text="@string/s_female" />
+        tools:layout_editor_absoluteX="229dp" />
 
     <ImageButton
         android:id="@+id/submitGenderIb"
@@ -94,8 +94,8 @@
         android:id="@+id/dottedScreenPb"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="39dp"
         android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="39dp"
         app:layout_constraintBottom_toTopOf="@+id/selectGenderPromptTv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -58,5 +58,5 @@ data class TaskRecord(
     var microtask_assignment_order: AssignmentOrderType,
     var status: TaskStatus,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )

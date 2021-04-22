@@ -11,11 +11,11 @@ import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
-import com.microsoft.research.karya.data.repo.WorkerRepository
-import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
+import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.model.karya.enums.RegisterWorkerState
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
+import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -32,7 +32,7 @@ class RegistrationViewModel @Inject constructor(
 
     private val _openDashBoardFromOTP = MutableLiveData<Boolean>(false)
     val openDashBoardFromOTP: LiveData<Boolean>
-        get() =_openDashBoardFromOTP
+        get() = _openDashBoardFromOTP
 
     private val _openProfilePictureFragmentFromOTP = MutableLiveData<Boolean>(false)
     val openProfilePictureFragmentFromOTP: LiveData<Boolean>
@@ -109,7 +109,7 @@ class RegistrationViewModel @Inject constructor(
                 _openDashBoardFromOTP.value = true
             }
 
-        }.catch { e->
+        }.catch { e ->
             sendVerifyOtpError(e)
         }.launchIn(viewModelScope)
     }
@@ -217,7 +217,8 @@ class RegistrationViewModel @Inject constructor(
 
     fun registerWorker() {
 
-        val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(WorkerInformation.age_group!!, WorkerInformation.gender)
+        val registerOrUpdateWorkerRequest =
+            RegisterOrUpdateWorkerRequest(WorkerInformation.age_group!!, WorkerInformation.gender)
 
         workerRepository.updateWorker(
             "",
@@ -232,10 +233,10 @@ class RegistrationViewModel @Inject constructor(
     }
 
     private fun sendRegisterWorkerError(e: Throwable) {
-        selectAgeGroupFragmentErrorId = when(e) {
+        selectAgeGroupFragmentErrorId = when (e) {
             is IncorrectAccessCodeException -> R.string.s_invalid_creation_code
             is UnknownError -> R.string.s_unknown_error
-            else  -> R.string.s_unknown_error
+            else -> R.string.s_unknown_error
         }
         _currRegisterState.value = RegisterWorkerState.FAILURE
     }

@@ -34,7 +34,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
-            throw when(response.code()) {
+            throw when (response.code()) {
                 404 -> IncorrectOtpException("Incorrect OTP")
                 403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
                 401 -> IncorrectAccessCodeException("Access Code is incorrect")
@@ -90,7 +90,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
-            throw when(response.code()) {
+            throw when (response.code()) {
                 401 -> IncorrectAccessCodeException("Access Code is incorrect")
                 else -> UnknownException("Something went wrong")
             }

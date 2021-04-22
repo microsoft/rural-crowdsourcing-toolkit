@@ -11,7 +11,7 @@ import android.text.TextWatcher
  */
 abstract class SeparatorTextWatcher(
     private val separator: Char,
-    private val interval: Int
+    private val interval: Int,
 ) : TextWatcher {
 
     private var dirty = false

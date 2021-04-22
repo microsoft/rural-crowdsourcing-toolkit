@@ -16,7 +16,7 @@ private const val BUFFER_SIZE = 88200
 class RawToAACEncoder(
     private val SamplingRate: Int = 44100,
     private val OutputMimeType: String = "audio/mp4a-latm",
-    private val OutputBitRate: Int = 128000
+    private val OutputBitRate: Int = 128000,
 ) {
 
     private var mStop = false

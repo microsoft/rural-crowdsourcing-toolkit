@@ -1,8 +1,8 @@
 package com.microsoft.research.karya.ui.registration
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
@@ -48,9 +48,4 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-//        registrationActivity.onAssistantClick()
-        // TODO: Add Assistant
-    }
 }

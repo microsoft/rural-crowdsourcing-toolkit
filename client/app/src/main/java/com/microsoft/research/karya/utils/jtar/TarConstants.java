@@ -18,7 +18,6 @@ package com.microsoft.research.karya.utils.jtar;
 
 /**
  * @author Kamran Zafar
- *
  */
 public class TarConstants {
     public static final int EOF_BLOCK = 1024;

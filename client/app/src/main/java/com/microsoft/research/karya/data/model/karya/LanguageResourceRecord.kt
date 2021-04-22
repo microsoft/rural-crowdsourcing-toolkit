@@ -45,5 +45,5 @@ data class LanguageResourceRecord(
     var lrv_file_id: String?,
     var params: JsonObject,
     var created_at: String,
-    var last_updated_at: String
+    var last_updated_at: String,
 )
