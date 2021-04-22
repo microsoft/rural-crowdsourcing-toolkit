@@ -35,7 +35,7 @@ abstract class MicrotaskRenderer(
     private val includeCompleted: Boolean,
     private val finishOnGroupBoundary: Boolean,
     useAssistant: Boolean = false
-) : BaseActivity(useAssistant = useAssistant, playAssistantOnResume = false) {
+) : BaseActivity() {
 
     protected lateinit var task: TaskRecord
     private lateinit var microtaskAssignmentIDs: List<String>

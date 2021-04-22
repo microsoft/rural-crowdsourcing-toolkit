@@ -26,7 +26,7 @@ interface WorkerAPI {
     /*
     * This API would be used before OTP to determine App language and check the validity of access code
     * */
-    @GET("/getWorker")
+    @GET("/worker")
     suspend fun getWorkerUsingAccessCode(
         @Header("access-code") accessCode: String
     ): Response<ValidAccessCodeResponse>
@@ -34,7 +34,7 @@ interface WorkerAPI {
     /*
     * This API would be used whenever needed after the successful OTP verification
     * */
-    @GET("/getWorker")
+    @GET("/worker")
     suspend fun getWorkerUsingIdToken(
         @Header("id-token") idToken: String
     ): Response<WorkerRecord>

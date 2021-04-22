@@ -37,6 +37,5 @@ interface LanguageDao : BasicDao<LanguageRecord> {
     @Transaction
     suspend fun upsert(records: List<LanguageRecord>) {
         insertForUpsert(records)
-        updateForUpsert(records)
     }
 }

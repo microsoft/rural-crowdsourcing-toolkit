@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
+        android:name=".KaryaApp"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -38,19 +39,6 @@
             android:noHistory="true"
             />
 
-        <!-- Activity to select the application language -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.selectAppLanguage.SelectAppLanguage"
-            android:screenOrientation="portrait"
-            />
-
-        <!-- Activity to fetch data for the selected app language -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.selectAppLanguage.FetchFileResourcesForAppLanguage"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
-
         <!-- Activity to receive user consent for collecting data via the application -->
         <activity android:name="com.microsoft.research.karya.ui.consentForm.ConsentFormActivity"
             android:screenOrientation="portrait"
@@ -58,37 +46,11 @@
             />
 
 
-        <!-- Activity to send OTP to the user -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.registration.SendOTPActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
-
         <!-- Network activity to register the user -->
         <activity
             android:name="com.microsoft.research.karya.ui.registration.RegisterWorker"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            />
-
-        <!-- Activity to request user to specify their skills in a particular language -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.skillSpecification.SkillSpecification"
-            android:screenOrientation="portrait"
-            />
-
-        <!-- Activity to request user to register their skill  -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.skillSpecification.RegisterSkill"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
-
-        <!-- Activity to list the set of languages in which skills can be specified  -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.skillSpecification.SkilledLanguageList"
-            android:screenOrientation="portrait"
             />
 
         <!-- Activity to display the user dashboard -->

@@ -1,6 +1,10 @@
 package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonObject
+import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
+import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
+import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
+import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.WorkerLanguageSkillObject
@@ -34,7 +38,12 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
         val workerRecord = response.body()
 
         if (!response.isSuccessful) {
-            error("Request failed, response code: ${response.code()}")
+            throw when(response.code()) {
+                404 -> IncorrectOtpException("Incorrect OTP")
+                403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
+                401 -> IncorrectAccessCodeException("Access Code is incorrect")
+                else -> UnknownException("Something went wrong")
+            }
         }
 
         if (workerRecord != null) {

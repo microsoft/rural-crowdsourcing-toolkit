@@ -36,10 +36,12 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-abstract class BaseActivity(
-    private val useAssistant: Boolean = false,
-    private val playAssistantOnResume: Boolean = true
-) : AppCompatActivity() {
+abstract class BaseActivity() : AppCompatActivity() {
+
+    private val useAssistant: Boolean = false
+    private val playAssistantOnResume: Boolean = false
+    //TODO: Removing from the constructor since hilt doesnt support this.
+    // We can manipulate this in other ways
 
     /** Database and API service */
     protected lateinit var karyaDb: KaryaDatabase
@@ -257,56 +259,56 @@ abstract class BaseActivity(
         uiCue: (() -> Unit)? = null,
         onCompletionListener: (() -> Unit)? = null
     ) {
-        /** If player is not initialized, return */
-        if (!::assistantPlayer.isInitialized || !assistantAvailable) {
-            return
-        }
-
-        /** Get the audio file path for the given file */
-        val name = getString(resId)
-
-        ioScope.launch {
-            var audioLanguageId = languageId
-            if (languageId == null) {
-                setAppLanguageJob.join()
-                audioLanguageId = appLanguageId
-            }
-
-            val resourceId = karyaDb.languageResourceDaoExtra().getIdFromName(name)
-            val audioFilePath = getBlobPath(
-                KaryaFileContainer.LANG_RES,
-                resourceId.toString(),
-                audioLanguageId.toString()
-            )
-
-            /** Play the recording if file exists. Else silently fail */
-            if (File(audioFilePath).exists()) {
-                if (assistantAvailable) {
-                    uiScope.launch {
-                        if (assistantPlayer.isPlaying) assistantPlayer.stop()
-
-                        /** Set on completion listener if one is provided */
-                        assistantPlayer.setOnCompletionListener {
-                            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                            if (onCompletionListener != null) {
-                                onCompletionListener()
-                            }
-                        }
-
-                        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                        if (uiCue != null) uiCue()
-                        with(assistantPlayer) {
-                            reset()
-                            setDataSource(audioFilePath)
-                            prepare()
-                            start()
-                        }
-                    }
-                }
-            } else if (onCompletionListener != null) {
-                onCompletionListener()
-            }
-        }
+//        /** If player is not initialized, return */
+//        if (!::assistantPlayer.isInitialized || !assistantAvailable) {
+//            return
+//        }
+//
+//        /** Get the audio file path for the given file */
+//        val name = getString(resId)
+//
+//        ioScope.launch {
+//            var audioLanguageId = languageId
+//            if (languageId == null) {
+//                setAppLanguageJob.join()
+//                audioLanguageId = appLanguageId
+//            }
+//
+//            val resourceId = karyaDb.languageResourceDaoExtra().getIdFromName(name)
+//            val audioFilePath = getBlobPath(
+//                KaryaFileContainer.LANG_RES,
+//                resourceId.toString(),
+//                audioLanguageId.toString()
+//            )
+//
+//            /** Play the recording if file exists. Else silently fail */
+//            if (File(audioFilePath).exists()) {
+//                if (assistantAvailable) {
+//                    uiScope.launch {
+//                        if (assistantPlayer.isPlaying) assistantPlayer.stop()
+//
+//                        /** Set on completion listener if one is provided */
+//                        assistantPlayer.setOnCompletionListener {
+//                            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+//                            if (onCompletionListener != null) {
+//                                onCompletionListener()
+//                            }
+//                        }
+//
+//                        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+//                        if (uiCue != null) uiCue()
+//                        with(assistantPlayer) {
+//                            reset()
+//                            setDataSource(audioFilePath)
+//                            prepare()
+//                            start()
+//                        }
+//                    }
+//                }
+//            } else if (onCompletionListener != null) {
+//                onCompletionListener()
+//            }
+//        }
     }
 
     /**

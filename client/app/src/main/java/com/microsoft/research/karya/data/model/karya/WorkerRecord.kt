@@ -15,13 +15,8 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "worker", foreignKeys = arrayOf(
-        ForeignKey(
-            entity = LanguageRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("app_language")
-        )
-    ), indices = arrayOf(Index("app_language"))
+    tableName = "worker"
+    //TODO: Add Foreign Keys if required after freezing schema
 )
 
 data class WorkerRecord(

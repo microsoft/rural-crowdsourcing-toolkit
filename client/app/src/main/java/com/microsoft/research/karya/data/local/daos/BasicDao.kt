@@ -31,7 +31,7 @@ interface BasicDao<T> {
     /**
      * Insert a list of [records] into the table. Will be followed by update in case of conflict.
      */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertForUpsert(records: List<T>)
 
     /**
