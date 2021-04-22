@@ -21,26 +21,6 @@ language:
     getbyid: wp
     get: wp
 
-scenario:
-  fields:
-    - id, bigserial, pk
-    - name, varchar, 48, unique, not null
-    - full_name, varchar, 48, unique, not null
-    - description, text, not null
-    - task_params, json, not null
-    - assignment_granularity, assignment_granularity_type, not null
-    - group_assignment_order, assignment_order_type, not null
-    - microtask_assignment_order, assignment_order_type, not null
-    - synchronous_validation, boolean, not null, false
-    - enabled, boolean, not null, false, filter
-    - skills, json, not null
-    - params, json
-  apis:
-    getbyid: wp
-    get: wp
-  boxapis:
-    get: wp
-
 work_provider:
   fields:
     - id, bigserial, pk
@@ -142,7 +122,7 @@ task:
     - id, bigserial, pk
     - work_provider_id, >, work_provider, not null, filter
     - language_id, >, language, not null, filter
-    - scenario_id, >, scenario, not null, filter
+    - scenario_name, varchar, 32, not null, filter
     - name, varchar, 48, not null
     - description, text, not null
     - primary_language_name, varchar, 48, not null
@@ -180,28 +160,12 @@ microtask:
     - output, json
     - params, json
 
-policy:
-  fields:
-    - id, bigserial, pk
-    - scenario_id, >, scenario, not null, filter
-    - name, varchar, 48, not null
-    - description, text, not null
-    - params, json
-  unique:
-    - - scenario_id
-      - name
-  apis:
-    getbyid: admin
-    get: admin
-  getfilter:
-    - scenario_id
-
 task_assignment:
   fields:
     - id, bigserial, pk
     - task_id, >, task, not null, filter
     - box_id, >, box, not null, filter
-    - policy_id, >, policy, not null, filter
+    - policy, varchar, 32, not null, filter
     - deadline, timestamp
     - status, task_assignment_status, not null, filter
     - params, json

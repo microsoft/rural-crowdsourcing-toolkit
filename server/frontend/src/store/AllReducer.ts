@@ -38,7 +38,6 @@ type StoreReducer = Reducer<AllState, StoreActions>;
 // Initial state
 const initState: AllState = {
   language: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  scenario: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   work_provider: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   worker_language_skill: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
@@ -50,7 +49,6 @@ const initState: AllState = {
   microtask_group_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   payment_request: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   payout_info: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  policy: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   box: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   karya_file: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   auth: { cwp: null, status: 'SUCCESS' },

@@ -6,17 +6,12 @@
  */
 
 import { TaskRecord } from '@karya/db';
-import { scenarioById } from '../scenarios/Index';
+import { generateOutput } from '@karya/scenarios';
 
 /**
  * Handler to start output file generation for a task
  */
 export async function generateTaskOutput(task: TaskRecord) {
-  /** Get the scenario */
-  const scenarioObj = scenarioById[Number.parseInt(task.scenario_id, 10)];
-
-  /** Call the relevant output generator */
-  if (scenarioObj.outputGenerator) {
-    await scenarioObj.outputGenerator(task);
-  }
+  // TODO: Temporary fix
+  await generateOutput(task, '');
 }

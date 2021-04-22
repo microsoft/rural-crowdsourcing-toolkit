@@ -6,17 +6,12 @@
 // provider can only access tasks that they have created. Hence, they could not
 // be auto generated.
 
-import BBPromise from 'bluebird';
-import { Task, TaskRecord, TaskStatus, BasicModel } from '@karya/db';
+import { Task, TaskRecord, BasicModel } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
-import { ParameterParserResponse, parseTaskParameters } from '../scenarios/common/ParameterParser';
-import { IScenario, scenarioMap } from '../scenarios/Index';
 import * as BlobStore from '@karya/blobstore';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
-
-import { taskApprovalQueue, taskValidationQueue } from '../services/Index';
-import { validateTask as taskValidationHandler } from '../services/ValidateTask';
+import { validateTaskParameters } from '@karya/scenarios';
 
 /**
  * Function to create a work provider filter either based on an explicit query
@@ -69,8 +64,7 @@ export function generateOutputSasURLs(task: TaskRecord): TaskRecord {
 export async function insertRecord(ctx: KaryaHTTPContext) {
   try {
     // extract the task object and file attachments
-    const task: Task = JSON.parse(ctx.request.body.data);
-    const { files } = ctx.request;
+    const task: Task = ctx.request.body;
 
     // get current user from state
     const { current_user } = ctx.state;
@@ -78,97 +72,20 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
     // force work provider ID to be the ID of the current work provider
     task.work_provider_id = current_user.id;
 
-    // get the scenario record
-    const scenarioId = task.scenario_id;
-    const scenarioRecord = await BasicModel.getSingle('scenario', {
-      id: scenarioId,
-    });
-
-    // get the scenario object from the name
-    const scenario = scenarioMap[scenarioRecord.name];
-
-    // parse the task parameters
-    const ppResponse = parseTaskParameters(scenario, task.params, files);
-    const { params, uploadParams, blobParams, languageParams } = ppResponse;
+    let params: object;
+    try {
+      params = await validateTaskParameters(task);
+    } catch (e) {
+      HttpResponse.BadRequest(ctx, e.message);
+      return;
+    }
 
     task.params = params;
-    task.status = 'created';
+    task.status = 'validated';
 
     // Insert the task into the Db
     const insertedRecord = await BasicModel.insertRecord('task', task);
-    const task_id = insertedRecord.id;
-
-    const errors: string[] = [];
-
-    // Check if all the language params are valid
-    for (const paramid of languageParams) {
-      try {
-        const languageID = params[paramid] as string;
-        await BasicModel.getSingle('language', { id: languageID });
-      } catch (langErr) {
-        errors.push(`Invalid language input for ${paramid}`);
-      }
-    }
-
-    const actions: string[] = [];
-    // Create appropriate blob names for the blobs and store
-    if (Object.keys(blobParams).length > 0) {
-      Object.entries(blobParams).map(([param_id, info]) => {
-        try {
-          const blobURL = BlobStore.getBlobURL({
-            cname: 'task-params',
-            task_id,
-            param_id,
-            ext: info.ext,
-          });
-          params[param_id] = blobURL;
-          actions.push(blobURL);
-        } catch (e) {
-          errors.push(`Failed to get URL for '${param_id}'`);
-        }
-      });
-    }
-
-    // Upload all files to be uploaded
-    await BBPromise.map(Object.entries(uploadParams), async (args) => {
-      try {
-        const [param_id, info] = args;
-        const blobURL = await BlobStore.uploadBlobFromFile(
-          {
-            cname: 'task-params',
-            task_id,
-            param_id,
-            ext: info.ext,
-          },
-          info.file.path
-        );
-        params[param_id] = blobURL;
-      } catch (e) {
-        errors.push(`Failed to upload`);
-      }
-    });
-
-    let status: TaskStatus = 'created';
-
-    // If there are no errors or no blobParams, then the task can be moved to submitted state
-    if (errors.length === 0 && actions.length === 0) {
-      status = 'submitted';
-    }
-
-    // Update task
-    const updatedRecord = await BasicModel.updateSingle(
-      'task',
-      { id: task_id },
-      {
-        status,
-        params,
-        errors: errors.length > 0 ? { messages: errors } : {},
-        actions: actions.length > 0 ? { uploads: actions } : {},
-      }
-    );
-
-    // successful response
-    HttpResponse.OK(ctx, updatedRecord);
+    HttpResponse.OK(ctx, insertedRecord);
   } catch (e) {
     const message = getControllerError(e);
     HttpResponse.BadRequest(ctx, message);
@@ -188,54 +105,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
    * 2. The update record may not contain all the parameters
    */
   // get current user
-  const { current_user } = ctx.state;
-
-  // extract the ID and updates from params
-  const task_id = ctx.params.id;
-  const task: Task = ctx.request.body;
-
   try {
-    // don't allow edit if the status of the task is beyond 'validated'
-    if (task.status == 'approved' || task.status == 'assigned' || task.status == 'completed') {
-      HttpResponse.BadRequest(ctx, 'Task cannot be updated after approval');
-      return;
-    }
-
-    // force work provider ID to be the ID of the current work provider
-    task.work_provider_id = current_user.id;
-
-    // get the scenario record
-    const scenarioId = task.scenario_id;
-    const scenarioRecord = await BasicModel.getSingle('scenario', {
-      id: scenarioId,
-    });
-
-    // get the scenario object from the name
-    const scenario: IScenario = scenarioMap[scenarioRecord.name];
-
-    // parse the task parameters
-    let ppResponse: ParameterParserResponse;
-    ppResponse = parseTaskParameters(scenario, task.params, ctx.request.files);
-
-    task.params = ppResponse.params;
-
-    // Upload files if it is provided
-    // This part needs to be verified
-    // TODO: This functionality should be separate?
-    if (ctx.request.files) {
-      const file = ctx.request.files.fileData;
-      const taskParams: any = task.params;
-      // TODO: This function needs fixing
-      // adding uploaded file's path to the task param
-      // taskParams.filePath = result.url;
-    }
-
-    task.status = 'submitted';
-    const taskRecord = await BasicModel.updateSingle('task', { id: task_id }, task);
-
-    // successful response
-    HttpResponse.OK(ctx, taskRecord);
-
     // run validating task utility in background
     // runService('validate_task', { task, scenario });
   } catch (e) {
@@ -292,77 +162,5 @@ export async function getRecords(ctx: KaryaHTTPContext) {
   } catch (e) {
     const message = getControllerError(e);
     HttpResponse.GenericError(ctx, message);
-  }
-}
-
-/**
- * Validate a task
- * @param ctx koa context
- */
-export async function validateTask(ctx: KaryaHTTPContext) {
-  // TODO: Async path to be properly implemented
-
-  // extract ID from params
-  const id = ctx.params.id;
-
-  try {
-    // get the task record
-    const taskRecord = await BasicModel.getSingle('task', { id });
-
-    // get the scenario record
-    const scenarioRecord = await BasicModel.getSingle('scenario', {
-      id: taskRecord.scenario_id,
-    });
-
-    // get scenario object
-    const scenario = scenarioMap[scenarioRecord.name];
-
-    // If scenario has synchronous validation, direclty call the task validator
-    if (scenario.synchronous_validation) {
-      const updatedRecord = await taskValidationHandler(taskRecord);
-
-      // If validation failed, then return bad request
-      if (updatedRecord === null) {
-        HttpResponse.BadRequest(ctx, 'Task validation failed. Please fix the errors in your submission');
-        return;
-      }
-
-      HttpResponse.OK(ctx, updatedRecord);
-    } else {
-      await taskValidationQueue.add(taskRecord);
-
-      const updatedRecord = await BasicModel.updateSingle('task', { id: taskRecord.id }, { status: 'validating' });
-
-      HttpResponse.OK(ctx, updatedRecord);
-    }
-  } catch (e) {
-    const message = getControllerError(e);
-    HttpResponse.BadRequest(ctx, message);
-  }
-}
-
-/**
- * Controller to approve a task. Calls an async task that run in the background.
- * Sets the task status to 'approving' and returns to the client
- * @param ctx koa context
- */
-export async function approveTask(ctx: KaryaHTTPContext) {
-  // extract ID from params
-  const id = ctx.params.id;
-
-  try {
-    const taskRecord = await BasicModel.getSingle('task', { id });
-
-    // Insert the task into the approval queue
-    // TODO: Should we capture the job ID and store it in the DB?
-    await taskApprovalQueue.add(taskRecord);
-
-    // update the task status to 'approving'
-    const updatedRecord = await BasicModel.updateSingle('task', { id }, { status: 'approving' });
-
-    HttpResponse.OK(ctx, updatedRecord);
-  } catch (e) {
-    const message = getControllerError(e);
-    HttpResponse.BadRequest(ctx, message);
   }
 }

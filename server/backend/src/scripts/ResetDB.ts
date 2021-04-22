@@ -7,7 +7,6 @@
 
 import { Promise as BBPromise } from 'bluebird';
 import { knex, setupDbConnection, createAllTables, dropAllTables, BasicModel } from '@karya/db';
-import { registerScenarios } from '../scenarios/Register';
 import { languages } from './InitLanguages';
 import { bootstrapAuth } from './AuthBootstrap';
 import config, { loadSecretsFromVault } from '../config/Index';
@@ -44,7 +43,7 @@ async function initializeLanguages() {
 }
 
 /** Script sequence */
-let scriptSequence = ['recreate-tables', 'init-languages', 'register-scenarios', 'auth-bootstrap'];
+let scriptSequence = ['recreate-tables', 'init-languages', 'auth-bootstrap'];
 
 /** Main Script to reset the DB */
 (async () => {
@@ -77,9 +76,6 @@ let scriptSequence = ['recreate-tables', 'init-languages', 'register-scenarios',
         break;
       case 'init-languages':
         await initializeLanguages();
-        break;
-      case 'register-scenarios':
-        await registerScenarios();
         break;
       case 'auth-bootstrap':
         const cc = await bootstrapAuth();

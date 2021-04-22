@@ -53,7 +53,7 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
     const tableColumns: Array<TableColumnType<TaskAssignmentRecord>> = [
       { header: 'Task', type: 'field', field: 'task_id' },
       { header: 'Box', type: 'field', field: 'box_id' },
-      { header: 'Policy', type: 'field', field: 'policy_id' },
+      { header: 'Policy', type: 'field', field: 'policy' },
       { header: 'Status', type: 'function', function: taskAssignmentStatus },
     ];
 

@@ -16,8 +16,8 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { ParameterDefinition } from '../../db/ParameterTypes';
-import { LanguageRecord, ScenarioRecord, Task } from '@karya/db';
+import { LanguageRecord, Task } from '@karya/db';
+import { ScenarioInterface, scenarioMap, ScenarioName } from '@karya/scenarios';
 
 // HTML Helpers
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
@@ -56,7 +56,7 @@ const mapDispatchToProps = (dispatch: any) => {
 
 // create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const dataConnector = withData('language', 'scenario');
+const dataConnector = withData('language');
 const connector = compose(dataConnector, reduxConnector);
 
 // component prop type
@@ -66,7 +66,7 @@ type CreateTaskProps = RouterProps & DataProps<typeof dataConnector> & Connected
 type CreateTaskState = {
   task: Task;
   params: { [id: string]: string | number | boolean };
-  scenario?: ScenarioRecord;
+  scenario?: ScenarioInterface;
   language?: LanguageRecord;
   files: { [id: string]: File };
 };
@@ -112,15 +112,15 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
   // Handle change in scenario or language
   handleScenarioChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const scenario_id = e.currentTarget.value;
-    const scenario = this.props.scenario.data.find((s) => s.id === scenario_id) as ScenarioRecord;
+    const scenario_name = e.currentTarget.value as ScenarioName;
+    const scenario = scenarioMap[scenario_name];
     this.setState({ scenario });
     const task: Task = {
       name: '',
       description: '',
       primary_language_name: '',
       primary_language_description: '',
-      scenario_id,
+      scenario_name,
       assignment_granularity: scenario.assignment_granularity,
       group_assignment_order: scenario.group_assignment_order,
       microtask_assignment_order: scenario.microtask_assignment_order,
@@ -168,14 +168,14 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     const task: Task = { ...this.state.task };
-    task.scenario_id = this.state.scenario?.id;
+    task.scenario_name = this.state.scenario?.name;
     task.language_id = this.state.language?.id;
     task.params = this.state.params;
     this.props.createTask(task, this.state.files);
   };
 
   // render a parameter
-  renderTaskParameter(param: ParameterDefinition) {
+/*  renderTaskParameter(param: ParameterDefinition) {
     switch (param.type) {
       case 'string':
         return (
@@ -230,7 +230,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           </div>
         );
     }
-  }
+  } */
 
   render() {
     // Generate error with get languages
@@ -239,28 +239,22 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
         <ErrorMessageWithRetry message={this.props.language.messages} onRetry={this.props.getData('language')} />
       ) : null;
 
-    // Generate error with get scenarios
-    const getScenariosErrorElement =
-      this.props.scenario.status === 'FAILURE' ? (
-        <ErrorMessageWithRetry message={this.props.scenario.messages} onRetry={this.props.getData('scenario')} />
-      ) : null;
-
     // Generate error with task creation
     const createErrorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
     // Scenarios drop down
-    const scenarios = this.props.scenario.data.filter((s) => s.enabled === true);
+    const scenarios = Object.values(scenarioMap);
     const { scenario } = this.state;
-    const scenario_id = scenario ? scenario.id : 0;
+    const scenario_name = scenario ? scenario.name : 'null';
     const scenarioDropDown = (
       <div>
-        <select id='scenario_id' value={scenario_id} onChange={this.handleScenarioChange}>
-          <option value={0} disabled={true}>
+        <select id='scenario_id' value={scenario_name} onChange={this.handleScenarioChange}>
+          <option value='null' disabled={true}>
             Select a Scenario
           </option>
           {scenarios.map((s) => (
-            <option value={s.id} key={s.id}>
+            <option value={s.name} key={s.name}>
               {s.full_name}
             </option>
           ))}
@@ -291,7 +285,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     let taskForm = null;
     if (scenario !== undefined && language !== undefined) {
       // get parameters from the
-      const { params } = scenario.task_params as { params: ParameterDefinition[] };
+      const params  = scenario.task_input;
       const { assignment_granularity, group_assignment_order, microtask_assignment_order } = scenario;
 
       const { task } = this.state;
@@ -349,11 +343,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           {/** Task parameter */}
           <div className='section'>
             <h5 className='red-text'>Task Parameters</h5>
-            {params.map((p, index) => (
-              <div className='row' key={index}>
-                {this.renderTaskParameter(p)}
-              </div>
-            ))}
           </div>
 
           {/** Assignment parameters */}
@@ -435,13 +424,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             <h5 className='red-text'>Scenario and Language Information</h5>
             <div className='row'>
               <div className='col s4'>
-                {this.props.scenario.status === 'IN_FLIGHT' ? (
-                  <ProgressBar />
-                ) : this.props.scenario.status === 'FAILURE' ? (
-                  getScenariosErrorElement
-                ) : (
-                  scenarioDropDown
-                )}
+                {scenarioDropDown}
               </div>
               <div className='col s4 offset-s1'>
                 {this.props.language.status === 'IN_FLIGHT' ? (

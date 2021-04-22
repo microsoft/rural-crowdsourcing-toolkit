@@ -14,8 +14,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
-// Types and actions
-import { ParameterDefinition } from '../../db/ParameterTypes';
+import { scenarioMap, ScenarioName} from '@karya/scenarios'
 
 // Utils
 import { approveStatuses, editStatuses, taskStatus, validateStatuses } from './TaskUtils';
@@ -87,7 +86,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const dataConnector = withData('language', 'scenario');
+const dataConnector = withData('language');
 const connector = compose(withAuth, dataConnector, reduxConnector);
 
 // Task detail props
@@ -134,15 +133,12 @@ class TaskDetail extends React.Component<TaskDetailProps> {
     const errorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
-    const scenario = this.props.scenario.data.find((s) => s.id === task.scenario_id);
+    const scenario = scenarioMap[task.scenario_name as ScenarioName];
     const language = this.props.language.data.find((s) => s.id === task.language_id);
 
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
     const language_name = language ? `${language.name} (${language.primary_language_name})` : '<Loading languages>';
 
-    const { params: param_defs } = scenario
-      ? (scenario.task_params as { params: ParameterDefinition[] })
-      : { params: undefined };
     const param_values = task.params as {
       [id: string]: string | string[] | number | undefined | Array<[string, string, string | null]>;
     };
@@ -231,25 +227,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
           </div>
         </div>
 
-        <div className='section'>
-          <div className='row'>
-            <div className='col'>
-              <h6 className='red-text'>Task Parameters</h6>
-            </div>
-          </div>
-          {param_defs === undefined ? (
-            <div className='row'>
-              <div className='col'>Loading parameters ... </div>
-            </div>
-          ) : (
-            param_defs.map((param) => (
-              <div className='row' key={param.identifier} style={{ marginBottom: '0px' }}>
-                <div className='col'>{param.name}: </div>
-                <div className='col'>{param_values[param.identifier]}</div>
-              </div>
-            ))
-          )}
-        </div>
 
         <div className='section'>
           <div className='row'>

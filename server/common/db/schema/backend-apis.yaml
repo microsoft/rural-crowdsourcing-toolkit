@@ -5,11 +5,6 @@ language:
     GET_BY_ID: wp
     GET_ALL: wp
 
-scenario:
-  auto:
-    GET_BY_ID: wp
-    GET_ALL: wp
-
 work_provider:
   auto:
     GET_ALL: admin
@@ -125,11 +120,6 @@ microtask:
       endpoint: /microtasks_with_completed_assignments/
       controller: getMicrotasksWithCompletedAssignments
       params: DBT.Microtask
-
-policy:
-  auto:
-    GET_BY_ID: admin
-    GET_ALL: admin
 
 task_assignment:
   auto:

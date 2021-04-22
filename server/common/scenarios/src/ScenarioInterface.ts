@@ -132,9 +132,9 @@ export interface ScenarioInterface {
    * @param tarFilePath Path to tar file associated with the input
    * @param task_folder Temporary folder for processing the request
    */
-  processInputFile?(
+  processInputFile(
     task: TaskRecord,
-    jsonFilePath?: string,
+    jsonData?: any,
     tarFilePath?: string,
     task_folder?: string
   ): Promise<MicrotaskList>;

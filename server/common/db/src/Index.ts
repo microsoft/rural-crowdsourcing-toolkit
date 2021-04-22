@@ -16,3 +16,5 @@ export { dropAllTables } from './auto/DropFunctions';
 
 // Export basic models
 export * as BasicModel from './models/BasicModel';
+export * as MicrotaskModel from './models/MicrotaskModel';
+export * as MicrotaskGroupModel from './models/MicrotaskGroupModel';

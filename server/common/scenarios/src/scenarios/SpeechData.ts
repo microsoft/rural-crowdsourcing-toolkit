@@ -6,7 +6,6 @@
 import { MicrotaskList, ScenarioInterface } from '../ScenarioInterface';
 import { TaskRecord, Microtask } from '@karya/db';
 import Joi from 'joi';
-import { promises as fsp } from 'fs';
 
 /**
  * Task parameter input and file formats.
@@ -70,12 +69,11 @@ export type SpeechDataTask = TaskRecord & { params: SpeechDataTaskInputParameter
  */
 async function processInputFile(
   task: SpeechDataTask,
-  jsonFilePath?: string,
+  jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList> {
-  const sentenceFileData = (await fsp.readFile(jsonFilePath!!)).toString();
-  const sentences: string[] = JSON.parse(sentenceFileData);
+  const sentences: string[] = jsonData!!;
   const microtasks = sentences.map((sentence) => {
     const mt: Microtask = {
       task_id: task.id,

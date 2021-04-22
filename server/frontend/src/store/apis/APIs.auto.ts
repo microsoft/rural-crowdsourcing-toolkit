@@ -6,12 +6,8 @@
 import * as DBT from '@karya/db';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
-export type DbParamsType<
-  Table extends DBT.DbTableName
-> = Table extends 'language'
+export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'language'
   ? 'DBT.Language'
-  : Table extends 'scenario'
-  ? 'DBT.Scenario'
   : Table extends 'work_provider'
   ? 'DBT.WorkProvider'
   : Table extends 'box'
@@ -26,8 +22,6 @@ export type DbParamsType<
   ? 'DBT.MicrotaskGroup'
   : Table extends 'microtask'
   ? 'DBT.Microtask'
-  : Table extends 'policy'
-  ? 'DBT.Policy'
   : Table extends 'task_assignment'
   ? 'DBT.TaskAssignment'
   : Table extends 'worker_language_skill'
@@ -69,18 +63,6 @@ export type BackendRequestInitAction =
       store: 'language';
       label: 'GET_ALL';
       params: DBT.Language;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'scenario';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'scenario';
-      label: 'GET_ALL';
-      params: DBT.Scenario;
     }
   | {
       type: 'BR_INIT';
@@ -287,18 +269,6 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
-      store: 'policy';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'policy';
-      label: 'GET_ALL';
-      params: DBT.Policy;
-    }
-  | {
-      type: 'BR_INIT';
       store: 'task_assignment';
       label: 'CREATE';
       request: DBT.TaskAssignment;
@@ -451,18 +421,6 @@ export type BackendRequestSuccessAction =
       store: 'language';
       label: 'GET_ALL';
       response: DBT.LanguageRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'scenario';
-      label: 'GET_BY_ID';
-      response: DBT.ScenarioRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'scenario';
-      label: 'GET_ALL';
-      response: DBT.ScenarioRecord[];
     }
   | {
       type: 'BR_SUCCESS';
@@ -646,18 +604,6 @@ export type BackendRequestSuccessAction =
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'policy';
-      label: 'GET_BY_ID';
-      response: DBT.PolicyRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'policy';
-      label: 'GET_ALL';
-      response: DBT.PolicyRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
       store: 'task_assignment';
       label: 'CREATE';
       response: DBT.TaskAssignmentRecord;
@@ -833,12 +779,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST(
-          '/work_provider/generate/cc',
-          action.request,
-          {},
-          action.files,
-        ),
+        response: await POST('/work_provider/generate/cc', action.request, {}, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_UP') {
@@ -846,11 +787,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT(
-          '/work_provider/update/cc',
-          action.request,
-          action.files,
-        ),
+        response: await PUT('/work_provider/update/cc', action.request, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_IN') {
@@ -858,12 +795,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST(
-          '/work_provider/sign/in',
-          action.request,
-          action.headers,
-          action.files,
-        ),
+        response: await POST('/work_provider/sign/in', action.request, action.headers, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'AUTO_SIGN_IN') {
@@ -871,12 +803,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST(
-          '/work_provider/sign/in',
-          action.request,
-          {},
-          action.files,
-        ),
+        response: await POST('/work_provider/sign/in', action.request, {}, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_OUT') {
@@ -884,11 +811,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT(
-          '/work_provider/sign/out',
-          action.request,
-          action.files,
-        ),
+        response: await PUT('/work_provider/sign/out', action.request, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'box' && action.label === 'GENERATE_CC') {
@@ -896,12 +819,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST(
-          '/box/generate/cc',
-          action.request,
-          {},
-          action.files,
-        ),
+        response: await POST('/box/generate/cc', action.request, {}, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'task' && action.label === 'VALIDATE') {
@@ -909,11 +827,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT(
-          '/task/:id/validate'.replace(':id', action.id),
-          action.request,
-          action.files,
-        ),
+        response: await PUT('/task/:id/validate'.replace(':id', action.id), action.request, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'task' && action.label === 'APPROVE') {
@@ -921,25 +835,15 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT(
-          '/task/:id/approve'.replace(':id', action.id),
-          action.request,
-          action.files,
-        ),
+        response: await PUT('/task/:id/approve'.replace(':id', action.id), action.request, action.files),
       } as BackendRequestSuccessAction;
     }
-    if (
-      action.store === 'microtask' &&
-      action.label === 'GET_ALL_WITH_COMPLETED'
-    ) {
+    if (action.store === 'microtask' && action.label === 'GET_ALL_WITH_COMPLETED') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET(
-          '/microtasks_with_completed_assignments/',
-          action.params,
-        ),
+        response: await GET('/microtasks_with_completed_assignments/', action.params),
       } as BackendRequestSuccessAction;
     }
 

@@ -10,12 +10,8 @@ import logger from './utils/Logger';
 import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
 import router from './routes/Routes';
 
-import { setupDbConnection, BasicModel } from '@karya/db';
-import { registerScenarios } from './scenarios/Register';
+import { setupDbConnection } from '@karya/db';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/blobstore';
-
-import { scenarioById } from './scenarios/Index';
-import { taskOutputGeneratorQueue } from './services/Index';
 
 // Setup Koa application
 const app = new Koa();
@@ -42,16 +38,6 @@ app.use(router.routes());
   // Setup the database connection
   setupDbConnection(config.dbConfig);
 
-  // Register scenarios
-  logger.info(`Syncing scenarios with the database`);
-  try {
-    await registerScenarios();
-    logger.info(`Completed registration of scenarios`);
-  } catch (e) {
-    logger.error('Failed to register scenarios. Check if the database is running');
-    error = true;
-  }
-
   // Setup the blob store connection
   setupBlobStore(config.blob);
 
@@ -73,20 +59,6 @@ app.use(router.routes());
   } catch (e) {
     logger.error('Failed to create local folders');
     error = true;
-  }
-
-  // Get list of incomplete tasks and add output generator cron jobs if they have one
-  await taskOutputGeneratorQueue.empty();
-  const incompleteTasks = await BasicModel.getRecords('task', {
-    status: 'approved',
-  });
-  for (const task of incompleteTasks) {
-    const scenarioObj = scenarioById[Number.parseInt(task.scenario_id, 10)];
-    if (scenarioObj.outputGenerator) {
-      taskOutputGeneratorQueue.add(task, {
-        repeat: { cron: `${task.id} 0 * * *` },
-      });
-    }
   }
 
   if (error) {

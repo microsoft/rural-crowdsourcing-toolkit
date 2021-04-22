@@ -5,18 +5,9 @@
  * Model functions to handle queries from a box
  */
 
-import {
-  BoxRecord,
-  BoxUpdatableTables,
-  DbRecordType,
-  DbTableName,
-  MicrotaskAssignmentRecord,
-  tableList,
-  BasicModel,
-} from '@karya/db';
+import { BoxRecord, BoxUpdatableTables, DbRecordType, DbTableName, tableList, BasicModel } from '@karya/db';
 
 import { Promise as BBPromise } from 'bluebird';
-import { scenarioById } from '../scenarios/Index';
 import { getBlobSASURL } from '@karya/blobstore';
 
 const boxUpdatableTables: BoxUpdatableTables[] = [
@@ -49,7 +40,7 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
 
   // Get all updates from the following tables. Records in these tables can be
   // created and updated only by the server
-  const allUpdatesTables: DbTableName[] = ['language', 'scenario', 'policy'];
+  const allUpdatesTables: DbTableName[] = ['language'];
 
   await BBPromise.mapSeries(allUpdatesTables, async (table) => {
     const tableUpdates = await BasicModel.getRecords(table, {}, { from });
@@ -141,26 +132,36 @@ export async function applyUpdatesFromBox(box: BoxRecord, updates: TableUpdates<
         throw new Error(`Box can only update its own record`);
       }
       if (tableName === 'microtask_assignment') {
-        let currentMta: MicrotaskAssignmentRecord | null = null;
-        try {
-          currentMta = await BasicModel.getSingle('microtask_assignment', {
-            id: row.id,
-          });
-        } catch (e) {
-          // record does not exist
-        }
+        /**
+         * Below code is to handle microtask assignment completion as the
+         * server. In the new format, our plan is to deal with this using task
+         * chains. Commenting it out for now.
+         */
+        // let currentMta: MicrotaskAssignmentRecord | null = null;
+        // try {
+        //   currentMta = await BasicModel.getSingle('microtask_assignment', {
+        //     id: row.id,
+        //   });
+        // } catch (e) {
+        //   // record does not exist
+        // }
 
         // @ts-ignore
         await BasicModel.upsertRecord(tableName, row);
 
-        const mta = row as MicrotaskAssignmentRecord;
-        if ((!currentMta || currentMta.status === 'assigned') && mta.status === 'completed') {
-          const mt = await BasicModel.getSingle('microtask', {
-            id: mta.microtask_id,
-          });
-          const task = await BasicModel.getSingle('task', { id: mt.task_id });
-          await scenarioById[Number.parseInt(task.scenario_id, 10)].handleMicrotaskAssignmentCompletion(mta, mt, task);
-        }
+        /**
+         * Below code is to handle microtask assignment completion as the
+         * server. In the new format, our plan is to deal with this using task
+         * chains. Commenting it out for now.
+         */
+        // const mta = row as MicrotaskAssignmentRecord;
+        // if ((!currentMta || currentMta.status === 'assigned') && mta.status === 'completed') {
+        //   const mt = await BasicModel.getSingle('microtask', {
+        //     id: mta.microtask_id,
+        //   });
+        //   const task = await BasicModel.getSingle('task', { id: mt.task_id });
+        //   await scenarioById[Number.parseInt(task.scenario_id, 10)].handleMicrotaskAssignmentCompletion(mta, mt, task);
+        // }
       } else {
         // @ts-ignore
         await BasicModel.upsertRecord(tableName, row);

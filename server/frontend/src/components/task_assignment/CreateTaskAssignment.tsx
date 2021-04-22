@@ -15,10 +15,11 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { PolicyParameterDefinition } from '../../db/ParameterTypes';
+import { scenarioMap, ScenarioName } from '@karya/scenarios';
+import { policyMap, policyList, PolicyName } from '@karya/policies';
 
 // HTML helpers
-import { BoxRecord, PolicyRecord, TaskAssignment, TaskRecord } from '@karya/db';
+import { BoxRecord, TaskAssignment, TaskRecord } from '@karya/db';
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
@@ -54,7 +55,7 @@ const mapDispatchToProps = (dispatch: any) => {
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const dataConnector = withData('box', 'policy', 'task');
+const dataConnector = withData('box', 'task');
 const connector = compose(dataConnector, reduxConnector);
 // Component props
 // Need filter for box.
@@ -65,7 +66,7 @@ type CreateTaskAssignmentState = {
   params: { [id: string]: string | number };
   task?: TaskRecord;
   box?: BoxRecord;
-  policy?: PolicyRecord;
+  policy?: PolicyName;
 };
 
 class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, CreateTaskAssignmentState> {
@@ -107,8 +108,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
 
   // Change policy
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const policy_id = e.currentTarget.value;
-    const policy = this.props.policy.data.find((p) => p.id === policy_id);
+    const policy = e.currentTarget.value as PolicyName;
     this.setState({ policy, params: {} });
   };
 
@@ -136,51 +136,15 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     const ta: TaskAssignment = {
       task_id: this.state.task?.id,
       box_id: this.state.box?.id,
-      policy_id: this.state.policy?.id,
+      policy: this.state.policy,
       params: this.state.params,
       status: 'assigned',
     };
     this.props.createTaskAssignment(ta);
   };
 
-  // render a parameter
-  renderPolicyParameter(param: PolicyParameterDefinition) {
-    switch (param.type) {
-      case 'string':
-        return (
-          <ColTextInput
-            id={param.identifier}
-            label={param.name}
-            width='s4'
-            onChange={this.handleStringParamChange}
-            required={param.required}
-          />
-        );
-      case 'integer':
-        return (
-          <ColTextInput
-            id={param.identifier}
-            label={param.name}
-            width='s4'
-            onChange={this.handleIntegerParamChange}
-            required={param.required}
-          />
-        );
-      case 'float':
-        return (
-          <ColTextInput
-            id={param.identifier}
-            label={param.name}
-            width='s4'
-            onChange={this.handleFloatParamChange}
-            required={param.required}
-          />
-        );
-    }
-  }
-
   render() {
-    const errorElements = [this.props.request, this.props.box, this.props.policy, this.props.task].map((op, index) =>
+    const errorElements = [this.props.request, this.props.box, this.props.task].map((op, index) =>
       op.status === 'FAILURE' ? <ErrorMessage key={index} message={op.messages} /> : null,
     );
 
@@ -223,18 +187,18 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     );
 
     // Policy drop down
-    const policies = task === undefined ? [] : this.props.policy.data.filter((p) => p.scenario_id === task.scenario_id);
-    const { policy } = this.state;
-    const policy_id = policy ? policy.id : 0;
+    const scenario = scenarioMap[task?.scenario_name as ScenarioName];
+    const policies = task === undefined ? [] : policyList[scenario.response_type];
+    const policy = this.state.policy ?? 'null';
     const policyDropDown = (
       <div>
-        <select id='policy_id' value={policy_id} onChange={this.handlePolicyChange}>
-          <option value={0} disabled={true}>
+        <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
+          <option value='null' disabled={true}>
             Select a Policy
           </option>
           {policies.map((p) => (
-            <option value={p.id} key={p.id}>
-              {p.name}
+            <option value={p.name} key={p.name}>
+              {p.full_name}
             </option>
           ))}
         </select>
@@ -244,16 +208,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     // Policy params section
     let policyParamsSection = null;
     if (task !== undefined && box !== undefined && policy !== undefined) {
-      const { params: policyParams } = policy.params as { params: PolicyParameterDefinition[] };
-      policyParamsSection = (
-        <div className='section'>
-          {policyParams.map((p, index) => (
-            <div className='row' key={index}>
-              {this.renderPolicyParameter(p)}
-            </div>
-          ))}
-        </div>
-      );
+      policyParamsSection = <div className='section'></div>;
     }
 
     return (
@@ -280,13 +235,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
               </div>
             </div>
             <div className='row'>
-              <div className='col s4'>
-                {this.props.policy.status === 'IN_FLIGHT' ? (
-                  <ProgressBar />
-                ) : this.props.policy.status === 'SUCCESS' ? (
-                  policyDropDown
-                ) : null}
-              </div>
+              <div className='col s4'>{policyDropDown}</div>
             </div>
           </div>
 

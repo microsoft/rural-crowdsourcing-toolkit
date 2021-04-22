@@ -9,10 +9,7 @@ import { Promise as BBPromise } from 'bluebird';
 import box_id from '../config/box_id';
 import { this_box } from '../config/ThisBox';
 import { DbRecordType, DbTableName, WorkerRecord, tableList, BasicModel } from '@karya/db';
-import {
-  handleMicrotaskAssignmentCompletion,
-  handleMicrotaskGroupAssignmentCompletion,
-} from '../scenarios/AssignmentService';
+import { handleMicrotaskAssignmentCompletion } from '../scenarios/AssignmentService';
 import logger from '../utils/Logger';
 
 // Type for collecting table updates
@@ -51,7 +48,7 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
   } = {};
 
   // Get all updates from the following tables
-  const allUpdatesTables: DbTableName[] = ['language', 'scenario', 'policy'];
+  const allUpdatesTables: DbTableName[] = ['language'];
 
   // Collect updates for tables which the server could have updated
   await BBPromise.mapSeries(allUpdatesTables, async (table) => {
