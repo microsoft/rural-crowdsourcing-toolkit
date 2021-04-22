@@ -4,10 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
@@ -31,42 +30,42 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     private lateinit var karyaAPI: KaryaAPIService
 
     private fun setupObservers() {
-        viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner, Observer { openDashBoard ->
+        viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner) { openDashBoard ->
             if (openDashBoard) {
                 navigateToDashBoard()
             }
-        })
+        }
 
-        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner, { openProfilePictureFragment ->
+        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner) { openProfilePictureFragment ->
             if (openProfilePictureFragment) {
                 navigateToProfilePicture()
             }
-        })
+        }
 
-        viewModel.currOtpVerifyState.observe(viewLifecycleOwner, { state ->
+        viewModel.currOtpVerifyState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 OtpVerifyState.SUCCESS -> onOtpVerifySuccess()
                 OtpVerifyState.FAIL -> onOtpVerifyOrResendFailure()
                 OtpVerifyState.NOT_ENTERED -> setOtpNotSentUI()
             }
-        })
+        }
 
-        viewModel.currOtpResendState.observe(viewLifecycleOwner, { state ->
+        viewModel.currOtpResendState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 // TODO: Maybe indicate user after successful otp sent
                 OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
             }
-        })
+        }
 
-        viewModel.idTokenLiveData.observe(viewLifecycleOwner, { idToken ->
+        viewModel.idTokenLiveData.observe(viewLifecycleOwner) { idToken ->
             if (!idToken.isNullOrEmpty()) {
                 val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                with (sharedPref.edit()) {
+                with(sharedPref.edit()) {
                     putString(getString(R.string.id_token_key), idToken)
                     apply()
                 }
             }
-        })
+        }
     }
 
     private fun navigateToDashBoard() {

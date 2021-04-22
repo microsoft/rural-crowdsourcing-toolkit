@@ -1,8 +1,8 @@
 package com.microsoft.research.karya.ui.registration
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
@@ -20,14 +20,14 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 
-    fun setUpObservers() {
-        viewModel.currRegisterState.observe(viewLifecycleOwner, { state ->
-            when(state) {
+    private fun setUpObservers() {
+        viewModel.currRegisterState.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 RegisterWorkerState.SUCCESS -> navigateToDashboard()
                 RegisterWorkerState.FAILURE -> onRegisterWorkerFailure()
                 RegisterWorkerState.NOT_STARTED -> onRegisterWorkerNotStarted()
             }
-        })
+        }
     }
 
     private fun onRegisterWorkerNotStarted() {
@@ -56,9 +56,9 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
         /** Setup the UI Strings **/
         val yearsString = getString(R.string.s_years)
 
-        val youthLabel = AgeGroup.YOUTH_AGE.range + " " + yearsString
-        val middleLabel = AgeGroup.MIDDLE_AGE.range + " " + yearsString
-        val oldLabel = AgeGroup.OLD_AGE.range + " " + yearsString
+        val youthLabel = "${AgeGroup.YOUTH_AGE.range} $yearsString"
+        val middleLabel = "${AgeGroup.MIDDLE_AGE.range} $yearsString"
+        val oldLabel = "${AgeGroup.OLD_AGE.range} $yearsString"
 
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_age_prompt

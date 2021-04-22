@@ -4,11 +4,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
@@ -29,23 +27,18 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
     private lateinit var registrationActivity: RegistrationActivity
     private lateinit var baseActivity: BaseActivity
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-
-        viewModel.openSelectGenderFragmentFromProfilePicture.observe(viewLifecycleOwner, { navigate->
+    private fun setUpObservers() {
+        viewModel.openSelectGenderFragmentFromProfilePicture.observe(viewLifecycleOwner) { navigate ->
             if (navigate) {
                 navigateToSelectGenderFragment()
             }
-        })
+        }
 
-        viewModel.loadImageBitmap.observe(viewLifecycleOwner, { shouldLoad ->
+        viewModel.loadImageBitmap.observe(viewLifecycleOwner) { shouldLoad ->
             if (shouldLoad) {
                 loadBitmap()
             }
-        })
-
-        return view
+        }
     }
 
     private fun loadBitmap() {
@@ -65,17 +58,19 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
         registrationActivity = activity as RegistrationActivity
         baseActivity = activity as BaseActivity
 
+        setUpObservers()
+
         /** Initialise assistant audio **/
         registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
 
         with(binding) {
 
-            binding.mainProfilePictureIv.setOnClickListener { getProfilePicture() }
+            mainProfilePictureIv.setOnClickListener { getProfilePicture() }
 
-            binding.profilePictureNextIv.setOnClickListener {
-                binding.mainProfilePictureIv.isClickable = false
-                binding.rotateRightIb.isClickable = false
-                binding.profilePictureNextIv.visibility = View.INVISIBLE
+            profilePictureNextIv.setOnClickListener {
+                mainProfilePictureIv.isClickable = false
+                rotateRightIb.isClickable = false
+                profilePictureNextIv.visibility = View.INVISIBLE
                 val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
 
                 if (::profilePic.isInitialized) {
@@ -85,7 +80,7 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
                 }
             }
 
-            binding.rotateRightIb.setOnClickListener {
+            rotateRightIb.setOnClickListener {
                 if (::profilePic.isInitialized) {
                     profilePic = viewModel.rotateRight(profilePic)
                 }
