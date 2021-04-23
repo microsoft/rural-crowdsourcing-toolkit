@@ -14,9 +14,9 @@ private const val CODEC_TIMEOUT_IN_MS = 5000
 private const val BUFFER_SIZE = 88200
 
 class RawToAACEncoder(
-    private val SamplingRate: Int = 44100,
-    private val OutputMimeType: String = "audio/mp4a-latm",
-    private val OutputBitRate: Int = 128000,
+  private val SamplingRate: Int = 44100,
+  private val OutputMimeType: String = "audio/mp4a-latm",
+  private val OutputBitRate: Int = 128000,
 ) {
 
   private var mStop = false
@@ -30,8 +30,7 @@ class RawToAACEncoder(
     val mux = MediaMuxer(outputFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
 
     var outputFormat = MediaFormat.createAudioFormat(OutputMimeType, SamplingRate, 1)
-    outputFormat.setInteger(
-        MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
+    outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
     outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, OutputBitRate)
 
     val codec = MediaCodec.createEncoderByType(OutputMimeType)
@@ -57,11 +56,12 @@ class RawToAACEncoder(
           if (bytesRead == -1) { // -1 implies EOS
             hasMoreData = false
             codec.queueInputBuffer(
-                inputBufIndex,
-                0,
-                0,
-                presentationTimeUs.toLong(),
-                MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+              inputBufIndex,
+              0,
+              0,
+              presentationTimeUs.toLong(),
+              MediaCodec.BUFFER_FLAG_END_OF_STREAM
+            )
           } else {
             totalBytesRead += bytesRead
             dstBuf.put(tempBuffer, 0, bytesRead)
@@ -79,8 +79,7 @@ class RawToAACEncoder(
           val encodedData = codecOutputBuffers[outputBufIndex]
           encodedData.position(outBuffInfo.offset)
           encodedData.limit(outBuffInfo.offset + outBuffInfo.size)
-          if (outBuffInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0 &&
-              outBuffInfo.size != 0) {
+          if (outBuffInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0 && outBuffInfo.size != 0) {
             codec.releaseOutputBuffer(outputBufIndex, false)
           } else {
             mux.writeSampleData(audioTrackIdx, codecOutputBuffers[outputBufIndex], outBuffInfo)

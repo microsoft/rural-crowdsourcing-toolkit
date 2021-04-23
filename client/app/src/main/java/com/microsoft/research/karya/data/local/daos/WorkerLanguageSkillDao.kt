@@ -15,8 +15,7 @@ import com.microsoft.research.karya.data.model.karya.WorkerLanguageSkillRecord
 @Dao
 interface WorkerLanguageSkillDao : BasicDao<WorkerLanguageSkillRecord> {
 
-  @Query("SELECT * FROM worker_language_skill")
-  suspend fun getAll(): List<WorkerLanguageSkillRecord>
+  @Query("SELECT * FROM worker_language_skill") suspend fun getAll(): List<WorkerLanguageSkillRecord>
 
   @Query("SELECT * FROM worker_language_skill WHERE id == :id")
   suspend fun getById(id: String): WorkerLanguageSkillRecord

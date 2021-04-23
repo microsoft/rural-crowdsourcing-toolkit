@@ -92,6 +92,6 @@ class SplashScreen : BaseActivity() {
 
   /** Update the splash screen progress bar */
   private fun updateSplashScreenProgress(
-      state: SplashScreenState,
+    state: SplashScreenState,
   ) = uiScope.launch { progressBar.progress = state.ordinal }
 }

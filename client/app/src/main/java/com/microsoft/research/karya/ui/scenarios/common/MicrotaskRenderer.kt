@@ -31,10 +31,10 @@ private const val REQUEST_PERMISSIONS = 201
  * this interface.
  */
 abstract class MicrotaskRenderer(
-    private val activityName: String,
-    private val includeCompleted: Boolean,
-    private val finishOnGroupBoundary: Boolean,
-    useAssistant: Boolean = false,
+  private val activityName: String,
+  private val includeCompleted: Boolean,
+  private val finishOnGroupBoundary: Boolean,
+  useAssistant: Boolean = false,
 ) : BaseActivity() {
 
   protected lateinit var task: TaskRecord
@@ -135,8 +135,7 @@ abstract class MicrotaskRenderer(
     val extension = params.second
     val assignmentId = microtaskAssignmentIDs[currentAssignmentIndex]
 
-    return if (identifier == "") "$assignmentId.$extension"
-    else "$assignmentId-$identifier.$extension"
+    return if (identifier == "") "$assignmentId.$extension" else "$assignmentId-$identifier.$extension"
   }
 
   /** Get the file path for an output file for the current assignment and [params] pair */
@@ -192,11 +191,11 @@ abstract class MicrotaskRenderer(
   protected suspend fun completeAndSaveCurrentMicrotask() {
     /** Delete all scratch files */
     val deleteScratchFilesJob =
-        ioScope.launch {
-          val directory = getDir("microtask-assignment-scratch", Context.MODE_PRIVATE)
-          val files = directory.listFiles()
-          files?.forEach { if (it.exists()) it.delete() }
-        }
+      ioScope.launch {
+        val directory = getDir("microtask-assignment-scratch", Context.MODE_PRIVATE)
+        val files = directory.listFiles()
+        files?.forEach { if (it.exists()) it.delete() }
+      }
 
     val output = JsonObject()
     output.add("data", outputData)
@@ -204,9 +203,8 @@ abstract class MicrotaskRenderer(
     output.add("logs", logs)
 
     karyaDb
-        .microtaskAssignmentDaoExtra()
-        .markComplete(
-            microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
+      .microtaskAssignmentDaoExtra()
+      .markComplete(microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
 
     /** Update progress bar */
     if (currentAssignment.status == MicrotaskAssignmentStatus.assigned) {
@@ -277,11 +275,11 @@ abstract class MicrotaskRenderer(
 
       setWorkerJob.join()
       firstTimeActivityVisit =
-          try {
-            !thisWorker.params.get(activityName).asBoolean
-          } catch (e: Exception) {
-            true
-          }
+        try {
+          !thisWorker.params.get(activityName).asBoolean
+        } catch (e: Exception) {
+          true
+        }
 
       /** Mark the activity as visited */
       activityVisited()
@@ -291,35 +289,31 @@ abstract class MicrotaskRenderer(
 
     /** Fetch all microtask assignments and point to first incomplete assignment */
     microtaskLoadingJob =
-        ioScope.launch {
-          microtaskAssignmentIDs =
-              karyaDb
-                  .microtaskAssignmentDaoExtra()
-                  .getUnsubmittedIDsForTask(task.id, includeCompleted)
+      ioScope.launch {
+        microtaskAssignmentIDs =
+          karyaDb.microtaskAssignmentDaoExtra().getUnsubmittedIDsForTask(task.id, includeCompleted)
 
-          // If there are no microtasks, move back to the dashboard
-          if (microtaskAssignmentIDs.isEmpty()) {
-            finish()
-          }
-
-          // Move to the first incomplete (assigned) microtask or the last microtask
-          do {
-            val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
-            val microtaskAssignment =
-                karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
-            if (microtaskAssignment.status == MicrotaskAssignmentStatus.assigned) {
-              break
-            }
-            currentAssignmentIndex++
-          } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
+        // If there are no microtasks, move back to the dashboard
+        if (microtaskAssignmentIDs.isEmpty()) {
+          finish()
         }
+
+        // Move to the first incomplete (assigned) microtask or the last microtask
+        do {
+          val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
+          val microtaskAssignment = karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
+          if (microtaskAssignment.status == MicrotaskAssignmentStatus.assigned) {
+            break
+          }
+          currentAssignmentIndex++
+        } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
+      }
 
     /** Check if there are any permissions needed */
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
       for (permission in permissions) {
-        if (ActivityCompat.checkSelfPermission(this, permission) !=
-            PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
           hasAllPermissions = false
           ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS)
           break
@@ -351,9 +345,9 @@ abstract class MicrotaskRenderer(
 
   /** On permission result, if any permission is not granted, return immediately */
   override fun onRequestPermissionsResult(
-      requestCode: Int,
-      permissions: Array<out String>,
-      grantResults: IntArray,
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray,
   ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -395,18 +389,17 @@ abstract class MicrotaskRenderer(
 
       // Fetch the assignment and the microtask
       ioScope
-          .launch {
-            currentAssignment = karyaDb.microtaskAssignmentDao().getById(assignmentID)
-            currentMicrotask = karyaDb.microTaskDao().getById(currentAssignment.microtask_id)
-          }
-          .join()
+        .launch {
+          currentAssignment = karyaDb.microtaskAssignmentDao().getById(assignmentID)
+          currentMicrotask = karyaDb.microTaskDao().getById(currentAssignment.microtask_id)
+        }
+        .join()
 
       /** If microtask has input files, extract them */
       var microtaskInputFileJob: Job? = null
       var inputFileDoesNotExist = false
       if (currentMicrotask.input_file_id != null) {
-        val microtaskTarBallPath =
-            getBlobPath(KaryaFileContainer.MICROTASK_INPUT, currentMicrotask.id)
+        val microtaskTarBallPath = getBlobPath(KaryaFileContainer.MICROTASK_INPUT, currentMicrotask.id)
         val microtaskInputDirectory = getMicrotaskInputDirectory()
 
         if (!File(microtaskTarBallPath).exists()) {
@@ -415,17 +408,17 @@ abstract class MicrotaskRenderer(
             /** Input files were not downloaded fully */
             val alertDialogBuilder = AlertDialog.Builder(this@MicrotaskRenderer)
             alertDialogBuilder.setMessage(
-                "Input files were not fully downloaded. Please sync with server to download all files")
+              "Input files were not fully downloaded. Please sync with server to download all files"
+            )
             alertDialogBuilder.setPositiveButton("Okay") { _, _ -> finish() }
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
           }
         } else {
           microtaskInputFileJob =
-              ioScope.launch {
-                FileUtils.extractGZippedTarBallIntoDirectory(
-                    microtaskTarBallPath, microtaskInputDirectory)
-              }
+            ioScope.launch {
+              FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
+            }
         }
       }
 
@@ -435,31 +428,32 @@ abstract class MicrotaskRenderer(
       if (finishOnGroupBoundary &&
           currentMicrotaskGroupId != null &&
           currentMicrotask.group_id != null &&
-          currentMicrotask.group_id != currentMicrotaskGroupId) {
+          currentMicrotask.group_id != currentMicrotaskGroupId
+      ) {
         finish()
       }
       currentMicrotaskGroupId = currentMicrotask.group_id
 
       outputData =
-          if (currentAssignment.output.has("data")) {
-            currentAssignment.output.getAsJsonObject("data")
-          } else {
-            JsonObject()
-          }
+        if (currentAssignment.output.has("data")) {
+          currentAssignment.output.getAsJsonObject("data")
+        } else {
+          JsonObject()
+        }
 
       logs =
-          if (currentAssignment.output.has("logs")) {
-            currentAssignment.output.getAsJsonArray("logs")
-          } else {
-            JsonArray()
-          }
+        if (currentAssignment.output.has("logs")) {
+          currentAssignment.output.getAsJsonArray("logs")
+        } else {
+          JsonArray()
+        }
 
       outputFiles =
-          if (currentAssignment.output.has("files")) {
-            currentAssignment.output.getAsJsonArray("files")
-          } else {
-            JsonArray()
-          }
+        if (currentAssignment.output.has("files")) {
+          currentAssignment.output.getAsJsonArray("files")
+        } else {
+          JsonArray()
+        }
 
       // setup microtask
       uiScope.launch {

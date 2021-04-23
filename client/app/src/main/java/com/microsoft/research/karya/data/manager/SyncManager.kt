@@ -12,8 +12,7 @@ import com.microsoft.research.karya.ui.dashboard.DashboardActivity
 class SyncManager() {
 
   fun sync(context: Context, appLanguage: Int) {
-    val workRequest =
-        OneTimeWorkRequest.Builder(DashboardActivity.PerformSyncBackground::class.java)
+    val workRequest = OneTimeWorkRequest.Builder(DashboardActivity.PerformSyncBackground::class.java)
     val data = Data.Builder()
 
     data.putInt("appLanguageId", appLanguage)

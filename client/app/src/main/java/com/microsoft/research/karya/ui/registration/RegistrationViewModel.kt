@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.onEach
 class RegistrationViewModel
 @Inject
 constructor(
-    private val workerRepository: WorkerRepository,
+  private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
   private val _openDashBoardFromOTP = MutableLiveData<Boolean>(false)
@@ -56,8 +56,7 @@ constructor(
   val currOtpResendState: LiveData<OtpSendState>
     get() = _currOtpResendState
 
-  private val _currRegisterState =
-      MutableLiveData<RegisterWorkerState>(RegisterWorkerState.NOT_STARTED)
+  private val _currRegisterState = MutableLiveData<RegisterWorkerState>(RegisterWorkerState.NOT_STARTED)
   val currRegisterState: LiveData<RegisterWorkerState>
     get() = _currRegisterState
 
@@ -79,81 +78,83 @@ constructor(
     WorkerInformation.creation_code = "2888118064405199"
     WorkerInformation.app_language = 1
     workerRepository
-        .getOrVerifyOTP(
-            WorkerInformation.creation_code!!,
-            WorkerInformation.phone_number!!,
-            "",
-            WorkerRepository.OtpAction.GENERATE.name.toLowerCase())
-        .onEach { _currOtpSendState.value = OtpSendState.SUCCESS }
-        .catch { e -> sendGenerateOtpError(e) }
-        .launchIn(viewModelScope)
+      .getOrVerifyOTP(
+        WorkerInformation.creation_code!!,
+        WorkerInformation.phone_number!!,
+        "",
+        WorkerRepository.OtpAction.GENERATE.name.toLowerCase()
+      )
+      .onEach { _currOtpSendState.value = OtpSendState.SUCCESS }
+      .catch { e -> sendGenerateOtpError(e) }
+      .launchIn(viewModelScope)
   }
 
   fun verifyOTP(otp: String) {
     workerRepository
-        .getOrVerifyOTP(
-            WorkerInformation.creation_code!!,
-            WorkerInformation.phone_number!!,
-            otp,
-            WorkerRepository.OtpAction.VERIFY.name.toLowerCase())
-        .onEach { workerRecord ->
-          _currOtpVerifyState.value = OtpVerifyState.SUCCESS
-          _idTokenLiveData.value = workerRecord.id_token!!
+      .getOrVerifyOTP(
+        WorkerInformation.creation_code!!,
+        WorkerInformation.phone_number!!,
+        otp,
+        WorkerRepository.OtpAction.VERIFY.name.toLowerCase()
+      )
+      .onEach { workerRecord ->
+        _currOtpVerifyState.value = OtpVerifyState.SUCCESS
+        _idTokenLiveData.value = workerRecord.id_token!!
 
-          if (workerRecord.age.isNullOrEmpty()) {
-            // First time registration, go on with the regular registration flow
-            _openProfilePictureFragmentFromOTP.value = true
-          } else {
-            // Save the worker and navigate to dashboard
-            workerRepository.upsertWorker(workerRecord)
-            _openDashBoardFromOTP.value = true
-          }
+        if (workerRecord.age.isNullOrEmpty()) {
+          // First time registration, go on with the regular registration flow
+          _openProfilePictureFragmentFromOTP.value = true
+        } else {
+          // Save the worker and navigate to dashboard
+          workerRepository.upsertWorker(workerRecord)
+          _openDashBoardFromOTP.value = true
         }
-        .catch { e -> sendVerifyOtpError(e) }
-        .launchIn(viewModelScope)
+      }
+      .catch { e -> sendVerifyOtpError(e) }
+      .launchIn(viewModelScope)
   }
 
   /** Resend OTP */
   fun resendOTP() {
     workerRepository
-        .getOrVerifyOTP(
-            WorkerInformation.creation_code!!,
-            WorkerInformation.phone_number!!,
-            "",
-            WorkerRepository.OtpAction.RESEND.name.toLowerCase())
-        .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
-        .catch { e -> sendResendOtpError(e) }
-        .launchIn(viewModelScope)
+      .getOrVerifyOTP(
+        WorkerInformation.creation_code!!,
+        WorkerInformation.phone_number!!,
+        "",
+        WorkerRepository.OtpAction.RESEND.name.toLowerCase()
+      )
+      .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
+      .catch { e -> sendResendOtpError(e) }
+      .launchIn(viewModelScope)
   }
 
   private fun sendGenerateOtpError(e: Throwable) {
     phoneNumberFragmentErrorId =
-        when (e) {
-          is PhoneNumberAlreadyUsedException -> R.string.s_phone_number_already_used
-          is IncorrectAccessCodeException ->
-              R.string.s_invalid_creation_code // this case should never happen
-          is UnknownException -> R.string.s_unknown_error
-          else -> R.string.s_unknown_error
-        }
+      when (e) {
+        is PhoneNumberAlreadyUsedException -> R.string.s_phone_number_already_used
+        is IncorrectAccessCodeException -> R.string.s_invalid_creation_code // this case should never happen
+        is UnknownException -> R.string.s_unknown_error
+        else -> R.string.s_unknown_error
+      }
     _currOtpSendState.value = OtpSendState.FAIL
   }
 
   private fun sendResendOtpError(e: Throwable) {
     otpFragmentErrorId =
-        when (e) {
-          is UnknownError -> R.string.s_unknown_error
-          else -> R.string.s_unknown_error
-        }
+      when (e) {
+        is UnknownError -> R.string.s_unknown_error
+        else -> R.string.s_unknown_error
+      }
     _currOtpResendState.value = OtpSendState.FAIL
   }
 
   private fun sendVerifyOtpError(e: Throwable) {
     otpFragmentErrorId =
-        when (e) {
-          is IncorrectOtpException -> R.string.s_invalid_otp
-          is UnknownError -> R.string.s_unknown_error
-          else -> R.string.s_unknown_error
-        }
+      when (e) {
+        is IncorrectOtpException -> R.string.s_invalid_otp
+        is UnknownError -> R.string.s_unknown_error
+        else -> R.string.s_unknown_error
+      }
     _currOtpVerifyState.value = OtpVerifyState.FAIL
   }
 
@@ -188,8 +189,7 @@ constructor(
   fun rotateRight(profilePic: Bitmap): Bitmap {
     val matrix = Matrix()
     matrix.postRotate(90.toFloat())
-    val rotated =
-        Bitmap.createBitmap(profilePic, 0, 0, profilePic.width, profilePic.height, matrix, true)
+    val rotated = Bitmap.createBitmap(profilePic, 0, 0, profilePic.width, profilePic.height, matrix, true)
     _loadImageBitmap.value = true
     return rotated
   }
@@ -206,25 +206,25 @@ constructor(
   fun registerWorker() {
 
     val registerOrUpdateWorkerRequest =
-        RegisterOrUpdateWorkerRequest(WorkerInformation.age_group!!, WorkerInformation.gender)
+      RegisterOrUpdateWorkerRequest(WorkerInformation.age_group!!, WorkerInformation.gender)
 
     workerRepository
-        .updateWorker("", WorkerInformation.creation_code!!, registerOrUpdateWorkerRequest)
-        .onEach { workerRecord ->
-          workerRepository.upsertWorker(workerRecord)
-          _currRegisterState.value = RegisterWorkerState.SUCCESS
-        }
-        .catch { e -> sendRegisterWorkerError(e) }
-        .launchIn(viewModelScope)
+      .updateWorker("", WorkerInformation.creation_code!!, registerOrUpdateWorkerRequest)
+      .onEach { workerRecord ->
+        workerRepository.upsertWorker(workerRecord)
+        _currRegisterState.value = RegisterWorkerState.SUCCESS
+      }
+      .catch { e -> sendRegisterWorkerError(e) }
+      .launchIn(viewModelScope)
   }
 
   private fun sendRegisterWorkerError(e: Throwable) {
     selectAgeGroupFragmentErrorId =
-        when (e) {
-          is IncorrectAccessCodeException -> R.string.s_invalid_creation_code
-          is UnknownError -> R.string.s_unknown_error
-          else -> R.string.s_unknown_error
-        }
+      when (e) {
+        is IncorrectAccessCodeException -> R.string.s_invalid_creation_code
+        is UnknownError -> R.string.s_unknown_error
+        else -> R.string.s_unknown_error
+      }
     _currRegisterState.value = RegisterWorkerState.FAILURE
   }
 }

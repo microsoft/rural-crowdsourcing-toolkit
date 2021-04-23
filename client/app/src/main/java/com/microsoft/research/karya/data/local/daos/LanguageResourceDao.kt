@@ -17,8 +17,7 @@ interface LanguageResourceDao : BasicDao<LanguageResourceRecord> {
 
   @Query("SELECT * FROM language_resource") suspend fun getAll(): List<LanguageResourceRecord>
 
-  @Query("SELECT * FROM language_resource WHERE id == :id")
-  suspend fun getById(id: Int): LanguageResourceRecord
+  @Query("SELECT * FROM language_resource WHERE id == :id") suspend fun getById(id: Int): LanguageResourceRecord
 
   /** Upsert a [record] in the table */
   @Transaction

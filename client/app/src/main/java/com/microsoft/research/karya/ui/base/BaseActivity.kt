@@ -101,28 +101,27 @@ abstract class BaseActivity() : AppCompatActivity() {
 
     /** Get app language ID */
     setAppLanguageJob =
-        ioScope.launch {
-          setWorkerJob.join()
-          val oldAppLanguageId = appLanguageId
-          appLanguageId =
-              if (this@BaseActivity::thisWorker.isInitialized) thisWorker.app_language
-              else WorkerInformation.app_language
-          if (appLanguageId != oldAppLanguageId && appLanguageId != null) {
-            appLanguageChanged = true
-          }
+      ioScope.launch {
+        setWorkerJob.join()
+        val oldAppLanguageId = appLanguageId
+        appLanguageId =
+          if (this@BaseActivity::thisWorker.isInitialized) thisWorker.app_language else WorkerInformation.app_language
+        if (appLanguageId != oldAppLanguageId && appLanguageId != null) {
+          appLanguageChanged = true
         }
+      }
 
     // Get strings
     getStringsJob =
-        ioScope.launch {
-          setAppLanguageJob.join()
-          if (appLanguageChanged) {
+      ioScope.launch {
+        setAppLanguageJob.join()
+        if (appLanguageChanged) {
 
-            //                salutation = getValueFromName(R.string.salutation)
-            // Set various Strings for the Activity
-            getStringsForActivity()
-          }
+          //                salutation = getValueFromName(R.string.salutation)
+          // Set various Strings for the Activity
+          getStringsForActivity()
         }
+      }
 
     // Update UI
     runBlocking {
@@ -207,10 +206,10 @@ abstract class BaseActivity() : AppCompatActivity() {
   /** Set worker */
   private fun setWorker() {
     setWorkerJob =
-        ioScope.launch {
-          val workers = karyaDb.workerDao().getAll()
-          if (workers.isNotEmpty()) thisWorker = workers[0]
-        }
+      ioScope.launch {
+        val workers = karyaDb.workerDao().getAll()
+        if (workers.isNotEmpty()) thisWorker = workers[0]
+      }
   }
 
   /** Function to get all string values needed for the activity */
@@ -232,10 +231,10 @@ abstract class BaseActivity() : AppCompatActivity() {
 
   /** Play an audio file using the resource name */
   protected fun playAssistantAudio(
-      @StringRes resId: Int,
-      languageId: Int? = null,
-      uiCue: (() -> Unit)? = null,
-      onCompletionListener: (() -> Unit)? = null,
+    @StringRes resId: Int,
+    languageId: Int? = null,
+    uiCue: (() -> Unit)? = null,
+    onCompletionListener: (() -> Unit)? = null,
   ) {
     //        /** If player is not initialized, return */
     //        if (!::assistantPlayer.isInitialized || !assistantAvailable) {

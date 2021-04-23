@@ -37,8 +37,7 @@ fun Fragment.hideKeyboard() {
   imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Context.getDirectory(directoryName: String): String =
-    getDir(directoryName, Context.MODE_PRIVATE).path
+fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
 
 fun View.visible() {
   this.visibility = View.VISIBLE

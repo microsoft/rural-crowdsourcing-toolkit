@@ -69,8 +69,7 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
         mainProfilePictureIv.isClickable = false
         rotateRightIb.isClickable = false
         profilePictureNextIv.visibility = View.INVISIBLE
-        val imageFolder =
-            requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
+        val imageFolder = requireActivity().getDir("profile_picture", AppCompatActivity.MODE_PRIVATE).path
 
         if (::profilePic.isInitialized) {
           viewModel.submitProfilePicture(profilePic, imageFolder)

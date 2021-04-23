@@ -17,8 +17,7 @@ interface PayoutInfoDao : BasicDao<PayoutInfoRecord> {
 
   @Query("SELECT * FROM payout_info") suspend fun getAll(): List<PayoutInfoRecord>
 
-  @Query("SELECT * FROM payout_info WHERE id == :id")
-  suspend fun getById(id: String): PayoutInfoRecord
+  @Query("SELECT * FROM payout_info WHERE id == :id") suspend fun getById(id: String): PayoutInfoRecord
 
   /** Upsert a [record] in the table */
   @Transaction

@@ -23,8 +23,7 @@ import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Response
 
-class FirstLoadFetchData :
-    NetworkActivity(indeterminateProgress = false, noMessage = true, allowRetry = false) {
+class FirstLoadFetchData : NetworkActivity(indeterminateProgress = false, noMessage = true, allowRetry = false) {
 
   enum class FetchDataState {
     FETCH_START,
@@ -90,7 +89,8 @@ class FirstLoadFetchData :
     if (!languagesResponse.isSuccessful ||
         !scenariosResponse.isSuccessful ||
         !lrResponse.isSuccessful ||
-        !lrvResponse.isSuccessful) {
+        !lrvResponse.isSuccessful
+    ) {
       networkErrorMessage = ""
       networkRetryMessage = ""
       throw Exception("no_internet")
@@ -103,14 +103,15 @@ class FirstLoadFetchData :
 
     /** Gather and sort language resources */
     val languageResources =
-        lrResponse.body()!!.sortedWith(
-            Comparator { r1, r2 ->
-              when {
-                r1.type == LanguageResourceType.string_resource -> -1
-                r2.type == LanguageResourceType.file_resource -> -1
-                else -> 1
-              }
-            })
+      lrResponse.body()!!.sortedWith(
+        Comparator { r1, r2 ->
+          when {
+            r1.type == LanguageResourceType.string_resource -> -1
+            r2.type == LanguageResourceType.file_resource -> -1
+            else -> 1
+          }
+        }
+      )
 
     /** Upsert all of them into the local db */
     karyaDb.languageDao().upsert(languages)
@@ -125,8 +126,7 @@ class FirstLoadFetchData :
     for (resId in listResources) {
       val filePath = getBlobPath(KaryaFileContainer.LR_LRVS, resId.toString())
       if (!File(filePath).exists()) {
-        val requestDeferred =
-            ioScope.async { karyaAPI.getFileLanguageResourceValuesByLanguageResourceId(resId) }
+        val requestDeferred = ioScope.async { karyaAPI.getFileLanguageResourceValuesByLanguageResourceId(resId) }
         listFileRequests.add(requestDeferred)
       } else {
         listFileRequests.add(null)
@@ -171,5 +171,5 @@ class FirstLoadFetchData :
 
   /** Update the progress of the activity */
   private fun updateActivityProgress(state: FetchDataState) =
-      uiScope.launch { networkRequestPb.progress = state.ordinal }
+    uiScope.launch { networkRequestPb.progress = state.ordinal }
 }

@@ -16,26 +16,26 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "language_resource_value",
-    foreignKeys =
-        arrayOf(
-            ForeignKey(
-                entity = LanguageRecord::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("language_id")),
-            ForeignKey(
-                entity = LanguageResourceRecord::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("language_resource_id"))),
-    indices = arrayOf(Index("language_id"), Index("language_resource_id")))
+  tableName = "language_resource_value",
+  foreignKeys =
+    arrayOf(
+      ForeignKey(entity = LanguageRecord::class, parentColumns = arrayOf("id"), childColumns = arrayOf("language_id")),
+      ForeignKey(
+        entity = LanguageResourceRecord::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("language_resource_id")
+      )
+    ),
+  indices = arrayOf(Index("language_id"), Index("language_resource_id"))
+)
 data class LanguageResourceValueRecord(
-    @PrimaryKey var id: Int,
-    var language_id: Int,
-    var language_resource_id: Int,
-    var value: String,
-    var valid: Boolean,
-    var need_update: Boolean,
-    var params: JsonObject,
-    var created_at: String,
-    var last_updated_at: String,
+  @PrimaryKey var id: Int,
+  var language_id: Int,
+  var language_resource_id: Int,
+  var value: String,
+  var valid: Boolean,
+  var need_update: Boolean,
+  var params: JsonObject,
+  var created_at: String,
+  var last_updated_at: String,
 )

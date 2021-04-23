@@ -15,8 +15,7 @@ import com.microsoft.research.karya.data.model.karya.LanguageResourceValueRecord
 @Dao
 interface LanguageResourceValueDao : BasicDao<LanguageResourceValueRecord> {
 
-  @Query("SELECT * FROM language_resource_value")
-  suspend fun getAll(): List<LanguageResourceValueRecord>
+  @Query("SELECT * FROM language_resource_value") suspend fun getAll(): List<LanguageResourceValueRecord>
 
   @Query("SELECT * FROM language_resource_value WHERE id == :id")
   suspend fun getById(id: Int): LanguageResourceValueRecord

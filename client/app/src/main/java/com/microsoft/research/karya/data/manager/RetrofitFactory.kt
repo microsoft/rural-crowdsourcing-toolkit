@@ -11,11 +11,7 @@ object RetrofitFactory {
   private val SERVER_URL = "https://karyabox2.eastus.cloudapp.azure.com"
 
   fun create(): KaryaAPIService {
-    val retrofit =
-        Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(SERVER_URL)
-            .build()
+    val retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(SERVER_URL).build()
     return retrofit.create(KaryaAPIService::class.java)
   }
 }

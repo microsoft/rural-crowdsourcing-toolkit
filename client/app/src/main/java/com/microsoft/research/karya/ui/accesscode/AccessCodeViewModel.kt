@@ -10,13 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 @HiltViewModel
-class AccessCodeViewModel @Inject constructor(private val workerRepository: WorkerRepository) :
-    ViewModel() {
+class AccessCodeViewModel @Inject constructor(private val workerRepository: WorkerRepository) : ViewModel() {
 
   fun checkAccessCode(accessCode: String): Flow<Result> {
-    return workerRepository
-        .getWorkerUsingAccessCode(accessCode)
-        .map { response -> response.appLanguage }
-        .mapToResult()
+    return workerRepository.getWorkerUsingAccessCode(accessCode).map { response -> response.appLanguage }.mapToResult()
   }
 }
