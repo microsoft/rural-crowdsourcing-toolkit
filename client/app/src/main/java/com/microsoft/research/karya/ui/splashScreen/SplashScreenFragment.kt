@@ -31,6 +31,7 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
     navController = findNavController()
     binding.progressBar.isIndeterminate = true
+    handleNavigation()
   }
 
   private fun handleNavigation() {
