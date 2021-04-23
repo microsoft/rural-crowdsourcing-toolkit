@@ -74,7 +74,8 @@ the following people.
 
 Currently, the code is also being developed by Navana Tech with contributions from the following people.
  
-- Aditya Wasan (https://github.com/skrilltrax) 
+- Aditya Wasan (https://github.com/skrilltrax)
+- Amogh Lele (https://github.com/sphericalkat)
 
 ## Microsoft Open Source Code of Conduct
 
