@@ -8,13 +8,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitFactory {
-    private val SERVER_URL = "https://karyabox2.eastus.cloudapp.azure.com"
+  private val SERVER_URL = "https://karyabox2.eastus.cloudapp.azure.com"
 
-    fun create(): KaryaAPIService {
-        val retrofit = Retrofit.Builder()
+  fun create(): KaryaAPIService {
+    val retrofit =
+        Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(SERVER_URL)
             .build()
-        return retrofit.create(KaryaAPIService::class.java)
-    }
+    return retrofit.create(KaryaAPIService::class.java)
+  }
 }

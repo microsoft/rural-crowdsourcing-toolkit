@@ -2,10 +2,9 @@
 // Licensed under the MIT license.
 
 /**
- * This file was auto-generated using specs and scripts in the db-schema
- * repository. DO NOT EDIT DIRECTLY.
+ * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
+ * DIRECTLY.
  */
-
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
@@ -15,26 +14,24 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "microtask_assignment", foreignKeys = arrayOf(
-        ForeignKey(
-            entity = MicrotaskRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("microtask_id")
-        ), ForeignKey(
-            entity = WorkerRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("worker_id")
-        ), ForeignKey(
-            entity = KaryaFileRecord::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("output_file_id")
-        )
-    ), indices = arrayOf(Index("microtask_id"), Index("worker_id"), Index("output_file_id"))
-)
-
+    tableName = "microtask_assignment",
+    foreignKeys =
+        arrayOf(
+            ForeignKey(
+                entity = MicrotaskRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("microtask_id")),
+            ForeignKey(
+                entity = WorkerRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("worker_id")),
+            ForeignKey(
+                entity = KaryaFileRecord::class,
+                parentColumns = arrayOf("id"),
+                childColumns = arrayOf("output_file_id"))),
+    indices = arrayOf(Index("microtask_id"), Index("worker_id"), Index("output_file_id")))
 data class MicrotaskAssignmentRecord(
-    @PrimaryKey
-    var id: String,
+    @PrimaryKey var id: String,
     var local_id: String,
     var box_id: Int,
     var microtask_id: String,

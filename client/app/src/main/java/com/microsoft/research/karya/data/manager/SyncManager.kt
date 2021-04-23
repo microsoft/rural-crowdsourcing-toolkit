@@ -11,23 +11,20 @@ import com.microsoft.research.karya.ui.dashboard.DashboardActivity
 
 class SyncManager() {
 
-    fun sync(context: Context, appLanguage: Int) {
-        val workRequest = OneTimeWorkRequest.Builder(DashboardActivity.PerformSyncBackground::class.java)
-        val data = Data.Builder()
+  fun sync(context: Context, appLanguage: Int) {
+    val workRequest =
+        OneTimeWorkRequest.Builder(DashboardActivity.PerformSyncBackground::class.java)
+    val data = Data.Builder()
 
-        data.putInt("appLanguageId", appLanguage)
+    data.putInt("appLanguageId", appLanguage)
 
-        //Set Input Data
-        workRequest.setInputData(data.build())
-        val workManager = WorkManager.getInstance(context)
+    // Set Input Data
+    workRequest.setInputData(data.build())
+    val workManager = WorkManager.getInstance(context)
 
-        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val task = workRequest.setConstraints(constraints).build()
+    val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+    val task = workRequest.setConstraints(constraints).build()
 
-        workManager.enqueueUniqueWork(
-            BoxSyncWorker.WORK_NAME,
-            ExistingWorkPolicy.KEEP,
-            task
-        )
-    }
+    workManager.enqueueUniqueWork(BoxSyncWorker.WORK_NAME, ExistingWorkPolicy.KEEP, task)
+  }
 }

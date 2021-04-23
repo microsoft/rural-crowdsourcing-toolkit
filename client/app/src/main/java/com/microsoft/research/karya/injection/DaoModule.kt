@@ -13,16 +13,15 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 class DaoModule {
 
-    @Provides
-    @Reusable
-    fun provideWorkerDao(karyaDatabase: KaryaDatabase): WorkerDao {
-        return karyaDatabase.workerDao()
-    }
+  @Provides
+  @Reusable
+  fun provideWorkerDao(karyaDatabase: KaryaDatabase): WorkerDao {
+    return karyaDatabase.workerDao()
+  }
 
-    @Provides
-    @Reusable
-    fun provideLanguageDao(karyaDatabase: KaryaDatabase): LanguageDao {
-        return karyaDatabase.languageDao()
-    }
-
+  @Provides
+  @Reusable
+  fun provideLanguageDao(karyaDatabase: KaryaDatabase): LanguageDao {
+    return karyaDatabase.languageDao()
+  }
 }

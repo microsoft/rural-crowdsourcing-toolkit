@@ -7,35 +7,25 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RegistrationActivity : BaseActivity() {
-    /** Compute creation code text box length based on the creation code length */
+  /** Compute creation code text box length based on the creation code length */
+  var current_assistant_audio = -1
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_registration)
+  }
 
-    var current_assistant_audio = -1
+  /** On assistant click, play the access code prompt */
+  override fun onAssistantClick() {
+    super.onAssistantClick()
+    playAssistantAudio(current_assistant_audio)
+  }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration)
+  /** Get strings for this activity */
+  override suspend fun getStringsForActivity() {}
 
-    }
-
-    /**
-     * On assistant click, play the access code prompt
-     */
-    override fun onAssistantClick() {
-        super.onAssistantClick()
-        playAssistantAudio(current_assistant_audio)
-    }
-
-    /**
-     * Get strings for this activity
-     */
-    override suspend fun getStringsForActivity() {
-    }
-
-    /**
-     * Set the initial UI strings
-     */
-    override suspend fun setInitialUIStrings() {
-        // Nothing here, since we are setting the UI strings in resources
-    }
+  /** Set the initial UI strings */
+  override suspend fun setInitialUIStrings() {
+    // Nothing here, since we are setting the UI strings in resources
+  }
 }

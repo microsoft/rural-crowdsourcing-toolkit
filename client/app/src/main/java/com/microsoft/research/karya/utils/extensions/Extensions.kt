@@ -12,43 +12,42 @@ import androidx.fragment.app.Fragment
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-/**
- * Request focus on a text field and show the keyboard
- */
+/** Request focus on a text field and show the keyboard */
 fun Activity.requestSoftKeyFocus(editText: EditText) {
-    editText.requestFocus()
-    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+  editText.requestFocus()
+  val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+  imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
 }
 
 fun Activity.hideKeyboard() {
-    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    val view = currentFocus ?: View(this)
-    imm.hideSoftInputFromWindow(view.windowToken, 0)
+  val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+  val view = currentFocus ?: View(this)
+  imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
 fun Fragment.requestSoftKeyFocus(editText: EditText) {
-    editText.requestFocus()
-    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+  editText.requestFocus()
+  val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+  imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
 }
 
 fun Fragment.hideKeyboard() {
-    val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    val view = requireActivity().currentFocus ?: View(requireContext())
-    imm.hideSoftInputFromWindow(view.windowToken, 0)
+  val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+  val view = requireActivity().currentFocus ?: View(requireContext())
+  imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
+fun Context.getDirectory(directoryName: String): String =
+    getDir(directoryName, Context.MODE_PRIVATE).path
 
 fun View.visible() {
-    this.visibility = View.VISIBLE
+  this.visibility = View.VISIBLE
 }
 
 fun View.invisible() {
-    this.visibility = View.INVISIBLE
+  this.visibility = View.INVISIBLE
 }
 
 fun View.gone() {
-    this.visibility = View.GONE
+  this.visibility = View.GONE
 }
