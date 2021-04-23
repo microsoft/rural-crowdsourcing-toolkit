@@ -21,11 +21,10 @@ import { languageMap, LanguageCode } from '@karya/languages';
 
 // HTML Helpers
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
-import { ErrorMessage, ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
+import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 // Hoc
 import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
-import { DataProps, withData } from '../hoc/WithData';
 
 // Create router props
 type RouterProps = RouteComponentProps<{}>;
