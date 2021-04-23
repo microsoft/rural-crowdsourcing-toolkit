@@ -31,14 +31,10 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
     navController = findNavController()
     binding.progressBar.isIndeterminate = true
+  }
 
+  private fun handleNavigation() {
     lifecycleScope.launch {
-      val isFirstRun = isFirstRun()
-      if (isFirstRun) {
-        navigateToAccessCodeScreen()
-        return@launch
-      }
-
       val loggedInUsers = getLoggedInUsers()
 
       when (loggedInUsers) {
