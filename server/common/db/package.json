@@ -25,6 +25,7 @@
     "yaml": "^1.10.2"
   },
   "dependencies": {
+    "@karya/misc-utils": "^2.0.0",
     "knex": "^0.95.4",
     "pg": "^8.5.1"
   }

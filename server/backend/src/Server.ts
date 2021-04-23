@@ -1,23 +1,24 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+import { loadSecrets } from './secrets/Index';
 import cors from '@koa/cors';
 import Koa from 'koa';
-
-import config, { loadSecretsFromVault } from './config/Index';
 import logger from './utils/Logger';
-
 import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
 import router from './routes/Routes';
-
 import { setupDbConnection } from '@karya/db';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/blobstore';
+import { envGetNumber, envGetString } from '@karya/misc-utils';
 
 // Setup Koa application
 const app = new Koa();
 
 // App middlewares
-app.use(cors(config.corsConfig));
+app.use(cors({ origin: envGetString('CORS_ORIGIN', ''), credentials: true }));
 app.use(logHttpRequests);
 app.use(authenticateRequest);
 app.use(router.allowedMethods());
@@ -27,19 +28,14 @@ app.use(router.routes());
 (async () => {
   let error = false;
 
-  logger.info(`Loaded '${config.name}' config`);
-
   // If config secrets are stored in key vault, fetch them
-  if (config.azureKeyVault !== null) {
-    logger.info('Loading secrets from key vault');
-    await loadSecretsFromVault();
-  }
+  await loadSecrets(['GOOGLE_CLIENT_ID', 'AZURE_BLOB_KEY', 'PHONE_OTP_API_KEY']);
 
   // Setup the database connection
-  setupDbConnection(config.dbConfig);
+  setupDbConnection();
 
   // Setup the blob store connection
-  setupBlobStore(config.blob);
+  setupBlobStore();
 
   // Create blob containers
   logger.info(`Creating blob containers if not present`);
@@ -54,7 +50,8 @@ app.use(router.routes());
   // Create local folders
   logger.info(`Creating local folders for the containers`);
   try {
-    await createLocalFolders(config.localFolder);
+    const localFolder = envGetString('LOCAL_FOLDER');
+    await createLocalFolders(`${process.cwd()}/${localFolder}`);
     logger.info(`Created all local folders`);
   } catch (e) {
     logger.error('Failed to create local folders');
@@ -67,9 +64,10 @@ app.use(router.routes());
 })()
   .then((res) => {
     // Start the local web server
-    const server = app.listen(config.serverPort);
+    const port = envGetNumber('SERVER_PORT');
+    const server = app.listen(port);
     server.setTimeout(0);
-    logger.info(`Server running on port ${config.serverPort}`);
+    logger.info(`Server running on port ${port}`);
   })
   .catch((e) => {
     logger.error(e.message);

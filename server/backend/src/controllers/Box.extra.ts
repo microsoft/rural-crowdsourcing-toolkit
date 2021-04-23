@@ -9,7 +9,6 @@ import { getControllerError } from './ControllerErrors';
 import { getCreationCode } from '@karya/misc-utils';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
-import config from '../config/Index';
 
 /**
  * Creates a sample box with a new creation code and respond with the box record
@@ -25,7 +24,7 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     while (true) {
       try {
         creation_code = getCreationCode({
-          length: config.creationCodeLength,
+          length: 16,
           numeric: false,
         });
         await BasicModel.getSingle('box', { creation_code });

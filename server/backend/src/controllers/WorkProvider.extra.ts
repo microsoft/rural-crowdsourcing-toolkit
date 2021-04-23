@@ -9,7 +9,6 @@ import { getControllerError } from './ControllerErrors';
 import { getCreationCode } from '@karya/misc-utils';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
-import config from '../config/Index';
 
 /**
  * Generate a creation code for a new work provider. Create a temporary work
@@ -26,7 +25,7 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     while (true) {
       try {
         creation_code = getCreationCode({
-          length: config.creationCodeLength,
+          length: 16,
           numeric: false,
         });
         await BasicModel.getSingle('work_provider', { creation_code });

@@ -3,7 +3,6 @@
 
 /** Script to bootstrap authentication */
 
-import config from '../config/Index';
 import { WorkProvider, BasicModel } from '@karya/db';
 import { getCreationCode } from '@karya/misc-utils';
 
@@ -22,7 +21,7 @@ export async function bootstrapAuth() {
 
   /** Get a creation code  */
   const creation_code = getCreationCode({
-    length: config.creationCodeLength,
+    length: 16,
     numeric: false,
   });
 

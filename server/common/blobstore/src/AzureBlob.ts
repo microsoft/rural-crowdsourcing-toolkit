@@ -13,22 +13,19 @@ import {
   generateBlobSASQueryParameters,
   StorageSharedKeyCredential,
 } from '@azure/storage-blob';
-
-// Container names and types
 import { BlobParameters, ContainerName, containerNames, getBlobName } from './BlobContainer';
-
-// Blue bird promise
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
+import { envGetString } from '@karya/misc-utils';
 
 let mainClient: BlobServiceClient;
 let rootURL: string;
 let sharedKeyCredential: StorageSharedKeyCredential;
 
-export function setupBlobStore(blobStore: { account: string; key: string }) {
+export function setupBlobStore(blobStore?: { account: string; key: string }) {
   // Azure blob store account and key
-  const account = blobStore.account;
-  const accountKey = blobStore.key;
+  const account = blobStore?.account ?? envGetString('AZURE_BLOB_ACCOUNT');
+  const accountKey = blobStore?.key ?? envGetString('AZURE_BLOB_KEY');
 
   // Create shared storage credential
   sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);

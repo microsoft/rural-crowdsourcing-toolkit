@@ -6,10 +6,21 @@
 // are made.
 
 import knexPkg, { Knex } from 'knex';
+import { envGetBoolean, envGetNumber, envGetString } from '@karya/misc-utils';
 
 let knex: Knex;
 
-export function setupDbConnection(dbConfig: Knex.PgConnectionConfig) {
+export function setupDbConnection(argDbConfig?: Knex.PgConnectionConfig) {
+  // Extract db config from env
+  const dbConfig: Knex.PgConnectionConfig = argDbConfig ?? {
+    host: envGetString('DB_HOST'),
+    user: envGetString('DB_USER'),
+    password: envGetString('DB_PASSWORD'),
+    database: envGetString('DB_NAME'),
+    port: envGetNumber('DB_PORT'),
+    ssl: envGetBoolean('DB_SECURE'),
+  };
+
   const options: Knex.Config = {
     client: 'pg',
     connection: dbConfig,

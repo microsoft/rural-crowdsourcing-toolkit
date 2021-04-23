@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.5.0",
+    "@karya/misc-utils": "^2.0.0",
     "bluebird": "^3.7.2"
   }
 }

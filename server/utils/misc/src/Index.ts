@@ -21,3 +21,30 @@ export function getCreationCode(
 
   return creationCode;
 }
+
+/**
+ * Get the value of an environment variable
+ * @param key Key to access within env
+ * @param defaultValue Default value if key not present
+ * @returns The value of the environment variable
+ */
+
+export function envGetString(key: string, defaultValue?: string): string {
+  const value = process.env[key] ?? defaultValue;
+  if (!value) throw new Error(`Undefined environment variable '${key}'`);
+  return value;
+}
+
+export function envGetNumber(key: string, defaultValue?: number): number {
+  const eV = process.env[key];
+  const value = eV ? Number.parseInt(eV) : defaultValue;
+  if (!value) throw new Error(`Undefined environment variable '${key}'`);
+  return value;
+}
+
+export function envGetBoolean(key: string, defaultValue?: boolean): boolean {
+  const eV = process.env[key];
+  const value = eV != undefined ? eV == 'true' : defaultValue;
+  if (value == undefined) throw new Error(`Undefined environment variable '${key}'`);
+  return value;
+}

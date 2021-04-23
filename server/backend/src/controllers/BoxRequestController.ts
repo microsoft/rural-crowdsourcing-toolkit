@@ -8,7 +8,6 @@
 import { randomBytes } from 'crypto';
 import * as jwtSimple from 'jwt-simple';
 import RawBody from 'raw-body';
-import config from '../config/Index';
 import { Box, BoxRecord, KaryaFileRecord, BasicModel } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
 import * as BoxRequestModel from '../models/BoxRequestModel';
@@ -18,6 +17,7 @@ import { compress, decompress } from '@karya/compression';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 import logger from '../utils/Logger';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Check in request from the box. Update box params with the timestamp.
@@ -35,8 +35,11 @@ export async function checkin(ctx: KaryaHTTPContext) {
  * @param ctx Karya koa context
  */
 export async function sendPhoneAuthInfo(ctx: KaryaHTTPContext) {
+  const url = envGetString('PHONE_OTP_URL', '');
+  const apiKey = envGetString('PHONE_OTP_API_KEY', '');
+  const phoneOtp = url === '' ? { available: false } : { available: true, url, apiKey };
   // Send phone OTP information
-  HttpResponse.OK(ctx, config.phoneOtp);
+  HttpResponse.OK(ctx, phoneOtp);
 }
 
 /**

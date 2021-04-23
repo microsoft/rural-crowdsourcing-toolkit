@@ -24,6 +24,7 @@
     "bluebird": "^3.5.5",
     "bull": "^3.18.0",
     "cookies": "^0.8.0",
+    "dotenv": "^8.2.0",
     "formidable": "^1.2.2",
     "google-auth-library": "^7.0.2",
     "jwt-simple": "^0.5.6",

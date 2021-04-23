@@ -9,7 +9,6 @@ import { Promise as BBPromise } from 'bluebird';
 import { knex, setupDbConnection, createAllTables, dropAllTables, BasicModel } from '@karya/db';
 import { languages } from './InitLanguages';
 import { bootstrapAuth } from './AuthBootstrap';
-import config, { loadSecretsFromVault } from '../config/Index';
 import logger from '../utils/Logger';
 
 /**
@@ -48,7 +47,6 @@ let scriptSequence = ['recreate-tables', 'init-languages', 'auth-bootstrap'];
 /** Main Script to reset the DB */
 (async () => {
   logger.info(`Starting reset script DB`);
-  logger.info(`Loaded '${config.name}' config`);
 
   const option = process.argv[2] || 'all';
   if (option !== 'all') {
@@ -61,13 +59,7 @@ let scriptSequence = ['recreate-tables', 'init-languages', 'auth-bootstrap'];
     scriptSequence = [option];
   }
 
-  // If config secrets are stored in key vault, fetch them
-  if (config.azureKeyVault !== null) {
-    logger.info('Loading secrets from key vault');
-    await loadSecretsFromVault();
-  }
-
-  setupDbConnection(config.dbConfig);
+  setupDbConnection();
 
   await BBPromise.mapSeries(scriptSequence, async (action) => {
     switch (action) {

@@ -10,7 +10,6 @@ import { BasicModel, AuthProviderType, WorkProvider, WorkProviderRecord } from '
 import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
-import config from '../config/Index';
 
 /**
  * Helper to set a cookie in the HTTP response. Reset cookie if value is undefined
@@ -19,14 +18,13 @@ import config from '../config/Index';
  * @param value value of the cookie
  */
 export function setCookie(ctx: KaryaHTTPContext, key: string, value: string | undefined) {
-  const { maxAge, ...cookieOptions } = config.cookieOptions;
   if (value !== undefined) {
-    const addMilliseconds = maxAge || 15 * 60 * 1000;
+    const addMilliseconds = 60 * 60 * 1000;
     const expires = new Date();
     expires.setMilliseconds(expires.getMilliseconds() + addMilliseconds);
-    ctx.cookies.set(key, value, { ...cookieOptions, expires });
+    ctx.cookies.set(key, value, { httpOnly: true, sameSite: true, expires });
   } else {
-    ctx.cookies.set(key, '', { ...cookieOptions, expires: new Date(0) });
+    ctx.cookies.set(key, '', { httpOnly: true, sameSite: true, expires: new Date(0) });
   }
 }
 
