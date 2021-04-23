@@ -1,0 +1,26 @@
+{
+  "name": "@karya/languages",
+  "version": "2.0.0",
+  "description": "This package implements all languages specific functionality",
+  "private": true,
+  "license": "MIT",
+  "main": "dist/Index",
+  "types": "dist/Index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/joi": "^17.2.3",
+    "@types/node": "^14.14.35",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@karya/db": "^2.0.0",
+    "joi": "^17.4.0"
+  }
+}
