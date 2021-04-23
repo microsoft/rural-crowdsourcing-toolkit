@@ -24,16 +24,6 @@
         - Starting activity. Checks for registered user and moves to language selection or the
         - dashboard.
         -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreen"
-            android:noHistory="true" />
-
-
-        <!-- Activity to fetch data on initial load -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.fetchData.FirstLoadFetchData"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
 
         <!-- Activity to display the user dashboard -->
         <activity
