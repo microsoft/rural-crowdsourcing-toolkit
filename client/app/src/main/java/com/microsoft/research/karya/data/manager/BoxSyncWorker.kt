@@ -1,48 +1,48 @@
-//package com.microsoft.research.karya.data.manager
+// package com.microsoft.research.karya.data.manager
 //
-//import android.content.Context
-//import androidx.appcompat.app.AppCompatActivity
-//import androidx.work.CoroutineWorker
-//import androidx.work.WorkerParameters
-//import com.google.gson.Gson
-//import com.google.gson.GsonBuilder
-//import com.google.gson.JsonArray
-//import com.google.gson.JsonObject
-//import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
-//import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
-//import com.microsoft.research.karya.data.model.karya.LanguageRecord
-//import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-//import com.microsoft.research.karya.data.model.karya.MicrotaskGroupAssignmentRecord
-//import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
-//import com.microsoft.research.karya.data.model.karya.PolicyRecord
-//import com.microsoft.research.karya.data.model.karya.ScenarioRecord
-//import com.microsoft.research.karya.data.model.karya.TaskRecord
-//import com.microsoft.research.karya.data.model.karya.WorkerRecord
-//import com.microsoft.research.karya.data.remote.request.UploadFileRequest
-//import com.microsoft.research.karya.ui.base.BaseActivity
-//import com.microsoft.research.karya.ui.dashboard.AType
-//import com.microsoft.research.karya.utils.FileUtils
-//import com.microsoft.research.karya.utils.jtar.TarEntry
-//import com.microsoft.research.karya.utils.jtar.TarOutputStream
-//import java.io.BufferedOutputStream
-//import java.io.File
-//import java.io.FileInputStream
-//import java.io.FileOutputStream
-//import java.math.BigInteger
-//import java.security.MessageDigest
-//import java.util.zip.GZIPOutputStream
-//import kotlinx.coroutines.CoroutineScope
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.flow.MutableStateFlow
-//import kotlinx.coroutines.flow.asStateFlow
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.withContext
-//import okhttp3.MediaType.Companion.toMediaTypeOrNull
-//import okhttp3.MultipartBody
-//import okhttp3.RequestBody
+// import android.content.Context
+// import androidx.appcompat.app.AppCompatActivity
+// import androidx.work.CoroutineWorker
+// import androidx.work.WorkerParameters
+// import com.google.gson.Gson
+// import com.google.gson.GsonBuilder
+// import com.google.gson.JsonArray
+// import com.google.gson.JsonObject
+// import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
+// import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
+// import com.microsoft.research.karya.data.model.karya.LanguageRecord
+// import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
+// import com.microsoft.research.karya.data.model.karya.MicrotaskGroupAssignmentRecord
+// import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
+// import com.microsoft.research.karya.data.model.karya.PolicyRecord
+// import com.microsoft.research.karya.data.model.karya.ScenarioRecord
+// import com.microsoft.research.karya.data.model.karya.TaskRecord
+// import com.microsoft.research.karya.data.model.karya.WorkerRecord
+// import com.microsoft.research.karya.data.remote.request.UploadFileRequest
+// import com.microsoft.research.karya.ui.base.BaseActivity
+// import com.microsoft.research.karya.ui.dashboard.AType
+// import com.microsoft.research.karya.utils.FileUtils
+// import com.microsoft.research.karya.utils.jtar.TarEntry
+// import com.microsoft.research.karya.utils.jtar.TarOutputStream
+// import java.io.BufferedOutputStream
+// import java.io.File
+// import java.io.FileInputStream
+// import java.io.FileOutputStream
+// import java.math.BigInteger
+// import java.security.MessageDigest
+// import java.util.zip.GZIPOutputStream
+// import kotlinx.coroutines.CoroutineScope
+// import kotlinx.coroutines.Dispatchers
+// import kotlinx.coroutines.flow.MutableStateFlow
+// import kotlinx.coroutines.flow.asStateFlow
+// import kotlinx.coroutines.launch
+// import kotlinx.coroutines.withContext
+// import okhttp3.MediaType.Companion.toMediaTypeOrNull
+// import okhttp3.MultipartBody
+// import okhttp3.RequestBody
 //
 //// Worker Class for backgrounding sync with box
-//class BoxSyncWorker(context: Context, workerParams: WorkerParameters) :
+// class BoxSyncWorker(context: Context, workerParams: WorkerParameters) :
 //    CoroutineWorker(context, workerParams) {
 //
 //  companion object {
@@ -110,7 +110,8 @@
 //    //        updateText(DashboardActivity.uploadFilesString)
 //
 //    setWorker()
-//    uploadFilesToBox() // Only files are uploaded which are created by the user for each assignment
+//    uploadFilesToBox() // Only files are uploaded which are created by the user for each
+// assignment
 //    //        updateText(DashboardActivity.sendUpdatesString)
 //    //            uiScope.launch { networkRequestMessageTv.text = sendUpdatesString }
 //    sendDbUpdates() // Only database updates are sent
@@ -272,7 +273,8 @@
 //
 //    // 5. Send updates to server
 //    val postUpdates =
-//        karyaAPI.postUpdates(thisWorker.auth_provider!!.toString(), thisWorker.id_token!!, updates)
+//        karyaAPI.postUpdates(thisWorker.auth_provider!!.toString(), thisWorker.id_token!!,
+// updates)
 //    val response = postUpdates.execute()
 //    updateSendStageProgress(SendUpdatesStage.SENT_REQUEST)
 //
@@ -311,7 +313,8 @@
 //
 //    // Call for updates
 //    val request =
-//        karyaAPI.getUpdates(thisWorker.auth_provider.toString(), thisWorker.id_token!!, thisWorker)
+//        karyaAPI.getUpdates(thisWorker.auth_provider.toString(), thisWorker.id_token!!,
+// thisWorker)
 //    val response = request.execute()
 //    updateReceiveStageProgress(ReceiveUpdatesStage.RECEIVED_UPDATES)
 //
@@ -494,7 +497,8 @@
 //          karyaAPI.getFileLanguageResourceValuesByLanguageId(appLanguageId)
 //      if (languageResourceFileResponse.isSuccessful) {
 //        // The filepath is storing tar file
-//        val filePath = getBlobPath(BaseActivity.KaryaFileContainer.L_LRVS, appLanguageId.toString())
+//        val filePath = getBlobPath(BaseActivity.KaryaFileContainer.L_LRVS,
+// appLanguageId.toString())
 //        FileUtils.downloadFileToLocalPath(languageResourceFileResponse, filePath)
 //
 //        /** Extract the tar ball into the lang-res folder */
@@ -597,9 +601,9 @@
 //    // Fill to 32 chars
 //    return "%32s".format(output).replace(' ', '0')
 //  }
-//}
+// }
 //
-//private enum class SendUpdatesStage {
+// private enum class SendUpdatesStage {
 //  SEND_START,
 //  COLLECTED_MA_UPDATES,
 //  COLLECTED_MGA_UPDATES,
@@ -607,12 +611,12 @@
 //  SENT_REQUEST,
 //  UPDATED_LOCAL_DB,
 //  SEND_END,
-//}
+// }
 //
-//private enum class ReceiveUpdatesStage {
+// private enum class ReceiveUpdatesStage {
 //  RECEIVE_START,
 //  RECEIVED_UPDATES,
 //  UPDATED_LOCAL_DB,
 //  CLEANUP_KARYA_FILES,
 //  RECEIVE_END
-//}
+// }

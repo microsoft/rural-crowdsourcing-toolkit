@@ -41,7 +41,7 @@ abstract class BaseActivity() : AppCompatActivity() {
 
   /** Database and API service */
   protected lateinit var karyaDb: KaryaDatabase
-//  lateinit var karyaAPI: KaryaAPIService
+  //  lateinit var karyaAPI: KaryaAPIService
 
   /** Player for assistant */
   private var assistantAvailable: Boolean = false
@@ -68,7 +68,7 @@ abstract class BaseActivity() : AppCompatActivity() {
 
     // Set db and API service
     karyaDb = KaryaDatabase.getInstance(this)!!
-//    karyaAPI = RetrofitFactory.create()
+    //    karyaAPI = RetrofitFactory.create()
 
     // Reset support action bar title
     this.setSupportActionBar(appTb)
