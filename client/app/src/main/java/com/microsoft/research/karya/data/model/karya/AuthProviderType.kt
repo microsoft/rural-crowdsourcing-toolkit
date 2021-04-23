@@ -2,12 +2,12 @@
 // Licensed under the MIT license.
 
 /**
- * This file was auto-generated using specs and scripts in the db-schema
- * repository. DO NOT EDIT DIRECTLY.
+ * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
+ * DIRECTLY.
  */
-
 package com.microsoft.research.karya.data.model.karya
 
 enum class AuthProviderType {
-    google_oauth, phone_otp
+  google_oauth,
+  phone_otp
 }

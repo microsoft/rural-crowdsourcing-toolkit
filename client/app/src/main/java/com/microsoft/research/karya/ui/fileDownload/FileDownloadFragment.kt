@@ -17,31 +17,30 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
-    @Inject
-    lateinit var resourceManager: ResourceManager
+  @Inject lateinit var resourceManager: ResourceManager
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    downloadResourceFiles()
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        downloadResourceFiles()
-    }
+  private fun downloadResourceFiles() {
+    val fileDownloadFlow =
+        resourceManager.downloadLanguageResources(
+            WorkerInformation.creation_code!!, WorkerInformation.app_language!!)
 
-    private fun downloadResourceFiles() {
-        val fileDownloadFlow = resourceManager.downloadLanguageResources(
-            WorkerInformation.creation_code!!,
-            WorkerInformation.app_language!!
-        )
-
-        fileDownloadFlow.observe(lifecycle, lifecycleScope) { result ->
-            when (result) {
-                is Result.Success<*> -> navigateToRegistration()
-                is Result.Error -> {}
-                Result.Loading -> { Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show() }
-            }
+    fileDownloadFlow.observe(lifecycle, lifecycleScope) { result ->
+      when (result) {
+        is Result.Success<*> -> navigateToRegistration()
+        is Result.Error -> {}
+        Result.Loading -> {
+          Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
         }
+      }
     }
+  }
 
-    fun navigateToRegistration() {
-        findNavController().navigate(R.id.action_fileDownloadFragment_to_registrationActivity)
-    }
+  fun navigateToRegistration() {
+    findNavController().navigate(R.id.action_fileDownloadFragment_to_registrationActivity)
+  }
 }

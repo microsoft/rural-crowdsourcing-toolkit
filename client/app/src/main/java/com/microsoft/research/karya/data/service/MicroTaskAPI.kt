@@ -7,16 +7,16 @@ import retrofit2.http.*
 
 interface MicroTaskAPI {
 
-    @PUT("/assignments")
-    suspend fun submitAssignments(
-        @Header("id-token") idTokenHeader: String,
-        @Body updates: List<MicrotaskAssignmentRecord>,
-    ): Response<List<String>>
+  @PUT("/assignments")
+  suspend fun submitAssignments(
+      @Header("id-token") idTokenHeader: String,
+      @Body updates: List<MicrotaskAssignmentRecord>,
+  ): Response<List<String>>
 
-    @GET("/assignments")
-    suspend fun getAssignments(
-        @Header("id-token") idTokenHeader: String,
-        @Query("type") type: String, //TODO: Make this an enum class
-        @Query("from") from: String,
-    ): Response<GetAssignmentsResponse>
+  @GET("/assignments")
+  suspend fun getAssignments(
+      @Header("id-token") idTokenHeader: String,
+      @Query("type") type: String, // TODO: Make this an enum class
+      @Query("from") from: String,
+  ): Response<GetAssignmentsResponse>
 }

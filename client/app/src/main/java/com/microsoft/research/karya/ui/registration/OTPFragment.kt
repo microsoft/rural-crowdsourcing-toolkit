@@ -28,143 +28,132 @@ private const val OTP_LENGTH = 6
 @AndroidEntryPoint
 class OTPFragment : Fragment(R.layout.fragment_otp) {
 
-    private val binding by viewBinding(FragmentOtpBinding::bind)
-    private val viewModel by activityViewModels<RegistrationViewModel>()
+  private val binding by viewBinding(FragmentOtpBinding::bind)
+  private val viewModel by activityViewModels<RegistrationViewModel>()
 
-    private lateinit var registrationActivity: RegistrationActivity
-    private lateinit var baseActivity: BaseActivity
-    private lateinit var karyaAPI: KaryaAPIService
+  private lateinit var registrationActivity: RegistrationActivity
+  private lateinit var baseActivity: BaseActivity
+  private lateinit var karyaAPI: KaryaAPIService
 
-    private fun setupObservers() {
-        viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner) { openDashBoard ->
-            if (openDashBoard) {
-                navigateToDashBoard()
-            }
-        }
-
-        viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner) { openProfilePictureFragment ->
-            if (openProfilePictureFragment) {
-                navigateToProfilePicture()
-            }
-        }
-
-        viewModel.currOtpVerifyState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                OtpVerifyState.SUCCESS -> onOtpVerifySuccess()
-                OtpVerifyState.FAIL -> onOtpVerifyOrResendFailure()
-                OtpVerifyState.NOT_ENTERED -> setOtpNotSentUI()
-            }
-        }
-
-        viewModel.currOtpResendState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                // TODO: Maybe indicate user after successful otp sent
-                OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
-            }
-        }
-
-        viewModel.idTokenLiveData.observe(viewLifecycleOwner) { idToken ->
-            lifecycleScope.launch(Dispatchers.IO) {
-                if (!idToken.isNullOrEmpty()) {
-                    val idTokenKey = stringPreferencesKey(PreferenceKeys.ID_TOKEN_KEY)
-                    requireContext().dataStore.edit { settings ->
-                        settings[idTokenKey] = idToken
-                    }
-                }
-            }
-        }
+  private fun setupObservers() {
+    viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner) { openDashBoard ->
+      if (openDashBoard) {
+        navigateToDashBoard()
+      }
     }
 
-    private fun navigateToDashBoard() {
-        findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
-        viewModel.afterNavigateToDashboard()
+    viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner) {
+        openProfilePictureFragment ->
+      if (openProfilePictureFragment) {
+        navigateToProfilePicture()
+      }
     }
 
-    private fun navigateToProfilePicture() {
-        findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
-        viewModel.afterNavigateToProfilePicture()
+    viewModel.currOtpVerifyState.observe(viewLifecycleOwner) { state ->
+      when (state) {
+        OtpVerifyState.SUCCESS -> onOtpVerifySuccess()
+        OtpVerifyState.FAIL -> onOtpVerifyOrResendFailure()
+        OtpVerifyState.NOT_ENTERED -> setOtpNotSentUI()
+      }
     }
 
-    private fun onOtpVerifySuccess() {
-        binding.otpStatusIv.setImageResource(0)
-        binding.otpStatusIv.setImageResource(R.drawable.ic_check)
-        binding.invalidOTPTv.visibility = View.INVISIBLE
+    viewModel.currOtpResendState.observe(viewLifecycleOwner) { state ->
+      when (state) {
+        // TODO: Maybe indicate user after successful otp sent
+        OtpSendState.FAIL -> onOtpVerifyOrResendFailure()
+      }
     }
 
-    private fun onOtpVerifyOrResendFailure() {
-        with(binding) {
-            invalidOTPTv.visibility = View.VISIBLE
-            invalidOTPTv.text = getString(viewModel.otpFragmentErrorId) // TODO: Change TextView id
-            otpStatusIv.setImageResource(0)
-            otpStatusIv.setImageResource(R.drawable.ic_quit_select)
-            otpEt.isEnabled = true
-            baseActivity.requestSoftKeyFocus(binding.otpEt)
+    viewModel.idTokenLiveData.observe(viewLifecycleOwner) { idToken ->
+      lifecycleScope.launch(Dispatchers.IO) {
+        if (!idToken.isNullOrEmpty()) {
+          val idTokenKey = stringPreferencesKey(PreferenceKeys.ID_TOKEN_KEY)
+          requireContext().dataStore.edit { settings -> settings[idTokenKey] = idToken }
         }
+      }
     }
+  }
 
-    private fun setOtpNotSentUI() {
-        // No Action has to take place since OTP is not sent
+  private fun navigateToDashBoard() {
+    findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
+    viewModel.afterNavigateToDashboard()
+  }
+
+  private fun navigateToProfilePicture() {
+    findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
+    viewModel.afterNavigateToProfilePicture()
+  }
+
+  private fun onOtpVerifySuccess() {
+    binding.otpStatusIv.setImageResource(0)
+    binding.otpStatusIv.setImageResource(R.drawable.ic_check)
+    binding.invalidOTPTv.visibility = View.INVISIBLE
+  }
+
+  private fun onOtpVerifyOrResendFailure() {
+    with(binding) {
+      invalidOTPTv.visibility = View.VISIBLE
+      invalidOTPTv.text = getString(viewModel.otpFragmentErrorId) // TODO: Change TextView id
+      otpStatusIv.setImageResource(0)
+      otpStatusIv.setImageResource(R.drawable.ic_quit_select)
+      otpEt.isEnabled = true
+      baseActivity.requestSoftKeyFocus(binding.otpEt)
     }
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+  private fun setOtpNotSentUI() {
+    // No Action has to take place since OTP is not sent
+  }
 
-        setupObservers()
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-        registrationActivity = activity as RegistrationActivity
-        baseActivity = activity as BaseActivity
-        karyaAPI = baseActivity.karyaAPI
+    setupObservers()
 
-        /** Initialise assistant audio **/
-        registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
+    registrationActivity = activity as RegistrationActivity
+    baseActivity = activity as BaseActivity
+    karyaAPI = baseActivity.karyaAPI
 
-        /** Resend OTP handler */
-        binding.resendOTPBtn.setOnClickListener { resendOTP() }
+    /** Initialise assistant audio */
+    registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
 
-        /** Set listener for the OTP text box */
-        binding.otpEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    /** Resend OTP handler */
+    binding.resendOTPBtn.setOnClickListener { resendOTP() }
 
-            override fun afterTextChanged(s: Editable?) {
-                if (s?.length == OTP_LENGTH)
-                    handleOTPReady()
-                else
-                    handleOTPNotReady()
-            }
+    /** Set listener for the OTP text box */
+    binding.otpEt.addTextChangedListener(
+        object : TextWatcher {
+          override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+          override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+          override fun afterTextChanged(s: Editable?) {
+            if (s?.length == OTP_LENGTH) handleOTPReady() else handleOTPNotReady()
+          }
         })
-        baseActivity.requestSoftKeyFocus(binding.otpEt)
+    baseActivity.requestSoftKeyFocus(binding.otpEt)
+  }
 
-    }
+  override fun onResume() {
+    super.onResume()
+    registrationActivity.onAssistantClick()
+  }
 
-    override fun onResume() {
-        super.onResume()
-        registrationActivity.onAssistantClick()
-    }
+  /** Handler called when full OTP is entered */
+  private fun handleOTPReady() {
+    binding.otpEt.isEnabled = false
+    viewModel.verifyOTP(binding.otpEt.text.toString())
+  }
 
-    /**
-     * Handler called when full OTP is entered
-     */
-    private fun handleOTPReady() {
-        binding.otpEt.isEnabled = false
-        viewModel.verifyOTP(binding.otpEt.text.toString())
-    }
+  /** Handler called when OTP is not full length. Clear error message and check box */
+  private fun handleOTPNotReady() {
+    binding.invalidOTPTv.visibility = View.INVISIBLE
+    binding.otpStatusIv.setImageResource(0)
+    binding.otpStatusIv.setImageResource(R.drawable.ic_check_grey)
+  }
 
-    /**
-     * Handler called when OTP is not full length. Clear error message and
-     * check box
-     */
-    private fun handleOTPNotReady() {
-        binding.invalidOTPTv.visibility = View.INVISIBLE
-        binding.otpStatusIv.setImageResource(0)
-        binding.otpStatusIv.setImageResource(R.drawable.ic_check_grey)
-    }
-
-    /**
-     * Resend OTP
-     */
-    private fun resendOTP() {
-        binding.resendOTPBtn.visibility = View.GONE
-        viewModel.resendOTP()
-    }
+  /** Resend OTP */
+  private fun resendOTP() {
+    binding.resendOTPBtn.visibility = View.GONE
+    viewModel.resendOTP()
+  }
 }

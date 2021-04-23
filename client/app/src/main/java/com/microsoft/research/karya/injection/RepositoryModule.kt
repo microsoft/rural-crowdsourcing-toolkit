@@ -20,27 +20,30 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
 
-    @Provides
-    @Singleton
-    fun provideLanguageRepository(languageAPI: LanguageAPI, languageDao: LanguageDao): LanguageRepository {
-        return LanguageRepository(languageAPI, languageDao)
-    }
+  @Provides
+  @Singleton
+  fun provideLanguageRepository(
+      languageAPI: LanguageAPI,
+      languageDao: LanguageDao
+  ): LanguageRepository {
+    return LanguageRepository(languageAPI, languageDao)
+  }
 
-    @Provides
-    @Singleton
-    fun provideMicroTaskRepository(microTaskAPI: MicroTaskAPI): MicroTaskRepository {
-        return MicroTaskRepository(microTaskAPI)
-    }
+  @Provides
+  @Singleton
+  fun provideMicroTaskRepository(microTaskAPI: MicroTaskAPI): MicroTaskRepository {
+    return MicroTaskRepository(microTaskAPI)
+  }
 
-    @Provides
-    @Singleton
-    fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao): WorkerRepository {
-        return WorkerRepository(workerAPI, workerDao)
-    }
+  @Provides
+  @Singleton
+  fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao): WorkerRepository {
+    return WorkerRepository(workerAPI, workerDao)
+  }
 
-    @Provides
-    @Singleton
-    fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI): KaryaFileRepository {
-        return KaryaFileRepository(karyaFileAPI)
-    }
+  @Provides
+  @Singleton
+  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI): KaryaFileRepository {
+    return KaryaFileRepository(karyaFileAPI)
+  }
 }

@@ -6,14 +6,16 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("dagger.hilt.android.plugin")
+    id("com.ncorti.ktfmt.gradle") version "0.5.0"
+    id("com.github.ben-manes.versions") version "0.38.0"
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
         applicationId = "com.microsoft.research.karya"
         minSdkVersion(21)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         multiDexEnabled = true
         versionCode = 24
         versionName = "1"
@@ -43,7 +45,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
-    buildToolsVersion = "29.0.3"
+    buildToolsVersion = "31.0.0-rc3"
 }
 
 dependencyLocking {
@@ -83,6 +85,7 @@ dependencies {
     implementation(Dependencies.Google.gson)
     implementation(Dependencies.Google.material)
 
+    implementation(platform(Dependencies.Google.Firebase.bom))
     implementation(Dependencies.Google.Firebase.crashlytics)
     implementation(Dependencies.Google.Firebase.analytics)
 
