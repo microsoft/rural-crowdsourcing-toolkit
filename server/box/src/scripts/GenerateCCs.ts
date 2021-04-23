@@ -5,7 +5,6 @@ import box_id from '../config/box_id';
 import { knex, setupDbConnection, Worker, WorkerRecord, BasicModel } from '@karya/db';
 import { getCreationCode } from '@karya/misc-utils';
 import logger from '../utils/Logger';
-import config from '../config/Index';
 
 export async function generateWorkerCCs(
   numCreationCodes: number,
@@ -26,7 +25,7 @@ export async function generateWorkerCCs(
   while (newWorkers.length < numCreationCodes && continuousErrors < 3) {
     // Get a creation code
     const creationCode = getCreationCode({
-      length: config.creationCodeLength,
+      length: 16,
       numeric: true,
     });
 
@@ -63,7 +62,7 @@ export async function generateWorkerCCs(
 
 // Main script
 (async () => {
-  setupDbConnection(config.dbConfig);
+  setupDbConnection();
 
   const numCreationCodes = Number.parseInt(process.argv[2], 10);
   if (isNaN(numCreationCodes)) {

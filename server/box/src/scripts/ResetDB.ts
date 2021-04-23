@@ -6,7 +6,6 @@
  */
 
 import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/db';
-import config from '../config/Index';
 import logger from '../utils/Logger';
 
 /** Main Script to reset the DB */
@@ -15,7 +14,7 @@ import logger from '../utils/Logger';
 
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
-  setupDbConnection(config.dbConfig);
+  setupDbConnection();
   await dropAllTables();
   await createAllTables('box');
   logger.info(`Tables recreated`);

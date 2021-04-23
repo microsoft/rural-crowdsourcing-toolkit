@@ -5,7 +5,6 @@
  * Controllers to send/receive updates from worker
  */
 
-import config from '../config/Index';
 import { WorkerRecord } from '@karya/db';
 import {
   applyUpdatesFromWorker,
@@ -67,7 +66,7 @@ export async function sendUpdatesForWorker(ctx: KaryaHTTPContext) {
 
   // Check if new microtasks can be assigned to the worker
   try {
-    await assignMicrotasksForWorker(worker, config.maxCreditPerBatch);
+    await assignMicrotasksForWorker(worker, 500);
   } catch (e) {
     logger.error(JSON.stringify(e));
     HttpResponse.BadRequest(ctx, 'Error while assigning tasks to worker');

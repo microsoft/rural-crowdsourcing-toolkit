@@ -4,9 +4,9 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import { boxInfo } from '../config/BoxInfo';
-import config from '../config/Index';
 import { knex, setupDbConnection, BoxRecord } from '@karya/db';
 import logger from '../utils/Logger';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Register the box with the server
@@ -14,7 +14,8 @@ import logger from '../utils/Logger';
  */
 async function registerBoxWithServer() {
   try {
-    const response = await axios.put<BoxRecord>(`${config.serverUrl}/api/box/update/cc`, boxInfo);
+    const serverUrl = envGetString('BACKEND_SERVER_URL');
+    const response = await axios.put<BoxRecord>(`${serverUrl}/api/box/update/cc`, boxInfo);
     logger.info(`Successfully registered box with the server. Box ID = ${response.data.id}`);
     return response.data;
   } catch (err) {
@@ -40,7 +41,7 @@ async function verifyNoBox() {
  * await can be used in a script
  */
 async function runScript() {
-  setupDbConnection(config.dbConfig);
+  setupDbConnection();
 
   // Ensure that there is no box
   await verifyNoBox();

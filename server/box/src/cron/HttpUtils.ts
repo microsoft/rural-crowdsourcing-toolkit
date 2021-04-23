@@ -9,9 +9,11 @@ import axios, { AxiosError, ResponseType as AxiosResponseType } from 'axios';
 import FormData from 'form-data';
 import { File } from 'formidable';
 import fetch, { RequestInit } from 'node-fetch';
-import config from '../config/Index';
 import { authHeader, this_box } from '../config/ThisBox';
 import { ErrorBody } from './HttpResponseTypes';
+import { envGetString } from '@karya/misc-utils';
+
+const serverUrl = envGetString('BACKEND_SERVER_URL');
 
 /**
  * Helper function to send a backend request using the fetch library
@@ -20,7 +22,7 @@ import { ErrorBody } from './HttpResponseTypes';
  */
 export async function BackendFetch<ResponseType = any>(resource: string, params: RequestInit): Promise<ResponseType> {
   const headers = params.headers ? { ...params.headers, ...authHeader } : { ...authHeader };
-  const response = await fetch(`${config.serverUrl}/api${resource}`, {
+  const response = await fetch(`${serverUrl}/api${resource}`, {
     ...params,
     headers,
     timeout: 0,
@@ -34,8 +36,7 @@ export async function BackendFetch<ResponseType = any>(resource: string, params:
 }
 
 /** Set axios base server URL prefix from config */
-const url = config.serverUrl;
-axios.defaults.baseURL = `${url}/api`;
+axios.defaults.baseURL = `${serverUrl}/api`;
 
 export { axios };
 

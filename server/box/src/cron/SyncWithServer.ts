@@ -3,7 +3,6 @@
 
 /** Function to execute sequence of steps to sync with the server */
 
-import config from '../config/Index';
 import logger from '../utils/Logger';
 import { BasicModel } from '@karya/db';
 import { downloadPendingKaryaFiles, getNewSASTokens } from './DownloadFilesFromBlobStore';
@@ -39,8 +38,13 @@ export async function syncWithServer() {
     if (!this_box.physical) {
       logger.info(`Fetching phone authentication information`);
       try {
-        const phoneOtp = await GET<{}, typeof config['phoneOtp']>('/rbox/phone-auth-info', {});
-        config.phoneOtp = { ...phoneOtp };
+        const phoneOtp: { available: boolean; url: string; apiKey: string } = await GET<{}>(
+          '/rbox/phone-auth-info',
+          {}
+        );
+        process.env.PHONE_OTP_AVAILABLE = phoneOtp.available.toString();
+        process.env.PHONE_OTP_URL = phoneOtp.url;
+        process.env.PHONE_OTP_API_KEY = phoneOtp.apiKey;
         logger.info(`Phone auth available.`);
       } catch (e) {
         // Unable to fetch api_key

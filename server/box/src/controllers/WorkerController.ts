@@ -6,12 +6,12 @@
 
 import { refreshIDToken, signUpUser } from '../auth-providers/Index';
 import { generateOTP, sendOTP } from '../auth-providers/phone-otp/OTPUtils';
-import config from '../config/Index';
 import { Worker, WorkerRecord, BasicModel } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import logger, { requestLogger } from '../utils/Logger';
 import { KaryaHTTPContext } from './KoaContextType';
+import { envGetBoolean } from '@karya/misc-utils';
 
 /**
  * Controller for simple checkin. No authentication.
@@ -39,9 +39,8 @@ export async function checkCreationCode(ctx: KaryaHTTPContext) {
   }
 
   // Check if a creation code record exist
-  let worker: WorkerRecord;
   try {
-    worker = await BasicModel.getSingle('worker', { creation_code });
+    await BasicModel.getSingle('worker', { creation_code });
   } catch (e) {
     HttpResponse.OK(ctx, { valid: false, message: 'invalid_creation_code' });
     return;
@@ -100,7 +99,8 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
   }
 
   // If phone auth is not available, return
-  if (!config.phoneOtp.available && !phone_number.startsWith('00000')) {
+  const phoneOTPAvailable = envGetBoolean('PHONE_OTP_AVAILABLE', false);
+  if (!phoneOTPAvailable && !phone_number.startsWith('00000')) {
     HttpResponse.Unavailable(ctx, 'Phone authentication is currently not available');
     return;
   }

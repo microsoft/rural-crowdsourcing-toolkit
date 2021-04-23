@@ -4,27 +4,19 @@
 /** This file implements the google oauth2 auth provider interface. */
 
 import { OAuth2Client } from 'google-auth-library';
-
-import config from '../../config/Index';
 import { Worker, WorkerRecord } from '@karya/db';
-import {
-  IAuthProvider,
-  IDTokenVerificationResponse,
-  UserSignUpResponse,
-} from '../common/AuthProviderInterface';
+import { IAuthProvider, IDTokenVerificationResponse, UserSignUpResponse } from '../common/AuthProviderInterface';
+import { envGetString } from '@karya/misc-utils';
 
 // user signup function
-async function signUpUser(
-  userInfo: Worker,
-  ccRecord: WorkerRecord,
-): Promise<UserSignUpResponse> {
+async function signUpUser(userInfo: Worker, ccRecord: WorkerRecord): Promise<UserSignUpResponse> {
   // If no id_token is provided, return
   if (!userInfo.id_token) {
     return { success: false, message: `Auth mechanism needs ID token` };
   }
   try {
     /** TODO: Move this to config */
-    const CLIENT_ID = config.googleOAuthClientId;
+    const CLIENT_ID = envGetString('GOOGLE_CLIENT_ID');
     const idToken = userInfo.id_token;
     const client = new OAuth2Client(CLIENT_ID);
     const ticket = await client.verifyIdToken({
@@ -46,11 +38,9 @@ async function signUpUser(
  * match object to fetch the worker
  * @param idToken id_token received from the HTTP request
  */
-async function verifyIDToken(
-  idToken: string,
-): Promise<IDTokenVerificationResponse> {
+async function verifyIDToken(idToken: string): Promise<IDTokenVerificationResponse> {
   try {
-    const CLIENT_ID = config.googleOAuthClientId;
+    const CLIENT_ID = envGetString('GOOGLE_CLIENT_ID');
     const client = new OAuth2Client(CLIENT_ID);
     const ticket = await client.verifyIdToken({
       idToken,

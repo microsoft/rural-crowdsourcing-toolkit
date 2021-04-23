@@ -9,10 +9,10 @@ import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import box_id from '../config/box_id';
-import config from '../config/Index';
 import { KaryaFileRecord, BasicModel } from '@karya/db';
 import logger from '../utils/Logger';
 import { BackendFetch } from './HttpUtils';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Upload all karya files to the server
@@ -33,7 +33,8 @@ export async function uploadKaryaFilesToServer() {
   await BBPromise.mapSeries(fileRecords, async (fileRecord) => {
     // Attempt to read file from local storage
     // TODO: Convert this to file stream
-    const filepath = `${config.filesFolder}/${fileRecord.container_name}/${fileRecord.name}`;
+    const folder = envGetString('LOCAL_FOLDER');
+    const filepath = `${process.cwd()}/${folder}/${fileRecord.container_name}/${fileRecord.name}`;
     let fileData: Buffer;
     try {
       fileData = await fsp.readFile(filepath);

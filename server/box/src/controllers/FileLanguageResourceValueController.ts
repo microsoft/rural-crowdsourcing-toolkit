@@ -6,11 +6,11 @@
  */
 
 import * as fs from 'fs';
-import config from '../config/Index';
 import { getControllerError } from './ControllerErrors';
 import { ContainerName, getBlobName } from '@karya/blobstore';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Fetch the LRV tar ball for a specific language or a language resource. The ID
@@ -39,7 +39,8 @@ export async function getLRVFile(ctx: KaryaHTTPContext) {
     return;
   }
 
-  const fileName = `${config.filesFolder}/${containerName}/${blobName}`;
+  const folder = envGetString('LOCAL_FOLDER');
+  const fileName = `${process.cwd()}/${folder}/${containerName}/${blobName}`;
   const fileCheck = fs.existsSync(fileName);
   if (!fileCheck) {
     HttpResponse.NotFound(ctx, 'File not found');

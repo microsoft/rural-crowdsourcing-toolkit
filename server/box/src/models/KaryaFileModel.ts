@@ -8,9 +8,9 @@
 import { promises as fsp } from 'fs';
 import md5File from 'md5-file';
 import box_id from '../config/box_id';
-import config from '../config/Index';
 import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/db';
 import { BlobParameters, getBlobName } from '@karya/blobstore';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Insert a karya file created by the worker.
@@ -43,7 +43,8 @@ export async function insertWorkerFile(
   karyaFile.in_box = true;
 
   // copy the file to the right location
-  await fsp.copyFile(filepath, `${config.filesFolder}/${karyaFile.container_name}/${karyaFile.name}`);
+  const folder = envGetString('LOCAL_FOLDER');
+  await fsp.copyFile(filepath, `${process.cwd()}/${folder}/${karyaFile.container_name}/${karyaFile.name}`);
 
   // Insert the record into the db
   const fileRecord = await BasicModel.insertRecord('karya_file', karyaFile);
@@ -67,7 +68,8 @@ export async function insertLocalKaryaFile(blobParams: BlobParameters, filepath:
   const checksum = await getChecksum(filepath, csAlgo);
 
   // Copy file to the appropriate path
-  await fsp.copyFile(filepath, `${config.filesFolder}/${blobParams.cname}/${blobName}`);
+  const folder = envGetString('LOCAL_FOLDER');
+  await fsp.copyFile(filepath, `${process.cwd()}/${folder}/${blobParams.cname}/${blobName}`);
 
   // Create karya file object
   const kf: KaryaFile = {

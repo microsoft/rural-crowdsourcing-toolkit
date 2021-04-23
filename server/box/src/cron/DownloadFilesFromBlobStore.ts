@@ -9,11 +9,11 @@
 import axios from 'axios';
 import BBPromise from 'bluebird';
 import * as fs from 'fs';
-import config from '../config/Index';
 import { KaryaFileRecord, BasicModel } from '@karya/db';
 import { getChecksum } from '../models/KaryaFileModel';
 import logger from '../utils/Logger';
 import { GET } from './HttpUtils';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Download all pending karya files. These are files corresponding to records
@@ -41,7 +41,8 @@ export async function downloadPendingKaryaFiles() {
 
         // Construct local file path
         // Local directories must have been created during server init
-        const filepath = `${config.filesFolder}/${karyaFile.container_name}/${karyaFile.name}`;
+        const folder = envGetString('LOCAL_FOLDER');
+        const filepath = `${process.cwd()}/${folder}/${karyaFile.container_name}/${karyaFile.name}`;
 
         // Download the file. On failure, reset the URL.
         try {

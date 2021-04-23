@@ -2,12 +2,12 @@
 // Licensed under the MIT license.
 
 import * as fs from 'fs';
-import config from '../config/Index';
 import { KaryaFile, BasicModel } from '@karya/db';
 import { getControllerError } from './ControllerErrors';
 import { insertWorkerFile } from '../models/KaryaFileModel';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
+import { envGetString } from '@karya/misc-utils';
 
 /**
  * Get the input karya file for a microtask via the microtask assignment ID. The
@@ -44,7 +44,8 @@ export async function getInputFileForAssignment(ctx: KaryaHTTPContext) {
 
     const fileId = microtask.input_file_id;
     const fileRecord = await BasicModel.getSingle('karya_file', { id: fileId });
-    const filepath = `${config.filesFolder}/${fileRecord.container_name}/${fileRecord.name}`;
+    const folder = envGetString('LOCAL_FOLDER');
+    const filepath = `${process.cwd()}/${folder}/${fileRecord.container_name}/${fileRecord.name}`;
 
     ctx.attachment(fileRecord.name);
     HttpResponse.OK(ctx, fs.createReadStream(filepath));

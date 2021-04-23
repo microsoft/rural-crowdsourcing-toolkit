@@ -7,19 +7,20 @@
 
 import * as cron from 'node-cron';
 
-import config from '../config/Index';
 import logger from '../utils/Logger';
 
 import { syncWithServer } from './SyncWithServer';
 import { setupDbConnection } from '@karya/db';
+import { envGetString } from '@karya/misc-utils';
 
 // Status of active cron job
 let cronRunning = false;
 
-setupDbConnection(config.dbConfig);
+setupDbConnection();
 
 /** Cron job to sync with server */
-cron.schedule(config.cronInterval, async () => {
+const cronInterval = envGetString('CRON_INTERVAL');
+cron.schedule(cronInterval, async () => {
   // If the cron job is running, quit.
   if (cronRunning) {
     logger.info(`Previous cron job is still running. Exiting cron job.`);
