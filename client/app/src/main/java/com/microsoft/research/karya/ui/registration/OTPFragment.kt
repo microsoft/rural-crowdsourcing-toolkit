@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
-import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.PreferenceKeys
@@ -33,7 +32,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
 
   private lateinit var registrationActivity: RegistrationActivity
   private lateinit var baseActivity: BaseActivity
-  private lateinit var karyaAPI: KaryaAPIService
 
   private fun setupObservers() {
     viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner) { openDashBoard ->
@@ -112,7 +110,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
 
     registrationActivity = activity as RegistrationActivity
     baseActivity = activity as BaseActivity
-    karyaAPI = baseActivity.karyaAPI
 
     /** Initialise assistant audio */
     registrationActivity.current_assistant_audio = R.string.audio_otp_prompt

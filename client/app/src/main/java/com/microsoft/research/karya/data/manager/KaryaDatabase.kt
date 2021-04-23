@@ -18,18 +18,12 @@ import com.microsoft.research.karya.data.local.daos.ScenarioDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.local.daosExtra.LanguageDaoExtra
-import com.microsoft.research.karya.data.local.daosExtra.LanguageResourceDaoExtra
-import com.microsoft.research.karya.data.local.daosExtra.LanguageResourceValueDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
-import com.microsoft.research.karya.data.local.daosExtra.MicrotaskGroupAssignmentDaoExtra
-import com.microsoft.research.karya.data.local.daosExtra.TaskDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.WorkerDaoExtra
-import com.microsoft.research.karya.data.local.daosExtra.WorkerLanguageSkillDaoExtra
 import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import com.microsoft.research.karya.data.model.karya.LanguageRecord
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskGroupAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
 import com.microsoft.research.karya.data.model.karya.PaymentRequestRecord
 import com.microsoft.research.karya.data.model.karya.PayoutInfoRecord
@@ -44,17 +38,11 @@ import com.microsoft.research.karya.data.model.karya.WorkerRecord
         [
             LanguageRecord::class,
             ScenarioRecord::class,
-            LanguageResourceRecord::class,
-            LanguageResourceValueRecord::class,
             WorkerRecord::class,
             KaryaFileRecord::class,
             TaskRecord::class,
-            MicrotaskGroupRecord::class,
             MicrotaskRecord::class,
             PolicyRecord::class,
-            TaskAssignmentRecord::class,
-            WorkerLanguageSkillRecord::class,
-            MicrotaskGroupAssignmentRecord::class,
             MicrotaskAssignmentRecord::class,
             PayoutMethodRecord::class,
             PayoutInfoRecord::class,
@@ -69,24 +57,13 @@ abstract class KaryaDatabase : RoomDatabase() {
   abstract fun scenarioDao(): ScenarioDao
   abstract fun taskDao(): TaskDao
   abstract fun workerDao(): WorkerDao
-  abstract fun languageResourceDao(): LanguageResourceDao
-  abstract fun languageResourceValueDao(): LanguageResourceValueDao
-  abstract fun workerLanguageSkillDao(): WorkerLanguageSkillDao
   abstract fun microtaskAssignmentDao(): MicrotaskAssignmentDao
-  abstract fun microtaskGroupAssignmentDao(): MicrotaskGroupAssignmentDao
-  abstract fun microtaskGroupDao(): MicrotaskGroupDao
-  abstract fun taskAssignmentDao(): TaskAssignmentDao
 
   abstract fun languageDaoExtra(): LanguageDaoExtra
-  abstract fun languageResourceDaoExtra(): LanguageResourceDaoExtra
-  abstract fun languageResourceValueDaoExtra(): LanguageResourceValueDaoExtra
   abstract fun microtaskAssignmentDaoExtra(): MicrotaskAssignmentDaoExtra
   abstract fun microtaskDaoExtra(): MicrotaskDaoExtra
-  abstract fun microtaskGroupAssignmentDaoExtra(): MicrotaskGroupAssignmentDaoExtra
-  abstract fun taskDaoExtra(): TaskDaoExtra
   abstract fun workerDaoExtra(): WorkerDaoExtra
   abstract fun karyaFileDao(): KaryaFileDao
-  abstract fun workerLanguageSkillDaoExtra(): WorkerLanguageSkillDaoExtra
 
   companion object {
     private var INSTANCE: KaryaDatabase? = null

@@ -1,7 +1,6 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.BuildConfig
-import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAPI
@@ -64,12 +63,6 @@ class RetrofitModule {
         .baseUrl(baseUrl)
         .addConverterFactory(converterFactory)
         .build()
-  }
-
-  @Provides
-  @Reusable
-  fun provideKaryaAPIService(retrofit: Retrofit): KaryaAPIService {
-    return retrofit.create(KaryaAPIService::class.java)
   }
 
   @Provides

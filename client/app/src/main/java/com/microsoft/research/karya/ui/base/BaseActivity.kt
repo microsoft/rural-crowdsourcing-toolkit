@@ -23,9 +23,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.KaryaDatabase
-import com.microsoft.research.karya.data.manager.RetrofitFactory
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
-import com.microsoft.research.karya.data.service.KaryaAPIService
 import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.ImageUtils
 import java.io.File
@@ -43,7 +41,7 @@ abstract class BaseActivity() : AppCompatActivity() {
 
   /** Database and API service */
   protected lateinit var karyaDb: KaryaDatabase
-  lateinit var karyaAPI: KaryaAPIService
+//  lateinit var karyaAPI: KaryaAPIService
 
   /** Player for assistant */
   private var assistantAvailable: Boolean = false
@@ -70,7 +68,7 @@ abstract class BaseActivity() : AppCompatActivity() {
 
     // Set db and API service
     karyaDb = KaryaDatabase.getInstance(this)!!
-    karyaAPI = RetrofitFactory.create()
+//    karyaAPI = RetrofitFactory.create()
 
     // Reset support action bar title
     this.setSupportActionBar(appTb)
