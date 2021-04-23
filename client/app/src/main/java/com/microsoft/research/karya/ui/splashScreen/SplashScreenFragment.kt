@@ -76,10 +76,10 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
   }
 
   private suspend fun isFirstRun(): Boolean =
-      withContext(Dispatchers.IO) {
-        val firstRunKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_RUN)
-        val data = requireContext().dataStore.data.first()
+    withContext(Dispatchers.IO) {
+      val firstRunKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_RUN)
+      val data = requireContext().dataStore.data.first()
 
-        return@withContext data[firstRunKey] ?: true
-      }
+      return@withContext data[firstRunKey] ?: true
+    }
 }

@@ -35,29 +35,31 @@ object ImageUtils {
   /** Load image into a image view */
   fun loadImageBitmap(activity: Activity, bitmap: Bitmap, view: ImageView) {
     Glide.with(activity)
-        .asBitmap()
-        .load(bitmap)
-        .apply(
-            RequestOptions()
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .placeholder(R.drawable.ic_perm_identity)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .circleCrop())
-        .into(view)
+      .asBitmap()
+      .load(bitmap)
+      .apply(
+        RequestOptions()
+          .format(DecodeFormat.PREFER_ARGB_8888)
+          .placeholder(R.drawable.ic_perm_identity)
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .circleCrop()
+      )
+      .into(view)
   }
 
   /** Load image into a image view */
   fun loadImageString(activity: Activity, base64String: String?, view: ImageView) {
     val bitmap = base64StringToBitmap(base64String)
     Glide.with(activity)
-        .asBitmap()
-        .load(bitmap)
-        .apply(
-            RequestOptions()
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .placeholder(R.drawable.ic_perm_identity)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .circleCrop())
-        .into(view)
+      .asBitmap()
+      .load(bitmap)
+      .apply(
+        RequestOptions()
+          .format(DecodeFormat.PREFER_ARGB_8888)
+          .placeholder(R.drawable.ic_perm_identity)
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .circleCrop()
+      )
+      .into(view)
   }
 }

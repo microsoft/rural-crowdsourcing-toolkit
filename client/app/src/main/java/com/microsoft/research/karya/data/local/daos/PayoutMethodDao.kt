@@ -17,8 +17,7 @@ interface PayoutMethodDao : BasicDao<PayoutMethodRecord> {
 
   @Query("SELECT * FROM payout_method") suspend fun getAll(): List<PayoutMethodRecord>
 
-  @Query("SELECT * FROM payout_method WHERE id == :id")
-  suspend fun getById(id: Int): PayoutMethodRecord
+  @Query("SELECT * FROM payout_method WHERE id == :id") suspend fun getById(id: Int): PayoutMethodRecord
 
   /** Upsert a [record] in the table */
   @Transaction

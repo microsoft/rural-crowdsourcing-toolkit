@@ -20,10 +20,10 @@ import kotlinx.coroutines.launch
 private const val DAY45_IN_SECONDS = 45 * 24 * 60 * 60
 
 abstract class NetworkActivity(
-    private val indeterminateProgress: Boolean = true,
-    private val noMessage: Boolean = false,
-    private val allowRetry: Boolean = false,
-    private val needIdToken: Boolean = false,
+  private val indeterminateProgress: Boolean = true,
+  private val noMessage: Boolean = false,
+  private val allowRetry: Boolean = false,
+  private val needIdToken: Boolean = false,
 ) : BaseActivity() {
 
   protected var networkRequestMessage: String = ""
@@ -80,21 +80,21 @@ abstract class NetworkActivity(
     resetError()
     var success = true
     val networkRequestJob =
-        ioScope.launch {
-          try {
-            if (needIdToken) {
-              checkIdToken()
-            }
-            Log.i("BEFORE_SEND_REQUEST", "SENDING REQUEST")
-            executeRequest()
-          } catch (exception: Exception) {
-            success = false
-            // TODO: Set a good error message., maybe by passing an error message inside the
-            // function?
-            setErrorMessage()
-            Log.d("CUSTOM_DEBUG", exception.toString())
+      ioScope.launch {
+        try {
+          if (needIdToken) {
+            checkIdToken()
           }
+          Log.i("BEFORE_SEND_REQUEST", "SENDING REQUEST")
+          executeRequest()
+        } catch (exception: Exception) {
+          success = false
+          // TODO: Set a good error message., maybe by passing an error message inside the
+          // function?
+          setErrorMessage()
+          Log.d("CUSTOM_DEBUG", exception.toString())
         }
+      }
 
     uiScope.launch {
       networkRequestJob.join()
@@ -138,8 +138,7 @@ abstract class NetworkActivity(
     /** Compare with current time */
     val current = System.currentTimeMillis() / 1000
     if (current - body.iat > DAY45_IN_SECONDS || current > body.exp) {
-      val updatedWorkerResponse =
-          karyaAPI.refreshIdToken(thisWorker.auth_provider.toString(), thisWorker.id_token!!)
+      val updatedWorkerResponse = karyaAPI.refreshIdToken(thisWorker.auth_provider.toString(), thisWorker.id_token!!)
       if (updatedWorkerResponse.isSuccessful) {
         val updatedWorker = updatedWorkerResponse.body()!!
         val newToken = updatedWorker.id_token!!

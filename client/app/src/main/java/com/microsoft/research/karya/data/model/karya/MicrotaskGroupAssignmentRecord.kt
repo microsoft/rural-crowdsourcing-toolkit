@@ -16,26 +16,26 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "microtask_group_assignment",
-    foreignKeys =
-        arrayOf(
-            ForeignKey(
-                entity = MicrotaskGroupRecord::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("microtask_group_id")),
-            ForeignKey(
-                entity = WorkerRecord::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("worker_id"))),
-    indices = arrayOf(Index("microtask_group_id"), Index("worker_id")))
+  tableName = "microtask_group_assignment",
+  foreignKeys =
+    arrayOf(
+      ForeignKey(
+        entity = MicrotaskGroupRecord::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("microtask_group_id")
+      ),
+      ForeignKey(entity = WorkerRecord::class, parentColumns = arrayOf("id"), childColumns = arrayOf("worker_id"))
+    ),
+  indices = arrayOf(Index("microtask_group_id"), Index("worker_id"))
+)
 data class MicrotaskGroupAssignmentRecord(
-    @PrimaryKey var id: String,
-    var local_id: String,
-    var box_id: Int,
-    var microtask_group_id: String,
-    var worker_id: String,
-    var status: MicrotaskGroupAssignmentStatus,
-    var params: JsonObject,
-    var created_at: String,
-    var last_updated_at: String,
+  @PrimaryKey var id: String,
+  var local_id: String,
+  var box_id: Int,
+  var microtask_group_id: String,
+  var worker_id: String,
+  var status: MicrotaskGroupAssignmentStatus,
+  var params: JsonObject,
+  var created_at: String,
+  var last_updated_at: String,
 )

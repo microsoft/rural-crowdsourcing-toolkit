@@ -15,20 +15,17 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "microtask_group",
-    foreignKeys =
-        arrayOf(
-            ForeignKey(
-                entity = TaskRecord::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("task_id"))),
-    indices = arrayOf(Index("task_id")))
+  tableName = "microtask_group",
+  foreignKeys =
+    arrayOf(ForeignKey(entity = TaskRecord::class, parentColumns = arrayOf("id"), childColumns = arrayOf("task_id"))),
+  indices = arrayOf(Index("task_id"))
+)
 data class MicrotaskGroupRecord(
-    @PrimaryKey var id: String,
-    var task_id: String,
-    var microtask_assignment_order: AssignmentOrderType,
-    var status: MicrotaskGroupStatus,
-    var params: JsonObject,
-    var created_at: String,
-    var last_updated_at: String,
+  @PrimaryKey var id: String,
+  var task_id: String,
+  var microtask_assignment_order: AssignmentOrderType,
+  var status: MicrotaskGroupStatus,
+  var params: JsonObject,
+  var created_at: String,
+  var last_updated_at: String,
 )

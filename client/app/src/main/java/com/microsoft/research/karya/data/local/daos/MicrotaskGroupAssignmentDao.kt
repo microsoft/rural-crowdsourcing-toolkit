@@ -15,8 +15,7 @@ import com.microsoft.research.karya.data.model.karya.MicrotaskGroupAssignmentRec
 @Dao
 interface MicrotaskGroupAssignmentDao : BasicDao<MicrotaskGroupAssignmentRecord> {
 
-  @Query("SELECT * FROM microtask_group_assignment")
-  suspend fun getAll(): List<MicrotaskGroupAssignmentRecord>
+  @Query("SELECT * FROM microtask_group_assignment") suspend fun getAll(): List<MicrotaskGroupAssignmentRecord>
 
   @Query("SELECT * FROM microtask_group_assignment WHERE id == :id")
   suspend fun getById(id: String): MicrotaskGroupAssignmentRecord

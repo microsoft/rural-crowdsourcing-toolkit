@@ -9,6 +9,6 @@ interface LanguageAPI {
 
   @GET("/languages")
   suspend fun getLanguages(
-      @Header("access-code") accessCode: String,
+    @Header("access-code") accessCode: String,
   ): Response<List<LanguageRecord>>
 }

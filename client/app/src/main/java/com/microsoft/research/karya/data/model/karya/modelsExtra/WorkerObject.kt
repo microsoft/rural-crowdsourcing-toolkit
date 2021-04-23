@@ -6,10 +6,10 @@ package com.microsoft.research.karya.data.model.karya.modelsExtra
 import com.microsoft.research.karya.data.model.karya.AuthProviderType
 
 data class WorkerObject(
-    var creation_code: String,
-    var auth_provider: AuthProviderType,
-    var phone_number: String,
-    var age: String,
-    var gender: String,
-    var app_language: Int? = null,
+  var creation_code: String,
+  var auth_provider: AuthProviderType,
+  var phone_number: String,
+  var age: String,
+  var gender: String,
+  var app_language: Int? = null,
 )

@@ -14,23 +14,26 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 
 @Entity(
-    tableName = "payment_request",
-    foreignKeys =
-        arrayOf(
-            ForeignKey(
-                entity = PayoutInfoRecord::class,
-                parentColumns = arrayOf("id"),
-                childColumns = arrayOf("payout_info_id"))),
-    indices = arrayOf(Index("payout_info_id")))
+  tableName = "payment_request",
+  foreignKeys =
+    arrayOf(
+      ForeignKey(
+        entity = PayoutInfoRecord::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("payout_info_id")
+      )
+    ),
+  indices = arrayOf(Index("payout_info_id"))
+)
 data class PaymentRequestRecord(
-    @PrimaryKey var id: String,
-    var local_id: String,
-    var box_id: Int,
-    var payout_info_id: String,
-    var amount: Int,
-    var status: PaymentRequestStatus,
-    var reference: String?,
-    var params: JsonObject,
-    var created_at: String,
-    var last_updated_at: String,
+  @PrimaryKey var id: String,
+  var local_id: String,
+  var box_id: Int,
+  var payout_info_id: String,
+  var amount: Int,
+  var status: PaymentRequestStatus,
+  var reference: String?,
+  var params: JsonObject,
+  var created_at: String,
+  var last_updated_at: String,
 )

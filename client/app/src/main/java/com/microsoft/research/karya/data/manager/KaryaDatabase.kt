@@ -51,27 +51,28 @@ import com.microsoft.research.karya.data.model.karya.WorkerLanguageSkillRecord
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 
 @Database(
-    entities =
-        [
-            LanguageRecord::class,
-            ScenarioRecord::class,
-            LanguageResourceRecord::class,
-            LanguageResourceValueRecord::class,
-            WorkerRecord::class,
-            KaryaFileRecord::class,
-            TaskRecord::class,
-            MicrotaskGroupRecord::class,
-            MicrotaskRecord::class,
-            PolicyRecord::class,
-            TaskAssignmentRecord::class,
-            WorkerLanguageSkillRecord::class,
-            MicrotaskGroupAssignmentRecord::class,
-            MicrotaskAssignmentRecord::class,
-            PayoutMethodRecord::class,
-            PayoutInfoRecord::class,
-            PaymentRequestRecord::class],
-    version = 5,
-    exportSchema = false)
+  entities =
+    [
+      LanguageRecord::class,
+      ScenarioRecord::class,
+      LanguageResourceRecord::class,
+      LanguageResourceValueRecord::class,
+      WorkerRecord::class,
+      KaryaFileRecord::class,
+      TaskRecord::class,
+      MicrotaskGroupRecord::class,
+      MicrotaskRecord::class,
+      PolicyRecord::class,
+      TaskAssignmentRecord::class,
+      WorkerLanguageSkillRecord::class,
+      MicrotaskGroupAssignmentRecord::class,
+      MicrotaskAssignmentRecord::class,
+      PayoutMethodRecord::class,
+      PayoutInfoRecord::class,
+      PaymentRequestRecord::class],
+  version = 5,
+  exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun languageDao(): LanguageDao
@@ -105,10 +106,7 @@ abstract class KaryaDatabase : RoomDatabase() {
     fun getInstance(context: Context): KaryaDatabase? {
       if (INSTANCE == null) {
         synchronized(KaryaDatabase::class) {
-          INSTANCE =
-              Room.databaseBuilder(
-                      context.applicationContext, KaryaDatabase::class.java, "karya.db")
-                  .build()
+          INSTANCE = Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db").build()
         }
       }
       return INSTANCE

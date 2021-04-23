@@ -17,8 +17,7 @@ interface TaskAssignmentDao : BasicDao<TaskAssignmentRecord> {
 
   @Query("SELECT * FROM task_assignment") suspend fun getAll(): List<TaskAssignmentRecord>
 
-  @Query("SELECT * FROM task_assignment WHERE id == :id")
-  suspend fun getById(id: String): TaskAssignmentRecord
+  @Query("SELECT * FROM task_assignment WHERE id == :id") suspend fun getById(id: String): TaskAssignmentRecord
 
   /** Upsert a [record] in the table */
   @Transaction

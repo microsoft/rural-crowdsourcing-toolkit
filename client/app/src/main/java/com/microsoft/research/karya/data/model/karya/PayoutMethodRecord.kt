@@ -14,11 +14,11 @@ import com.google.gson.JsonObject
 
 @Entity(tableName = "payout_method")
 data class PayoutMethodRecord(
-    @PrimaryKey var id: Int,
-    var name: String,
-    var description: String,
-    var required_info: JsonObject,
-    var enabled: Boolean,
-    var created_at: String,
-    var last_updated_at: String,
+  @PrimaryKey var id: Int,
+  var name: String,
+  var description: String,
+  var required_info: JsonObject,
+  var enabled: Boolean,
+  var created_at: String,
+  var last_updated_at: String,
 )

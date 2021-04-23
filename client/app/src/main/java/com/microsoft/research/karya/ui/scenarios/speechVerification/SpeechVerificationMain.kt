@@ -15,11 +15,12 @@ import kotlinx.android.synthetic.main.microtask_speech_verification.*
 import kotlinx.coroutines.launch
 
 class SpeechVerificationMain :
-    MicrotaskRenderer(
-        activityName = "SPEECH_VERIFICATION",
-        includeCompleted = false,
-        finishOnGroupBoundary = false,
-        useAssistant = false) {
+  MicrotaskRenderer(
+    activityName = "SPEECH_VERIFICATION",
+    includeCompleted = false,
+    finishOnGroupBoundary = false,
+    useAssistant = false
+  ) {
   /** UI button states */
   private enum class ButtonState {
     DISABLED,
@@ -68,16 +69,8 @@ class SpeechVerificationMain :
     setContentView(R.layout.microtask_speech_verification)
 
     /** Set corner radius for button */
-    playBtnCv.addOnLayoutChangeListener {
-        _: View,
-        left: Int,
-        _: Int,
-        right: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
+    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
+      ->
       playBtnCv.radius = (right - left).toFloat() / 2
     }
 
@@ -297,25 +290,25 @@ class SpeechVerificationMain :
     mediaPlayer = null
 
     val accuracy =
-        when (accuracyRating) {
-          R.string.accuracy_correct -> 2
-          R.string.accuracy_errors -> 1
-          else -> 0
-        }
+      when (accuracyRating) {
+        R.string.accuracy_correct -> 2
+        R.string.accuracy_errors -> 1
+        else -> 0
+      }
 
     val quality =
-        when (qualityRating) {
-          R.string.quality_good -> 2
-          R.string.quality_noisy -> 1
-          else -> 0
-        }
+      when (qualityRating) {
+        R.string.quality_good -> 2
+        R.string.quality_noisy -> 1
+        else -> 0
+      }
 
     val volume =
-        when (volumeRating) {
-          R.string.volume_high -> 2
-          R.string.volume_okay -> 1
-          else -> 0
-        }
+      when (volumeRating) {
+        R.string.volume_high -> 2
+        R.string.volume_okay -> 1
+        else -> 0
+      }
 
     outputData.addProperty("accuracy", accuracy)
     outputData.addProperty("quality", quality)
@@ -333,9 +326,9 @@ class SpeechVerificationMain :
 
   /** Set button states */
   private fun setButtonStates(
-      backState: ButtonState,
-      playState: ButtonState,
-      nextState: ButtonState,
+    backState: ButtonState,
+    playState: ButtonState,
+    nextState: ButtonState,
   ) {
     backBtnState = backState
     playBtnState = playState
@@ -350,25 +343,28 @@ class SpeechVerificationMain :
     nextBtn.isClickable = nextBtnState != ButtonState.DISABLED
 
     playBtn.setBackgroundResource(
-        when (playBtnState) {
-          ButtonState.DISABLED -> R.drawable.ic_speaker_disabled
-          ButtonState.ENABLED -> R.drawable.ic_speaker_enabled
-          ButtonState.ACTIVE -> R.drawable.ic_speaker_active
-        })
+      when (playBtnState) {
+        ButtonState.DISABLED -> R.drawable.ic_speaker_disabled
+        ButtonState.ENABLED -> R.drawable.ic_speaker_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_speaker_active
+      }
+    )
 
     nextBtn.setBackgroundResource(
-        when (nextBtnState) {
-          ButtonState.DISABLED -> R.drawable.ic_next_disabled
-          ButtonState.ENABLED -> R.drawable.ic_next_enabled
-          ButtonState.ACTIVE -> R.drawable.ic_next_enabled
-        })
+      when (nextBtnState) {
+        ButtonState.DISABLED -> R.drawable.ic_next_disabled
+        ButtonState.ENABLED -> R.drawable.ic_next_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_next_enabled
+      }
+    )
 
     backBtn.setBackgroundResource(
-        when (backBtnState) {
-          ButtonState.DISABLED -> R.drawable.ic_back_disabled
-          ButtonState.ENABLED -> R.drawable.ic_back_enabled
-          ButtonState.ACTIVE -> R.drawable.ic_back_enabled
-        })
+      when (backBtnState) {
+        ButtonState.DISABLED -> R.drawable.ic_back_disabled
+        ButtonState.ENABLED -> R.drawable.ic_back_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_back_enabled
+      }
+    )
   }
 
   /** Disable reviewing */
@@ -460,9 +456,9 @@ class SpeechVerificationMain :
 
   private fun updateReviewStatus() {
     reviewCompleted =
-        accuracyRating != R.string.rating_undefined &&
-            qualityRating != R.string.rating_undefined &&
-            volumeRating != R.string.rating_undefined
+      accuracyRating != R.string.rating_undefined &&
+        qualityRating != R.string.rating_undefined &&
+        volumeRating != R.string.rating_undefined
 
     if (reviewCompleted) {
       setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
@@ -474,11 +470,11 @@ class SpeechVerificationMain :
     val runnable = Runnable {
       while (state == activityState) {
         val currentPosition =
-            try {
-              mediaPlayer?.currentPosition
-            } catch (e: Exception) {
-              null
-            }
+          try {
+            mediaPlayer?.currentPosition
+          } catch (e: Exception) {
+            null
+          }
         playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
         Thread.sleep(100)
       }

@@ -27,9 +27,9 @@ class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTas
   }
 
   fun submitAssignments(
-      idToken: String,
-      accessCode: String,
-      updates: List<MicrotaskAssignmentRecord>,
+    idToken: String,
+    accessCode: String,
+    updates: List<MicrotaskAssignmentRecord>,
   ) = flow {
     val response = microTaskAPI.submitAssignments(idToken, updates)
     val successAssignmentIDS = response.body()
