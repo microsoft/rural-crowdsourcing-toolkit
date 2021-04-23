@@ -10,7 +10,6 @@
 package com.microsoft.research.karya.ui.fetchData
 
 import android.content.Intent
-import com.microsoft.research.karya.data.model.karya.LanguageResourceType
 import com.microsoft.research.karya.ui.accesscode.AccessCodeActivity
 import com.microsoft.research.karya.ui.base.NetworkActivity
 import com.microsoft.research.karya.utils.AppConstants

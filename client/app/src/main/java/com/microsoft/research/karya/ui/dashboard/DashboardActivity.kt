@@ -22,6 +22,7 @@ import com.microsoft.research.karya.data.manager.KaryaDatabase
 import com.microsoft.research.karya.data.manager.RetrofitFactory
 import com.microsoft.research.karya.data.model.*
 import com.microsoft.research.karya.data.model.karya.*
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
 import com.microsoft.research.karya.ui.base.BaseActivity

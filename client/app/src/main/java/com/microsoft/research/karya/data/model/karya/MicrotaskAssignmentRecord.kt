@@ -12,6 +12,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 
 @Entity(
     tableName = "microtask_assignment",

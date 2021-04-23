@@ -11,7 +11,7 @@ import android.media.MediaRecorder
 import android.view.View
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.*
 import com.microsoft.research.karya.utils.RawToAACEncoder

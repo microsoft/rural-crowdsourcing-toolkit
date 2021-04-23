@@ -5,7 +5,6 @@ package com.microsoft.research.karya.data.local.daosExtra
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.microsoft.research.karya.data.model.karya.LanguageResourceValueRecord
 
 @Dao
 interface LanguageResourceValueDaoExtra {

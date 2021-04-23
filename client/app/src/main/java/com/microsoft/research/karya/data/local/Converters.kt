@@ -13,15 +13,11 @@ import com.microsoft.research.karya.data.model.karya.AssignmentOrderType
 import com.microsoft.research.karya.data.model.karya.AuthProviderType
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.FileCreator
-import com.microsoft.research.karya.data.model.karya.LanguageResourceType
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
-import com.microsoft.research.karya.data.model.karya.MicrotaskGroupAssignmentStatus
-import com.microsoft.research.karya.data.model.karya.MicrotaskGroupStatus
-import com.microsoft.research.karya.data.model.karya.MicrotaskStatus
-import com.microsoft.research.karya.data.model.karya.PaymentRequestStatus
-import com.microsoft.research.karya.data.model.karya.PayoutInfoStatus
-import com.microsoft.research.karya.data.model.karya.TaskAssignmentStatus
-import com.microsoft.research.karya.data.model.karya.TaskStatus
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskStatus
+import com.microsoft.research.karya.data.model.karya.enums.PaymentRequestStatus
+import com.microsoft.research.karya.data.model.karya.enums.PayoutInfoStatus
+import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -109,24 +105,6 @@ class Converters {
   }
 
   @TypeConverter
-  fun fromStringToLanguageResourceType(value: String?): LanguageResourceType? {
-    if (value == null) {
-      return null
-    }
-    val listType = object : TypeToken<LanguageResourceType>() {}.type
-    return Gson().fromJson(value, listType)
-  }
-
-  @TypeConverter
-  fun fromLanguageResourceTypetoString(list: LanguageResourceType?): String? {
-    if (list == null) {
-      return null
-    }
-    val gson = Gson()
-    return gson.toJson(list)
-  }
-
-  @TypeConverter
   fun fromStringToAuthProviderType(value: String?): AuthProviderType? {
     if (value == null) {
       return null
@@ -199,24 +177,6 @@ class Converters {
   }
 
   @TypeConverter
-  fun fromStringToMicrotaskGroupStatus(value: String?): MicrotaskGroupStatus? {
-    if (value == null) {
-      return null
-    }
-    val listType = object : TypeToken<MicrotaskGroupStatus>() {}.type
-    return Gson().fromJson(value, listType)
-  }
-
-  @TypeConverter
-  fun fromMicrotaskGroupStatustoString(list: MicrotaskGroupStatus?): String? {
-    if (list == null) {
-      return null
-    }
-    val gson = Gson()
-    return gson.toJson(list)
-  }
-
-  @TypeConverter
   fun fromStringToMicrotaskStatus(value: String?): MicrotaskStatus? {
     if (value == null) {
       return null
@@ -227,42 +187,6 @@ class Converters {
 
   @TypeConverter
   fun fromMicrotaskStatustoString(list: MicrotaskStatus?): String? {
-    if (list == null) {
-      return null
-    }
-    val gson = Gson()
-    return gson.toJson(list)
-  }
-
-  @TypeConverter
-  fun fromStringToTaskAssignmentStatus(value: String?): TaskAssignmentStatus? {
-    if (value == null) {
-      return null
-    }
-    val listType = object : TypeToken<TaskAssignmentStatus>() {}.type
-    return Gson().fromJson(value, listType)
-  }
-
-  @TypeConverter
-  fun fromTaskAssignmentStatustoString(list: TaskAssignmentStatus?): String? {
-    if (list == null) {
-      return null
-    }
-    val gson = Gson()
-    return gson.toJson(list)
-  }
-
-  @TypeConverter
-  fun fromStringToMicrotaskGroupAssignmentStatus(value: String?): MicrotaskGroupAssignmentStatus? {
-    if (value == null) {
-      return null
-    }
-    val listType = object : TypeToken<MicrotaskGroupAssignmentStatus>() {}.type
-    return Gson().fromJson(value, listType)
-  }
-
-  @TypeConverter
-  fun fromMicrotaskGroupAssignmentStatustoString(list: MicrotaskGroupAssignmentStatus?): String? {
     if (list == null) {
       return null
     }
