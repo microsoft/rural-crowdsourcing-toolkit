@@ -6,8 +6,7 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import { knex, setupDbConnection, createAllTables, dropAllTables, BasicModel } from '@karya/db';
-import { languages } from './InitLanguages';
+import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/db';
 import { bootstrapAuth } from './AuthBootstrap';
 import logger from '../utils/Logger';
 
@@ -22,27 +21,8 @@ async function recreateAllTables() {
   logger.info(`Tables recreated`);
 }
 
-/**
- * Function to sync all the languages
- */
-async function initializeLanguages() {
-  logger.info(`Initializing language records`);
-  await BBPromise.mapSeries(languages, async (language) => {
-    try {
-      await BasicModel.insertRecord('language', language);
-    } catch (err) {
-      try {
-        await BasicModel.updateSingle('language', { name: language.name }, language);
-      } catch (e) {
-        logger.error(`Failed to sync language '${language.name}'`);
-      }
-    }
-  });
-  logger.info(`Completed initializing languages`);
-}
-
 /** Script sequence */
-let scriptSequence = ['recreate-tables', 'init-languages', 'auth-bootstrap'];
+let scriptSequence = ['recreate-tables', 'auth-bootstrap'];
 
 /** Main Script to reset the DB */
 (async () => {
@@ -65,9 +45,6 @@ let scriptSequence = ['recreate-tables', 'init-languages', 'auth-bootstrap'];
     switch (action) {
       case 'recreate-tables':
         await recreateAllTables();
-        break;
-      case 'init-languages':
-        await initializeLanguages();
         break;
       case 'auth-bootstrap':
         const cc = await bootstrapAuth();

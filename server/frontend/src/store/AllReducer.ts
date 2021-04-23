@@ -37,7 +37,6 @@ type StoreReducer = Reducer<AllState, StoreActions>;
 
 // Initial state
 const initState: AllState = {
-  language: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   work_provider: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },

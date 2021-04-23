@@ -12,12 +12,12 @@ import { RouteComponentProps } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
-import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { LanguageRecord, Task } from '@karya/db';
+import { Task } from '@karya/db';
 import { ScenarioInterface, scenarioMap, ScenarioName } from '@karya/scenarios';
+import { languageMap, LanguageCode } from '@karya/languages';
 
 // HTML Helpers
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
@@ -56,18 +56,17 @@ const mapDispatchToProps = (dispatch: any) => {
 
 // create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const dataConnector = withData('language');
-const connector = compose(dataConnector, reduxConnector);
+const connector = reduxConnector;
 
 // component prop type
-type CreateTaskProps = RouterProps & DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
 
 // component state
 type CreateTaskState = {
   task: Task;
   params: { [id: string]: string | number | boolean };
   scenario?: ScenarioInterface;
-  language?: LanguageRecord;
+  language_code?: LanguageCode;
   files: { [id: string]: File };
 };
 
@@ -130,10 +129,9 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
   // Handle language change
   handleLanguageChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const language_id = e.currentTarget.value;
-    const language = this.props.language.data.find((l) => l.id === language_id) as LanguageRecord;
+    const language_code = e.currentTarget.value as LanguageCode;
     const task: Task = { ...this.state.task, primary_language_name: '', primary_language_description: '' };
-    this.setState({ language, task });
+    this.setState({ language_code, task });
   };
 
   // Handle input change
@@ -169,13 +167,13 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     e.preventDefault();
     const task: Task = { ...this.state.task };
     task.scenario_name = this.state.scenario?.name;
-    task.language_id = this.state.language?.id;
+    task.language_code = this.state.language_code;
     task.params = this.state.params;
     this.props.createTask(task, this.state.files);
   };
 
   // render a parameter
-/*  renderTaskParameter(param: ParameterDefinition) {
+  /*  renderTaskParameter(param: ParameterDefinition) {
     switch (param.type) {
       case 'string':
         return (
@@ -233,12 +231,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   } */
 
   render() {
-    // Generate error with get languages
-    const getLanguagesErrorElement =
-      this.props.language.status === 'FAILURE' ? (
-        <ErrorMessageWithRetry message={this.props.language.messages} onRetry={this.props.getData('language')} />
-      ) : null;
-
     // Generate error with task creation
     const createErrorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
@@ -263,18 +255,17 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     );
 
     // languages drop down
-    const languages = this.props.language.data;
-    const { language } = this.state;
-    const language_id = language ? language.id : 0;
+    const languages = Object.values(languageMap);
+    const language_code = this.state.language_code ?? 'null';
     const languageDropDown = (
       <div>
-        <select id='language_id' value={language_id} onChange={this.handleLanguageChange}>
-          <option value={0} disabled={true}>
+        <select id='language_code' value={language_code} onChange={this.handleLanguageChange}>
+          <option value='null' disabled={true}>
             Select a Language
           </option>
           {languages.map((l) => (
-            <option value={l.id} key={l.id}>
-              {`${l.name} (${l.primary_language_name})`}
+            <option value={l.code} key={l.code}>
+              {`${l.name} (${l.primary_name})`}
             </option>
           ))}
         </select>
@@ -283,10 +274,11 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
     // task creation form
     let taskForm = null;
-    if (scenario !== undefined && language !== undefined) {
+    if (scenario !== undefined && language_code !== 'null') {
       // get parameters from the
-      const params  = scenario.task_input;
+      const params = scenario.task_input;
       const { assignment_granularity, group_assignment_order, microtask_assignment_order } = scenario;
+      const language = languageMap[language_code];
 
       const { task } = this.state;
       taskForm = (
@@ -305,7 +297,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
               />
               <ColTextInput
                 id='primary_language_name'
-                label={`Task name in ${language.name} (${language.primary_language_name})`}
+                label={`Task name in ${language.name} (${language.primary_name})`}
                 width='s4'
                 value={task.primary_language_name}
                 onChange={this.handleInputChange}
@@ -328,7 +320,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
             <div className='row'>
               <div className='col s8 input-field'>
-                <label htmlFor='primary_language_description'>{`Task Description in ${language.name} (${language.primary_language_name})`}</label>
+                <label htmlFor='primary_language_description'>{`Task Description in ${language.name} (${language.primary_name})`}</label>
                 <textarea
                   id='primary_language_description'
                   className='materialize-textarea'
@@ -423,18 +415,8 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           <div className='section'>
             <h5 className='red-text'>Scenario and Language Information</h5>
             <div className='row'>
-              <div className='col s4'>
-                {scenarioDropDown}
-              </div>
-              <div className='col s4 offset-s1'>
-                {this.props.language.status === 'IN_FLIGHT' ? (
-                  <ProgressBar />
-                ) : this.props.language.status === 'FAILURE' ? (
-                  getLanguagesErrorElement
-                ) : (
-                  languageDropDown
-                )}
-              </div>
+              <div className='col s4'>{scenarioDropDown}</div>
+              <div className='col s4 offset-s1'>{languageDropDown}</div>
             </div>
           </div>
           {taskForm}

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@karya/db": "^2.0.0",
+    "@karya/languages": "^2.0.0",
     "@karya/policies": "^2.0.0",
     "@karya/scenarios": "^2.0.0",
     "@testing-library/jest-dom": "^4.2.4",

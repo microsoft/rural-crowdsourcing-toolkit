@@ -38,15 +38,6 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
     [key in DbTableName]?: DbRecordType<key>[];
   } = {};
 
-  // Get all updates from the following tables
-  const allUpdatesTables: DbTableName[] = ['language'];
-
-  // Collect updates for tables which the server could have updated
-  await BBPromise.mapSeries(allUpdatesTables, async (table) => {
-    // @ts-ignore
-    updateMap[table] = await BasicModel.getUpdatesSince(table, from_server);
-  });
-
   const worker_id = worker.id;
   const eon = new Date(0).toISOString();
 

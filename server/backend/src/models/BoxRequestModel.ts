@@ -37,16 +37,6 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
 
   const updateMap: { [key in DbTableName]?: DbRecordType<key>[] } = {};
 
-  // Get all updates from the following tables. Records in these tables can be
-  // created and updated only by the server
-  const allUpdatesTables: DbTableName[] = ['language'];
-
-  await BBPromise.mapSeries(allUpdatesTables, async (table) => {
-    const tableUpdates = await BasicModel.getRecords(table, {}, { from });
-    // @ts-ignore
-    updateMap[table] = tableUpdates;
-  });
-
   // Get task assignment updates
   const task_assignment_updates = await BasicModel.getRecords('task_assignment', { box_id, status: 'assigned' });
 
@@ -67,14 +57,11 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
   const microtask_updates = await BasicModel.getRecords('microtask', {}, { from }, {}, [['task_id', task_ids]]);
   updateMap['microtask'] = microtask_updates;
 
-  // Get all karya file updates
-  const language_file_ids = (updateMap['language'] || []).map((l) => l.lrv_file_id);
-
   const task_file_ids = task_updates.map((t) => t.input_file_id);
   const microtask_file_ids = microtask_updates.map((m) => m.input_file_id);
 
   let karya_file_ids: string[] = [];
-  [language_file_ids, task_file_ids, microtask_file_ids].forEach((idlist) => {
+  [task_file_ids, microtask_file_ids].forEach((idlist) => {
     karya_file_ids = karya_file_ids.concat(idlist.filter((id): id is string => id !== null));
   });
   const karya_file_updates = (await BasicModel.getRecords('karya_file', {}, {}, {}, [['id', karya_file_ids]]))

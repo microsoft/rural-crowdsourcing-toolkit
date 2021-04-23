@@ -14,20 +14,20 @@ import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
-import { scenarioMap, ScenarioName} from '@karya/scenarios'
+import { scenarioMap, ScenarioName } from '@karya/scenarios';
 
 // Utils
 import { approveStatuses, editStatuses, taskStatus, validateStatuses } from './TaskUtils';
 
 // HoCs
 import { AuthProps, withAuth } from '../hoc/WithAuth';
-import { DataProps, withData } from '../hoc/WithData';
 
 // HTML helpers
 import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 import moment from 'moment';
+import { LanguageCode, languageMap } from '@karya/languages';
 
 /** Props */
 
@@ -86,11 +86,10 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const dataConnector = withData('language');
-const connector = compose(withAuth, dataConnector, reduxConnector);
+const connector = compose(withAuth, reduxConnector);
 
 // Task detail props
-type TaskDetailProps = OwnProps & AuthProps & DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector>;
 
 class TaskDetail extends React.Component<TaskDetailProps> {
   /** Validate task */
@@ -134,10 +133,10 @@ class TaskDetail extends React.Component<TaskDetailProps> {
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
     const scenario = scenarioMap[task.scenario_name as ScenarioName];
-    const language = this.props.language.data.find((s) => s.id === task.language_id);
+    const language = languageMap[task.language_code as LanguageCode];
 
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
-    const language_name = language ? `${language.name} (${language.primary_language_name})` : '<Loading languages>';
+    const language_name = language ? `${language.name} (${language.primary_name})` : '<Loading languages>';
 
     const param_values = task.params as {
       [id: string]: string | string[] | number | undefined | Array<[string, string, string | null]>;
@@ -226,7 +225,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
             </div>
           </div>
         </div>
-
 
         <div className='section'>
           <div className='row'>

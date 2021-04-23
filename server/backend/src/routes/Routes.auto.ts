@@ -22,14 +22,6 @@ import * as WorkProviderController from '../controllers/WorkProvider.extra';
 // create a new router
 const router = new Router({ prefix: '/api' });
 
-router.post('/language', checkAdmin, setTableName, BodyParser(), insertRecord);
-router.put('/language/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
-router.get('/language/:id', setTableName, getRecordById);
-router.get('/language', setTableName, setGetFilter, getRecords);
-
-router.get('/scenario/:id', setTableName, getRecordById);
-router.get('/scenario', setTableName, setGetFilter, getRecords);
-
 router.get('/work_provider/:id', WorkProviderController.getRecordById);
 router.put('/work_provider/:id', BodyParser(), WorkProviderController.updateRecordById);
 router.post('/work_provider/generate/cc', checkAdmin, BodyParser(), WorkProviderController.generateCreationCode);
@@ -70,17 +62,10 @@ router.get(
   MicrotaskController.getMicrotasksWithCompletedAssignments
 );
 
-router.get('/policy/:id', checkAdmin, setTableName, getRecordById);
-router.get('/policy', checkAdmin, setTableName, setGetFilter, getRecords);
-
 router.post('/task_assignment', checkAdmin, setTableName, BodyParser(), insertRecord);
 router.put('/task_assignment/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
 router.get('/task_assignment/:id', checkAdmin, setTableName, getRecordById);
 router.get('/task_assignment', checkAdmin, setTableName, setGetFilter, getRecords);
-
-router.put('/worker_language_skill/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
-router.get('/worker_language_skill/:id', checkAdmin, setTableName, getRecordById);
-router.get('/worker_language_skill', checkAdmin, setTableName, setGetFilter, getRecords);
 
 router.put('/microtask_group_assignment/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
 router.get('/microtask_group_assignment/:id', checkAdmin, setTableName, getRecordById);

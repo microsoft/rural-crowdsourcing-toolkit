@@ -6,9 +6,7 @@
 import * as DBT from '@karya/db';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
-export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'language'
-  ? 'DBT.Language'
-  : Table extends 'work_provider'
+export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'work_provider'
   ? 'DBT.WorkProvider'
   : Table extends 'box'
   ? 'DBT.Box'
@@ -35,33 +33,6 @@ export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'languag
   : never;
 
 export type BackendRequestInitAction =
-  | {
-      type: 'BR_INIT';
-      store: 'language';
-      label: 'CREATE';
-      request: DBT.Language;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.Language;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'language';
-      label: 'GET_ALL';
-      params: DBT.Language;
-    }
   | {
       type: 'BR_INIT';
       store: 'work_provider';
@@ -376,30 +347,6 @@ export type BackendRequestInitAction =
 export type StoreList = BackendRequestInitAction['store'];
 
 export type BackendRequestSuccessAction =
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language';
-      label: 'CREATE';
-      response: DBT.LanguageRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language';
-      label: 'UPDATE_BY_ID';
-      response: DBT.LanguageRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language';
-      label: 'GET_BY_ID';
-      response: DBT.LanguageRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'language';
-      label: 'GET_ALL';
-      response: DBT.LanguageRecord[];
-    }
   | {
       type: 'BR_SUCCESS';
       store: 'work_provider';
