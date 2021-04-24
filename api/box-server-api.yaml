@@ -15,183 +15,312 @@ paths:
     get:
       description: Get a worker record. The worker can identify themselves using
         their unique access code or the id token previously received from the
-        server.
+        server. When using access code, this end point just returns the default
+        language associated with the corresponding worker record and if the
+        worker has already been registered (used to determine the registration
+        flow post OTP verification).
+
+      security:
+        - AccessCode: []
+        - IDToken: []
 
       responses:
         200:
-          description: Authorized worker. Successfully retured worker record.
+          description: Worker authorized successfully. Returned partial worker
+            record if access code was used for authentication, or full worker
+            record if id token was used.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Worker'
+                oneOf:
+                  - type: object
+                    description: Response if id token is used for auth
+                    $ref: '#/components/schemas/Worker'
+                  - type: object
+                    description: Response if access code is used for auth
+                    properties:
+                      language_code:
+                        type: string
+                        description: Code of the default language for the worker
+                          record.
+                      registered:
+                        type: boolean
+                        description: Has a worker already registered previously
+                          with this code?
 
         401:
-          description: Invalid access code or id token.
+          $ref: '#/components/responses/Unauthorized'
 
-        404:
-          description: Access token already attached to another phone number.
-
-  /worker/{id}/otp:
-    put:
-      description: Generate/resend/verify OTP for a worker. The worker can
-        identify themselves using their unique access code or the id token
-        previously received from the server. The "action" query parameter should
-        be "generate" | "resend" | "verify". In case of "verify", the OTP should
-        be included in the header.
-
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-        - name: action
-          in: query
-          required: true
-          schema: { type: string }
-        - name: x-phone-number
-          in: header
-          required: true
-          schema: { type: string }
-        - name: x-otp
-          in: header
-          required: false
-          schema: { type: string }
-
-      responses:
-        200:
-          description: Request executed successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Worker'
-
-        400:
-          description: Request did not have appropriate details.
-
-        401:
-          description: Invalid access code or id token.
-
-        404:
-          description: Access token already attached to another phone number.
-
-  /worker/{id}:
     put:
       description: Update the "updatable" parameters of a worker. The worker can
-        identify themselves using their unique access code or the id token
-        previously received from the server. 
+        identify themselves using id token that is sent after the registration.
+        The action query parameter describes if the request is a simple update
+        of for registering the worker. For registration, year of birth and
+        gender are required parameters.
 
       parameters:
-        - name: id
-          in: path
-          required: true
+        - name: action
+          description: Specifies the type of update. Can be 'register' or 'update'.
           schema: { type: string }
+          in: query
+          required: true
+
+      security:
+        - IDToken: []
 
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Worker'
+              type: object
+              properties:
+                yob:
+                  type: integer
+                  description: Year of birth. Required with registration.
+                gender:
+                  type: string
+                  description: Gender. Required with registration.
+                # TODO: List other updatable parameters here
 
       responses:
         200:
-          description: Request executed successfully.
+          description: Request executed successfully. Returned entire worked record.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Worker'
 
         400:
-          description: Request did not have appropriate details.
+          description: Action query parameter is not present, or required fields
+            are not present with registration, or an empty update.
 
         401:
-          description: Invalid access code or id token.
+          $ref: '#/components/responses/Unauthorized'
 
-        404:
-          description: Access token already attached to another phone number.
-
-  /languages:
-    get:
-      description: Get all languages supported on the platform.
-
-      responses:
-        200:
-          description: Successfully sent list of languages
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Language'
-
-        401:
-          description: Invalid access code or id token.
-
-  /karya_files:
-    post:
-      description: Upload a karya file to the server. This can be either an
-        output tar ball for an assignment or a log file.
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/KaryaFile'
-          multipart/formdata:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-
-      responses:
-        200:
-          description: File uploaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KaryaFile'
-
-        400:
-          description: Invalid request
-
-        401:
-          description: Unauthorized request. Invalid id token.
-
-  /karya_file/{id}:
-    get:
-      description: Get a karya file from the server. This can be an input to a
-        microtask, or a language asset.
+  /worker/otp:
+    put:
+      description: Generate/resend/verify OTP for a worker. The worker can
+        identify themselves using their unique access code. The "action" query
+        parameter should be "generate" | "resend" | "verify". In case of
+        "verify", the OTP should be included in the header. The return type for
+        resend and generate is empty Json-object and for verify it would be the
+        entire worker record.
 
       parameters:
-        - name: id
-          description: ID of the karya file
+        - name: action
           in: query
           required: true
           schema: { type: string }
+        - name: phone-number
+          in: header
+          required: true
+          schema: { type: string }
+        - name: otp
+          in: header
+          required: false
+          schema: { type: string }
+
+      security:
+        - AccessCode: []
+        - IDToken: []
 
       responses:
         200:
-          description: Successfully sent tar ball to the worker
+          description: Request executed successfully. Returned an empty response
+            generate/resend of OTP and the entire worker record for verify.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Empty object for generate / resend OTP
+                  - type: object
+                    description: Entire worker record on successful verification.
+                    $ref: '#/components/schemas/Worker'
+
+        400:
+          description: Missing phone number and OTP (for verify).
+
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+        403:
+          description: Access code is already used by another phone number.
+
+        408:
+          description: Time limit exceeded before the verify request was sent.
+
+        429:
+          description: Request rate for sending OTP exceeded. Rate will be
+            by the server. Only for generate and resend.
+
+        503:
+          description: Unable to send OTP. Or OTP service currently unavailable.
+            Only for generate and resend.
+
+  /language_assets/{code}:
+    get:
+      description: Get the file asset for the language with the specified code.
+        The response will be a tar ball with all audio files.
+
+      parameters:
+        - name: code
+          description: ISO 639-1 code for the language
+          schema: { type: string }
+          in: query
+          required: true
+
+      security:
+        - AccessCode: []
+        - IDToken: []
+
+      responses:
+        200:
+          description: Successfully returned language asset to worker.
           content:
             application/tgz:
               schema:
                 type: string
                 format: binary
 
-        400:
-          description: Invalid request.
-
         401:
-          description: Unauthorized request. Invalid id token.
+          $ref: '#/components/responses/Unauthorized'
+
+        400:
+          description: Missing code in query parameter
 
         404:
-          description: Could not find file with the given ID.
+          description: No assets for the specified language
+
+  /assignment/{id}/input_file:
+    get:
+      description: Get the input file for a particular assignment.
+
+      parameters:
+        - name: id
+          description: ID of the assignment
+          in: query
+          schema: { type: string }
+          required: true
+
+      security:
+        - IDToken: []
+
+      responses:
+        200:
+          description: Successfully returned input file to worker.
+          content:
+            application/tgz:
+              schema:
+                type: string
+                format: binary
+
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+        403:
+          description: Assignment was not made to the requesting user.
+
+        404:
+          description: Assignment does not exist with the given id or the
+            particular assignment does not have an input file.
+
+  /assignment/{id}/output_file:
+    post:
+      description: Submit the output file for a particular assignment.
+
+      parameters:
+        - name: id
+          description: ID of the assignment
+          in: query
+          schema: { type: string }
+          required: true
+
+      security:
+        - IDToken: []
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                algorithm:
+                  type: string
+                  description: Algorithm used to create the checksum
+                checksum:
+                  type: string
+                  description: Checksum for the uploaded file
+
+      responses:
+        200:
+          description: Successfully created (or updated) output file for
+            assignment. Returned the karya file record for the file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KaryaFile'
+
+        400:
+          description: Missing fields in the request body, or no file or invalid
+            checksum.
+
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+        403:
+          description: Assignment was not made the the requesting user.
+
+        404:
+          description: Assignment does not exist for the given ID.
+
+  /worker/log_file:
+    post:
+      description: Upload or replace a log file created for the current worker.
+
+      security:
+        - IDToken: []
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                algorithm:
+                  type: string
+                  description: Algorithm used to create the checksum
+                checksum:
+                  type: string
+                  description: Checksum for the uploaded file
+                timestamp:
+                  type: string
+                  description: Unique timestamp to identify the file with (e.g.,
+                    date on which it was created).
+
+      responses:
+        200:
+          description: Successfully created (or updated) log file for worker.
+            Returns the karya file record for the newly created file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KaryaFile'
+
+        400:
+          description: Missing fields in the request body, or no file or invalid
+            checksum.
+
+        401:
+          $ref: '#/components/responses/Unauthorized'
 
   /assignments:
     put:
       description: Submit all completed and skipped assignments.
+
+      security:
+        - IDToken: []
 
       requestBody:
         content:
@@ -210,21 +339,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MicrotaskAssignment'
+                  type: string
 
         400:
-          description: Invalid request.
+          description: Invalid or an empty request.
 
         401:
-          description: Unauthorized request. Invalid id token.
+          $ref: '#/components/responses/Unauthorized'
 
     get:
       description: Get assignments (new or verified) that were last updated
-        beyond the timestamp specified in the request.
-        For new assignments, the response includes all the microtask records and
-        the task information associated with the assignments.
-        For verified assignments, the response only includes the relevant
-        information from the list of assignments.
+        beyond the timestamp specified in the request. For new assignments, the
+        response includes all the microtask records and the task information
+        associated with the assignments. For verified assignments, the response
+        only includes the relevant information from the list of assignments.
 
       parameters:
         - name: type
@@ -239,6 +367,9 @@ paths:
           in: query
           required: false
           schema: { type: string }
+
+      security:
+        - IDToken: []
 
       responses:
         200:
@@ -272,10 +403,10 @@ paths:
                       $ref: '#/components/schemas/MicrotaskAssignment'
 
         400:
-          description: Invalid request.
+          description: Missing type or from fields in query.
 
         401:
-          description: Unauthorized request. Invalid id token.
+          $ref: '#/components/responses/Unauthorized'
 
   /payment_methods:
     post:
@@ -405,37 +536,250 @@ components:
   schemas:
     Worker:
       type: object
+      properties:
+        id:
+          type: string
+        local_id:
+          type: string
+        box_id:
+          type: string
+        creation_code:
+          type: string
+        auth_provider:
+          type: string
+        username:
+          type: string
+        salt:
+          type: string
+        passwd_hash:
+          type: string
+        phone_number:
+          type: string
+        email:
+          type: string
+        oauth_id:
+          type: string
+        id_token:
+          type: string
+        full_name:
+          type: string
+        profile_picture:
+          type: string
+        age:
+          type: string
+        gender:
+          type: string
+        app_language:
+          type: string
+        last_sent_to_box_at:
+          type: string
+        last_received_from_box_at:
+          type: string
+        last_sent_to_server_at:
+          type: string
+        last_received_from_server_at:
+          type: string
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     Language:
       type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        primary_language_name:
+          type: string
+        locale:
+          type: string
+        iso_639_3_code:
+          type: string
+        script:
+          type: string
+        string_support:
+          type: boolean
+        file_support:
+          type: boolean
+        list_support:
+          type: boolean
+        update_lrv_file:
+          type: boolean
+        lrv_file_id:
+          type: boolean
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     KaryaFile:
       type: object
+      properties:
+        id:
+          type: string
+        local_id:
+          type: string
+        box_id:
+          type: string
+        container_name:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        creator:
+          type: string
+        worker_id:
+          type: string
+        algorithm:
+          type: string
+        checksum:
+          type: string
+        in_box:
+          type: boolean
+        in_server:
+          type: boolean
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     MicrotaskAssignment:
       type: object
+      properties:
+        id:
+          type: string
+        local_id:
+          type: string
+        box_id:
+          type: string
+        microtask_id:
+          type: string
+        worker_id:
+          type: string
+        deadline:
+          type: string
+        status:
+          type: string
+        completed_at:
+          type: string
+        output:
+          type: object
+        output_file_id:
+          type: string
+        credits:
+          type: number
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     Microtask:
       type: object
+      properties:
+        id:
+          type: string
+        task_id:
+          type: string
+        group_id:
+          type: string
+        input:
+          type: object
+        input_file_id:
+          type: string
+        deadline:
+          type: string
+        credits:
+          type: number
+        status:
+          type: string
+        output:
+          type: object
+        params:
+          type: object
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     Task:
       type: object
+      properties:
+        id:
+          type: string
+        work_provider_id:
+          type: string
+        language_id:
+          type: string
+        scenario_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        primary_language_name:
+          type: string
+        primary_language_description:
+          type: string
+        params:
+          type: object
+        errors:
+          type: object
+        actions:
+          type: object
+        input_file_id:
+          type: string
+        output_file_id:
+          type: string
+        budget:
+          type: number
+        deadline:
+          type: string
+        assignment_granularity:
+          type: string
+        group_assignment_order:
+          type: string
+        microtask_assignment_order:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+        last_updated_at:
+          type: string
+
     PaymentMethod:
       type: object
+
     Payment:
       type: object
 
   securitySchemes:
-    access_code:
+    AccessCode:
       type: apiKey
-      name: x-access-code
-      description: Unique access code provided to each worker. This access code
-        can be used only once to associate a worker record with a specific phone
-        number. After that, this authentication method will be rejected by the
-        server.
+      description: Unique access code provided to each worker. This
+        authentication method can be used for the end points that help associate
+        a phone number to the corresponding worker record, and end points that
+        are not worker specific (e.g., get language assets).
       in: header
+      name: access-code
 
-    id_token:
+    IDToken:
       type: http
       scheme: bearer
       description: ID token generated by the server upon successful verification
         of the OTP.
 
-security:
-  - access_code: []
-  - id_token: []
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication information
