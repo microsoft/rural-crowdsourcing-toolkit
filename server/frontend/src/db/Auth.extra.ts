@@ -3,7 +3,7 @@
 
 /** Additional types needed for authentication */
 
-import { AuthProviderType } from '@karya/db';
+import { AuthProviderType } from '@karya/common';
 
 /** Auth header to be attached to each request */
 export type AuthHeader = {

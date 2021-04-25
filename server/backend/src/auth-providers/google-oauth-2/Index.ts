@@ -5,7 +5,7 @@
 
 import { OAuth2Client } from 'google-auth-library';
 
-import { WorkProvider } from '@karya/db';
+import { WorkProvider } from '@karya/common';
 import { IAuthProvider, IDTokenVerificationResponse, UserSignUpResponse } from '../common/AuthProviderInterface';
 import { envGetString } from '@karya/misc-utils';
 

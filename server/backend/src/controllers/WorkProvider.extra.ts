@@ -4,7 +4,7 @@
 // Implements APIs on the work_provider table. These APIs require extra checks to
 // ensure that a work provider is allowed to access only there records.
 
-import { WorkProvider, BasicModel } from '@karya/db';
+import { WorkProvider, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import { getCreationCode } from '@karya/misc-utils';
 import * as HttpResponse from '@karya/http-response';

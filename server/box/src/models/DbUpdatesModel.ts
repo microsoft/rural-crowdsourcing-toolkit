@@ -8,7 +8,7 @@
 import { Promise as BBPromise } from 'bluebird';
 import box_id from '../config/box_id';
 import { this_box } from '../config/ThisBox';
-import { DbRecordType, DbTableName, WorkerRecord, tableList, BasicModel } from '@karya/db';
+import { DbRecordType, DbTableName, WorkerRecord, tableList, BasicModel } from '@karya/common';
 import { handleMicrotaskAssignmentCompletion } from '../scenarios/AssignmentService';
 import logger from '../utils/Logger';
 

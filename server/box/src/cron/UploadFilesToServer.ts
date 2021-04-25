@@ -9,7 +9,7 @@ import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import box_id from '../config/box_id';
-import { KaryaFileRecord, BasicModel } from '@karya/db';
+import { KaryaFileRecord, BasicModel } from '@karya/common';
 import logger from '../utils/Logger';
 import { BackendFetch } from './HttpUtils';
 import { envGetString } from '@karya/misc-utils';

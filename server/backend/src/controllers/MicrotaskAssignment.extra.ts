@@ -13,9 +13,9 @@ import {
   MicrotaskAssignmentRecord,
   tableFilterColumns,
   BasicModel,
-} from '@karya/db';
+} from '@karya/common';
 import { getControllerError } from './ControllerErrors';
-import { getBlobSASURL } from '@karya/blobstore';
+import { getBlobSASURL } from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 

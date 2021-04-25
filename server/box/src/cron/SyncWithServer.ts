@@ -4,7 +4,7 @@
 /** Function to execute sequence of steps to sync with the server */
 
 import logger from '../utils/Logger';
-import { BasicModel } from '@karya/db';
+import { BasicModel } from '@karya/common';
 import { downloadPendingKaryaFiles, getNewSASTokens } from './DownloadFilesFromBlobStore';
 import { getUpdatesFromServer } from './GetUpdatesFromServer';
 import { sendUpdatesToServer } from './SendUpdatesToServer';

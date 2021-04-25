@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import box_id from '../config/box_id';
-import { knex, setupDbConnection, Worker, WorkerRecord, BasicModel } from '@karya/db';
+import { knex, setupDbConnection, Worker, WorkerRecord, BasicModel } from '@karya/common';
 import { getCreationCode } from '@karya/misc-utils';
 import logger from '../utils/Logger';
 

@@ -12,8 +12,8 @@ import {
   BasicModel,
   MicrotaskModel,
   MicrotaskGroupModel,
-} from '@karya/db';
-import { PolicyName, policyMap } from '@karya/policies';
+} from '@karya/common';
+import { PolicyName, policyMap } from '@karya/common';
 
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments

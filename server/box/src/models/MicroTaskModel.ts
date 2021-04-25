@@ -3,7 +3,7 @@
 
 /** Extra model functions for the language resource table */
 
-import { knex, MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/db';
+import { knex, MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/common';
 
 /**
  * Get a list of microtask records from the specified task that can

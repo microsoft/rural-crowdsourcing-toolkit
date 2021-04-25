@@ -3,19 +3,12 @@
 
 /** The file implements the phone-otp auth provider interface */
 
-import { Worker, WorkerRecord } from '@karya/db';
+import { Worker, WorkerRecord } from '@karya/common';
 import { generateToken, verifyToken } from '../AuthUtils';
-import {
-  IAuthProvider,
-  IDTokenVerificationResponse,
-  UserSignUpResponse,
-} from '../common/AuthProviderInterface';
+import { IAuthProvider, IDTokenVerificationResponse, UserSignUpResponse } from '../common/AuthProviderInterface';
 
 // User signup function
-async function signUpUser(
-  userInfo: Worker,
-  ccRecord: WorkerRecord,
-): Promise<UserSignUpResponse> {
+async function signUpUser(userInfo: Worker, ccRecord: WorkerRecord): Promise<UserSignUpResponse> {
   // If no phone number, return
   if (!userInfo.phone_number) {
     return { success: false, message: 'Need phone number' };
@@ -38,9 +31,7 @@ async function signUpUser(
 }
 
 // Token verification function
-async function verifyIDToken(
-  idToken: string,
-): Promise<IDTokenVerificationResponse> {
+async function verifyIDToken(idToken: string): Promise<IDTokenVerificationResponse> {
   return verifyToken(idToken);
 }
 

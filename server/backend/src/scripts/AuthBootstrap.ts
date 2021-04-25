@@ -3,7 +3,7 @@
 
 /** Script to bootstrap authentication */
 
-import { WorkProvider, BasicModel } from '@karya/db';
+import { WorkProvider, BasicModel } from '@karya/common';
 import { getCreationCode } from '@karya/misc-utils';
 
 /**

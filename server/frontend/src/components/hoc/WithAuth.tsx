@@ -10,7 +10,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 // DB types
-import { WorkProviderRecord } from '@karya/db';
+import { WorkProviderRecord } from '@karya/common';
 
 // Map current work provider state to props
 const mapStateToProps = (state: RootState) => {

@@ -4,7 +4,7 @@
 // Define the interaface that should be implemented for different auth
 // providers.
 
-import { AuthProviderType, WorkProvider } from '@karya/db';
+import { AuthProviderType, WorkProvider } from '@karya/common';
 
 /**
  * Response type for the verify user function.

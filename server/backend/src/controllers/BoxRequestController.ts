@@ -8,11 +8,11 @@
 import { randomBytes } from 'crypto';
 import * as jwtSimple from 'jwt-simple';
 import RawBody from 'raw-body';
-import { Box, BoxRecord, KaryaFileRecord, BasicModel } from '@karya/db';
+import { Box, BoxRecord, KaryaFileRecord, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import * as BoxRequestModel from '../models/BoxRequestModel';
 import { getChecksum } from '../models/KaryaFileModel';
-import * as BS from '@karya/blobstore';
+import * as BS from '@karya/common';
 import { compress, decompress } from '@karya/compression';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

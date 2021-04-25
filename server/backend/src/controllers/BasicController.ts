@@ -5,7 +5,7 @@
 // tables in the database.
 
 import { getControllerError } from './ControllerErrors';
-import { BasicModel } from '@karya/db';
+import { BasicModel } from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 

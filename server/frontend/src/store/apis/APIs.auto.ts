@@ -3,7 +3,7 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import * as DBT from '@karya/db';
+import * as DBT from '@karya/common';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'work_provider'

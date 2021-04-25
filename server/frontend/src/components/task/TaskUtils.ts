@@ -3,7 +3,7 @@
 
 /** Utility functions for rendering task components */
 
-import { TaskRecord, TaskStatus } from '@karya/db';
+import { TaskRecord, TaskStatus } from '@karya/common';
 
 // task status function
 export const taskStatus = (task: TaskRecord): string => {

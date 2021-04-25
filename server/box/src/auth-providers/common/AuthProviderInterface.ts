@@ -4,11 +4,7 @@
 // Define the interaface that should be implemented for different auth
 // providers.
 
-import {
-  AuthProviderType,
-  Worker,
-  WorkerRecord,
-} from '@karya/db';
+import { AuthProviderType, Worker, WorkerRecord } from '@karya/common';
 
 /**
  * Response type for the verify user function.
@@ -32,10 +28,7 @@ export interface IAuthProvider {
 
   // function to verify the supplied user information and fill out the remaining
   // fields of the auth object.
-  signUpUser(
-    userInfo: Worker,
-    ccRecord: WorkerRecord,
-  ): Promise<UserSignUpResponse>;
+  signUpUser(userInfo: Worker, ccRecord: WorkerRecord): Promise<UserSignUpResponse>;
 
   // function to verify id_token
   verifyIDToken(id_token: string): Promise<IDTokenVerificationResponse>;

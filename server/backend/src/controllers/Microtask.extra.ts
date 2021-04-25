@@ -12,7 +12,7 @@ import {
   TaskRecord,
   tableFilterColumns,
   BasicModel,
-} from '@karya/db';
+} from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

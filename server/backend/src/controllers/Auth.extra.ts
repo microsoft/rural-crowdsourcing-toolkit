@@ -6,7 +6,7 @@
  */
 
 import { signUpUser } from '../auth-providers/Index';
-import { BasicModel, AuthProviderType, WorkProvider, WorkProviderRecord } from '@karya/db';
+import { BasicModel, AuthProviderType, WorkProvider, WorkProviderRecord } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

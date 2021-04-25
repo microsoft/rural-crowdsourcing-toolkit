@@ -4,7 +4,7 @@
 // This file defines a basic set of controllers that can be used by all the
 // tables in the database.
 
-import { BoxUpdatableTables, BasicModel } from '@karya/db';
+import { BoxUpdatableTables, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';

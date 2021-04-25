@@ -6,7 +6,7 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/db';
+import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/common';
 import { bootstrapAuth } from './AuthBootstrap';
 import logger from '../utils/Logger';
 

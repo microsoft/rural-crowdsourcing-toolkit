@@ -10,8 +10,8 @@ import Koa from 'koa';
 import logger from './utils/Logger';
 import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
 import router from './routes/Routes';
-import { setupDbConnection } from '@karya/db';
-import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/blobstore';
+import { setupDbConnection } from '@karya/common';
+import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 
 // Setup Koa application

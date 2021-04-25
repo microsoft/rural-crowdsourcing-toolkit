@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as fs from 'fs';
-import { KaryaFile, BasicModel } from '@karya/db';
+import { KaryaFile, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import { insertWorkerFile } from '../models/KaryaFileModel';
 import * as HttpResponse from '@karya/http-response';

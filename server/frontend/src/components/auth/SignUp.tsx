@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import M from 'materialize-css'
+import M from 'materialize-css';
 
 import React, { ChangeEventHandler, Component, FormEventHandler } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
@@ -22,7 +22,7 @@ import GoogleLogin from 'react-google-login';
 import config from '../../config/Index';
 
 /** Types needed for database tables */
-import { WorkProvider } from '@karya/db';
+import { WorkProvider } from '@karya/common';
 
 /** Router props (for history) */
 type RouterProps = RouteComponentProps<{}>;

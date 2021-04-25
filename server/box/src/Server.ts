@@ -5,11 +5,11 @@ import cors from '@koa/cors';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import Koa from 'koa';
-import { setupDbConnection } from '@karya/db';
+import { setupDbConnection } from '@karya/common';
 import { SetBox } from './config/ThisBox';
 import { authenticateRequest, httpRequestLogger } from './routes/Middlewares';
 import router from './routes/Routes';
-import { containerNames } from '@karya/blobstore';
+import { containerNames } from '@karya/common';
 import logger from './utils/Logger';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 

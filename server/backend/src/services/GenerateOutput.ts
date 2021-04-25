@@ -5,8 +5,8 @@
  * Handler for task output generation
  */
 
-import { TaskRecord } from '@karya/db';
-import { generateOutput } from '@karya/scenarios';
+import { TaskRecord } from '@karya/common';
+import { generateOutput } from '@karya/common';
 
 /**
  * Handler to start output file generation for a task

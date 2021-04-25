@@ -4,7 +4,7 @@
 // Implements additional APIs for the 'box' table that could not be auto
 // implemented.
 
-import { Box, BasicModel } from '@karya/db';
+import { Box, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import { getCreationCode } from '@karya/misc-utils';
 import * as HttpResponse from '@karya/http-response';

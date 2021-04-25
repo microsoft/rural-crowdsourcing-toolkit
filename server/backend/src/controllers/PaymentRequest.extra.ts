@@ -7,7 +7,7 @@ import { getControllerError } from './ControllerErrors';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
 
-import { knex, PaymentRequestRecord, PayoutInfo, PayoutInfoRecord, BasicModel } from '@karya/db';
+import { knex, PaymentRequestRecord, PayoutInfo, PayoutInfoRecord, BasicModel } from '@karya/common';
 
 /**
  * Function to retrieve payment request records. This request can have a

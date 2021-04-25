@@ -5,7 +5,7 @@
 
 import { randomBytes } from 'crypto';
 import * as jwt from 'jsonwebtoken';
-import { Worker, WorkerRecord, BasicModel } from '@karya/db';
+import { Worker, WorkerRecord, BasicModel } from '@karya/common';
 import { IDTokenVerificationResponse } from './common/AuthProviderInterface';
 
 const audience = 'karya-box';

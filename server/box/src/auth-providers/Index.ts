@@ -6,7 +6,7 @@
  */
 
 /** Import necessary DB types */
-import { AuthProviderType, Worker, WorkerRecord, BasicModel } from '@karya/db';
+import { AuthProviderType, Worker, WorkerRecord, BasicModel } from '@karya/common';
 
 /** Import types from auth interaface */
 import { IDTokenVerificationResponse, UserSignUpResponse } from './common/AuthProviderInterface';

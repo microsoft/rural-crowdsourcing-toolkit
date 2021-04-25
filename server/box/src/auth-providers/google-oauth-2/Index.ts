@@ -4,7 +4,7 @@
 /** This file implements the google oauth2 auth provider interface. */
 
 import { OAuth2Client } from 'google-auth-library';
-import { Worker, WorkerRecord } from '@karya/db';
+import { Worker, WorkerRecord } from '@karya/common';
 import { IAuthProvider, IDTokenVerificationResponse, UserSignUpResponse } from '../common/AuthProviderInterface';
 import { envGetString } from '@karya/misc-utils';
 

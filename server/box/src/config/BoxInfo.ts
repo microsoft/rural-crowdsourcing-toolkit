@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { Box } from '@karya/db';
+import { Box } from '@karya/common';
 
 export const boxInfo: Box = {
   location_name: '<Enter Box Location Name>',

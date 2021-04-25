@@ -4,7 +4,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import { boxInfo } from '../config/BoxInfo';
-import { knex, setupDbConnection, BoxRecord } from '@karya/db';
+import { knex, setupDbConnection, BoxRecord } from '@karya/common';
 import logger from '../utils/Logger';
 import { envGetString } from '@karya/misc-utils';
 

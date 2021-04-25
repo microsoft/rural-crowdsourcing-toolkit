@@ -5,7 +5,7 @@
  * Script to reset the database and initialize some basic tables
  */
 
-import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/db';
+import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/common';
 import logger from '../utils/Logger';
 
 /** Main Script to reset the DB */

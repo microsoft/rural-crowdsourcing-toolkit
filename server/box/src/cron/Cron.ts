@@ -10,7 +10,7 @@ import * as cron from 'node-cron';
 import logger from '../utils/Logger';
 
 import { syncWithServer } from './SyncWithServer';
-import { setupDbConnection } from '@karya/db';
+import { setupDbConnection } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 
 // Status of active cron job

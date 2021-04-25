@@ -5,10 +5,10 @@
  * Model functions to handle queries from a box
  */
 
-import { BoxRecord, BoxUpdatableTables, DbRecordType, DbTableName, tableList, BasicModel } from '@karya/db';
+import { BoxRecord, BoxUpdatableTables, DbRecordType, DbTableName, tableList, BasicModel } from '@karya/common';
 
 import { Promise as BBPromise } from 'bluebird';
-import { getBlobSASURL } from '@karya/blobstore';
+import { getBlobSASURL } from '@karya/common';
 
 const boxUpdatableTables: BoxUpdatableTables[] = [
   'worker',

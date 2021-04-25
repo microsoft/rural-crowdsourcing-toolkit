@@ -5,7 +5,7 @@
  * Controllers to send/receive updates from worker
  */
 
-import { WorkerRecord } from '@karya/db';
+import { WorkerRecord } from '@karya/common';
 import {
   applyUpdatesFromWorker,
   getUpdatesForWorker,

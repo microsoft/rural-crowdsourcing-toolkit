@@ -6,7 +6,7 @@
  */
 
 import { this_box } from '../config/ThisBox';
-import { DbTableName } from '@karya/db';
+import { DbTableName } from '@karya/common';
 import { applyUpdatesFromServer, TableUpdates } from '../models/DbUpdatesModel';
 import { decompress } from '@karya/compression';
 import logger from '../utils/Logger';

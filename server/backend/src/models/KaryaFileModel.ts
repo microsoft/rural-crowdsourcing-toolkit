@@ -6,8 +6,8 @@
  */
 
 import md5File from 'md5-file';
-import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/db';
-import { BlobParameters, getBlobName, uploadBlobFromFile } from '@karya/blobstore';
+import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/common';
+import { BlobParameters, getBlobName, uploadBlobFromFile } from '@karya/common';
 
 /**
  * Handler to upload a karya file to the blob store, create its checksum and add

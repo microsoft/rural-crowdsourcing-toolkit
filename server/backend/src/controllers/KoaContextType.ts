@@ -4,7 +4,7 @@
 /** Defining the Koa context type with the appropriate state */
 
 import { ParameterizedContext } from 'koa';
-import { BoxRecord, DbTableName, WorkProviderRecord } from '@karya/db';
+import { BoxRecord, DbTableName, WorkProviderRecord } from '@karya/common';
 
 /** Karya state */
 type KaryaState = {

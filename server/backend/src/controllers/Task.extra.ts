@@ -6,12 +6,12 @@
 // provider can only access tasks that they have created. Hence, they could not
 // be auto generated.
 
-import { Task, TaskRecord, BasicModel } from '@karya/db';
+import { Task, TaskRecord, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
-import * as BlobStore from '@karya/blobstore';
+import * as BlobStore from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaHTTPContext } from './KoaContextType';
-import { validateTaskParameters } from '@karya/scenarios';
+import { validateTaskParameters } from '@karya/common';
 
 /**
  * Function to create a work provider filter either based on an explicit query

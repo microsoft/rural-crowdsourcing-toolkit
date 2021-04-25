@@ -8,8 +8,8 @@
 import { promises as fsp } from 'fs';
 import md5File from 'md5-file';
 import box_id from '../config/box_id';
-import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/db';
-import { BlobParameters, getBlobName } from '@karya/blobstore';
+import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/common';
+import { BlobParameters, getBlobName } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 
 /**

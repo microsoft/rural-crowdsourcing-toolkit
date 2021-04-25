@@ -3,10 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@karya/db": "^2.0.0",
-    "@karya/languages": "^2.0.0",
-    "@karya/policies": "^2.0.0",
-    "@karya/scenarios": "^2.0.0",
+    "@karya/common": "^2.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "axios": "^0.21.1",
     "bluebird": "^3.7.2",
