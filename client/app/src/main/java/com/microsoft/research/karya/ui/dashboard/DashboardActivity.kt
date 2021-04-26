@@ -119,8 +119,7 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
   /** Set initial UI strings */
   override suspend fun setInitialUIStrings() {
 
-    val syncText =
-        "$getNewTasksString - $submitCompletedTasksString - $getVerifiedTasksString - $updateEarningString"
+    val syncText = "$getNewTasksString - $submitCompletedTasksString - $getVerifiedTasksString - $updateEarningString"
     syncPromptTv.text = syncText
   }
 
@@ -254,22 +253,22 @@ class DashboardActivity : BaseActivity(), OnDashboardTaskAdapterClick {
 
     runBlocking {
       ioScope
-          .launch {
-            taskRecord = karyaDb.taskDao().getById(task.taskID)
-            scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
-          }
-          .join()
+        .launch {
+          taskRecord = karyaDb.taskDao().getById(task.taskID)
+          scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
+        }
+        .join()
     }
 
     val nextIntent =
-        when (scenarioRecord?.name) {
-          "story-speech" -> Intent(this, StorySpeechMain::class.java)
-          "speech-data" -> Intent(this, SpeechDataMain::class.java)
-          "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-          else -> {
-            throw Exception("Unimplemented scenario")
-          }
+      when (scenarioRecord?.name) {
+        "story-speech" -> Intent(this, StorySpeechMain::class.java)
+        "speech-data" -> Intent(this, SpeechDataMain::class.java)
+        "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
+        else -> {
+          throw Exception("Unimplemented scenario")
         }
+      }
 
     nextIntent.putExtra("taskID", task.taskID)
     nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
