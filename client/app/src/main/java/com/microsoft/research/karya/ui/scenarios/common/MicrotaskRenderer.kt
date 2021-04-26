@@ -12,9 +12,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.FileUtils
 import java.io.File

@@ -7,7 +7,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 
 @Dao
 interface MicrotaskAssignmentDaoExtra {

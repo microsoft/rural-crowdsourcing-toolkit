@@ -138,15 +138,17 @@ abstract class NetworkActivity(
     /** Compare with current time */
     val current = System.currentTimeMillis() / 1000
     if (current - body.iat > DAY45_IN_SECONDS || current > body.exp) {
-      val updatedWorkerResponse = karyaAPI.refreshIdToken(thisWorker.auth_provider.toString(), thisWorker.id_token!!)
-      if (updatedWorkerResponse.isSuccessful) {
-        val updatedWorker = updatedWorkerResponse.body()!!
-        val newToken = updatedWorker.id_token!!
-        karyaDb.workerDaoExtra().updateIdToken(newToken)
-        thisWorker.id_token = newToken
-      } else {
-        throw Exception("Could not refresh ID Token")
-      }
+      //      val updatedWorkerResponse =
+      //          karyaAPI.refreshIdToken(thisWorker.auth_provider.toString(),
+      // thisWorker.id_token!!)
+      //      if (updatedWorkerResponse.isSuccessful) {
+      //        val updatedWorker = updatedWorkerResponse.body()!!
+      //        val newToken = updatedWorker.id_token!!
+      //        karyaDb.workerDaoExtra().updateIdToken(newToken)
+      //        thisWorker.id_token = newToken
+      //      } else {
+      //        throw Exception("Could not refresh ID Token")
+      //      }
     }
   }
 
