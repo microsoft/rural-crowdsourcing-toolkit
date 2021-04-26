@@ -17,9 +17,9 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import kotlinx.android.synthetic.main.item_task.view.*
 
 class TaskListAdapter(
-    val context: Context,
-    private val onDashboardTaskAdapterClick: OnDashboardTaskAdapterClick,
-    val activity: DashboardActivity,
+  val context: Context,
+  private val onDashboardTaskAdapterClick: OnDashboardTaskAdapterClick,
+  val activity: DashboardActivity,
 ) : RecyclerView.Adapter<TaskViewHolder>() {
 
   private var tasks: List<TaskInfo> = mutableListOf()
@@ -75,10 +75,10 @@ class TaskListAdapter(
   }
 
   fun setLabels(
-      incompleteLabel: String,
-      completedLabel: String,
-      submittedLabel: String,
-      verifiedLabel: String,
+    incompleteLabel: String,
+    completedLabel: String,
+    submittedLabel: String,
+    verifiedLabel: String,
   ) {
     incompleteMicrotasksLabel = incompleteLabel
     completedMicrotasksLabel = completedLabel

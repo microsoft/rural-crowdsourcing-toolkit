@@ -17,8 +17,7 @@ interface KaryaFileDao : BasicDao<KaryaFileRecord> {
 
   @Query("SELECT * FROM karya_file") suspend fun getAll(): List<KaryaFileRecord>
 
-  @Query("SELECT * FROM karya_file WHERE id == :id")
-  suspend fun getById(id: String): KaryaFileRecord
+  @Query("SELECT * FROM karya_file WHERE id == :id") suspend fun getById(id: String): KaryaFileRecord
 
   /** Upsert a [record] in the table */
   @Transaction

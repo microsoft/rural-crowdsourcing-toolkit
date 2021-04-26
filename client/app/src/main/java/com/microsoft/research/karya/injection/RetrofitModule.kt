@@ -43,26 +43,22 @@ class RetrofitModule {
   @Reusable
   fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
     return OkHttpClient.Builder()
-        .apply {
-          if (BuildConfig.DEBUG) {
-            addNetworkInterceptor(httpLoggingInterceptor)
-          }
+      .apply {
+        if (BuildConfig.DEBUG) {
+          addNetworkInterceptor(httpLoggingInterceptor)
         }
-        .build()
+      }
+      .build()
   }
 
   @Provides
   @Reusable
   fun provideRetrofitInstance(
-      @BaseUrlQualifier baseUrl: String,
-      converterFactory: GsonConverterFactory,
-      okHttpClient: OkHttpClient
+    @BaseUrlQualifier baseUrl: String,
+    converterFactory: GsonConverterFactory,
+    okHttpClient: OkHttpClient
   ): Retrofit {
-    return Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl(baseUrl)
-        .addConverterFactory(converterFactory)
-        .build()
+    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl).addConverterFactory(converterFactory).build()
   }
 
   @Provides

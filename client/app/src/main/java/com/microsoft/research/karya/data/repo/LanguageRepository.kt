@@ -11,8 +11,8 @@ import kotlinx.coroutines.withContext
 class LanguageRepository
 @Inject
 constructor(
-    private val languageAPI: LanguageAPI,
-    private val languageDao: LanguageDao,
+  private val languageAPI: LanguageAPI,
+  private val languageDao: LanguageDao,
 ) {
   fun getLanguages(accessCode: String) = flow {
     val response = languageAPI.getLanguages(accessCode)
@@ -32,5 +32,5 @@ constructor(
   suspend fun getLanguageById(id: Int) = withContext(Dispatchers.IO) { languageDao.getById(id) }
 
   suspend fun upsertLanguageRecords(records: List<LanguageRecord>) =
-      withContext(Dispatchers.IO) { languageDao.upsert(records) }
+    withContext(Dispatchers.IO) { languageDao.upsert(records) }
 }

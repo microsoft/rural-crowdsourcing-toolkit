@@ -26,8 +26,7 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
   private fun downloadResourceFiles() {
     val fileDownloadFlow =
-        resourceManager.downloadLanguageResources(
-            WorkerInformation.creation_code!!, WorkerInformation.app_language!!)
+      resourceManager.downloadLanguageResources(WorkerInformation.creation_code!!, WorkerInformation.app_language!!)
 
     fileDownloadFlow.observe(lifecycle, lifecycleScope) { result ->
       when (result) {

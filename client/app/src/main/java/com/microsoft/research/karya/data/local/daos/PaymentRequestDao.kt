@@ -17,8 +17,7 @@ interface PaymentRequestDao : BasicDao<PaymentRequestRecord> {
 
   @Query("SELECT * FROM payment_request") suspend fun getAll(): List<PaymentRequestRecord>
 
-  @Query("SELECT * FROM payment_request WHERE id == :id")
-  suspend fun getById(id: String): PaymentRequestRecord
+  @Query("SELECT * FROM payment_request WHERE id == :id") suspend fun getById(id: String): PaymentRequestRecord
 
   /** Upsert a [record] in the table */
   @Transaction

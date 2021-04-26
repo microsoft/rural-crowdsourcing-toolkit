@@ -26,10 +26,10 @@ class NgDashboardActivity : AppCompatActivity() {
     with(binding) {
       // TODO: Convert this to one string instead of joining multiple strings
       val syncText =
-          "${getString(R.string.s_get_new_tasks)} - " +
-              "${getString(R.string.s_submit_completed_tasks)} - " +
-              "${getString(R.string.s_update_verified_tasks)} - " +
-              getString(R.string.s_update_earning)
+        "${getString(R.string.s_get_new_tasks)} - " +
+          "${getString(R.string.s_submit_completed_tasks)} - " +
+          "${getString(R.string.s_update_verified_tasks)} - " +
+          getString(R.string.s_update_earning)
 
       syncPromptTv.text = syncText
     }
@@ -65,13 +65,13 @@ class NgDashboardActivity : AppCompatActivity() {
 
     // task.scenarioID for now
     val nextIntent =
-        when (task.scenarioName) {
-          // Use [ScenarioType] enum once we migrate to it.
-          "story-speech" -> Intent(this, StorySpeechMain::class.java)
-          "speech-data" -> Intent(this, SpeechDataMain::class.java)
-          "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-          else -> error("Unimplemented scenario")
-        }
+      when (task.scenarioName) {
+        // Use [ScenarioType] enum once we migrate to it.
+        "story-speech" -> Intent(this, StorySpeechMain::class.java)
+        "speech-data" -> Intent(this, SpeechDataMain::class.java)
+        "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
+        else -> error("Unimplemented scenario")
+      }
 
     nextIntent.putExtra("taskID", task.taskID)
     nextIntent.putExtra("incomplete", task.incompleteMicrotasks)

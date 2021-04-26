@@ -9,8 +9,8 @@ import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.visible
 
 class NgTaskListAdapter(
-    private var tasks: List<TaskInfo>,
-    private val dashboardItemClick: (task: TaskInfo) -> Unit = {}
+  private var tasks: List<TaskInfo>,
+  private val dashboardItemClick: (task: TaskInfo) -> Unit = {}
 ) : RecyclerView.Adapter<NgTaskListAdapter.NgTaskViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NgTaskViewHolder {
@@ -44,8 +44,8 @@ class NgTaskListAdapter(
   }
 
   class NgTaskViewHolder(
-      private val binding: ItemTaskBinding,
-      private val dashboardItemClick: (task: TaskInfo) -> Unit
+    private val binding: ItemTaskBinding,
+    private val dashboardItemClick: (task: TaskInfo) -> Unit
   ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(taskInfo: TaskInfo) {

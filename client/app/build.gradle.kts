@@ -48,6 +48,13 @@ android {
     buildToolsVersion = "31.0.0-rc3"
 }
 
+ktfmt {
+    googleStyle()
+
+    maxWidth.set(120)
+    removeUnusedImports.set(true)
+}
+
 dependencyLocking {
     lockAllConfigurations()
 }

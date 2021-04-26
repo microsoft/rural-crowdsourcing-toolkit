@@ -13,9 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
-class WorkerRepository
-@Inject
-constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
+class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
 
   enum class OtpAction {
     GENERATE,
@@ -24,10 +22,10 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
   }
 
   fun getOrVerifyOTP(
-      accessCode: String,
-      phoneNumber: String,
-      otp: String,
-      action: String,
+    accessCode: String,
+    phoneNumber: String,
+    otp: String,
+    action: String,
   ) = flow {
     val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, otp, action)
     val workerRecord = response.body()
@@ -64,7 +62,7 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
   }
 
   fun getWorkerUsingIdToken(
-      idToken: String,
+    idToken: String,
   ) = flow {
     val response = workerAPI.getWorkerUsingIdToken(idToken)
     val workerRecord = response.body()
@@ -81,9 +79,9 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
   }
 
   fun updateWorker(
-      idToken: String,
-      accessCode: String,
-      registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
+    idToken: String,
+    accessCode: String,
+    registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
   ) = flow {
     val response = workerAPI.updateWorker(idToken, accessCode, registerOrUpdateWorkerRequest)
     val workerRecord = response.body()
@@ -103,15 +101,14 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
   }
 
   suspend fun getAllWorkers() =
-      withContext(Dispatchers.IO) {
-        return@withContext workerDao.getAll()
-      }
+    withContext(Dispatchers.IO) {
+      return@withContext workerDao.getAll()
+    }
 
   suspend fun getWorkerById(id: String) =
-      withContext(Dispatchers.IO) {
-        return@withContext workerDao.getById(id)
-      }
+    withContext(Dispatchers.IO) {
+      return@withContext workerDao.getById(id)
+    }
 
-  suspend fun upsertWorker(worker: WorkerRecord) =
-      withContext(Dispatchers.IO) { workerDao.upsert(worker) }
+  suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) { workerDao.upsert(worker) }
 }

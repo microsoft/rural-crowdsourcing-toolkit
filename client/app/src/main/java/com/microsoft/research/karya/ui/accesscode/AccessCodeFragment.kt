@@ -40,22 +40,23 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     with(binding) {
       /** Add text change listener to creation code */
       creationCodeEt.addTextChangedListener(
-          object : SeparatorTextWatcher('-', 4) {
-            override fun onAfterTextChanged(text: String, position: Int) {
-              creationCodeEt.run {
-                setText(text)
-                setSelection(position)
-              }
-
-              /** If creation code length has reached max, call handler */
-              if (creationCodeEt.length() == creationCodeEtMax) {
-                // TODO: call this once the user presses the button to move forward.
-                handleFullCreationCode()
-              } else {
-                clearErrorMessages()
-              }
+        object : SeparatorTextWatcher('-', 4) {
+          override fun onAfterTextChanged(text: String, position: Int) {
+            creationCodeEt.run {
+              setText(text)
+              setSelection(position)
             }
-          })
+
+            /** If creation code length has reached max, call handler */
+            if (creationCodeEt.length() == creationCodeEtMax) {
+              // TODO: call this once the user presses the button to move forward.
+              handleFullCreationCode()
+            } else {
+              clearErrorMessages()
+            }
+          }
+        }
+      )
       requestSoftKeyFocus(creationCodeEt)
     }
   }

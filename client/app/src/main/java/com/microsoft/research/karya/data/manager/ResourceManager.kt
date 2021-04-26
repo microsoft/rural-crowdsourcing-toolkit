@@ -20,9 +20,9 @@ import kotlinx.coroutines.withContext
 class ResourceManager
 @Inject
 constructor(
-    private val languageRepository: LanguageRepository,
-    private val karyaFileRepository: KaryaFileRepository,
-    private val filesDirPath: String,
+  private val languageRepository: LanguageRepository,
+  private val karyaFileRepository: KaryaFileRepository,
+  private val filesDirPath: String,
 ) {
   private val job = Job()
 
@@ -32,23 +32,23 @@ constructor(
     val languageResFolder = File(getAudioFolderPath(languageId))
 
     return languageResFolder.exists() &&
-        languageResFolder.isDirectory &&
-        languageResFolder.listFiles()?.isNotEmpty() ?: false
+      languageResFolder.isDirectory &&
+      languageResFolder.listFiles()?.isNotEmpty() ?: false
   }
 
   fun downloadLanguageResources(accessCode: String, languageId: Int) = flow {
     emit(Result.Loading)
 
     val languages =
-        languageRepository
-            .getLanguages(WorkerInformation.creation_code!!)
-            .flowOn(Dispatchers.IO)
-            .catch {
-              Log.d("ResourceManager", "Error downloading languageRecords")
-              emit(Result.Error(it))
-              return@catch
-            }
-            .single()
+      languageRepository
+        .getLanguages(WorkerInformation.creation_code!!)
+        .flowOn(Dispatchers.IO)
+        .catch {
+          Log.d("ResourceManager", "Error downloading languageRecords")
+          emit(Result.Error(it))
+          return@catch
+        }
+        .single()
 
     val languageRecord = languages.find { it.id == languageId }
 
@@ -56,20 +56,19 @@ constructor(
     val karyaFileId = languageRecord?.lrv_file_id ?: "2"
 
     val responseBody =
-        karyaFileRepository
-            .getKaryaFile(accessCode, "", karyaFileId)
-            .flowOn(Dispatchers.IO)
-            .catch {
-              Log.d("ResourceManager", "Error downloading KaryaFile")
-              emit(Result.Error(it))
-              return@catch
-            }
-            .single()
+      karyaFileRepository
+        .getKaryaFile(accessCode, "", karyaFileId)
+        .flowOn(Dispatchers.IO)
+        .catch {
+          Log.d("ResourceManager", "Error downloading KaryaFile")
+          emit(Result.Error(it))
+          return@catch
+        }
+        .single()
 
     withContext(Dispatchers.IO) {
       FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(languageId))
-      FileUtils.extractTarBallIntoDirectory(
-          getTarballPath(languageId), getAudioFolderPath(languageId))
+      FileUtils.extractTarBallIntoDirectory(getTarballPath(languageId), getAudioFolderPath(languageId))
     }
 
     emit(Result.Success(Unit))

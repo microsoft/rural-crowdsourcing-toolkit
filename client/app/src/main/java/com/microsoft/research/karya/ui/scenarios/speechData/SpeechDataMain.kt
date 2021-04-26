@@ -38,16 +38,17 @@ private const val AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT
  * activity presents a next and previous button to navigate around microtasks.
  */
 open class SpeechDataMain(
-    includeCompleted: Boolean = false,
-    finishOnGroupBoundary: Boolean = false,
-    prerecordingTime: Int = 250,
-    private val postRecordingTime: Int = 250,
+  includeCompleted: Boolean = false,
+  finishOnGroupBoundary: Boolean = false,
+  prerecordingTime: Int = 250,
+  private val postRecordingTime: Int = 250,
 ) :
-    MicrotaskRenderer(
-        activityName = "SPEECH_DATA",
-        includeCompleted = includeCompleted,
-        finishOnGroupBoundary = finishOnGroupBoundary,
-        useAssistant = true) {
+  MicrotaskRenderer(
+    activityName = "SPEECH_DATA",
+    includeCompleted = includeCompleted,
+    finishOnGroupBoundary = finishOnGroupBoundary,
+    useAssistant = true
+  ) {
   /**
    * UI button states
    *
@@ -90,8 +91,7 @@ open class SpeechDataMain(
   private var mediaPlayer: MediaPlayer? = null
 
   /** Audio recorder config parameters */
-  private val _minBufferSize =
-      AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
+  private val _minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
   private val _recorderBufferSize = _minBufferSize * 4
   private val _recorderBufferBytes = _recorderBufferSize
 
@@ -148,42 +148,33 @@ open class SpeechDataMain(
     setContentView(R.layout.speech_data_main)
 
     /** record instruction */
-    recordInstruction =
-        task.params.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+    recordInstruction = task.params.get("instruction").asString ?: getString(R.string.record_sentence_desc)
     recordPromptTv.text = recordInstruction
 
     /** Forced replace */
     noForcedReplay =
-        try {
-          task.params.get("noForcedReplay").asBoolean
-        } catch (e: Exception) {
-          false
-        }
+      try {
+        task.params.get("noForcedReplay").asBoolean
+      } catch (e: Exception) {
+        false
+      }
 
     /** Set card corner radius */
     recordBtnCv.addOnLayoutChangeListener {
-        _: View,
-        left: Int,
-        _: Int,
-        right: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
+      _: View,
+      left: Int,
+      _: Int,
+      right: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
     }
 
-    playBtnCv.addOnLayoutChangeListener {
-        _: View,
-        left: Int,
-        _: Int,
-        right: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
+    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
+      ->
       playBtnCv.radius = (right - left).toFloat() / 2
     }
 
@@ -410,8 +401,8 @@ open class SpeechDataMain(
        * state, resume player
        */
       ActivityState.FIRST_PLAYBACK -> {
-        if (previousActivityState == ActivityState.RECORDED ||
-            previousActivityState == ActivityState.ACTIVITY_STOPPED) {
+        if (previousActivityState == ActivityState.RECORDED || previousActivityState == ActivityState.ACTIVITY_STOPPED
+        ) {
           initializePlayer()
           mediaPlayer!!.setOnCompletionListener { setActivityState(ActivityState.COMPLETED) }
           playFile(scratchRecordingFilePath)
@@ -515,10 +506,10 @@ open class SpeechDataMain(
       ActivityState.ENCODING_NEXT -> {
         runBlocking {
           encodingJob =
-              ioScope.launch {
-                encodeRecording()
-                completeAndSaveCurrentMicrotask()
-              }
+            ioScope.launch {
+              encodeRecording()
+              completeAndSaveCurrentMicrotask()
+            }
           encodingJob?.join()
           moveToNextMicrotask()
           setActivityState(ActivityState.INIT)
@@ -531,10 +522,10 @@ open class SpeechDataMain(
       ActivityState.ENCODING_BACK -> {
         runBlocking {
           encodingJob =
-              ioScope.launch {
-                encodeRecording()
-                completeAndSaveCurrentMicrotask()
-              }
+            ioScope.launch {
+              encodeRecording()
+              completeAndSaveCurrentMicrotask()
+            }
           encodingJob?.join()
           moveToPreviousMicrotask()
           setActivityState(ActivityState.INIT)
@@ -581,36 +572,38 @@ open class SpeechDataMain(
   private fun playRecordPrompt() {
     val oldColor = sentenceTv.currentTextColor
     playAssistantAudio(
-        R.string.audio_record_sentence,
-        uiCue = {
-          sentenceTv.setTextColor(Color.parseColor("#CC6666"))
-          sentencePointerIv.visibility = View.VISIBLE
-        },
-        onCompletionListener = {
-          uiScope.launch {
-            sentenceTv.setTextColor(oldColor)
-            sentencePointerIv.visibility = View.INVISIBLE
-            delay(500)
-            playRecordAction()
-          }
-        })
+      R.string.audio_record_sentence,
+      uiCue = {
+        sentenceTv.setTextColor(Color.parseColor("#CC6666"))
+        sentencePointerIv.visibility = View.VISIBLE
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          sentenceTv.setTextColor(oldColor)
+          sentencePointerIv.visibility = View.INVISIBLE
+          delay(500)
+          playRecordAction()
+        }
+      }
+    )
   }
 
   private fun playRecordAction() {
     uiScope.launch {
       playAssistantAudio(
-          R.string.audio_record_action,
-          uiCue = {
-            recordPointerIv.visibility = View.VISIBLE
-            recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
-          },
-          onCompletionListener = {
-            uiScope.launch {
-              recordPointerIv.visibility = View.INVISIBLE
-              delay(500)
-              playStopAction()
-            }
-          })
+        R.string.audio_record_action,
+        uiCue = {
+          recordPointerIv.visibility = View.VISIBLE
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+        },
+        onCompletionListener = {
+          uiScope.launch {
+            recordPointerIv.visibility = View.INVISIBLE
+            delay(500)
+            playStopAction()
+          }
+        }
+      )
       delay(1500)
       recordBtn.setBackgroundResource(R.drawable.ic_mic_active)
     }
@@ -619,15 +612,16 @@ open class SpeechDataMain(
   private fun playStopAction() {
     uiScope.launch {
       playAssistantAudio(
-          R.string.audio_stop_action,
-          uiCue = { recordPointerIv.visibility = View.VISIBLE },
-          onCompletionListener = {
-            uiScope.launch {
-              recordPointerIv.visibility = View.INVISIBLE
-              delay(500)
-              playListenAction()
-            }
-          })
+        R.string.audio_stop_action,
+        uiCue = { recordPointerIv.visibility = View.VISIBLE },
+        onCompletionListener = {
+          uiScope.launch {
+            recordPointerIv.visibility = View.INVISIBLE
+            delay(500)
+            playListenAction()
+          }
+        }
+      )
       delay(500)
       recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
     }
@@ -635,70 +629,74 @@ open class SpeechDataMain(
 
   private fun playListenAction() {
     playAssistantAudio(
-        R.string.audio_listen_action,
-        uiCue = {
-          playPointerIv.visibility = View.VISIBLE
-          playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
-        },
-        onCompletionListener = {
-          uiScope.launch {
-            playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
-            playPointerIv.visibility = View.INVISIBLE
-            delay(500)
-            playRerecordAction()
-          }
-        })
+      R.string.audio_listen_action,
+      uiCue = {
+        playPointerIv.visibility = View.VISIBLE
+        playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
+          playPointerIv.visibility = View.INVISIBLE
+          delay(500)
+          playRerecordAction()
+        }
+      }
+    )
   }
 
   private fun playRerecordAction() {
     playAssistantAudio(
-        R.string.audio_rerecord_action,
-        uiCue = {
-          recordPointerIv.visibility = View.VISIBLE
-          recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
-        },
-        onCompletionListener = {
-          uiScope.launch {
-            recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-            recordPointerIv.visibility = View.INVISIBLE
-            delay(500)
-            playNextAction()
-          }
-        })
+      R.string.audio_rerecord_action,
+      uiCue = {
+        recordPointerIv.visibility = View.VISIBLE
+        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+          recordPointerIv.visibility = View.INVISIBLE
+          delay(500)
+          playNextAction()
+        }
+      }
+    )
   }
 
   private fun playNextAction() {
     playAssistantAudio(
-        R.string.audio_next_action,
-        uiCue = {
-          nextPointerIv.visibility = View.VISIBLE
-          nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
-        },
-        onCompletionListener = {
-          uiScope.launch {
-            nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
-            nextPointerIv.visibility = View.INVISIBLE
-            delay(500)
-            playPreviousAction()
-          }
-        })
+      R.string.audio_next_action,
+      uiCue = {
+        nextPointerIv.visibility = View.VISIBLE
+        nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
+          nextPointerIv.visibility = View.INVISIBLE
+          delay(500)
+          playPreviousAction()
+        }
+      }
+    )
   }
 
   private fun playPreviousAction() {
     playAssistantAudio(
-        R.string.audio_previous_action,
-        uiCue = {
-          backPointerIv.visibility = View.VISIBLE
-          backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
-        },
-        onCompletionListener = {
-          uiScope.launch {
-            backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
-            backPointerIv.visibility = View.INVISIBLE
-            delay(500)
-            moveToPrerecording()
-          }
-        })
+      R.string.audio_previous_action,
+      uiCue = {
+        backPointerIv.visibility = View.VISIBLE
+        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+          backPointerIv.visibility = View.INVISIBLE
+          delay(500)
+          moveToPrerecording()
+        }
+      }
+    )
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
@@ -862,9 +860,7 @@ open class SpeechDataMain(
     setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
 
     when (activityState) {
-      ActivityState.COMPLETED_PRERECORDING,
-      ActivityState.OLD_PLAYING,
-      ActivityState.OLD_PAUSED, -> {
+      ActivityState.COMPLETED_PRERECORDING, ActivityState.OLD_PLAYING, ActivityState.OLD_PAUSED, -> {
         setActivityState(ActivityState.SIMPLE_NEXT)
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED, -> {
@@ -970,12 +966,7 @@ open class SpeechDataMain(
   /** Initialize [audioRecorder] */
   private fun initializeAndStartRecorder() {
     audioRecorder =
-        AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            SAMPLE_RATE,
-            AUDIO_CHANNEL,
-            AUDIO_ENCODING,
-            _recorderBufferSize)
+      AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, _recorderBufferSize)
     audioRecorder!!.startRecording()
   }
 
@@ -1026,21 +1017,21 @@ open class SpeechDataMain(
   private fun writeAudioDataToPrerecordBuffer() {
     /** Keep reading until prerecording */
     preRecordingJob =
-        ioScope.launch {
-          while (isPrerecordingState(activityState)) {
-            val currentBuffer = preRecordBuffer[currentPreRecordBufferIndex]
-            val consumedBytes = preRecordBufferConsumed[currentPreRecordBufferIndex]
-            val remainingBytes = maxPreRecordBytes - consumedBytes
+      ioScope.launch {
+        while (isPrerecordingState(activityState)) {
+          val currentBuffer = preRecordBuffer[currentPreRecordBufferIndex]
+          val consumedBytes = preRecordBufferConsumed[currentPreRecordBufferIndex]
+          val remainingBytes = maxPreRecordBytes - consumedBytes
 
-            val readBytes = audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
-            preRecordBufferConsumed[currentPreRecordBufferIndex] += readBytes
+          val readBytes = audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
+          preRecordBufferConsumed[currentPreRecordBufferIndex] += readBytes
 
-            if (readBytes == remainingBytes) {
-              currentPreRecordBufferIndex = 1 - currentPreRecordBufferIndex
-              preRecordBufferConsumed[currentPreRecordBufferIndex] = 0
-            }
+          if (readBytes == remainingBytes) {
+            currentPreRecordBufferIndex = 1 - currentPreRecordBufferIndex
+            preRecordBufferConsumed[currentPreRecordBufferIndex] = 0
           }
         }
+      }
   }
 
   /**
@@ -1049,107 +1040,105 @@ open class SpeechDataMain(
    */
   private fun writeAudioDataToRecordBuffer() {
     recordingJob =
-        ioScope.launch {
-          if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
-          }
-
-          totalRecordedBytes = preRecordBufferConsumed[0] + preRecordBufferConsumed[1]
-          totalRecordedBytes =
-              if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
-
-          var data = ByteArray(_recorderBufferBytes)
-          currentRecordBufferConsumed = 0
-          var remainingSpace = _recorderBufferBytes
-
-          var readBytes = 0
-          while (activityState == ActivityState.RECORDING || readBytes > 0) {
-            readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
-            if (readBytes > 0) {
-              currentRecordBufferConsumed += readBytes
-              remainingSpace -= readBytes
-              if (remainingSpace == 0) {
-                recordBuffers.add(data)
-                data = ByteArray(_recorderBufferBytes)
-                currentRecordBufferConsumed = 0
-                remainingSpace = _recorderBufferBytes
-              }
-              totalRecordedBytes += readBytes
-              resetRecordingLength()
-            }
-          }
-
-          recordBuffers.add(data)
+      ioScope.launch {
+        if (isPrerecordingState(previousActivityState)) {
+          preRecordingJob!!.join()
         }
+
+        totalRecordedBytes = preRecordBufferConsumed[0] + preRecordBufferConsumed[1]
+        totalRecordedBytes = if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
+
+        var data = ByteArray(_recorderBufferBytes)
+        currentRecordBufferConsumed = 0
+        var remainingSpace = _recorderBufferBytes
+
+        var readBytes = 0
+        while (activityState == ActivityState.RECORDING || readBytes > 0) {
+          readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
+          if (readBytes > 0) {
+            currentRecordBufferConsumed += readBytes
+            remainingSpace -= readBytes
+            if (remainingSpace == 0) {
+              recordBuffers.add(data)
+              data = ByteArray(_recorderBufferBytes)
+              currentRecordBufferConsumed = 0
+              remainingSpace = _recorderBufferBytes
+            }
+            totalRecordedBytes += readBytes
+            resetRecordingLength()
+          }
+        }
+
+        recordBuffers.add(data)
+      }
   }
 
   /** Finish recording and finalize the wav file (update the file size) */
   private fun finishRecordingAndFinalizeWavFile() {
     runBlocking {
       audioFileFlushJob =
-          ioScope.launch {
-            delay(postRecordingTime.toLong())
-            audioRecorder!!.stop()
+        ioScope.launch {
+          delay(postRecordingTime.toLong())
+          audioRecorder!!.stop()
 
-            recordingJob!!.join()
-            audioRecorder!!.release()
+          recordingJob!!.join()
+          audioRecorder!!.release()
 
-            /** Write data to file */
-            scratchRecordingFileInitJob.join()
+          /** Write data to file */
+          scratchRecordingFileInitJob.join()
 
-            /** Write the prerecord buffer to file */
-            val bufferIndex = currentPreRecordBufferIndex
-            val otherIndex = 1 - bufferIndex
-            var currentBufferBytes = preRecordBufferConsumed[bufferIndex]
-            val otherBufferBytes = preRecordBufferConsumed[otherIndex]
+          /** Write the prerecord buffer to file */
+          val bufferIndex = currentPreRecordBufferIndex
+          val otherIndex = 1 - bufferIndex
+          var currentBufferBytes = preRecordBufferConsumed[bufferIndex]
+          val otherBufferBytes = preRecordBufferConsumed[otherIndex]
 
-            if (currentBufferBytes < 0) {
-              currentBufferBytes = 0
-            }
-
-            val currentBuffer = preRecordBuffer[bufferIndex]
-            val otherBuffer = preRecordBuffer[otherIndex]
-
-            // If other buffer is not empty, first write tail from other buffer
-            if (otherBufferBytes != 0) {
-              scratchRecordingFile.write(
-                  otherBuffer, currentBufferBytes, maxPreRecordBytes - currentBufferBytes)
-              totalRecordedBytes = maxPreRecordBytes - currentBufferBytes
-            }
-
-            // write current buffer
-            scratchRecordingFile.write(currentBuffer, 0, currentBufferBytes)
-            totalRecordedBytes += currentBufferBytes
-
-            /** Write the main record buffer */
-            for (i in 0 until recordBuffers.lastIndex) {
-              scratchRecordingFile.write(recordBuffers[i], 0, _recorderBufferBytes)
-              totalRecordedBytes += _recorderBufferBytes
-            }
-
-            /** Write the last buffer */
-            try {
-              if (currentRecordBufferConsumed > 0) {
-                val lastBuffer = recordBuffers.last()
-                scratchRecordingFile.write(lastBuffer, 0, currentRecordBufferConsumed)
-                totalRecordedBytes += currentRecordBufferConsumed
-              }
-            } catch (e: Exception) {
-              // Ignore (rare) errors
-            }
-
-            resetRecordingLength()
-
-            /** Close the file */
-            scratchRecordingFile.close()
-
-            /** Fix the file size fields in the wav file */
-            val dataSize = totalRecordedBytes
-            val scratchFile = RandomAccessFile(scratchRecordingFilePath, "rw")
-            writeIntAtLocation(scratchFile, dataSize + 36, 4)
-            writeIntAtLocation(scratchFile, dataSize, 40)
-            scratchFile.close()
+          if (currentBufferBytes < 0) {
+            currentBufferBytes = 0
           }
+
+          val currentBuffer = preRecordBuffer[bufferIndex]
+          val otherBuffer = preRecordBuffer[otherIndex]
+
+          // If other buffer is not empty, first write tail from other buffer
+          if (otherBufferBytes != 0) {
+            scratchRecordingFile.write(otherBuffer, currentBufferBytes, maxPreRecordBytes - currentBufferBytes)
+            totalRecordedBytes = maxPreRecordBytes - currentBufferBytes
+          }
+
+          // write current buffer
+          scratchRecordingFile.write(currentBuffer, 0, currentBufferBytes)
+          totalRecordedBytes += currentBufferBytes
+
+          /** Write the main record buffer */
+          for (i in 0 until recordBuffers.lastIndex) {
+            scratchRecordingFile.write(recordBuffers[i], 0, _recorderBufferBytes)
+            totalRecordedBytes += _recorderBufferBytes
+          }
+
+          /** Write the last buffer */
+          try {
+            if (currentRecordBufferConsumed > 0) {
+              val lastBuffer = recordBuffers.last()
+              scratchRecordingFile.write(lastBuffer, 0, currentRecordBufferConsumed)
+              totalRecordedBytes += currentRecordBufferConsumed
+            }
+          } catch (e: Exception) {
+            // Ignore (rare) errors
+          }
+
+          resetRecordingLength()
+
+          /** Close the file */
+          scratchRecordingFile.close()
+
+          /** Fix the file size fields in the wav file */
+          val dataSize = totalRecordedBytes
+          val scratchFile = RandomAccessFile(scratchRecordingFilePath, "rw")
+          writeIntAtLocation(scratchFile, dataSize + 36, 4)
+          writeIntAtLocation(scratchFile, dataSize, 40)
+          scratchFile.close()
+        }
 
       /**
        * If still in recorded state, switch to playback. User may have stopped activity by pressing
@@ -1199,32 +1188,36 @@ open class SpeechDataMain(
 
     // Set the background
     recordBtn.setBackgroundResource(
-        when (recordBtnState) {
-          DISABLED -> R.drawable.ic_mic_disabled
-          ENABLED -> R.drawable.ic_mic_enabled
-          ACTIVE -> R.drawable.ic_mic_active
-        })
+      when (recordBtnState) {
+        DISABLED -> R.drawable.ic_mic_disabled
+        ENABLED -> R.drawable.ic_mic_enabled
+        ACTIVE -> R.drawable.ic_mic_active
+      }
+    )
 
     playBtn.setBackgroundResource(
-        when (playBtnState) {
-          DISABLED -> R.drawable.ic_speaker_disabled
-          ENABLED -> R.drawable.ic_speaker_enabled
-          ACTIVE -> R.drawable.ic_speaker_active
-        })
+      when (playBtnState) {
+        DISABLED -> R.drawable.ic_speaker_disabled
+        ENABLED -> R.drawable.ic_speaker_enabled
+        ACTIVE -> R.drawable.ic_speaker_active
+      }
+    )
 
     nextBtn.setBackgroundResource(
-        when (nextBtnState) {
-          DISABLED -> R.drawable.ic_next_disabled
-          ENABLED -> R.drawable.ic_next_enabled
-          ACTIVE -> R.drawable.ic_next_enabled
-        })
+      when (nextBtnState) {
+        DISABLED -> R.drawable.ic_next_disabled
+        ENABLED -> R.drawable.ic_next_enabled
+        ACTIVE -> R.drawable.ic_next_enabled
+      }
+    )
 
     backBtn.setBackgroundResource(
-        when (backBtnState) {
-          DISABLED -> R.drawable.ic_back_disabled
-          ENABLED -> R.drawable.ic_back_enabled
-          ACTIVE -> R.drawable.ic_back_enabled
-        })
+      when (backBtnState) {
+        DISABLED -> R.drawable.ic_back_disabled
+        ENABLED -> R.drawable.ic_back_enabled
+        ACTIVE -> R.drawable.ic_back_enabled
+      }
+    )
   }
 
   /** Reset wav file on a new recording creation */
@@ -1254,8 +1247,8 @@ open class SpeechDataMain(
   /** Encode the scratch wav recording file into a compressed main file. */
   private suspend fun encodeRecording() {
     CoroutineScope(Dispatchers.Default)
-        .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
-        .join()
+      .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
+      .join()
     addOutputFile(outputRecordingFileParams)
   }
 

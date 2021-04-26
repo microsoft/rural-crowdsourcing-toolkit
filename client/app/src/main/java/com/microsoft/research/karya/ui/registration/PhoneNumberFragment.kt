@@ -63,33 +63,33 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
     /** Set the phone number font size to the same value as the phantom text view font size */
     binding.phantomPhoneNumberTv.addOnLayoutChangeListener {
-        _: View,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
-      binding.phoneNumberEt.setTextSize(
-          TypedValue.COMPLEX_UNIT_PX, binding.phantomPhoneNumberTv.textSize)
+      _: View,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int ->
+      binding.phoneNumberEt.setTextSize(TypedValue.COMPLEX_UNIT_PX, binding.phantomPhoneNumberTv.textSize)
     }
 
     /** Set phone number text change listener */
     binding.phoneNumberEt.addTextChangedListener(
-        object : TextWatcher {
-          override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-          override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+      object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-          override fun afterTextChanged(s: Editable?) {
-            if (s?.length == PHONE_NUMBER_LENGTH) {
-              handlePhoneNumberReady()
-            } else {
-              handlePhoneNumberNotReady()
-            }
+        override fun afterTextChanged(s: Editable?) {
+          if (s?.length == PHONE_NUMBER_LENGTH) {
+            handlePhoneNumberReady()
+          } else {
+            handlePhoneNumberNotReady()
           }
-        })
+        }
+      }
+    )
     baseActivity.requestSoftKeyFocus(binding.phoneNumberEt)
 
     /** Phone number next button should not be clickable by default */

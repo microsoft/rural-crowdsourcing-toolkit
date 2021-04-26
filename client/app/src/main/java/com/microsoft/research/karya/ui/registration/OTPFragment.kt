@@ -40,8 +40,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       }
     }
 
-    viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner) {
-        openProfilePictureFragment ->
+    viewModel.openProfilePictureFragmentFromOTP.observe(viewLifecycleOwner) { openProfilePictureFragment ->
       if (openProfilePictureFragment) {
         navigateToProfilePicture()
       }
@@ -119,14 +118,15 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
 
     /** Set listener for the OTP text box */
     binding.otpEt.addTextChangedListener(
-        object : TextWatcher {
-          override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-          override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+      object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-          override fun afterTextChanged(s: Editable?) {
-            if (s?.length == OTP_LENGTH) handleOTPReady() else handleOTPNotReady()
-          }
-        })
+        override fun afterTextChanged(s: Editable?) {
+          if (s?.length == OTP_LENGTH) handleOTPReady() else handleOTPNotReady()
+        }
+      }
+    )
     baseActivity.requestSoftKeyFocus(binding.otpEt)
   }
 

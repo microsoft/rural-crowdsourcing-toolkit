@@ -22,10 +22,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideLanguageRepository(
-      languageAPI: LanguageAPI,
-      languageDao: LanguageDao
-  ): LanguageRepository {
+  fun provideLanguageRepository(languageAPI: LanguageAPI, languageDao: LanguageDao): LanguageRepository {
     return LanguageRepository(languageAPI, languageDao)
   }
 

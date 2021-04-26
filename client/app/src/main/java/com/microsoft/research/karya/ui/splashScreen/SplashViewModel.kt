@@ -7,8 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val workerRepository: WorkerRepository) :
-    ViewModel() {
+class SplashViewModel @Inject constructor(private val workerRepository: WorkerRepository) : ViewModel() {
 
   suspend fun getLoggedInUsers(): List<WorkerRecord> {
     return workerRepository.getAllWorkers()

@@ -31,11 +31,11 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
     val consentFormText = getString(R.string.s_consent_form_text)
 
     val spannedText =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-          Html.fromHtml(consentFormText, Html.FROM_HTML_MODE_COMPACT)
-        } else {
-          Html.fromHtml(consentFormText)
-        }
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(consentFormText, Html.FROM_HTML_MODE_COMPACT)
+      } else {
+        Html.fromHtml(consentFormText)
+      }
 
     with(binding) {
       consentFormTv.text = spannedText
