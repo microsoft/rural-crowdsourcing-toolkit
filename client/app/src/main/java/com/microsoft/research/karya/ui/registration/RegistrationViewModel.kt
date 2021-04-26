@@ -75,9 +75,6 @@ constructor(
 
   fun sendOTP(phoneNumber: String) {
     WorkerInformation.phone_number = phoneNumber
-    // TODO: Remove the hard coded initialization
-    WorkerInformation.creation_code = "2888118064405199"
-    WorkerInformation.app_language = 1
     workerRepository
         .getOrVerifyOTP(
             WorkerInformation.creation_code!!,
@@ -160,13 +157,13 @@ constructor(
   fun afterNavigateToProfilePicture() {
     _openProfilePictureFragmentFromOTP.value = false
     _currOtpResendState.value = OtpSendState.NOT_SENT
-    _currOtpSendState.value = OtpSendState.NOT_SENT
+    _currOtpVerifyState.value = OtpVerifyState.NOT_ENTERED
   }
 
   fun afterNavigateToDashboard() {
     _openDashBoardFromOTP.value = false
     _currOtpResendState.value = OtpSendState.NOT_SENT
-    _currOtpSendState.value = OtpSendState.NOT_SENT
+    _currOtpVerifyState.value = OtpVerifyState.NOT_ENTERED
   }
 
   fun resetOtpSendState() {

@@ -75,6 +75,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
   private fun navigateToDashBoard() {
     findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
     viewModel.afterNavigateToDashboard()
+    requireActivity().finish()
   }
 
   private fun navigateToProfilePicture() {
