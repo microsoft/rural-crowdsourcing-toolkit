@@ -1,0 +1,281 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+//
+// Karya database specification
+
+import { DatabaseSpec, TableColumnSpec } from '@karya/schema-spec';
+
+// Definitive list of all karya database tables
+export const karyaTableNames = [
+  'server_user',
+  'box',
+  'worker',
+  'karya_file',
+  'task',
+  'microtask_group',
+  'microtask',
+  'task_op',
+  'task_chain',
+  'task_assignment',
+  'microtask_group_assignment',
+  'microtask_assignment',
+] as const;
+
+export type KaryaTableName = typeof karyaTableNames[number];
+
+// List of custom strings
+const karyaStrings = [
+  'ServerRole',
+  'AuthProvider',
+  'Gender',
+  'ContainerName',
+  'FileCreator',
+  'ChecksumAlgorithm',
+  'LanguageCode',
+  'ScenarioName',
+  'AssignmentGranularity',
+  'AssignmentOrder',
+  'TaskStatus',
+  'MicrotaskStatus',
+  'TaskOpType',
+  'TaskOpStatus',
+  'ChainName',
+  'ChainStatus',
+  'PolicyName',
+  'TaskAssignmentStatus',
+  'MicrotaskAssignmentStatus',
+] as const;
+
+export type KaryaString = typeof karyaStrings[number];
+
+// List of custom objects
+const karyaObjects = ['MicrotaskInput', 'MicrotaskOutput'] as const;
+export type KaryaObject = typeof karyaObjects[number];
+
+// Karya Database Specification
+const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
+  version: '2.0.0',
+  tables: {
+    server_user: {
+      columns: [
+        ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
+        ['auth_provider', ['string', 32, 'AuthProvider'], 'not unique', 'nullable', 'mutable'],
+        ['phone_number', ['string', 16], 'not unique', 'nullable', 'mutable'],
+        ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
+        ['salt1', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['salt2', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['role', ['string', 32, 'ServerRole'], 'not unique', 'not nullable', 'not mutable'],
+        ['full_name', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['email', ['string', 64], 'not unique', 'nullable', 'mutable'],
+      ],
+    },
+
+    box: {
+      columns: [
+        ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
+        ['physical', ['boolean', false], 'not unique', 'not nullable', 'not mutable'],
+        ['name', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['location', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['gps', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['url', ['string', 128], 'not unique', 'nullable', 'mutable'],
+        ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
+        ['salt1', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['salt2', ['string', 64], 'not unique', 'nullable', 'mutable'],
+      ],
+    },
+
+    worker: {
+      columns: [
+        ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
+        ['auth_provider', ['string', 32, 'AuthProvider'], 'not unique', 'nullable', 'mutable'],
+        ['phone_number', ['string', 16], 'not unique', 'nullable', 'mutable'],
+        ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
+        ['salt1', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['salt2', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['full_name', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['year_of_birth', ['string', 4], 'not unique', 'nullable', 'mutable'],
+        ['gender', ['string', 16, 'Gender'], 'not unique', 'nullable', 'mutable'],
+        ['language', ['string', 8, 'LanguageCode'], 'not unique', 'nullable', 'mutable'],
+        ['tags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    karya_file: {
+      columns: [
+        ['container_name', ['string', 64, 'ContainerName'], 'not unique', 'not nullable', 'not mutable'],
+        ['name', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
+        ['url', ['string', 128], 'unique', 'nullable', 'mutable'],
+        ['creator', ['string', 16, 'FileCreator'], 'not unique', 'not nullable', 'not mutable'],
+        ['creator_id', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+        ['algorithm', ['string', 8, 'ChecksumAlgorithm'], 'not unique', 'not nullable', 'mutable'],
+        ['checksum', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['in_box', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['in_server', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    task: {
+      columns: [
+        ['work_provider_id', ['>', 'server_user'], 'not unique', 'not nullable', 'not mutable'],
+        ['language', ['string', 8, 'LanguageCode'], 'not unique', 'not nullable', 'not mutable'],
+        ['scenario', ['string', 16, 'ScenarioName'], 'not unique', 'not nullable', 'not mutable'],
+        ['name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['description', ['text'], 'not unique', 'not nullable', 'mutable'],
+        ['display_name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['params', ['kv'], 'not unique', 'not nullable', 'mutable'],
+        ['tags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
+        ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        [
+          'assignment_granularity',
+          ['string', 16, 'AssignmentGranularity'],
+          'not unique',
+          'not nullable',
+          'not mutable',
+        ],
+        ['group_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
+        ['microtask_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
+        ['status', ['string', 16, 'TaskStatus'], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    microtask_group: {
+      columns: [
+        ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['microtask_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    microtask: {
+      columns: [
+        ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['group_id', ['>', 'microtask_group'], 'not unique', 'nullable', 'not mutable'],
+        ['input', ['object', 'MicrotaskInput'], 'not unique', 'not nullable', 'not mutable'],
+        ['input_file_id', ['>', 'karya_file'], 'not unique', 'nullable', 'not mutable'],
+        ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        ['credits', ['float'], 'not unique', 'nullable', 'mutable'],
+        ['status', ['string', 16, 'MicrotaskStatus'], 'not unique', 'not nullable', 'mutable'],
+        ['output', ['object', 'MicrotaskOutput'], 'not unique', 'nullable', 'mutable'],
+      ],
+    },
+
+    task_op: {
+      columns: [
+        ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['op_type', ['string', 16, 'TaskOpType'], 'not unique', 'not nullable', 'not mutable'],
+        ['file_id', ['>', 'karya_file'], 'unique', 'nullable', 'not mutable'],
+        ['status', ['string', 16, 'TaskOpStatus'], 'not unique', 'not nullable', 'mutable'],
+        ['completed_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        ['messages', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    task_chain: {
+      columns: [
+        ['chain', ['string', 32, 'ChainName'], 'not unique', 'not nullable', 'not mutable'],
+        ['from_task', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['to_task', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['status', ['string', 16, 'ChainStatus'], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    task_assignment: {
+      columns: [
+        ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
+        ['policy', ['string', 16, 'PolicyName'], 'not unique', 'not nullable', 'not mutable'],
+        ['params', ['kv'], 'not unique', 'not nullable', 'not mutable'],
+        ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        ['status', ['string', 16, 'TaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
+      ],
+    },
+
+    microtask_group_assignment: {
+      columns: [
+        ['group_id', ['>', 'microtask_group'], 'not unique', 'not nullable', 'not mutable'],
+        ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
+      ],
+    },
+
+    microtask_assignment: {
+      columns: [
+        ['microtask_id', ['>', 'microtask'], 'not unique', 'not nullable', 'not mutable'],
+        ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
+        ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        ['status', ['string', 16, 'MicrotaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
+        ['completed_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        ['output', ['object', 'MicrotaskOutput'], 'not unique', 'nullable', 'mutable'],
+        ['output_file_id', ['>', 'karya_file'], 'unique', 'nullable', 'mutable'],
+        ['logs', ['stringarray'], 'not unique', 'nullable', 'mutable'],
+        ['verified_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
+        ['report', ['object'], 'not unique', 'nullable', 'mutable'],
+        ['credits', ['float'], 'not unique', 'nullable', 'mutable'],
+      ],
+    },
+  },
+};
+
+// Common fields for all tables
+const commonFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
+  ['extras', ['object'], 'not unique', 'nullable', 'mutable'],
+  ['created_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'not mutable'],
+  ['last_updated_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'mutable'],
+];
+
+// Server tables - Tables for which only the server can create records
+const serverTables: KaryaTableName[] = [
+  'server_user',
+  'box',
+  'task',
+  'microtask_group',
+  'microtask',
+  'task_op',
+  'task_chain',
+  'task_assignment',
+];
+
+// ID fields for server tables on the server side
+const serverSideServerIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
+  ['id', ['bigserial'], 'unique', 'not nullable', 'not mutable'],
+];
+
+// ID fields for server tables on the box side
+const boxSideServerIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
+  ['id', ['bigint'], 'unique', 'not nullable', 'not mutable'],
+];
+
+// Box tables - Tables for which the box can also create records
+const boxTables: KaryaTableName[] = ['worker', 'karya_file', 'microtask_group_assignment', 'microtask_assignment'];
+
+// ID fields for box tables on the box side
+const boxSideBoxIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
+  ['id', ['bigint'], 'unique', 'not nullable', 'not mutable'],
+  ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
+  ['local_id', ['bigserial'], 'unique', 'not nullable', 'not mutable'],
+];
+
+// ID fields for box tables on the server side
+const serverSideBoxIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
+  ['id', ['bigint'], 'unique', 'not nullable', 'not mutable'],
+  ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
+  ['local_id', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+];
+
+// Seperate server-side and box side database spec
+const karyaServerDb = { ...karyaDb };
+const karyaBoxDb = { ...karyaDb };
+
+serverTables.forEach((table) => {
+  const columns = karyaDb.tables[table].columns;
+  karyaServerDb.tables[table].columns = serverSideServerIdFields.concat(columns).concat(commonFields);
+  karyaBoxDb.tables[table].columns = boxSideServerIdFields.concat(columns).concat(commonFields);
+});
+
+boxTables.forEach((table) => {
+  const columns = karyaDb.tables[table].columns;
+  karyaServerDb.tables[table].columns = serverSideBoxIdFields.concat(columns).concat(commonFields);
+  karyaBoxDb.tables[table].columns = boxSideBoxIdFields.concat(columns).concat(commonFields);
+});
+
+export { karyaServerDb, karyaBoxDb };

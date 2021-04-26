@@ -10,6 +10,8 @@ import { tableFilterColumnsFileData } from './generators/TableGetFilterGenerator
 import { tableListFileData } from './generators/TableListGenerator';
 import { createTableFunctionsFileData } from './generators/CreateTableFunctionsGenerator';
 import { dropTableFunctionsFileData } from './generators/DropFunctionsGenerator';
+import { writeTypescriptInterfaceFile } from '@karya/schema-spec';
+import { karyaServerDb } from './specs/KaryaDb';
 
 const SRC_FOLDER = `${process.cwd()}/src/db/auto`;
 
@@ -37,3 +39,10 @@ fs.writeFileSync(createFunctionsFile, createTableFunctionsFileData());
 // Write the table column list into a file
 const dropFunctionsFile = `${SRC_FOLDER}/DropFunctions.ts`;
 fs.writeFileSync(dropFunctionsFile, dropTableFunctionsFileData());
+
+// -- NEW Model
+
+const NG_SRC_FOLDER = `${process.cwd()}/src/db/ng-auto`;
+
+const ngTableInterfacesFile = `${NG_SRC_FOLDER}/TableInterfaces.ts`;
+writeTypescriptInterfaceFile(karyaServerDb, '../types/Custom', ngTableInterfacesFile);
