@@ -6,14 +6,7 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import {
-  knex,
-  KaryaFileRecord,
-  MicrotaskAssignment,
-  MicrotaskAssignmentRecord,
-  tableFilterColumns,
-  BasicModel,
-} from '@karya/common';
+import { knex, KaryaFileRecord, MicrotaskAssignment, MicrotaskAssignmentRecord, BasicModel } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
 import { getBlobSASURL } from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
@@ -26,13 +19,7 @@ import { KaryaHTTPContext } from './KoaContextType';
  */
 export async function getRecords(ctx: KaryaHTTPContext) {
   try {
-    const microtaskAssignmentFilter: MicrotaskAssignment = {};
-    tableFilterColumns['microtask_assignment'].forEach((col) => {
-      if (ctx.request.query[col]) {
-        // @ts-ignore
-        microtaskAssignmentFilter[col] = ctx.request.query[col];
-      }
-    });
+    const microtaskAssignmentFilter: MicrotaskAssignment = ctx.request.query;
 
     const limit = ctx.request.query['limit'] as string;
     let records: MicrotaskAssignmentRecord[];

@@ -4,7 +4,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AuthResponse, verifyIDToken } from '../auth-providers/Index';
 import { KaryaMiddleware } from '../controllers/KoaContextType';
-import { AuthProviderType, DbTableName, WorkerRecord, tableFilterColumns, BasicModel } from '@karya/common';
+import { AuthProviderType, DbTableName, WorkerRecord, BasicModel } from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
 import { requestLogger } from '../utils/Logger';
 
@@ -102,17 +102,7 @@ export const setTableName: KaryaMiddleware = async (ctx, next) => {
  * @param next next middleware in the chain
  */
 export const setGetFilter: KaryaMiddleware = async (ctx, next) => {
-  const tableName = ctx.state.tableName as DbTableName;
-  const filterColumns: string[] = tableFilterColumns[tableName];
-
-  const filter: { [id: string]: any } = {};
-  filterColumns.forEach((column) => {
-    if (ctx.request.query[column]) {
-      filter[column] = ctx.request.query[column];
-    }
-  });
-
-  ctx.state.filter = filter;
+  ctx.state.filter = ctx.request.query;
   await next();
 };
 

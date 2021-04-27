@@ -10,7 +10,6 @@ import {
   MicrotaskRecord,
   Task,
   TaskRecord,
-  tableFilterColumns,
   BasicModel,
 } from '@karya/common';
 import { getControllerError } from './ControllerErrors';
@@ -99,13 +98,7 @@ export async function getRecords(ctx: KaryaHTTPContext) {
 export async function getMicrotasksWithCompletedAssignments(ctx: KaryaHTTPContext) {
   try {
     // generate microtask filter
-    const microtaskFilter: Microtask = {};
-    tableFilterColumns['microtask'].forEach((col) => {
-      if (ctx.request.query[col]) {
-        // @ts-ignore
-        microtaskFilter[col] = ctx.request.query[col];
-      }
-    });
+    const microtaskFilter: Microtask = ctx.request.query;
 
     // get the records
     const microtasks = await knex<MicrotaskRecord>('microtask as m')

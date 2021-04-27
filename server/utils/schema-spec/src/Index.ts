@@ -5,7 +5,7 @@
 
 export * from './SchemaInterface';
 
-import { typescriptDbInterface } from './generators/DatabaseGenerators';
+import { knexDbSpec, typescriptDbInterface } from './generators/DatabaseGenerators';
 import prettier, { Options as PrettierOptions } from 'prettier';
 import fs from 'fs';
 import { DatabaseSpec } from './SchemaInterface';
@@ -33,5 +33,19 @@ export function writeTypescriptInterfaceFile<T extends string, S extends string,
   fileName: string
 ) {
   const data = typescriptDbInterface(dbSpec, customTypePath);
+  fs.writeFileSync(fileName, format(data));
+}
+
+/**
+ * Write the database create table functions into a given file
+ * @param dbSpec Database specification
+ * @param fileName Path to the destination file
+ */
+export function writeTableFunctionsFile<T extends string, S extends string, O extends string>(
+  dbSpec: DatabaseSpec<T, S, O>,
+  knexClientPath: string,
+  fileName: string
+) {
+  const data = knexDbSpec(dbSpec, knexClientPath);
   fs.writeFileSync(fileName, format(data));
 }

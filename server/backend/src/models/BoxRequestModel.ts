@@ -5,7 +5,7 @@
  * Model functions to handle queries from a box
  */
 
-import { BoxRecord, BoxUpdatableTables, DbRecordType, DbTableName, tableList, BasicModel } from '@karya/common';
+import { BoxRecord, BoxUpdatableTables, DbRecordType, DbTableName, BasicModel } from '@karya/common';
 
 import { Promise as BBPromise } from 'bluebird';
 import { getBlobSASURL } from '@karya/common';
@@ -90,10 +90,23 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
   );
 
   // Push all updates
-  tableList.forEach((t) => {
-    const tupdates = updateMap[t];
+  [
+    'work_provider',
+    'box',
+    'worker',
+    'karya_file',
+    'task',
+    'microtask_group',
+    'microtask',
+    'task_assignment',
+    'microtask_group_assignment',
+    'microtask_assignment',
+    'payout_info',
+    'payment_request',
+  ].forEach((t) => {
+    const tupdates = updateMap[t as DbTableName];
     if (tupdates && tupdates.length > 0) {
-      updates.push({ tableName: t, rows: tupdates });
+      updates.push({ tableName: t as DbTableName, rows: tupdates });
     }
   });
 

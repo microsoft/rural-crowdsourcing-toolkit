@@ -8,7 +8,7 @@
 import { Promise as BBPromise } from 'bluebird';
 import box_id from '../config/box_id';
 import { this_box } from '../config/ThisBox';
-import { DbRecordType, DbTableName, WorkerRecord, tableList, BasicModel } from '@karya/common';
+import { DbRecordType, DbTableName, WorkerRecord, BasicModel } from '@karya/common';
 import { handleMicrotaskAssignmentCompletion } from '../scenarios/AssignmentService';
 import logger from '../utils/Logger';
 
@@ -120,10 +120,23 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
   ];
 
   // Push all updates
-  tableList.forEach((tableName) => {
-    const rows = updateMap[tableName];
+  [
+    'worker',
+    'karya_file',
+    'task',
+    'microtask_group',
+    'microtask',
+    'task_assignment',
+    'microtask_group_assignment',
+    'microtask_assignment',
+    'payout_info',
+    'payment_request',
+  ].forEach((tableName) => {
+    const t = tableName as DbTableName;
+    const rows = updateMap[t];
     if (rows && rows.length > 0) {
-      updates.push({ tableName, rows });
+      // @ts-ignore
+      updates.push({ t, rows });
     }
   });
 
