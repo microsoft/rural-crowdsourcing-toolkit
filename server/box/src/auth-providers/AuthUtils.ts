@@ -30,7 +30,7 @@ export function generateToken(id: string, worker: Worker) {
     algorithm: 'HS256',
   });
 
-  worker.salt = secret;
+  worker.salt1 = secret;
   worker.id_token = id_token;
   return worker;
 }
@@ -58,13 +58,13 @@ export async function verifyToken(idToken: string): Promise<IDTokenVerificationR
   }
 
   // If the worker secret is not present, return
-  if (!worker.salt) {
+  if (!worker.salt1) {
     return { success: false, message: 'Invalid token', matchInfo: worker };
   }
 
   // Use the salt to verify the token
   try {
-    jwt.verify(idToken, worker.salt, { audience, algorithms: ['HS256'] });
+    jwt.verify(idToken, worker.salt1, { audience, algorithms: ['HS256'] });
     return { success: true, matchInfo: { id: worker_id } };
   } catch (e) {
     return { success: false, message: 'Expired token', matchInfo: worker };

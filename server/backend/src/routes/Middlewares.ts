@@ -106,12 +106,12 @@ export const authenticateBox: KaryaMiddleware = async (ctx, next) => {
 
   // Retrieve auth information
   const id = header['box-id'] as string;
-  const key = header['id-token'] as string;
+  const id_token = header['id-token'] as string;
 
   // Retrieve the box record
   // TODO: This is currently very rudimentary authentication. Need to make it stronger.
   try {
-    const box = await BasicModel.getSingle('box', { id, key });
+    const box = await BasicModel.getSingle('box', { id, id_token });
     ctx.state.current_box = box;
     await next();
   } catch (e) {
@@ -127,7 +127,7 @@ export const authenticateBox: KaryaMiddleware = async (ctx, next) => {
  * @param next next middleware in the chain
  */
 export const checkAdmin: KaryaMiddleware = async (ctx, next) => {
-  if (!ctx.state.current_user || !ctx.state.current_user.admin) {
+  if (!ctx.state.current_user || ctx.state.current_user.role != 'admin') {
     HttpResponse.Forbidden(ctx, ['Unauthorized access to resource']);
   } else {
     await next();

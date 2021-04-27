@@ -6,7 +6,7 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/common';
+import { knex, setupDbConnection, ServerDbFunctions } from '@karya/common';
 import { bootstrapAuth } from './AuthBootstrap';
 import logger from '../utils/Logger';
 
@@ -16,8 +16,8 @@ import logger from '../utils/Logger';
 async function recreateAllTables() {
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
-  await dropAllTables();
-  await createAllTables('backend');
+  await ServerDbFunctions.dropAllTables();
+  await ServerDbFunctions.createAllTables();
   logger.info(`Tables recreated`);
 }
 

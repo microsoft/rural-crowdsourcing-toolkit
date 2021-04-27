@@ -7,11 +7,11 @@
 // Microtask Input
 export type MicrotaskInput = {
   data: object;
-  files: string[];
+  files?: string[];
 };
 
 // Microtask Output
 export type MicrotaskOutput = {
   data: object;
-  files: string[];
+  files?: string[];
 };

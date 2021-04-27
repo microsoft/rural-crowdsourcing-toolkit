@@ -24,9 +24,9 @@ async function signUpUser(userInfo: Worker, ccRecord: WorkerRecord): Promise<Use
       audience: CLIENT_ID,
     });
 
-    const oauth_id = ticket.getUserId() as string;
-    userInfo.oauth_id = oauth_id;
-    const matchInfo: Worker = { auth_provider: 'google_oauth', oauth_id };
+    const auth_id = ticket.getUserId() as string;
+    userInfo.auth_id = auth_id;
+    const matchInfo: Worker = { auth_provider: 'google_oauth', auth_id };
     return { success: true, userInfo, matchInfo };
   } catch (e) {
     return { success: false, message: e.toString() };
@@ -47,8 +47,8 @@ async function verifyIDToken(idToken: string): Promise<IDTokenVerificationRespon
       audience: CLIENT_ID,
     });
 
-    const oauth_id = ticket.getUserId() as string;
-    const matchInfo: Worker = { auth_provider: 'google_oauth', oauth_id };
+    const auth_id = ticket.getUserId() as string;
+    const matchInfo: Worker = { auth_provider: 'google_oauth', auth_id };
     return { success: true, matchInfo };
   } catch (e) {
     return { success: false, message: e.toString() };

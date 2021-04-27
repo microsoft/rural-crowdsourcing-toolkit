@@ -7,7 +7,6 @@
 
 import { Promise as BBPromise } from 'bluebird';
 import box_id from '../config/box_id';
-import { this_box } from '../config/ThisBox';
 import { DbRecordType, DbTableName, WorkerRecord, BasicModel } from '@karya/common';
 import { handleMicrotaskAssignmentCompletion } from '../scenarios/AssignmentService';
 import logger from '../utils/Logger';
@@ -29,10 +28,6 @@ const workerUpdatableTables: WorkerUpdatableTables[] = ['worker', 'microtask_gro
 export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUpdates<DbTableName>[]> {
   const updates: TableUpdates<DbTableName>[] = [];
 
-  // Extract from_box and from_server
-  const from_box = worker.last_received_from_box_at;
-  const from_server = worker.last_received_from_server_at;
-
   // Map of all updates
   const updateMap: {
     [key in DbTableName]?: DbRecordType<key>[];
@@ -40,6 +35,10 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
 
   const worker_id = worker.id;
   const eon = new Date(0).toISOString();
+
+  // Extract from_box and from_server
+  const from_box = eon;
+  const from_server = eon;
 
   // Collect newly assigned microtask_group_assignment updates
   const microtaskGroupAssignmentUpdates = await BasicModel.getRecords(
@@ -61,7 +60,7 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
   const verifiedMicrotaskAssignments = (
     await BasicModel.getRecords('microtask_assignment', { worker_id, status: 'verified' }, { from: from_server })
   ).map((a) => {
-    a.output = {};
+    a.output = null;
     a.output_file_id = null;
     return a;
   });
@@ -79,7 +78,7 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
   updateMap['microtask'] = microtaskUpdates;
 
   // Get all microtask groups corresponding to microtask group assignments
-  const microtaskGroupIds = microtaskGroupAssignmentUpdates.map((g) => g.microtask_group_id);
+  const microtaskGroupIds = microtaskGroupAssignmentUpdates.map((g) => g.group_id);
   updateMap['microtask_group'] = await BasicModel.getRecords('microtask_group', {}, {}, {}, [
     ['id', microtaskGroupIds],
   ]);
@@ -114,8 +113,6 @@ export async function getUpdatesForWorker(worker: WorkerRecord): Promise<TableUp
   updateMap['worker'] = [
     {
       ...worker,
-      last_received_from_server_at: this_box.last_received_from_server_at,
-      profile_picture: null,
     },
   ];
 

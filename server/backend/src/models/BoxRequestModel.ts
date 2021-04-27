@@ -5,20 +5,19 @@
  * Model functions to handle queries from a box
  */
 
-import { BoxRecord, BoxUpdatableTables, DbRecordType, DbTableName, BasicModel } from '@karya/common';
+import { BoxRecord, DbRecordType, DbTableName, BasicModel } from '@karya/common';
 
 import { Promise as BBPromise } from 'bluebird';
 import { getBlobSASURL } from '@karya/common';
 
-const boxUpdatableTables: BoxUpdatableTables[] = [
+const boxUpdatableTables = [
   'worker',
   'karya_file',
   'task_assignment',
   'microtask_group_assignment',
   'microtask_assignment',
-  'payout_info',
-  'payment_request',
-];
+] as const;
+type BoxUpdatableTable = typeof boxUpdatableTables[number];
 
 // Type for collecting table updates
 export type TableUpdates<TableName extends DbTableName> = {
@@ -57,11 +56,10 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
   const microtask_updates = await BasicModel.getRecords('microtask', {}, { from }, {}, [['task_id', task_ids]]);
   updateMap['microtask'] = microtask_updates;
 
-  const task_file_ids = task_updates.map((t) => t.input_file_id);
   const microtask_file_ids = microtask_updates.map((m) => m.input_file_id);
 
   let karya_file_ids: string[] = [];
-  [task_file_ids, microtask_file_ids].forEach((idlist) => {
+  [microtask_file_ids].forEach((idlist) => {
     karya_file_ids = karya_file_ids.concat(idlist.filter((id): id is string => id !== null));
   });
   const karya_file_updates = (await BasicModel.getRecords('karya_file', {}, {}, {}, [['id', karya_file_ids]]))
@@ -74,14 +72,6 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
   });
   updateMap['karya_file'] = (updateMap['karya_file'] || []).concat(karya_file_updates);
 
-  // Collect updates from filter update tables
-  const payoutTables: BoxUpdatableTables[] = ['payout_info', 'payment_request'];
-  await BBPromise.mapSeries(payoutTables, async (table) => {
-    const tableUpdates = await BasicModel.getRecords(table, { box_id }, { from });
-    // @ts-ignore
-    updateMap[table] = tableUpdates;
-  });
-
   // Collect verified microtask assigmnents
   updateMap['microtask_assignment'] = await BasicModel.getRecords(
     'microtask_assignment',
@@ -91,7 +81,6 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
 
   // Push all updates
   [
-    'work_provider',
     'box',
     'worker',
     'karya_file',
@@ -101,8 +90,6 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
     'task_assignment',
     'microtask_group_assignment',
     'microtask_assignment',
-    'payout_info',
-    'payment_request',
   ].forEach((t) => {
     const tupdates = updateMap[t as DbTableName];
     if (tupdates && tupdates.length > 0) {
@@ -119,7 +106,7 @@ export async function getUpdatesForBox(box: BoxRecord, from: string): Promise<Ta
  * @param box Record for the box
  * @param updates Updates to different tables from the box
  */
-export async function applyUpdatesFromBox(box: BoxRecord, updates: TableUpdates<BoxUpdatableTables>[]) {
+export async function applyUpdatesFromBox(box: BoxRecord, updates: TableUpdates<BoxUpdatableTable>[]) {
   await BBPromise.mapSeries(updates, async (update) => {
     const { tableName, rows } = update;
     if (!boxUpdatableTables.includes(tableName)) {

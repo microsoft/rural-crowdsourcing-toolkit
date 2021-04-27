@@ -28,7 +28,7 @@ export async function receiveUpdatesFromWorker(ctx: KaryaHTTPContext) {
   requestLogger.info({
     message: 'receiving updates from worker',
     worker_id: ctx.state.current_user.id,
-    creation_code: ctx.state.current_user.creation_code,
+    creation_code: ctx.state.current_user.access_code,
   });
 
   // Apply the updates
@@ -59,9 +59,7 @@ export async function sendUpdatesForWorker(ctx: KaryaHTTPContext) {
   requestLogger.info({
     message: 'sending updates to worker',
     worker_id: current_user.id,
-    creation_code: current_user.creation_code,
-    from_box: current_user.last_received_from_box_at,
-    from_server: current_user.last_received_from_server_at,
+    creation_code: current_user.access_code,
   });
 
   // Check if new microtasks can be assigned to the worker

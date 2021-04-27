@@ -6,7 +6,7 @@
 import * as DBT from '@karya/common';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
-export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'work_provider'
+export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_user'
   ? 'DBT.WorkProvider'
   : Table extends 'box'
   ? 'DBT.Box'
@@ -26,22 +26,18 @@ export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'work_pr
   ? 'DBT.MicrotaskGroupAssignment'
   : Table extends 'microtask_assignment'
   ? 'DBT.MicrotaskAssignment & { limit?: number; }'
-  : Table extends 'payout_info'
-  ? 'DBT.PayoutInfo'
-  : Table extends 'payment_request'
-  ? 'DBT.PayoutInfo & DBT.PaymentRequest'
   : never;
 
 export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'GET_BY_ID';
       id: string;
     }
   | {
       type: 'BR_INIT';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'UPDATE_BY_ID';
       id: string;
       request: DBT.WorkProvider;
@@ -49,14 +45,14 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'GENERATE_CC';
       request: DBT.WorkProvider;
       files?: undefined;
     }
   | {
       type: 'BR_INIT';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'GET_ALL';
       params: DBT.WorkProvider;
     }
@@ -302,46 +298,6 @@ export type BackendRequestInitAction =
       store: 'microtask_assignment';
       label: 'GET_BY_ID';
       id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payout_info';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.PayoutInfo;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payout_info';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payout_info';
-      label: 'GET_ALL';
-      params: DBT.PayoutInfo;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payment_request';
-      label: 'GET_ALL';
-      params: DBT.PayoutInfo & DBT.PaymentRequest;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payment_request';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.PaymentRequest;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'payment_request';
-      label: 'GET_BY_ID';
-      id: string;
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -349,25 +305,25 @@ export type StoreList = BackendRequestInitAction['store'];
 export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'GET_BY_ID';
       response: DBT.WorkProviderRecord;
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'UPDATE_BY_ID';
       response: DBT.WorkProviderRecord;
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'GENERATE_CC';
       response: DBT.WorkProviderRecord;
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'work_provider';
+      store: 'server_user';
       label: 'GET_ALL';
       response: DBT.WorkProviderRecord[];
     }
@@ -589,42 +545,6 @@ export type BackendRequestSuccessAction =
       store: 'microtask_assignment';
       label: 'GET_BY_ID';
       response: DBT.MicrotaskAssignmentRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payout_info';
-      label: 'UPDATE_BY_ID';
-      response: DBT.PayoutInfoRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payout_info';
-      label: 'GET_BY_ID';
-      response: DBT.PayoutInfoRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payout_info';
-      label: 'GET_ALL';
-      response: DBT.PayoutInfoRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payment_request';
-      label: 'GET_ALL';
-      response: DBT.PaymentRequestRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payment_request';
-      label: 'UPDATE_BY_ID';
-      response: DBT.PaymentRequestRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'payment_request';
-      label: 'GET_BY_ID';
-      response: DBT.PaymentRequestRecord;
     };
 
 export type BackendRequestFailureAction = {
@@ -681,12 +601,12 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    if (action.store === 'work_provider' && action.label === 'GENERATE_CC') {
+    if (action.store === 'server_user' && action.label === 'GENERATE_CC') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST('/work_provider/generate/cc', action.request, {}, action.files),
+        response: await POST('/server_user/generate/cc', action.request, {}, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_UP') {
@@ -694,7 +614,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT('/work_provider/update/cc', action.request, action.files),
+        response: await PUT('/server_user/update/cc', action.request, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_IN') {
@@ -702,7 +622,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST('/work_provider/sign/in', action.request, action.headers, action.files),
+        response: await POST('/server_user/sign/in', action.request, action.headers, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'AUTO_SIGN_IN') {
@@ -710,7 +630,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST('/work_provider/sign/in', action.request, {}, action.files),
+        response: await POST('/server_user/sign/in', action.request, {}, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_OUT') {
@@ -718,7 +638,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT('/work_provider/sign/out', action.request, action.files),
+        response: await PUT('/server_user/sign/out', action.request, action.files),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'box' && action.label === 'GENERATE_CC') {

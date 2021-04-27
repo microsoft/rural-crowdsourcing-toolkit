@@ -168,7 +168,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     );
 
     // Box drop down
-    const boxes = this.props.box.data.filter((b) => b.key !== null);
+    const boxes = this.props.box.data.filter((b) => b.id_token !== null);
     const { box } = this.state;
     const box_id = box ? box.id : 0;
     const boxDropDown = (
@@ -179,7 +179,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
           </option>
           {boxes.map((b) => (
             <option value={b.id} key={b.id}>
-              {b.name} ({b.location_name})
+              {b.name} ({b.location})
             </option>
           ))}
         </select>

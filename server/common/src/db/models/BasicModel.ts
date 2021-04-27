@@ -3,7 +3,7 @@
 
 // This file defines basic model functions for all the tables in the database.
 
-import { DbObjectType, DbRecordType, DbTableName } from '../auto/TableInterfaces';
+import { DbObjectType, DbRecordType, DbTableName } from '../Index';
 import { knex } from '../Client';
 
 /**

@@ -3,28 +3,8 @@
 //
 // Script to generate files from the specifications.
 
-import fs from 'fs';
-import { tableInterfacesFileData } from './generators/TableInterfacesGenerator';
-import { createTableFunctionsFileData } from './generators/CreateTableFunctionsGenerator';
-import { dropTableFunctionsFileData } from './generators/DropFunctionsGenerator';
-
 import { writeTypescriptInterfaceFile, writeTableFunctionsFile } from '@karya/schema-spec';
 import { karyaBoxDb, karyaServerDb } from './specs/KaryaDb';
-
-const SRC_FOLDER = `${process.cwd()}/src/db/auto`;
-
-// Write the table interfaces file. This file contains all the type definitions
-// for the karya database tables.
-const tableInterfacesFile = `${SRC_FOLDER}/TableInterfaces.ts`;
-fs.writeFileSync(tableInterfacesFile, tableInterfacesFileData());
-
-// Write the table column list into a file
-const createFunctionsFile = `${SRC_FOLDER}/CreateFunctions.ts`;
-fs.writeFileSync(createFunctionsFile, createTableFunctionsFileData());
-
-// Write the table column list into a file
-const dropFunctionsFile = `${SRC_FOLDER}/DropFunctions.ts`;
-fs.writeFileSync(dropFunctionsFile, dropTableFunctionsFileData());
 
 // -- NEW Model
 

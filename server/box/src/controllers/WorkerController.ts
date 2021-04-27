@@ -29,20 +29,20 @@ export async function checkIn(ctx: KaryaHTTPContext) {
  */
 export async function checkCreationCode(ctx: KaryaHTTPContext) {
   // Get creation code from params
-  const creation_code: string = ctx.params.creation_code;
+  const access_code: string = ctx.params.access_code;
 
   // Check if there is a creation code
   // May be unnecessary based on the koa operation
-  if (!creation_code) {
+  if (!access_code) {
     HttpResponse.BadRequest(ctx, 'Need a creation code');
     return;
   }
 
   // Check if a creation code record exist
   try {
-    await BasicModel.getSingle('worker', { creation_code });
+    await BasicModel.getSingle('worker', { access_code });
   } catch (e) {
-    HttpResponse.OK(ctx, { valid: false, message: 'invalid_creation_code' });
+    HttpResponse.OK(ctx, { valid: false, message: 'invalid_access_code' });
     return;
   }
 
@@ -50,7 +50,7 @@ export async function checkCreationCode(ctx: KaryaHTTPContext) {
   /* if (worker.auth_provider) {
     HttpResponse.OK(ctx, {
       valid: false,
-      message: 'creation_code_already_used',
+      message: 'access_code_already_used',
     });
     return;
   } */
@@ -68,7 +68,7 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
   const worker: Worker = ctx.request.body;
 
   // Check if the creation code is valid
-  if (!worker.creation_code) {
+  if (!worker.access_code) {
     HttpResponse.BadRequest(ctx, 'Need to provide creation code');
     return;
   }
@@ -77,16 +77,16 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
   let workerRecord: WorkerRecord;
   try {
     workerRecord = await BasicModel.getSingle('worker', {
-      creation_code: worker.creation_code,
+      access_code: worker.access_code,
     });
   } catch (e) {
-    HttpResponse.NotFound(ctx, 'invalid_creation_code');
+    HttpResponse.NotFound(ctx, 'invalid_access_code');
     return;
   }
 
   // Ensure that the creation code is not in use
   if (workerRecord.auth_provider && worker.phone_number != workerRecord.phone_number) {
-    HttpResponse.Unavailable(ctx, 'creation_code_already_used');
+    HttpResponse.Unavailable(ctx, 'access_code_already_used');
     return;
   }
 
@@ -128,7 +128,7 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
     // generate the OTP
     let otp: string;
     if (ctx.query.resend) {
-      const params = workerRecord.params as {
+      const params = workerRecord.extras as {
         phone_number: string;
         otp: string;
       };
@@ -148,7 +148,7 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
       workerRecord = await BasicModel.updateSingle(
         'worker',
         { id: workerRecord.id },
-        { params: { ...workerRecord.params, phone_number, otp } }
+        { extras: { ...workerRecord.extras, phone_number, otp } }
       );
     }
 
@@ -156,8 +156,6 @@ export async function initiatePhoneAuthentication(ctx: KaryaHTTPContext) {
     if (!phone_number.startsWith('00000')) {
       await sendOTP(phone_number, otp);
     }
-
-    workerRecord.profile_picture = null;
 
     // Respond with the record
     HttpResponse.OK(ctx, workerRecord);
@@ -178,18 +176,18 @@ export async function updateWorkerWithCreationCode(ctx: KaryaHTTPContext) {
 
   /** Check if the creation code is valid */
   try {
-    const { creation_code } = workerInfo;
-    ccRecord = await BasicModel.getSingle('worker', { creation_code });
+    const { access_code } = workerInfo;
+    ccRecord = await BasicModel.getSingle('worker', { access_code });
   } catch (e) {
     logger.error('Invalid creation code');
-    HttpResponse.BadRequest(ctx, 'invalid_creation_code');
+    HttpResponse.BadRequest(ctx, 'invalid_access_code');
     return;
   }
 
   /** Creation code already used check */
   /* if (ccRecord.auth_provider !== null) {
     logger.error('Creation code already in use');
-    HttpResponse.BadRequest(ctx, 'creation_code_already_used');
+    HttpResponse.BadRequest(ctx, 'access_code_already_used');
     return;
   } */
 
@@ -203,8 +201,7 @@ export async function updateWorkerWithCreationCode(ctx: KaryaHTTPContext) {
       // Set the cookie with id_token
       const worker = authResponse.wp;
       // assert that the auth_provider and id_token are not null
-      worker.salt = null;
-      worker.profile_picture = null;
+      worker.salt1 = null;
       HttpResponse.OK(ctx, worker);
     } else {
       logger.error('worker authentication failed');
@@ -224,13 +221,12 @@ export async function refreshIdToken(ctx: KaryaHTTPContext) {
   const workerRecord = ctx.state.current_user;
   requestLogger.info({ info: 'refresh token', id: workerRecord.id });
   requestLogger.info({
-    oldSalt: workerRecord.salt,
+    oldSalt: workerRecord.salt1,
     oldToken: workerRecord.id_token,
   });
   try {
     const updatedRecord = await refreshIDToken(workerRecord);
-    updatedRecord.salt = null;
-    updatedRecord.profile_picture = null;
+    updatedRecord.salt1 = null;
     HttpResponse.OK(ctx, updatedRecord);
   } catch (e) {
     const message = getControllerError(e);

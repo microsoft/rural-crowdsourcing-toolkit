@@ -39,7 +39,7 @@ export function typescriptDbInterface<T extends string, S extends string, O exte
   // Db object map
   const tableObjectMap = tableNames.map((name) => {
     const tsTableName = typescriptTableName(name);
-    return `T extends '${name}' ? ${tsTableName}Record `;
+    return `T extends '${name}' ? ${tsTableName} `;
   });
 
   return `

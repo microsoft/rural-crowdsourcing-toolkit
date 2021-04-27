@@ -2,16 +2,22 @@
 // Licensed under the MIT license.
 
 // Export all auto generated files
-export * from './auto/TableInterfaces';
+export * from './ng-auto/TableInterfaces';
+export * from './types/CustomStrings';
 
 // Export the client and setup function
 export { knex, setupDbConnection } from './Client';
 
 // Export table create/delete functions
-export { createAllTables } from './auto/CreateFunctions';
-export { dropAllTables } from './auto/DropFunctions';
+export * as ServerDbFunctions from './ng-auto/ServerTableFunctions';
+export * as BoxDbFunctions from './ng-auto/BoxTableFunctions';
 
 // Export basic models
 export * as BasicModel from './models/BasicModel';
 export * as MicrotaskModel from './models/MicrotaskModel';
 export * as MicrotaskGroupModel from './models/MicrotaskGroupModel';
+
+// Temporary fixes
+export { ServerUserRecord as WorkProviderRecord } from './ng-auto/TableInterfaces';
+export { ServerUser as WorkProvider } from './ng-auto/TableInterfaces';
+export { AuthProvider as AuthProviderType } from './types/CustomStrings';

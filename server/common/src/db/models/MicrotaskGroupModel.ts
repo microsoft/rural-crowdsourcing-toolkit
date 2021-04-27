@@ -8,7 +8,7 @@ import {
   MicrotaskRecord,
   TaskRecord,
   WorkerRecord,
-} from '../auto/TableInterfaces';
+} from '../Index';
 
 /**
  * Get a list of microtask group records from the specified task that can

@@ -144,13 +144,7 @@ class TaskDetail extends React.Component<TaskDetailProps> {
 
     const disableEdit = !editStatuses.includes(task.status);
     const disableValidate = !validateStatuses.includes(task.status);
-    const disableApprove = !(this.props.cwp.admin && approveStatuses.includes(task.status));
-
-    const task_actions = task.actions as { uploads: string[] };
-    const task_errors = task.errors as { messages: string[] };
-
-    const uploads = task_actions.uploads || [];
-    const task_messages = task_errors.messages || [];
+    const disableApprove = !(this.props.cwp.role === 'admin' && approveStatuses.includes(task.status));
 
     const outputFiles = param_values.outputFiles
       ? (param_values.outputFiles as Array<[string, string, string | null]>)
@@ -168,46 +162,15 @@ class TaskDetail extends React.Component<TaskDetailProps> {
           <div className='row' style={{ marginBottom: '0px' }}>
             <div className='col m6'>
               <h5>
-                {`${task.name} (${task.primary_language_name})`}
+                {`${task.name} (${task.display_name})`}
                 <i className='material-icons right' onClick={this.props.getTask}>
                   refresh
                 </i>
               </h5>
               <p>{task.description}</p>
-              <p>{task.primary_language_description}</p>
             </div>
           </div>
         </div>
-
-        {uploads.length === 0 ? null : (
-          <div className='section'>
-            <div className='row'>
-              <div className='col'>
-                <h6 className='red-text'>Actions to be completed</h6>
-              </div>
-            </div>
-            {uploads.map((upload, index) => (
-              <div className='row' key={index} style={{ marginBottom: '0px' }}>
-                <div className='col'>{upload}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {task_messages.length === 0 ? null : (
-          <div className='section'>
-            <div className='row'>
-              <div className='col'>
-                <h6 className='red-text'>Task errors</h6>
-              </div>
-            </div>
-            {task_messages.map((err, index) => (
-              <div className='row' key={index} style={{ marginBottom: '0px' }}>
-                <div className='col'>{err}</div>
-              </div>
-            ))}
-          </div>
-        )}
 
         <div className='section'>
           <div className='row' style={{ marginBottom: '0px' }}>
@@ -245,15 +208,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
           <div className='row' style={{ marginBottom: '0px' }}>
             <div className='col'>Microtask Assignment Order: </div>
             <div className='col'>{task.microtask_assignment_order}</div>
-          </div>
-        </div>
-
-        <div className='section'>
-          <div className='row' style={{ marginBottom: '0px' }}>
-            <div className='col'>
-              <span className='red-text'>Estimated Budget: </span>
-              <span>{task.budget !== null ? task.budget : 'Not estimated yet'}</span>
-            </div>
           </div>
         </div>
 

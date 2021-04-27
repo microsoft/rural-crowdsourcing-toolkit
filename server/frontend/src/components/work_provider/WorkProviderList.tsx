@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch: any) => {
     generateWorkProviderCC: (wp: WorkProvider) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
-        store: 'work_provider',
+        store: 'server_user',
         label: 'GENERATE_CC',
         request: wp,
       };
@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch: any) => {
 
 /** Create the connector HoC */
 const reduxConnector = connect(null, mapDispatchToProps);
-const dataConnector = withData('work_provider');
+const dataConnector = withData('server_user');
 const connector = compose(dataConnector, reduxConnector);
 
 /** LanugageList has only connected props */
@@ -81,42 +81,42 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
 
   // On update, update text fields
   componentDidUpdate(prevProps: WorkProviderListProps) {
-    if (prevProps.work_provider.status === 'IN_FLIGHT' && this.props.work_provider.status === 'SUCCESS') {
+    if (prevProps.server_user.status === 'IN_FLIGHT' && this.props.server_user.status === 'SUCCESS') {
       this.clearForm();
     }
     M.updateTextFields();
   }
 
   render() {
-    const work_providers = this.props.work_provider.data;
+    const server_users = this.props.server_user.data;
 
     /** Extract error message element */
     const errorMessageElement =
-      this.props.work_provider.status === 'FAILURE' ? (
+      this.props.server_user.status === 'FAILURE' ? (
         <div>
-          <ErrorMessage message={this.props.work_provider.messages} />
+          <ErrorMessage message={this.props.server_user.messages} />
         </div>
       ) : null;
 
     const tableColumns: Array<TableColumnType<WorkProviderRecord>> = [
-      { header: 'Admin', type: 'function', function: (wp) => (wp.admin ? 'Yes' : 'No') },
+      { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'admin' ? 'Yes' : 'No') },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
       { type: 'function', header: 'Authentication Type', function: (wp) => AuthProviderName(wp.auth_provider) },
-      { type: 'field', field: 'creation_code', header: 'Creation Code' },
+      { type: 'field', field: 'access_code', header: 'Access Code' },
     ];
 
     /** Function to sort the work providers */
     const sortWorkProviders = (a: WorkProviderRecord, b: WorkProviderRecord) => {
-      if (a.admin === b.admin) {
+      if (a.role === b.role) {
         return new Date(a.created_at) < new Date(b.created_at) ? 1 : -1;
       }
-      return a.admin ? -1 : 1;
+      return a.role === 'admin' ? -1 : 1;
     };
 
     /** List of signed up work providers */
-    const signedUpWorkProviders = work_providers.filter((wp) => wp.auth_provider !== null).sort(sortWorkProviders);
-    const createdWorkProviders = work_providers.filter((wp) => wp.auth_provider === null).sort(sortWorkProviders);
+    const signedUpWorkProviders = server_users.filter((wp) => wp.auth_provider !== null).sort(sortWorkProviders);
+    const createdWorkProviders = server_users.filter((wp) => wp.auth_provider === null).sort(sortWorkProviders);
 
     /** Creation code form */
     const { ccForm } = this.state;
@@ -128,7 +128,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
               id='full_name'
               label='Full Name'
               required={true}
-              value={ccForm.full_name}
+              value={ccForm.full_name ?? 'Unnamed'}
               onChange={this.handleChange}
               width='s3'
             />
@@ -136,7 +136,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
               id='email'
               label='Email'
               required={true}
-              value={ccForm.email}
+              value={ccForm.email ?? 'No mail'}
               onChange={this.handleChange}
               width='s3'
             />
@@ -144,7 +144,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
               id='phone_number'
               label='Phone Number'
               required={true}
-              value={ccForm.phone_number}
+              value={ccForm.phone_number ?? 'No number'}
               onChange={this.handleChange}
               width='s3'
             />
@@ -165,7 +165,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
             rows={signedUpWorkProviders}
             emptyMessage='No signed up work providers'
           />
-          {this.props.work_provider.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
+          {this.props.server_user.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
           <TableList<WorkProviderRecord>
             columns={tableColumns}
             rows={createdWorkProviders}

@@ -4,7 +4,7 @@
 import BBPromise from 'bluebird';
 import box_id from '../config/box_id';
 import {
-  AssignmentOrderType,
+  AssignmentOrder,
   MicrotaskAssignmentRecord,
   MicrotaskGroupRecord,
   MicrotaskRecord,
@@ -108,7 +108,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     // Assign all microtask groups and microtasks to the user
     await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
       await BasicModel.insertRecord('microtask_group_assignment', {
-        microtask_group_id: group.id,
+        group_id: group.id,
         worker_id: worker.id,
         status: 'assigned',
       });
@@ -151,7 +151,7 @@ export async function handleMicrotaskAssignmentCompletion(microtaskAssignment: M
  * Reorder elements of an array based on the sort order
  * @param array Array to be shuffled
  */
-function reorder<T extends { id: string }>(array: T[], order: AssignmentOrderType) {
+function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
   if (order === 'random') {
     let currentIndex = array.length;
     let temporaryValue: T;

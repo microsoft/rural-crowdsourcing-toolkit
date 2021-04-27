@@ -20,14 +20,14 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     const box: Box = ctx.request.body;
 
     // Generate creation code and ensure it is not repeated
-    let creation_code = '';
+    let access_code = '';
     while (true) {
       try {
-        creation_code = getCreationCode({
+        access_code = getCreationCode({
           length: 16,
           numeric: false,
         });
-        await BasicModel.getSingle('box', { creation_code });
+        await BasicModel.getSingle('box', { access_code });
       } catch (e) {
         // Exception indicates that the creation code is already present
         break;
@@ -35,7 +35,7 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     }
 
     // Update box record with creation code and return it
-    box.creation_code = creation_code;
+    box.access_code = access_code;
 
     // Insert the record and return it
     const record = await BasicModel.insertRecord('box', box);

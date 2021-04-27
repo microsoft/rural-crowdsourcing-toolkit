@@ -27,7 +27,7 @@ export async function getRecordById(ctx: KaryaHTTPContext) {
     });
 
     // check if work_provider has access to the record
-    if (!current_user.admin) {
+    if (current_user.role != 'admin') {
       // extract task record for the microtask group
       const task = await BasicModel.getSingle('task', {
         id: microtaskGroupRecord.task_id,

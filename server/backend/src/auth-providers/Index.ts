@@ -37,7 +37,7 @@ export async function signUpUser(userInfo: WorkProvider): Promise<AuthResponse> 
     }
 
     /** Check if a previous work provider with the given credentials exists */
-    const records = await BasicModel.getRecords('work_provider', signUpResponse.matchInfo);
+    const records = await BasicModel.getRecords('server_user', signUpResponse.matchInfo);
 
     if (records.length > 0) {
       return {
@@ -50,10 +50,10 @@ export async function signUpUser(userInfo: WorkProvider): Promise<AuthResponse> 
     const updatedWP = signUpResponse.userInfo;
 
     /** Cannot sign up an admin user via the web portal */
-    delete updatedWP.admin;
+    delete updatedWP.role;
 
     /** Run query to update */
-    const updatedRecord = await BasicModel.updateSingle('work_provider', { id: userInfo.id }, updatedWP);
+    const updatedRecord = await BasicModel.updateSingle('server_user', { id: userInfo.id }, updatedWP);
 
     /** Successful update */
     return { success: true, wp: updatedRecord };
@@ -81,7 +81,7 @@ export async function verifyIDToken(authProvider: AuthProviderType, idToken: str
     }
 
     /** Get the records with matching info */
-    const records = await BasicModel.getRecords('work_provider', tokenResponse.matchInfo);
+    const records = await BasicModel.getRecords('server_user', tokenResponse.matchInfo);
 
     /** If no work provider */
     if (records.length !== 1) {

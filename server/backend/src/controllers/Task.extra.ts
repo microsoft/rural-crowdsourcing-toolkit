@@ -32,7 +32,7 @@ export function getWorkProviderFilter(ctx: KaryaHTTPContext): Task {
     workProviderFilter.work_provider_id = ctx.request.query.work_provider_id as string;
   }
   // if not admin, override with the implicit ID
-  if (!current_user.admin) {
+  if (current_user.role != 'admin') {
     workProviderFilter.work_provider_id = current_user.id;
   }
   return workProviderFilter;
@@ -42,6 +42,7 @@ export function getWorkProviderFilter(ctx: KaryaHTTPContext): Task {
  * Generate output SAS URLs for tasks
  */
 export function generateOutputSasURLs(task: TaskRecord): TaskRecord {
+  // @ts-ignore
   const params = task.params as {
     outputFiles: Array<[string, string, string | null]>;
   };
@@ -52,6 +53,7 @@ export function generateOutputSasURLs(task: TaskRecord): TaskRecord {
       }
     }
   }
+  // @ts-ignore
   return { ...task, params };
 }
 
@@ -80,8 +82,9 @@ export async function insertRecord(ctx: KaryaHTTPContext) {
       return;
     }
 
+    // @ts-ignore
     task.params = params;
-    task.status = 'validated';
+    task.status = 'submitted';
 
     // Insert the task into the Db
     const insertedRecord = await BasicModel.insertRecord('task', task);
@@ -131,7 +134,7 @@ export async function getRecordById(ctx: KaryaHTTPContext) {
   const filter: Task = { id };
 
   // add the work_provider field if not admin
-  if (!current_user.admin) {
+  if (current_user.role != 'admin') {
     filter.work_provider_id = current_user.id;
   }
 

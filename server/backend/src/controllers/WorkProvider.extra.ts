@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-// Implements APIs on the work_provider table. These APIs require extra checks to
+// Implements APIs on the server_user table. These APIs require extra checks to
 // ensure that a work provider is allowed to access only there records.
 
 import { WorkProvider, BasicModel } from '@karya/common';
@@ -21,14 +21,14 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
     const workProvider: WorkProvider = ctx.request.body;
 
     /** Generate a creation code and ensure it is not repeated */
-    let creation_code = '';
+    let access_code = '';
     while (true) {
       try {
-        creation_code = getCreationCode({
+        access_code = getCreationCode({
           length: 16,
           numeric: false,
         });
-        await BasicModel.getSingle('work_provider', { creation_code });
+        await BasicModel.getSingle('server_user', { access_code });
       } catch (e) {
         // Exception indicates that the record is not there.
         break;
@@ -37,11 +37,11 @@ export async function generateCreationCode(ctx: KaryaHTTPContext) {
 
     /** Update creation code in  work provider object */
     // Admin cannot be created via the web portal
-    workProvider.admin = false;
-    workProvider.creation_code = creation_code;
+    workProvider.role = 'work_provider';
+    workProvider.access_code = access_code;
 
     /** Insert the work provider object and return it */
-    const record = await BasicModel.insertRecord('work_provider', workProvider);
+    const record = await BasicModel.insertRecord('server_user', workProvider);
     HttpResponse.OK(ctx, record);
   } catch (e) {
     const message = getControllerError(e);
@@ -63,14 +63,14 @@ export async function getRecordById(ctx: KaryaHTTPContext) {
   const { current_user } = ctx.state;
 
   // check if the user is authorized to get the record
-  if (!current_user.admin && current_user.id != id) {
+  if (current_user.role != 'admin' && current_user.id != id) {
     HttpResponse.Forbidden(ctx, 'Unauthorized access');
     return;
   }
 
   try {
     // get the work provider record
-    const record = await BasicModel.getSingle('work_provider', { id });
+    const record = await BasicModel.getSingle('server_user', { id });
     HttpResponse.OK(ctx, record);
   } catch (e) {
     const message = getControllerError(e);
@@ -93,7 +93,7 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
   const { current_user } = ctx.state;
 
   // check if the user is authorized to update the record
-  if (!current_user.admin && current_user.id != id) {
+  if (current_user.role != 'admin' && current_user.id != id) {
     HttpResponse.Forbidden(ctx, 'Unauthorized access to record');
     return;
   }
@@ -102,12 +102,12 @@ export async function updateRecordById(ctx: KaryaHTTPContext) {
   const updates: WorkProvider = ctx.request.body;
 
   // work provider cannot update the id and admin fields
-  delete updates.admin;
+  delete updates.role;
   delete updates.id;
 
   try {
     // attempt to update the record
-    const record = await BasicModel.updateSingle('work_provider', { id }, updates);
+    const record = await BasicModel.updateSingle('server_user', { id }, updates);
     HttpResponse.OK(ctx, record);
   } catch (e) {
     const message = getControllerError(e);

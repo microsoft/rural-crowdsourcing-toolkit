@@ -44,8 +44,6 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
           return 'Assigned';
         case 'completed':
           return 'Completed';
-        case 'sent':
-          return 'Sent to Box';
       }
     };
 

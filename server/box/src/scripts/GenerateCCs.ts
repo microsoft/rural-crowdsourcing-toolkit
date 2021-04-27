@@ -17,7 +17,7 @@ export async function generateWorkerCCs(
     return false;
   }
 
-  const params = tags ? { tags } : {};
+  const extras = tags ? { tags } : {};
 
   // Repeat for num_cc times
   let continuousErrors = 0;
@@ -31,10 +31,10 @@ export async function generateWorkerCCs(
 
     // Generate a worker record
     const createWorker: Worker = {
-      creation_code: creationCode,
+      access_code: creationCode,
       box_id,
       full_name: '',
-      params,
+      extras,
     };
 
     try {
@@ -54,7 +54,7 @@ export async function generateWorkerCCs(
   }
 
   for (const worker of newWorkers) {
-    console.log(worker.creation_code);
+    console.log(worker.access_code);
   }
 
   return true;

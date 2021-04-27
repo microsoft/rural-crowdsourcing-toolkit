@@ -24,9 +24,6 @@ import { envGetString } from '@karya/misc-utils';
  * @param ctx Koa context
  */
 export async function checkin(ctx: KaryaHTTPContext) {
-  const box = ctx.state.current_box;
-  const params = { ...box.params, last_check_in_at: new Date().toISOString() };
-  await BasicModel.updateSingle('box', { id: box.id }, { params });
   HttpResponse.OK(ctx, {});
 }
 
@@ -228,23 +225,23 @@ export async function updateWithCreationCode(ctx: KaryaHTTPContext) {
 
   // Check if the creation code is valid
   try {
-    const { creation_code } = box;
-    boxRecord = await BasicModel.getSingle('box', { creation_code });
+    const { access_code } = box;
+    boxRecord = await BasicModel.getSingle('box', { access_code });
   } catch (e) {
     HttpResponse.BadRequest(ctx, 'Invalid creation code');
     return;
   }
 
   // Check if the creation code is already used
-  if (boxRecord.key !== null) {
+  if (boxRecord.id_token !== null) {
     HttpResponse.BadRequest(ctx, 'Creation code already in use');
     return;
   }
 
   // Create the key for the box
   const { salt, key } = createNewKeyForBox(boxRecord);
-  box.salt = salt;
-  box.key = key;
+  box.salt1 = salt;
+  box.id_token = key;
 
   // Remove unnecessary fields from box
   delete box.physical;
@@ -253,7 +250,7 @@ export async function updateWithCreationCode(ctx: KaryaHTTPContext) {
     const updatedRecord = await BasicModel.updateSingle('box', { id: boxRecord.id }, box);
 
     // Don't send salt to the box
-    updatedRecord.salt = null;
+    updatedRecord.salt1 = null;
     HttpResponse.OK(ctx, updatedRecord);
   } catch (e) {
     const message = getControllerError(e);

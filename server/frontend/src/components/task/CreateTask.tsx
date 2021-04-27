@@ -74,8 +74,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     task: {
       name: '',
       description: '',
-      primary_language_name: '',
-      primary_language_description: '',
+      display_name: '',
     },
     params: {},
     files: {},
@@ -86,8 +85,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     const task: Task = {
       name: '',
       description: '',
-      primary_language_name: '',
-      primary_language_description: '',
+      display_name: '',
     };
     this.setState({ task });
   };
@@ -116,8 +114,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     const task: Task = {
       name: '',
       description: '',
-      primary_language_name: '',
-      primary_language_description: '',
+      display_name: '',
       scenario_name,
       assignment_granularity: scenario.assignment_granularity,
       group_assignment_order: scenario.group_assignment_order,
@@ -129,7 +126,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   // Handle language change
   handleLanguageChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const language_code = e.currentTarget.value as LanguageCode;
-    const task: Task = { ...this.state.task, primary_language_name: '', primary_language_description: '' };
+    const task: Task = { ...this.state.task, display_name: '' };
     this.setState({ language_code, task });
   };
 
@@ -298,7 +295,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 id='primary_language_name'
                 label={`Task name in ${language.name} (${language.primary_name})`}
                 width='s4'
-                value={task.primary_language_name}
+                value={task.display_name}
                 onChange={this.handleInputChange}
                 required={true}
               />
@@ -311,19 +308,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                   id='description'
                   className='materialize-textarea'
                   value={task.description}
-                  onChange={this.handleInputChange}
-                  required={true}
-                ></textarea>
-              </div>
-            </div>
-
-            <div className='row'>
-              <div className='col s8 input-field'>
-                <label htmlFor='primary_language_description'>{`Task Description in ${language.name} (${language.primary_name})`}</label>
-                <textarea
-                  id='primary_language_description'
-                  className='materialize-textarea'
-                  value={task.primary_language_description}
                   onChange={this.handleInputChange}
                   required={true}
                 ></textarea>

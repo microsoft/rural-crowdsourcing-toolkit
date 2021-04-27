@@ -63,8 +63,8 @@ class SignUp extends Component<SignUpProps, SignUpState> {
   /** Initial state */
   state: SignUpState = {
     wp: {
-      admin: false,
-      creation_code: '',
+      role: 'work_provider',
+      access_code: '',
       full_name: '',
       phone_number: '',
       email: '',
@@ -75,8 +75,8 @@ class SignUp extends Component<SignUpProps, SignUpState> {
   handleFormCancel: FormEventHandler = (e) => {
     e.preventDefault();
     const wp: WorkProvider = {
-      admin: false,
-      creation_code: '',
+      role: 'work_provider',
+      access_code: '',
       full_name: '',
       phone_number: '',
       email: '',
@@ -104,8 +104,8 @@ class SignUp extends Component<SignUpProps, SignUpState> {
     const id_token = googleUser.getAuthResponse().id_token;
 
     const wp: WorkProvider = {
-      creation_code: '',
-      admin: false,
+      access_code: '',
+      role: 'work_provider',
       full_name: profile.getName(),
       email: profile.getEmail(),
       phone_number: '',
@@ -179,7 +179,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                   <TextInput
                     id='creation_code'
                     label='16-Digit Creation Code*'
-                    value={wp.creation_code}
+                    value={wp.access_code}
                     onChange={this.handleFormChange}
                     required={true}
                     width='s12 m8'
@@ -188,7 +188,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                   <TextInput
                     id='full_name'
                     label='Full name of the work provider*'
-                    value={wp.full_name}
+                    value={wp.full_name ?? ''}
                     onChange={this.handleFormChange}
                     required={true}
                     width='s12 m8'
@@ -197,7 +197,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                   <TextInput
                     id='email'
                     label='E-mail Address'
-                    value={wp.email}
+                    value={wp.email ?? ''}
                     onChange={this.handleFormChange}
                     width='s12 m8'
                   />
@@ -205,7 +205,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                   <TextInput
                     id='phone_number'
                     label='Phone Number'
-                    value={wp.phone_number}
+                    value={wp.phone_number ?? ''}
                     onChange={this.handleFormChange}
                     width='s12 m8'
                   />

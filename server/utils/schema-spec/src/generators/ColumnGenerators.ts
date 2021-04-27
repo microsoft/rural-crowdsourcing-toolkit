@@ -34,7 +34,7 @@ function typescriptType<T extends string, S extends string, O extends string>(
     case 'stringarray':
       return `{ ${name}: string[] }`;
     case 'kv':
-      return '{ [id: string]: string }';
+      return '{ [id: string]: string | number | boolean}';
     case 'object':
       return ctype[1] ? `Custom.${ctype[1]}` : 'object';
     default:
@@ -96,7 +96,7 @@ export function basicKnexField<T extends string, S extends string, O extends str
       const eon = new Date(0).toISOString();
       const field = `timestamp('${name}')`;
       const def = ctype[1];
-      return def ? (def == 'eon' ? `${field}.defaultTo(${eon})` : `${field}.defaultTo(${now})`) : field;
+      return def ? (def == 'eon' ? `${field}.defaultTo('${eon}')` : `${field}.defaultTo(${now})`) : field;
     }
 
     case '>':

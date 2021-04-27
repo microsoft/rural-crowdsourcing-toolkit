@@ -39,9 +39,9 @@ export async function updateWithCreationCode(ctx: KaryaHTTPContext) {
 
   /** Check if the creation code is valid */
   try {
-    const { creation_code } = workProvider;
-    workProviderRecord = await BasicModel.getSingle('work_provider', {
-      creation_code,
+    const { access_code } = workProvider;
+    workProviderRecord = await BasicModel.getSingle('server_user', {
+      access_code,
     });
   } catch (e) {
     HttpResponse.BadRequest(ctx, 'Invalid creation code');

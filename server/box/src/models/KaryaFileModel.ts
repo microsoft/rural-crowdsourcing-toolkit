@@ -37,8 +37,8 @@ export async function insertWorkerFile(
   // Fill out the remaining details
   karyaFile.container_name = blobParams.cname;
   karyaFile.name = getBlobName(blobParams);
-  karyaFile.creator = 'karya_client';
-  karyaFile.worker_id = worker_id;
+  karyaFile.creator = 'worker';
+  karyaFile.creator_id = worker_id;
   karyaFile.box_id = box_id;
   karyaFile.in_box = true;
 
@@ -76,7 +76,8 @@ export async function insertLocalKaryaFile(blobParams: BlobParameters, filepath:
     name: blobName,
     box_id,
     container_name: blobParams.cname,
-    creator: 'karya_box',
+    creator: 'box',
+    creator_id: box_id,
     algorithm: csAlgo,
     checksum,
     in_box: true,

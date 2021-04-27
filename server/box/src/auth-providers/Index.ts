@@ -66,16 +66,11 @@ export async function signUpUser(userInfo: Worker, ccRecord: WorkerRecord): Prom
     const updatedWP = signUpResponse.userInfo;
 
     /** Run query to update */
-    const eon = new Date(0).toISOString();
     const updatedRecord = await BasicModel.updateSingle(
       'worker',
       { id: ccRecord.id },
       {
         ...updatedWP,
-        last_received_from_box_at: eon,
-        last_received_from_server_at: eon,
-        last_sent_to_box_at: eon,
-        last_sent_to_server_at: eon,
       }
     );
 
@@ -156,7 +151,7 @@ export async function refreshIDToken(worker: WorkerRecord): Promise<WorkerRecord
   // Update the db
   const { id, last_updated_at, created_at, ...rest } = refreshedRecord;
   requestLogger.info({
-    newSalt: refreshedRecord.salt,
+    newSalt: refreshedRecord.salt1,
     newToken: refreshedRecord.id_token,
   });
   const updatedRecord = await BasicModel.updateSingle('worker', { id }, rest);

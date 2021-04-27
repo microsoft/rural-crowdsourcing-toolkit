@@ -15,7 +15,6 @@ import * as BoxController from '../controllers/Box.extra';
 import * as MicrotaskController from '../controllers/Microtask.extra';
 import * as MicrotaskAssignmentController from '../controllers/MicrotaskAssignment.extra';
 import * as MicrotaskGroupController from '../controllers/MicrotaskGroup.extra';
-import * as PaymentRequestController from '../controllers/PaymentRequest.extra';
 import * as TaskController from '../controllers/Task.extra';
 import * as WorkProviderController from '../controllers/WorkProvider.extra';
 
@@ -74,13 +73,5 @@ router.get('/microtask_group_assignment', checkAdmin, setTableName, setGetFilter
 router.get('/microtask_assignment', checkAdmin, MicrotaskAssignmentController.getRecords);
 router.put('/microtask_assignment/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
 router.get('/microtask_assignment/:id', checkAdmin, setTableName, getRecordById);
-
-router.put('/payout_info/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
-router.get('/payout_info/:id', checkAdmin, setTableName, getRecordById);
-router.get('/payout_info', checkAdmin, setTableName, setGetFilter, getRecords);
-
-router.get('/payment_request', checkAdmin, PaymentRequestController.getRecords);
-router.put('/payment_request/:id', checkAdmin, setTableName, BodyParser(), updateRecordById);
-router.get('/payment_request/:id', checkAdmin, setTableName, getRecordById);
 
 export default router;

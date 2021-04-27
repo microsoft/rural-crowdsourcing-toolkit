@@ -59,6 +59,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     server_user: {
       columns: [
         ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
+        ['registered', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
         ['auth_provider', ['string', 32, 'AuthProvider'], 'not unique', 'nullable', 'mutable'],
         ['phone_number', ['string', 16], 'not unique', 'nullable', 'mutable'],
         ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
@@ -74,6 +75,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     box: {
       columns: [
         ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
+        ['registered', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
         ['physical', ['boolean', false], 'not unique', 'not nullable', 'not mutable'],
         ['name', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['location', ['string', 64], 'not unique', 'nullable', 'mutable'],
@@ -82,12 +84,15 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
         ['salt1', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['salt2', ['string', 64], 'not unique', 'nullable', 'mutable'],
+        ['last_received_from_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
+        ['last_sent_to_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
       ],
     },
 
     worker: {
       columns: [
         ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
+        ['registered', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
         ['auth_provider', ['string', 32, 'AuthProvider'], 'not unique', 'nullable', 'mutable'],
         ['phone_number', ['string', 16], 'not unique', 'nullable', 'mutable'],
         ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
@@ -119,8 +124,8 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     task: {
       columns: [
         ['work_provider_id', ['>', 'server_user'], 'not unique', 'not nullable', 'not mutable'],
-        ['language', ['string', 8, 'LanguageCode'], 'not unique', 'not nullable', 'not mutable'],
-        ['scenario', ['string', 16, 'ScenarioName'], 'not unique', 'not nullable', 'not mutable'],
+        ['language_code', ['string', 8, 'LanguageCode'], 'not unique', 'not nullable', 'not mutable'],
+        ['scenario_name', ['string', 16, 'ScenarioName'], 'not unique', 'not nullable', 'not mutable'],
         ['name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['description', ['text'], 'not unique', 'not nullable', 'mutable'],
         ['display_name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
@@ -144,6 +149,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       columns: [
         ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
         ['microtask_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
+        ['status', ['string', 16, 'MicrotaskStatus'], 'not unique', 'not nullable', 'mutable'],
       ],
     },
 
@@ -154,7 +160,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['input', ['object', 'MicrotaskInput'], 'not unique', 'not nullable', 'not mutable'],
         ['input_file_id', ['>', 'karya_file'], 'not unique', 'nullable', 'not mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
-        ['credits', ['float'], 'not unique', 'nullable', 'mutable'],
+        ['credits', ['float'], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 16, 'MicrotaskStatus'], 'not unique', 'not nullable', 'mutable'],
         ['output', ['object', 'MicrotaskOutput'], 'not unique', 'nullable', 'mutable'],
       ],
@@ -195,6 +201,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       columns: [
         ['group_id', ['>', 'microtask_group'], 'not unique', 'not nullable', 'not mutable'],
         ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
+        ['status', ['string', 16, 'MicrotaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
       ],
     },
 

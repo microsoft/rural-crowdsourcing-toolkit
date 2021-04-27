@@ -4,9 +4,8 @@
 import { Box } from '@karya/common';
 
 export const boxInfo: Box = {
-  location_name: '<Enter Box Location Name>',
-  gps_location: '<GPS Location - If applicable>',
-  hw_address: '<Hardware Address>',
+  location: '<Enter Box Location Name>',
+  gps: '<GPS Location - If applicable>',
   url: '<URL of the box>',
-  creation_code: '<Creation code to use>',
+  access_code: '<Creation code to use>',
 };

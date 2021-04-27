@@ -14,32 +14,32 @@ import { getCreationCode } from '@karya/misc-utils';
  */
 export async function bootstrapAuth() {
   /** Ensure there are no records */
-  const currentRecords = await BasicModel.getRecords('work_provider', {});
+  const currentRecords = await BasicModel.getRecords('server_user', {});
   if (currentRecords.length > 0) {
     throw new Error('There are already work provider records. Not bootstrapping');
   }
 
   /** Get a creation code  */
-  const creation_code = getCreationCode({
+  const access_code = getCreationCode({
     length: 16,
     numeric: false,
   });
 
   /** Create an admin user */
   const workProvider: WorkProvider = {
-    admin: true,
-    creation_code,
+    role: 'admin',
+    access_code,
     full_name: '',
     email: '',
     phone_number: '',
   };
 
   /** Insert the new user */
-  const insertedRecord = await BasicModel.insertRecord('work_provider', workProvider);
+  const insertedRecord = await BasicModel.insertRecord('server_user', workProvider);
 
   if (insertedRecord === null) {
     throw new Error('Failed to create record');
   }
 
-  return creation_code;
+  return access_code;
 }

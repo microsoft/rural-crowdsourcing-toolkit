@@ -5,7 +5,7 @@
  * Script to reset the database and initialize some basic tables
  */
 
-import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/common';
+import { knex, setupDbConnection, BoxDbFunctions } from '@karya/common';
 import logger from '../utils/Logger';
 
 /** Main Script to reset the DB */
@@ -15,7 +15,7 @@ import logger from '../utils/Logger';
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
   setupDbConnection();
-  await dropAllTables();
-  await createAllTables('box');
+  await BoxDbFunctions.dropAllTables();
+  await BoxDbFunctions.createAllTables();
   logger.info(`Tables recreated`);
 })().finally(() => knex.destroy());

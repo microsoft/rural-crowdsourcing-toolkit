@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '../auto/TableInterfaces';
+import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '../Index';
 import { knex } from '../Client';
 
 /**

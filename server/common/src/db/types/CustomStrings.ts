@@ -9,7 +9,7 @@ const serverRoles = ['admin', 'work_provider'] as const;
 export type ServerRole = typeof serverRoles[number];
 
 // Auth Provider -- TODO: move this to a auth provider module
-const authProviders = ['phone_otp'] as const;
+const authProviders = ['phone_otp', 'google_oauth'] as const;
 export type AuthProvider = typeof authProviders[number];
 
 // Gender

@@ -57,7 +57,7 @@ export async function POST<RequestType = any, ResponseType = any>(
     const response = await axios.post<ResponseType>(endpoint, obj, {
       headers: {
         'box-id': this_box.id,
-        'id-token': this_box.key,
+        'id-token': this_box.id_token,
       },
     });
     return response.data;
@@ -72,7 +72,7 @@ export async function POST<RequestType = any, ResponseType = any>(
       headers: {
         'Content-Type': 'multipart/form-data',
         'box-id': this_box.id,
-        'id-token': this_box.key,
+        'id-token': this_box.id_token,
       },
     });
     return response.data;
@@ -96,7 +96,7 @@ export async function PUT<RequestType = any, ResponseType = any>(
     const response = await axios.put<ResponseType>(endpoint, obj, {
       headers: {
         'box-id': this_box.id,
-        'id-token': this_box.key,
+        'id-token': this_box.id_token,
         'content-type': contentType,
       },
     });
@@ -112,7 +112,7 @@ export async function PUT<RequestType = any, ResponseType = any>(
       headers: {
         'Content-Type': 'multipart/form-data',
         'box-id': this_box.id,
-        'id-token': this_box.key,
+        'id-token': this_box.id_token,
       },
     });
     return response.data;
@@ -133,7 +133,7 @@ export async function GET<ParamsType = any, ResponseType = any>(
     params,
     headers: {
       'box-id': this_box.id,
-      'id-token': this_box.key,
+      'id-token': this_box.id_token,
     },
     responseType,
   });

@@ -37,16 +37,16 @@ type StoreReducer = Reducer<AllState, StoreActions>;
 
 // Initial state
 const initState: AllState = {
-  work_provider: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  server_user: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  task_op: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  task_chain: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_group: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_group_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  payment_request: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  payout_info: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   box: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   karya_file: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   auth: { cwp: null, status: 'SUCCESS' },
@@ -135,12 +135,12 @@ const storeReducer: StoreReducer = (state = initState, action) => {
   }
 
   // Work provider table
-  if (action.store === 'work_provider') {
+  if (action.store === 'server_user') {
     if (action.label === 'GENERATE_CC') {
-      const oldData = state.work_provider?.data || [];
+      const oldData = state.server_user?.data || [];
       const { response } = action;
       const data = mergeData(oldData, response);
-      return { ...state, work_provider: { data, last_fetched_at, status } };
+      return { ...state, server_user: { data, last_fetched_at, status } };
     }
   }
 

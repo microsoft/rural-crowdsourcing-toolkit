@@ -41,7 +41,7 @@ async function verifyIDToken(idToken: string): Promise<IDTokenVerificationRespon
  */
 async function refreshIDToken(worker: WorkerRecord): Promise<WorkerRecord> {
   const updatedWorker = generateToken(worker.id, worker);
-  worker.salt = updatedWorker.salt as string;
+  worker.salt1 = updatedWorker.salt1 as string;
   worker.id_token = updatedWorker.id_token as string;
   return worker;
 }
