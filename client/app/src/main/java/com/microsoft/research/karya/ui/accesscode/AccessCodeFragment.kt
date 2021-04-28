@@ -65,7 +65,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
       when (result) {
         is Result.Success<*> -> onAccessCodeVerified(result as Result.Success<Int>, accessCode)
         // TODO: Use error codes and exceptions from Anurag's PR
-        is Result.Error -> showErrorMessage(result.exception.message ?: "Error fetching data")
+        is Result.Error -> showErrorMessage(getString(result.errorMessageId))
         Result.Loading -> showLoading()
       }
     }

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
-import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
+import com.microsoft.research.karya.data.exceptions.AccessCodeAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
@@ -126,7 +126,7 @@ constructor(
   private fun sendGenerateOtpError(e: Throwable) {
     phoneNumberFragmentErrorId =
         when (e) {
-          is PhoneNumberAlreadyUsedException -> R.string.s_phone_number_already_used
+          is AccessCodeAlreadyUsedException -> R.string.s_phone_number_already_used
           is IncorrectAccessCodeException ->
               R.string.s_invalid_creation_code // this case should never happen
           is UnknownException -> R.string.s_unknown_error

@@ -2,7 +2,8 @@ package com.microsoft.research.karya.data.repo
 
 import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
-import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
+import com.microsoft.research.karya.data.exceptions.AccessCodeAlreadyUsedException
+import com.microsoft.research.karya.data.exceptions.SessionExpiredException
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
@@ -35,7 +36,7 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
     if (!response.isSuccessful) {
       throw when (response.code()) {
         404 -> IncorrectOtpException("Incorrect OTP")
-        403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
+        403 -> AccessCodeAlreadyUsedException("Access Code is being used by another phone number")
         401 -> IncorrectAccessCodeException("Access Code is incorrect")
         else -> UnknownException("Something went wrong")
       }
@@ -53,7 +54,10 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
     val responseBody = response.body()
 
     if (!response.isSuccessful) {
-      error("Request failed, response code: ${response.code()}")
+        throw when (response.code()) {
+            401 -> IncorrectAccessCodeException("Access Code is incorrect")
+            else -> UnknownException("Something went wrong")
+        }
     }
 
     if (responseBody != null) {
@@ -70,7 +74,10 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {
-      error("Request failed, response code: ${response.code()}")
+        throw when (response.code()) {
+            401 -> SessionExpiredException("Invalid id-token")
+            else -> UnknownException("Something went wrong")
+        }
     }
 
     if (workerRecord != null) {
@@ -90,7 +97,7 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
 
     if (!response.isSuccessful) {
       throw when (response.code()) {
-        401 -> IncorrectAccessCodeException("Access Code is incorrect")
+        401 -> IncorrectAccessCodeException("Invalid Access Code or id token")
         else -> UnknownException("Something went wrong")
       }
     }
