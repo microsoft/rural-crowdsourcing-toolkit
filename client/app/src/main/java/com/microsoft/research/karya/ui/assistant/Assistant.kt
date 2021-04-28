@@ -3,14 +3,18 @@ package com.microsoft.research.karya.ui.assistant
 import android.media.MediaPlayer
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import java.io.File
 
-class Assistant(
-  private val lifecycle: Lifecycle,
-) : LifecycleObserver {
+class Assistant(lifecycleOwner: LifecycleOwner) : LifecycleObserver {
 
   private lateinit var assistantPlayer: MediaPlayer
+  private val lifecycle: Lifecycle = lifecycleOwner.lifecycle
+
+  init {
+    lifecycleOwner.lifecycle.addObserver(this)
+  }
 
   fun playAssistantAudio(
     audioFilePath: String,
@@ -30,8 +34,10 @@ class Assistant(
 
         assistantPlayer.setOnErrorListener { _: MediaPlayer, _: Int, _: Int ->
           onErrorListener()
-          // returning false here indicates that we have not handled the error and onCompletionListener will be called
-          // Since we are returning false, we can do all the destruction work in onCompletion like we would have done
+          // returning false here indicates that we have not handled the error and
+          // onCompletionListener will be called
+          // Since we are returning false, we can do all the destruction work in onCompletion like
+          // we would have done
           // for the success case and only specify the error handling tasks in onErrorListener.
           return@setOnErrorListener false
         }
