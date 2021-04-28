@@ -40,7 +40,7 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
       when (loggedInUsers) {
         0 -> navigateToAccessCodeScreen()
-        1 -> navigateToUserAuthScreen()
+        1 -> navigateToDashboardScreen()
         else -> navigateToUserSelectScreen()
       }
     }
@@ -48,11 +48,6 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
   private fun navigateToUserSelectScreen() {
     // navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
-    requireActivity().finish()
-  }
-
-  private fun navigateToUserAuthScreen() {
-    navController.navigate(R.id.action_splashScreenFragment_to_registration_navigation)
     requireActivity().finish()
   }
 
