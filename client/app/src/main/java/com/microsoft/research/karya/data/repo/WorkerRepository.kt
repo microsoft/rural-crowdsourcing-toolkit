@@ -1,8 +1,8 @@
 package com.microsoft.research.karya.data.repo
 
+import com.microsoft.research.karya.data.exceptions.AccessCodeAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
-import com.microsoft.research.karya.data.exceptions.AccessCodeAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.SessionExpiredException
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.local.daos.WorkerDao
@@ -54,10 +54,10 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
     val responseBody = response.body()
 
     if (!response.isSuccessful) {
-        throw when (response.code()) {
-            401 -> IncorrectAccessCodeException("Access Code is incorrect")
-            else -> UnknownException("Something went wrong")
-        }
+      throw when (response.code()) {
+        401 -> IncorrectAccessCodeException("Access Code is incorrect")
+        else -> UnknownException("Something went wrong")
+      }
     }
 
     if (responseBody != null) {
@@ -74,10 +74,10 @@ constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) 
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {
-        throw when (response.code()) {
-            401 -> SessionExpiredException("Invalid id-token")
-            else -> UnknownException("Something went wrong")
-        }
+      throw when (response.code()) {
+        401 -> SessionExpiredException("Invalid id-token")
+        else -> UnknownException("Something went wrong")
+      }
     }
 
     if (workerRecord != null) {
