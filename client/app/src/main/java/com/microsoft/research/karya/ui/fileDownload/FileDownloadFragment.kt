@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.microsoft.research.karya.AccessCodeNavGraphDirections
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.ui.accesscode.AccessCodeViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
   val viewModel by hiltNavGraphViewModels<AccessCodeViewModel>(R.id.access_code_nav_graph)
-  @Inject lateinit var resourceManager: ResourceManager
+  @Inject
+  lateinit var resourceManager: ResourceManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -35,7 +37,8 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
     fileDownloadFlow.observe(lifecycle, lifecycleScope) { result ->
       when (result) {
         is Result.Success<*> -> navigateToRegistration()
-        is Result.Error -> {}
+        is Result.Error -> {
+        }
         Result.Loading -> {
           Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
         }
@@ -43,8 +46,9 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
     }
   }
 
-  fun navigateToRegistration() {
-    findNavController().navigate(R.id.action_fileDownloadFragment_to_registrationActivity)
+  private fun navigateToRegistration() {
+    val action = AccessCodeNavGraphDirections.registerWorker(viewModel.workerAccessCode)
+    findNavController().navigate(action)
     findNavController().popBackStack()
   }
 }

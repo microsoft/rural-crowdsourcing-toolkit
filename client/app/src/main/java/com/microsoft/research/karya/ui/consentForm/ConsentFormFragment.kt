@@ -8,11 +8,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
+import com.microsoft.research.karya.AccessCodeNavGraphDirections
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
 import com.microsoft.research.karya.ui.accesscode.AccessCodeViewModel
-import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -57,7 +57,8 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
   }
 
   private fun navigateToRegistrationFlow() {
-    findNavController().navigate(R.id.action_consentFormFragment_to_registrationActivity)
+    val action = AccessCodeNavGraphDirections.registerWorker(viewModel.workerAccessCode)
+    findNavController().navigate(action)
   }
 
   private fun navigateToResourceDownload() {

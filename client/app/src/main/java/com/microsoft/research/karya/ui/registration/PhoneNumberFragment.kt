@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
@@ -60,6 +61,12 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     baseActivity = activity as BaseActivity
 
     registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
+
+    // Save access code in viewModel
+    val args = registrationActivity.navArgs<RegistrationActivityArgs>()
+    val accessCode = args.value.accessCode
+    viewModel.workerAccessCode = accessCode
+
 
     /** Set the phone number font size to the same value as the phantom text view font size */
     binding.phantomPhoneNumberTv.addOnLayoutChangeListener {

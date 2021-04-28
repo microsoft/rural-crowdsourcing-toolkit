@@ -72,6 +72,8 @@ constructor(
   var otpFragmentErrorId by Delegates.notNull<Int>()
   var selectAgeGroupFragmentErrorId by Delegates.notNull<Int>()
 
+  var workerAccessCode: String = ""
+
   fun sendOTP(phoneNumber: String) {
     WorkerInformation.phone_number = phoneNumber
     // TODO: Remove the hard coded initialization
