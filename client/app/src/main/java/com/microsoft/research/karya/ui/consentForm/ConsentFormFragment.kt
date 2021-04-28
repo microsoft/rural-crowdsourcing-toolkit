@@ -6,10 +6,12 @@ import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
+import com.microsoft.research.karya.ui.accesscode.AccessCodeViewModel
 import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
 
   private val binding by viewBinding(FragmentConsentFormBinding::bind)
+  private val viewModel by hiltNavGraphViewModels<AccessCodeViewModel>(R.id.access_code_nav_graph)
   @Inject lateinit var resourceManager: ResourceManager
 
   // TODO: add assistant
@@ -42,8 +45,7 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
       consentFormTv.movementMethod = ScrollingMovementMethod()
 
       agreeBtn.setOnClickListener {
-        // TODO(aditya-navana): Uncomment this once the new apis are available.
-        if (resourceManager.areLanguageResourcesAvailable(WorkerInformation.app_language!!)) {
+        if (resourceManager.areLanguageResourcesAvailable(viewModel.workerLanguage)) {
           navigateToRegistrationFlow()
         } else {
           navigateToResourceDownload()

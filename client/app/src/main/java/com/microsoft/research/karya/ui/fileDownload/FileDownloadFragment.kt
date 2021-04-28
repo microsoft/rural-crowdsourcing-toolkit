@@ -14,7 +14,6 @@ import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.flow.single
 
 @AndroidEntryPoint
 class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
@@ -24,15 +23,14 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    lifecycleScope.launchWhenStarted { downloadResourceFiles() }
+    downloadResourceFiles()
   }
 
-  private suspend fun downloadResourceFiles() {
-    // TODO: Should we pass accessCode from the accessCode Fragment?
-    val accessCode = viewModel.currentWorkerAccessCode
-    val worker = viewModel.getWorkerByAccessCode(accessCode).single()
+  private fun downloadResourceFiles() {
+    val accessCode = viewModel.workerAccessCode
+    val language = viewModel.workerLanguage
 
-    val fileDownloadFlow = resourceManager.downloadLanguageResources(worker.accessCode, worker.appLanguage)
+    val fileDownloadFlow = resourceManager.downloadLanguageResources(accessCode, language)
 
     fileDownloadFlow.observe(lifecycle, lifecycleScope) { result ->
       when (result) {

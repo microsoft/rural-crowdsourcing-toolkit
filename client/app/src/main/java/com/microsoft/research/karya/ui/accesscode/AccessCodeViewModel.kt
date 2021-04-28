@@ -7,17 +7,17 @@ import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.mapToResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AccessCodeViewModel @Inject constructor(private val workerRepository: WorkerRepository) : ViewModel() {
 
   // Stores the current worker access code during the access code flow
-  var currentWorkerAccessCode: String = ""
+  var workerAccessCode: String = ""
+  var workerLanguage: Int = -1
 
   fun checkAccessCode(accessCode: String): Flow<Result> {
     return workerRepository.verifyAccessCode(accessCode).map { response -> response.appLanguage }.mapToResult()
@@ -27,16 +27,8 @@ class AccessCodeViewModel @Inject constructor(private val workerRepository: Work
     val emptyWorker = WorkerRecord.createEmptyWorker()
     val worker = emptyWorker.copy(accessCode = accessCode, appLanguage = language)
 
-    currentWorkerAccessCode = accessCode
+    workerAccessCode = accessCode
+    workerLanguage = language
     viewModelScope.launch { workerRepository.upsertWorker(worker) }
-  }
-
-  fun getWorkerByAccessCode(accessCode: String): Flow<WorkerRecord> {
-    return flow {
-      // We should never reach the error case
-      val worker = workerRepository.getWorkerByAccessCode(accessCode) ?: error("User not found")
-
-      emit(worker)
-    }
   }
 }
