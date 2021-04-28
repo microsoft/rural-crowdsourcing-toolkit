@@ -46,7 +46,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     }
   }
 
-  fun getWorkerUsingAccessCode(accessCode: String) = flow {
+  fun verifyAccessCode(accessCode: String) = flow {
     val response = workerAPI.getWorkerUsingAccessCode(accessCode)
     val responseBody = response.body()
 
@@ -112,7 +112,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
 
   suspend fun getWorkerByAccessCode(accessCode: String) =
     withContext(Dispatchers.IO) {
-      return@withContext workerDao.getById(accessCode)
+      return@withContext workerDao.getByAccessCode(accessCode)
     }
 
   suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) { workerDao.upsert(worker) }

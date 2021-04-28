@@ -41,7 +41,7 @@ constructor(
 
     val languages =
       languageRepository
-        .getLanguages(WorkerInformation.creation_code!!)
+        .getLanguages(accessCode)
         .flowOn(Dispatchers.IO)
         .catch {
           Log.d("ResourceManager", "Error downloading languageRecords")

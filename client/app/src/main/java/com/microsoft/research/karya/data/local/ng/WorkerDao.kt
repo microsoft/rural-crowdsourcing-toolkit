@@ -12,10 +12,10 @@ interface WorkerDao : BasicDao<WorkerRecord> {
 
   @Query("SELECT * FROM worker") suspend fun getAll(): List<WorkerRecord>
 
-  @Query("SELECT * FROM worker WHERE id == :id") suspend fun getById(id: String): WorkerRecord
+  @Query("SELECT * FROM worker WHERE id == :id") suspend fun getById(id: String): WorkerRecord?
 
   @Query("SELECT * FROM worker where accessCode == :accessCode")
-  suspend fun getByAccessCode(accessCode: String): WorkerRecord
+  suspend fun getByAccessCode(accessCode: String): WorkerRecord?
 
   @Query("UPDATE worker SET appLanguage=:appLanguage WHERE id == :id")
   suspend fun updateAppLanguageForId(appLanguage: Int, id: String)
