@@ -276,7 +276,7 @@ abstract class MicrotaskRenderer(
       setWorkerJob.join()
       firstTimeActivityVisit =
         try {
-          !thisWorker.params.get(activityName).asBoolean
+          !thisWorker.params!!.get(activityName).asBoolean
         } catch (e: Exception) {
           true
         }
@@ -339,7 +339,7 @@ abstract class MicrotaskRenderer(
 
   private fun activityVisited() {
     val params = thisWorker.params
-    params.addProperty(activityName, true)
+    params!!.addProperty(activityName, true)
     ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
   }
 

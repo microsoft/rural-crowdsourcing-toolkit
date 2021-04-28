@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.registration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -66,7 +67,6 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     val args = registrationActivity.navArgs<RegistrationActivityArgs>()
     val accessCode = args.value.accessCode
     viewModel.workerAccessCode = accessCode
-
 
     /** Set the phone number font size to the same value as the phantom text view font size */
     binding.phantomPhoneNumberTv.addOnLayoutChangeListener {

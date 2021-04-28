@@ -11,18 +11,23 @@ import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
+import com.microsoft.research.karya.data.model.karya.enums.AgeGroup
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.data.model.karya.enums.RegisterWorkerState
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.FileOutputStream
-import javax.inject.Inject
-import kotlin.properties.Delegates
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import java.io.FileOutputStream
+import java.util.*
+import javax.inject.Inject
+import kotlin.properties.Delegates
 
 // TODO: ADD dependencies in the constructor
 @HiltViewModel
@@ -72,43 +77,47 @@ constructor(
   var otpFragmentErrorId by Delegates.notNull<Int>()
   var selectAgeGroupFragmentErrorId by Delegates.notNull<Int>()
 
-  var workerAccessCode: String = ""
+  var workerAccessCode = ""
+  var workerPhoneNumber = ""
 
   fun sendOTP(phoneNumber: String) {
-    WorkerInformation.phone_number = phoneNumber
-    // TODO: Remove the hard coded initialization
-    WorkerInformation.creation_code = "2888118064405199"
-    WorkerInformation.app_language = 1
-    workerRepository
-      .getOrVerifyOTP(
-        WorkerInformation.creation_code!!,
-        WorkerInformation.phone_number!!,
-        "",
-        WorkerRepository.OtpAction.GENERATE.name.toLowerCase()
-      )
-      .onEach { _currOtpSendState.value = OtpSendState.SUCCESS }
-      .catch { e -> sendGenerateOtpError(e) }
-      .launchIn(viewModelScope)
+    viewModelScope.launch {
+      workerPhoneNumber = phoneNumber
+
+      workerRepository
+        .getOrVerifyOTP(
+          accessCode = workerAccessCode,
+          phoneNumber = workerPhoneNumber,
+          otp = "",
+          WorkerRepository.OtpAction.GENERATE.name.toLowerCase(Locale.ROOT)
+        )
+        .onEach {
+          _currOtpSendState.value = OtpSendState.SUCCESS
+        }
+        .catch { e -> sendGenerateOtpError(e) }
+        .collect()
+    }
   }
 
   fun verifyOTP(otp: String) {
     workerRepository
       .getOrVerifyOTP(
-        WorkerInformation.creation_code!!,
-        WorkerInformation.phone_number!!,
+        workerAccessCode,
+        workerPhoneNumber,
         otp,
         WorkerRepository.OtpAction.VERIFY.name.toLowerCase()
       )
       .onEach { workerRecord ->
-        _currOtpVerifyState.value = OtpVerifyState.SUCCESS
-        _idTokenLiveData.value = workerRecord.idToken
+        val idToken = workerRecord.idToken ?: error("idToken should not be null")
 
+        _currOtpVerifyState.value = OtpVerifyState.SUCCESS
+        _idTokenLiveData.value = idToken
         if (workerRecord.age.isNullOrEmpty()) {
           // First time registration, go on with the regular registration flow
           _openProfilePictureFragmentFromOTP.value = true
         } else {
           // Save the worker and navigate to dashboard
-          workerRepository.upsertWorker(workerRecord)
+          updateWorker(workerRecord)
           _openDashBoardFromOTP.value = true
         }
       }
@@ -120,14 +129,20 @@ constructor(
   fun resendOTP() {
     workerRepository
       .getOrVerifyOTP(
-        WorkerInformation.creation_code!!,
-        WorkerInformation.phone_number!!,
+        workerAccessCode,
+        workerAccessCode,
         "",
         WorkerRepository.OtpAction.RESEND.name.toLowerCase()
       )
       .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
       .catch { e -> sendResendOtpError(e) }
       .launchIn(viewModelScope)
+  }
+
+  private fun updateWorker(workerRecord: WorkerRecord) {
+    viewModelScope.launch {
+      workerRepository.upsertWorker(workerRecord.copy(accessCode = workerAccessCode))
+    }
   }
 
   private fun sendGenerateOtpError(e: Throwable) {
@@ -204,22 +219,6 @@ constructor(
     _loadImageBitmap.value = false
   }
 
-  /** Methods for Registering Worker ============================== */
-  fun registerWorker() {
-
-    val registerOrUpdateWorkerRequest =
-      RegisterOrUpdateWorkerRequest(WorkerInformation.age_group!!, WorkerInformation.gender)
-
-    workerRepository
-      .updateWorker("", WorkerInformation.creation_code!!, registerOrUpdateWorkerRequest)
-      .onEach { workerRecord ->
-        workerRepository.upsertWorker(workerRecord)
-        _currRegisterState.value = RegisterWorkerState.SUCCESS
-      }
-      .catch { e -> sendRegisterWorkerError(e) }
-      .launchIn(viewModelScope)
-  }
-
   private fun sendRegisterWorkerError(e: Throwable) {
     selectAgeGroupFragmentErrorId =
       when (e) {
@@ -228,5 +227,37 @@ constructor(
         else -> R.string.s_unknown_error
       }
     _currRegisterState.value = RegisterWorkerState.FAILURE
+  }
+
+  fun updateWorkerAge(currentAge: AgeGroup) {
+    viewModelScope.launch {
+      val worker = workerRepository.getWorkerByAccessCode(workerAccessCode) ?: error("Worker does not exist")
+      val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(currentAge.name, worker.gender)
+
+      workerRepository
+        .updateWorker("", workerAccessCode, registerOrUpdateWorkerRequest)
+        .onEach { workerRecord ->
+          workerRepository.upsertWorker(workerRecord)
+          _currRegisterState.value = RegisterWorkerState.SUCCESS
+        }
+        .catch { e -> sendRegisterWorkerError(e) }
+        .launchIn(viewModelScope)
+    }
+  }
+
+  fun updateWorkerGender(gender: String) {
+    viewModelScope.launch {
+      val worker = workerRepository.getWorkerByAccessCode(workerAccessCode) ?: error("Worker does not exist")
+      val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(worker.age ?: "", gender)
+
+      workerRepository
+        .updateWorker("", workerAccessCode, registerOrUpdateWorkerRequest)
+        .onEach { workerRecord ->
+          workerRepository.upsertWorker(workerRecord)
+          _currRegisterState.value = RegisterWorkerState.SUCCESS
+        }
+        .catch { e -> sendRegisterWorkerError(e) }
+        .launchIn(viewModelScope)
+    }
   }
 }

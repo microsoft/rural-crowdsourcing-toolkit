@@ -3,25 +3,26 @@ package com.microsoft.research.karya.data.model.karya.ng
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "worker")
 data class WorkerRecord(
-  @PrimaryKey val id: String,
-  val age: String,
-  val accessCode: String,
-  val appLanguage: Int,
-  val authType: AuthType,
-  val email: String,
-  val fullName: String,
-  val gender: String,
-  val idToken: String,
-  val oauthId: String,
-  val params: JsonObject,
-  val passwordHash: String,
-  val phoneNumber: String,
-  val profilePicturePath: String,
-  val salt: String,
-  val username: String,
+  @PrimaryKey @SerializedName("id") val id: String,
+  @SerializedName("age") val age: String?,
+  @SerializedName("access_code") val accessCode: String?,
+  @SerializedName("app_language") val appLanguage: Int,
+  @SerializedName("auth_type") val authType: AuthType?,
+  @SerializedName("email") val email: String?,
+  @SerializedName("full_name") val fullName: String?,
+  @SerializedName("gender") val gender: String?,
+  @SerializedName("id_token") val idToken: String?,
+  @SerializedName("oauth_id") val oauthId: String?,
+  @SerializedName("params") val params: JsonObject?,
+  @SerializedName("passwd_hash") val passwordHash: String?,
+  @SerializedName("phone_number") val phoneNumber: String?,
+  @SerializedName("profile_picture") val profilePicturePath: String?,
+  @SerializedName("salt") val salt: String?,
+  @SerializedName("username") val username: String?,
 ) {
   companion object {
     fun createEmptyWorker(): WorkerRecord {
