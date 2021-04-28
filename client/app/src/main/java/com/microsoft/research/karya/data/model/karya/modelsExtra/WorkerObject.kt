@@ -3,11 +3,11 @@
 
 package com.microsoft.research.karya.data.model.karya.modelsExtra
 
-import com.microsoft.research.karya.data.model.karya.AuthProviderType
+import com.microsoft.research.karya.data.model.karya.ng.AuthType
 
 data class WorkerObject(
   var creation_code: String,
-  var auth_provider: AuthProviderType,
+  var auth_: AuthType,
   var phone_number: String,
   var age: String,
   var gender: String,

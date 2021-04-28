@@ -340,7 +340,7 @@ abstract class MicrotaskRenderer(
   private fun activityVisited() {
     val params = thisWorker.params
     params.addProperty(activityName, true)
-    ioScope.launch { karyaDb.workerDaoExtra().updateParams(params) }
+    ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
   }
 
   /** On permission result, if any permission is not granted, return immediately */

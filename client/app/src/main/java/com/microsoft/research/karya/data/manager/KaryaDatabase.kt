@@ -16,11 +16,10 @@ import com.microsoft.research.karya.data.local.daos.MicrotaskDao
 import com.microsoft.research.karya.data.local.daos.PolicyDao
 import com.microsoft.research.karya.data.local.daos.ScenarioDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
-import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.local.daosExtra.LanguageDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
-import com.microsoft.research.karya.data.local.daosExtra.WorkerDaoExtra
+import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import com.microsoft.research.karya.data.model.karya.LanguageRecord
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
@@ -31,7 +30,7 @@ import com.microsoft.research.karya.data.model.karya.PayoutMethodRecord
 import com.microsoft.research.karya.data.model.karya.PolicyRecord
 import com.microsoft.research.karya.data.model.karya.ScenarioRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
-import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 
 @Database(
   entities =
@@ -63,7 +62,6 @@ abstract class KaryaDatabase : RoomDatabase() {
   abstract fun languageDaoExtra(): LanguageDaoExtra
   abstract fun microtaskAssignmentDaoExtra(): MicrotaskAssignmentDaoExtra
   abstract fun microtaskDaoExtra(): MicrotaskDaoExtra
-  abstract fun workerDaoExtra(): WorkerDaoExtra
   abstract fun karyaFileDao(): KaryaFileDao
 
   companion object {

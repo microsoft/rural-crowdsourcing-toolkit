@@ -4,8 +4,8 @@ import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
-import com.microsoft.research.karya.data.local.daos.WorkerDao
-import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.local.ng.WorkerDao
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.service.WorkerAPI
 import javax.inject.Inject
@@ -108,6 +108,11 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
   suspend fun getWorkerById(id: String) =
     withContext(Dispatchers.IO) {
       return@withContext workerDao.getById(id)
+    }
+
+  suspend fun getWorkerByAccessCode(accessCode: String) =
+    withContext(Dispatchers.IO) {
+      return@withContext workerDao.getById(accessCode)
     }
 
   suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) { workerDao.upsert(worker) }

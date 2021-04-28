@@ -13,6 +13,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.enums.PayoutInfoStatus
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 
 @Entity(
   tableName = "payout_info",

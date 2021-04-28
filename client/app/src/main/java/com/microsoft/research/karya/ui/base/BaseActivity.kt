@@ -23,7 +23,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.KaryaDatabase
-import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.ImageUtils
 import java.io.File
@@ -103,7 +103,7 @@ abstract class BaseActivity() : AppCompatActivity() {
         setWorkerJob.join()
         val oldAppLanguageId = appLanguageId
         appLanguageId =
-          if (this@BaseActivity::thisWorker.isInitialized) thisWorker.app_language else WorkerInformation.app_language
+          if (this@BaseActivity::thisWorker.isInitialized) thisWorker.appLanguage else WorkerInformation.app_language
         if (appLanguageId != oldAppLanguageId && appLanguageId != null) {
           appLanguageChanged = true
         }

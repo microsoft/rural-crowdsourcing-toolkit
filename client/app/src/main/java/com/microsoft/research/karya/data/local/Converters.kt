@@ -10,7 +10,6 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.data.model.karya.AssignmentGranularityType
 import com.microsoft.research.karya.data.model.karya.AssignmentOrderType
-import com.microsoft.research.karya.data.model.karya.AuthProviderType
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.FileCreator
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
@@ -18,6 +17,7 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskStatus
 import com.microsoft.research.karya.data.model.karya.enums.PaymentRequestStatus
 import com.microsoft.research.karya.data.model.karya.enums.PayoutInfoStatus
 import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
+import com.microsoft.research.karya.data.model.karya.ng.AuthType
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -105,16 +105,16 @@ class Converters {
   }
 
   @TypeConverter
-  fun fromStringToAuthProviderType(value: String?): AuthProviderType? {
+  fun fromStringToAuthProviderType(value: String?): AuthType? {
     if (value == null) {
       return null
     }
-    val listType = object : TypeToken<AuthProviderType>() {}.type
+    val listType = object : TypeToken<AuthType>() {}.type
     return Gson().fromJson(value, listType)
   }
 
   @TypeConverter
-  fun fromAuthProviderTypetoString(list: AuthProviderType?): String? {
+  fun fromAuthProviderTypetoString(list: AuthType?): String? {
     if (list == null) {
       return null
     }

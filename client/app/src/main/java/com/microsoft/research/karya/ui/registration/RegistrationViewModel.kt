@@ -99,7 +99,7 @@ constructor(
       )
       .onEach { workerRecord ->
         _currOtpVerifyState.value = OtpVerifyState.SUCCESS
-        _idTokenLiveData.value = workerRecord.id_token!!
+        _idTokenLiveData.value = workerRecord.idToken
 
         if (workerRecord.age.isNullOrEmpty()) {
           // First time registration, go on with the regular registration flow
