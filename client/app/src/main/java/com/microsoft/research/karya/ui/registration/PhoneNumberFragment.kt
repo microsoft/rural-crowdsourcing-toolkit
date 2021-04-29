@@ -3,7 +3,6 @@ package com.microsoft.research.karya.ui.registration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.fragment.app.Fragment

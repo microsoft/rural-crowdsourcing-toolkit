@@ -19,15 +19,15 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.FileOutputStream
+import java.util.*
+import javax.inject.Inject
+import kotlin.properties.Delegates
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.io.FileOutputStream
-import java.util.*
-import javax.inject.Inject
-import kotlin.properties.Delegates
 
 // TODO: ADD dependencies in the constructor
 @HiltViewModel
@@ -91,9 +91,7 @@ constructor(
           otp = "",
           WorkerRepository.OtpAction.GENERATE.name.toLowerCase(Locale.ROOT)
         )
-        .onEach {
-          _currOtpSendState.value = OtpSendState.SUCCESS
-        }
+        .onEach { _currOtpSendState.value = OtpSendState.SUCCESS }
         .catch { e -> sendGenerateOtpError(e) }
         .collect()
     }
@@ -101,12 +99,7 @@ constructor(
 
   fun verifyOTP(otp: String) {
     workerRepository
-      .getOrVerifyOTP(
-        workerAccessCode,
-        workerPhoneNumber,
-        otp,
-        WorkerRepository.OtpAction.VERIFY.name.toLowerCase()
-      )
+      .getOrVerifyOTP(workerAccessCode, workerPhoneNumber, otp, WorkerRepository.OtpAction.VERIFY.name.toLowerCase())
       .onEach { workerRecord ->
         val idToken = workerRecord.idToken ?: error("idToken should not be null")
 
@@ -128,21 +121,14 @@ constructor(
   /** Resend OTP */
   fun resendOTP() {
     workerRepository
-      .getOrVerifyOTP(
-        workerAccessCode,
-        workerAccessCode,
-        "",
-        WorkerRepository.OtpAction.RESEND.name.toLowerCase()
-      )
+      .getOrVerifyOTP(workerAccessCode, workerAccessCode, "", WorkerRepository.OtpAction.RESEND.name.toLowerCase())
       .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
       .catch { e -> sendResendOtpError(e) }
       .launchIn(viewModelScope)
   }
 
   private fun updateWorker(workerRecord: WorkerRecord) {
-    viewModelScope.launch {
-      workerRepository.upsertWorker(workerRecord.copy(accessCode = workerAccessCode))
-    }
+    viewModelScope.launch { workerRepository.upsertWorker(workerRecord.copy(accessCode = workerAccessCode)) }
   }
 
   private fun sendGenerateOtpError(e: Throwable) {
