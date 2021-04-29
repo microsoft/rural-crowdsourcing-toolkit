@@ -44,16 +44,16 @@ fun Fragment.hideKeyboard() {
 fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
 
 fun Context.isNetworkAvailable(): Boolean {
-  val connectivityManager = getSystemService<ConnectivityManager>();
+  val connectivityManager = getSystemService<ConnectivityManager>()
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
     val activeNetwork = connectivityManager?.activeNetwork ?: return false
     val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
     return when {
       capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
       capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-      //for other device how are able to connect with Ethernet
+      // for other device how are able to connect with Ethernet
       capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-      //for check internet over Bluetooth
+      // for check internet over Bluetooth
       capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
       else -> false
     }
