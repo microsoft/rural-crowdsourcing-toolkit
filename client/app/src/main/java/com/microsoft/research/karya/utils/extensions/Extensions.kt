@@ -2,9 +2,13 @@ package com.microsoft.research.karya.utils.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.core.content.getSystemService
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -38,6 +42,26 @@ fun Fragment.hideKeyboard() {
 }
 
 fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
+
+fun Context.isNetworkAvailable(): Boolean {
+  val connectivityManager = getSystemService<ConnectivityManager>()
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    val activeNetwork = connectivityManager?.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+    return when {
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+      // for other device how are able to connect with Ethernet
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+      // for check internet over Bluetooth
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+      else -> false
+    }
+  } else {
+    val activeNetworkInfo = connectivityManager?.activeNetworkInfo ?: return false
+    return activeNetworkInfo.isConnected
+  }
+}
 
 fun View.visible() {
   this.visibility = View.VISIBLE
