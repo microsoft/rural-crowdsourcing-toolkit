@@ -1,11 +1,12 @@
 package com.microsoft.research.karya.data.remote.response
 
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
+import com.google.gson.annotations.SerializedName
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 
 data class GetAssignmentsResponse(
-  val tasks: List<TaskRecord>,
-  val microtasks: List<MicrotaskRecord>,
-  val assignments: List<MicrotaskAssignmentRecord>,
+  @SerializedName("tasks") val tasks: List<TaskRecord>,
+  @SerializedName("microtasks") val microTasks: List<MicroTaskRecord>,
+  @SerializedName("assignments") val assignments: List<MicroTaskAssignmentRecord>,
 )

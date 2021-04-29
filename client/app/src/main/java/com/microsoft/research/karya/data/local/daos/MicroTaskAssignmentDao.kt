@@ -10,26 +10,26 @@ package com.microsoft.research.karya.data.local.daos
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 
 @Dao
-interface MicrotaskAssignmentDao : BasicDao<MicrotaskAssignmentRecord> {
+interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
 
-  @Query("SELECT * FROM microtask_assignment") suspend fun getAll(): List<MicrotaskAssignmentRecord>
+  @Query("SELECT * FROM microtask_assignment") suspend fun getAll(): List<MicroTaskAssignmentRecord>
 
   @Query("SELECT * FROM microtask_assignment WHERE id == :id")
-  suspend fun getById(id: String): MicrotaskAssignmentRecord
+  suspend fun getById(id: String): MicroTaskAssignmentRecord
 
   /** Upsert a [record] in the table */
   @Transaction
-  suspend fun upsert(record: MicrotaskAssignmentRecord) {
+  suspend fun upsert(record: MicroTaskAssignmentRecord) {
     insertForUpsert(record)
     updateForUpsert(record)
   }
 
   /** Upsert a list of [records] in the table */
   @Transaction
-  suspend fun upsert(records: List<MicrotaskAssignmentRecord>) {
+  suspend fun upsert(records: List<MicroTaskAssignmentRecord>) {
     insertForUpsert(records)
     updateForUpsert(records)
   }

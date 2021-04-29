@@ -1,16 +1,16 @@
 package com.microsoft.research.karya.data.service
 
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.remote.response.GetAssignmentsResponse
 import retrofit2.Response
 import retrofit2.http.*
 
-interface MicroTaskAPI {
+interface MicroTaskAssignmentAPI {
 
   @PUT("/assignments")
   suspend fun submitAssignments(
     @Header("id-token") idTokenHeader: String,
-    @Body updates: List<MicrotaskAssignmentRecord>,
+    @Body updates: List<MicroTaskAssignmentRecord>,
   ): Response<List<String>>
 
   @GET("/assignments")

@@ -12,7 +12,9 @@ import com.microsoft.research.karya.databinding.ActivityDashboardBinding
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NgDashboardActivity : AppCompatActivity() {
 
   val binding by viewBinding(ActivityDashboardBinding::inflate)
@@ -39,6 +41,8 @@ class NgDashboardActivity : AppCompatActivity() {
         adapter = NgTaskListAdapter(emptyList(), ::onDashboardItemClick)
         layoutManager = LinearLayoutManager(context)
       }
+
+      syncCv.setOnClickListener { viewModel.fetchNewTasks() }
     }
   }
 
@@ -123,10 +127,5 @@ class NgDashboardActivity : AppCompatActivity() {
 
       startActivity(nextIntent)
     */
-  }
-
-  fun sync() {
-    // TODO: Make app language an enum
-    viewModel.syncTasks(this, -1)
   }
 }
