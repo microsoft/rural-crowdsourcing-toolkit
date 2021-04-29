@@ -1,11 +1,14 @@
 package com.microsoft.research.karya.data.repo
 
+import com.microsoft.research.karya.data.local.daos.TaskDao
 import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.service.MicroTaskAPI
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTaskAPI) {
+class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTaskAPI, private val taskDao: TaskDao) {
 
   fun getAssignments(accessCode: String, idToken: String, type: String, from: String) = flow {
     if (accessCode.isEmpty() or idToken.isEmpty()) {
@@ -44,4 +47,6 @@ class MicroTaskRepository @Inject constructor(private val microTaskAPI: MicroTas
       error("Request failed, response body was null")
     }
   }
+
+  fun getTasks(): Flow<List<TaskRecord>> = taskDao.getAllAsFlow()
 }

@@ -1,15 +1,16 @@
 package com.microsoft.research.karya.ui.dashboard
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.ActivityDashboardBinding
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
-import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
-import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
+import com.microsoft.research.karya.utils.Result
+import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.viewBinding
 
 class NgDashboardActivity : AppCompatActivity() {
@@ -20,9 +21,11 @@ class NgDashboardActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(binding.root)
+    setupViews()
+    observeTaskList()
   }
 
-  fun setupViews() {
+  private fun setupViews() {
     with(binding) {
       // TODO: Convert this to one string instead of joining multiple strings
       val syncText =
@@ -32,55 +35,97 @@ class NgDashboardActivity : AppCompatActivity() {
           getString(R.string.s_update_earning)
 
       syncPromptTv.text = syncText
+      tasksRv.apply {
+        adapter = NgTaskListAdapter(emptyList(), ::onDashboardItemClick)
+        layoutManager = LinearLayoutManager(context)
+      }
     }
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  private fun observeTaskList() {
+    viewModel.getAllTasks().observe(lifecycle, lifecycleScope) { result ->
+      when (result) {
+        is Result.Success<*> -> onTaskFetched(result.value as List<TaskRecord>)
+        is Result.Error -> {
+          // TODO(aditya-navana): Show
+        }
+        Result.Loading -> {
+          // TODO(aditya-navana): Show loading here
+        }
+      }
+    }
+  }
+
+  private fun onTaskFetched(taskRecordList: List<TaskRecord>) {
+    val taskInfoList =
+      taskRecordList.map { taskRecord ->
+        TaskInfo(
+          taskID = taskRecord.id,
+          taskName = taskRecord.name,
+          scenarioName = taskRecord.scenario_id.toString(),
+          incompleteMicrotasks = 4,
+          completedMicrotasks = 4,
+          submittedMicrotasks = 4,
+          verifiedMicrotasks = 4
+        )
+      }
+
+    (binding.tasksRv.adapter as NgTaskListAdapter).updateList(taskInfoList)
   }
 
   fun onDashboardItemClick(task: TaskInfo) {
     /*
-        var taskRecord: TaskRecord?
-        var scenarioRecord: ScenarioRecord? = null
+          var taskRecord: TaskRecord?
+          var scenarioRecord: ScenarioRecord? = null
 
-        runBlocking {
-            ioScope.launch {
-                taskRecord = karyaDb.taskDao().getById(task.taskID)
-                scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
-            }.join()
-        }
+          runBlocking {
+              ioScope.launch {
+                  taskRecord = karyaDb.taskDao().getById(task.taskID)
+                  scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
+              }.join()
+          }
 
-        val nextIntent = when (scenarioRecord?.name) {
-            "story-speech" -> Intent(this, StorySpeechMain::class.java)
-            "speech-data" -> Intent(this, SpeechDataMain::class.java)
-            "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-            else -> {
-                throw Exception("Unimplemented scenario")
-            }
-        }
+          val nextIntent = when (scenarioRecord?.name) {
+              "story-speech" -> Intent(this, StorySpeechMain::class.java)
+              "speech-data" -> Intent(this, SpeechDataMain::class.java)
+              "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
+              else -> {
+                  throw Exception("Unimplemented scenario")
+              }
+          }
 
-        nextIntent.putExtra("taskID", task.taskID)
-        nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
-        nextIntent.putExtra("completed", task.completedMicrotasks)
+          nextIntent.putExtra("taskID", task.taskID)
+          nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
+          nextIntent.putExtra("completed", task.completedMicrotasks)
 
-        startActivity(nextIntent)
-    */
-
-    // task.scenarioID for now
-    val nextIntent =
-      when (task.scenarioName) {
-        // Use [ScenarioType] enum once we migrate to it.
-        "story-speech" -> Intent(this, StorySpeechMain::class.java)
-        "speech-data" -> Intent(this, SpeechDataMain::class.java)
-        "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-        else -> error("Unimplemented scenario")
+      runBlocking {
+          ioScope.launch {
+              taskRecord = karyaDb.taskDao().getById(task.taskID)
+              scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
+          }.join()
       }
 
-    nextIntent.putExtra("taskID", task.taskID)
-    nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
-    nextIntent.putExtra("completed", task.completedMicrotasks)
+      // task.scenarioID for now
+      val nextIntent = when (task.scenarioName) {
+          // Use [ScenarioType] enum once we migrate to it.
+          "story-speech" -> Intent(this, StorySpeechMain::class.java)
+          "speech-data" -> Intent(this, SpeechDataMain::class.java)
+          "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
+          else -> {
+              throw Exception("Unimplemented scenario")
+          }
+      }
 
-    startActivity(nextIntent)
+      nextIntent.putExtra("taskID", task.taskID)
+      nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
+      nextIntent.putExtra("completed", task.completedMicrotasks)
+
+      startActivity(nextIntent)
+    */
   }
 
-  fun syncBox() {
+  fun sync() {
     // TODO: Make app language an enum
     viewModel.syncTasks(this, -1)
   }
