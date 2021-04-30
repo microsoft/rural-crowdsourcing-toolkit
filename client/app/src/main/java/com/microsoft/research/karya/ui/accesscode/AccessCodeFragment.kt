@@ -16,11 +16,12 @@ import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.visible
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -61,35 +62,19 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     }
   }
 
+  @Suppress("UNCHECKED_CAST")
   private fun checkAccessCode(accessCode: String) {
-    viewModel.checkAccessCode(accessCode).observe(lifecycle, lifecycleScope) { result ->
-      when (result) {
-        is Result.Success<*> -> onAccessCodeVerified(result as Result.Success<Int>, accessCode)
-        // TODO: Use error codes and exceptions from Anurag's PR
-        is Result.Error -> showErrorMessage(result.exception.message ?: "Error fetching data")
-        Result.Loading -> showLoading()
+    viewModel
+      .checkAccessCode(accessCode)
+      .onEach { result ->
+        when (result) {
+          is Result.Success<*> -> onAccessCodeVerified(result as Result.Success<Int>, accessCode)
+          // TODO: Use error codes and exceptions from Anurag's PR
+          is Result.Error -> onAccessCodeFailure(result.exception.message ?: "Error fetching data")
+          Result.Loading -> showLoading()
+        }
       }
-    }
-  }
-
-  private fun onAccessCodeVerified(successResult: Result.Success<Int>, accessCode: String) {
-    showSuccessMessage()
-    lifecycleScope.launch { updateLanguagePreference(successResult.value) }
-    WorkerInformation.creation_code = accessCode
-
-    navigateToConsentFormFragment()
-  }
-
-  private fun onAccessCodeFailure(message: String) {
-    showErrorMessage(message)
-  }
-
-  private suspend fun updateLanguagePreference(newLanguage: Int) {
-    // TODO: Remove this
-    WorkerInformation.app_language = newLanguage
-
-    val languagePrefKey = intPreferencesKey(PreferenceKeys.APP_LANGUAGE)
-    requireContext().dataStore.edit { prefs -> prefs[languagePrefKey] = newLanguage }
+      .launchIn(lifecycleScope)
   }
 
   private fun navigateToConsentFormFragment() {
@@ -102,24 +87,35 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     checkAccessCode(accessCode)
   }
 
-  private fun showSuccessMessage() {
+  private fun onAccessCodeVerified(successResult: Result.Success<Int>, accessCode: String) {
+    hideLoading()
+    showSuccessUi()
+    lifecycleScope.launch { updateLanguagePreference(successResult.value) }
+    WorkerInformation.creation_code = accessCode
+
+    navigateToConsentFormFragment()
+    resetViewState()
+  }
+
+  private fun onAccessCodeFailure(message: String) {
+    hideLoading()
+    showErrorUi(message)
+  }
+
+  private fun showSuccessUi() {
     with(binding) {
       creationCodeStatusIv.setImageResource(0)
       creationCodeStatusIv.setImageResource(R.drawable.ic_baseline_check_circle_outline_24)
     }
-
-    hideLoading()
   }
 
-  private fun showErrorMessage(error: String) {
+  private fun showErrorUi(error: String) {
     with(binding) {
       creationCodeErrorTv.text = error
       creationCodeStatusIv.setImageResource(0)
       creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
       creationCodeEt.isEnabled = true
     }
-
-    hideLoading()
     requestSoftKeyFocus(binding.creationCodeEt)
   }
 
@@ -131,7 +127,22 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     }
   }
 
+  private fun resetViewState() {
+    hideLoading()
+    clearErrorMessages()
+    binding.creationCodeEt.isEnabled = true
+    binding.creationCodeEt.text.clear()
+  }
+
   private fun showLoading() = binding.loadingPb.visible()
 
   private fun hideLoading() = binding.loadingPb.gone()
+
+  private suspend fun updateLanguagePreference(newLanguage: Int) {
+    // TODO: Remove this
+    WorkerInformation.app_language = newLanguage
+
+    val languagePrefKey = intPreferencesKey(PreferenceKeys.APP_LANGUAGE)
+    requireContext().dataStore.edit { prefs -> prefs[languagePrefKey] = newLanguage }
+  }
 }

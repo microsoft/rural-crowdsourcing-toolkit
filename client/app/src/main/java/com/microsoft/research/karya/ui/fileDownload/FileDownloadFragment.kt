@@ -41,5 +41,6 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
   fun navigateToRegistration() {
     findNavController().navigate(R.id.action_fileDownloadFragment_to_registrationActivity)
+    findNavController().popBackStack()
   }
 }
