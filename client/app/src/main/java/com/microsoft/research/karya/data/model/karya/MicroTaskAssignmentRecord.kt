@@ -20,7 +20,7 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
   foreignKeys =
     arrayOf(
       ForeignKey(
-        entity = MicrotaskRecord::class,
+        entity = MicroTaskRecord::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("microtask_id")
       ),
@@ -33,14 +33,14 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
     ),
   indices = arrayOf(Index("microtask_id"), Index("worker_id"), Index("output_file_id"))
 )
-data class MicrotaskAssignmentRecord(
+data class MicroTaskAssignmentRecord(
   @PrimaryKey var id: String,
   var local_id: String,
   var box_id: Int,
   var microtask_id: String,
   var worker_id: String,
   var deadline: String?,
-  var status: MicrotaskAssignmentStatus,
+  var status: MicrotaskAssignmentStatus?,
   var completed_at: String?,
   var output: JsonObject,
   var output_file_id: String?,

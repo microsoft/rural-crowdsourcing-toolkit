@@ -1,6 +1,9 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.local.daos.LanguageDao
+import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
+import com.microsoft.research.karya.data.local.daos.MicroTaskDao
+import com.microsoft.research.karya.data.local.daos.TaskDao
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.manager.KaryaDatabase
 import dagger.Module
@@ -23,5 +26,23 @@ class DaoModule {
   @Reusable
   fun provideLanguageDao(karyaDatabase: KaryaDatabase): LanguageDao {
     return karyaDatabase.languageDao()
+  }
+
+  @Provides
+  @Reusable
+  fun provideTaskDao(karyaDatabase: KaryaDatabase): TaskDao {
+    return karyaDatabase.taskDao()
+  }
+
+  @Provides
+  @Reusable
+  fun provideMicroTaskDao(karyaDatabase: KaryaDatabase): MicroTaskDao {
+    return karyaDatabase.microTaskDao()
+  }
+
+  @Provides
+  @Reusable
+  fun provideMicroTaskAssignmentDao(karyaDatabase: KaryaDatabase): MicroTaskAssignmentDao {
+    return karyaDatabase.microtaskAssignmentDao()
   }
 }

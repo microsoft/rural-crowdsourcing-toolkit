@@ -6,7 +6,7 @@ package com.microsoft.research.karya.data.local.daosExtra
 import androidx.room.Dao
 import androidx.room.Query
 import com.google.gson.JsonObject
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 
 @Dao
@@ -16,16 +16,16 @@ interface MicrotaskAssignmentDaoExtra {
 
   /** Get list of microtask assignments by [status] */
   @Query("SELECT * FROM microtask_assignment WHERE status=:status")
-  suspend fun getAssignmentsByStatus(status: MicrotaskAssignmentStatus): List<MicrotaskAssignmentRecord>
+  suspend fun getAssignmentsByStatus(status: MicrotaskAssignmentStatus): List<MicroTaskAssignmentRecord>
 
   /** Get list of incomplete microtask assignments */
-  suspend fun getIncompleteAssignments(): List<MicrotaskAssignmentRecord> {
-    return getAssignmentsByStatus(MicrotaskAssignmentStatus.assigned)
+  suspend fun getIncompleteAssignments(): List<MicroTaskAssignmentRecord> {
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.ASSIGNED)
   }
 
   /** Get list of completed microtask assignments */
-  suspend fun getCompletedAssignments(): List<MicrotaskAssignmentRecord> {
-    return getAssignmentsByStatus(MicrotaskAssignmentStatus.completed)
+  suspend fun getCompletedAssignments(): List<MicroTaskAssignmentRecord> {
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.COMPLETED)
   }
 
   @Query(
@@ -57,9 +57,9 @@ interface MicrotaskAssignmentDaoExtra {
    */
   suspend fun getUnsubmittedIDsForTask(taskId: String, includeCompleted: Boolean): List<String> {
     return if (includeCompleted) {
-      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.assigned, MicrotaskAssignmentStatus.completed))
+      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED))
     } else {
-      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.assigned))
+      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED))
     }
   }
 
@@ -74,7 +74,7 @@ interface MicrotaskAssignmentDaoExtra {
   suspend fun markComplete(
     id: String,
     output: JsonObject,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.completed,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
     date: String,
   )
 
@@ -82,14 +82,14 @@ interface MicrotaskAssignmentDaoExtra {
   @Query("UPDATE microtask_assignment SET status=:status WHERE id=:id")
   suspend fun markSubmitted(
     id: String,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.submitted,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.SUBMITTED,
   )
 
   /** Query to get list of assignments whose output karya files are in the server */
   @Query(
     "SELECT ma.* FROM microtask_assignment AS ma INNER JOIN karya_file AS kf ON ma.output_file_id = kf.id WHERE kf.in_server=:in_server"
   )
-  suspend fun getAssignmentsWithUploadedFiles(in_server: Boolean = true): List<MicrotaskAssignmentRecord>
+  suspend fun getAssignmentsWithUploadedFiles(in_server: Boolean = true): List<MicroTaskAssignmentRecord>
 
   /** Query to get count of assignments by status */
   @Query("SELECT COUNT(*) FROM microtask_assignment where status=:status")
@@ -97,5 +97,5 @@ interface MicrotaskAssignmentDaoExtra {
 
   /** Query to get the total amount earned so far */
   @Query("SELECT SUM(credits) FROM microtask_assignment where status=:status")
-  suspend fun getTotalCreditsEarned(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.verified): Float?
+  suspend fun getTotalCreditsEarned(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED): Float?
 }

@@ -11,8 +11,8 @@ import androidx.room.TypeConverters
 import com.microsoft.research.karya.data.local.Converters
 import com.microsoft.research.karya.data.local.daos.KaryaFileDao
 import com.microsoft.research.karya.data.local.daos.LanguageDao
-import com.microsoft.research.karya.data.local.daos.MicrotaskAssignmentDao
-import com.microsoft.research.karya.data.local.daos.MicrotaskDao
+import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
+import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.PolicyDao
 import com.microsoft.research.karya.data.local.daos.ScenarioDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
@@ -22,8 +22,8 @@ import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import com.microsoft.research.karya.data.model.karya.LanguageRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.PaymentRequestRecord
 import com.microsoft.research.karya.data.model.karya.PayoutInfoRecord
 import com.microsoft.research.karya.data.model.karya.PayoutMethodRecord
@@ -40,9 +40,9 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
       WorkerRecord::class,
       KaryaFileRecord::class,
       TaskRecord::class,
-      MicrotaskRecord::class,
+      MicroTaskRecord::class,
       PolicyRecord::class,
-      MicrotaskAssignmentRecord::class,
+      MicroTaskAssignmentRecord::class,
       PayoutMethodRecord::class,
       PayoutInfoRecord::class,
       PaymentRequestRecord::class],
@@ -52,12 +52,12 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun languageDao(): LanguageDao
-  abstract fun microTaskDao(): MicrotaskDao
+  abstract fun microTaskDao(): MicroTaskDao
   abstract fun policyDao(): PolicyDao
   abstract fun scenarioDao(): ScenarioDao
   abstract fun taskDao(): TaskDao
   abstract fun workerDao(): WorkerDao
-  abstract fun microtaskAssignmentDao(): MicrotaskAssignmentDao
+  abstract fun microtaskAssignmentDao(): MicroTaskAssignmentDao
 
   abstract fun languageDaoExtra(): LanguageDaoExtra
   abstract fun microtaskAssignmentDaoExtra(): MicrotaskAssignmentDaoExtra

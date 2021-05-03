@@ -18,8 +18,6 @@ import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
   tableName = "task",
   foreignKeys =
     arrayOf(
-      ForeignKey(entity = LanguageRecord::class, parentColumns = arrayOf("id"), childColumns = arrayOf("language_id")),
-      ForeignKey(entity = ScenarioRecord::class, parentColumns = arrayOf("id"), childColumns = arrayOf("scenario_id")),
       ForeignKey(
         entity = KaryaFileRecord::class,
         parentColumns = arrayOf("id"),
@@ -31,7 +29,7 @@ import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
         childColumns = arrayOf("output_file_id")
       )
     ),
-  indices = arrayOf(Index("language_id"), Index("scenario_id"), Index("input_file_id"), Index("output_file_id"))
+  indices = arrayOf(Index("input_file_id"), Index("output_file_id"))
 )
 data class TaskRecord(
   @PrimaryKey var id: String,

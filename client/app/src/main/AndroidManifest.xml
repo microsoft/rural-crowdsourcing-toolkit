@@ -51,6 +51,7 @@
         </activity>
 
         <activity android:name=".ui.accesscode.AccessCodeActivity" />
+        <activity android:name=".ui.dashboard.NgDashboardActivity" />
 
     </application>
 </manifest>

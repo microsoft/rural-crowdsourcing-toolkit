@@ -3,7 +3,7 @@ package com.microsoft.research.karya.injection
 import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
-import com.microsoft.research.karya.data.service.MicroTaskAPI
+import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
 import com.microsoft.research.karya.injection.qualifier.BaseUrlQualifier
 import dagger.Module
@@ -69,8 +69,8 @@ class RetrofitModule {
 
   @Provides
   @Reusable
-  fun provideMicroTaskAPI(retrofit: Retrofit): MicroTaskAPI {
-    return retrofit.create(MicroTaskAPI::class.java)
+  fun provideMicroTaskAPI(retrofit: Retrofit): MicroTaskAssignmentAPI {
+    return retrofit.create(MicroTaskAssignmentAPI::class.java)
   }
 
   @Provides

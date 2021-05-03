@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.local.daos.LanguageDao
+import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
@@ -8,7 +9,6 @@ import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
-import com.microsoft.research.karya.data.service.MicroTaskAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
 import dagger.Module
 import dagger.Provides
@@ -28,8 +28,8 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideMicroTaskRepository(microTaskAPI: MicroTaskAPI): MicroTaskRepository {
-    return MicroTaskRepository(microTaskAPI)
+  fun provideMicroTaskRepository(microTaskDao: MicroTaskDao): MicroTaskRepository {
+    return MicroTaskRepository(microTaskDao)
   }
 
   @Provides

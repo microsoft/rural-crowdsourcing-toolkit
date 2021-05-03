@@ -311,7 +311,7 @@ open class SpeechDataMain(
     /** Write wav file */
     scratchRecordingFileInitJob = ioScope.launch { resetWavFile() }
 
-    sentenceTv.text = currentMicrotask.input.get("data").toString()
+    sentenceTv.text = currentMicroTask.input.get("data").toString()
     totalRecordedBytes = 0
     playbackProgressPb.progress = 0
 
@@ -328,7 +328,7 @@ open class SpeechDataMain(
     preRecordBufferConsumed[0] = 0
     preRecordBufferConsumed[1] = 0
 
-    if (currentAssignment.status != MicrotaskAssignmentStatus.completed) {
+    if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()

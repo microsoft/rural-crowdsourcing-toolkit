@@ -76,7 +76,7 @@
                 android:progressBackgroundTint="@color/colorLightGrey2"
                 android:progressTint="#6C6"
                 android:scaleY="2"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -95,8 +95,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@id/rupeesEarnedCl"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/syncCv"
         app:layout_constraintVertical_bias="0"
         tools:itemCount="2"

@@ -11,8 +11,8 @@ import androidx.core.app.ActivityCompat
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.microsoft.research.karya.data.model.karya.MicrotaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicrotaskRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
+import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.base.BaseActivity
@@ -42,8 +42,8 @@ abstract class MicrotaskRenderer(
   private var currentAssignmentIndex: Int = 0
   private var currentMicrotaskGroupId: String? = null
 
-  protected lateinit var currentMicrotask: MicrotaskRecord
-  protected lateinit var currentAssignment: MicrotaskAssignmentRecord
+  protected lateinit var currentMicroTask: MicroTaskRecord
+  protected lateinit var currentAssignment: MicroTaskAssignmentRecord
 
   private var totalMicrotasks: Int = 0
   private var completedMicrotasks: Int = 0
@@ -173,7 +173,7 @@ abstract class MicrotaskRenderer(
   /** Get Microtask input directory */
   private fun getMicrotaskInputDirectory(): String {
     val microtaskInputName = KaryaFileContainer.MICROTASK_INPUT.cname
-    val microtaskId = currentMicrotask.id
+    val microtaskId = currentMicroTask.id
     val microtaskInputDirectory = getDir("${microtaskInputName}_$microtaskId", MODE_PRIVATE)
     return microtaskInputDirectory.path
   }
@@ -207,7 +207,7 @@ abstract class MicrotaskRenderer(
       .markComplete(microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
 
     /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.assigned) {
+    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
       completedMicrotasks++
       uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
@@ -302,7 +302,7 @@ abstract class MicrotaskRenderer(
         do {
           val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
           val microtaskAssignment = karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
-          if (microtaskAssignment.status == MicrotaskAssignmentStatus.assigned) {
+          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
             break
           }
           currentAssignmentIndex++
@@ -391,15 +391,15 @@ abstract class MicrotaskRenderer(
       ioScope
         .launch {
           currentAssignment = karyaDb.microtaskAssignmentDao().getById(assignmentID)
-          currentMicrotask = karyaDb.microTaskDao().getById(currentAssignment.microtask_id)
+          currentMicroTask = karyaDb.microTaskDao().getById(currentAssignment.microtask_id)
         }
         .join()
 
       /** If microtask has input files, extract them */
       var microtaskInputFileJob: Job? = null
       var inputFileDoesNotExist = false
-      if (currentMicrotask.input_file_id != null) {
-        val microtaskTarBallPath = getBlobPath(KaryaFileContainer.MICROTASK_INPUT, currentMicrotask.id)
+      if (currentMicroTask.input_file_id != null) {
+        val microtaskTarBallPath = getBlobPath(KaryaFileContainer.MICROTASK_INPUT, currentMicroTask.id)
         val microtaskInputDirectory = getMicrotaskInputDirectory()
 
         if (!File(microtaskTarBallPath).exists()) {
@@ -427,12 +427,12 @@ abstract class MicrotaskRenderer(
       // Check if we are in a group boundary and finish if necessary
       if (finishOnGroupBoundary &&
           currentMicrotaskGroupId != null &&
-          currentMicrotask.group_id != null &&
-          currentMicrotask.group_id != currentMicrotaskGroupId
+          currentMicroTask.group_id != null &&
+          currentMicroTask.group_id != currentMicrotaskGroupId
       ) {
         finish()
       }
-      currentMicrotaskGroupId = currentMicrotask.group_id
+      currentMicrotaskGroupId = currentMicroTask.group_id
 
       outputData =
         if (currentAssignment.output.has("data")) {

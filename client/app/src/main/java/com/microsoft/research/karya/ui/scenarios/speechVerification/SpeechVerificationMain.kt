@@ -134,8 +134,8 @@ class SpeechVerificationMain :
     disableReview()
     reviewCompleted = false
 
-    val sentence = currentMicrotask.input.get("data").asString
-    val recordingFileName = currentMicrotask.input.get("files").asJsonArray[0].asString
+    val sentence = currentMicroTask.input.get("data").asString
+    val recordingFileName = currentMicroTask.input.get("files").asJsonArray[0].asString
     val recordingFile = getMicrotaskInputFilePath(recordingFileName)
 
     sentenceTv.text = sentence

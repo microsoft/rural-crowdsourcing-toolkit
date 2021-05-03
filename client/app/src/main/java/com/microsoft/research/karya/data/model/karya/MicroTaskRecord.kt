@@ -27,7 +27,7 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskStatus
     ),
   indices = arrayOf(Index("task_id"), Index("group_id"), Index("input_file_id"))
 )
-data class MicrotaskRecord(
+data class MicroTaskRecord(
   @PrimaryKey var id: String,
   var task_id: String,
   var group_id: String?,
