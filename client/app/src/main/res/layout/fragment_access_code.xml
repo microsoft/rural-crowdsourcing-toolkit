@@ -6,9 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.accesscode.AccessCodeActivity">
 
-    <include
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
         android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_60sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/creationCodePromptTv"
@@ -32,6 +36,7 @@
         android:digits="0123456789"
         android:fontFamily="monospace"
         android:hint="@string/creation_code_hint"
+        android:importantForAutofill="no"
         android:inputType="number"
         android:maxLength="19"
         android:paddingVertical="@dimen/_10sdp"
@@ -39,8 +44,7 @@
         android:textSize="@dimen/_18ssp"
         app:layout_constraintEnd_toStartOf="@id/creationCodeStatusIv"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv" />
 
     <ImageView
         android:id="@+id/creationCodeStatusIv"

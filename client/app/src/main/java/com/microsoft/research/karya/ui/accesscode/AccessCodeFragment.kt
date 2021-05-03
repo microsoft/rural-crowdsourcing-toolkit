@@ -39,6 +39,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
   private fun setupViews() {
     with(binding) {
+      appTb.setTitle(getString(R.string.s_access_code_title))
       /** Add text change listener to creation code */
       creationCodeEt.addTextChangedListener(
         object : SeparatorTextWatcher('-', 4) {

@@ -46,6 +46,8 @@ class DashboardActivity : AppCompatActivity() {
       }
 
       syncCv.setOnClickListener { viewModel.fetchNewTasks() }
+
+      appTb.setTitle(getString(R.string.s_dashboard_title))
     }
   }
 

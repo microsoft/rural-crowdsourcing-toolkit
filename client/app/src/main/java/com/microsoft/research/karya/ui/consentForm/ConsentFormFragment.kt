@@ -40,6 +40,7 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
       }
 
     with(binding) {
+      appTb.setTitle(getString(R.string.s_consent_form_title))
       consentFormTv.text = spannedText
       consentFormTv.movementMethod = ScrollingMovementMethod()
 
