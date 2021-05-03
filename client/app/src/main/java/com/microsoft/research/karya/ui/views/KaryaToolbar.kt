@@ -3,7 +3,6 @@ package com.microsoft.research.karya.ui.views
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.AppToolbarBinding
@@ -17,7 +16,9 @@ class KaryaToolbar : Toolbar {
 
   private lateinit var binding: AppToolbarBinding
 
-  init { initView(context) }
+  init {
+    initView(context)
+  }
 
   private fun initView(context: Context) {
     val view = inflate(context, R.layout.app_toolbar, this)
