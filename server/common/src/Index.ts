@@ -8,3 +8,4 @@ export * from './languages/Index';
 export * from './policies/Index';
 export * from './blobstore/Index';
 export * from './db/Index';
+export * from './auth/Index';

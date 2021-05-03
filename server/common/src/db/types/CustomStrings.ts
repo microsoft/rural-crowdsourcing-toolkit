@@ -8,10 +8,6 @@
 const serverRoles = ['admin', 'work_provider'] as const;
 export type ServerRole = typeof serverRoles[number];
 
-// Auth Provider -- TODO: move this to a auth provider module
-const authProviders = ['phone_otp', 'google_oauth'] as const;
-export type AuthProvider = typeof authProviders[number];
-
 // Gender
 const genders = ['male', 'female', 'not_specified'] as const;
 export type Gender = typeof genders[number];
@@ -53,5 +49,5 @@ const taskAssignmentStatuses = ['assigned', 'completed'] as const;
 export type TaskAssignmentStatus = typeof taskAssignmentStatuses[number];
 
 // Microtask Assignment Status
-const microtaskAssignmentStatuses = ['assigned', 'completed', 'skipped', 'expired', 'submitted', 'verified'];
+const microtaskAssignmentStatuses = ['assigned', 'completed', 'skipped', 'expired', 'verified'] as const;
 export type MicrotaskAssignmentStatus = typeof microtaskAssignmentStatuses[number];

@@ -5,6 +5,7 @@
 // interfaces file.
 
 export * from './CustomStrings';
+export { RegistrationMechanism } from '../../auth/Index';
 export { ContainerName } from '../../blobstore/Index';
 export { LanguageCode } from '../../languages/Index';
 export { ScenarioName, AssignmentGranularity, AssignmentOrder } from '../../scenarios/Index';

@@ -1,38 +1,22 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// File to define all the containers in the blob store.
 
-/**
- * File to define all the containers in the blob store.
- */
+import { LanguageCode } from '../Index';
 
 // Container parameters
 export type BlobParameters =
   | {
-      cname: 'lang-res';
-      language_resource_id: string;
-      language_id: string;
-      ext: string;
-    }
-  | {
-      cname: 'l-lrvs';
-      language_id: string;
-      ext: 'tar';
-    }
-  | {
-      cname: 'lr-lrvs';
-      language_resource_id: string;
-      ext: 'tar';
-    }
-  | {
-      cname: 'task-params';
-      task_id: string;
-      param_id: string;
-      ext: string;
+      cname: 'language-assets';
+      language_code: LanguageCode;
+      ext: 'tgz';
     }
   | {
       cname: 'task-input';
       task_id: string;
-      ext: string;
+      file_id: string;
+      ext: 'tgz';
     }
   | {
       cname: 'task-output';
@@ -43,7 +27,7 @@ export type BlobParameters =
   | {
       cname: 'microtask-input';
       microtask_id: string;
-      ext: string;
+      ext: 'tgz';
     }
   | {
       cname: 'microtask-assignment-output';
@@ -71,14 +55,11 @@ export type BlobParameters =
 // Container Name type and list
 export type ContainerName = BlobParameters['cname'];
 export const containerNames: readonly ContainerName[] = [
-  'lang-res',
-  'l-lrvs',
-  'lr-lrvs',
-  'task-params',
+  'language-assets',
   'task-input',
+  'task-output',
   'microtask-input',
   'microtask-assignment-output',
-  'task-output',
   'server-logs',
   'box-logs',
   'worker-logs',
@@ -90,14 +71,8 @@ export const containerNames: readonly ContainerName[] = [
  */
 export function getBlobName(params: BlobParameters): string {
   switch (params.cname) {
-    case 'lang-res':
-      return `${params.language_resource_id}-${params.language_id}.${params.ext}`;
-    case 'l-lrvs':
-      return `L-${params.language_id}.${params.ext}`;
-    case 'lr-lrvs':
-      return `LR-${params.language_resource_id}.${params.ext}`;
-    case 'task-params':
-      return `${params.task_id}-${params.param_id}.${params.ext}`;
+    case 'language-assets':
+      return `${params.language_code}.${params.ext}`;
     case 'task-input':
       return `${params.task_id}.${params.ext}`;
     case 'task-output':

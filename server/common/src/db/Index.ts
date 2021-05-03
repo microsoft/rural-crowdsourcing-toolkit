@@ -20,4 +20,3 @@ export * as MicrotaskGroupModel from './models/MicrotaskGroupModel';
 // Temporary fixes
 export { ServerUserRecord as WorkProviderRecord } from './ng-auto/TableInterfaces';
 export { ServerUser as WorkProvider } from './ng-auto/TableInterfaces';
-export { AuthProvider as AuthProviderType } from './types/CustomStrings';
