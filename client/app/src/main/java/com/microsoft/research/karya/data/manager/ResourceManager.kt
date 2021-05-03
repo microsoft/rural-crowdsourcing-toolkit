@@ -3,7 +3,6 @@ package com.microsoft.research.karya.data.manager
 import android.util.Log
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
-import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.Result
 import java.io.File
@@ -41,7 +40,7 @@ constructor(
 
     val languages =
       languageRepository
-        .getLanguages(WorkerInformation.creation_code!!)
+        .getLanguages(accessCode)
         .flowOn(Dispatchers.IO)
         .catch {
           Log.d("ResourceManager", "Error downloading languageRecords")

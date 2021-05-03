@@ -1,7 +1,7 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.local.daos.LanguageDao
-import com.microsoft.research.karya.data.local.daos.WorkerDao
+import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.manager.KaryaDatabase
 import dagger.Module
 import dagger.Provides

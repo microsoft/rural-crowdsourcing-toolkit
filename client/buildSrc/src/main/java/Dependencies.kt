@@ -5,6 +5,7 @@ private const val DAGGER_HILT_VERSION = "2.34.1-beta"
 private const val GMS_VERSION = "4.3.5"
 private const val KOTLIN_VERSION = "1.4.30"
 private const val LINT_VERSION = "27.3.0-alpha04"
+private const val NAVIGATION_VERSION = "2.3.5"
 
 object Plugins {
 
@@ -16,6 +17,7 @@ object Plugins {
     const val gms = "com.google.gms:google-services:$GMS_VERSION"
     const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     const val hilt = "com.google.dagger:hilt-android-gradle-plugin:$DAGGER_HILT_VERSION"
+    const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$NAVIGATION_VERSION"
 }
 
 object Dependencies {
@@ -71,10 +73,9 @@ object Dependencies {
         }
 
         object Navigation {
-            private const val version = "2.3.5"
 
-            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$version"
-            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$version"
+            const val fragmentKtx = "androidx.navigation:navigation-fragment-ktx:$NAVIGATION_VERSION"
+            const val uiKtx = "androidx.navigation:navigation-ui-ktx:$NAVIGATION_VERSION"
         }
 
     }

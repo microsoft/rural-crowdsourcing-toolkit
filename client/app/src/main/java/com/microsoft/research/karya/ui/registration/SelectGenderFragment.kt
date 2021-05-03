@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.registration
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
@@ -12,7 +13,7 @@ import com.microsoft.research.karya.utils.viewBinding
 class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
   private val binding by viewBinding(FragmentSelectGenderBinding::bind)
-
+  private val viewModel by activityViewModels<RegistrationViewModel>()
   private lateinit var registrationActivity: RegistrationActivity
   private lateinit var baseActivity: BaseActivity
 
@@ -21,27 +22,27 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
     registrationActivity = activity as RegistrationActivity
     baseActivity = activity as BaseActivity
+    var gender = "not_specified"
 
     /** Initialise assistant audio */
     registrationActivity.current_assistant_audio = R.string.audio_gender_prompt
 
-    WorkerInformation.gender = "not_specified"
-
     with(binding) {
       maleBtn.setOnClickListener {
-        WorkerInformation.gender = "male"
+        gender = "male"
         maleBtn.isSelected = true
         femaleBtn.isSelected = false
       }
 
       femaleBtn.setOnClickListener {
-        WorkerInformation.gender = "female"
+        gender = "female"
         femaleBtn.isSelected = true
         maleBtn.isSelected = false
       }
 
       submitGenderIb.setOnClickListener {
         submitGenderIb.visibility = View.INVISIBLE
+        viewModel.updateWorkerGender(gender)
         findNavController().navigate(R.id.action_selectGenderFragment_to_selectAgeGroupFragment)
       }
     }

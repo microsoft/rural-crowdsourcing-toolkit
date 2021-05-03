@@ -1,6 +1,6 @@
 package com.microsoft.research.karya.data.service
 
-import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.remote.response.ValidAccessCodeResponse
 import retrofit2.Response

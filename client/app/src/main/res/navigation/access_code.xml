@@ -22,22 +22,22 @@
         <action
             android:id="@+id/action_consentFormFragment_to_fileDownloadFragment"
             app:destination="@id/fileDownloadFragment" />
-        <action
-            android:id="@+id/action_consentFormFragment_to_registrationActivity"
-            app:destination="@id/registrationActivity" />
     </fragment>
     <fragment
         android:id="@+id/fileDownloadFragment"
         android:name="com.microsoft.research.karya.ui.fileDownload.FileDownloadFragment"
         android:label="FileDownloadFragment"
-        tools:layout="@layout/fragment_file_download">
-        <action
-            android:id="@+id/action_fileDownloadFragment_to_registrationActivity"
-            app:destination="@id/registrationActivity" />
-    </fragment>
+        tools:layout="@layout/fragment_file_download"/>
     <activity
         android:id="@+id/registrationActivity"
         android:name="com.microsoft.research.karya.ui.registration.RegistrationActivity"
         android:label="activity_registration"
-        tools:layout="@layout/activity_registration" />
+        tools:layout="@layout/activity_registration" >
+        <argument
+            android:name="accessCode"
+            app:argType="string" />
+    </activity>
+    <action
+        android:id="@+id/registerWorker"
+        app:destination="@id/registrationActivity" />
 </navigation>

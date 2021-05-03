@@ -132,7 +132,7 @@ abstract class NetworkActivity(
    */
   private suspend fun checkIdToken() {
     /** Extract the created time from id token */
-    val idToken = thisWorker.id_token!!
+    val idToken = thisWorker.idToken!!
     val body = getPayload(idToken)
 
     /** Compare with current time */

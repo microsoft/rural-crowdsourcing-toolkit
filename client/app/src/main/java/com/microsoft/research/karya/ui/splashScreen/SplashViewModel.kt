@@ -1,7 +1,7 @@
 package com.microsoft.research.karya.ui.splashScreen
 
 import androidx.lifecycle.ViewModel
-import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

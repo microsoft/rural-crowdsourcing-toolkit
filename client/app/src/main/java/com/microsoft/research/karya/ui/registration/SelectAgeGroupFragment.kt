@@ -20,6 +20,8 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   private lateinit var registrationActivity: RegistrationActivity
   private lateinit var baseActivity: BaseActivity
 
+  lateinit var currentAge: AgeGroup
+
   private fun setUpObservers() {
     viewModel.currRegisterState.observe(viewLifecycleOwner) { state ->
       when (state) {
@@ -87,6 +89,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
     binding.youthBtn.isSelected = false
     binding.middleAgeBtn.isSelected = false
     binding.oldAgeBtn.isSelected = false
+    currentAge = item
     when (item) {
       AgeGroup.YOUNG -> {
         binding.youthBtn.isSelected = true
@@ -122,6 +125,6 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
    * request, move to the register worker activity.
    */
   private fun submitAgeGroup() {
-    viewModel.registerWorker()
+    viewModel.updateWorkerAge(currentAge)
   }
 }

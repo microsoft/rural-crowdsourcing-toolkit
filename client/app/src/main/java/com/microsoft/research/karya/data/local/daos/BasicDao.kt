@@ -14,7 +14,7 @@ interface BasicDao<T> {
   @Insert suspend fun insert(record: T)
 
   /** Insert a [record] into the table. Will be followed by update in case of conflict. */
-  @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun insertForUpsert(record: T)
+  @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertForUpsert(record: T)
 
   /** Update a [record] in the table. Will be preceded by insert. */
   @Update(onConflict = OnConflictStrategy.IGNORE) suspend fun updateForUpsert(record: T)
