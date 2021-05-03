@@ -39,14 +39,17 @@ paths:
                   - type: object
                     description: Response if access code is used for auth
                     properties:
-                      language_code:
+                      id:
+                        type: string
+                        description: Unique ID of the worker on the platform
+                      language:
                         type: string
                         description: Code of the default language for the worker
                           record.
-                      registered:
-                        type: boolean
-                        description: Has a worker already registered previously
-                          with this code?
+                      reg_mechanism:
+                        type: string
+                        description: Mechanism through which user is registered.
+                          null indicates user is not yet registered.
 
         401:
           $ref: '#/components/responses/Unauthorized'
@@ -76,7 +79,7 @@ paths:
               type: object
               properties:
                 yob:
-                  type: integer
+                  type: string
                   description: Year of birth. Required with registration.
                 gender:
                   type: string
@@ -98,27 +101,14 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
 
-  /worker/otp:
+  /worker/otp/generate:
     put:
-      description: Generate/resend/verify OTP for a worker. The worker can
-        identify themselves using their unique access code. The "action" query
-        parameter should be "generate" | "resend" | "verify". In case of
-        "verify", the OTP should be included in the header. The return type for
-        resend and generate is empty Json-object and for verify it would be the
-        entire worker record.
+      description: Generate a new OTP for a worker.
 
       parameters:
-        - name: action
-          in: query
-          required: true
-          schema: { type: string }
         - name: phone-number
           in: header
           required: true
-          schema: { type: string }
-        - name: otp
-          in: header
-          required: false
           schema: { type: string }
 
       security:
@@ -127,20 +117,85 @@ paths:
 
       responses:
         200:
-          description: Request executed successfully. Returned an empty response
-            generate/resend of OTP and the entire worker record for verify.
+          description: Successfully generated and sent OTP.
+
+        400:
+          description: Missing phone number in header
+
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+        403:
+          description: Access code is already used by another phone number.
+
+        429:
+          description: Request rate for sending OTP exceeded. Rate will be
+            by the server.
+
+        503:
+          description: Unable to send OTP. Or OTP service currently unavailable.
+
+  /worker/otp/resend:
+    put:
+      description: Resend OTP previously generated.
+
+      parameters:
+        - name: phone-number
+          in: header
+          required: true
+          schema: { type: string }
+
+      security:
+        - AccessCode: []
+        - IDToken: []
+
+      responses:
+        200:
+          description: Successfully resent OTP.
+
+        400:
+          description: Missing phone number. OTP was never sent for this record.
+
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+        403:
+          description: Access code is already used by another phone number.
+
+        429:
+          description: OTP already resent once.
+
+        503:
+          description: Unable to send OTP. Or OTP service currently unavailable.
+
+  /worker/otp/verify:
+    put:
+      description: Verify the OTP sent for the worker.
+
+      parameters:
+        - name: phone-number
+          in: header
+          required: true
+          schema: { type: string }
+        - name: otp
+          in: header
+          required: true
+          schema: { type: string }
+
+      security:
+        - AccessCode: []
+        - IDToken: []
+
+      responses:
+        200:
+          description: OTP successfully verified.
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    description: Empty object for generate / resend OTP
-                  - type: object
-                    description: Entire worker record on successful verification.
-                    $ref: '#/components/schemas/Worker'
+                $ref: '#/components/schemas/Worker'
 
         400:
-          description: Missing phone number and OTP (for verify).
+          description: Missing phone number / OTP.
 
         401:
           $ref: '#/components/responses/Unauthorized'
@@ -151,14 +206,6 @@ paths:
         408:
           description: Time limit exceeded before the verify request was sent.
 
-        429:
-          description: Request rate for sending OTP exceeded. Rate will be
-            by the server. Only for generate and resend.
-
-        503:
-          description: Unable to send OTP. Or OTP service currently unavailable.
-            Only for generate and resend.
-
   /language_assets/{code}:
     get:
       description: Get the file asset for the language with the specified code.
@@ -168,7 +215,7 @@ paths:
         - name: code
           description: ISO 639-1 code for the language
           schema: { type: string }
-          in: query
+          in: path
           required: true
 
       security:
@@ -188,7 +235,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 
         400:
-          description: Missing code in query parameter
+          description: Missing or invalid language code in path
 
         404:
           description: No assets for the specified language
@@ -200,7 +247,7 @@ paths:
       parameters:
         - name: id
           description: ID of the assignment
-          in: query
+          in: path
           schema: { type: string }
           required: true
 
@@ -233,7 +280,7 @@ paths:
       parameters:
         - name: id
           description: ID of the assignment
-          in: query
+          in: path
           schema: { type: string }
           required: true
 
@@ -408,130 +455,6 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized'
 
-  /payment_methods:
-    post:
-      description: Submit information for a new payment method for the worker.
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PaymentMethod'
-
-      responses:
-        200:
-          description: Successfully created a new payment method for the worker.
-            Returns the newly created record.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaymentMethod'
-
-        400:
-          description: Invalid request.
-
-        401:
-          description: Unauthorized request. Invalid id token.
-
-  /payment_method/{id}:
-    parameters:
-      - name: id
-        description: ID of the payment method
-        required: true
-        in: path
-        schema: { type: string }
-
-    get:
-      description: Get updated payment method record.
-      responses:
-        200:
-          description: Successfully sent the updated payment method record.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaymentMethod'
-
-        400:
-          description: Invalid request.
-
-        401:
-          description: Unauthorized request. Invalid id token.
-
-    put:
-      description: Update any updatable entries of payment method.
-      responses:
-        200:
-          description: Successfully sent the updated payment method record.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaymentMethod'
-
-        400:
-          description: Invalid request.
-
-        401:
-          description: Unauthorized request. Invalid id token.
-
-  /payments:
-    get:
-      description: Get all payments updated after the given timestamp.
-
-      parameters:
-        - name: from
-          required: true
-          description: Start timestamp for the payments
-          in: query
-          schema: { type: string }
-
-      responses:
-        200:
-          description: Successfully sent the list of payments made to the
-            worker.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Payment'
-
-        400:
-          description: Invalid request.
-
-        401:
-          description: Unauthorized request. Invalid id token.
-
-  /payments/{id}:
-    parameters:
-      - name: id
-        description: ID of the payment
-        required: true
-        in: path
-        schema: { type: string }
-
-    put:
-      description: Update the status of the payment
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Payment'
-
-      responses:
-        200:
-          description: Successfully updated the payment.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Payment'
-
-        400:
-          description: Invalid request.
-
-        401:
-          description: Unauthorized request. Invalid id token.
-
 components:
   schemas:
     Worker:
@@ -539,79 +462,25 @@ components:
       properties:
         id:
           type: string
-        local_id:
+        access_code:
           type: string
-        box_id:
-          type: string
-        creation_code:
-          type: string
-        auth_provider:
-          type: string
-        username:
-          type: string
-        salt:
-          type: string
-        passwd_hash:
+        reg_mechanism:
           type: string
         phone_number:
           type: string
-        email:
-          type: string
-        oauth_id:
+        auth_id:
           type: string
         id_token:
           type: string
         full_name:
           type: string
-        profile_picture:
-          type: string
-        age:
+        year_of_birth:
           type: string
         gender:
           type: string
-        app_language:
+        language:
           type: string
-        last_sent_to_box_at:
-          type: string
-        last_received_from_box_at:
-          type: string
-        last_sent_to_server_at:
-          type: string
-        last_received_from_server_at:
-          type: string
-        params:
-          type: object
-        created_at:
-          type: string
-        last_updated_at:
-          type: string
-
-    Language:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        primary_language_name:
-          type: string
-        locale:
-          type: string
-        iso_639_3_code:
-          type: string
-        script:
-          type: string
-        string_support:
-          type: boolean
-        file_support:
-          type: boolean
-        list_support:
-          type: boolean
-        update_lrv_file:
-          type: boolean
-        lrv_file_id:
-          type: boolean
-        params:
+        tags:
           type: object
         created_at:
           type: string
@@ -623,19 +492,13 @@ components:
       properties:
         id:
           type: string
-        local_id:
-          type: string
-        box_id:
-          type: string
         container_name:
           type: string
         name:
           type: string
-        url:
-          type: string
         creator:
           type: string
-        worker_id:
+        creator_id:
           type: string
         algorithm:
           type: string
@@ -645,8 +508,6 @@ components:
           type: boolean
         in_server:
           type: boolean
-        params:
-          type: object
         created_at:
           type: string
         last_updated_at:
@@ -656,10 +517,6 @@ components:
       type: object
       properties:
         id:
-          type: string
-        local_id:
-          type: string
-        box_id:
           type: string
         microtask_id:
           type: string
@@ -675,10 +532,14 @@ components:
           type: object
         output_file_id:
           type: string
+        logs:
+          type: object
+        verified_at:
+          type: string
+        report:
+          type: object
         credits:
           type: number
-        params:
-          type: object
         created_at:
           type: string
         last_updated_at:
@@ -705,8 +566,6 @@ components:
           type: string
         output:
           type: object
-        params:
-          type: object
         created_at:
           type: string
         last_updated_at:
@@ -719,30 +578,20 @@ components:
           type: string
         work_provider_id:
           type: string
-        language_id:
+        language_code:
           type: string
-        scenario_id:
+        scenario_name:
           type: string
         name:
           type: string
         description:
           type: string
-        primary_language_name:
-          type: string
-        primary_language_description:
+        display_name:
           type: string
         params:
           type: object
-        errors:
+        tags:
           type: object
-        actions:
-          type: object
-        input_file_id:
-          type: string
-        output_file_id:
-          type: string
-        budget:
-          type: number
         deadline:
           type: string
         assignment_granularity:
@@ -758,12 +607,6 @@ components:
         last_updated_at:
           type: string
 
-    PaymentMethod:
-      type: object
-
-    Payment:
-      type: object
-
   securitySchemes:
     AccessCode:
       type: apiKey
@@ -775,10 +618,11 @@ components:
       name: access-code
 
     IDToken:
-      type: http
-      scheme: bearer
+      type: apiKey
       description: ID token generated by the server upon successful verification
         of the OTP.
+      in: header
+      name: karya-id-token
 
   responses:
     Unauthorized:
