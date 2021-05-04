@@ -10,10 +10,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // Store types and actions
-import { TaskRecord } from '@karya/common';
+import { TaskRecord } from '@karya/core';
 import { taskStatus } from './TaskUtils';
-import { scenarioMap, ScenarioName } from '@karya/common';
-import { languageMap, LanguageCode } from '@karya/common';
+import { scenarioMap, ScenarioName } from '@karya/core';
+import { languageMap, LanguageCode } from '@karya/core';
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
 

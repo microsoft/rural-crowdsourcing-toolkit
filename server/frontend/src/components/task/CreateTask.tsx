@@ -15,9 +15,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { Task } from '@karya/common';
-import { ScenarioInterface, scenarioMap, ScenarioName } from '@karya/common';
-import { languageMap, LanguageCode } from '@karya/common';
+import { Task } from '@karya/core';
+import { ScenarioInterface, scenarioMap, ScenarioName } from '@karya/core';
+import { languageMap, LanguageCode } from '@karya/core';
 
 // HTML Helpers
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';

@@ -10,7 +10,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // Store types and actions
-import { TaskAssignmentRecord } from '@karya/common';
+import { TaskAssignmentRecord } from '@karya/core';
 
 // HTML helpers
 import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';

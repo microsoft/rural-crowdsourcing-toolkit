@@ -22,7 +22,7 @@ import GoogleLogin from 'react-google-login';
 import config from '../../config/Index';
 
 /** Types needed for database tables */
-import { WorkProvider } from '@karya/common';
+import { ServerUser } from '@karya/core';
 
 /** Router props (for history) */
 type RouterProps = RouteComponentProps<{}>;
@@ -36,7 +36,7 @@ const mapStateToProps = (state: RootState) => {
 /** Map dispatch action creators to props */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    signUpWorkProvider: (wp: WorkProvider, id_token: string) => {
+    signUpServerUser: (wp: ServerUser, id_token: string) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'auth',
@@ -57,7 +57,7 @@ type SignUpProps = OwnProps & ConnectedProps<typeof connector>;
 
 /** Signup state */
 type SignUpState = {
-  wp: WorkProvider;
+  wp: ServerUser;
   id_token: string;
 };
 
@@ -77,7 +77,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
   /** Handle form cancel */
   handleFormCancel: FormEventHandler = (e) => {
     e.preventDefault();
-    const wp: WorkProvider = {
+    const wp: ServerUser = {
       role: 'work_provider',
       access_code: '',
       full_name: '',
@@ -89,14 +89,14 @@ class SignUp extends Component<SignUpProps, SignUpState> {
 
   /** Form ...this.state, field on change handler */
   handleFormChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const updatedWP: WorkProvider = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
+    const updatedWP: ServerUser = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ wp: updatedWP });
   };
 
   /** Form submission */
   handleFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    this.props.signUpWorkProvider(this.state.wp, this.state.id_token);
+    this.props.signUpServerUser(this.state.wp, this.state.id_token);
   };
 
   /**
@@ -106,7 +106,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
     const profile = googleUser.getBasicProfile();
     const id_token = googleUser.getAuthResponse().id_token;
 
-    const wp: WorkProvider = {
+    const wp: ServerUser = {
       access_code: '',
       role: 'work_provider',
       full_name: profile.getName(),

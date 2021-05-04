@@ -3,7 +3,7 @@
 
 /** Additional types needed for authentication */
 
-import { RegistrationMechanism } from '@karya/common';
+import { RegistrationMechanism } from '@karya/core';
 
 /** Auth header to be attached to each request */
 export type AuthHeader = {

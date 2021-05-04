@@ -3,12 +3,12 @@
  * repository. DO NOT EDIT DIRECTLY.
  */
 
-import * as DBT from '@karya/common';
+import * as DBT from '@karya/core';
 import { AuthHeader } from '../../db/Auth.extra';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_user'
-  ? 'DBT.WorkProvider'
+  ? 'DBT.ServerUser'
   : Table extends 'box'
   ? 'DBT.Box'
   : Table extends 'worker'
@@ -41,28 +41,28 @@ export type BackendRequestInitAction =
       store: 'server_user';
       label: 'UPDATE_BY_ID';
       id: string;
-      request: DBT.WorkProvider;
+      request: DBT.ServerUser;
       files?: undefined;
     }
   | {
       type: 'BR_INIT';
       store: 'server_user';
       label: 'GENERATE_CC';
-      request: DBT.WorkProvider;
+      request: DBT.ServerUser;
       files?: undefined;
     }
   | {
       type: 'BR_INIT';
       store: 'server_user';
       label: 'GET_ALL';
-      params: DBT.WorkProvider;
+      params: DBT.ServerUser;
     }
   | {
       type: 'BR_INIT';
       store: 'auth';
       headers: AuthHeader;
       label: 'SIGN_UP';
-      request: DBT.WorkProvider;
+      request: DBT.ServerUser;
       files?: undefined;
     }
   | {
@@ -309,43 +309,43 @@ export type BackendRequestSuccessAction =
       type: 'BR_SUCCESS';
       store: 'server_user';
       label: 'GET_BY_ID';
-      response: DBT.WorkProviderRecord;
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';
       store: 'server_user';
       label: 'UPDATE_BY_ID';
-      response: DBT.WorkProviderRecord;
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';
       store: 'server_user';
       label: 'GENERATE_CC';
-      response: DBT.WorkProviderRecord;
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';
       store: 'server_user';
       label: 'GET_ALL';
-      response: DBT.WorkProviderRecord[];
+      response: DBT.ServerUserRecord[];
     }
   | {
       type: 'BR_SUCCESS';
       store: 'auth';
       label: 'SIGN_UP';
-      response: DBT.WorkProviderRecord;
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';
       store: 'auth';
       label: 'SIGN_IN';
-      response: DBT.WorkProviderRecord;
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';
       store: 'auth';
       label: 'AUTO_SIGN_IN';
-      response: DBT.WorkProviderRecord;
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';

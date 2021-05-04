@@ -15,11 +15,11 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { scenarioMap, ScenarioName } from '@karya/common';
-import { policyMap, policyList, PolicyName } from '@karya/common';
+import { scenarioMap, ScenarioName } from '@karya/core';
+import { policyMap, policyList, PolicyName } from '@karya/core';
 
 // HTML helpers
-import { BoxRecord, TaskAssignment, TaskRecord } from '@karya/common';
+import { BoxRecord, TaskAssignment, TaskRecord } from '@karya/core';
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 

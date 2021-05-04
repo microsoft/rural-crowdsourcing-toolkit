@@ -16,7 +16,7 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 import { AuthProviderName } from '../../db/Auth.extra';
-import { WorkProvider, WorkProviderRecord } from '@karya/common';
+import { ServerUser, ServerUserRecord } from '@karya/core';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
 import { DataProps, withData } from '../hoc/WithData';
@@ -24,7 +24,7 @@ import { DataProps, withData } from '../hoc/WithData';
 /** Map get languages action creator to props */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    generateWorkProviderCC: (wp: WorkProvider) => {
+    generateServerUserCC: (wp: ServerUser) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'server_user',
@@ -42,23 +42,23 @@ const dataConnector = withData('server_user');
 const connector = compose(dataConnector, reduxConnector);
 
 /** LanugageList has only connected props */
-type WorkProviderListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type ServerUserListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
 /** Component only tracks status of existing request */
-type WorkProviderListState = {
-  ccForm: WorkProvider;
+type ServerUserListState = {
+  ccForm: ServerUser;
 };
 
-/** WorkProviderList component */
-class WorkProviderList extends React.Component<WorkProviderListProps, WorkProviderListState> {
+/** ServerUserList component */
+class ServerUserList extends React.Component<ServerUserListProps, ServerUserListState> {
   // setup creation code state
-  state: WorkProviderListState = {
+  state: ServerUserListState = {
     ccForm: { full_name: '', email: '', phone_number: '' },
   };
 
   // clear form
   clearForm = () => {
-    const ccForm: WorkProvider = { full_name: '', email: '', phone_number: '' };
+    const ccForm: ServerUser = { full_name: '', email: '', phone_number: '' };
     this.setState({ ccForm });
   };
 
@@ -71,7 +71,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
   // handle form submit
   handleCCFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    this.props.generateWorkProviderCC(this.state.ccForm);
+    this.props.generateServerUserCC(this.state.ccForm);
   };
 
   // On mount, get all work providers
@@ -80,7 +80,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
   }
 
   // On update, update text fields
-  componentDidUpdate(prevProps: WorkProviderListProps) {
+  componentDidUpdate(prevProps: ServerUserListProps) {
     if (prevProps.server_user.status === 'IN_FLIGHT' && this.props.server_user.status === 'SUCCESS') {
       this.clearForm();
     }
@@ -98,7 +98,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
         </div>
       ) : null;
 
-    const tableColumns: Array<TableColumnType<WorkProviderRecord>> = [
+    const tableColumns: Array<TableColumnType<ServerUserRecord>> = [
       { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'admin' ? 'Yes' : 'No') },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
@@ -107,7 +107,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
     ];
 
     /** Function to sort the work providers */
-    const sortWorkProviders = (a: WorkProviderRecord, b: WorkProviderRecord) => {
+    const sortServerUsers = (a: ServerUserRecord, b: ServerUserRecord) => {
       if (a.role === b.role) {
         return new Date(a.created_at) < new Date(b.created_at) ? 1 : -1;
       }
@@ -115,8 +115,8 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
     };
 
     /** List of signed up work providers */
-    const signedUpWorkProviders = server_users.filter((wp) => wp.reg_mechanism !== null).sort(sortWorkProviders);
-    const createdWorkProviders = server_users.filter((wp) => wp.reg_mechanism === null).sort(sortWorkProviders);
+    const signedUpServerUsers = server_users.filter((wp) => wp.reg_mechanism !== null).sort(sortServerUsers);
+    const createdServerUsers = server_users.filter((wp) => wp.reg_mechanism === null).sort(sortServerUsers);
 
     /** Creation code form */
     const { ccForm } = this.state;
@@ -160,15 +160,15 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
       <div className='tmar20'>
         {errorMessageElement}
         <Fragment>
-          <TableList<WorkProviderRecord>
+          <TableList<ServerUserRecord>
             columns={tableColumns}
-            rows={signedUpWorkProviders}
+            rows={signedUpServerUsers}
             emptyMessage='No signed up work providers'
           />
           {this.props.server_user.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
-          <TableList<WorkProviderRecord>
+          <TableList<ServerUserRecord>
             columns={tableColumns}
-            rows={createdWorkProviders}
+            rows={createdServerUsers}
             emptyMessage='No new creation codes'
           />
         </Fragment>
@@ -177,4 +177,4 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
   }
 }
 
-export default connector(WorkProviderList);
+export default connector(ServerUserList);

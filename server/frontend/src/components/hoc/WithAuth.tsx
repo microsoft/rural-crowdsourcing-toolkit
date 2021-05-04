@@ -10,12 +10,12 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 // DB types
-import { WorkProviderRecord } from '@karya/common';
+import { ServerUserRecord } from '@karya/core';
 
 // Map current work provider state to props
 const mapStateToProps = (state: RootState) => {
   return {
-    cwp: state.all.auth.cwp as Readonly<WorkProviderRecord>,
+    cwp: state.all.auth.cwp as Readonly<ServerUserRecord>,
   };
 };
 

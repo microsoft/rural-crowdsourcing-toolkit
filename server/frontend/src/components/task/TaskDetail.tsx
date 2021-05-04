@@ -14,7 +14,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
-import { scenarioMap, ScenarioName } from '@karya/common';
+import { scenarioMap, ScenarioName } from '@karya/core';
 
 // Utils
 import { approveStatuses, editStatuses, taskStatus, validateStatuses } from './TaskUtils';
@@ -27,7 +27,7 @@ import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 import moment from 'moment';
-import { LanguageCode, languageMap } from '@karya/common';
+import { LanguageCode, languageMap } from '@karya/core';
 
 /** Props */
 

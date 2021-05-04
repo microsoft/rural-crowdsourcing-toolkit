@@ -17,7 +17,7 @@ import { DbParamsType } from '../../store/apis/APIs.auto';
 import { RootState } from '../../store/Index';
 
 // Types
-import { DbTableName } from '@karya/common';
+import { DbTableName } from '@karya/core';
 
 /**
  * Type listing the additional props that will be attached to a component when

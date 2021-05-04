@@ -12,7 +12,7 @@ import { Reducer } from 'redux';
 import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSuccessAction } from './apis/APIs.auto';
 
 // Types for state
-import { DbRecordType, DbTableName, WorkProviderRecord } from '@karya/common';
+import { DbRecordType, DbTableName, ServerUserRecord } from '@karya/core';
 
 // Table state
 type RequestStatus = { status: 'IN_FLIGHT' } | { status: 'SUCCESS' } | { status: 'FAILURE'; messages: string[] };
@@ -26,7 +26,7 @@ export type StoreState<Table extends DbTableName> = {
 export type AllState = {
   [id in DbTableName]: StoreState<id>;
 } & {
-  auth: { cwp: WorkProviderRecord | null } & RequestStatus;
+  auth: { cwp: ServerUserRecord | null } & RequestStatus;
 };
 
 // Store actions
