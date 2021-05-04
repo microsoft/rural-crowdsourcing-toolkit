@@ -33,7 +33,7 @@ export const register: RegistrationMiddleware = async (ctx, next) => {
     return;
   }
 
-  await BasicModel.updateSingle('server_user', { id: ctx.state.entity.id }, serverUserInfo);
+  ctx.state.entity = await BasicModel.updateSingle('server_user', { id: ctx.state.entity.id }, serverUserInfo);
   await next();
 };
 
