@@ -23,7 +23,7 @@ import { approveStatuses, editStatuses, taskStatus, validateStatuses } from './T
 import { AuthProps, withAuth } from '../hoc/WithAuth';
 
 // HTML helpers
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 import moment from 'moment';

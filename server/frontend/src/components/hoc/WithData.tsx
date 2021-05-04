@@ -13,7 +13,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { store } from '../../index';
 import { AllState } from '../../store/AllReducer';
-import { DbParamsType } from '../../store/apis/APIs.auto';
+import { DbParamsType } from '../../store/apis/APIs';
 import { RootState } from '../../store/Index';
 
 // Types

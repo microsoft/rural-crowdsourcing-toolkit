@@ -9,7 +9,7 @@
 import { Reducer } from 'redux';
 
 // Actions
-import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSuccessAction } from './apis/APIs.auto';
+import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSuccessAction } from './apis/APIs';
 
 // Types for state
 import { DbRecordType, DbTableName, ServerUserRecord } from '@karya/core';

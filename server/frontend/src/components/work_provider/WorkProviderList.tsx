@@ -18,7 +18,7 @@ import { TableColumnType, TableList } from '../templates/TableList';
 import { AuthProviderName } from '../../db/Auth.extra';
 import { ServerUser, ServerUserRecord } from '@karya/core';
 
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 /** Map get languages action creator to props */

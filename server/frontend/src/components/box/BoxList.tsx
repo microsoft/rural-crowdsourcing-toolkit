@@ -22,7 +22,7 @@ import { TableColumnType, TableList } from '../templates/TableList';
 import { Box, BoxRecord } from '@karya/core';
 
 // HoCs
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 // Map dispatch to props

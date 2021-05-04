@@ -11,7 +11,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 /** Import async ops and action creators */
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Template elements */
 import { SubmitOrCancel, TextInput } from '../templates/FormInputs';

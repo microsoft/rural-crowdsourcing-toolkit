@@ -14,7 +14,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 // HTML helpers
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 // Router props

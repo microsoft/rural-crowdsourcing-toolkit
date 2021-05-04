@@ -24,7 +24,7 @@ import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 // HoC
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 // Router props

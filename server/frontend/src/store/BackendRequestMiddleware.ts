@@ -6,7 +6,7 @@
  * to the store.
  */
 
-import { backendRequest } from './apis/APIs.auto';
+import { backendRequest } from './apis/APIs';
 import { AllActions } from './Index';
 
 const backendRequestMiddleware = ({ dispatch }: any) => (next: any) => async (action: AllActions) => {
