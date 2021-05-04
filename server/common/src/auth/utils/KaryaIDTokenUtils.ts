@@ -59,7 +59,7 @@ function generateKaryaIdToken(entityType: AuthEntity, id: string, expiresIn: str
  * @param entityType Name of the entity for which the token is to be generated
  * @param id_token ID token to be verified
  */
-export function verifyKaryaIdToken(entityType: AuthEntity, id_token: string): AuthRecord {
+export async function verifyKaryaIdToken(entityType: AuthEntity, id_token: string): Promise<AuthRecord> {
   // Token cannot be decoded or does not contain the header
   const decoded = jwt.decode(id_token, { json: true, complete: true });
   if (!decoded || !decoded.header) {
@@ -114,7 +114,6 @@ const defaultIDTokenOptions: KaryaIDTokenOptions = {
   tokenExpiresIn: '30 days',
   cookieOptions: {
     maxAge: 60 * 60,
-    secure: true,
     httpOnly: true,
     sameSite: true,
   },
@@ -187,7 +186,7 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
       try {
         // @ts-ignore: Perhaps can be fixed by moving verifyKaryaIdToken into
         // the dependency injected code
-        ctx.state.entity = verifyKaryaIdToken(entityType, id_token);
+        ctx.state.entity = await verifyKaryaIdToken(entityType, id_token);
         ctx.state.auth_mechanism = 'karya-id-token';
         if (next) await next();
         else HttpResponse.OK(ctx, {});

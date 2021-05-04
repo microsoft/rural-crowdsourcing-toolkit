@@ -36,11 +36,12 @@ const mapStateToProps = (state: RootState) => {
 /** Map dispatch action creators to props */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    signUpWorkProvider: (wp: WorkProvider) => {
+    signUpWorkProvider: (wp: WorkProvider, id_token: string) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'auth',
         label: 'SIGN_UP',
+        headers: { 'reg-mechanism': 'google-id-token', 'google-id-token': id_token },
         request: wp,
       };
       dispatch(action);
@@ -57,6 +58,7 @@ type SignUpProps = OwnProps & ConnectedProps<typeof connector>;
 /** Signup state */
 type SignUpState = {
   wp: WorkProvider;
+  id_token: string;
 };
 
 class SignUp extends Component<SignUpProps, SignUpState> {
@@ -69,6 +71,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
       phone_number: '',
       email: '',
     },
+    id_token: '',
   };
 
   /** Handle form cancel */
@@ -81,7 +84,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
       phone_number: '',
       email: '',
     };
-    this.setState({ wp });
+    this.setState({ wp, id_token: '' });
   };
 
   /** Form ...this.state, field on change handler */
@@ -93,7 +96,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
   /** Form submission */
   handleFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    this.props.signUpWorkProvider(this.state.wp);
+    this.props.signUpWorkProvider(this.state.wp, this.state.id_token);
   };
 
   /**
@@ -109,11 +112,9 @@ class SignUp extends Component<SignUpProps, SignUpState> {
       full_name: profile.getName(),
       email: profile.getEmail(),
       phone_number: '',
-      auth_provider: 'google_oauth',
-      id_token,
     };
 
-    this.setState({ wp });
+    this.setState({ wp, id_token });
   };
 
   /**

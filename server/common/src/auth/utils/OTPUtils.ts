@@ -145,7 +145,7 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
    * Verify OTP for the worker.
    * @param ctx Karya request context
    */
-  const verify: OTPMiddleware = async (ctx, next) => {
+  const verify: OTPMiddleware = async (ctx, next): Promise<boolean> => {
     const entity = ctx.state.entity;
 
     // Extract OTP from the header
@@ -154,13 +154,13 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     // Check if otp is valid
     if (!otp || otp instanceof Array) {
       HttpResponse.BadRequest(ctx, 'Missing or multiple OTPs');
-      return;
+      return false;
     }
 
     // If OTP is not valid, then unauthorized access
     if (otp != entity.otp) {
       HttpResponse.Unauthorized(ctx, 'Invalid OTP');
-      return;
+      return false;
     }
 
     // Clear OTP field
@@ -168,6 +168,7 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     await BasicModel.updateSingle(entityType, { id: entity.id }, { otp: null });
     if (next) await next();
     else HttpResponse.OK(ctx, {});
+    return true;
   };
 
   return { generate, resend, verify, checkPhoneNumber };

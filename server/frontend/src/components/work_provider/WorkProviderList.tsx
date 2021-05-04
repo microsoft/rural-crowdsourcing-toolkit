@@ -102,7 +102,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
       { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'admin' ? 'Yes' : 'No') },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
-      { type: 'function', header: 'Authentication Type', function: (wp) => AuthProviderName(wp.auth_provider) },
+      { type: 'function', header: 'Registration Type', function: (wp) => AuthProviderName(wp.reg_mechanism) },
       { type: 'field', field: 'access_code', header: 'Access Code' },
     ];
 
@@ -115,8 +115,8 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
     };
 
     /** List of signed up work providers */
-    const signedUpWorkProviders = server_users.filter((wp) => wp.auth_provider !== null).sort(sortWorkProviders);
-    const createdWorkProviders = server_users.filter((wp) => wp.auth_provider === null).sort(sortWorkProviders);
+    const signedUpWorkProviders = server_users.filter((wp) => wp.reg_mechanism !== null).sort(sortWorkProviders);
+    const createdWorkProviders = server_users.filter((wp) => wp.reg_mechanism === null).sort(sortWorkProviders);
 
     /** Creation code form */
     const { ccForm } = this.state;

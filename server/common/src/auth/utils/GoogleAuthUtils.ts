@@ -14,20 +14,20 @@ export type GoogleAuthState = {
 };
 
 // Google Auth Middleware
-type GoogleAuthMiddleware = Application.Middleware<GoogleAuthState>;
+type GoogleAuthContext = Application.ParameterizedContext<GoogleAuthState>;
 
 /**
  * Middleware to verify a google-generated id token.
  * @param entityType Name of the entity: server_user or worker
  */
-export const verifyGoogleIdToken: GoogleAuthMiddleware = async (ctx, next) => {
+export const verifyGoogleIdToken = async (ctx: GoogleAuthContext): Promise<boolean> => {
   // Extract google ID token from header
   const idToken = ctx.request.header['google-id-token'];
 
   // Check if the id token is valid
   if (!idToken || idToken instanceof Array) {
     HttpResponse.BadRequest(ctx, 'Missing or multiple google id tokens');
-    return;
+    return false;
   }
 
   // Get google client id
@@ -36,7 +36,7 @@ export const verifyGoogleIdToken: GoogleAuthMiddleware = async (ctx, next) => {
     audience = envGetString('GOOGLE_CLIENT_ID');
   } catch (e) {
     HttpResponse.Unavailable(ctx, 'Server unable to accept google tokens');
-    return;
+    return false;
   }
 
   // Verify token
@@ -46,10 +46,9 @@ export const verifyGoogleIdToken: GoogleAuthMiddleware = async (ctx, next) => {
     const auth_id = ticket.getUserId();
     if (!auth_id) throw new Error('No auth_id with token');
     ctx.state.auth_id = auth_id;
-    if (next) await next();
-    else HttpResponse.OK(ctx, {});
+    return true;
   } catch (e) {
     HttpResponse.Unauthorized(ctx, 'Invalid token');
-    return;
+    return false;
   }
 };

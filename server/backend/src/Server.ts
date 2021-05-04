@@ -8,8 +8,7 @@ import { loadSecrets } from './secrets/Index';
 import cors from '@koa/cors';
 import Koa from 'koa';
 import logger from './utils/Logger';
-import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
-import router from './routes/Routes';
+import { userRouter } from './routes/UserRoutes';
 import { setupDbConnection } from '@karya/common';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
@@ -19,10 +18,8 @@ const app = new Koa();
 
 // App middlewares
 app.use(cors({ origin: envGetString('CORS_ORIGIN', ''), credentials: true }));
-app.use(logHttpRequests);
-app.use(authenticateRequest);
-app.use(router.allowedMethods());
-app.use(router.routes());
+app.use(userRouter.allowedMethods());
+app.use(userRouter.routes());
 
 // Main script
 (async () => {

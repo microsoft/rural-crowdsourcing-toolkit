@@ -4,6 +4,7 @@
  */
 
 import * as DBT from '@karya/common';
+import { AuthHeader } from '../../db/Auth.extra';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_user'
@@ -59,6 +60,7 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'auth';
+      headers: AuthHeader;
       label: 'SIGN_UP';
       request: DBT.WorkProvider;
       files?: undefined;
@@ -67,7 +69,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'auth';
       label: 'SIGN_IN';
-      headers: { 'auth-provider': DBT.AuthProviderType; 'id-token': string };
+      headers: AuthHeader;
       request: {};
       files?: undefined;
     }

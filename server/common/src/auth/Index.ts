@@ -3,6 +3,17 @@
 //
 // Entry point for auth module
 
+import { DbRecordType } from '../db/Index';
+import { RegistrationMechanism } from '../Index';
+
 export { RegistrationMechanism, AuthMechanism, AuthState } from './Common';
 export * from './utils/OTPUtils';
 export * from './utils/KaryaIDTokenUtils';
+export * from './utils/GoogleAuthUtils';
+
+export type UserRegistrationState<EntityType extends 'server_user' | 'worker'> = {
+  reg_mechanism: RegistrationMechanism;
+  phone_number: string;
+  auth_id: string;
+  entity: DbRecordType<EntityType>;
+};

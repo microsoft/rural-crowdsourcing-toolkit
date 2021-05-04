@@ -4,6 +4,7 @@
 // Karya database specification
 
 import { DatabaseSpec, TableColumnSpec } from '@karya/schema-spec';
+import deepcopy from 'deepcopy';
 
 // Definitive list of all karya database tables
 export const karyaTableNames = [
@@ -272,17 +273,17 @@ const serverSideBoxIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaO
 ];
 
 // Seperate server-side and box side database spec
-const karyaServerDb = { ...karyaDb };
-const karyaBoxDb = { ...karyaDb };
+const karyaServerDb = deepcopy(karyaDb);
+const karyaBoxDb = deepcopy(karyaDb);
 
 serverTables.forEach((table) => {
-  const columns = karyaDb.tables[table].columns;
+  const columns = karyaServerDb.tables[table].columns;
   karyaServerDb.tables[table].columns = serverSideServerIdFields.concat(columns).concat(commonFields);
   karyaBoxDb.tables[table].columns = boxSideServerIdFields.concat(columns).concat(commonFields);
 });
 
 boxTables.forEach((table) => {
-  const columns = karyaDb.tables[table].columns;
+  const columns = karyaServerDb.tables[table].columns;
   karyaServerDb.tables[table].columns = serverSideBoxIdFields.concat(columns).concat(commonFields);
   karyaBoxDb.tables[table].columns = boxSideBoxIdFields.concat(columns).concat(commonFields);
 });
