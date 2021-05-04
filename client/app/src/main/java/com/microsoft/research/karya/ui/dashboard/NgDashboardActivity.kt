@@ -46,6 +46,8 @@ class NgDashboardActivity : AppCompatActivity() {
     }
   }
 
+  private fun observeUi() {}
+
   @Suppress("UNCHECKED_CAST")
   private fun observeTaskList() {
     viewModel.getAllTasks().observe(lifecycle, lifecycleScope) { result ->

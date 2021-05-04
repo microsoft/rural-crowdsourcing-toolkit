@@ -229,8 +229,10 @@ constructor(
       val worker = authManager.fetchLoggedInWorker()
       val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(currentAge.name, worker.gender)
 
+      checkNotNull(worker.idToken)
+
       workerRepository
-        .updateWorker(worker.idToken!!, worker.accessCode, registerOrUpdateWorkerRequest)
+        .updateWorker(worker.idToken, worker.accessCode, registerOrUpdateWorkerRequest)
         .onEach { workerRecord ->
           workerRepository.upsertWorker(workerRecord)
           _currRegisterState.value = RegisterWorkerState.SUCCESS
@@ -245,8 +247,10 @@ constructor(
       val worker = authManager.fetchLoggedInWorker()
       val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(worker.age ?: "", gender)
 
+      checkNotNull(worker.idToken)
+
       workerRepository
-        .updateWorker("", worker.accessCode, registerOrUpdateWorkerRequest)
+        .updateWorker(worker.idToken, worker.accessCode, registerOrUpdateWorkerRequest)
         .onEach { workerRecord ->
           workerRepository.upsertWorker(workerRecord)
           _currRegisterState.value = RegisterWorkerState.SUCCESS

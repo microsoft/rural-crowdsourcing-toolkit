@@ -15,7 +15,7 @@ class NgTaskListAdapter(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NgTaskViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
-    val binding = ItemTaskBinding.inflate(layoutInflater)
+    val binding = ItemTaskBinding.inflate(layoutInflater, parent, false)
 
     return NgTaskViewHolder(binding, dashboardItemClick)
   }

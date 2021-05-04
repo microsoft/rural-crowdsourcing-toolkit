@@ -23,6 +23,12 @@ constructor(
 ) {
   private lateinit var activeWorker: String
 
+  suspend fun fetchLoggedInWorkerIdToken(): String {
+    val worker = fetchLoggedInWorker()
+
+    return worker.idToken ?: throw NoWorkerException()
+  }
+
   suspend fun fetchLoggedInWorkerAccessCode(): String {
     if (!this::activeWorker.isInitialized || activeWorker.isEmpty()) {
       activeWorker = getLoggedInWorkerAccessCode()
@@ -47,6 +53,12 @@ constructor(
     setLoggedInWorkerAccessCode(accessCode)
   }
 
+  suspend fun logoutWorker() =
+    withContext(defaultDispatcher) {
+      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+      applicationContext.dataStore.edit { prefs -> prefs.remove(accessCodeKey) }
+    }
+
   suspend fun fetchLoggedInWorker(): WorkerRecord {
     if (!this::activeWorker.isInitialized || activeWorker.isEmpty()) {
       activeWorker = getLoggedInWorkerAccessCode()
@@ -54,12 +66,6 @@ constructor(
 
     return workerRepository.getWorkerByAccessCode(activeWorker) ?: throw NoWorkerException()
   }
-
-  suspend fun logoutWorker() =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      applicationContext.dataStore.edit { prefs -> prefs.remove(accessCodeKey) }
-    }
 
   private suspend fun setLoggedInWorkerAccessCode(accessCode: String) =
     withContext(defaultDispatcher) {

@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
-import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.ImageUtils
 import com.microsoft.research.karya.utils.viewBinding
 
@@ -25,7 +24,6 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
   private lateinit var profilePic: Bitmap
 
   private lateinit var registrationActivity: RegistrationActivity
-  private lateinit var baseActivity: BaseActivity
 
   private fun setUpObservers() {
     viewModel.openSelectGenderFragmentFromProfilePicture.observe(viewLifecycleOwner) { navigate ->
@@ -55,12 +53,12 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
     super.onViewCreated(view, savedInstanceState)
 
     registrationActivity = activity as RegistrationActivity
-    baseActivity = activity as BaseActivity
+    // baseActivity = activity as BaseActivity
 
     setUpObservers()
 
     /** Initialise assistant audio */
-    registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
+    // registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
 
     with(binding) {
       mainProfilePictureIv.setOnClickListener { getProfilePicture() }
