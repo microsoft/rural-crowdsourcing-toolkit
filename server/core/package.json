@@ -1,0 +1,26 @@
+{
+  "name": "@karya/core",
+  "version": "2.0.0",
+  "description": "This package defines core types used across the platform.",
+  "private": true,
+  "main": "dist/Index",
+  "types": "dist/Index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist* && rm -rf tsconfig*.tsbuildinfo",
+    "compile": "tsc -b tsconfig-schema.json && node ./dist-schema/GenerateFiles.js && tsc -b tsconfig-ext.json"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@karya/schema-spec": "^2.0.0",
+    "@types/node": "^13.13.25",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "deepcopy": "^2.1.0",
+    "joi": "^17.4.0"
+  }
+}
