@@ -109,8 +109,8 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     // Send the otp
     try {
       await sendOTP(phone_number, otp);
-      if (next) await next();
-      else HttpResponse.OK(ctx, {});
+      HttpResponse.OK(ctx, {});
+      await next();
     } catch (e) {
       HttpResponse.Unavailable(ctx, 'Could not send OTP');
     }
@@ -134,8 +134,8 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     // Send the otp
     try {
       await sendOTP(phone_number, otp);
-      if (next) await next();
-      else HttpResponse.OK(ctx, {});
+      HttpResponse.OK(ctx, {});
+      await next();
     } catch (e) {
       HttpResponse.Unavailable(ctx, 'Could not send OTP');
     }
@@ -166,8 +166,8 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     // Clear OTP field
     // @ts-ignore: Unclear why this error is occuring.
     await BasicModel.updateSingle(entityType, { id: entity.id }, { otp: null });
-    if (next) await next();
-    else HttpResponse.OK(ctx, {});
+    HttpResponse.OK(ctx, {});
+    await next();
     return true;
   };
 

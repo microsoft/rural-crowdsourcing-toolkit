@@ -28,7 +28,10 @@ type KaryaUserRouteState<ExtraState = {}> = KaryaDefaultUserRouteState & ExtraSt
 export type KaryaUserRouteMiddleware<ExtraState = {}> = Application.Middleware<KaryaUserRouteState<ExtraState>>;
 
 // Create the router
-const userRouter = new Router<KaryaDefaultUserRouteState>();
+const userRouter = new Router<KaryaDefaultUserRouteState>({ prefix: '/api_user' });
+
+/** Add user authenticator to all requests */
+userRouter.use(Middlewares.authenticateRequest);
 
 /**
  * Authentication related routes. Register, login and logout users.
@@ -44,7 +47,8 @@ userRouter.put<RegistrationState, {}>(
   BodyParser(),
   AuthController.register,
   // @ts-ignore Possibly incorrect understanding of router types
-  Middlewares.generateToken
+  Middlewares.generateToken,
+  Middlewares.respondWithUserRecord
 );
 
 // Exchange google auth or OTP for karya ID token. ID token is stored in cookies.
@@ -53,7 +57,9 @@ userRouter.get<RegistrationState, {}>(
   // @ts-ignore Possibly incorrect understanding of router types
   Middlewares.setRegMechanism,
   AuthController.login,
-  Middlewares.generateToken
+  Middlewares.generateToken,
+  // @ts-ignore Possibly incorrect understanding of router types
+  Middlewares.respondWithUserRecord
 );
 
 // Clear cookies = logout user.
@@ -104,8 +110,5 @@ userRouter.post('/task_assignments', Middlewares.onlyAdmin, BodyParser(), TaskAs
 
 // Get all task assignments
 userRouter.get('/task_assignments', Middlewares.onlyAdmin, TaskAssignmentController.get);
-
-/** Add user authenticator to all requests */
-userRouter.use(Middlewares.authenticateRequest);
 
 export { userRouter };

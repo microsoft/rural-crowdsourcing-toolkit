@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch: any) => {
         type: 'BR_INIT',
         store: 'auth',
         label: 'SIGN_UP',
-        headers: { 'reg-mechanism': 'google-id-token', 'google-id-token': id_token },
+        headers: { 'reg-mechanism': 'google-id-token', 'google-id-token': id_token, 'access-code': wp.access_code! },
         request: wp,
       };
       dispatch(action);
@@ -68,7 +68,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
       role: 'work_provider',
       access_code: '',
       full_name: '',
-      phone_number: '',
       email: '',
     },
     id_token: '',
@@ -81,7 +80,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
       role: 'work_provider',
       access_code: '',
       full_name: '',
-      phone_number: '',
       email: '',
     };
     this.setState({ wp, id_token: '' });
@@ -111,7 +109,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
       role: 'work_provider',
       full_name: profile.getName(),
       email: profile.getEmail(),
-      phone_number: '',
     };
 
     this.setState({ wp, id_token });
@@ -178,8 +175,8 @@ class SignUp extends Component<SignUpProps, SignUpState> {
               <div className='card-content'>
                 <form onSubmit={this.handleFormSubmit}>
                   <TextInput
-                    id='creation_code'
-                    label='16-Digit Creation Code*'
+                    id='access_code'
+                    label='16-Character Access Code*'
                     value={wp.access_code}
                     onChange={this.handleFormChange}
                     required={true}
@@ -199,14 +196,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                     id='email'
                     label='E-mail Address'
                     value={wp.email ?? ''}
-                    onChange={this.handleFormChange}
-                    width='s12 m8'
-                  />
-
-                  <TextInput
-                    id='phone_number'
-                    label='Phone Number'
-                    value={wp.phone_number ?? ''}
                     onChange={this.handleFormChange}
                     width='s12 m8'
                   />

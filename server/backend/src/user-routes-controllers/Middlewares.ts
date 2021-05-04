@@ -8,7 +8,11 @@ import * as HttpResponse from '@karya/http-response';
 import { KaryaIDTokenHandlerTemplate } from '@karya/common';
 
 // Karya ID token middlewares
-const idTokenHandler = KaryaIDTokenHandlerTemplate('server_user', { inCookie: true, tokenExpiresIn: '12h' });
+const idTokenHandler = KaryaIDTokenHandlerTemplate('server_user', {
+  inCookie: true,
+  tokenExpiresIn: '12h',
+  cookieOptions: { httpOnly: true, secure: false },
+});
 export const generateToken = idTokenHandler.generateToken;
 
 /**
@@ -50,4 +54,11 @@ export const setRegMechanism: RegistrationMiddleware = async (ctx, next) => {
 
   ctx.state.reg_mechanism = reg_mechanism;
   await next();
+};
+
+/**
+ * Return user record
+ */
+export const respondWithUserRecord: RegistrationMiddleware = async (ctx) => {
+  HttpResponse.OK(ctx, ctx.state.entity);
 };

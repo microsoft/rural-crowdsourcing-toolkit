@@ -282,7 +282,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT('/server_user/update/cc', action.request, action.files),
+        response: await PUT('/server_user/register', action.request, action.files, action.headers),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_IN') {
@@ -290,7 +290,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST('/server_user/sign/in', action.request, action.headers, action.files),
+        response: await GET('/server_user/login', {}, action.headers),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'AUTO_SIGN_IN') {
@@ -298,7 +298,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST('/server_user/sign/in', action.request, {}, action.files),
+        response: await GET('/server_user/login'),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_OUT') {
@@ -306,7 +306,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await PUT('/server_user/sign/out', action.request, action.files),
+        response: await GET('/server_user/logout'),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'box' && action.label === 'GENERATE_CC') {
