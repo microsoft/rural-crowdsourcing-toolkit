@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_consentFormFragment_to_fileDownloadFragment"
             app:destination="@id/fileDownloadFragment" />
+        <action
+            android:id="@+id/action_consentFormFragment_to_registrationActivity"
+            app:destination="@id/registrationActivity" />
     </fragment>
     <fragment
         android:id="@+id/fileDownloadFragment"

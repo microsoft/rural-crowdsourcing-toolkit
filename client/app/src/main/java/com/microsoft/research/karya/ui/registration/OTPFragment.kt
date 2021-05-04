@@ -14,9 +14,9 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
-import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
+import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -29,9 +29,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
 
   private val binding by viewBinding(FragmentOtpBinding::bind)
   private val viewModel by activityViewModels<RegistrationViewModel>()
-
-  private lateinit var registrationActivity: RegistrationActivity
-  private lateinit var baseActivity: BaseActivity
 
   private fun setupObservers() {
     viewModel.openDashBoardFromOTP.observe(viewLifecycleOwner) { openDashBoard ->
@@ -94,7 +91,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       otpStatusIv.setImageResource(0)
       otpStatusIv.setImageResource(R.drawable.ic_quit_select)
       otpEt.isEnabled = true
-      baseActivity.requestSoftKeyFocus(binding.otpEt)
+      requestSoftKeyFocus(binding.otpEt)
     }
   }
 
@@ -107,11 +104,8 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
 
     setupObservers()
 
-    registrationActivity = activity as RegistrationActivity
-    baseActivity = activity as BaseActivity
-
     /** Initialise assistant audio */
-    registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
+    // registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
 
     /** Resend OTP handler */
     binding.resendOTPBtn.setOnClickListener { resendOTP() }
@@ -127,12 +121,12 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
         }
       }
     )
-    baseActivity.requestSoftKeyFocus(binding.otpEt)
+    requestSoftKeyFocus(binding.otpEt)
   }
 
   override fun onResume() {
     super.onResume()
-    registrationActivity.onAssistantClick()
+    // registrationActivity.onAssistantClick()
   }
 
   /** Handler called when full OTP is entered */
