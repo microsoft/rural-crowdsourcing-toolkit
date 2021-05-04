@@ -123,6 +123,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       }
     )
     requestSoftKeyFocus(binding.otpEt)
+    binding.appTb.setTitle(getString(R.string.s_otp_prompt))
   }
 
   override fun onResume() {

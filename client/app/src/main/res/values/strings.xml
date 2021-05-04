@@ -9,6 +9,11 @@
     <string name="s_fetching_values_for_language">Getting all necessary data to display the app in English</string>
     <string name="s_consent_form_title">Consent Form</string>
     <string name="s_access_code_title">Enter Access Code</string>
+    <string name="s_otp_title">Enter OTP</string>
+    <string name="s_phone_number_title">Enter Phone Number</string>
+    <string name="s_age_title">Select Age Group</string>
+    <string name="s_gender_title">Select Gender</string>
+    <string name="s_profile_pic_title">Select Profile Picture</string>
     <string name="s_dashboard_title">Dashboard</string>
     <string name="s_consent_form_agree">I agree</string>
     <string name="s_consent_form_disagree">No. I do not want to participate</string>

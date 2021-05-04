@@ -81,6 +81,8 @@ class ProfilePictureFragment : Fragment(R.layout.fragment_profile_picture) {
           profilePic = viewModel.rotateRight(profilePic)
         }
       }
+
+      appTb.setTitle(getString(R.string.s_profile_pic_title))
     }
 
     disableRotateButton()

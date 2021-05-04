@@ -51,9 +51,11 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
       phoneNumberNextIv.setOnClickListener {
         phoneNumberNextIv.invisible()
-        handleNextClick(binding.phoneNumberEt.text.toString())
+        handleNextClick(phoneNumberEt.text.toString())
       }
-      binding.phoneNumberNextIv.isClickable = false
+      phoneNumberNextIv.isClickable = false
+
+      appTb.setTitle(getString(R.string.s_phone_number_title))
     }
   }
 
