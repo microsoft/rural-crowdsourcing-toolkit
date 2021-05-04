@@ -25,7 +25,7 @@ export const register: RegistrationMiddleware = async (ctx, next) => {
 
   if (ctx.state.reg_mechanism == 'google-id-token') {
     // Verify google token
-    const verified = verifyGoogleIdToken(ctx);
+    const verified = await verifyGoogleIdToken(ctx);
     if (!verified) return;
     serverUserInfo.auth_id = ctx.state.auth_id;
   } else {
@@ -43,7 +43,7 @@ export const register: RegistrationMiddleware = async (ctx, next) => {
 export const login: RegistrationMiddleware = async (ctx, next) => {
   if (ctx.state.reg_mechanism == 'google-id-token') {
     // Verify token
-    const verified = verifyGoogleIdToken(ctx);
+    const verified = await verifyGoogleIdToken(ctx);
     if (!verified) return;
 
     // Retrieve the user record
@@ -54,6 +54,7 @@ export const login: RegistrationMiddleware = async (ctx, next) => {
       });
     } catch (e) {
       HttpResponse.Unauthorized(ctx, 'No user with this google account');
+      return;
     }
   } else {
     HttpResponse.Unavailable(ctx, 'Reg mechanism not supported yet');
