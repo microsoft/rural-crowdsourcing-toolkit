@@ -23,6 +23,14 @@ constructor(
 ) {
   private lateinit var activeWorker: String
 
+  suspend fun fetchLoggedInWorkerAccessCode(): String {
+    if (!this::activeWorker.isInitialized || activeWorker.isEmpty()) {
+      activeWorker = getLoggedInWorkerAccessCode()
+    }
+
+    return activeWorker
+  }
+
   suspend fun isWorkerRegistered(): Boolean {
     if (!this::activeWorker.isInitialized || activeWorker.isEmpty()) {
       activeWorker = getLoggedInWorkerAccessCode()

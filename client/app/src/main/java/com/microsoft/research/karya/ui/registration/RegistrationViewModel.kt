@@ -11,6 +11,7 @@ import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.enums.AgeGroup
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.data.model.karya.enums.OtpVerifyState
@@ -29,47 +30,47 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-// TODO: ADD dependencies in the constructor
 @HiltViewModel
 class RegistrationViewModel
 @Inject
 constructor(
   private val workerRepository: WorkerRepository,
+  private val authManager: AuthManager,
 ) : ViewModel() {
 
-  private val _openDashBoardFromOTP = MutableLiveData<Boolean>(false)
+  private val _openDashBoardFromOTP = MutableLiveData(false)
   val openDashBoardFromOTP: LiveData<Boolean>
     get() = _openDashBoardFromOTP
 
-  private val _openProfilePictureFragmentFromOTP = MutableLiveData<Boolean>(false)
+  private val _openProfilePictureFragmentFromOTP = MutableLiveData(false)
   val openProfilePictureFragmentFromOTP: LiveData<Boolean>
     get() = _openProfilePictureFragmentFromOTP
 
-  private val _openSelectGenderFragmentFromProfilePicture = MutableLiveData<Boolean>(false)
+  private val _openSelectGenderFragmentFromProfilePicture = MutableLiveData(false)
   val openSelectGenderFragmentFromProfilePicture: LiveData<Boolean>
     get() = _openSelectGenderFragmentFromProfilePicture
 
-  private val _currOtpVerifyState = MutableLiveData<OtpVerifyState>(OtpVerifyState.NOT_ENTERED)
+  private val _currOtpVerifyState = MutableLiveData(OtpVerifyState.NOT_ENTERED)
   val currOtpVerifyState: LiveData<OtpVerifyState>
     get() = _currOtpVerifyState
 
-  private val _currOtpSendState = MutableLiveData<OtpSendState>(OtpSendState.NOT_SENT)
+  private val _currOtpSendState = MutableLiveData(OtpSendState.NOT_SENT)
   val currOtpSendState: LiveData<OtpSendState>
     get() = _currOtpSendState
 
-  private val _currOtpResendState = MutableLiveData<OtpSendState>(OtpSendState.NOT_SENT)
+  private val _currOtpResendState = MutableLiveData(OtpSendState.NOT_SENT)
   val currOtpResendState: LiveData<OtpSendState>
     get() = _currOtpResendState
 
-  private val _currRegisterState = MutableLiveData<RegisterWorkerState>(RegisterWorkerState.NOT_STARTED)
+  private val _currRegisterState = MutableLiveData(RegisterWorkerState.NOT_STARTED)
   val currRegisterState: LiveData<RegisterWorkerState>
     get() = _currRegisterState
 
-  private val _loadImageBitmap = MutableLiveData<Boolean>(false)
+  private val _loadImageBitmap = MutableLiveData(false)
   val loadImageBitmap: LiveData<Boolean>
     get() = _loadImageBitmap
 
-  private val _idTokenLiveData = MutableLiveData<String>("")
+  private val _idTokenLiveData = MutableLiveData("")
   val idTokenLiveData: LiveData<String>
     get() = _idTokenLiveData
 
@@ -77,16 +78,17 @@ constructor(
   var otpFragmentErrorId by Delegates.notNull<Int>()
   var selectAgeGroupFragmentErrorId by Delegates.notNull<Int>()
 
-  var workerAccessCode = ""
   var workerPhoneNumber = ""
 
   fun sendOTP(phoneNumber: String) {
     viewModelScope.launch {
       workerPhoneNumber = phoneNumber
+      // This is an O(1) call except for the first time when worker is fetched from preferences
+      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
 
       workerRepository
         .getOrVerifyOTP(
-          accessCode = workerAccessCode,
+          accessCode = accessCode,
           phoneNumber = workerPhoneNumber,
           otp = "",
           WorkerRepository.OtpAction.GENERATE.name.toLowerCase(Locale.ROOT)
@@ -98,37 +100,45 @@ constructor(
   }
 
   fun verifyOTP(otp: String) {
-    workerRepository
-      .getOrVerifyOTP(workerAccessCode, workerPhoneNumber, otp, WorkerRepository.OtpAction.VERIFY.name.toLowerCase())
-      .onEach { workerRecord ->
-        val idToken = workerRecord.idToken ?: error("idToken should not be null")
+    viewModelScope.launch {
+      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
 
-        _currOtpVerifyState.value = OtpVerifyState.SUCCESS
-        _idTokenLiveData.value = idToken
-        if (workerRecord.age.isNullOrEmpty()) {
-          // First time registration, go on with the regular registration flow
-          _openProfilePictureFragmentFromOTP.value = true
-        } else {
-          // Save the worker and navigate to dashboard
-          updateWorker(workerRecord)
-          _openDashBoardFromOTP.value = true
+      workerRepository
+        .getOrVerifyOTP(accessCode, workerPhoneNumber, otp, WorkerRepository.OtpAction.VERIFY.name.toLowerCase())
+        .onEach { workerRecord ->
+          val idToken = workerRecord.idToken ?: error("idToken should not be null")
+
+          _currOtpVerifyState.value = OtpVerifyState.SUCCESS
+          _idTokenLiveData.value = idToken
+          if (workerRecord.age.isNullOrEmpty()) {
+            // First time registration, go on with the regular registration flow
+            _openProfilePictureFragmentFromOTP.value = true
+          } else {
+            // Save the worker and navigate to dashboard
+            updateWorker(workerRecord)
+            _openDashBoardFromOTP.value = true
+          }
         }
-      }
-      .catch { e -> sendVerifyOtpError(e) }
-      .launchIn(viewModelScope)
+        .catch { e -> sendVerifyOtpError(e) }
+        .collect()
+    }
   }
 
   /** Resend OTP */
   fun resendOTP() {
-    workerRepository
-      .getOrVerifyOTP(workerAccessCode, workerAccessCode, "", WorkerRepository.OtpAction.RESEND.name.toLowerCase())
-      .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
-      .catch { e -> sendResendOtpError(e) }
-      .launchIn(viewModelScope)
+    viewModelScope.launch {
+      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+
+      workerRepository
+        .getOrVerifyOTP(accessCode, workerPhoneNumber, "", WorkerRepository.OtpAction.RESEND.name.toLowerCase())
+        .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
+        .catch { e -> sendResendOtpError(e) }
+        .collect()
+    }
   }
 
   private fun updateWorker(workerRecord: WorkerRecord) {
-    viewModelScope.launch { workerRepository.upsertWorker(workerRecord.copy(accessCode = workerAccessCode)) }
+    viewModelScope.launch { workerRepository.upsertWorker(workerRecord) }
   }
 
   private fun sendGenerateOtpError(e: Throwable) {
@@ -181,7 +191,6 @@ constructor(
 
   /** Handle submit profile picture click. */
   fun submitProfilePicture(profilePic: Bitmap?, imageFolder: String) {
-
     WorkerInformation.profile_picture = profilePic
     val fileName = "pp.png"
     val out = FileOutputStream("$imageFolder/$fileName")
@@ -217,11 +226,11 @@ constructor(
 
   fun updateWorkerAge(currentAge: AgeGroup) {
     viewModelScope.launch {
-      val worker = workerRepository.getWorkerByAccessCode(workerAccessCode) ?: error("Worker does not exist")
+      val worker = authManager.fetchLoggedInWorker()
       val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(currentAge.name, worker.gender)
 
       workerRepository
-        .updateWorker("", workerAccessCode, registerOrUpdateWorkerRequest)
+        .updateWorker(worker.idToken!!, worker.accessCode, registerOrUpdateWorkerRequest)
         .onEach { workerRecord ->
           workerRepository.upsertWorker(workerRecord)
           _currRegisterState.value = RegisterWorkerState.SUCCESS
@@ -233,11 +242,11 @@ constructor(
 
   fun updateWorkerGender(gender: String) {
     viewModelScope.launch {
-      val worker = workerRepository.getWorkerByAccessCode(workerAccessCode) ?: error("Worker does not exist")
+      val worker = authManager.fetchLoggedInWorker()
       val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(worker.age ?: "", gender)
 
       workerRepository
-        .updateWorker("", workerAccessCode, registerOrUpdateWorkerRequest)
+        .updateWorker("", worker.accessCode, registerOrUpdateWorkerRequest)
         .onEach { workerRecord ->
           workerRepository.upsertWorker(workerRecord)
           _currRegisterState.value = RegisterWorkerState.SUCCESS

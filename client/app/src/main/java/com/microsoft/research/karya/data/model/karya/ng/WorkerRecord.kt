@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "worker")
 data class WorkerRecord(
   @PrimaryKey @SerializedName("id") val id: String,
-  @SerializedName("age") val age: String?,
-  @SerializedName("access_code") val accessCode: String?,
+  @SerializedName("access_code") val accessCode: String,
   @SerializedName("app_language") val appLanguage: Int,
+  @SerializedName("age") val age: String?,
   @SerializedName("auth_type") val authType: AuthType?,
   @SerializedName("email") val email: String?,
   @SerializedName("full_name") val fullName: String?,
