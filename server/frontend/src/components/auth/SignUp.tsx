@@ -65,7 +65,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
   /** Initial state */
   state: SignUpState = {
     wp: {
-      role: 'work_provider',
       access_code: '',
       full_name: '',
       email: '',
@@ -77,7 +76,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
   handleFormCancel: FormEventHandler = (e) => {
     e.preventDefault();
     const wp: ServerUser = {
-      role: 'work_provider',
       access_code: '',
       full_name: '',
       email: '',
@@ -106,7 +104,6 @@ class SignUp extends Component<SignUpProps, SignUpState> {
 
     const wp: ServerUser = {
       access_code: '',
-      role: 'work_provider',
       full_name: profile.getName(),
       email: profile.getEmail(),
     };
