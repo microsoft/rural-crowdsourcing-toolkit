@@ -9,8 +9,8 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
-import com.microsoft.research.karya.ui.registration.WorkerInformation
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
@@ -68,7 +68,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
       .checkAccessCode(accessCode)
       .onEach { result ->
         when (result) {
-          is Result.Success<*> -> onAccessCodeVerified(result as Result.Success<Int>, accessCode)
+          is Result.Success<*> -> onAccessCodeVerified(result.value as WorkerRecord)
           // TODO: Use error codes and exceptions from Anurag's PR
           is Result.Error -> onAccessCodeFailure(result.exception.message ?: "Error fetching data")
           Result.Loading -> showLoading()
@@ -87,11 +87,10 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     checkAccessCode(accessCode)
   }
 
-  private fun onAccessCodeVerified(successResult: Result.Success<Int>, accessCode: String) {
+  private fun onAccessCodeVerified(workerRecord: WorkerRecord) {
     hideLoading()
     showSuccessUi()
-    lifecycleScope.launch { updateLanguagePreference(successResult.value) }
-    WorkerInformation.creation_code = accessCode
+    lifecycleScope.launch { updateLanguagePreference(workerRecord.appLanguage) }
 
     navigateToConsentFormFragment()
     resetViewState()
@@ -139,9 +138,6 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private fun hideLoading() = binding.loadingPb.gone()
 
   private suspend fun updateLanguagePreference(newLanguage: Int) {
-    // TODO: Remove this
-    WorkerInformation.app_language = newLanguage
-
     val languagePrefKey = intPreferencesKey(PreferenceKeys.APP_LANGUAGE)
     requireContext().dataStore.edit { prefs -> prefs[languagePrefKey] = newLanguage }
   }

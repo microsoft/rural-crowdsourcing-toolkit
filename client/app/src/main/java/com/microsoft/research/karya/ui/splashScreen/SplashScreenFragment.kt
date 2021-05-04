@@ -31,7 +31,7 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
   private fun handleNavigation() {
     viewModel.splashDestination.observe(lifecycle, lifecycleScope) { destination ->
-      when(destination) {
+      when (destination) {
         SplashDestination.AccessCode -> handleNoUserNavigation()
         SplashDestination.Dashboard -> handleSingleUserNavigation()
         SplashDestination.Splash -> {}
