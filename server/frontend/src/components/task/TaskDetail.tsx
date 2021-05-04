@@ -61,26 +61,6 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       };
       dispatch(action);
     },
-    validateTask: () => {
-      const action: BackendRequestInitAction = {
-        type: 'BR_INIT',
-        store: 'task',
-        label: 'VALIDATE',
-        request: {},
-        id,
-      };
-      dispatch(action);
-    },
-    approveTask: () => {
-      const action: BackendRequestInitAction = {
-        type: 'BR_INIT',
-        store: 'task',
-        label: 'APPROVE',
-        request: {},
-        id,
-      };
-      dispatch(action);
-    },
   };
 };
 
@@ -92,16 +72,6 @@ const connector = compose(withAuth, reduxConnector);
 type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector>;
 
 class TaskDetail extends React.Component<TaskDetailProps> {
-  /** Validate task */
-  validateTask = () => {
-    this.props.validateTask();
-  };
-
-  /** Approve task */
-  approveTask = () => {
-    this.props.approveTask();
-  };
-
   componentDidMount() {
     if (this.props.task === undefined) {
       this.props.getTask();
@@ -227,20 +197,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
                 <div className='col s2 center-align'>
                   <button className='btn-small' disabled={disableEdit}>
                     Edit Task
-                  </button>
-                </div>
-              )}
-              {disableValidate ? null : (
-                <div className='col s2 center-align'>
-                  <button className='btn-small' disabled={disableValidate} onClick={this.validateTask}>
-                    Validate Task
-                  </button>
-                </div>
-              )}
-              {disableApprove ? null : (
-                <div className='col s2 center-align'>
-                  <button className='btn-small' disabled={disableApprove} onClick={this.approveTask}>
-                    Approve Task
                   </button>
                 </div>
               )}

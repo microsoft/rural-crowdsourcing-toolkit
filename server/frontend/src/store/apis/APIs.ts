@@ -33,20 +33,6 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'server_user';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'server_user';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.ServerUser;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'server_user';
       label: 'GENERATE_CC';
       request: DBT.ServerUser;
       files?: undefined;
@@ -97,69 +83,8 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'box';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.Box;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'box';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'box';
       label: 'GET_ALL';
       params: DBT.Box;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'worker';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.Worker;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'worker';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'worker';
-      label: 'GET_ALL';
-      params: DBT.Worker;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'karya_file';
-      label: 'CREATE';
-      request: DBT.KaryaFile;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'karya_file';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.KaryaFile;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'karya_file';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'karya_file';
-      label: 'GET_ALL';
-      params: DBT.KaryaFile;
     }
   | {
       type: 'BR_INIT';
@@ -190,52 +115,6 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
-      store: 'task';
-      label: 'VALIDATE';
-      id: string;
-      request: {};
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'task';
-      label: 'APPROVE';
-      id: string;
-      request: {};
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_group';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_group';
-      label: 'GET_ALL';
-      params: DBT.MicrotaskGroup;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask';
-      label: 'GET_ALL';
-      params: DBT.Microtask;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask';
-      label: 'GET_ALL_WITH_COMPLETED';
-      params: DBT.Microtask;
-    }
-  | {
-      type: 'BR_INIT';
       store: 'task_assignment';
       label: 'CREATE';
       request: DBT.TaskAssignment;
@@ -244,79 +123,13 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'task_assignment';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.TaskAssignment;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'task_assignment';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'task_assignment';
       label: 'GET_ALL';
       params: DBT.TaskAssignment;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_group_assignment';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.MicrotaskGroupAssignment;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_group_assignment';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_group_assignment';
-      label: 'GET_ALL';
-      params: DBT.MicrotaskGroupAssignment;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_assignment';
-      label: 'GET_ALL';
-      params: DBT.MicrotaskAssignment & { limit?: number };
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_assignment';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.MicrotaskAssignment;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'microtask_assignment';
-      label: 'GET_BY_ID';
-      id: string;
     };
 
 export type StoreList = BackendRequestInitAction['store'];
 
 export type BackendRequestSuccessAction =
-  | {
-      type: 'BR_SUCCESS';
-      store: 'server_user';
-      label: 'GET_BY_ID';
-      response: DBT.ServerUserRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'server_user';
-      label: 'UPDATE_BY_ID';
-      response: DBT.ServerUserRecord;
-    }
   | {
       type: 'BR_SUCCESS';
       store: 'server_user';
@@ -362,62 +175,8 @@ export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
       store: 'box';
-      label: 'UPDATE_BY_ID';
-      response: DBT.BoxRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'box';
-      label: 'GET_BY_ID';
-      response: DBT.BoxRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'box';
       label: 'GET_ALL';
       response: DBT.BoxRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'worker';
-      label: 'UPDATE_BY_ID';
-      response: DBT.WorkerRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'worker';
-      label: 'GET_BY_ID';
-      response: DBT.WorkerRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'worker';
-      label: 'GET_ALL';
-      response: DBT.WorkerRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'karya_file';
-      label: 'CREATE';
-      response: DBT.KaryaFileRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'karya_file';
-      label: 'UPDATE_BY_ID';
-      response: DBT.KaryaFileRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'karya_file';
-      label: 'GET_BY_ID';
-      response: DBT.KaryaFileRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'karya_file';
-      label: 'GET_ALL';
-      response: DBT.KaryaFileRecord[];
     }
   | {
       type: 'BR_SUCCESS';
@@ -445,48 +204,6 @@ export type BackendRequestSuccessAction =
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'task';
-      label: 'VALIDATE';
-      response: DBT.TaskRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'task';
-      label: 'APPROVE';
-      response: DBT.TaskRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_group';
-      label: 'GET_BY_ID';
-      response: DBT.MicrotaskGroupRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_group';
-      label: 'GET_ALL';
-      response: DBT.MicrotaskGroupRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask';
-      label: 'GET_BY_ID';
-      response: DBT.MicrotaskRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask';
-      label: 'GET_ALL';
-      response: DBT.MicrotaskRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask';
-      label: 'GET_ALL_WITH_COMPLETED';
-      response: DBT.MicrotaskRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
       store: 'task_assignment';
       label: 'CREATE';
       response: DBT.TaskAssignmentRecord;
@@ -494,59 +211,8 @@ export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
       store: 'task_assignment';
-      label: 'UPDATE_BY_ID';
-      response: DBT.TaskAssignmentRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'task_assignment';
-      label: 'GET_BY_ID';
-      response: DBT.TaskAssignmentRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'task_assignment';
       label: 'GET_ALL';
       response: DBT.TaskAssignmentRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_group_assignment';
-      label: 'UPDATE_BY_ID';
-      response: DBT.MicrotaskGroupAssignmentRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_group_assignment';
-      label: 'GET_BY_ID';
-      response: DBT.MicrotaskGroupAssignmentRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_group_assignment';
-      label: 'GET_ALL';
-      response: DBT.MicrotaskGroupAssignmentRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_assignment';
-      label: 'GET_ALL';
-      response: {
-        assignments: DBT.MicrotaskAssignmentRecord[];
-        files: DBT.KaryaFileRecord[];
-      };
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_assignment';
-      label: 'UPDATE_BY_ID';
-      response: DBT.MicrotaskAssignmentRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'microtask_assignment';
-      label: 'GET_BY_ID';
-      response: DBT.MicrotaskAssignmentRecord;
     };
 
 export type BackendRequestFailureAction = {
@@ -649,30 +315,6 @@ export async function backendRequest(
         store,
         label,
         response: await POST('/box/generate/cc', action.request, {}, action.files),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'task' && action.label === 'VALIDATE') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await PUT('/task/:id/validate'.replace(':id', action.id), action.request, action.files),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'task' && action.label === 'APPROVE') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await PUT('/task/:id/approve'.replace(':id', action.id), action.request, action.files),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'microtask' && action.label === 'GET_ALL_WITH_COMPLETED') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await GET('/microtasks_with_completed_assignments/', action.params),
       } as BackendRequestSuccessAction;
     }
 

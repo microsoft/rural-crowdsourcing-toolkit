@@ -22,9 +22,6 @@ import CreateTask from './components/task/CreateTask';
 import TaskDetail from './components/task/TaskDetail';
 import TaskList from './components/task/TaskList';
 
-/** microtask components */
-import MicrotaskList from './components/microtask/MicrotaskList';
-
 /** work_provider components */
 import WorkProviderList from './components/work_provider/WorkProviderList';
 
@@ -61,9 +58,6 @@ const Routes = (
     {/** Task assignment routes */}
     <AdminRoute exact path='/task-assignments' component={TaskAssignmentList} />
     <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
-
-    {/** Microtask lists */}
-    <WorkProviderRoute exact path='/task/:task_id/microtasks' component={MicrotaskList} />
   </Switch>
 );
 

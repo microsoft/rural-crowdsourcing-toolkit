@@ -88,24 +88,6 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
-  if (action.store === 'microtask_assignment' && action.label === 'GET_ALL') {
-    const assignments = action.response.assignments;
-    const files = action.response.files;
-    return {
-      ...state,
-      microtask_assignment: {
-        data: assignments.sort(defaultSorter),
-        last_fetched_at: new Date(),
-        status,
-      },
-      karya_file: {
-        data: files,
-        last_fetched_at: new Date(),
-        status,
-      },
-    };
-  }
-
   // GET_ALL action
   if (action.label === 'GET_ALL') {
     const { store, response } = action;
@@ -124,16 +106,6 @@ const storeReducer: StoreReducer = (state = initState, action) => {
 
   // Handle custom actions
 
-  // Task table
-  if (action.store === 'task') {
-    const oldData = state.task?.data || [];
-    if (action.label === 'APPROVE' || action.label === 'VALIDATE') {
-      const { response } = action;
-      const data = mergeData(oldData, response);
-      return { ...state, task: { data, last_fetched_at, status } };
-    }
-  }
-
   // Work provider table
   if (action.store === 'server_user') {
     if (action.label === 'GENERATE_CC') {
@@ -151,13 +123,6 @@ const storeReducer: StoreReducer = (state = initState, action) => {
       const { response } = action;
       const data = mergeData(oldData, response);
       return { ...state, box: { data, last_fetched_at, status } };
-    }
-  }
-
-  // Microtask extra
-  if (action.store === 'microtask') {
-    if (action.label === 'GET_ALL_WITH_COMPLETED') {
-      return { ...state, microtask: { data: action.response, last_fetched_at, status } };
     }
   }
 
