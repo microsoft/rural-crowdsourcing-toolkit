@@ -1,23 +1,22 @@
 package com.microsoft.research.karya.ui.registration
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.TypedValue
 import android.view.View
+import android.widget.ImageView
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
-import com.microsoft.research.karya.ui.base.BaseActivity
+import com.microsoft.research.karya.utils.AppConstants.PHONE_NUMBER_LENGTH
+import com.microsoft.research.karya.utils.extensions.hideKeyboard
+import com.microsoft.research.karya.utils.extensions.invisible
+import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
+import com.microsoft.research.karya.utils.extensions.visible
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
@@ -25,9 +24,38 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
   private val binding by viewBinding(FragmentPhoneNumberBinding::bind)
   private val viewModel by activityViewModels<RegistrationViewModel>()
 
-  private val PHONE_NUMBER_LENGTH = 10
-  private lateinit var registrationActivity: RegistrationActivity
-  private lateinit var baseActivity: BaseActivity
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setupViews()
+    setupObservers()
+    requestSoftKeyFocus(binding.phoneNumberEt)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    // registrationActivity.onAssistantClick()
+  }
+
+  private fun setupViews() {
+    // registrationActivity = activity as RegistrationActivity
+    // registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
+
+    with(binding) {
+      phoneNumberEt.doAfterTextChanged { phoneNumber ->
+        if (!phoneNumber.isNullOrEmpty() && phoneNumber.length == PHONE_NUMBER_LENGTH) {
+          phoneNumberNextIv.handlePhoneNumberReady()
+        } else {
+          phoneNumberNextIv.handlePhoneNumberNotReady()
+        }
+      }
+
+      phoneNumberNextIv.setOnClickListener {
+        phoneNumberNextIv.invisible()
+        handleNextClick(binding.phoneNumberEt.text.toString())
+      }
+      binding.phoneNumberNextIv.isClickable = false
+    }
+  }
 
   private fun setupObservers() {
     viewModel.currOtpSendState.observe(viewLifecycleOwner) { sent ->
@@ -52,88 +80,21 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     binding.failToSendOtpTv.text = getString(viewModel.phoneNumberFragmentErrorId)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    setupObservers()
-
-    registrationActivity = activity as RegistrationActivity
-    baseActivity = activity as BaseActivity
-
-    registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
-
-    // Save access code in viewModel
-    val args = registrationActivity.navArgs<RegistrationActivityArgs>()
-    val accessCode = args.value.accessCode
-    viewModel.workerAccessCode = accessCode
-
-    /** Set the phone number font size to the same value as the phantom text view font size */
-    binding.phantomPhoneNumberTv.addOnLayoutChangeListener {
-      _: View,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int ->
-      binding.phoneNumberEt.setTextSize(TypedValue.COMPLEX_UNIT_PX, binding.phantomPhoneNumberTv.textSize)
-    }
-
-    /** Set phone number text change listener */
-    binding.phoneNumberEt.addTextChangedListener(
-      object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-        override fun afterTextChanged(s: Editable?) {
-          if (s?.length == PHONE_NUMBER_LENGTH) {
-            handlePhoneNumberReady()
-          } else {
-            handlePhoneNumberNotReady()
-          }
-        }
-      }
-    )
-    baseActivity.requestSoftKeyFocus(binding.phoneNumberEt)
-
-    /** Phone number next button should not be clickable by default */
-    binding.phoneNumberNextIv.setOnClickListener {
-      binding.phoneNumberNextIv.visibility = View.INVISIBLE
-      handleNextClick()
-    }
-    binding.phoneNumberNextIv.isClickable = false
-  }
-
-  override fun onResume() {
-    super.onResume()
-    registrationActivity.onAssistantClick()
-  }
-
-  /** Update UI when the phone number is ready */
-  private fun handlePhoneNumberReady() {
-    lifecycleScope.launch(Dispatchers.Main) {
-      binding.phoneNumberNextIv.setImageResource(0)
-      binding.phoneNumberNextIv.setImageResource(R.drawable.ic_next_enabled)
-      binding.phoneNumberNextIv.isClickable = true
-    }
-  }
-
-  /** Update UI when the phone number is ready */
-  private fun handlePhoneNumberNotReady() {
-    lifecycleScope.launch(Dispatchers.Main) {
-      binding.phoneNumberNextIv.visibility = View.VISIBLE
-      binding.phoneNumberNextIv.setImageResource(0)
-      binding.phoneNumberNextIv.setImageResource(R.drawable.ic_next_disabled)
-      binding.phoneNumberNextIv.isClickable = false
-    }
-  }
-
-  /** On next click, hide keyboard. Send request to send OTP to the phone number */
-  private fun handleNextClick() {
-    baseActivity.hideKeyboard()
-    val phoneNumber = binding.phoneNumberEt.text.toString()
+  private fun handleNextClick(phoneNumber: String) {
+    hideKeyboard()
     viewModel.sendOTP(phoneNumber)
+  }
+
+  private fun ImageView.handlePhoneNumberReady() {
+    setImageResource(0)
+    setImageResource(R.drawable.ic_next_enabled)
+    isClickable = true
+  }
+
+  private fun ImageView.handlePhoneNumberNotReady() {
+    visible()
+    setImageResource(0)
+    setImageResource(R.drawable.ic_next_disabled)
+    isClickable = false
   }
 }

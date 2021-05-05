@@ -25,7 +25,7 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
     var gender = "not_specified"
 
     /** Initialise assistant audio */
-    registrationActivity.current_assistant_audio = R.string.audio_gender_prompt
+    // registrationActivity.current_assistant_audio = R.string.audio_gender_prompt
 
     with(binding) {
       maleBtn.setOnClickListener {

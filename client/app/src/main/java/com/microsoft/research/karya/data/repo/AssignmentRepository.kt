@@ -42,11 +42,11 @@ constructor(
     }
   }
 
-  fun submitAssignments(
-    idToken: String,
-    accessCode: String,
-    updates: List<MicroTaskAssignmentRecord>,
-  ) = flow {
+  fun submitAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
+    if (idToken.isEmpty()) {
+      error("Either Access Code or ID Token is required")
+    }
+
     val response = assignmentAPI.submitAssignments(idToken, updates)
     val successAssignmentIDS = response.body()
 

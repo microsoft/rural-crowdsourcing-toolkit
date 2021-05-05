@@ -63,7 +63,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
     val oldLabel = "${AgeGroup.OLD.range} $yearsString"
 
     /** Initialise assistant audio */
-    registrationActivity.current_assistant_audio = R.string.audio_age_prompt
+    // registrationActivity.current_assistant_audio = R.string.audio_age_prompt
 
     with(binding) {
       youthBtn.text = youthLabel

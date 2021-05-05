@@ -44,6 +44,7 @@
         android:paddingHorizontal="@dimen/_18sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:text="99999 99999"
+        android:textSize="@dimen/_18ssp"
         app:autoSizeMaxTextSize="@dimen/_25ssp"
         app:autoSizeMinTextSize="@dimen/_12ssp"
         app:autoSizeStepGranularity="@dimen/_1ssp"

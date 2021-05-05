@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.dashboard
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.utils.Result
@@ -11,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -20,28 +21,26 @@ class DashboardViewModel
 constructor(
   private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
+  private val authManager: AuthManager,
 ) : ViewModel() {
 
-  private val idToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0NDQyNDkzMDEzMjA0MyIsImlhdCI6MTYxOTY5MTk0OCwiZXhwIjoxNjI0ODc1OTQ4LCJhdWQiOiJrYXJ5YS1ib3gifQ.jxNNDkkjP9pI0cdBmcXMnu1-l2QkDb2dfcOs0S9TWjw"
-
-  fun syncTasks(appLanguage: Int) {
+  fun fetchNewTasks() {
     viewModelScope.launch {
-      // assignmentRepository.getAssignments(WorkerInformation.creation_code!!, "", "speech-data",
-      // "")
+      val idToken = authManager.fetchLoggedInWorkerIdToken()
+
+      assignmentRepository.getAssignments(idToken, "new", "").catch { Log.d("dashboard", it.message!!) }.collect()
     }
   }
 
-  fun fetchNewTasks() {
-    Log.d("dashboard", "fetchNewTasks")
-    assignmentRepository
-      .getAssignments(idToken, "new", "")
-      .catch { Log.d("dashboard", it.message!!) }
-      .launchIn(viewModelScope)
-  }
-
   fun fetchVerifiedTasks(from: String = "") {
-    assignmentRepository.getAssignments(idToken, "verified", from)
+    viewModelScope.launch {
+      val idToken = authManager.fetchLoggedInWorkerIdToken()
+
+      assignmentRepository
+        .getAssignments(idToken, "verified", from)
+        .catch { Log.d("dashboard", it.message!!) }
+        .collect()
+    }
   }
 
   /**

@@ -2,7 +2,6 @@ package com.microsoft.research.karya.data.service
 
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
-import com.microsoft.research.karya.data.remote.response.ValidAccessCodeResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -26,7 +25,7 @@ interface WorkerAPI {
   @GET("/worker")
   suspend fun getWorkerUsingAccessCode(
     @Header("access-code") accessCode: String,
-  ): Response<ValidAccessCodeResponse>
+  ): Response<WorkerRecord>
 
   /*
    * This API would be used whenever needed after the successful OTP verification

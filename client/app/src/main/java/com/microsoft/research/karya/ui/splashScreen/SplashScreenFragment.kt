@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.splashScreen
 
 import android.os.Bundle
 import android.view.View
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
@@ -10,20 +9,15 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSplashScreenBinding
-import com.microsoft.research.karya.utils.PreferenceKeys
-import com.microsoft.research.karya.utils.extensions.dataStore
+import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
   private val binding by viewBinding(FragmentSplashScreenBinding::bind)
-  private val viewModel by hiltNavGraphViewModels<SplashViewModel>(R.navigation.splash)
+  private val viewModel by hiltNavGraphViewModels<SplashViewModel>(R.id.splash)
   private lateinit var navController: NavController
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,46 +26,32 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
     navController = findNavController()
     binding.progressBar.isIndeterminate = true
     handleNavigation()
+    viewModel.navigate()
   }
 
   private fun handleNavigation() {
-    lifecycleScope.launch {
-      val loggedInUsers = getLoggedInUsers()
-
-      when (loggedInUsers) {
-        0 -> navigateToAccessCodeScreen()
-        1 -> navigateToDashboardScreen()
-        else -> navigateToUserSelectScreen()
+    viewModel.splashDestination.observe(lifecycle, lifecycleScope) { destination ->
+      when (destination) {
+        SplashDestination.AccessCode -> handleNoUserNavigation()
+        SplashDestination.Dashboard -> handleSingleUserNavigation()
+        SplashDestination.Splash -> {}
+        SplashDestination.UserSelection -> handleMultipleUserNavigation()
       }
     }
   }
 
-  private fun navigateToUserSelectScreen() {
+  private fun handleMultipleUserNavigation() {
     // navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
     requireActivity().finish()
   }
 
-  private fun navigateToAccessCodeScreen() {
+  private fun handleNoUserNavigation() {
     navController.navigate(R.id.action_splashScreenFragment_to_access_code_nav_graph)
     requireActivity().finish()
   }
 
-  private fun navigateToDashboardScreen() {
+  private fun handleSingleUserNavigation() {
     navController.navigate(R.id.action_splashScreenFragment_to_ngDashboardActivity)
     requireActivity().finish()
   }
-
-  private suspend fun getLoggedInUsers(): Int {
-    val workers = viewModel.getLoggedInUsers()
-
-    return workers.size
-  }
-
-  private suspend fun isFirstRun(): Boolean =
-    withContext(Dispatchers.IO) {
-      val firstRunKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_RUN)
-      val data = requireContext().dataStore.data.first()
-
-      return@withContext data[firstRunKey] ?: true
-    }
 }
