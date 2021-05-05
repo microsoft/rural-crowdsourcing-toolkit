@@ -45,6 +45,8 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
         viewModel.updateWorkerGender(gender)
         findNavController().navigate(R.id.action_selectGenderFragment_to_selectAgeGroupFragment)
       }
+
+      appTb.setTitle(getString(R.string.s_gender_title))
     }
   }
 }

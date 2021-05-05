@@ -6,17 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.registration.RegistrationActivity">
 
-    <include
-        android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/registration_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
-        app:defaultNavHost="true"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/registration_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

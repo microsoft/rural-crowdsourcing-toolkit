@@ -8,9 +8,13 @@
     android:animateLayoutChanges="true"
     tools:context=".ui.dashboard.DashboardActivity">
 
-    <include
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
         android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/syncCv"

@@ -79,6 +79,8 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
         submitAgeGroupIb.visibility = View.INVISIBLE
         submitAgeGroup()
       }
+
+      appTb.setTitle(getString(R.string.s_age_title))
     }
 
     disableAgeGroupSubmitButton()

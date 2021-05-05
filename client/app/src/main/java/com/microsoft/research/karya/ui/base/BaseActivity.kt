@@ -125,7 +125,7 @@ abstract class BaseActivity() : AppCompatActivity() {
     runBlocking {
       getStringsJob.join()
       if (appLanguageChanged) {
-        salutationTv.text = salutation
+        // title.text = salutation
         setInitialUIStrings()
       }
     }

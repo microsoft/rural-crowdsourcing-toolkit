@@ -10,6 +10,7 @@
     android:gravity="center_vertical"
     android:minHeight="@dimen/_56sdp"
     android:orientation="horizontal"
+    android:paddingBottom="@dimen/_1sdp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
@@ -17,30 +18,34 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
         android:paddingRight="@dimen/_5sdp">
 
         <ImageView
             android:id="@+id/profilePictureIv"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
             android:adjustViewBounds="true"
             android:contentDescription="profile picture"
             android:scaleType="fitXY"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_perm_identity" />
 
         <TextView
-            android:id="@+id/salutationTv"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
             android:textColor="?attr/appLanguageTextColor"
             android:textSize="@dimen/_15ssp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/profilePictureIv"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Hi" />
