@@ -9,7 +9,6 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AgeGroup
 import com.microsoft.research.karya.data.model.karya.enums.RegisterWorkerState
 import com.microsoft.research.karya.databinding.FragmentSelectAgeGroupBinding
-import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.viewBinding
 
 class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
@@ -18,7 +17,6 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   private val viewModel by activityViewModels<RegistrationViewModel>()
 
   private lateinit var registrationActivity: RegistrationActivity
-  private lateinit var baseActivity: BaseActivity
 
   lateinit var currentAge: AgeGroup
 
@@ -54,7 +52,6 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
     setUpObservers()
 
     registrationActivity = activity as RegistrationActivity
-    baseActivity = activity as BaseActivity
 
     /** Setup the UI Strings */
     val yearsString = getString(R.string.s_years)

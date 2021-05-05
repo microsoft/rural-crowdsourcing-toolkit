@@ -25,6 +25,7 @@
         android:layout_marginStart="@dimen/_32sdp"
         android:layout_marginTop="@dimen/_32sdp"
         android:layout_marginEnd="@dimen/_32sdp"
+        android:indeterminate="true"
         android:max="2"
         android:scaleY="2"
         app:layout_constraintBottom_toBottomOf="parent"

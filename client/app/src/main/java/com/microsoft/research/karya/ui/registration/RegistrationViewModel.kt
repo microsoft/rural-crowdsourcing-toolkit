@@ -110,16 +110,21 @@ constructor(
 
           _currOtpVerifyState.value = OtpVerifyState.SUCCESS
           _idTokenLiveData.value = idToken
+
+          updateWorker(workerRecord)
+
           if (workerRecord.age.isNullOrEmpty()) {
             // First time registration, go on with the regular registration flow
             _openProfilePictureFragmentFromOTP.value = true
           } else {
-            // Save the worker and navigate to dashboard
-            updateWorker(workerRecord)
+            // navigate to dashboard
             _openDashBoardFromOTP.value = true
           }
         }
-        .catch { e -> sendVerifyOtpError(e) }
+        .catch { e ->
+          e.printStackTrace()
+          sendVerifyOtpError(e)
+        }
         .collect()
     }
   }
@@ -137,8 +142,8 @@ constructor(
     }
   }
 
-  private fun updateWorker(workerRecord: WorkerRecord) {
-    viewModelScope.launch { workerRepository.upsertWorker(workerRecord) }
+  private suspend fun updateWorker(workerRecord: WorkerRecord) {
+    workerRepository.upsertWorker(workerRecord)
   }
 
   private fun sendGenerateOtpError(e: Throwable) {
