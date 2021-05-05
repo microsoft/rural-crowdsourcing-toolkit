@@ -7,8 +7,5 @@ data class TaskInfo(
   val taskID: String,
   val taskName: String,
   val scenarioName: String,
-  val incompleteMicrotasks: Int,
-  val completedMicrotasks: Int,
-  val submittedMicrotasks: Int,
-  val verifiedMicrotasks: Int,
+  val taskStatus: TaskStatus,
 )

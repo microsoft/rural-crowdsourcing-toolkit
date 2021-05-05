@@ -18,6 +18,9 @@ interface MicroTaskDao : BasicDao<MicroTaskRecord> {
 
   @Query("SELECT * FROM microtask WHERE id == :id") suspend fun getById(id: String): MicroTaskRecord
 
+  @Query("SELECT * FROM microtask WHERE task_id == :taskId")
+  suspend fun getByTaskId(taskId: String): List<MicroTaskRecord>
+
   /** Upsert a [record] in the table */
   @Transaction
   suspend fun upsert(record: MicroTaskRecord) {
