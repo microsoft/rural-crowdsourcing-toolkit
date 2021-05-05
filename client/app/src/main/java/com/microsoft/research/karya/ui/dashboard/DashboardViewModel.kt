@@ -10,13 +10,16 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.utils.Result
-import com.microsoft.research.karya.utils.extensions.mapToResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -33,6 +36,10 @@ constructor(
     compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
       taskInfo.taskID
     }
+
+  private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
+    MutableStateFlow(DashboardUiState.Success(emptyList()))
+  val dashboardUiState = _dashboardUiState.asStateFlow()
 
   fun fetchNewTasks() {
     viewModelScope.launch {
@@ -58,10 +65,11 @@ constructor(
    * @return [Flow] of list of [TaskRecord] wrapper in a [Result]
    */
   @Suppress("USELESS_CAST")
-  fun getAllTasks(): Flow<Result> {
-    return taskRepository
+  fun getAllTasks() {
+    taskRepository
       .getAllTasksFlow()
-      .map { taskList ->
+      .onStart { _dashboardUiState.emit(DashboardUiState.Loading) }
+      .onEach { taskList ->
         val taskInfoList = mutableListOf<TaskInfo>()
 
         taskList.forEach { taskRecord ->
@@ -69,10 +77,11 @@ constructor(
           taskInfoList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_id.toString(), taskStatus))
         }
 
-        // Cast it to make sure we are returning a read only list
-        taskInfoList.sortedWith(taskInfoComparator) as List<TaskInfo>
+        val success = DashboardUiState.Success(taskInfoList.sortedWith(taskInfoComparator))
+        _dashboardUiState.emit(success)
       }
-      .mapToResult()
+      .catch { throwable -> _dashboardUiState.emit(DashboardUiState.Error(throwable)) }
+      .launchIn(viewModelScope)
   }
 
   private suspend fun fetchTaskStatus(taskId: String): TaskStatus {

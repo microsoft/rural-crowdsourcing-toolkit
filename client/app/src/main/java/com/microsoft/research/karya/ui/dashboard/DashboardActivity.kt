@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.ActivityDashboardBinding
-import com.microsoft.research.karya.utils.Result
+import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
+import com.microsoft.research.karya.utils.extensions.visible
 import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +24,9 @@ class DashboardActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(binding.root)
     setupViews()
-    observeTaskList()
+    observeUi()
+
+    viewModel.getAllTasks()
   }
 
   private fun setupViews() {
@@ -36,6 +39,7 @@ class DashboardActivity : AppCompatActivity() {
           getString(R.string.s_update_earning)
 
       syncPromptTv.text = syncText
+
       tasksRv.apply {
         adapter = TaskListAdapter(emptyList(), ::onDashboardItemClick)
         layoutManager = LinearLayoutManager(context)
@@ -45,26 +49,32 @@ class DashboardActivity : AppCompatActivity() {
     }
   }
 
-  private fun observeUi() {}
-
-  @Suppress("UNCHECKED_CAST")
-  private fun observeTaskList() {
-    viewModel.getAllTasks().observe(lifecycle, lifecycleScope) { result ->
-      when (result) {
-        is Result.Success<*> -> onTaskFetched(result.value as List<TaskInfo>)
-        is Result.Error -> {
-          // TODO(aditya-navana): Show
-        }
-        Result.Loading -> {
-          // TODO(aditya-navana): Show loading here
-        }
+  private fun observeUi() {
+    viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
+      when (dashboardUiState) {
+        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
+        is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable)
+        DashboardUiState.Loading -> showLoadingUi()
       }
     }
   }
 
-  private fun onTaskFetched(taskInfoList: List<TaskInfo>) {
+  private fun showSuccessUi(taskInfoList: List<TaskInfo>) {
+    hideLoading()
     (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoList)
   }
+
+  private fun showErrorUi(throwable: Throwable) {
+    hideLoading()
+  }
+
+  private fun showLoadingUi() {
+    showLoading()
+  }
+
+  private fun showLoading() = binding.syncProgressBar.visible()
+
+  private fun hideLoading() = binding.syncProgressBar.gone()
 
   fun onDashboardItemClick(task: TaskInfo) {
     /*
