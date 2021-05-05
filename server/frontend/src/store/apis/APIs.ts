@@ -307,6 +307,16 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
+    // Get all tasks
+    if (action.store === 'task' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/tasks'),
+      } as BackendRequestSuccessAction;
+    }
+
     // GET_BY_ID actions
     if (action.label === 'GET_BY_ID') {
       const endpoint = `${store}/${action.id}`;
