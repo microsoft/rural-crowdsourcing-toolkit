@@ -21,7 +21,6 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
     super.onViewCreated(view, savedInstanceState)
 
     registrationActivity = activity as RegistrationActivity
-    baseActivity = activity as BaseActivity
     var gender = "not_specified"
 
     /** Initialise assistant audio */

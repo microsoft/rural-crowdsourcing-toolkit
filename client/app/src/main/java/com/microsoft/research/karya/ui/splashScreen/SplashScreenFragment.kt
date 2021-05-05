@@ -24,7 +24,6 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
     super.onViewCreated(view, savedInstanceState)
 
     navController = findNavController()
-    binding.progressBar.isIndeterminate = true
     handleNavigation()
     viewModel.navigate()
   }
@@ -32,26 +31,32 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
   private fun handleNavigation() {
     viewModel.splashDestination.observe(lifecycle, lifecycleScope) { destination ->
       when (destination) {
-        SplashDestination.AccessCode -> handleNoUserNavigation()
-        SplashDestination.Dashboard -> handleSingleUserNavigation()
+        SplashDestination.AccessCode -> navigateToAccessCode()
+        SplashDestination.UserSelection -> navigateToUserSelection()
+        SplashDestination.Registration -> navigateToRegistration()
+        SplashDestination.Dashboard -> navigateToDashboard()
         SplashDestination.Splash -> {}
-        SplashDestination.UserSelection -> handleMultipleUserNavigation()
       }
     }
   }
 
-  private fun handleMultipleUserNavigation() {
+  private fun navigateToUserSelection() {
     // navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
     requireActivity().finish()
   }
 
-  private fun handleNoUserNavigation() {
+  private fun navigateToAccessCode() {
     navController.navigate(R.id.action_splashScreenFragment_to_access_code_nav_graph)
     requireActivity().finish()
   }
 
-  private fun handleSingleUserNavigation() {
+  private fun navigateToDashboard() {
     navController.navigate(R.id.action_splashScreenFragment_to_ngDashboardActivity)
+    requireActivity().finish()
+  }
+
+  private fun navigateToRegistration() {
+    navController.navigate(R.id.action_splashScreenFragment_to_registration_navigation)
     requireActivity().finish()
   }
 }

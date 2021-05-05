@@ -27,10 +27,9 @@ constructor(
       val workers = getAllWorkers().size
 
       when (workers) {
-        0 -> _splashDestination.value = SplashDestination.AccessCode
-        // TODO: check if authentication is complete or not.
-        1 -> _splashDestination.value = SplashDestination.Dashboard
-        else -> _splashDestination.value = SplashDestination.UserSelection
+        0 -> handleNewUser()
+        1 -> handleSingleUser()
+        else -> handleMultipleUsers()
       }
     }
   }
@@ -45,5 +44,23 @@ constructor(
 
   private suspend fun isWorkerRegistrationComplete(): Boolean {
     return authManager.isWorkerRegistered()
+  }
+
+  private suspend fun handleNewUser() {
+    _splashDestination.value = SplashDestination.AccessCode
+  }
+
+  private suspend fun handleSingleUser() {
+    val worker = getLoggedInWorker()
+
+    if (worker.idToken.isNullOrEmpty()) {
+      _splashDestination.value = SplashDestination.Registration
+    } else {
+      _splashDestination.value = SplashDestination.Dashboard
+    }
+  }
+
+  private suspend fun handleMultipleUsers() {
+    _splashDestination.value = SplashDestination.UserSelection
   }
 }
