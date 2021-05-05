@@ -189,9 +189,6 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
         // the dependency injected code
         ctx.state.entity = await verifyKaryaIdToken(entityType, id_token);
         ctx.state.auth_mechanism = 'karya-id-token';
-
-        // Setting tentative success response
-        HttpResponse.OK(ctx, {});
         await next();
         return;
       } catch (e) {
@@ -210,8 +207,6 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
         // @ts-ignore Not sure why this is an error
         ctx.state.entity = await BasicModel.getSingle(entityType, { access_code });
         ctx.state.auth_mechanism = 'access-code';
-        // Setting tentative success response
-        HttpResponse.OK(ctx, {});
         await next();
       } catch (e) {
         HttpResponse.Unauthorized(ctx, 'Invalid access code');
