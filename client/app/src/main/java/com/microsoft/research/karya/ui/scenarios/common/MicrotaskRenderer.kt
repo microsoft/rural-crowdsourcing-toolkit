@@ -230,7 +230,7 @@ abstract class MicrotaskRenderer(
       .markComplete(microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
 
     /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
+    if (currentAssignment.status == MicrotaskAssignmentStatus.assigned) {
       completedMicrotasks++
       uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
@@ -335,7 +335,7 @@ abstract class MicrotaskRenderer(
         do {
           val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
           val microtaskAssignment = karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
-          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
+          if (microtaskAssignment.status == MicrotaskAssignmentStatus.assigned) {
             break
           }
           currentAssignmentIndex++

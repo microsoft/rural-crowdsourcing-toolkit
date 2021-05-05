@@ -20,12 +20,12 @@ interface MicrotaskAssignmentDaoExtra {
 
   /** Get list of incomplete microtask assignments */
   suspend fun getIncompleteAssignments(): List<MicroTaskAssignmentRecord> {
-    return getAssignmentsByStatus(MicrotaskAssignmentStatus.ASSIGNED)
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.assigned)
   }
 
   /** Get list of completed microtask assignments */
   suspend fun getCompletedAssignments(): List<MicroTaskAssignmentRecord> {
-    return getAssignmentsByStatus(MicrotaskAssignmentStatus.COMPLETED)
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.completed)
   }
 
   @Query(
@@ -57,9 +57,9 @@ interface MicrotaskAssignmentDaoExtra {
    */
   suspend fun getUnsubmittedIDsForTask(taskId: String, includeCompleted: Boolean): List<String> {
     return if (includeCompleted) {
-      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED))
+      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.assigned, MicrotaskAssignmentStatus.completed))
     } else {
-      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED))
+      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.assigned))
     }
   }
 
@@ -74,7 +74,7 @@ interface MicrotaskAssignmentDaoExtra {
   suspend fun markComplete(
     id: String,
     output: JsonObject,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.completed,
     date: String,
   )
 
@@ -82,7 +82,7 @@ interface MicrotaskAssignmentDaoExtra {
   @Query("UPDATE microtask_assignment SET status=:status WHERE id=:id")
   suspend fun markSubmitted(
     id: String,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.SUBMITTED,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.submitted,
   )
 
   /** Query to get list of assignments whose output karya files are in the server */
@@ -97,5 +97,5 @@ interface MicrotaskAssignmentDaoExtra {
 
   /** Query to get the total amount earned so far */
   @Query("SELECT SUM(credits) FROM microtask_assignment where status=:status")
-  suspend fun getTotalCreditsEarned(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED): Float?
+  suspend fun getTotalCreditsEarned(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.verified): Float?
 }
