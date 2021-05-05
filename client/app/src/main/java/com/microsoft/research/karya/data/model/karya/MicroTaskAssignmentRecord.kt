@@ -40,7 +40,7 @@ data class MicroTaskAssignmentRecord(
   var microtask_id: String,
   var worker_id: String,
   var deadline: String?,
-  var status: MicrotaskAssignmentStatus?,
+  var status: MicrotaskAssignmentStatus,
   var completed_at: String?,
   var output: JsonObject,
   var output_file_id: String?,
