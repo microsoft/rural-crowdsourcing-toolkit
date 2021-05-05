@@ -32,19 +32,6 @@ export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_
 export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
-      store: 'server_user';
-      label: 'GENERATE_CC';
-      request: DBT.ServerUser;
-      files?: undefined;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'server_user';
-      label: 'GET_ALL';
-      params: DBT.ServerUser;
-    }
-  | {
-      type: 'BR_INIT';
       store: 'auth';
       headers: AuthHeader;
       label: 'SIGN_UP';
@@ -71,6 +58,19 @@ export type BackendRequestInitAction =
       store: 'auth';
       label: 'SIGN_OUT';
       request: {};
+      files?: undefined;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'server_user';
+      label: 'GET_ALL';
+      params: DBT.ServerUser;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'server_user';
+      label: 'GENERATE_CC';
+      request: DBT.ServerUser;
       files?: undefined;
     }
   | {
@@ -132,18 +132,6 @@ export type StoreList = BackendRequestInitAction['store'];
 export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
-      store: 'server_user';
-      label: 'GENERATE_CC';
-      response: DBT.ServerUserRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'server_user';
-      label: 'GET_ALL';
-      response: DBT.ServerUserRecord[];
-    }
-  | {
-      type: 'BR_SUCCESS';
       store: 'auth';
       label: 'SIGN_UP';
       response: DBT.ServerUserRecord;
@@ -165,6 +153,18 @@ export type BackendRequestSuccessAction =
       store: 'auth';
       label: 'SIGN_OUT';
       response: {};
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'server_user';
+      label: 'GET_ALL';
+      response: DBT.ServerUserRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'server_user';
+      label: 'GENERATE_CC';
+      response: DBT.ServerUserRecord;
     }
   | {
       type: 'BR_SUCCESS';
@@ -227,6 +227,66 @@ export async function backendRequest(
 ): Promise<BackendRequestSuccessAction | BackendRequestFailureAction> {
   const { store, label } = action;
   try {
+    // Server user registration
+    if (action.store === 'auth' && action.label === 'SIGN_UP') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await PUT('/server_user/register', action.request, action.files, action.headers),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Server user login
+    if (action.store === 'auth' && action.label === 'SIGN_IN') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/server_user/login', {}, action.headers),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Server user auto login (with id token)
+    if (action.store === 'auth' && action.label === 'AUTO_SIGN_IN') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/server_user'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Server user logout
+    if (action.store === 'auth' && action.label === 'SIGN_OUT') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/server_user/logout'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get all server users
+    if (action.store === 'server_user' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/server_users'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Create new server user record
+    if (action.store === 'server_user' && action.label === 'GENERATE_CC') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST('/server_users', action.request, {}),
+      } as BackendRequestSuccessAction;
+    }
+
     // GET_BY_ID actions
     if (action.label === 'GET_BY_ID') {
       const endpoint = `${store}/${action.id}`;
@@ -269,46 +329,6 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    if (action.store === 'server_user' && action.label === 'GENERATE_CC') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await POST('/server_user/generate/cc', action.request, {}, action.files),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'auth' && action.label === 'SIGN_UP') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await PUT('/server_user/register', action.request, action.files, action.headers),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'auth' && action.label === 'SIGN_IN') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await GET('/server_user/login', {}, action.headers),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'auth' && action.label === 'AUTO_SIGN_IN') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await GET('/server_user'),
-      } as BackendRequestSuccessAction;
-    }
-    if (action.store === 'auth' && action.label === 'SIGN_OUT') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await GET('/server_user/logout'),
-      } as BackendRequestSuccessAction;
-    }
     if (action.store === 'box' && action.label === 'GENERATE_CC') {
       return {
         type: 'BR_SUCCESS',

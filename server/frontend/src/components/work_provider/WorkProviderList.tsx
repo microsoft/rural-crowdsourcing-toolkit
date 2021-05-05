@@ -130,7 +130,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
               required={true}
               value={ccForm.full_name ?? 'Unnamed'}
               onChange={this.handleChange}
-              width='s3'
+              width='s4'
             />
             <ColTextInput
               id='email'
@@ -138,15 +138,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
               required={true}
               value={ccForm.email ?? 'No mail'}
               onChange={this.handleChange}
-              width='s3'
-            />
-            <ColTextInput
-              id='phone_number'
-              label='Phone Number'
-              required={true}
-              value={ccForm.phone_number ?? 'No number'}
-              onChange={this.handleChange}
-              width='s3'
+              width='s4'
             />
             <div className='col s2'>
               <button className='btn red'>Generate Code</button>

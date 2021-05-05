@@ -29,6 +29,7 @@ export const create: KaryaUserRouteMiddleware = async (ctx) => {
 
   // Update box record with access code
   server_user.access_code = access_code;
+  server_user.role = 'work_provider';
 
   try {
     const record = await BasicModel.insertRecord('server_user', server_user);
