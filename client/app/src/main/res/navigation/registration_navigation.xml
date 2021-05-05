@@ -67,7 +67,7 @@
     </fragment>
     <activity
         android:id="@+id/dashboardActivity2"
-        android:name="com.microsoft.research.karya.ui.dashboard.NgDashboardActivity"
+        android:name="com.microsoft.research.karya.ui.dashboard.DashboardActivity"
         android:label="activity_dashboard"
         tools:layout="@layout/activity_dashboard" />
 </navigation>

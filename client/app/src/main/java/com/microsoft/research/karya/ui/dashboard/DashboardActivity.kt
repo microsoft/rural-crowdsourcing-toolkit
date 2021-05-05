@@ -14,7 +14,7 @@ import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NgDashboardActivity : AppCompatActivity() {
+class DashboardActivity : AppCompatActivity() {
 
   val binding by viewBinding(ActivityDashboardBinding::inflate)
   val viewModel: DashboardViewModel by viewModels()
@@ -37,7 +37,7 @@ class NgDashboardActivity : AppCompatActivity() {
 
       syncPromptTv.text = syncText
       tasksRv.apply {
-        adapter = NgTaskListAdapter(emptyList(), ::onDashboardItemClick)
+        adapter = TaskListAdapter(emptyList(), ::onDashboardItemClick)
         layoutManager = LinearLayoutManager(context)
       }
 
@@ -63,7 +63,7 @@ class NgDashboardActivity : AppCompatActivity() {
   }
 
   private fun onTaskFetched(taskInfoList: List<TaskInfo>) {
-    (binding.tasksRv.adapter as NgTaskListAdapter).updateList(taskInfoList)
+    (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoList)
   }
 
   fun onDashboardItemClick(task: TaskInfo) {

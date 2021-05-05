@@ -20,15 +20,6 @@
         android:usesCleartextTraffic="true">
 
         <activity android:name=".ui.registration.RegistrationActivity" />
-        <!--
-        - Starting activity. Checks for registered user and moves to language selection or the
-        - dashboard.
-        -->
-
-        <!-- Activity to display the user dashboard -->
-        <activity
-            android:name="com.microsoft.research.karya.ui.dashboard.DashboardActivity"
-            android:screenOrientation="portrait" />
 
         <!-- Microtask rendering activities -->
         <activity
@@ -50,8 +41,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.accesscode.AccessCodeActivity" />
-        <activity android:name=".ui.dashboard.NgDashboardActivity" />
+        <activity
+            android:name=".ui.accesscode.AccessCodeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.dashboard.DashboardActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

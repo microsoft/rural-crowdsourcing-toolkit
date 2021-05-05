@@ -1,117 +1,95 @@
 package com.microsoft.research.karya.ui.dashboard
-/*
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
 
-
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
-import kotlinx.android.synthetic.main.item_task.view.*
+import com.microsoft.research.karya.databinding.ItemTaskBinding
+import com.microsoft.research.karya.utils.extensions.gone
+import com.microsoft.research.karya.utils.extensions.visible
 
 class TaskListAdapter(
-  val context: Context,
-  private val onDashboardTaskAdapterClick: OnDashboardTaskAdapterClick,
-  val activity: DashboardActivity,
-) : RecyclerView.Adapter<TaskViewHolder>() {
+  private var tasks: List<TaskInfo>,
+  private val dashboardItemClick: (task: TaskInfo) -> Unit = {},
+) : RecyclerView.Adapter<TaskListAdapter.NgTaskViewHolder>() {
 
-  private var tasks: List<TaskInfo> = mutableListOf()
-  private var incompleteMicrotasksLabel: String = ""
-  private var completedMicrotasksLabel: String = ""
-  private var submittedMicrotasksLabel: String = ""
-  private var verifiedMicrotasksLabel: String = ""
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NgTaskViewHolder {
+    val layoutInflater = LayoutInflater.from(parent.context)
+    val binding = ItemTaskBinding.inflate(layoutInflater, parent, false)
 
-  override fun onCreateViewHolder(p0: ViewGroup, p1: Int): TaskViewHolder {
-    return TaskViewHolder(LayoutInflater.from(context).inflate(R.layout.item_task, p0, false))
+    return NgTaskViewHolder(binding, dashboardItemClick)
+  }
+
+  override fun onBindViewHolder(holder: NgTaskViewHolder, position: Int) {
+    holder.bind(tasks[position])
   }
 
   override fun getItemCount(): Int {
     return tasks.size
   }
 
-  override fun onBindViewHolder(p0: TaskViewHolder, p1: Int) {
-    val task = tasks[p1]
-    p0.taskName.text = task.taskName
-    p0.scenarioName.text = task.scenarioName
+  fun addTasks(newTasks: List<TaskInfo>) {
+    val oldTaskCount = tasks.size
+    val tempList = mutableListOf<TaskInfo>()
+    tempList.addAll(tasks)
+    tempList.addAll(newTasks)
 
-    p0.progressBar.max = task.incompleteMicrotasks + task.completedMicrotasks
-    p0.progressBar.progress = task.completedMicrotasks
-
-    p0.incompleteCl.visibility = if (task.incompleteMicrotasks > 0) View.VISIBLE else View.GONE
-    p0.completedCl.visibility = if (task.completedMicrotasks > 0) View.VISIBLE else View.GONE
-    p0.submittedCl.visibility = if (task.submittedMicrotasks > 0) View.VISIBLE else View.GONE
-    p0.verifiedCl.visibility = if (task.verifiedMicrotasks > 0) View.VISIBLE else View.GONE
-
-    p0.numIncompleteLabel.text = incompleteMicrotasksLabel
-    p0.numCompletedLabel.text = completedMicrotasksLabel
-    p0.numSubmittedLabel.text = submittedMicrotasksLabel
-    p0.numVerifiedLabel.text = verifiedMicrotasksLabel
-
-    p0.numIncompleteTv.text = task.incompleteMicrotasks.toString()
-    p0.numCompletedTv.text = task.completedMicrotasks.toString()
-    p0.numSubmittedTv.text = task.submittedMicrotasks.toString()
-    p0.numVerifiedTv.text = task.verifiedMicrotasks.toString()
-
-    if (task.incompleteMicrotasks == 0) {
-      p0.taskLl.isClickable = false
-      p0.taskLl.isEnabled = false
-    } else {
-      p0.taskLl.isClickable = true
-      p0.taskLl.isEnabled = true
-    }
-
-    p0.taskLl.setOnClickListener {
-      p0.taskLl.isClickable = false
-      p0.taskLl.isEnabled = false
-      onDashboardTaskAdapterClick.onclickDashboardTaskItem(task)
-    }
+    tasks = tempList
+    notifyItemRangeInserted(oldTaskCount, newTasks.size)
   }
 
-  fun setLabels(
-    incompleteLabel: String,
-    completedLabel: String,
-    submittedLabel: String,
-    verifiedLabel: String,
-  ) {
-    incompleteMicrotasksLabel = incompleteLabel
-    completedMicrotasksLabel = completedLabel
-    submittedMicrotasksLabel = submittedLabel
-    verifiedMicrotasksLabel = verifiedLabel
-  }
-
-  fun setList(tasks: List<TaskInfo>) {
-    this.tasks = tasks
+  fun updateList(newList: List<TaskInfo>) {
+    tasks = newList
     notifyDataSetChanged()
   }
+
+  class NgTaskViewHolder(
+    private val binding: ItemTaskBinding,
+    private val dashboardItemClick: (task: TaskInfo) -> Unit,
+  ) : RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(taskInfo: TaskInfo) {
+      setText(binding, taskInfo)
+      setViews(binding, taskInfo)
+    }
+
+    private fun setText(binding: ItemTaskBinding, task: TaskInfo) {
+      with(binding) {
+        task.apply {
+          taskNameTv.text = taskName
+          scenarioNameTv.text = scenarioName
+          numIncompleteTv.text = taskStatus.assignedMicrotasks.toString()
+          numCompletedTv.text = taskStatus.completedMicrotasks.toString()
+          numSubmittedTv.text = taskStatus.submittedMicrotasks.toString()
+          numVerifiedTv.text = taskStatus.verifiedMicrotasks.toString()
+        }
+      }
+    }
+
+    private fun setViews(binding: ItemTaskBinding, task: TaskInfo) {
+      with(binding) {
+        task.apply {
+          completedTasksPb.max = taskStatus.assignedMicrotasks + taskStatus.completedMicrotasks
+          completedTasksPb.progress = taskStatus.completedMicrotasks
+
+          incompleteCl.apply { if (taskStatus.assignedMicrotasks > 0) visible() else gone() }
+          completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
+          submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
+          verifiedCl.apply { if (taskStatus.verifiedMicrotasks > 0) visible() else gone() }
+        }
+
+        taskLl.apply {
+          val clickableAndEnabled = task.taskStatus.assignedMicrotasks == 0
+          isClickable = clickableAndEnabled
+          isEnabled = clickableAndEnabled
+
+          setOnClickListener {
+            isClickable = false
+            isEnabled = false
+            dashboardItemClick(task)
+          }
+        }
+      }
+    }
+  }
 }
-
-class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-  val taskLl: LinearLayout = itemView.taskLl
-  val taskName: TextView = itemView.taskNameTv
-  val scenarioName: TextView = itemView.scenarioNameTv
-  val progressBar: ProgressBar = itemView.completedTasksPb
-
-  val numIncompleteTv: TextView = itemView.numIncompleteTv
-  val numCompletedTv: TextView = itemView.numCompletedTv
-  val numSubmittedTv: TextView = itemView.numSubmittedTv
-  val numVerifiedTv: TextView = itemView.numVerifiedTv
-
-  val numIncompleteLabel: TextView = itemView.numIncompleteLabel
-  val numCompletedLabel: TextView = itemView.numCompletedLabel
-  val numSubmittedLabel: TextView = itemView.numSubmittedLabel
-  val numVerifiedLabel: TextView = itemView.numVerifiedLabel
-
-  val incompleteCl: ConstraintLayout = itemView.incompleteCl
-  val completedCl: ConstraintLayout = itemView.completedCl
-  val submittedCl: ConstraintLayout = itemView.submittedCl
-  val verifiedCl: ConstraintLayout = itemView.verifiedCl
-}
-*/
