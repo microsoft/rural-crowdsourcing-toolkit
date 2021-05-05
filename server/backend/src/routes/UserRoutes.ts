@@ -70,45 +70,65 @@ userRouter.get('/server_user/logout', AuthController.logout);
  */
 
 // Create a new server user
-userRouter.post('/server_users', Middlewares.onlyAdmin, BodyParser(), ServerUserController.create);
+userRouter.post(
+  '/server_users',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  BodyParser(),
+  ServerUserController.create
+);
 
 // Get all server users
-userRouter.get('/server_users', Middlewares.onlyAdmin, ServerUserController.get);
+userRouter.get('/server_users', Middlewares.needIdToken, Middlewares.onlyAdmin, ServerUserController.getAll);
+
+// Get current server_user
+userRouter.get('/server_user', Middlewares.needIdToken, Middlewares.respondWithUserRecord);
 
 /**
  * Routes to create, get, remove boxes.
  */
 
 // Create a new box with a given name. Generates a random access code for the box.
-userRouter.post('/boxes', Middlewares.onlyAdmin, BodyParser(), BoxController.create);
+userRouter.post('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BodyParser(), BoxController.create);
 
 // Get all boxes
-userRouter.get('/boxes', Middlewares.onlyAdmin, BoxController.get);
+userRouter.get('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BoxController.get);
 
 /**
  * Task related routes. Create/update tasks, submit input files.
  */
 
 // Create a new task
-userRouter.post('/tasks', BodyParser(), TaskController.create);
+userRouter.post('/tasks', Middlewares.needIdToken, BodyParser(), TaskController.create);
 
 // TODO: Edit task
 // userRouter.put('/task/:id');
 
 // Submit input files for a task
-userRouter.post('/task/:id/input_files', BodyParser({ multipart: true }), TaskController.submitInputFiles);
+userRouter.post(
+  '/task/:id/input_files',
+  Middlewares.needIdToken,
+  BodyParser({ multipart: true }),
+  TaskController.submitInputFiles
+);
 
 // Get all tasks
-userRouter.get('/tasks', TaskController.get);
+userRouter.get('/tasks', Middlewares.needIdToken, TaskController.get);
 
 /**
  * Task assignment routes. Create/update task assignments
  */
 
 // Create task assignment
-userRouter.post('/task_assignments', Middlewares.onlyAdmin, BodyParser(), TaskAssignmentController.create);
+userRouter.post(
+  '/task_assignments',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  BodyParser(),
+  TaskAssignmentController.create
+);
 
 // Get all task assignments
-userRouter.get('/task_assignments', Middlewares.onlyAdmin, TaskAssignmentController.get);
+userRouter.get('/task_assignments', Middlewares.needIdToken, Middlewares.onlyAdmin, TaskAssignmentController.get);
 
 export { userRouter };

@@ -31,6 +31,17 @@ export const authenticateRequest: KaryaUserRouteMiddleware = async (ctx, next) =
 };
 
 /**
+ * Only cross these paths with ID token
+ */
+export const needIdToken: KaryaUserRouteMiddleware = async (ctx, next) => {
+  if (ctx.state.auth_mechanism != 'karya-id-token') {
+    HttpResponse.Forbidden(ctx, 'Request needs id-token authentication');
+    return;
+  }
+  await next();
+};
+
+/**
  * Only allow admins to pass through this middleware
  */
 export const onlyAdmin: KaryaUserRouteMiddleware = async (ctx, next) => {
@@ -59,6 +70,6 @@ export const setRegMechanism: RegistrationMiddleware = async (ctx, next) => {
 /**
  * Return user record
  */
-export const respondWithUserRecord: RegistrationMiddleware = async (ctx) => {
+export const respondWithUserRecord: KaryaUserRouteMiddleware = async (ctx) => {
   HttpResponse.OK(ctx, ctx.state.entity);
 };

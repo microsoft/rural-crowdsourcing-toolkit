@@ -42,7 +42,7 @@ export const create: KaryaUserRouteMiddleware = async (ctx) => {
 /**
  * Get all server users.
  */
-export const get: KaryaUserRouteMiddleware = async (ctx) => {
+export const getAll: KaryaUserRouteMiddleware = async (ctx) => {
   try {
     const records = await BasicModel.getRecords('server_user', {});
     HttpResponse.OK(ctx, records);

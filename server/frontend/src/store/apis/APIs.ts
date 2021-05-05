@@ -298,7 +298,7 @@ export async function backendRequest(
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET('/server_user/login'),
+        response: await GET('/server_user'),
       } as BackendRequestSuccessAction;
     }
     if (action.store === 'auth' && action.label === 'SIGN_OUT') {
