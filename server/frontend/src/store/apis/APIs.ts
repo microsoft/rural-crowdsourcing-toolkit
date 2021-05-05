@@ -287,6 +287,26 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
+    // Get all boxes
+    if (action.store === 'box' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/boxes'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Create a new box
+    if (action.store === 'box' && action.label === 'GENERATE_CC') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST('/boxes', action.request, {}),
+      } as BackendRequestSuccessAction;
+    }
+
     // GET_BY_ID actions
     if (action.label === 'GET_BY_ID') {
       const endpoint = `${store}/${action.id}`;
@@ -326,15 +346,6 @@ export async function backendRequest(
         store,
         label,
         response: await POST(store, action.request, {}, action.files),
-      } as BackendRequestSuccessAction;
-    }
-
-    if (action.store === 'box' && action.label === 'GENERATE_CC') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await POST('/box/generate/cc', action.request, {}, action.files),
       } as BackendRequestSuccessAction;
     }
 
