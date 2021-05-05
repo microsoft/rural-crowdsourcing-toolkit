@@ -1,7 +1,8 @@
+package com.microsoft.research.karya.ui.dashboard
+/*
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-package com.microsoft.research.karya.ui.dashboard
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -113,3 +114,4 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
   val submittedCl: ConstraintLayout = itemView.submittedCl
   val verifiedCl: ConstraintLayout = itemView.verifiedCl
 }
+*/

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.ActivityDashboardBinding
 import com.microsoft.research.karya.utils.Result
@@ -52,7 +51,7 @@ class NgDashboardActivity : AppCompatActivity() {
   private fun observeTaskList() {
     viewModel.getAllTasks().observe(lifecycle, lifecycleScope) { result ->
       when (result) {
-        is Result.Success<*> -> onTaskFetched(result.value as List<TaskRecord>)
+        is Result.Success<*> -> onTaskFetched(result.value as List<TaskInfo>)
         is Result.Error -> {
           // TODO(aditya-navana): Show
         }
@@ -63,20 +62,7 @@ class NgDashboardActivity : AppCompatActivity() {
     }
   }
 
-  private fun onTaskFetched(taskRecordList: List<TaskRecord>) {
-    val taskInfoList =
-      taskRecordList.map { taskRecord ->
-        TaskInfo(
-          taskID = taskRecord.id,
-          taskName = taskRecord.name,
-          scenarioName = taskRecord.scenario_id.toString(),
-          incompleteMicrotasks = 4,
-          completedMicrotasks = 4,
-          submittedMicrotasks = 4,
-          verifiedMicrotasks = 4
-        )
-      }
-
+  private fun onTaskFetched(taskInfoList: List<TaskInfo>) {
     (binding.tasksRv.adapter as NgTaskListAdapter).updateList(taskInfoList)
   }
 

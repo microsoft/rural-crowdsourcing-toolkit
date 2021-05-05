@@ -55,27 +55,31 @@ class NgTaskListAdapter(
 
     private fun setText(binding: ItemTaskBinding, task: TaskInfo) {
       with(binding) {
-        taskNameTv.text = task.taskName
-        scenarioNameTv.text = task.scenarioName
-        numIncompleteTv.text = task.incompleteMicrotasks.toString()
-        numCompletedTv.text = task.completedMicrotasks.toString()
-        numSubmittedTv.text = task.submittedMicrotasks.toString()
-        numVerifiedTv.text = task.verifiedMicrotasks.toString()
+        task.apply {
+          taskNameTv.text = taskName
+          scenarioNameTv.text = scenarioName
+          numIncompleteTv.text = taskStatus.assignedMicrotasks.toString()
+          numCompletedTv.text = taskStatus.completedMicrotasks.toString()
+          numSubmittedTv.text = taskStatus.submittedMicrotasks.toString()
+          numVerifiedTv.text = taskStatus.verifiedMicrotasks.toString()
+        }
       }
     }
 
     private fun setViews(binding: ItemTaskBinding, task: TaskInfo) {
       with(binding) {
-        completedTasksPb.max = task.incompleteMicrotasks + task.completedMicrotasks
-        completedTasksPb.progress = task.completedMicrotasks
+        task.apply {
+          completedTasksPb.max = taskStatus.assignedMicrotasks + taskStatus.completedMicrotasks
+          completedTasksPb.progress = taskStatus.completedMicrotasks
 
-        incompleteCl.apply { if (task.incompleteMicrotasks > 0) visible() else gone() }
-        completedCl.apply { if (task.completedMicrotasks > 0) visible() else gone() }
-        submittedCl.apply { if (task.submittedMicrotasks > 0) visible() else gone() }
-        verifiedCl.apply { if (task.verifiedMicrotasks > 0) visible() else gone() }
+          incompleteCl.apply { if (taskStatus.assignedMicrotasks > 0) visible() else gone() }
+          completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
+          submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
+          verifiedCl.apply { if (taskStatus.verifiedMicrotasks > 0) visible() else gone() }
+        }
 
         taskLl.apply {
-          val clickableAndEnabled = task.incompleteMicrotasks == 0
+          val clickableAndEnabled = task.taskStatus.assignedMicrotasks == 0
           isClickable = clickableAndEnabled
           isEnabled = clickableAndEnabled
 
