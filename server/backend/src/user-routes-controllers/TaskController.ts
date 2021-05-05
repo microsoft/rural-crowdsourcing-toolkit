@@ -18,4 +18,4 @@ export const submitInputFiles: KaryaUserRouteMiddleware = async (ctx) => {};
 /**
  * Get all tasks.
  */
-export const get: KaryaUserRouteMiddleware = async (ctx) => {};
+export const getAll: KaryaUserRouteMiddleware = async (ctx) => {};

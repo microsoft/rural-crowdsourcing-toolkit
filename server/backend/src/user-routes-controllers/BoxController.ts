@@ -42,7 +42,7 @@ export const create: KaryaUserRouteMiddleware = async (ctx) => {
 /**
  * Get all boxes.
  */
-export const get: KaryaUserRouteMiddleware = async (ctx) => {
+export const getAll: KaryaUserRouteMiddleware = async (ctx) => {
   try {
     const records = await BasicModel.getRecords('box', {});
     HttpResponse.OK(ctx, records);

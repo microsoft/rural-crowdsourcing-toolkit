@@ -92,7 +92,7 @@ userRouter.get('/server_user', Middlewares.needIdToken, Middlewares.respondWithU
 userRouter.post('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BodyParser(), BoxController.create);
 
 // Get all boxes
-userRouter.get('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BoxController.get);
+userRouter.get('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BoxController.getAll);
 
 /**
  * Task related routes. Create/update tasks, submit input files.
@@ -113,7 +113,7 @@ userRouter.post(
 );
 
 // Get all tasks
-userRouter.get('/tasks', Middlewares.needIdToken, TaskController.get);
+userRouter.get('/tasks', Middlewares.needIdToken, TaskController.getAll);
 
 /**
  * Task assignment routes. Create/update task assignments
