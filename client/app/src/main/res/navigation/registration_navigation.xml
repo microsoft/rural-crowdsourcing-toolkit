@@ -14,7 +14,7 @@
             android:id="@+id/action_phoneNumberFragment_to_OTPFragment"
             app:destination="@id/OTPFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            app:exitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/OTPFragment"
@@ -25,7 +25,9 @@
             android:id="@+id/action_OTPFragment_to_profilePictureFragment"
             app:destination="@id/profilePictureFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/phoneNumberFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_OTPFragment_to_dashboardActivity2"
             app:destination="@id/dashboardActivity2"
@@ -63,7 +65,7 @@
             android:id="@+id/action_selectAgeGroupFragment_to_dashboardActivity2"
             app:destination="@id/dashboardActivity2"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+            app:exitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <activity
         android:id="@+id/dashboardActivity2"

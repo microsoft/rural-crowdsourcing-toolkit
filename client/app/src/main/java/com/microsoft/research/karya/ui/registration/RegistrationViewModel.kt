@@ -174,13 +174,13 @@ constructor(
   fun afterNavigateToProfilePicture() {
     _openProfilePictureFragmentFromOTP.value = false
     _currOtpResendState.value = OtpSendState.NOT_SENT
-    _currOtpSendState.value = OtpSendState.NOT_SENT
+    _currOtpVerifyState.value = OtpVerifyState.NOT_ENTERED
   }
 
   fun afterNavigateToDashboard() {
     _openDashBoardFromOTP.value = false
     _currOtpResendState.value = OtpSendState.NOT_SENT
-    _currOtpSendState.value = OtpSendState.NOT_SENT
+    _currOtpVerifyState.value = OtpVerifyState.NOT_ENTERED
   }
 
   fun resetOtpSendState() {

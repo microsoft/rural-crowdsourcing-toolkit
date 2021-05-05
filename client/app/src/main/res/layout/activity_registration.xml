@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:defaultNavHost="true"
         app:navGraph="@navigation/registration_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

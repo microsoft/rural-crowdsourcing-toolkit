@@ -45,6 +45,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
 
   private fun navigateToDashboard() {
     findNavController().navigate(R.id.action_selectAgeGroupFragment_to_dashboardActivity2)
+    requireActivity().finish()
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
