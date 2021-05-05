@@ -38,11 +38,12 @@
             app:srcCompat="@drawable/ic_perm_identity" />
 
         <TextView
-            android:id="@+id/salutationTv"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/appLanguageTextColor"
             android:textSize="@dimen/_15ssp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/profilePictureIv"
