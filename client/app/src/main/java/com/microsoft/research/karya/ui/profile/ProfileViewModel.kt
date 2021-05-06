@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
 import com.microsoft.research.karya.utils.extensions.rotateRight
@@ -68,6 +69,9 @@ constructor(
       val result = writeBitmap(bitmap, imageFile)
 
       if (result) {
+        val worker = authManager.fetchLoggedInWorker()
+        updateWorker(worker.copy(profilePicturePath = imageFile.path))
+
         _profileUiState.value = ProfileUiState.Success(imageFile.path)
       } else {
         _profileUiState.value = ProfileUiState.Error(UnknownException("Could not save image"))
@@ -90,10 +94,10 @@ constructor(
         return@launch
       }
 
-      val bitmap = BitmapFactory.decodeFile(imageFile.path)
+      var bitmap = BitmapFactory.decodeFile(imageFile.path)
       imageFile.delete()
 
-      bitmap.rotateRight()
+      bitmap = bitmap.rotateRight()
       imageFile.createNewFile()
       val result = writeBitmap(bitmap, imageFile)
 
@@ -109,4 +113,7 @@ constructor(
     withContext(Dispatchers.IO) {
       return@withContext bitmap.compress(Bitmap.CompressFormat.PNG, 100, file.outputStream())
     }
+
+  private suspend fun updateWorker(worker: WorkerRecord) =
+    withContext(Dispatchers.IO) { workerRepository.upsertWorker(worker) }
 }

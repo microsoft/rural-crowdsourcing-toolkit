@@ -48,6 +48,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
 
       rotateRightIb.setOnClickListener { viewModel.rotateProfileImage() }
 
+      profilePictureNextIv.setOnClickListener { navigateToSelectGenderFragment() }
+
       appTb.setTitle(getString(R.string.s_profile_pic_title))
     }
   }
@@ -73,17 +75,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
 
   private fun showInitialUi() {
     with(binding) {
-      profilePictureNextIv.visible()
+      hideLoading()
       rotateRightIb.gone()
     }
   }
 
   private fun showLoadingUi() {
-    with(binding) { rotateRightIb.gone() }
+    with(binding) {
+      showLoading()
+      rotateRightIb.gone()
+    }
   }
 
   private fun showSuccessUi(bitmapPath: String?) {
     with(binding) {
+      hideLoading()
       rotateRightIb.visible()
       enableRotateButton()
 
@@ -96,13 +102,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
 
   private fun showErrorUi(message: String) {
     with(binding) {
+      hideLoading()
       rotateRightIb.gone()
       disableRotateButton()
     }
-  }
-
-  private fun takePicture() {
-    selectPicture.launch(null)
   }
 
   private fun navigateToSelectGenderFragment() {
@@ -116,5 +119,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
   private fun enableRotateButton() {
     binding.rotateRightIb.visibility = View.VISIBLE
     binding.rotateRightIb.isClickable = true
+  }
+
+  private fun showLoading() {
+    with(binding) {
+      binding.loadingPb.visible()
+      binding.profilePictureNextIv.gone()
+    }
+  }
+
+  private fun hideLoading() {
+    with(binding) {
+      binding.loadingPb.gone()
+      binding.profilePictureNextIv.visible()
+    }
   }
 }
