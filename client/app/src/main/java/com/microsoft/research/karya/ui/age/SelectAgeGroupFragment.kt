@@ -9,15 +9,11 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AgeGroup
 import com.microsoft.research.karya.databinding.FragmentSelectAgeGroupBinding
-<<<<<<< Updated upstream:client/app/src/main/java/com/microsoft/research/karya/ui/age/SelectAgeGroupFragment.kt
-import com.microsoft.research.karya.utils.extensions.viewBinding
-=======
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import kotlinx.coroutines.flow.collect
->>>>>>> Stashed changes:client/app/src/main/java/com/microsoft/research/karya/ui/registration/SelectAgeGroupFragment.kt
 
 class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
 
@@ -41,9 +37,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
       middleAgeBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.MIDDLE) }
       oldAgeBtn.setOnClickListener { handleAgeGroupClick(AgeGroup.OLD) }
 
-      submitAgeGroupIb.setOnClickListener {
-        submitAgeGroup()
-      }
+      submitAgeGroupIb.setOnClickListener { submitAgeGroup() }
 
       appTb.setTitle(getString(R.string.s_age_title))
     }
