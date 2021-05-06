@@ -84,51 +84,19 @@ class DashboardActivity : AppCompatActivity() {
 
   fun onDashboardItemClick(task: TaskInfo) {
 
-    /*
-        var taskRecord: TaskRecord?
-        var scenarioRecord: ScenarioRecord? = null
-
-        runBlocking {
-            ioScope.launch {
-                taskRecord = karyaDb.taskDao().getById(task.taskID)
-                scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
-            }.join()
-        }
-
-        val nextIntent = when (scenarioRecord?.name) {
-            "story-speech" -> Intent(this, StorySpeechMain::class.java)
-            "speech-data" -> Intent(this, SpeechDataMain::class.java)
-            "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-            else -> {
-                throw Exception("Unimplemented scenario")
-            }
-        }
-
-        nextIntent.putExtra("taskID", task.taskID)
-        nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
-        nextIntent.putExtra("completed", task.completedMicrotasks)
-
-    runBlocking {
-        ioScope.launch {
-            taskRecord = karyaDb.taskDao().getById(task.taskID)
-            scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
-        }.join()
-    }
-    */
-    // task.scenarioID for now
-    val nextIntent =
-      when ("speech-data") { // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
-        // Use [ScenarioType] enum once we migrate to it.
-        "story-speech" -> Intent(this, StorySpeechMain::class.java)
-        "speech-data" -> Intent(this, SpeechDataMain::class.java)
-        "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-        else -> {
-          throw Exception("Unimplemented scenario")
-        }
+      val nextIntent = when (task.scenarioName) {
+          // Use [ScenarioType] enum once we migrate to it.
+          "story-speech" -> Intent(this, StorySpeechMain::class.java)
+          "speech-data" -> Intent(this, SpeechDataMain::class.java)
+          "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
+          else -> {
+              throw Exception("Unimplemented scenario")
+          }
       }
 
-    nextIntent.putExtra("taskID", task.taskID)
+      nextIntent.putExtra("taskID", task.taskID)
 
-    startActivity(nextIntent)
+      startActivity(nextIntent)
+
   }
 }
