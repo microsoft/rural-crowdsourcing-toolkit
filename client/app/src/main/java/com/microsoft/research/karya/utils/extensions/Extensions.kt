@@ -41,6 +41,8 @@ fun Fragment.hideKeyboard() {
   imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun Fragment.finish() = requireActivity().finish()
+
 fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
 
 fun Context.isNetworkAvailable(): Boolean {
@@ -61,16 +63,4 @@ fun Context.isNetworkAvailable(): Boolean {
     val activeNetworkInfo = connectivityManager?.activeNetworkInfo ?: return false
     return activeNetworkInfo.isConnected
   }
-}
-
-fun View.visible() {
-  this.visibility = View.VISIBLE
-}
-
-fun View.invisible() {
-  this.visibility = View.INVISIBLE
-}
-
-fun View.gone() {
-  this.visibility = View.GONE
 }

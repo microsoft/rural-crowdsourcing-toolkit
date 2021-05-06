@@ -28,28 +28,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appTb" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/phantomPhoneNumberTv"
-        android:layout_width="@dimen/_0sdp"
-        android:layout_height="@dimen/_60sdp"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
-        android:autofillHints=""
-        android:background="@drawable/blue_rounded_border"
-        android:fontFamily="monospace"
-        android:inputType="phone"
-        android:paddingHorizontal="@dimen/_18sdp"
-        android:paddingVertical="@dimen/_10sdp"
-        android:text="99999 99999"
-        android:textSize="@dimen/_18ssp"
-        app:autoSizeMaxTextSize="@dimen/_25ssp"
-        app:autoSizeMinTextSize="@dimen/_12ssp"
-        app:autoSizeStepGranularity="@dimen/_1ssp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintEnd_toStartOf="@id/phoneNumberNextIv"
-        app:layout_constraintStart_toStartOf="@id/phoneNumberPromptTv"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberPromptTv" />
-
     <EditText
         android:id="@+id/phoneNumberEt"
         android:layout_width="@dimen/_0sdp"
@@ -64,6 +42,7 @@
         android:maxLength="10"
         android:paddingVertical="@dimen/_10sdp"
         android:textAlignment="center"
+        android:textSize="@dimen/_18ssp"
         app:layout_constraintEnd_toStartOf="@id/phoneNumberNextIv"
         app:layout_constraintStart_toStartOf="@id/phoneNumberPromptTv"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberPromptTv" />

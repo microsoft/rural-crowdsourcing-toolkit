@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.registration
+package com.microsoft.research.karya.ui.profile
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
 import com.microsoft.research.karya.utils.ImageUtils
-import com.microsoft.research.karya.utils.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewBinding
 
 private const val REQUEST_IMAGE_CAPTURE = 101
 

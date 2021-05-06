@@ -21,13 +21,60 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     VERIFY
   }
 
-  fun getOrVerifyOTP(
+  fun getOTP(
+    accessCode: String,
+    phoneNumber: String,
+  ) = flow {
+    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, "", "generate")
+    val workerRecord = response.body()
+
+    if (!response.isSuccessful) {
+      throw when (response.code()) {
+        404 -> IncorrectOtpException("Incorrect OTP")
+        403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
+        401 -> IncorrectAccessCodeException("Access Code is incorrect")
+        else -> UnknownException("Something went wrong")
+      }
+    }
+
+    if (workerRecord == null) {
+      error("Request failed, response body was null")
+    }
+
+    // emit unit at the end to indicate success
+    // TODO: think if we should use suspend fun instead of a flow
+    emit(Unit)
+  }
+
+  fun resendOTP(
+    accessCode: String,
+    phoneNumber: String,
+  ) = flow {
+    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, "", "resend")
+    val workerRecord = response.body()
+
+    if (!response.isSuccessful) {
+      throw when (response.code()) {
+        404 -> IncorrectOtpException("Incorrect OTP")
+        403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
+        401 -> IncorrectAccessCodeException("Access Code is incorrect")
+        else -> UnknownException("Something went wrong")
+      }
+    }
+
+    if (workerRecord == null) {
+      error("Request failed, response body was null")
+    }
+
+    emit(Unit)
+  }
+
+  fun verifyOTP(
     accessCode: String,
     phoneNumber: String,
     otp: String,
-    action: String,
   ) = flow {
-    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, otp, action)
+    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, otp, "resend")
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

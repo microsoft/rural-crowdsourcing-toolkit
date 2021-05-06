@@ -12,7 +12,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
 import com.microsoft.research.karya.ui.accesscode.AccessCodeViewModel
-import com.microsoft.research.karya.utils.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

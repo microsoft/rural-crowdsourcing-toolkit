@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.utils
+package com.microsoft.research.karya.utils.extensions
 
 import android.view.LayoutInflater
 import android.view.View

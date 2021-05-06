@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
 import com.microsoft.research.karya.ui.base.BaseActivity
-import com.microsoft.research.karya.utils.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewBinding
 
 class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 

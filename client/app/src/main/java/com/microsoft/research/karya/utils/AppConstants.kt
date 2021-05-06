@@ -31,4 +31,5 @@ object AppConstants {
   const val REGISTER_SKILL = 7
 
   const val PHONE_NUMBER_LENGTH = 10
+  const val OTP_LENGTH = 6
 }

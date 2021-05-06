@@ -25,7 +25,6 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -79,68 +78,6 @@ constructor(
   var selectAgeGroupFragmentErrorId by Delegates.notNull<Int>()
 
   var workerPhoneNumber = ""
-
-  fun sendOTP(phoneNumber: String) {
-    viewModelScope.launch {
-      workerPhoneNumber = phoneNumber
-      // This is an O(1) call except for the first time when worker is fetched from preferences
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
-
-      workerRepository
-        .getOrVerifyOTP(
-          accessCode = accessCode,
-          phoneNumber = workerPhoneNumber,
-          otp = "",
-          WorkerRepository.OtpAction.GENERATE.name.toLowerCase(Locale.ROOT)
-        )
-        .onEach { _currOtpSendState.value = OtpSendState.SUCCESS }
-        .catch { e -> sendGenerateOtpError(e) }
-        .collect()
-    }
-  }
-
-  fun verifyOTP(otp: String) {
-    viewModelScope.launch {
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
-
-      workerRepository
-        .getOrVerifyOTP(accessCode, workerPhoneNumber, otp, WorkerRepository.OtpAction.VERIFY.name.toLowerCase())
-        .onEach { workerRecord ->
-          val idToken = workerRecord.idToken ?: error("idToken should not be null")
-
-          _currOtpVerifyState.value = OtpVerifyState.SUCCESS
-          _idTokenLiveData.value = idToken
-
-          updateWorker(workerRecord)
-
-          if (workerRecord.age.isNullOrEmpty()) {
-            // First time registration, go on with the regular registration flow
-            _openProfilePictureFragmentFromOTP.value = true
-          } else {
-            // navigate to dashboard
-            _openDashBoardFromOTP.value = true
-          }
-        }
-        .catch { e ->
-          e.printStackTrace()
-          sendVerifyOtpError(e)
-        }
-        .collect()
-    }
-  }
-
-  /** Resend OTP */
-  fun resendOTP() {
-    viewModelScope.launch {
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
-
-      workerRepository
-        .getOrVerifyOTP(accessCode, workerPhoneNumber, "", WorkerRepository.OtpAction.RESEND.name.toLowerCase())
-        .onEach { _currOtpResendState.value = OtpSendState.SUCCESS }
-        .catch { e -> sendResendOtpError(e) }
-        .collect()
-    }
-  }
 
   private suspend fun updateWorker(workerRecord: WorkerRecord) {
     workerRepository.upsertWorker(workerRecord)

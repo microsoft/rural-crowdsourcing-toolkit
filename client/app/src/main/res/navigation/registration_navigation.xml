@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/phoneNumberFragment"
-        android:name="com.microsoft.research.karya.ui.registration.PhoneNumberFragment"
+        android:name="com.microsoft.research.karya.ui.login.phone.PhoneNumberFragment"
         android:label="PhoneNumberFragment"
         tools:layout="@layout/fragment_phone_number">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/OTPFragment"
-        android:name="com.microsoft.research.karya.ui.registration.OTPFragment"
+        android:name="com.microsoft.research.karya.ui.login.otp.OTPFragment"
         android:label="fragment_o_t_p"
         tools:layout="@layout/fragment_otp">
         <action
@@ -58,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/selectAgeGroupFragment"
-        android:name="com.microsoft.research.karya.ui.registration.SelectAgeGroupFragment"
+        android:name="com.microsoft.research.karya.ui.age.SelectAgeGroupFragment"
         android:label="SelectAgeGroupFragment"
         tools:layout="@layout/fragment_select_age_group">
         <action

@@ -17,8 +17,8 @@ import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
+import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
-import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
