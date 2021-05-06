@@ -34,8 +34,10 @@ constructor(
 
   fun resendOTP() {
     viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
+      _otpUiState.value = OTPUiState.Loading
+
       // We updated the worker phone number during first otp call, let's reuse that
+      val worker = authManager.fetchLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
@@ -48,8 +50,10 @@ constructor(
 
   fun verifyOTP(otp: String) {
     viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
+      _otpUiState.value = OTPUiState.Loading
+
       // We updated the worker phone number during first otp call, let's reuse that
+      val worker = authManager.fetchLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository

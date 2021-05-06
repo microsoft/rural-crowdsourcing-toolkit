@@ -13,7 +13,6 @@ import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
-import kotlinx.coroutines.flow.collect
 
 class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
 
@@ -44,7 +43,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   }
 
   private fun observeUi() {
-    viewModel.selectAgeUiState.observe(lifecycle, lifecycleScope) { state ->
+    viewModel.selectAgeUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       when (state) {
         is SelectAgeUiState.Error -> showErrorUi(state.throwable.message!!)
         SelectAgeUiState.Initial -> showInitialUi()
@@ -55,11 +54,9 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   }
 
   private fun observeEffects() {
-    lifecycleScope.launchWhenStarted {
-      viewModel.selectAgeEffects.collect { effect ->
-        when (effect) {
-          SelectAgeEffects.Navigate -> navigateToDashboard()
-        }
+    viewModel.selectAgeEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+      when (effect) {
+        SelectAgeEffects.Navigate -> navigateToDashboard()
       }
     }
   }

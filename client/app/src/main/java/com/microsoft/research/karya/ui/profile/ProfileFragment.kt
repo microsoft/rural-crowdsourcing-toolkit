@@ -15,9 +15,6 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-
-private const val REQUEST_IMAGE_CAPTURE = 101
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
@@ -39,7 +36,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
     observeUi()
     observeEffects()
 
-    /** Initialise assistant audio */
     // registrationActivity.current_assistant_audio = R.string.audio_profile_picture_prompt
     // disableRotateButton()
   }
@@ -57,7 +53,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
   }
 
   private fun observeUi() {
-    viewModel.profileUiState.observe(lifecycle, lifecycleScope) { state ->
+    viewModel.profileUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       when (state) {
         is ProfileUiState.Success -> showSuccessUi(state.data)
         is ProfileUiState.Error -> showErrorUi(state.throwable.message!!)
@@ -68,11 +64,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
   }
 
   private fun observeEffects() {
-    lifecycleScope.launchWhenStarted {
-      viewModel.profileEffects.collect { effect ->
-        when (effect) {
-          ProfileEffects.Navigate -> navigateToSelectGenderFragment()
-        }
+    viewModel.profileEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+      when (effect) {
+        ProfileEffects.Navigate -> navigateToSelectGenderFragment()
       }
     }
   }

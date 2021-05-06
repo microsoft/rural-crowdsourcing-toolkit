@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/profilePictureFragment"
-        android:name="com.microsoft.research.karya.ui.registration.ProfilePictureFragment"
+        android:name="com.microsoft.research.karya.ui.profile.ProfileFragment"
         android:label="ProfilePictureFragment"
         tools:layout="@layout/fragment_profile_picture">
         <action

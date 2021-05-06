@@ -74,7 +74,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     phoneNumber: String,
     otp: String,
   ) = flow {
-    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, otp, "resend")
+    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, otp, "verify")
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

@@ -13,12 +13,12 @@ import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
 import com.microsoft.research.karya.utils.AppConstants.PHONE_NUMBER_LENGTH
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.hideKeyboard
+import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
@@ -59,7 +59,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
   }
 
   private fun observeUi() {
-    viewModel.phoneNumberUiState.observe(lifecycle, lifecycleScope) { state ->
+    viewModel.phoneNumberUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       when (state) {
         is PhoneNumberUiState.Error -> showErrorUi(state.throwable.message!!)
         PhoneNumberUiState.Initial -> showInitialUi()
@@ -70,11 +70,9 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
   }
 
   private fun observeEffects() {
-    lifecycleScope.launchWhenResumed {
-      viewModel.phoneNumberEffects.collect { effect ->
-        when (effect) {
-          PhoneNumberEffects.Navigate -> navigateToOTPFragment()
-        }
+    viewModel.phoneNumberEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+      when (effect) {
+        PhoneNumberEffects.Navigate -> navigateToOTPFragment()
       }
     }
   }
@@ -87,20 +85,24 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     with(binding) {
       failToSendOtpTv.gone()
       phoneNumberNextIv.handlePhoneNumberNotReady()
+      loadingPb.gone()
     }
   }
 
   private fun showLoadingUi() {
     with(binding) {
       failToSendOtpTv.gone()
-      phoneNumberNextIv.handlePhoneNumberNotReady()
+      loadingPb.visible()
+      phoneNumberNextIv.invisible()
     }
   }
 
   private fun showSuccessUi() {
     with(binding) {
       failToSendOtpTv.gone()
-      phoneNumberNextIv.handlePhoneNumberNotReady()
+      loadingPb.gone()
+      phoneNumberNextIv.visible()
+      phoneNumberNextIv.handlePhoneNumberReady()
     }
   }
 
@@ -108,6 +110,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     with(binding) {
       failToSendOtpTv.text = message
       failToSendOtpTv.visible()
+      loadingPb.gone()
       phoneNumberNextIv.handlePhoneNumberNotReady()
     }
   }

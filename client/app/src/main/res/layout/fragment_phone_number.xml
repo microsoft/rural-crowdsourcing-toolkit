@@ -52,12 +52,26 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/next"
+        android:layout_marginEnd="@dimen/_16sdp"
         app:layout_constraintBottom_toBottomOf="@id/phoneNumberEt"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/phoneNumberEt"
         app:layout_constraintWidth_percent="0.15"
         app:srcCompat="@drawable/ic_next_disabled" />
+
+    <ProgressBar
+        android:id="@+id/loadingPb"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/next"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/phoneNumberEt"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/phoneNumberEt"
+        app:layout_constraintWidth_percent="0.15" />
 
     <TextView
         android:id="@+id/failToSendOtpTv"

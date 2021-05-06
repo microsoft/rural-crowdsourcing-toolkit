@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.login.otp
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -20,7 +19,6 @@ import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class OTPFragment : Fragment(R.layout.fragment_otp) {
@@ -39,31 +37,26 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     // registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
     binding.appTb.setTitle(getString(R.string.s_otp_title))
 
-    binding.resendOTPBtn.setOnClickListener { viewModel.resendOTP() }
+    binding.resendOTPBtn.setOnClickListener {
+      binding.resendOTPBtn.gone()
+      viewModel.resendOTP()
+    }
 
     binding.otpEt.doAfterTextChanged { otp ->
       if (otp?.length == AppConstants.OTP_LENGTH) {
-        // enable next button
+        enableNextButton()
       } else {
-        // disable next button
+        disableNextButton()
       }
     }
+
+    binding.otpNextIv.setOnClickListener { viewModel.verifyOTP(binding.otpEt.text.toString()) }
 
     requestSoftKeyFocus(binding.otpEt)
   }
 
-  private fun observeEffects() {
-    lifecycleScope.launchWhenStarted {
-      viewModel.otpEffects.collect { effect ->
-        when (effect) {
-          is OTPEffects.Navigate -> navigate(effect.data)
-        }
-      }
-    }
-  }
-
   private fun observeUi() {
-    viewModel.otpUiState.observe(lifecycle, lifecycleScope) { state ->
+    viewModel.otpUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       when (state) {
         is OTPUiState.Success -> showSuccessUi()
         // TODO: Change this to a correct mapping
@@ -74,40 +67,48 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     }
   }
 
+  private fun observeEffects() {
+    viewModel.otpEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+      when (effect) {
+        is OTPEffects.Navigate -> navigate(effect.data)
+      }
+    }
+  }
+
   private fun showInitialUi() {
     with(binding) {
       otpEt.text.clear()
-      invalidOTPTv.gone()
-      resendOTPBtn.gone()
+      hideError()
+      hideLoading()
+      disableNextButton()
       otpEt.enable()
     }
   }
 
   private fun showLoadingUi() {
     with(binding) {
-      invalidOTPTv.gone()
-      resendOTPBtn.gone()
+      hideError()
+      showLoading()
+      disableNextButton()
       otpEt.disable()
     }
   }
 
   private fun showSuccessUi() {
     with(binding) {
-      invalidOTPTv.gone()
-      resendOTPBtn.gone()
+      hideError()
+      hideLoading()
+      enableNextButton()
       otpEt.enable()
-      otpStatusIv.showSuccess()
     }
   }
 
   private fun showErrorUi(message: String) {
     with(binding) {
-      invalidOTPTv.text = message
-      invalidOTPTv.visible()
-      resendOTPBtn.gone()
-      otpEt.disable()
-      otpStatusIv.showFailure()
-
+      showError(message)
+      hideLoading()
+      disableNextButton()
+      otpEt.enable()
       requestSoftKeyFocus(binding.otpEt)
     }
   }
@@ -130,17 +131,52 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
   }
 
-  private fun ImageView.showSuccess() {
-    with(binding) {
-      otpStatusIv.setImageResource(0)
-      otpStatusIv.setImageResource(R.drawable.ic_check_grey)
+  private fun enableNextButton() {
+    binding.otpNextIv.apply {
+      setImageResource(0)
+      setImageResource(R.drawable.ic_next_enabled)
+      isClickable = true
     }
   }
 
-  private fun ImageView.showFailure() {
+  private fun disableNextButton() {
+    binding.otpNextIv.apply {
+      setImageResource(0)
+      setImageResource(R.drawable.ic_next_disabled)
+      isClickable = false
+    }
+  }
+
+  private fun showLoading() {
     with(binding) {
-      otpStatusIv.setImageResource(0)
-      otpStatusIv.setImageResource(R.drawable.ic_quit_select)
+      loadingPb.visible()
+      otpNextIv.gone()
+    }
+  }
+
+  private fun hideLoading() {
+    with(binding) {
+      loadingPb.gone()
+      otpNextIv.visible()
+    }
+  }
+
+  private fun showError(message: String) {
+    with(binding) {
+      invalidOTPTv.text = message
+      invalidOTPTv.visible()
+      otpStatusIv.apply {
+        visible()
+        setImageResource(0)
+        setImageResource(R.drawable.ic_quit_select)
+      }
+    }
+  }
+
+  private fun hideError() {
+    with(binding) {
+      invalidOTPTv.gone()
+      otpStatusIv.gone()
     }
   }
 }

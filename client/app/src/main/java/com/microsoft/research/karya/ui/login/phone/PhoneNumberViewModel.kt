@@ -6,6 +6,7 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,7 +17,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class PhoneNumberViewModel(
+class PhoneNumberViewModel
+@Inject
+constructor(
   private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
@@ -29,6 +32,8 @@ class PhoneNumberViewModel(
 
   fun sendOTP(phoneNumber: String) {
     viewModelScope.launch {
+      _phoneNumberUiState.value = PhoneNumberUiState.Loading
+
       // This is an O(1) call except for the first time when worker is fetched from preferences
       val worker = authManager.fetchLoggedInWorker()
       // Update worker's phone number in the DB.

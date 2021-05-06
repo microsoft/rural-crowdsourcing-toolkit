@@ -29,9 +29,8 @@
 
     <EditText
         android:id="@+id/otpEt"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="@dimen/_50sdp"
-        android:layout_marginStart="@dimen/_30sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_24sdp"
         android:autofillHints=""
@@ -40,54 +39,70 @@
         android:hint="@string/otp_hint"
         android:inputType="number"
         android:maxLength="6"
-        android:paddingHorizontal="@dimen/_20sdp"
+        android:paddingHorizontal="@dimen/_32sdp"
         android:textSize="@dimen/_26ssp"
-        app:layout_constraintEnd_toStartOf="@id/otpStatusIv"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/otpStatusIv"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/otpPromptTv"
         app:layout_constraintTop_toBottomOf="@+id/otpPromptTv"
         app:layout_constraintVertical_bias="0.149" />
 
-    <ImageView
-        android:id="@+id/otpStatusIv"
-        android:layout_width="@dimen/_35sdp"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_marginEnd="@dimen/_30sdp"
-        android:contentDescription="@string/status_check"
+    <FrameLayout
+        android:id="@+id/loadingContainer"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_16sdp"
         app:layout_constraintBottom_toBottomOf="@id/otpEt"
-        app:layout_constraintLeft_toRightOf="@id/otpEt"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@id/otpEt"
         app:layout_constraintTop_toTopOf="@id/otpEt"
-        app:srcCompat="@drawable/ic_check_grey" />
+        app:layout_constraintHorizontal_bias="1.0">
+
+        <ImageView
+            android:id="@+id/otpNextIv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/status_check"
+            app:srcCompat="@drawable/ic_next_disabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/resendOTPBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:text="@string/s_resend_otp"
         android:textAllCaps="false"
         app:layout_constraintStart_toStartOf="@id/otpEt"
         app:layout_constraintTop_toBottomOf="@id/otpEt" />
+
+    <ImageView
+        android:id="@+id/otpStatusIv"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:contentDescription="@string/status_check"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/resendOTPBtn"
+        app:layout_constraintTop_toBottomOf="@id/resendOTPBtn"
+        app:srcCompat="@drawable/ic_check_grey" />
 
     <TextView
         android:id="@+id/invalidOTPTv"
         style="@style/multilineError"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginLeft="@dimen/_15sdp"
-        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_15sdp"
-        android:layout_marginRight="@dimen/_15sdp"
         android:text="@string/s_invalid_otp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resendOTPBtn" />
+        app:layout_constraintStart_toEndOf="@id/otpStatusIv"
+        app:layout_constraintTop_toTopOf="@id/otpStatusIv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
