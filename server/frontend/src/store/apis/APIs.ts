@@ -91,7 +91,7 @@ export type BackendRequestInitAction =
       store: 'task';
       label: 'CREATE';
       request: DBT.Task;
-      files: { [id: string]: File };
+      files?: undefined;
     }
   | {
       type: 'BR_INIT';
@@ -314,6 +314,16 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/tasks'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Create a new task
+    if (action.store === 'task' && action.label === 'CREATE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST('/tasks', action.request),
       } as BackendRequestSuccessAction;
     }
 

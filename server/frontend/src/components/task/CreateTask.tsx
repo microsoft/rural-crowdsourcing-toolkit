@@ -22,6 +22,7 @@ import { languageMap, LanguageCode } from '@karya/core';
 // HTML Helpers
 import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
+import { ParameterSection } from '../templates/ParameterRenderer';
 
 // Hoc
 import { BackendRequestInitAction } from '../../store/apis/APIs';
@@ -33,6 +34,7 @@ type RouterProps = RouteComponentProps<{}>;
 const mapStateToProps = (state: RootState) => {
   const { data, ...request } = state.all.task;
   return {
+    task: data,
     request,
   };
 };
@@ -40,13 +42,12 @@ const mapStateToProps = (state: RootState) => {
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    createTask: (task: Task, files: { [id: string]: File }) => {
+    createTask: (task: Task) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'task',
         label: 'CREATE',
         request: task,
-        files,
       };
       dispatch(action);
     },
@@ -63,10 +64,9 @@ type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
 // component state
 type CreateTaskState = {
   task: Task;
-  params: { [id: string]: string | number | boolean };
+  params: { [id: string]: string | boolean };
   scenario?: ScenarioInterface;
   language_code?: LanguageCode;
-  files: { [id: string]: File };
 };
 
 class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
@@ -77,7 +77,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
       display_name: '',
     },
     params: {},
-    files: {},
   };
 
   // reset task data
@@ -142,16 +141,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     this.setState({ params });
   };
 
-  // Handle file change
-  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (e.currentTarget.files) {
-      const file = e.currentTarget.files[0];
-      const files = { ...this.state.files, [e.currentTarget.id]: file };
-      const params = { ...this.state.params, [e.currentTarget.id]: file.name };
-      this.setState({ files, params });
-    }
-  };
-
   // Handle boolean change
   handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.checked };
@@ -165,66 +154,8 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     task.scenario_name = this.state.scenario?.name;
     task.language_code = this.state.language_code;
     task.params = this.state.params;
-    this.props.createTask(task, this.state.files);
+    this.props.createTask(task);
   };
-
-  // render a parameter
-  /*  renderTaskParameter(param: ParameterDefinition) {
-    switch (param.type) {
-      case 'string':
-        return (
-          <ColTextInput
-            id={param.identifier}
-            label={param.name}
-            width='s4'
-            onChange={this.handleParamInputChange}
-            required={param.required}
-          />
-        );
-      case 'integer':
-        return (
-          <ColTextInput
-            id={param.identifier}
-            label={param.name}
-            width='s4'
-            onChange={this.handleParamInputChange}
-            required={param.required}
-          />
-        );
-      case 'float':
-        return (
-          <ColTextInput
-            id={param.identifier}
-            label={param.name}
-            width='s4'
-            onChange={this.handleParamInputChange}
-            required={param.required}
-          />
-        );
-      case 'file':
-        return (
-          <div className='col s4  file-field input-field'>
-            <div className='btn btn-small'>
-              <i className='material-icons'>attach_file</i>
-              <input type='file' id={param.identifier} onChange={this.handleParamFileChange} />
-            </div>
-            <div className='file-path-wrapper'>
-              <label htmlFor={`${param.identifier}-name`}>{param.name}</label>
-              <input id={`${param.identifier}-name`} type='text' className='file-path validate' />
-            </div>
-          </div>
-        );
-      case 'boolean':
-        return (
-          <div className='col s4 input-field'>
-            <label>
-              <input type='checkbox' id={param.identifier} onChange={this.handleParamBooleanChange} />
-              <span>{param.name}</span>
-            </label>
-          </div>
-        );
-    }
-  } */
 
   render() {
     // Generate error with task creation
@@ -274,7 +205,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
       // get parameters from the
       const params = scenario.task_input;
       const { assignment_granularity, group_assignment_order, microtask_assignment_order } = scenario;
-      const language = languageMap[language_code];
 
       const { task } = this.state;
       taskForm = (
@@ -292,8 +222,8 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 required={true}
               />
               <ColTextInput
-                id='primary_language_name'
-                label={`Task name in ${language.name} (${language.primary_name})`}
+                id='display_name'
+                label={`Display Name (to be shown in the app)`}
                 width='s4'
                 value={task.display_name}
                 onChange={this.handleInputChange}
@@ -303,7 +233,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
             <div className='row'>
               <div className='col s8 input-field'>
-                <label htmlFor='description'>Task Description in English</label>
+                <label htmlFor='description'>Task Description</label>
                 <textarea
                   id='description'
                   className='materialize-textarea'
@@ -318,6 +248,12 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           {/** Task parameter */}
           <div className='section'>
             <h5 className='red-text'>Task Parameters</h5>
+            <ParameterSection
+              params={params}
+              data={this.state.params}
+              onChange={this.handleParamInputChange}
+              onBooleanChange={this.handleParamBooleanChange}
+            />
           </div>
 
           {/** Assignment parameters */}
