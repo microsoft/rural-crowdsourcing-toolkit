@@ -8,10 +8,7 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-<<<<<<< Updated upstream
 import javax.inject.Inject
-=======
->>>>>>> Stashed changes
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -56,7 +56,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     lifecycleScope.launchWhenStarted {
       viewModel.otpEffects.collect { effect ->
         when (effect) {
-          is OTPEffects.Navigate -> navigate()
+          is OTPEffects.Navigate -> navigate(effect.data)
         }
       }
     }
@@ -113,11 +113,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
   }
 
   private fun navigate(destination: OTPDestination) {
-<<<<<<< Updated upstream
     when (destination) {
-=======
-    when(destination) {
->>>>>>> Stashed changes
       OTPDestination.AgeSelection -> TODO()
       OTPDestination.Dashboard -> navigateToDashBoard()
       OTPDestination.GenderSelection -> TODO()
