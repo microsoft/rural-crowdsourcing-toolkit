@@ -6,27 +6,36 @@
 import { TaskRecord } from '../../Index';
 import { ScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
+import { ParameterDefinition } from '@karya/parameter-specs';
 
 /**
  * Task parameter input and file formats.
  */
-const task_input = Joi.object({
-  instruction: Joi.string()
-    .label('Recording Instruction')
-    .description('Recording instruction to be shown to the user as a prompt')
-    .required(),
-  numRecordings: Joi.number()
-    .label('Number of Recordings')
-    .description('Number of recordings needed for each sentence in the input corpus')
-    .integer()
-    .min(1)
-    .required(),
-  creditsPerRecording: Joi.number()
-    .positive()
-    .label('Credits for Each Recording')
-    .description('Number of credits to be given for each correctly recorded sentence')
-    .required(),
-});
+const task_input: ParameterDefinition[] = [
+  {
+    id: 'instruction',
+    type: 'string',
+    label: 'Recording Instruction',
+    description: 'Recording instruction to be shown to the user on the client app',
+    required: true,
+  },
+
+  {
+    id: 'numRecordings',
+    type: 'int',
+    label: 'Number of Recordings',
+    description: 'Number of recordings needed for each sentence in the input corpus',
+    required: true,
+  },
+
+  {
+    id: 'creditsPerRecording',
+    type: 'float',
+    label: 'Credits for Each Recording',
+    description: 'Number of credits to be given to the user for each correctly recorded sentence',
+    required: true,
+  },
+];
 
 export type SpeechDataTaskInputParameters = {
   instruction: string;
@@ -38,7 +47,11 @@ export type SpeechDataTaskInputParameters = {
 const task_input_file: ScenarioInterface['task_input_file'] = {
   json: {
     required: true,
-    schema: Joi.array().items(Joi.string()),
+    description: `\
+    JSON file containing an array of objects. Each object must have a sentence field that contains the\
+    sentence prompt for the recording.\
+    `,
+    schema: Joi.array().items(Joi.object({ sentence: Joi.string() })),
   },
   tar: { required: false },
 };

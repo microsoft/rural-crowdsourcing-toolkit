@@ -5,6 +5,7 @@
 // interface.
 
 import { ScenarioName } from './Index';
+import { ParameterDefinition } from '@karya/parameter-specs';
 import Joi from 'joi';
 
 /**
@@ -59,9 +60,8 @@ export interface ScenarioInterface {
   // Description of the scenario in English
   description: string;
 
-  // Parameters to be supplied with new tasks of this type. This has to be
-  // specified as a Joi Schema.
-  task_input: Joi.ObjectSchema;
+  // Parameters to be supplied with new tasks of this type.
+  task_input: ParameterDefinition[];
 
   // Format for the input files for a task of this scenario. Each input can be a
   // combination of a JSON file and a tar ball. If a JSON file is required, then
@@ -71,11 +71,15 @@ export interface ScenarioInterface {
       | { required: false }
       | {
           required: true;
+          description: string;
           schema: Joi.Schema;
         };
-    tar: {
-      required: boolean;
-    };
+    tar:
+      | { required: false }
+      | {
+          required: true;
+          description: string;
+        };
   };
 
   // Input format for microtasks of this scenario. Microtask input contains two
