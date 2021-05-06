@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.ActivityDashboardBinding
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
+import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
+import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -45,7 +49,10 @@ class DashboardActivity : AppCompatActivity() {
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener { viewModel.fetchNewTasks() }
+      syncCv.setOnClickListener {
+        viewModel.fetchNewTasks()
+        viewModel.submitCompletedTasks()
+      }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
     }
@@ -79,6 +86,7 @@ class DashboardActivity : AppCompatActivity() {
   private fun hideLoading() = binding.syncProgressBar.gone()
 
   fun onDashboardItemClick(task: TaskInfo) {
+
     /*
           var taskRecord: TaskRecord?
           var scenarioRecord: ScenarioRecord? = null
@@ -109,9 +117,9 @@ class DashboardActivity : AppCompatActivity() {
               scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
           }.join()
       }
-
+      */
       // task.scenarioID for now
-      val nextIntent = when (task.scenarioName) {
+      val nextIntent = when ("speech-data") {
           // Use [ScenarioType] enum once we migrate to it.
           "story-speech" -> Intent(this, StorySpeechMain::class.java)
           "speech-data" -> Intent(this, SpeechDataMain::class.java)
@@ -122,10 +130,8 @@ class DashboardActivity : AppCompatActivity() {
       }
 
       nextIntent.putExtra("taskID", task.taskID)
-      nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
-      nextIntent.putExtra("completed", task.completedMicrotasks)
 
       startActivity(nextIntent)
-    */
+
   }
 }

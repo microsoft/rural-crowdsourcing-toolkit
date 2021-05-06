@@ -3,6 +3,7 @@ package com.microsoft.research.karya.data.repo
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
+import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
@@ -15,6 +16,7 @@ class AssignmentRepository
 constructor(
   private val assignmentAPI: MicroTaskAssignmentAPI,
   private val assignmentDao: MicroTaskAssignmentDao,
+  private val assignmentDaoExtra: MicrotaskAssignmentDaoExtra,
   private val microTaskDao: MicroTaskDao,
   private val taskDao: TaskDao,
 ) {
@@ -71,5 +73,15 @@ constructor(
 
   private suspend fun saveTasks(tasks: List<TaskRecord>) {
     taskDao.upsert(tasks)
+  }
+
+  suspend fun getLocalCompletedAssignments(): List<MicroTaskAssignmentRecord> {
+    return assignmentDaoExtra.getCompletedAssignments()
+  }
+
+  suspend fun markMicrotaskAssignmentsSubmitted(assignmentIds: List<String>) {
+    assignmentIds.forEach { assignmentId ->
+      assignmentDaoExtra.markSubmitted(assignmentId)
+    }
   }
 }

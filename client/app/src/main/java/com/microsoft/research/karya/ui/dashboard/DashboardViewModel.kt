@@ -49,6 +49,21 @@ constructor(
     }
   }
 
+  fun submitCompletedTasks() {
+    viewModelScope.launch {
+      val updates = assignmentRepository.getLocalCompletedAssignments()
+
+      val idToken = authManager.fetchLoggedInWorkerIdToken()
+
+      assignmentRepository.submitAssignments(idToken, updates)
+        .onEach { assignmentIds ->
+          assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds)
+        }
+        .catch { Log.d("dashboard submit task", it.message!!) }.collect()
+    }
+    // TODO: Pass error message to UI
+  }
+
   fun fetchVerifiedTasks(from: String = "") {
     viewModelScope.launch {
       val idToken = authManager.fetchLoggedInWorkerIdToken()
