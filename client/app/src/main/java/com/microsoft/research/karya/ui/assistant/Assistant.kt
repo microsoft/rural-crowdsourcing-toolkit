@@ -51,7 +51,7 @@ constructor(
   fun playAssistantAudio(
     audioFilePath: String,
     uiCue: () -> Unit = {},
-    onCompletionListener: (player: MediaPlayer) -> Unit = {},
+    onCompletionListener: () -> Unit = {},
     onErrorListener: () -> Unit = {},
   ) {
     if (!::assistantPlayer.isInitialized || !isAssistantAvailable()) {
@@ -62,7 +62,7 @@ constructor(
       if (isAssistantAvailable()) {
         if (assistantPlayer.isPlaying) assistantPlayer.stop()
 
-        assistantPlayer.setOnCompletionListener(onCompletionListener)
+        assistantPlayer.setOnCompletionListener{ onCompletionListener() }
 
         assistantPlayer.setOnErrorListener { _: MediaPlayer, _: Int, _: Int ->
           onErrorListener()
@@ -84,7 +84,7 @@ constructor(
         }
       }
     } else {
-      onErrorListener()
+      onCompletionListener()
     }
   }
 
