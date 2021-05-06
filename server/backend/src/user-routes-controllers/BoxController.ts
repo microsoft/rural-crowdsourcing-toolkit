@@ -5,13 +5,13 @@
 
 import { BasicModel, Box } from '@karya/common';
 import { getCreationCode } from '@karya/misc-utils';
-import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
+import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 
 /**
  * Create a new box. Generate a random creation code.
  */
-export const create: KaryaUserRouteMiddleware = async (ctx) => {
+export const create: UserRouteMiddleware = async (ctx) => {
   // Get basic box info
   const box: Box = ctx.request.body;
 
@@ -42,7 +42,7 @@ export const create: KaryaUserRouteMiddleware = async (ctx) => {
 /**
  * Get all boxes.
  */
-export const getAll: KaryaUserRouteMiddleware = async (ctx) => {
+export const getAll: UserRouteMiddleware = async (ctx) => {
   try {
     const records = await BasicModel.getRecords('box', {});
     HttpResponse.OK(ctx, records);

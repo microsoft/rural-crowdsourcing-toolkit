@@ -3,7 +3,7 @@
 //
 // List of end points for the server user.
 
-import { AuthMechanism, ServerUserRecord, UserRegistrationState } from '@karya/common';
+import { AuthMechanism, ServerUserRecord } from '@karya/common';
 import Application from 'koa';
 import BodyParser from 'koa-body';
 import Router from 'koa-router';
@@ -16,19 +16,19 @@ import * as TaskController from '../user-routes-controllers/TaskController';
 import * as TaskAssignmentController from '../user-routes-controllers/TaskAssignmentController';
 
 // Default state for all routes
-export type KaryaDefaultUserRouteState = {
+export type DefaultUserRouteState = {
   auth_mechanism: AuthMechanism | null;
   entity: ServerUserRecord;
 };
 
 // Custom route state
-type KaryaUserRouteState<ExtraState = {}> = KaryaDefaultUserRouteState & ExtraState;
+export type UserRouteState<ExtraState = {}> = DefaultUserRouteState & ExtraState;
 
 // Default middleware type for all routes
-export type KaryaUserRouteMiddleware<ExtraState = {}> = Application.Middleware<KaryaUserRouteState<ExtraState>>;
+export type UserRouteMiddleware<ExtraState = {}> = Application.Middleware<UserRouteState<ExtraState>>;
 
 // Create the router
-const userRouter = new Router<KaryaDefaultUserRouteState>({ prefix: '/api_user' });
+const userRouter = new Router<DefaultUserRouteState>({ prefix: '/api_user' });
 
 /** Add user authenticator to all requests */
 userRouter.use(Middlewares.authenticateRequest);
@@ -36,11 +36,10 @@ userRouter.use(Middlewares.authenticateRequest);
 /**
  * Authentication related routes. Register, login and logout users.
  */
-type RegistrationState = KaryaUserRouteState<UserRegistrationState<'server_user'>>;
 
 // Register a user with google auth or phone otp mechanism. Returns an ID token
 // back to the user. Need access code for identifying user record.
-userRouter.put<RegistrationState, {}>(
+userRouter.put<AuthController.RegistrationState, {}>(
   '/server_user/register',
   AuthController.setRegMechanism,
   BodyParser(),
@@ -51,7 +50,7 @@ userRouter.put<RegistrationState, {}>(
 );
 
 // Exchange google auth or OTP for karya ID token. ID token is stored in cookies.
-userRouter.get<RegistrationState, {}>(
+userRouter.get<AuthController.RegistrationState, {}>(
   '/server_user/login',
   AuthController.setRegMechanism,
   AuthController.login,

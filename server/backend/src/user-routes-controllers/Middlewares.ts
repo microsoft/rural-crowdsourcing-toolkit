@@ -3,7 +3,7 @@
 //
 // Middlewares for user routes
 
-import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
+import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { KaryaIDTokenHandlerTemplate } from '@karya/common';
 
@@ -19,7 +19,7 @@ export const generateToken = idTokenHandler.generateToken;
  * Authenticate an incoming request. All paths except login must have either
  * karya-id-token or access-code authentication.
  */
-export const authenticateRequest: KaryaUserRouteMiddleware = async (ctx, next) => {
+export const authenticateRequest: UserRouteMiddleware = async (ctx, next) => {
   // Login route does not need authentication
   if (ctx.path === '/api_user/server_user/login') {
     await next();
@@ -33,7 +33,7 @@ export const authenticateRequest: KaryaUserRouteMiddleware = async (ctx, next) =
 /**
  * Only cross these paths with ID token
  */
-export const needIdToken: KaryaUserRouteMiddleware = async (ctx, next) => {
+export const needIdToken: UserRouteMiddleware = async (ctx, next) => {
   if (ctx.state.auth_mechanism != 'karya-id-token') {
     HttpResponse.Forbidden(ctx, 'Request needs id-token authentication');
     return;
@@ -44,7 +44,7 @@ export const needIdToken: KaryaUserRouteMiddleware = async (ctx, next) => {
 /**
  * Only allow admins to pass through this middleware
  */
-export const onlyAdmin: KaryaUserRouteMiddleware = async (ctx, next) => {
+export const onlyAdmin: UserRouteMiddleware = async (ctx, next) => {
   if (ctx.state.entity.role != 'admin') {
     HttpResponse.Forbidden(ctx, 'Only admin can access this endpoint');
     return;
@@ -55,6 +55,6 @@ export const onlyAdmin: KaryaUserRouteMiddleware = async (ctx, next) => {
 /**
  * Return user record
  */
-export const respondWithUserRecord: KaryaUserRouteMiddleware = async (ctx) => {
+export const respondWithUserRecord: UserRouteMiddleware = async (ctx) => {
   HttpResponse.OK(ctx, ctx.state.entity);
 };

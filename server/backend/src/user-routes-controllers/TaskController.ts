@@ -3,16 +3,16 @@
 //
 // Handler for task related routes
 
-import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
+import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { Task, scenarioMap } from '@karya/core';
+import { Task, scenarioMap, TaskRecord } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
 import { BasicModel } from '@karya/common';
 
 /**
  * Create a new task.
  */
-export const create: KaryaUserRouteMiddleware = async (ctx) => {
+export const create: UserRouteMiddleware = async (ctx) => {
   const user = ctx.state.entity;
   const task: Task = ctx.request.body;
 
@@ -49,14 +49,9 @@ export const create: KaryaUserRouteMiddleware = async (ctx) => {
 };
 
 /**
- * Submit input files for a task
- */
-export const submitInputFiles: KaryaUserRouteMiddleware = async (ctx) => {};
-
-/**
  * Get all tasks.
  */
-export const getAll: KaryaUserRouteMiddleware = async (ctx) => {
+export const getAll: UserRouteMiddleware = async (ctx) => {
   try {
     const user = ctx.state.entity;
     const filter: Task = user.role == 'work_provider' ? { work_provider_id: ctx.state.entity.id } : {};
@@ -67,3 +62,8 @@ export const getAll: KaryaUserRouteMiddleware = async (ctx) => {
     HttpResponse.BadRequest(ctx, 'Unknown error occured');
   }
 };
+
+/**
+ * Submit input files for a task
+ */
+export const submitInputFiles: UserRouteMiddleware = async (ctx) => {};

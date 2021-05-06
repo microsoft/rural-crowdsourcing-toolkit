@@ -4,10 +4,11 @@
 // Handler for authentication related routes
 
 import { BasicModel, ServerUser, verifyGoogleIdToken, UserRegistrationState } from '@karya/common';
-import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
+import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 
-type RegistrationMiddleware = KaryaUserRouteMiddleware<UserRegistrationState<'server_user'>>;
+export type RegistrationState = UserRouteState<UserRegistrationState<'server_user'>>;
+type RegistrationMiddleware = UserRouteMiddleware<UserRegistrationState<'server_user'>>;
 
 /**
  * Set registration/login mechanism
@@ -84,6 +85,6 @@ export const login: RegistrationMiddleware = async (ctx, next) => {
 /**
  * Logout the user. Clear the cookies.
  */
-export const logout: KaryaUserRouteMiddleware = async (ctx) => {
+export const logout: UserRouteMiddleware = async (ctx) => {
   ctx.cookies.set('karya-id-token', null, { expires: new Date(0) });
 };

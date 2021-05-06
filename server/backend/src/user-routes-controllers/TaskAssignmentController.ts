@@ -3,14 +3,14 @@
 //
 // Handler for task assignment related routes
 
-import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
+import { UserRouteMiddleware } from '../routes/UserRoutes';
 
 /**
  * Create a new task assignment.
  */
-export const create: KaryaUserRouteMiddleware = async (ctx) => {};
+export const create: UserRouteMiddleware = async (ctx) => {};
 
 /**
  * Get all task assignments.
  */
-export const get: KaryaUserRouteMiddleware = async (ctx) => {};
+export const get: UserRouteMiddleware = async (ctx) => {};
