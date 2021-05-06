@@ -5,12 +5,48 @@
 
 import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel, Task } from '@karya/common';
+import { Task, scenarioMap } from '@karya/core';
+import { joiSchema } from '@karya/parameter-specs';
+import { BasicModel } from '@karya/common';
 
 /**
  * Create a new task.
  */
-export const create: KaryaUserRouteMiddleware = async (ctx) => {};
+export const create: KaryaUserRouteMiddleware = async (ctx) => {
+  const user = ctx.state.entity;
+  const task: Task = ctx.request.body;
+
+  // Set the work provider id
+  task.work_provider_id = user.id;
+
+  // TODO: Validate the task object
+
+  // Validate the task parameters
+  const scenario = scenarioMap[task.scenario_name!];
+  const schema = joiSchema(scenario.task_input);
+  const { value: params, error: paramsError } = schema.validate(task.params);
+
+  if (paramsError) {
+    HttpResponse.BadRequest(ctx, 'Invalid task parameters');
+    return;
+  }
+
+  // update params
+  task.params = params;
+
+  // update other fields
+  task.tags = { tags: [] };
+  task.status = 'submitted';
+
+  try {
+    const insertedRecord = await BasicModel.insertRecord('task', task);
+    HttpResponse.OK(ctx, insertedRecord);
+  } catch (e) {
+    // Internal server error
+    console.log(e);
+    HttpResponse.BadRequest(ctx, 'Unknown error occured');
+  }
+};
 
 /**
  * Submit input files for a task
