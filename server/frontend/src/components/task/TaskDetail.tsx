@@ -7,7 +7,7 @@
 
 // React stuff
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -17,7 +17,7 @@ import { RootState } from '../../store/Index';
 import { scenarioMap, ScenarioName } from '@karya/core';
 
 // Utils
-import { approveStatuses, editStatuses, taskStatus, validateStatuses } from './TaskUtils';
+import { taskStatus } from './TaskUtils';
 
 // HoCs
 import { AuthProps, withAuth } from '../hoc/WithAuth';
@@ -26,7 +26,6 @@ import { AuthProps, withAuth } from '../hoc/WithAuth';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
-import moment from 'moment';
 import { LanguageCode, languageMap } from '@karya/core';
 
 /** Props */
@@ -49,15 +48,14 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 };
 
 // Map dispatch to props
-const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
-  const id = ownProps.match.params.id;
+const mapDispatchToProps = (dispatch: any) => {
   return {
     getTask: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'task',
-        label: 'GET_BY_ID',
-        id,
+        label: 'GET_ALL',
+        params: {},
       };
       dispatch(action);
     },
@@ -107,18 +105,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
 
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
     const language_name = language ? `${language.name} (${language.primary_name})` : '<Loading languages>';
-
-    const param_values = task.params as {
-      [id: string]: string | string[] | number | undefined | Array<[string, string, string | null]>;
-    };
-
-    const disableEdit = !editStatuses.includes(task.status);
-    const disableValidate = !validateStatuses.includes(task.status);
-    const disableApprove = !(this.props.cwp.role === 'admin' && approveStatuses.includes(task.status));
-
-    const outputFiles = param_values.outputFiles
-      ? (param_values.outputFiles as Array<[string, string, string | null]>)
-      : null;
 
     return (
       <div className='white z-depth-1 lpad20'>
@@ -189,47 +175,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
             </div>
           </div>
         </div>
-
-        {disableEdit && disableValidate && disableApprove ? null : (
-          <div className='section'>
-            <div className='row'>
-              {disableEdit ? null : (
-                <div className='col s2 center-align'>
-                  <button className='btn-small' disabled={disableEdit}>
-                    Edit Task
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {task.status === 'approved' || task.status === 'completed' ? (
-          <div>
-            {!outputFiles ? null : (
-              <div className='section'>
-                <div className='row'>
-                  <div className='col'>
-                    <h6 className='red-text'>Output Files</h6>
-                  </div>
-                </div>
-                {outputFiles.map(([timestamp, status, url], index) =>
-                  !url ? null : (
-                    <div className='row' key={index}>
-                      <div className='col'>
-                        <a href={url}>{moment(timestamp).format('LLL')}</a>
-                      </div>
-                    </div>
-                  ),
-                )}
-              </div>
-            )}
-
-            <div className='section pad10'>
-              <Link to={`/task/${task.id}/microtasks`}>Show all microtasks</Link>
-            </div>
-          </div>
-        ) : null}
       </div>
     );
   }
