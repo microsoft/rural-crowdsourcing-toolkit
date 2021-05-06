@@ -37,13 +37,12 @@ userRouter.use(Middlewares.authenticateRequest);
  * Authentication related routes. Register, login and logout users.
  */
 type RegistrationState = KaryaUserRouteState<UserRegistrationState<'server_user'>>;
-export type RegistrationMiddleware = KaryaUserRouteMiddleware<UserRegistrationState<'server_user'>>;
 
 // Register a user with google auth or phone otp mechanism. Returns an ID token
 // back to the user. Need access code for identifying user record.
 userRouter.put<RegistrationState, {}>(
   '/server_user/register',
-  Middlewares.setRegMechanism,
+  AuthController.setRegMechanism,
   BodyParser(),
   AuthController.register,
   // @ts-ignore Possibly incorrect understanding of router types
@@ -54,8 +53,7 @@ userRouter.put<RegistrationState, {}>(
 // Exchange google auth or OTP for karya ID token. ID token is stored in cookies.
 userRouter.get<RegistrationState, {}>(
   '/server_user/login',
-  // @ts-ignore Possibly incorrect understanding of router types
-  Middlewares.setRegMechanism,
+  AuthController.setRegMechanism,
   AuthController.login,
   Middlewares.generateToken,
   // @ts-ignore Possibly incorrect understanding of router types

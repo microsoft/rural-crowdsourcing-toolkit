@@ -3,9 +3,26 @@
 //
 // Handler for authentication related routes
 
-import { BasicModel, ServerUser, verifyGoogleIdToken } from '@karya/common';
-import { KaryaUserRouteMiddleware, RegistrationMiddleware } from '../routes/UserRoutes';
+import { BasicModel, ServerUser, verifyGoogleIdToken, UserRegistrationState } from '@karya/common';
+import { KaryaUserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
+
+type RegistrationMiddleware = KaryaUserRouteMiddleware<UserRegistrationState<'server_user'>>;
+
+/**
+ * Set registration/login mechanism
+ */
+export const setRegMechanism: RegistrationMiddleware = async (ctx, next) => {
+  const reg_mechanism = ctx.request.header['reg-mechanism'];
+
+  if (reg_mechanism != 'phone-otp' && reg_mechanism != 'google-id-token') {
+    HttpResponse.BadRequest(ctx, 'Invalid registration/login mechanism');
+    return;
+  }
+
+  ctx.state.reg_mechanism = reg_mechanism;
+  await next();
+};
 
 /**
  * Register a new server user. User details are passed through the body. The
