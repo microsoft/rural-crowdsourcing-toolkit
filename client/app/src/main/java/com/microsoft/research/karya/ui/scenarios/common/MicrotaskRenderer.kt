@@ -18,19 +18,25 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
 import com.microsoft.research.karya.ui.assistant.Assistant
 import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.DateUtils.getCurrentDate
 import com.microsoft.research.karya.utils.FileUtils
+import com.microsoft.research.karya.utils.LANG_RES
+import com.microsoft.research.karya.utils.MICROTASK_ASSIGNMENT_OUTPUT
+import com.microsoft.research.karya.utils.MICROTASK_INPUT
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import com.microsoft.research.karya.utils.extensions.getContainerDirectory
-import java.io.File
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
+import javax.inject.Inject
 
 /** Code to request necessary permissions */
 private const val REQUEST_PERMISSIONS = 201
@@ -39,14 +45,17 @@ private const val REQUEST_PERMISSIONS = 201
  * Abstract microtask renderer class. Each scenario supported in the karya platform should implement
  * this interface.
  */
+@AndroidEntryPoint
 abstract class MicrotaskRenderer(
   private val activityName: String,
   private val includeCompleted: Boolean,
   private val finishOnGroupBoundary: Boolean
 ) : AppCompatActivity() {
 
-    /**Assistant*/
-    protected lateinit var assistant: Assistant
+  /**Assistant*/
+  protected lateinit var assistant: Assistant
+
+  @Inject @FilesDirQualifier lateinit var fileDirPath: String
 
   protected lateinit var task: TaskRecord
   private lateinit var microtaskAssignmentIDs: List<String>
@@ -59,16 +68,16 @@ abstract class MicrotaskRenderer(
   private var totalMicrotasks: Int = 0
   private var completedMicrotasks: Int = 0
 
-    /** Coroutine scopes */
-    protected val ioScope = CoroutineScope(Dispatchers.IO)
-    protected val uiScope = CoroutineScope(Dispatchers.Main)
+  /** Coroutine scopes */
+  protected val ioScope = CoroutineScope(Dispatchers.IO)
+  protected val uiScope = CoroutineScope(Dispatchers.Main)
 
-    // TODO: Remove Database calls from here, call from repository in the viewmodel
-    protected lateinit var karyaDb: KaryaDatabase
+  // TODO: Remove Database calls from here, call from repository in the viewmodel
+  protected lateinit var karyaDb: KaryaDatabase
 
-    // TODO: Remove this
-    protected lateinit var setWorkerJob: Job
-    protected lateinit var thisWorker: WorkerRecord
+  // TODO: Remove this
+  protected lateinit var setWorkerJob: Job
+  protected lateinit var thisWorker: WorkerRecord
 
   // Output fields for microtask assignment
   protected var outputData: JsonObject = JsonObject()
@@ -162,8 +171,8 @@ abstract class MicrotaskRenderer(
 
   /** Get the file path for an output file for the current assignment and [params] pair */
   protected fun getAssignmentOutputFilePath(params: Pair<String, String>): String {
-    val directory = getContainerDirectory(BaseActivity.KaryaFileContainer.MICROTASK_ASSIGNMENT_OUTPUT)
-      // TODO: Remove KaryaFileContainer from BaseActivity
+    val directory = getContainerDirectory(MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath))
+    // TODO: Remove KaryaFileContainer from BaseActivity
     val fileName = getAssignmentFileName(params)
     return "$directory/$fileName"
   }
@@ -285,11 +294,11 @@ abstract class MicrotaskRenderer(
   final override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-      // Setting up assistant
-      assistant = Assistant(this)
+    // Setting up assistant
+    assistant = Assistant(this)
 
-      // Set db and API service
-      karyaDb = KaryaDatabase.getInstance(this)!!
+    // Set db and API service
+    karyaDb = KaryaDatabase.getInstance(this)!!
 
     val taskId = intent.extras?.get("taskID") as String
     val incomplete = intent.extras?.getInt("incomplete")!!
@@ -302,19 +311,19 @@ abstract class MicrotaskRenderer(
       /** Fetch the task */
       ioScope.launch { task = karyaDb.taskDao().getById(taskId) }.join()
 
-        //TODO: Maybe pass an intent extra rather than storing in database
+      //TODO: Maybe pass an intent extra rather than storing in database
       ioScope.launch {
-          firstTimeActivityVisit =
-              try {
-                  !thisWorker.params!!.get(activityName).asBoolean
-              } catch (e: Exception) {
-                  true
-              }
+        firstTimeActivityVisit =
+          try {
+            !thisWorker.params!!.get(activityName).asBoolean
+          } catch (e: Exception) {
+            true
+          }
       }
 
       /** Mark the activity as visited */
 
-        // TODO: Set worker from database
+      // TODO: Set worker from database
       setWorker()
     }
 
@@ -346,7 +355,11 @@ abstract class MicrotaskRenderer(
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
       for (permission in permissions) {
-        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+            this,
+            permission
+          ) != PackageManager.PERMISSION_GRANTED
+        ) {
           hasAllPermissions = false
           ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS)
           break
@@ -354,17 +367,17 @@ abstract class MicrotaskRenderer(
       }
     }
   }
-    // TODO: Remove this
-    /** Set worker */
-    private fun setWorker() {
-        setWorkerJob =
-            ioScope.launch {
-                val workers = karyaDb.workerDao().getAll()
-                if (workers.isNotEmpty()) thisWorker = workers[0]
-                activityVisited()
-            }
+  // TODO: Remove this
+  /** Set worker */
+  private fun setWorker() {
+    setWorkerJob =
+      ioScope.launch {
+        val workers = karyaDb.workerDao().getAll()
+        if (workers.isNotEmpty()) thisWorker = workers[0]
+        activityVisited()
+      }
 
-    }
+  }
 
   /** On resume, get and setup the microtask */
   override fun onResume() {
@@ -443,7 +456,7 @@ abstract class MicrotaskRenderer(
       var microtaskInputFileJob: Job? = null
       var inputFileDoesNotExist = false
       if (currentMicroTask.input_file_id != null) {
-        val microtaskTarBallPath = getBlobPath(BaseActivity.KaryaFileContainer.MICROTASK_INPUT, currentMicroTask.id)
+        val microtaskTarBallPath = getBlobPath(MICROTASK_INPUT(fileDirPath), currentMicroTask.id)
         val microtaskInputDirectory = getMicrotaskInputDirectory()
 
         if (!File(microtaskTarBallPath).exists()) {
@@ -461,7 +474,10 @@ abstract class MicrotaskRenderer(
         } else {
           microtaskInputFileJob =
             ioScope.launch {
-              FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
+              FileUtils.extractGZippedTarBallIntoDirectory(
+                microtaskTarBallPath,
+                microtaskInputDirectory
+              )
             }
         }
       }
@@ -470,9 +486,9 @@ abstract class MicrotaskRenderer(
 
       // Check if we are in a group boundary and finish if necessary
       if (finishOnGroupBoundary &&
-          currentMicrotaskGroupId != null &&
-          currentMicroTask.group_id != null &&
-          currentMicroTask.group_id != currentMicrotaskGroupId
+        currentMicrotaskGroupId != null &&
+        currentMicroTask.group_id != null &&
+        currentMicroTask.group_id != currentMicrotaskGroupId
       ) {
         finish()
       }
@@ -509,7 +525,7 @@ abstract class MicrotaskRenderer(
 
   protected fun getAudioFilePath(audioResourceId: Int): String {
     return getBlobPath(
-      BaseActivity.KaryaFileContainer.LANG_RES,
+      LANG_RES(fileDirPath),
       audioResourceId.toString(),
       thisWorker.appLanguage.toString()
     )
