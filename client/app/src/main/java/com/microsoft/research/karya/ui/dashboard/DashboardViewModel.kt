@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
+import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
@@ -69,66 +70,88 @@ constructor(
 
   fun submitCompletedTasks() {
     viewModelScope.launch {
-      val updates = assignmentRepository.getLocalCompletedAssignments()
+      uploadOutputFiles()
 
-      val filteredAssignments = updates.filter {
-        // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if the file was already uploaded
-        it.output_file_id == null && it.output.get("files").asJsonArray.size() > 0
-      }
-
-      for ((index, assignment) in filteredAssignments.withIndex()) {
-        val assignmentTarBallPath = getBlobPath(microtaskOutputContainer, assignment.id)
-        val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
-        val outputDir = microtaskOutputContainer.getDirectory()
-        val fileNames = assignment.output.get("files").asJsonArray.map { it.asString }
-        val outputFilePaths = fileNames.map {
-          "$outputDir/${it}"
-        }
-        createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
-
-        val idToken = authManager.fetchLoggedInWorkerIdToken()
-        val requestFile = RequestBody.create(
-          "application/tgz".toMediaTypeOrNull(),
-          File(assignmentTarBallPath)
-        )
-        val filePart =
-          MultipartBody.Part.createFormData(
-            "file",
-            tarBallName,
-            requestFile
-          )
-
-        val md5sum = getMD5Digest(assignmentTarBallPath)
-        val uploadFileRequest =
-          UploadFileRequest(
-            0, // TODO: ASK WHY WE NEED BOX_ID
-            microtaskOutputContainer.cname,
-            tarBallName,
-            ChecksumAlgorithm.md5.toString(),
-            md5sum
-          )
-
-        val dataPart = MultipartBody.Part.createFormData(
-          "data", Gson().toJson(uploadFileRequest)
-        )
-
-//        karyaFileRepository.uploadKaryaFile(
-//          idToken,
-//          dataPart,
-//          filePart
-//        )
-
-      }
-
-      val idToken = authManager.fetchLoggedInWorkerIdToken()
-
-//      assignmentRepository.submitAssignments(idToken, updates)
-//        .onEach { assignmentIds ->
-//          assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds)
-//        }
-//        .catch { Log.d("dashboard submit task", it.message!!) }.collect()
     }
+  }
+
+  /*
+  * Upload the Files of completed Assignments
+  * */
+  private suspend fun uploadOutputFiles() {
+    val updates = assignmentRepository.getLocalCompletedAssignments()
+
+    val filteredAssignments = updates.filter {
+      // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if the file was already uploaded
+      it.output_file_id == null && it.output.get("files").asJsonArray.size() > 0
+    }
+
+    for ((index, assignment) in filteredAssignments.withIndex()) {
+      val assignmentTarBallPath = getBlobPath(microtaskOutputContainer, assignment.id)
+      val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
+      val outputDir = microtaskOutputContainer.getDirectory()
+      val fileNames = assignment.output.get("files").asJsonArray.map { it.asString }
+      val outputFilePaths = fileNames.map {
+        "$outputDir/${it}"
+      }
+      createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
+      uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
+    }
+
+    val idToken = authManager.fetchLoggedInWorkerIdToken()
+
+    assignmentRepository.submitAssignments(idToken, updates)
+      .onEach { assignmentIds ->
+        assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds)
+      }
+      .catch { Log.d("dashboard submit task", it.message!!) }.collect()
     // TODO: Pass error message to UI
+  }
+
+  /**
+   * Upload the tarball of an assignment to the server
+   */
+  private suspend fun uploadTarBall(
+    assignment: MicroTaskAssignmentRecord,
+    assignmentTarBallPath: String,
+    tarBallName: String
+  ) {
+    val idToken = authManager.fetchLoggedInWorkerIdToken()
+    val requestFile = RequestBody.create(
+      "application/tgz".toMediaTypeOrNull(),
+      File(assignmentTarBallPath)
+    )
+    val filePart =
+      MultipartBody.Part.createFormData(
+        "file",
+        tarBallName,
+        requestFile
+      )
+
+    val md5sum = getMD5Digest(assignmentTarBallPath)
+    val uploadFileRequest =
+      UploadFileRequest(
+        microtaskOutputContainer.cname,
+        tarBallName,
+        ChecksumAlgorithm.md5.toString(),
+        md5sum
+      )
+
+    val dataPart = MultipartBody.Part.createFormData(
+      "data", Gson().toJson(uploadFileRequest)
+    )
+
+    // Send the tarball
+    karyaFileRepository.uploadKaryaFile(
+      idToken,
+      dataPart,
+      filePart
+    ).catch {
+      throw it
+    }.collect { fileRecord ->  // Because we want this to be synchronous
+      karyaFileRepository.insertKaryaFile(fileRecord)
+      assignmentRepository.updateOutputFileId(assignment.id, fileRecord.id)
+    }
   }
 
   fun fetchVerifiedTasks(from: String = "") {

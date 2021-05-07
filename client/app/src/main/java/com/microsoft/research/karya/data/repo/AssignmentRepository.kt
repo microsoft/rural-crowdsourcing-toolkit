@@ -8,8 +8,10 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 class AssignmentRepository
 @Inject
@@ -78,6 +80,11 @@ constructor(
   suspend fun getLocalCompletedAssignments(): List<MicroTaskAssignmentRecord> {
     return assignmentDaoExtra.getCompletedAssignments()
   }
+
+  suspend fun updateOutputFileId(assignmentId: String, fileRecordId: String) =
+    withContext(Dispatchers.IO) {
+      assignmentDaoExtra.updateOutputFileID(assignmentId, fileRecordId)
+    }
 
   suspend fun markMicrotaskAssignmentsSubmitted(assignmentIds: List<String>) {
     assignmentIds.forEach { assignmentId ->

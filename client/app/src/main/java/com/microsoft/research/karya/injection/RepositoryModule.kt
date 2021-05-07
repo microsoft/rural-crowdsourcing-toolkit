@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.injection
 
+import com.microsoft.research.karya.data.local.daos.KaryaFileDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
@@ -39,7 +40,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI): KaryaFileRepository {
-    return KaryaFileRepository(karyaFileAPI)
+  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI, karyaFileDao: KaryaFileDao): KaryaFileRepository {
+    return KaryaFileRepository(karyaFileAPI, karyaFileDao)
   }
 }
