@@ -6,7 +6,7 @@
  */
 
 // React stuff
-import * as React from 'react';
+import React, { ChangeEventHandler } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
 // Redux stuff
@@ -48,7 +48,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 };
 
 // Map dispatch to props
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
+  const task_id = ownProps.match.params.id;
   return {
     getTask: () => {
       const action: BackendRequestInitAction = {
@@ -56,6 +57,18 @@ const mapDispatchToProps = (dispatch: any) => {
         store: 'task',
         label: 'GET_ALL',
         params: {},
+      };
+      dispatch(action);
+    },
+
+    submitInputFiles: (files: { [id: string]: File }) => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'task_op',
+        label: 'SUBMIT_INPUT_FILE',
+        task_id,
+        request: {},
+        files,
       };
       dispatch(action);
     },
@@ -69,12 +82,33 @@ const connector = compose(withAuth, reduxConnector);
 // Task detail props
 type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector>;
 
-class TaskDetail extends React.Component<TaskDetailProps> {
+type TaskDetailState = {
+  files: { [id: string]: File };
+};
+
+class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
+  state = {
+    files: {},
+  };
+
+  submitInputFiles = () => {
+    this.props.submitInputFiles(this.state.files);
+  };
+
   componentDidMount() {
     if (this.props.task === undefined) {
       this.props.getTask();
     }
   }
+
+  // Handle file change
+  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (e.currentTarget.files) {
+      const file = e.currentTarget.files[0];
+      const files = { ...this.state.files, [e.currentTarget.id]: file };
+      this.setState({ files });
+    }
+  };
 
   render() {
     const { task } = this.props;
@@ -110,7 +144,7 @@ class TaskDetail extends React.Component<TaskDetailProps> {
     const tarInputfile = scenario.task_input_file.tgz;
 
     return (
-      <div className='white z-depth-1 lpad20'>
+      <div className='white z-depth-1 lpad20 bpad20'>
         {errorElement !== null ? (
           <div className='section'>
             <div className='row'>{errorElement}</div>
@@ -185,6 +219,40 @@ class TaskDetail extends React.Component<TaskDetailProps> {
               <div className='col'>
                 <h6 className='red-text'>Submit New Input Files</h6>
               </div>
+            </div>
+            {jsonInputFile.required ? (
+              <div className='row'>
+                <div className='col s4  file-field input-field'>
+                  <div className='btn btn-small'>
+                    <i className='material-icons'>attach_file</i>
+                    <input type='file' id='json' onChange={this.handleParamFileChange} />
+                  </div>
+                  <div className='file-path-wrapper'>
+                    <label htmlFor='json-name'>Task JSON File</label>
+                    <input id='json-name' type='text' className='file-path validate' />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            {tarInputfile.required ? (
+              <div className='row'>
+                <div className='col s4  file-field input-field'>
+                  <div className='btn btn-small'>
+                    <i className='material-icons'>attach_file</i>
+                    <input type='file' id='json' onChange={this.handleParamFileChange} />
+                  </div>
+                  <div className='file-path-wrapper'>
+                    <label htmlFor='json-name'>Task JSON File</label>
+                    <input id='json-name' type='text' className='file-path validate' />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            <div className='row'>
+              <button className='btn' onClick={this.submitInputFiles}>
+                Submit Input Files
+                <i className='material-icons right'>send</i>
+              </button>
             </div>
           </div>
         ) : null}

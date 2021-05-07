@@ -38,6 +38,7 @@ export async function upsertKaryaFile(
     url: blobURL,
     container_name: blobParams.cname,
     creator: 'server',
+    creator_id: '0',
     algorithm: csAlgo,
     checksum,
     in_server: true,

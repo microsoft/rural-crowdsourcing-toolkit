@@ -96,22 +96,16 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'task';
-      label: 'GET_BY_ID';
-      id: string;
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'task';
-      label: 'UPDATE_BY_ID';
-      id: string;
-      request: DBT.Task;
-      files: { [id: string]: File };
-    }
-  | {
-      type: 'BR_INIT';
-      store: 'task';
       label: 'GET_ALL';
       params: DBT.Task;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'task_op';
+      label: 'SUBMIT_INPUT_FILE';
+      task_id: string;
+      request: {};
+      files: { [id: string]: File };
     }
   | {
       type: 'BR_INIT';
@@ -187,20 +181,14 @@ export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
       store: 'task';
-      label: 'GET_BY_ID';
-      response: DBT.TaskRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'task';
-      label: 'UPDATE_BY_ID';
-      response: DBT.TaskRecord;
-    }
-  | {
-      type: 'BR_SUCCESS';
-      store: 'task';
       label: 'GET_ALL';
       response: DBT.TaskRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task_op';
+      label: 'SUBMIT_INPUT_FILE';
+      response: DBT.TaskOpRecord;
     }
   | {
       type: 'BR_SUCCESS';
@@ -327,14 +315,12 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    // GET_BY_ID actions
-    if (action.label === 'GET_BY_ID') {
-      const endpoint = `${store}/${action.id}`;
+    if (action.store === 'task_op' && action.label === 'SUBMIT_INPUT_FILE') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET(endpoint),
+        response: await POST(`/task/${action.task_id}/input_files`, {}, {}, action.files),
       } as BackendRequestSuccessAction;
     }
 
@@ -348,17 +334,6 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    // UPDATE_BY_ID actions
-    if (action.label === 'UPDATE_BY_ID') {
-      const endpoint = `${store}/${action.id}`;
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await PUT(endpoint, action.request, action.files),
-      } as BackendRequestSuccessAction;
-    }
-
     // CREATE actions
     if (action.label === 'CREATE') {
       return {
@@ -369,7 +344,9 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    throw new Error(`Unknown request type '${label}' to '${store}'`);
+    ((obj: never) => {
+      throw new Error(`Unknown request type '${label}' to '${store}'`);
+    })(action);
   } catch (err: any) {
     const messages = handleError(err);
     return {

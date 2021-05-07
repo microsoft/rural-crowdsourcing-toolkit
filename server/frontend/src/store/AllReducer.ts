@@ -96,8 +96,8 @@ const storeReducer: StoreReducer = (state = initState, action) => {
 
   const last_fetched_at = state[action.store].last_fetched_at;
 
-  // GET_BY_ID action
-  if (action.label === 'GET_BY_ID' || action.label === 'UPDATE_BY_ID' || action.label === 'CREATE') {
+  // CREATE action
+  if (action.label === 'CREATE') {
     const { store, response } = action;
     const oldData = state[store]?.data || [];
     const data = mergeData(oldData, response);
@@ -126,11 +126,21 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
+  // Submit input files
+  if (action.store === 'task_op') {
+    const oldData = state.task_op?.data || [];
+    if (action.label === 'SUBMIT_INPUT_FILE') {
+      const { response } = action;
+      const data = mergeData(oldData, response);
+      return { ...state, task_op: { data, last_fetched_at, status } };
+    }
+  }
+
   // All action should be covered by now
   ((obj: never) => {
+    throw new Error('Should never have come here');
     // This is a typescript check
   })(action);
-  throw new Error('Should never have come here');
 };
 
 /**

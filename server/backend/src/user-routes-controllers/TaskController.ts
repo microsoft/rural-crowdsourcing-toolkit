@@ -12,6 +12,7 @@ import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
+import { inputProcessorQueue } from '../scenarios/Index';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecord };
@@ -126,20 +127,6 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     }
   }
 
-  // Copy the files to a temp folder
-  const timestamp = new Date().toISOString();
-  const uniqueName = `${task.id}-${timestamp}`;
-  const localFolder = envGetString('LOCAL_FOLDER');
-  const folderPath = `${process.cwd()}/${localFolder}/${uniqueName}`;
-
-  try {
-    await fsp.mkdir(folderPath);
-  } catch (e) {
-    // TODO: internal server error
-    HttpResponse.BadRequest(ctx, 'Could not create local folder');
-    return;
-  }
-
   // Copy required files to destination
   for (const req of required) {
     const file = files[req];
@@ -147,20 +134,58 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
       HttpResponse.BadRequest(ctx, `Multiple '${req}' files provided`);
       return;
     }
-    await fsp.copyFile(file.path, `${folderPath}/${uniqueName}.${req}`);
   }
 
-  // Tar input blob parameter
-  const inputBlobParams: BlobParameters = {
-    cname: 'task-input',
-    task_id: task.id,
-    timestamp,
-    ext: 'tgz',
-  };
-  const inputBlobName = getBlobName(inputBlobParams);
-  const inputBlobPath = `${folderPath}/${inputBlobName}`;
+  // Copy the files to a temp folder
+  const timestamp = new Date().toISOString();
+  const uniqueName = `${task.id}-${timestamp}`;
+  const localFolder = envGetString('LOCAL_FOLDER');
+  const folderPath = `${process.cwd()}/${localFolder}/task-input/${uniqueName}`;
+  const jsonFilePath = json.required ? `${folderPath}/${uniqueName}.json` : undefined;
+  const tgzFilePath = json.required ? `${folderPath}/${uniqueName}.tgz` : undefined;
 
-  const fileList = required.map((req) => `${uniqueName}.${req}`);
-  await tar.create({ C: folderPath, gzip: true, file: inputBlobPath }, fileList);
-  const karyaFile = await upsertKaryaFile(inputBlobPath, 'md5', inputBlobParams);
+  try {
+    await fsp.mkdir(folderPath);
+
+    // Copy required files to destination
+    for (const req of required) {
+      const file = files[req];
+      // @ts-ignore Already checked that file is not an instance of array
+      await fsp.copyFile(file.path, `${folderPath}/${uniqueName}.${req}`);
+    }
+
+    // Tar input blob parameter
+    const inputBlobParams: BlobParameters = {
+      cname: 'task-input',
+      task_id: task.id,
+      timestamp,
+      ext: 'tgz',
+    };
+    const inputBlobName = getBlobName(inputBlobParams);
+    const inputBlobPath = `${folderPath}/${inputBlobName}`;
+
+    // Create the karya file
+    const fileList = required.map((req) => `${uniqueName}.${req}`);
+    await tar.create({ C: folderPath, gzip: true, file: inputBlobPath }, fileList);
+    const karyaFile = await upsertKaryaFile(inputBlobPath, 'md5', inputBlobParams);
+
+    // Create the task operation
+    const taskOp = await BasicModel.insertRecord('task_op', {
+      task_id: task.id,
+      op_type: 'process_input',
+      file_id: karyaFile.id,
+      status: 'created',
+      messages: { messages: [] },
+    });
+
+    // Asynchronously process the input
+    await inputProcessorQueue.add({ task, jsonFilePath, tgzFilePath, folderPath, taskOp });
+
+    // Return success response with the task op record
+    HttpResponse.OK(ctx, taskOp);
+  } catch (e) {
+    // TODO: internal server error
+    HttpResponse.BadRequest(ctx, 'Something went wrong');
+    return;
+  }
 };

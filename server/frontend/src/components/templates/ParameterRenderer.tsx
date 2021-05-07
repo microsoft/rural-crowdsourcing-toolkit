@@ -23,9 +23,8 @@ export const ParameterSection = (props: ParamterSectionProps) => {
           case 'int':
           case 'float':
             return (
-              <div className='row'>
+              <div className='row' key={param.id}>
                 <ColTextInput
-                  key={param.id}
                   id={param.id}
                   label={param.label}
                   width='s4'
@@ -43,6 +42,8 @@ export const ParameterSection = (props: ParamterSectionProps) => {
                 </label>
               </div>
             );
+          default:
+            return null;
         }
       })}
     </div>
