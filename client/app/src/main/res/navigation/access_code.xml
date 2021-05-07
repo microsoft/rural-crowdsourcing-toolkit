@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/accessCodeFragment"
-        android:name="com.microsoft.research.karya.ui.accesscode.AccessCodeFragment"
+        android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeFragment"
         android:label="AccessCodeFragment"
         tools:layout="@layout/fragment_access_code">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/consentFormFragment"
-        android:name="com.microsoft.research.karya.ui.consentForm.ConsentFormFragment"
+        android:name="com.microsoft.research.karya.ui.onboarding.consentForm.ConsentFormFragment"
         android:label="ConsentFormFragment"
         tools:layout="@layout/fragment_consent_form">
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/fileDownloadFragment"
-        android:name="com.microsoft.research.karya.ui.fileDownload.FileDownloadFragment"
+        android:name="com.microsoft.research.karya.ui.onboarding.fileDownload.FileDownloadFragment"
         android:label="FileDownloadFragment"
         tools:layout="@layout/fragment_file_download">
         <action

@@ -130,7 +130,28 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     accessCode: String,
     registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
   ) = flow {
-    val response = workerAPI.updateWorker(idToken, accessCode, registerOrUpdateWorkerRequest)
+    val response = workerAPI.updateWorker(idToken, registerOrUpdateWorkerRequest)
+    val workerRecord = response.body()
+
+    if (!response.isSuccessful) {
+      throw when (response.code()) {
+        401 -> IncorrectAccessCodeException("Access Code is incorrect")
+        else -> UnknownException("Something went wrong")
+      }
+    }
+
+    if (workerRecord != null) {
+      emit(workerRecord)
+    } else {
+      error("Request failed, response body was null")
+    }
+  }
+
+  fun updateWorker(
+    idToken: String,
+    worker: WorkerRecord,
+  ) = flow {
+    val response = workerAPI.updateWorker(idToken, worker)
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

@@ -38,7 +38,12 @@ interface WorkerAPI {
   @PUT("/worker")
   suspend fun updateWorker(
     @Header("id-token") idToken: String,
-    @Header("access-code") accessCode: String,
     @Body registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
+  ): Response<WorkerRecord>
+
+  @PUT("/worker")
+  suspend fun updateWorker(
+    @Header("id-token") idToken: String,
+    @Body worker: WorkerRecord,
   ): Response<WorkerRecord>
 }

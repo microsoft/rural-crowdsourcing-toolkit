@@ -42,7 +42,7 @@
         </activity>
 
         <activity
-            android:name=".ui.accesscode.AccessCodeActivity"
+            android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeActivity"
             android:screenOrientation="portrait" />
 
         <activity
