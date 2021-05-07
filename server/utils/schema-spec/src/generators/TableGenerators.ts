@@ -48,11 +48,13 @@ export function knexTableSpec<T extends string, S extends string, O extends stri
   const columns = spec.columns;
   const knexColSpecs = columns.map((column) => knexColumnSpec(column));
   const tableType = typescriptTableName(name);
+  const triggers = spec.triggers?.map((trigger) => `await knex.raw(\`${trigger}\`)`) || [];
   return `
   export async function create${tableType}Table() {
     await knex.schema.createTable('${name}', async (table) => {
       ${knexColSpecs.join('\n')}
     });
+    ${triggers.join('\n')}
   }
 
   export async function drop${tableType}Table() {

@@ -35,6 +35,7 @@ export type TableColumnSpec<TableName extends string, CustomStringType = string,
  */
 export type TableSpec<TableName extends string, CustomStringType = string, CustomObjectType = string> = {
   columns: TableColumnSpec<TableName, CustomStringType, CustomObjectType>[];
+  triggers?: string[];
 };
 
 /**
@@ -43,4 +44,5 @@ export type TableSpec<TableName extends string, CustomStringType = string, Custo
 export type DatabaseSpec<TableName extends string, CustomStringType = string, CustomObjectType = string> = {
   version: string;
   tables: { [key in TableName]: TableSpec<TableName, CustomStringType, CustomObjectType> };
+  functions?: Array<[string, string]>;
 };

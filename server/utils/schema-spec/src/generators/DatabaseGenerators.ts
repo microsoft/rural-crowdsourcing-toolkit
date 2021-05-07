@@ -63,13 +63,26 @@ export function typescriptDbInterface<T extends string, S extends string, O exte
 }
 
 /**
- * Generate the create table functions for all the tables
+ * Generate the table functions for all the tables
  * @param spec Full database specification
  */
 export function knexDbSpec<T extends string, S extends string, O extends string>(
   spec: DatabaseSpec<T, S, O>,
   knexClientPath: string
 ): string {
+  // Create DB level functions
+  const dbFunctions =
+    spec.functions?.map(([name, body]) => {
+      return `async function create${name}Function() {
+      return knex.raw(\`${body}\`)
+    }`;
+    }) || [];
+
+  const dbFunctionCalls =
+    spec.functions?.map(([name, body]) => {
+      return `await create${name}Function()`;
+    }) || [];
+
   const tables = spec.tables;
   const knexTableSpecs = Object.keys(tables).map((name) => {
     const tableSpec = tables[name as T];
@@ -89,11 +102,15 @@ export function knexDbSpec<T extends string, S extends string, O extends string>
   return `
   import { knex } from '${knexClientPath}';
 
-  // Create table functions
+  // Db level functions
+  ${dbFunctions.join('\n')}
+
+  // Table functions
   ${knexTableSpecs.join('\n')}
 
   // Create all tables
   export async function createAllTables() {
+    ${dbFunctionCalls.join('\n')}
     ${createTableCalls.join('\n')}
   }
 
