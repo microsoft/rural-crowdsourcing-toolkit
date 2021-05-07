@@ -180,38 +180,36 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
     if (id_token) {
       if (id_token instanceof Array) {
         HttpResponse.Unauthorized(ctx, 'Invalid id token');
-        return;
+      } else {
+        // verify the id token
+        try {
+          // @ts-ignore: Perhaps can be fixed by moving verifyKaryaIdToken into
+          // the dependency injected code
+          ctx.state.entity = await verifyKaryaIdToken(entityType, id_token);
+          ctx.state.auth_mechanism = 'karya-id-token';
+          await next();
+          return;
+        } catch (e) {
+          HttpResponse.Unauthorized(ctx, 'Invalid id token');
+        }
       }
+    }
 
-      // verify the id token
-      try {
-        // @ts-ignore: Perhaps can be fixed by moving verifyKaryaIdToken into
-        // the dependency injected code
-        ctx.state.entity = await verifyKaryaIdToken(entityType, id_token);
-        ctx.state.auth_mechanism = 'karya-id-token';
-        await next();
-        return;
-      } catch (e) {
-        HttpResponse.Unauthorized(ctx, 'Invalid id token');
-        return;
-      }
-    } else {
-      // Try access code route
-      const access_code = ctx.request.header['access-code'];
-      if (!access_code || access_code instanceof Array) {
-        HttpResponse.Unauthorized(ctx, 'Missing or invalid auth information');
-        return;
-      }
+    // ID-token auth failed. Try access code route
+    const access_code = ctx.request.header['access-code'];
+    if (!access_code || access_code instanceof Array) {
+      HttpResponse.Unauthorized(ctx, 'Missing or invalid auth information');
+      return;
+    }
 
-      try {
-        // @ts-ignore Not sure why this is an error
-        ctx.state.entity = await BasicModel.getSingle(entityType, { access_code });
-        ctx.state.auth_mechanism = 'access-code';
-        await next();
-      } catch (e) {
-        HttpResponse.Unauthorized(ctx, 'Invalid access code');
-        return;
-      }
+    try {
+      // @ts-ignore Not sure why this is an error
+      ctx.state.entity = await BasicModel.getSingle(entityType, { access_code });
+      ctx.state.auth_mechanism = 'access-code';
+      await next();
+    } catch (e) {
+      HttpResponse.Unauthorized(ctx, 'Invalid access code');
+      return;
     }
   };
 
