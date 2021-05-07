@@ -174,6 +174,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['op_type', ['string', 16, 'TaskOpType'], 'not unique', 'not nullable', 'not mutable'],
         ['file_id', ['>', 'karya_file'], 'unique', 'nullable', 'not mutable'],
         ['status', ['string', 16, 'TaskOpStatus'], 'not unique', 'not nullable', 'mutable'],
+        ['started_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['completed_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['messages', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
       ],
@@ -226,6 +227,26 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
   },
 };
 
+// Compute ID trigger creation function
+const computeIdFunction = `CREATE OR REPLACE FUNCTION compute_id()
+  RETURNS TRIGGER AS $$
+  BEGIN
+  IF NEW.box_id IS NULL THEN
+  NEW.id = 0;
+  ELSE
+  NEW.id = NEW.box_id;
+  END IF;
+  NEW.id = (NEW.id << 48) + NEW.local_id;
+  RETURN NEW;
+  END;
+  $$ language 'plpgsql'`;
+karyaDb.functions = [['compute_id', computeIdFunction]];
+
+// Compute ID triggers
+function computeIDTrigger(tableName: KaryaTableName) {
+  return `CREATE TRIGGER ${tableName}_compute_id BEFORE INSERT ON ${tableName} FOR EACH ROW EXECUTE PROCEDURE compute_id();`;
+}
+
 // Common fields for all tables
 const commonFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
   ['extras', ['object'], 'not unique', 'nullable', 'mutable'],
@@ -256,12 +277,12 @@ const boxSideServerIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaO
 ];
 
 // Box tables - Tables for which the box can also create records
-const boxTables: KaryaTableName[] = ['worker', 'karya_file', 'microtask_group_assignment', 'microtask_assignment'];
+const boxTables: KaryaTableName[] = ['worker', 'microtask_group_assignment', 'microtask_assignment'];
 
 // ID fields for box tables on the box side
 const boxSideBoxIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
   ['id', ['bigint'], 'unique', 'not nullable', 'not mutable'],
-  ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
+  ['box_id', ['>', 'box'], 'not unique', 'nullable', 'not mutable'],
   ['local_id', ['bigserial'], 'unique', 'not nullable', 'not mutable'],
 ];
 
@@ -286,6 +307,13 @@ boxTables.forEach((table) => {
   const columns = karyaServerDb.tables[table].columns;
   karyaServerDb.tables[table].columns = serverSideBoxIdFields.concat(columns).concat(commonFields);
   karyaBoxDb.tables[table].columns = boxSideBoxIdFields.concat(columns).concat(commonFields);
+  karyaBoxDb.tables[table].triggers = [computeIDTrigger(table)];
 });
+
+const kf_columns = karyaDb.tables['karya_file'].columns;
+karyaServerDb.tables['karya_file'].columns = boxSideBoxIdFields.concat(kf_columns).concat(commonFields);
+karyaServerDb.tables['karya_file'].triggers = [computeIDTrigger('karya_file')];
+karyaBoxDb.tables['karya_file'].columns = boxSideBoxIdFields.concat(kf_columns).concat(commonFields);
+karyaBoxDb.tables['karya_file'].triggers = [computeIDTrigger('karya_file')];
 
 export { karyaServerDb, karyaBoxDb };
