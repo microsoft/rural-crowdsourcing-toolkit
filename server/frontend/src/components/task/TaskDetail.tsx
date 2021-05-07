@@ -106,6 +106,9 @@ class TaskDetail extends React.Component<TaskDetailProps> {
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
     const language_name = language ? `${language.name} (${language.primary_name})` : '<Loading languages>';
 
+    const jsonInputFile = scenario.task_input_file.json;
+    const tarInputfile = scenario.task_input_file.tgz;
+
     return (
       <div className='white z-depth-1 lpad20'>
         {errorElement !== null ? (
@@ -175,6 +178,16 @@ class TaskDetail extends React.Component<TaskDetailProps> {
             </div>
           </div>
         </div>
+
+        {jsonInputFile.required || tarInputfile.required ? (
+          <div className='secion'>
+            <div className='row'>
+              <div className='col'>
+                <h6 className='red-text'>Submit New Input Files</h6>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }

@@ -1,8 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist-schema",
-    "rootDir": "./schema"
-  },
-  "exclude": ["src", "dist-schema", "dist"]
-}

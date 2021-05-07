@@ -5,8 +5,8 @@
 export { knex, setupDbConnection } from './Client';
 
 // Export table create/delete functions
-export * as ServerDbFunctions from './ng-auto/ServerTableFunctions';
-export * as BoxDbFunctions from './ng-auto/BoxTableFunctions';
+export * as ServerDbFunctions from './auto/ServerTableFunctions';
+export * as BoxDbFunctions from './auto/BoxTableFunctions';
 
 // Export basic models
 export * as BasicModel from './models/BasicModel';
