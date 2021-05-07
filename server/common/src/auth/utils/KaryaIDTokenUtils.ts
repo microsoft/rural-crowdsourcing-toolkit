@@ -4,13 +4,13 @@
 // Helper to generate and verify karya ID tokens
 
 import jwt, { SignOptions, VerifyOptions, JwtHeader } from 'jsonwebtoken';
-import { AuthEntity, AuthMechanism, AuthRecord } from '../Common';
+import { AuthEntity, AuthRecord } from '../Common';
 import { envGetString } from '@karya/misc-utils';
-import { DbRecordType } from '../../Index';
+import { DbRecordType, AuthMechanism } from '@karya/core';
 import Application from 'koa';
 import { SetOption as CookieOptions } from 'cookies';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel } from '../../db/Index';
+import { BasicModel } from '../../Index';
 
 /**
  * process.env[$CURRENT_JWT_KID] is the current ID of the key to be used to

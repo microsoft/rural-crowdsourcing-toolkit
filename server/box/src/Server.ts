@@ -9,7 +9,7 @@ import { setupDbConnection } from '@karya/common';
 import { SetBox } from './config/ThisBox';
 import { httpRequestLogger } from './controllers/Middlewares';
 import router, { authenticateRequest } from './routes/Routes';
-import { containerNames } from '@karya/common';
+import { containerNames } from '@karya/core';
 import logger from './utils/Logger';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 

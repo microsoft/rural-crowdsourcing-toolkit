@@ -6,7 +6,7 @@
  */
 
 import md5File from 'md5-file';
-import { ChecksumAlgorithm } from '@karya/common';
+import { ChecksumAlgorithm } from '@karya/core';
 
 /**
  * Compute the checksum for a file given the path and checksum algorithm

@@ -53,7 +53,7 @@ const task_input_file: ScenarioInterface['task_input_file'] = {
     `,
     schema: Joi.array().items(Joi.object({ sentence: Joi.string() })),
   },
-  tar: { required: false },
+  tgz: { required: false },
 };
 
 // Microtask input format

@@ -74,7 +74,7 @@ export interface ScenarioInterface {
           description: string;
           schema: Joi.Schema;
         };
-    tar:
+    tgz:
       | { required: false }
       | {
           required: true;

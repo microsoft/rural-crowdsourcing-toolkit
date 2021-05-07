@@ -3,7 +3,8 @@
 
 /** Script to bootstrap authentication */
 
-import { WorkProvider, BasicModel } from '@karya/common';
+import { BasicModel } from '@karya/common';
+import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
 
 /**
@@ -26,7 +27,7 @@ export async function bootstrapAuth() {
   });
 
   /** Create an admin user */
-  const workProvider: WorkProvider = {
+  const workProvider: ServerUser = {
     role: 'admin',
     access_code,
     full_name: '',

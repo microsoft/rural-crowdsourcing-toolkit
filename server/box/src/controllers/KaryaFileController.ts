@@ -7,7 +7,6 @@ import { KaryaMiddleware, KaryaRouteState } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
 import { envGetString } from '@karya/misc-utils';
 import {
-  BasicModel,
   KaryaFileRecord,
   LanguageCode,
   languageCodes,
@@ -16,7 +15,8 @@ import {
   MicrotaskAssignmentRecord,
   MicrotaskRecord,
   KaryaFile,
-} from '@karya/common';
+} from '@karya/core';
+import { BasicModel } from '@karya/common';
 import fs from 'fs';
 
 export type KaryaFileGetRouteState = KaryaRouteState<{

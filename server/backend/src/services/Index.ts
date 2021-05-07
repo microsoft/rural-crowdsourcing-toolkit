@@ -9,7 +9,7 @@
 import Bull from 'bull';
 
 // Db types
-import { TaskRecord } from '@karya/common';
+import { TaskRecord } from '@karya/core';
 
 // Task action handlers
 import { generateTaskOutput } from './GenerateOutput';

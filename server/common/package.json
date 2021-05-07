@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.5.0",
+    "@karya/core": "^2.0.0",
     "@karya/http-response": "^2.0.0",
     "@karya/misc-utils": "^2.0.0",
     "@karya/schema-spec": "^2.0.0",

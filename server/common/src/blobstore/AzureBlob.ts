@@ -13,7 +13,7 @@ import {
   generateBlobSASQueryParameters,
   StorageSharedKeyCredential,
 } from '@azure/storage-blob';
-import { BlobParameters, ContainerName, containerNames, getBlobName } from './BlobContainer';
+import { BlobParameters, ContainerName, containerNames, getBlobName } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import { envGetString } from '@karya/misc-utils';

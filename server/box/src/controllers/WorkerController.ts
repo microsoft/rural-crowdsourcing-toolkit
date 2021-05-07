@@ -5,7 +5,8 @@
 
 import { KaryaMiddleware } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel, Worker } from '@karya/common';
+import { BasicModel } from '@karya/common';
+import { Worker } from '@karya/core';
 
 /**
  * Get worker information. Returns relevant properties of the worker record

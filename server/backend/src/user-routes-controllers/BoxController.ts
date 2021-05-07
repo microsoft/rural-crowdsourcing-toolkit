@@ -3,7 +3,8 @@
 //
 // Handler for box related routes
 
-import { BasicModel, Box } from '@karya/common';
+import { Box } from '@karya/core';
+import { BasicModel } from '@karya/common';
 import { getCreationCode } from '@karya/misc-utils';
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';

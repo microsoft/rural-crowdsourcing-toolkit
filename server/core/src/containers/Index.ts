@@ -15,7 +15,7 @@ export type BlobParameters =
   | {
       cname: 'task-input';
       task_id: string;
-      file_id: string;
+      timestamp: string;
       ext: 'tgz';
     }
   | {
@@ -74,7 +74,7 @@ export function getBlobName(params: BlobParameters): string {
     case 'language-assets':
       return `${params.language_code}.${params.ext}`;
     case 'task-input':
-      return `${params.task_id}.${params.ext}`;
+      return `${params.task_id}-${params.timestamp}.${params.ext}`;
     case 'task-output':
       return `${params.task_id}-${params.timestamp}.${params.ext}`;
     case 'microtask-input':

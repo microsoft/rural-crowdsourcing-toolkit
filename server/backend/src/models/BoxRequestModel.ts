@@ -5,7 +5,8 @@
  * Model functions to handle queries from a box
  */
 
-import { BoxRecord, DbRecordType, DbTableName, BasicModel } from '@karya/common';
+import { BoxRecord, DbRecordType, DbTableName } from '@karya/core';
+import { BasicModel } from '@karya/common';
 
 import { Promise as BBPromise } from 'bluebird';
 import { getBlobSASURL } from '@karya/common';

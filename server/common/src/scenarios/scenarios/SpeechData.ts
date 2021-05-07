@@ -4,7 +4,7 @@
 // Implementation of the speech-data scenario
 
 import { MicrotaskList, ScenarioInterface } from '../ScenarioInterface';
-import { TaskRecord, Microtask } from '../../db/Index';
+import { TaskRecord, Microtask } from '@karya/core';
 import Joi from 'joi';
 
 /**

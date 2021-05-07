@@ -3,10 +3,9 @@
 //
 // Entry point for auth module
 
-import { DbRecordType } from '../db/Index';
-import { RegistrationMechanism } from '../Index';
+import { DbRecordType, RegistrationMechanism } from '@karya/core';
 
-export { RegistrationMechanism, AuthMechanism, AuthState } from './Common';
+export { AuthState } from './Common';
 export * from './utils/OTPUtils';
 export * from './utils/KaryaIDTokenUtils';
 export * from './utils/GoogleAuthUtils';

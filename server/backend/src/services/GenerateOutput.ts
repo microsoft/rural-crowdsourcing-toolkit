@@ -5,7 +5,7 @@
  * Handler for task output generation
  */
 
-import { TaskRecord } from '@karya/common';
+import { TaskRecord } from '@karya/core';
 import { generateOutput } from '@karya/common';
 
 /**

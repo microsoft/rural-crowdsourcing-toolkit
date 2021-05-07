@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '../Index';
+import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/core';
 import { knex } from '../Client';
 
 /**

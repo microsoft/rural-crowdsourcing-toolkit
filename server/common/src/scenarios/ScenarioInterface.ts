@@ -4,8 +4,7 @@
 // Interface specification of a scenario. All scenarios must implement this
 // interface.
 
-import { TaskRecord, Microtask, MicrotaskGroup } from '../db/Index';
-import { ScenarioName } from './Index';
+import { TaskRecord, Microtask, MicrotaskGroup, ScenarioName } from '@karya/core';
 import Joi from 'joi';
 
 /**

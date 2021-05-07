@@ -12,8 +12,8 @@ import {
   MicrotaskRecord,
   TaskRecord,
   WorkerRecord,
-} from '../db/Index';
-import { PolicyName } from './Index';
+  PolicyName,
+} from '@karya/core';
 
 export interface PolicyInterface<ParamsType = object> {
   // Policy name

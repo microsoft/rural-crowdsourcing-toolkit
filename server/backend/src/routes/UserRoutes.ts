@@ -3,7 +3,7 @@
 //
 // List of end points for the server user.
 
-import { AuthMechanism, ServerUserRecord } from '@karya/common';
+import { AuthMechanism, ServerUserRecord } from '@karya/core';
 import Application from 'koa';
 import BodyParser from 'koa-body';
 import Router from 'koa-router';
@@ -102,10 +102,12 @@ userRouter.post('/tasks', Middlewares.needIdToken, BodyParser(), TaskController.
 // userRouter.put('/task/:id');
 
 // Submit input files for a task
-userRouter.post(
+userRouter.post<TaskController.TaskRouteState, {}>(
   '/task/:id/input_files',
   Middlewares.needIdToken,
+  TaskController.checkTask,
   BodyParser({ multipart: true }),
+  // @ts-ignore
   TaskController.submitInputFiles
 );
 

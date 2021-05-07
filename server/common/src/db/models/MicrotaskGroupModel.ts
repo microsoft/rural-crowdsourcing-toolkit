@@ -8,7 +8,7 @@ import {
   MicrotaskRecord,
   TaskRecord,
   WorkerRecord,
-} from '../Index';
+} from '@karya/core';
 
 /**
  * Get a list of microtask group records from the specified task that can

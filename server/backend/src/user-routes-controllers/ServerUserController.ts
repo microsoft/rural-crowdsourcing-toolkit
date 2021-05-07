@@ -3,7 +3,8 @@
 //
 // Handler for server user routes
 
-import { BasicModel, ServerUser } from '@karya/common';
+import { BasicModel } from '@karya/common';
+import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';

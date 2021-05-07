@@ -5,7 +5,8 @@
 
 import { KaryaMiddleware } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel, MicrotaskAssignmentRecord } from '@karya/common';
+import { MicrotaskAssignmentRecord } from '@karya/core';
+import { BasicModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
 import { assignMicrotasksForWorker } from '../scenarios/AssignmentService';
 

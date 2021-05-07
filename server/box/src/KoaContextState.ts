@@ -3,7 +3,8 @@
 //
 // Defines the koa context state type to be used by the koa app and router.
 
-import { WorkerRecord, AuthState } from '@karya/common';
+import { WorkerRecord } from '@karya/core';
+import { AuthState } from '@karya/common';
 import Application, { ParameterizedContext } from 'koa';
 
 // Default koa state for box server requests

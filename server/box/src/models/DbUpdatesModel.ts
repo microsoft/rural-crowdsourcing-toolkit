@@ -6,7 +6,8 @@
  */
 
 import { Promise as BBPromise } from 'bluebird';
-import { DbRecordType, DbTableName, BasicModel } from '@karya/common';
+import { DbRecordType, DbTableName } from '@karya/core';
+import { BasicModel } from '@karya/common';
 import logger from '../utils/Logger';
 
 // Type for collecting table updates

@@ -3,7 +3,8 @@
 //
 // Handler for authentication related routes
 
-import { BasicModel, ServerUser, verifyGoogleIdToken, UserRegistrationState } from '@karya/common';
+import { BasicModel, verifyGoogleIdToken, UserRegistrationState } from '@karya/common';
+import { ServerUser } from '@karya/core';
 import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 

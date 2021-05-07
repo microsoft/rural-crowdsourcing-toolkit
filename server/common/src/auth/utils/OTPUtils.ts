@@ -5,7 +5,8 @@
 
 import axios from 'axios';
 import { envGetString } from '@karya/misc-utils';
-import { DbRecordType, BasicModel } from '../../Index';
+import { DbRecordType } from '@karya/core';
+import { BasicModel } from '../../Index';
 import Application from 'koa';
 import * as HttpResponse from '@karya/http-response';
 

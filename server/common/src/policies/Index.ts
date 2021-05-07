@@ -6,12 +6,7 @@
 import { PolicyInterface } from './PolicyInterface';
 import { nTotalPolicy } from './policies/NTotalPolicy';
 import { MicrotaskResponseType } from '../scenarios/Index';
-
-// List of policy names
-export const policyNames = ['n-total'] as const;
-
-// PolicyName type
-export type PolicyName = typeof policyNames[number];
+import { PolicyName } from '@karya/core';
 
 /**
  * Policy map

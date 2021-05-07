@@ -5,15 +5,7 @@
 
 import { SignOptions, VerifyOptions } from 'jsonwebtoken';
 import { ParameterizedContext } from 'koa';
-import { DbRecordType } from '../Index';
-
-// List of authentication mechanisms
-export const authMechanisms = ['access-code', 'karya-id-token'] as const;
-export type AuthMechanism = typeof authMechanisms[number];
-
-// List of registration mechanisms
-const regMechanisms = ['access-code', 'phone-otp', 'google-id-token'] as const;
-export type RegistrationMechanism = typeof regMechanisms[number];
+import { DbRecordType, AuthMechanism } from '@karya/core';
 
 // List of entities that can be authenticated
 export type AuthEntity = 'server_user' | 'box' | 'worker';

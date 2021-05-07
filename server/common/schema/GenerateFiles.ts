@@ -11,8 +11,8 @@ import { karyaBoxDb, karyaServerDb } from './specs/KaryaDb';
 const NG_SRC_FOLDER = `${process.cwd()}/src/db/ng-auto`;
 
 // Table interfaces files
-const ngTableInterfacesFile = `${NG_SRC_FOLDER}/TableInterfaces.ts`;
-writeTypescriptInterfaceFile(karyaServerDb, '../types/Custom', ngTableInterfacesFile);
+// const ngTableInterfacesFile = `${NG_SRC_FOLDER}/TableInterfaces.ts`;
+// writeTypescriptInterfaceFile(karyaServerDb, '../types/Custom', ngTableInterfacesFile);
 
 // Server create table function
 const ngServerTableFunctionsFile = `${NG_SRC_FOLDER}/ServerTableFunctions.ts`;

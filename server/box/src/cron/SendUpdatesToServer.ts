@@ -7,7 +7,8 @@
 
 import { Promise as BBPromise } from 'bluebird';
 import { this_box } from '../config/ThisBox';
-import { DbRecordType, DbTableName, BasicModel } from '@karya/common';
+import { DbRecordType, DbTableName } from '@karya/core';
+import { BasicModel } from '@karya/common';
 import { TableUpdates } from '../models/DbUpdatesModel';
 import { compress } from '@karya/compression';
 import logger from '../utils/Logger';
