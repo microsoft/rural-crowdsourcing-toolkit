@@ -16,7 +16,7 @@ import { RootState } from '../../store/Index';
 
 // Store types and actions
 import { Task } from '@karya/core';
-import { ScenarioInterface, scenarioMap, ScenarioName } from '@karya/core';
+import { BaseScenarioInterface, scenarioMap, ScenarioName } from '@karya/core';
 import { languageMap, LanguageCode } from '@karya/core';
 
 // HTML Helpers
@@ -65,7 +65,7 @@ type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
 type CreateTaskState = {
   task: Task;
   params: { [id: string]: string | boolean };
-  scenario?: ScenarioInterface;
+  scenario?: BaseScenarioInterface;
   language_code?: LanguageCode;
 };
 
