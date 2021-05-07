@@ -4,7 +4,7 @@
 // Implementation of the speech-data scenario
 
 import { TaskRecord } from '../../Index';
-import { ScenarioInterface } from '../ScenarioInterface';
+import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
 import { ParameterDefinition } from '@karya/parameter-specs';
 
@@ -44,7 +44,7 @@ export type SpeechDataTaskInputParameters = {
 };
 
 // Task input file format for speech data task
-const task_input_file: ScenarioInterface['task_input_file'] = {
+const task_input_file: BaseScenarioInterface['task_input_file'] = {
   json: {
     required: true,
     description: `\
@@ -76,7 +76,7 @@ export type SpeechDataTaskRecord = TaskRecord & { params: SpeechDataTaskInputPar
 /**
  * Speech data scenario implementation
  */
-export const SpeechDataScenario: ScenarioInterface = {
+export const SpeechDataScenario: BaseScenarioInterface = {
   name: 'speech-data',
   full_name: 'Speech Data Collection',
   description: 'This scenario allows for collection of speech data from a text corpus.',
