@@ -315,6 +315,7 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
+    // Submit input files for a task
     if (action.store === 'task_op' && action.label === 'SUBMIT_INPUT_FILE') {
       return {
         type: 'BR_SUCCESS',
@@ -324,23 +325,23 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    // GET_ALL actions
-    if (action.label === 'GET_ALL') {
+    // Get all task assignments
+    if (action.store === 'task_assignment' && action.label === 'GET_ALL') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET(store, action.params),
+        response: await GET('/task_assignments', action.params),
       } as BackendRequestSuccessAction;
     }
 
-    // CREATE actions
-    if (action.label === 'CREATE') {
+    // Create new task assignment
+    if (action.store === 'task_assignment' && action.label === 'CREATE') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST(store, action.request, {}, action.files),
+        response: await POST('/task_assignments', action.request, {}),
       } as BackendRequestSuccessAction;
     }
 

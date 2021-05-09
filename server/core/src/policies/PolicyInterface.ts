@@ -5,8 +5,8 @@
 // specific task should be assigned to different users. This file formally
 // specifies the interface that should be implemented by any new policy.
 
-import Joi from 'joi';
 import { PolicyName } from './Index';
+import { ParameterDefinition } from '@karya/parameter-specs';
 
 export interface PolicyInterface {
   // Policy name
@@ -16,5 +16,5 @@ export interface PolicyInterface {
   full_name: string;
 
   // Parameters to be provided with the policy
-  params: Joi.ObjectSchema;
+  params: ParameterDefinition[];
 }

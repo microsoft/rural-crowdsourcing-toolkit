@@ -3,7 +3,7 @@
 //
 // Registration and authentication mechanissm available on the platform
 
-export const registrationMechansisms = ['google-id-token', 'phone-otp'] as const;
+export const registrationMechansisms = ['self-gen-key', 'google-id-token', 'phone-otp'] as const;
 export type RegistrationMechanism = typeof registrationMechansisms[number];
 
 export const authMechanisms = ['access-code', 'karya-id-token'] as const;

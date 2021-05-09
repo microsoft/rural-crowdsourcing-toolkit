@@ -20,7 +20,8 @@ import { policyMap, policyList, PolicyName } from '@karya/core';
 
 // HTML helpers
 import { BoxRecord, TaskAssignment, TaskRecord } from '@karya/core';
-import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
+import { SubmitOrCancel } from '../templates/FormInputs';
+import { ParameterSection } from '../templates/ParameterRenderer';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 // HoC
@@ -63,7 +64,7 @@ type CreateTaskAssignmentProps = RouterProps & ConnectedProps<typeof reduxConnec
 
 // Component state
 type CreateTaskAssignmentState = {
-  params: { [id: string]: string | number };
+  params: { [id: string]: string | boolean };
   task?: TaskRecord;
   box?: BoxRecord;
   policy?: PolicyName;
@@ -113,20 +114,14 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   };
 
   // handle param input change
-  handleStringParamChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  handleParamChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ params });
   };
 
-  // handle param input change
-  handleIntegerParamChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const params = { ...this.state.params, [e.currentTarget.id]: parseInt(e.currentTarget.value, 10) };
-    this.setState({ params });
-  };
-
-  // handle param input change
-  handleFloatParamChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const params = { ...this.state.params, [e.currentTarget.id]: parseFloat(e.currentTarget.value) };
+  // Handle boolean change
+  handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.checked };
     this.setState({ params });
   };
 
@@ -149,7 +144,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     );
 
     // Task drop down
-    const tasks = this.props.task.data.filter((t) => t.status === 'approved');
+    const tasks = this.props.task.data.filter((t) => t.status === 'submitted');
     const { task } = this.state;
     const task_id = task ? task.id : 0;
     const taskDropDown = (
@@ -189,11 +184,11 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     // Policy drop down
     const scenario = scenarioMap[task?.scenario_name as ScenarioName];
     const policies = task === undefined ? [] : policyList[scenario.response_type];
-    const policy = this.state.policy ?? 'null';
+    const policy = this.state.policy;
     const policyDropDown = (
       <div>
         <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
-          <option value='null' disabled={true}>
+          <option value={undefined} disabled={true}>
             Select a Policy
           </option>
           {policies.map((p) => (
@@ -208,7 +203,15 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     // Policy params section
     let policyParamsSection = null;
     if (task !== undefined && box !== undefined && policy !== undefined) {
-      policyParamsSection = <div className='section'></div>;
+      const policyObj = policyMap[policy];
+      policyParamsSection = (
+        <ParameterSection
+          params={policyObj.params}
+          data={this.state.params}
+          onChange={this.handleParamChange}
+          onBooleanChange={this.handleParamBooleanChange}
+        />
+      );
     }
 
     return (
