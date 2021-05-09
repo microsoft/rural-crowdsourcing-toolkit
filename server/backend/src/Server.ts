@@ -7,8 +7,10 @@ dotenv.config();
 import { loadSecrets } from './secrets/Index';
 import cors from '@koa/cors';
 import Koa from 'koa';
+import Router from 'koa-router';
 import logger from './utils/Logger';
 import { userRouter } from './routes/UserRoutes';
+import { boxRouter } from './routes/BoxRoutes';
 import { setupDbConnection } from '@karya/common';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
@@ -29,8 +31,14 @@ app.use(async (ctx, next) => {
   }
 });
 app.use(cors({ origin: envGetString('CORS_ORIGIN', ''), credentials: true }));
-app.use(userRouter.allowedMethods());
-app.use(userRouter.routes());
+
+// Create the main router
+const mainRouter = new Router();
+mainRouter.use('/api_user', userRouter.allowedMethods(), userRouter.routes());
+mainRouter.use('/api_box', boxRouter.allowedMethods(), boxRouter.routes());
+
+// Connect app to main router
+app.use(mainRouter.routes());
 
 // Main script
 (async () => {

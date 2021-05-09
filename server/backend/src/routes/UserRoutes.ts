@@ -28,7 +28,7 @@ export type UserRouteState<ExtraState = {}> = DefaultUserRouteState & ExtraState
 export type UserRouteMiddleware<ExtraState = {}> = Application.Middleware<UserRouteState<ExtraState>>;
 
 // Create the router
-const userRouter = new Router<DefaultUserRouteState>({ prefix: '/api_user' });
+const userRouter = new Router<DefaultUserRouteState>();
 
 /** Add user authenticator to all requests */
 userRouter.use(Middlewares.authenticateRequest);
