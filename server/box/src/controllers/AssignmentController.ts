@@ -72,7 +72,7 @@ export const submit: KaryaMiddleware = async (ctx) => {
 
   try {
     const ids: string[] = [];
-    const submitted_at = new Date().toISOString();
+    const submitted_to_box_at = new Date().toISOString();
     await BBPromise.mapSeries(assignments, async (assignment) => {
       if (assignment.worker_id != worker.id) {
         // TODO: Internally log this error. User does not have access to assignment
@@ -81,7 +81,7 @@ export const submit: KaryaMiddleware = async (ctx) => {
         // assignments
       } else {
         const { id, ...updates } = assignment;
-        await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_at });
+        await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
         if (assignment.status == 'completed') {
           // TODO: Handle microtask assignment completion, by invoking policy
         }
