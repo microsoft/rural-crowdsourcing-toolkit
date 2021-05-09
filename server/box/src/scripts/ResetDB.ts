@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// Script to reset the database and initialize some basic tables
 
-/**
- * Script to reset the database and initialize some basic tables
- */
+import dotenv from 'dotenv';
+dotenv.config();
 
 import { knex, setupDbConnection, BoxDbFunctions } from '@karya/common';
 import logger from '../utils/Logger';
