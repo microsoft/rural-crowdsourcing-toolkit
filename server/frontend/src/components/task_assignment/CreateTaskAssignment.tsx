@@ -110,6 +110,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   // Change policy
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
+    console.log(policy);
     this.setState({ policy, params: {} });
   };
 
@@ -184,11 +185,11 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     // Policy drop down
     const scenario = scenarioMap[task?.scenario_name as ScenarioName];
     const policies = task === undefined ? [] : policyList[scenario.response_type];
-    const policy = this.state.policy;
+    const policy = this.state.policy || 0;
     const policyDropDown = (
       <div>
         <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
-          <option value={undefined} disabled={true}>
+          <option value={0} disabled={true}>
             Select a Policy
           </option>
           {policies.map((p) => (
@@ -202,7 +203,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
 
     // Policy params section
     let policyParamsSection = null;
-    if (task !== undefined && box !== undefined && policy !== undefined) {
+    if (task !== undefined && box !== undefined && policy !== 0) {
       const policyObj = policyMap[policy];
       policyParamsSection = (
         <ParameterSection

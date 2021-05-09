@@ -45,7 +45,6 @@ export const create: UserRouteMiddleware = async (ctx) => {
   task.params = params;
 
   // update other fields
-  task.tags = { tags: [] };
   task.status = 'submitted';
 
   try {

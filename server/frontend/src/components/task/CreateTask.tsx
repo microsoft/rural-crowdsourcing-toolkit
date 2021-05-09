@@ -65,6 +65,7 @@ type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
 type CreateTaskState = {
   task: Task;
   params: { [id: string]: string | boolean };
+  tags: string;
   scenario?: BaseScenarioInterface;
   language_code?: LanguageCode;
 };
@@ -76,6 +77,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
       description: '',
       display_name: '',
     },
+    tags: '',
     params: {},
   };
 
@@ -136,6 +138,11 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   };
 
   // Handle param input change
+  handleTagsChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.setState({ tags: e.currentTarget.value });
+  };
+
+  // Handle param input change
   handleParamInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ params });
@@ -154,6 +161,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     task.scenario_name = this.state.scenario?.name;
     task.language_code = this.state.language_code;
     task.params = this.state.params;
+    task.tags = { tags: this.state.tags.split(',') };
     this.props.createTask(task);
   };
 
@@ -221,12 +229,24 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 onChange={this.handleInputChange}
                 required={true}
               />
+            </div>
+            <div className='row'>
               <ColTextInput
                 id='display_name'
                 label={`Display Name (to be shown in the app)`}
                 width='s4'
                 value={task.display_name}
                 onChange={this.handleInputChange}
+                required={true}
+              />
+            </div>
+            <div className='row'>
+              <ColTextInput
+                id='tags'
+                label={`List of task tags (comma seperated)`}
+                width='s4'
+                value={this.state.tags}
+                onChange={this.handleTagsChange}
                 required={true}
               />
             </div>
