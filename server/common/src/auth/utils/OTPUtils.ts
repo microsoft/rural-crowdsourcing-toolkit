@@ -4,11 +4,34 @@
 // Module to help with all things OTP.
 
 import axios from 'axios';
-import { envGetString } from '@karya/misc-utils';
+import { envGetString, envGetBoolean } from '@karya/misc-utils';
 import { DbRecordType } from '@karya/core';
 import { BasicModel } from '../../Index';
 import Application from 'koa';
 import * as HttpResponse from '@karya/http-response';
+
+// 2Factor OTP config type
+export type PhoneOTPConfig = {
+  available: boolean;
+  url: string;
+  apiKey: string;
+};
+
+// Get OTP config from environment
+export function getOTPConfig(): PhoneOTPConfig {
+  return {
+    available: envGetBoolean('PHONE_OTP_AVAILABLE'),
+    url: envGetString('PHONE_OTP_URL'),
+    apiKey: envGetString('PHONE_OTP_API_KEY'),
+  };
+}
+
+// Set OTP config to environment
+export function setOTPConfig(config: PhoneOTPConfig) {
+  process.env.PHONE_OTP_AVAILABLE = 'true';
+  process.env.PHONE_OTP_URL = config.url;
+  process.env.PHONE_OTP_API_KEY = config.apiKey;
+}
 
 /**
  * Generate a random OTP and return it

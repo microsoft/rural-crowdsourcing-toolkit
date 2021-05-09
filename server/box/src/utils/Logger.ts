@@ -30,3 +30,12 @@ export const requestLogger = newLogger({
   folder: logFolderPath,
   datePattern: datePattern,
 });
+
+// Cron logger
+export const cronLogger = newLogger({
+  name: 'cron',
+  folder: logFolderPath,
+  logToConsole: true,
+  consoleLogLevel: 'info',
+  datePattern,
+});
