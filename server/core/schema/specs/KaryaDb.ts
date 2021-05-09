@@ -78,7 +78,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
         ['registered', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
         ['reg_mechanism', ['string', 32, 'RegistrationMechanism'], 'not unique', 'nullable', 'mutable'],
-        ['key', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['key', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['physical', ['boolean', false], 'not unique', 'not nullable', 'not mutable'],
         ['name', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['location', ['string', 64], 'not unique', 'nullable', 'mutable'],

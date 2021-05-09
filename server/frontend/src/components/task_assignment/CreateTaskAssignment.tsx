@@ -163,7 +163,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     );
 
     // Box drop down
-    const boxes = this.props.box.data.filter((b) => b.id_token !== null);
+    const boxes = this.props.box.data.filter((b) => b.reg_mechanism !== null);
     const { box } = this.state;
     const box_id = box ? box.id : 0;
     const boxDropDown = (

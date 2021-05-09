@@ -3,6 +3,8 @@
 //
 // This file implements a set of misc helper utilities.
 
+import Crypto from 'crypto';
+
 /**
  * Helper utility generates a random creation code of a given length.
  * @param options length of the code; only numeric code
@@ -20,6 +22,13 @@ export function getCreationCode(
   }
 
   return creationCode;
+}
+
+/**
+ * Get a random base64 key of the given length
+ */
+export function randomKey(length: number) {
+  return Crypto.randomBytes(length).toString('base64').slice(0, length);
 }
 
 /**
