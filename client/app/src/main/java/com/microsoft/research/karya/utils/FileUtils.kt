@@ -7,8 +7,6 @@ package com.microsoft.research.karya.utils
 import com.microsoft.research.karya.utils.jtar.TarEntry
 import com.microsoft.research.karya.utils.jtar.TarInputStream
 import com.microsoft.research.karya.utils.jtar.TarOutputStream
-import okhttp3.ResponseBody
-import retrofit2.Response
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -18,6 +16,8 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 object FileUtils {
 
@@ -118,9 +118,7 @@ object FileUtils {
     fileStream.close()
   }
 
-  /**
-   * Get the MD5 digest for a file
-   */
+  /** Get the MD5 digest for a file */
   fun getMD5Digest(filePath: String): String {
     val digest = MessageDigest.getInstance("MD5")
     val inputStream = FileInputStream(filePath)

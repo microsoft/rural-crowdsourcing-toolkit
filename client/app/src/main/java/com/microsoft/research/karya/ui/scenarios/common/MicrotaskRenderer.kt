@@ -29,14 +29,14 @@ import com.microsoft.research.karya.utils.MICROTASK_INPUT
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import com.microsoft.research.karya.utils.extensions.getContainerDirectory
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import javax.inject.Inject
 
 /** Code to request necessary permissions */
 private const val REQUEST_PERMISSIONS = 201
@@ -52,7 +52,7 @@ abstract class MicrotaskRenderer(
   private val finishOnGroupBoundary: Boolean
 ) : AppCompatActivity() {
 
-  /**Assistant*/
+  /** Assistant */
   protected lateinit var assistant: Assistant
 
   @Inject @FilesDirQualifier lateinit var fileDirPath: String
@@ -311,7 +311,7 @@ abstract class MicrotaskRenderer(
       /** Fetch the task */
       ioScope.launch { task = karyaDb.taskDao().getById(taskId) }.join()
 
-      //TODO: Maybe pass an intent extra rather than storing in database
+      // TODO: Maybe pass an intent extra rather than storing in database
       ioScope.launch {
         firstTimeActivityVisit =
           try {
@@ -355,11 +355,7 @@ abstract class MicrotaskRenderer(
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
       for (permission in permissions) {
-        if (ActivityCompat.checkSelfPermission(
-            this,
-            permission
-          ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
           hasAllPermissions = false
           ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS)
           break
@@ -376,7 +372,6 @@ abstract class MicrotaskRenderer(
         if (workers.isNotEmpty()) thisWorker = workers[0]
         activityVisited()
       }
-
   }
 
   /** On resume, get and setup the microtask */
@@ -474,10 +469,7 @@ abstract class MicrotaskRenderer(
         } else {
           microtaskInputFileJob =
             ioScope.launch {
-              FileUtils.extractGZippedTarBallIntoDirectory(
-                microtaskTarBallPath,
-                microtaskInputDirectory
-              )
+              FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
             }
         }
       }
@@ -486,9 +478,9 @@ abstract class MicrotaskRenderer(
 
       // Check if we are in a group boundary and finish if necessary
       if (finishOnGroupBoundary &&
-        currentMicrotaskGroupId != null &&
-        currentMicroTask.group_id != null &&
-        currentMicroTask.group_id != currentMicrotaskGroupId
+          currentMicrotaskGroupId != null &&
+          currentMicroTask.group_id != null &&
+          currentMicroTask.group_id != currentMicrotaskGroupId
       ) {
         finish()
       }
@@ -524,10 +516,6 @@ abstract class MicrotaskRenderer(
   }
 
   protected fun getAudioFilePath(audioResourceId: Int): String {
-    return getBlobPath(
-      LANG_RES(fileDirPath),
-      audioResourceId.toString(),
-      thisWorker.appLanguage.toString()
-    )
+    return getBlobPath(LANG_RES(fileDirPath), audioResourceId.toString(), thisWorker.appLanguage.toString())
   }
 }
