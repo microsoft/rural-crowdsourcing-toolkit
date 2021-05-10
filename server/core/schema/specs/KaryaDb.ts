@@ -217,6 +217,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       columns: [
         ['microtask_id', ['>', 'microtask'], 'not unique', 'not nullable', 'not mutable'],
         ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
+        ['sent_to_server_at', ['timestamp'], 'not unique', 'not nullable', 'mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'MicrotaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
         ['completed_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
