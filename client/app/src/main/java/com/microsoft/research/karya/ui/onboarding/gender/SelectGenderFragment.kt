@@ -80,7 +80,7 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
   private fun showLoadingUi() {
     with(binding) {
-      showLoadingUi()
+      showLoading()
       disableGenderSubmitButton()
     }
   }
