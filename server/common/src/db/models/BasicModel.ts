@@ -168,3 +168,43 @@ export async function getRecords<TableName extends DbTableName, ColumnType exten
   const records = await query;
   return records as DbRecordType<TableName>[];
 }
+
+/**
+ * Get records from a particular table with a set of filters.
+ * @param tableName Name of the table
+ * @param match Object for exact match
+ * @param updateDuration Duration of the updates
+ * @param createDuration Duration of creation
+ * @param whereIns Where In filters
+ * @returns Retrieved records
+ */
+export async function ngGetRecords<TableName extends DbTableName, ColumnType extends keyof DbRecordType<TableName>>(
+  tableName: TableName,
+  match: DbObjectType<TableName> | {} = {},
+  whereIns: [c: ColumnType, values: DbRecordType<TableName>[ColumnType][]][] = [],
+  ranges: [
+    c: ColumnType,
+    low: DbRecordType<TableName>[ColumnType] | null,
+    high: DbRecordType<TableName>[ColumnType] | null
+  ][] = [],
+  orderBy?: ColumnType,
+  limit?: number
+): Promise<DbRecordType<TableName>[]> {
+  let query = knex(tableName).where(match);
+  // add whereIns
+  whereIns.forEach((filter) => {
+    query = query.whereIn(filter[0], filter[1]);
+  });
+  // and ranges
+  ranges.forEach(([c, low, high]) => {
+    if (low) query = query.where(c, '>', low);
+    if (high) query = query.where(c, '<=', high);
+  });
+  // Set order by
+  if (orderBy) query = query.orderBy(orderBy);
+  // Set imit
+  if (limit) query = query.limit(limit);
+  // retrieve the records and return
+  const records = await query;
+  return records as DbRecordType<TableName>[];
+}

@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import cron from 'node-cron';
-import { syncWithServer } from './ngSyncWithServer';
+import { syncBoxWithServer } from './ngSyncWithServer';
 import { BasicModel, setupDbConnection, knex } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { cronLogger } from '../utils/Logger';
@@ -40,7 +40,7 @@ setupDbConnection();
 
   // sync each box with server one after the other
   await BBPromise.mapSeries(boxes, async (box) => {
-    await syncWithServer(box);
+    await syncBoxWithServer(box);
   });
 
   cronRunning = false;

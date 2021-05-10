@@ -3,8 +3,8 @@
 //
 // Send files and information to the server
 
-import { BasicModel } from '@karya/common';
-import { BoxRecord, KaryaFileRecord } from '@karya/core';
+import { BasicModel, knex } from '@karya/common';
+import { BoxRecord, KaryaFileRecord, TaskAssignmentRecord, TaskRecord } from '@karya/core';
 import { envGetString } from '@karya/misc-utils';
 import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
@@ -15,7 +15,7 @@ import { cronLogger } from '../utils/Logger';
 /**
  * Upload all karya files to the server
  * @param box Box record
- * @param time Send timestamp for the sync
+ * @param axios Axios instance with defaults
  */
 export async function uploadKaryaFilesToServer(box: BoxRecord, axios: AxiosInstance) {
   // Get all files that are yet to be uploaded to the server

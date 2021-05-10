@@ -198,7 +198,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['params', ['kv'], 'not unique', 'not nullable', 'not mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'TaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
-        ['sent_to_box_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
+        ['received_from_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
       ],
     },
 

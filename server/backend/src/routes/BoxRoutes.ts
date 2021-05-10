@@ -63,10 +63,28 @@ boxRouter.put('/workers', Middlewares.needIdToken, WorkerController.updateWorker
 boxRouter.get('/task_assignments', Middlewares.needIdToken, TaskController.getTaskAssignments);
 
 // Get new microtasks (and correspond groups/files) for the specified task
-boxRouter.get('/task/:id/microtasks', Middlewares.needIdToken, TaskController.getMicrotasks);
+boxRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/:id/microtasks',
+  // @ts-ignore Lack of full understanding of router types
+  Middlewares.needIdToken,
+  TaskController.setTask,
+  TaskController.getMicrotasks
+);
 
 // Submit completed assignments for the specified task
-boxRouter.put('/task/:id/completed_assignments', Middlewares.needIdToken, TaskController.submitCompletedAssignments);
+boxRouter.put<TaskController.TaskRouteState, {}>(
+  '/task/:id/completed_assignments',
+  // @ts-ignore Lack of full understanding of router types
+  Middlewares.needIdToken,
+  TaskController.setTask,
+  TaskController.submitCompletedAssignments
+);
 
 // Get verified assignments for the specified task
-boxRouter.get('/task/:id/verified_assignments', Middlewares.needIdToken, TaskController.getVerifiedAssignments);
+boxRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/:id/verified_assignments',
+  // @ts-ignore Lack of full understanding of router types
+  Middlewares.needIdToken,
+  TaskController.setTask,
+  TaskController.getVerifiedAssignments
+);

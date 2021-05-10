@@ -8,11 +8,12 @@ import { axios } from './ngHttpUtils';
 import { cronLogger } from '../utils/Logger';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import { uploadKaryaFilesToServer } from './ngSendToServer';
+import { getMicrotasks, getTaskAssignments } from './ngReceiveFromServer';
 
 /**
  * Sync specified box with server
  */
-export async function syncWithServer(box: BoxRecord) {
+export async function syncBoxWithServer(box: BoxRecord) {
   cronLogger.info(`Syncing box ${box.id} with server`);
 
   // set request header
@@ -64,4 +65,14 @@ export async function syncWithServer(box: BoxRecord) {
   } catch (e) {
     cronLogger.error('Upload stage had errors. Check log file for errors.');
   }
+
+  // Send newly created workers to server
+
+  // Send all created/completed microtask (group) assignments
+
+  // Get task assignments from the server
+  await getTaskAssignments(box, axios);
+
+  // Get all microtasks
+  await getMicrotasks(box, axios);
 }
