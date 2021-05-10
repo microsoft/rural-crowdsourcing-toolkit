@@ -16,11 +16,9 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
 import com.microsoft.research.karya.utils.FileUtils.createTarBall
 import com.microsoft.research.karya.utils.FileUtils.getMD5Digest
-import com.microsoft.research.karya.utils.KaryaFileContainer
 import com.microsoft.research.karya.utils.MICROTASK_ASSIGNMENT_OUTPUT
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,25 +57,43 @@ constructor(
     MutableStateFlow(DashboardUiState.Success(emptyList()))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
-  fun fetchNewTasks() {
-    viewModelScope.launch {
-      val idToken = authManager.fetchLoggedInWorkerIdToken()
+  suspend fun fetchNewTasks() {
+    val idToken = authManager.fetchLoggedInWorkerIdToken()
 
-      assignmentRepository.getAssignments(idToken, "new", "")
-        .catch { Log.d("dashboard", it.message!!) }.collect()
+    assignmentRepository.getAssignments(idToken, "new", "")
+      .catch { it -> throw it }.collect()
+
+
+    Log.d("SYNC_ORDER", "FETCH_FINISH")
+  }
+
+  suspend fun submitCompletedTasks() {
+    uploadOutputFiles()
+    sendDbUpdates()
+    Log.d("SYNC_ORDER", "SUBMIT_FINISH")
+  }
+
+  private suspend fun sendDbUpdates() {
+
+    viewModelScope.launch {
+
+      val microtaskAssignments = assignmentRepository.getLocalCompletedAssignments().filter {
+        it.output.get("files").asJsonArray.size() == 0 || it.output_file_id != null
+      }
+      assignmentRepository.submitAssignments(
+        authManager.fetchLoggedInWorkerIdToken(),
+        microtaskAssignments
+      ).catch {
+        throw it // TODO: Inform the UI if any error
+      }.collect { assignmentIds ->
+        assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds)
+      }
     }
   }
 
-  fun submitCompletedTasks() {
-    viewModelScope.launch {
-      uploadOutputFiles()
-
-    }
-  }
-
-  /*
-  * Upload the Files of completed Assignments
-  * */
+  /**
+   * Upload the Files of completed Assignments
+   */
   private suspend fun uploadOutputFiles() {
     val updates = assignmentRepository.getLocalCompletedAssignments()
 
@@ -86,7 +102,7 @@ constructor(
       it.output_file_id == null && it.output.get("files").asJsonArray.size() > 0
     }
 
-    for ((index, assignment) in filteredAssignments.withIndex()) {
+    for (assignment in filteredAssignments) {
       val assignmentTarBallPath = getBlobPath(microtaskOutputContainer, assignment.id)
       val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
       val outputDir = microtaskOutputContainer.getDirectory()
@@ -97,15 +113,6 @@ constructor(
       createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
       uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
     }
-
-    val idToken = authManager.fetchLoggedInWorkerIdToken()
-
-    assignmentRepository.submitAssignments(idToken, updates)
-      .onEach { assignmentIds ->
-        assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds)
-      }
-      .catch { Log.d("dashboard submit task", it.message!!) }.collect()
-    // TODO: Pass error message to UI
   }
 
   /**
@@ -160,7 +167,9 @@ constructor(
 
       assignmentRepository
         .getAssignments(idToken, "verified", from)
-        .catch { Log.d("dashboard", it.message!!) }
+        .catch {
+          throw it
+        }
         .collect()
     }
   }
@@ -192,11 +201,20 @@ constructor(
         val success = DashboardUiState.Success(taskInfoList.sortedWith(taskInfoComparator))
         _dashboardUiState.emit(success)
       }
-      .catch { throwable -> _dashboardUiState.emit(DashboardUiState.Error(throwable)) }
+      .catch { throwable ->
+        _dashboardUiState.emit(DashboardUiState.Error(throwable))
+      }
       .launchIn(viewModelScope)
   }
 
   private suspend fun fetchTaskStatus(taskId: String): TaskStatus {
     return taskRepository.getTaskStatus(taskId)
+  }
+
+  fun syncWithServer() {
+    viewModelScope.launch {
+      submitCompletedTasks()
+      fetchNewTasks()
+    }
   }
 }
