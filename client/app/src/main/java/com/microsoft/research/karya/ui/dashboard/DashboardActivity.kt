@@ -128,7 +128,7 @@ class DashboardActivity : AppCompatActivity() {
     */
     // task.scenarioID for now
     val nextIntent =
-      when ("speech-data") {
+      when ("speech-data") { //TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
         // Use [ScenarioType] enum once we migrate to it.
         "story-speech" -> Intent(this, StorySpeechMain::class.java)
         "speech-data" -> Intent(this, SpeechDataMain::class.java)
