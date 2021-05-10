@@ -82,7 +82,7 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
   // For each task, get all microtasks
   await BBPromise.mapSeries(tasks, async (task) => {
     const granularity = task.assignment_granularity;
-    const limit = granularity == 'group' ? 10 : 5;
+    const limit = granularity == 'group' ? 10 : 1000;
 
     type MicrotasksResponse = {
       groups: MicrotaskGroupRecord[];
