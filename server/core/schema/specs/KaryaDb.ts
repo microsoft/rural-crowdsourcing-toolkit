@@ -313,10 +313,16 @@ boxTables.forEach((table) => {
   karyaBoxDb.tables[table].triggers = [computeIDTrigger(table)];
 });
 
+const karyaFileIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [
+  ['id', ['bigint'], 'unique', 'not nullable', 'not mutable'],
+  ['box_id', ['>', 'box'], 'not unique', 'nullable', 'not mutable'],
+  ['local_id', ['bigserial'], 'not unique', 'not nullable', 'not mutable'],
+];
+
 const kf_columns = karyaDb.tables['karya_file'].columns;
-karyaServerDb.tables['karya_file'].columns = boxSideBoxIdFields.concat(kf_columns).concat(commonFields);
+karyaServerDb.tables['karya_file'].columns = karyaFileIdFields.concat(kf_columns).concat(commonFields);
 karyaServerDb.tables['karya_file'].triggers = [computeIDTrigger('karya_file')];
-karyaBoxDb.tables['karya_file'].columns = boxSideBoxIdFields.concat(kf_columns).concat(commonFields);
+karyaBoxDb.tables['karya_file'].columns = karyaFileIdFields.concat(kf_columns).concat(commonFields);
 karyaBoxDb.tables['karya_file'].triggers = [computeIDTrigger('karya_file')];
 
 export { karyaServerDb, karyaBoxDb };
