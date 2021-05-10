@@ -8,7 +8,7 @@ import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
-import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
+import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.utils.extensions.rotateRight
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ class ProfileViewModel
 constructor(
   private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
-  @FilesDirQualifier private val filesDirPath: String,
+  @FilesDir private val filesDirPath: String,
 ) : ViewModel() {
 
   private val _profileUiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Initial)

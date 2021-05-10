@@ -2,8 +2,6 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.os.Bundle
 import android.view.View
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,10 +9,9 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
-import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
-import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -22,7 +19,6 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
@@ -91,7 +87,9 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private fun onAccessCodeVerified(workerRecord: WorkerRecord) {
     hideLoading()
     showSuccessUi()
-    lifecycleScope.launch { updateLanguagePreference(workerRecord.appLanguage) }
+
+    // TODO: workerRecord.appLanguage
+    updateActivityLanguage("hi")
 
     navigateToConsentFormFragment()
     resetViewState()
@@ -138,8 +136,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
   private fun hideLoading() = binding.loadingPb.gone()
 
-  private suspend fun updateLanguagePreference(newLanguage: Int) {
-    val languagePrefKey = intPreferencesKey(PreferenceKeys.APP_LANGUAGE)
-    requireContext().dataStore.edit { prefs -> prefs[languagePrefKey] = newLanguage }
+  private fun updateActivityLanguage(language: String) {
+    (requireActivity() as MainActivity).setActivityLocale(language)
   }
 }

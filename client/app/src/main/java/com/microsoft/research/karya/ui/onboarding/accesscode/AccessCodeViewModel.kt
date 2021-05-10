@@ -33,7 +33,7 @@ constructor(private val workerRepository: WorkerRepository, private val authMana
       .mapToResult()
   }
 
-  fun createWorker(accessCode: String, workerRecord: WorkerRecord) {
+  private fun createWorker(accessCode: String, workerRecord: WorkerRecord) {
     val dbWorker = workerRecord.copy(accessCode = accessCode)
 
     workerAccessCode = accessCode

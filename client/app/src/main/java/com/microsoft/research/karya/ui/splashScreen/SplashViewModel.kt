@@ -23,6 +23,9 @@ constructor(
   private val _splashDestination = MutableSharedFlow<Destination>()
   val splashDestination = _splashDestination.asSharedFlow()
 
+  private val _splashEffects = MutableSharedFlow<SplashEffects>()
+  val splashEffects = _splashEffects.asSharedFlow()
+
   fun navigate() {
     viewModelScope.launch {
       val workers = getAllWorkers().size
@@ -49,6 +52,9 @@ constructor(
 
   private suspend fun handleSingleUser() {
     val worker = getLoggedInWorker()
+
+    // TODO: worker.appLanguage
+    _splashEffects.emit(SplashEffects.UpdateLanguage("hi"))
 
     val destination =
       when {
