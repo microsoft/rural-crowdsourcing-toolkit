@@ -7,6 +7,7 @@ import { BoxRecord } from '@karya/core';
 import { axios } from './ngHttpUtils';
 import { cronLogger } from '../utils/Logger';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
+import { uploadKaryaFilesToServer } from './ngSendToServer';
 
 /**
  * Sync specified box with server
@@ -38,10 +39,13 @@ export async function syncWithServer(box: BoxRecord) {
     cronLogger.warn('Failed to update box with renewed ID token. Continuing with old token');
   }
 
+  // Set axios default header
+  axios.defaults.headers = headers;
+
   // Check if OTP service is available
   if (!box.physical) {
     try {
-      const response = await axios.get<PhoneOTPConfig>('/phone-auth', { headers });
+      const response = await axios.get<PhoneOTPConfig>('/phone-auth');
       const otpConfig = response.data;
       if (!otpConfig.available) {
         throw new Error('OTP service is not available');
@@ -52,5 +56,12 @@ export async function syncWithServer(box: BoxRecord) {
       cronLogger.warn('OTP service is not available');
       process.env.PHONE_OTP_AVAILABLE = 'false';
     }
+  }
+
+  // Upload files to the server
+  try {
+    await uploadKaryaFilesToServer(box, axios);
+  } catch (e) {
+    cronLogger.error('Upload stage had errors. Check log file for errors.');
   }
 }
