@@ -57,7 +57,10 @@ boxRouter.get('/karya_file/:id', Middlewares.needIdToken, KaryaFileController.ge
 boxRouter.get('/language_assets', Middlewares.needIdToken, KaryaFileController.getLanguageAssets);
 
 // Send all newly creted workers
-boxRouter.put('/workers', Middlewares.needIdToken, WorkerController.updateWorkers);
+boxRouter.put('/new_workers', Middlewares.needIdToken, BodyParser(), WorkerController.newWorkers);
+
+// Send all newly creted workers
+boxRouter.put('/workers', Middlewares.needIdToken, BodyParser(), WorkerController.updateWorkers);
 
 // Get new task assignments
 boxRouter.get('/task_assignments', Middlewares.needIdToken, TaskController.getTaskAssignments);
@@ -74,9 +77,10 @@ boxRouter.get<TaskController.TaskRouteState, {}>(
 // Submit completed assignments for the specified task
 boxRouter.put<TaskController.TaskRouteState, {}>(
   '/task/:id/completed_assignments',
-  // @ts-ignore Lack of full understanding of router types
   Middlewares.needIdToken,
   TaskController.setTask,
+  BodyParser(),
+  // @ts-ignore Lack of full understanding of router types
   TaskController.submitCompletedAssignments
 );
 
