@@ -5,7 +5,7 @@ import android.view.View
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.Fragment
-import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private val binding by viewBinding(FragmentAccessCodeBinding::bind)
-  private val viewModel by hiltNavGraphViewModels<AccessCodeViewModel>(R.id.access_code_nav_graph)
+  private val viewModel by viewModels<AccessCodeViewModel>()
 
   private val creationCodeLength = 16
   private val creationCodeEtMax = creationCodeLength + (creationCodeLength - 1) / 4
@@ -79,7 +79,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   }
 
   private fun navigateToConsentFormFragment() {
-    findNavController().navigate(R.id.action_accessCodeFragment_to_consentFormFragment)
+    findNavController().navigate(R.id.action_accessCodeFragment2_to_consentFormFragment2)
   }
 
   private fun handleFullCreationCode() {

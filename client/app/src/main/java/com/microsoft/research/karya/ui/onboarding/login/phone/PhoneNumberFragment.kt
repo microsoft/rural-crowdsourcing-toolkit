@@ -78,21 +78,22 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
   }
 
   private fun navigateToOTPFragment() {
-    findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
+    findNavController().navigate(R.id.action_phoneNumberFragment2_to_OTPFragment2)
   }
 
   private fun showInitialUi() {
     with(binding) {
       failToSendOtpTv.gone()
       phoneNumberNextIv.handlePhoneNumberNotReady()
-      loadingPb.gone()
+      hideLoading()
     }
   }
 
   private fun showLoadingUi() {
     with(binding) {
       failToSendOtpTv.gone()
-      loadingPb.visible()
+      showLoading()
+      phoneNumberNextIv.handlePhoneNumberNotReady()
       phoneNumberNextIv.invisible()
     }
   }
@@ -100,8 +101,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
   private fun showSuccessUi() {
     with(binding) {
       failToSendOtpTv.gone()
-      loadingPb.gone()
-      phoneNumberNextIv.visible()
+      hideLoading()
       phoneNumberNextIv.handlePhoneNumberReady()
     }
   }
@@ -110,8 +110,8 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     with(binding) {
       failToSendOtpTv.text = message
       failToSendOtpTv.visible()
-      loadingPb.gone()
-      phoneNumberNextIv.handlePhoneNumberNotReady()
+      hideLoading()
+      phoneNumberNextIv.handlePhoneNumberReady()
     }
   }
 
@@ -130,5 +130,19 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
     setImageResource(0)
     setImageResource(R.drawable.ic_next_disabled)
     isClickable = false
+  }
+
+  private fun hideLoading() {
+    with(binding) {
+      loadingPb.gone()
+      phoneNumberNextIv.visible()
+    }
+  }
+
+  private fun showLoading() {
+    with(binding) {
+      loadingPb.visible()
+      phoneNumberNextIv.gone()
+    }
   }
 }

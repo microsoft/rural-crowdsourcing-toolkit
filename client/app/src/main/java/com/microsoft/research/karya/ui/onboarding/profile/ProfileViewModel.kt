@@ -9,6 +9,7 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
+import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.utils.extensions.rotateRight
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
@@ -51,7 +52,7 @@ constructor(
         workerRepository.upsertWorker(worker.copy(profilePicturePath = path, fullName = name))
         _profileUiState.value = ProfileUiState.Success(path)
         // TODO: Check which navigation scenario to launch here
-        _profileEffects.emit(ProfileEffects.Navigate)
+        handleNavigation()
       } catch (throwable: Throwable) {
         _profileUiState.value = ProfileUiState.Error(UnknownException("Error saving data"))
       }
@@ -109,6 +110,18 @@ constructor(
         _profileUiState.value = ProfileUiState.Error(UnknownException("Could not save image"))
       }
     }
+  }
+
+  private suspend fun handleNavigation() {
+    val worker = authManager.fetchLoggedInWorker()
+
+    val destination =
+      when {
+        worker.age.isNullOrEmpty() -> Destination.MandatoryDataFlow
+        else -> Destination.Dashboard
+      }
+
+    _profileEffects.emit(ProfileEffects.Navigate(destination))
   }
 
   private suspend fun writeBitmap(bitmap: Bitmap, file: File): Boolean =

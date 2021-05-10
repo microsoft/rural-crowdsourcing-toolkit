@@ -66,6 +66,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   private fun showInitialUi() {
     with(binding) {
       failToRegisterTv.gone()
+      hideLoading()
       disableAgeGroupSubmitButton()
     }
   }
@@ -73,6 +74,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   private fun showLoadingUi() {
     with(binding) {
       failToRegisterTv.gone()
+      showLoading()
       disableAgeGroupSubmitButton()
     }
   }
@@ -80,6 +82,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
   private fun showSuccessUi() {
     with(binding) {
       failToRegisterTv.gone()
+      hideLoading()
       enableAgeGroupSubmitButton()
     }
   }
@@ -88,6 +91,7 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
     with(binding) {
       failToRegisterTv.text = message
       failToRegisterTv.visible()
+      hideLoading()
       disableAgeGroupSubmitButton()
     }
   }
@@ -131,8 +135,22 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
     viewModel.updateWorkerAge(currentAge)
   }
 
+  private fun hideLoading() {
+    with(binding) {
+      loadingPb.gone()
+      submitAgeGroupIb.visible()
+    }
+  }
+
+  private fun showLoading() {
+    with(binding) {
+      loadingPb.visible()
+      submitAgeGroupIb.gone()
+    }
+  }
+
   private fun navigateToDashboard() {
-    findNavController().navigate(R.id.action_selectAgeGroupFragment_to_dashboardActivity2)
+    findNavController().navigate(R.id.action_global_dashboardActivity4)
     requireActivity().finish()
   }
 }

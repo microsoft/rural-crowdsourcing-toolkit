@@ -5,10 +5,10 @@ import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
+import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.utils.AppConstants
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
@@ -17,6 +17,8 @@ import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewLifecycle
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -56,7 +58,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
   }
 
   private fun observeUi() {
-    viewModel.otpUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.otpUiState.observe(viewLifecycle, viewLifecycleScope) { state ->
       when (state) {
         is OTPUiState.Success -> showSuccessUi()
         // TODO: Change this to a correct mapping
@@ -68,9 +70,9 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
   }
 
   private fun observeEffects() {
-    viewModel.otpEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+    viewModel.otpEffects.observe(viewLifecycle, viewLifecycleScope) { effect ->
       when (effect) {
-        is OTPEffects.Navigate -> navigate(effect.data)
+        is OTPEffects.Navigate -> navigate(effect.destination)
       }
     }
   }
@@ -113,22 +115,21 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     }
   }
 
-  private fun navigate(destination: OTPDestination) {
+  private fun navigate(destination: Destination) {
     when (destination) {
-      OTPDestination.AgeSelection -> TODO()
-      OTPDestination.Dashboard -> navigateToDashBoard()
-      OTPDestination.GenderSelection -> TODO()
-      OTPDestination.ProfilePicSelection -> navigateToProfilePicture()
+      Destination.TempDataFlow -> navigateToTempDataFlow()
+      Destination.Dashboard -> navigateToDashBoard()
+      else -> {}
     }
   }
 
   private fun navigateToDashBoard() {
-    findNavController().navigate(R.id.action_OTPFragment_to_dashboardActivity2)
+    findNavController().navigate(R.id.action_global_dashboardActivity4)
     finish()
   }
 
-  private fun navigateToProfilePicture() {
-    findNavController().navigate(R.id.action_OTPFragment_to_profilePictureFragment)
+  private fun navigateToTempDataFlow() {
+    findNavController().navigate(R.id.action_OTPFragment2_to_tempDataFlow)
   }
 
   private fun enableNextButton() {

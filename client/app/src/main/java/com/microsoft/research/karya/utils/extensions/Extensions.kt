@@ -13,8 +13,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
+val Fragment.viewLifecycle
+  get() = viewLifecycleOwner.lifecycle
+
+val Fragment.viewLifecycleScope
+  get() = viewLifecycleOwner.lifecycleScope
 
 /** Request focus on a text field and show the keyboard */
 fun Activity.requestSoftKeyFocus(editText: EditText) {
