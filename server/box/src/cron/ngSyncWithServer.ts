@@ -7,7 +7,7 @@ import { BoxRecord } from '@karya/core';
 import { axios } from './ngHttpUtils';
 import { cronLogger } from '../utils/Logger';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
-import { uploadKaryaFilesToServer } from './ngSendToServer';
+import { sendNewWorkers, sendUpdatedWorkers, uploadKaryaFilesToServer } from './ngSendToServer';
 import { getMicrotasks, getNewSASTokens, getTaskAssignments, downloadPendingKaryaFiles } from './ngReceiveFromServer';
 
 /**
@@ -62,7 +62,9 @@ export async function syncBoxWithServer(box: BoxRecord) {
   // Upload files to the server
   await uploadKaryaFilesToServer(box, axios);
 
-  // Send newly created workers to server
+  // Send newly created workers and updated workers to server
+  await sendNewWorkers(box, axios);
+  await sendUpdatedWorkers(box, axios);
 
   // Send all created/completed microtask (group) assignments
 

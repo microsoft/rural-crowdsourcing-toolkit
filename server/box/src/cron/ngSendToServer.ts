@@ -3,8 +3,8 @@
 //
 // Send files and information to the server
 
-import { BasicModel } from '@karya/common';
-import { BoxRecord, KaryaFileRecord } from '@karya/core';
+import { BasicModel, knex } from '@karya/common';
+import { BoxRecord, KaryaFileRecord, WorkerRecord } from '@karya/core';
 import { envGetString } from '@karya/misc-utils';
 import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
@@ -17,7 +17,7 @@ import { cronLogger } from '../utils/Logger';
  * @param box Box record
  * @param axios Axios instance with defaults
  */
-export async function uploadKaryaFilesToServer(box: BoxRecord, axios: AxiosInstance) {
+export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get all files that are yet to be uploaded to the server
   const files = await BasicModel.getRecords('karya_file', { box_id: box.id, in_box: true, in_server: false });
 
@@ -52,7 +52,7 @@ export async function uploadKaryaFilesToServer(box: BoxRecord, axios: AxiosInsta
 
     // Upload file
     try {
-      await axios.put<KaryaFileRecord>('/karya_file', form, { headers: form.getHeaders() });
+      await axiosLocal.put<KaryaFileRecord>('/karya_file', form, { headers: form.getHeaders() });
       await BasicModel.updateSingle('karya_file', { id: file.id }, { in_server: true });
     } catch (e) {
       failedUpload.push(file.id);
@@ -64,5 +64,67 @@ export async function uploadKaryaFilesToServer(box: BoxRecord, axios: AxiosInsta
     cronLogger.warn(`Failed to upload ${failedCount} files`);
   } else {
     cronLogger.info('Uploaded all files successfully');
+  }
+}
+
+/**
+ * Send all newly created workers to the server
+ * TODO: Limit the number of records sent and loop?
+ * @param box Box with the workers
+ * @param axiosLocal Local axios instance with defaults
+ */
+export async function sendNewWorkers(box: BoxRecord, axiosLocal: AxiosInstance) {
+  // Get all new workers created that have not been sent to the server yet
+  try {
+    const workers = await knex<WorkerRecord>('worker')
+      .where('box_id', box.id)
+      .whereRaw('sent_to_server_at < created_at');
+
+    // If no new workers return
+    if (workers.length == 0) return;
+
+    cronLogger.info(`Sending '${workers.length}' new workers to server`);
+
+    type NewWorkerResponse = Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[];
+
+    const response = await axiosLocal.put<NewWorkerResponse>('/new_workers', workers);
+    const workerResponse = response.data;
+
+    await BBPromise.mapSeries(workerResponse, async (worker) => {
+      await BasicModel.updateSingle('worker', { id: worker.id }, { sent_to_server_at: worker.sent_to_server_at });
+    });
+  } catch (e) {
+    cronLogger.error('Failed to send new workers to server');
+  }
+}
+
+/**
+ * Send all workers whose profile has been updated to the server
+ * TODO: Limit the number of records sent and loop?
+ * @param box Box with the workers
+ * @param axiosLocal Local axios instance with defaults
+ */
+export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstance) {
+  // Get all new workers created that have not been sent to the server yet
+  try {
+    const workers = await knex<WorkerRecord>('worker')
+      .where('box_id', box.id)
+      .whereRaw('sent_to_server_at < profile_updated_at');
+
+    // If no new workers return
+    if (workers.length == 0) return;
+
+    cronLogger.info(`Sending '${workers.length}' updated workers to server`);
+
+    type NewWorkerResponse = Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[];
+
+    const response = await axiosLocal.put<NewWorkerResponse>('/workers', workers);
+    const workerResponse = response.data;
+
+    await BBPromise.mapSeries(workerResponse, async (worker) => {
+      await BasicModel.updateSingle('worker', { id: worker.id }, { sent_to_server_at: worker.sent_to_server_at });
+    });
+  } catch (e) {
+    cronLogger.error('Failed to send new workers to server');
   }
 }
