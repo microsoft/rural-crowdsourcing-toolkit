@@ -49,8 +49,8 @@ constructor(
   private val authManager: AuthManager,
 ) : ViewModel() {
 
-  val microtaskOutputContainer = MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath)
-  val microtaskInputContainer = MICROTASK_INPUT(fileDirPath)
+  private val microtaskOutputContainer = MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath)
+  private val microtaskInputContainer = MICROTASK_INPUT(fileDirPath)
 
   private val taskInfoComparator =
     compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
