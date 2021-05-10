@@ -56,11 +56,14 @@ boxRouter.get('/karya_file/:id', Middlewares.needIdToken, KaryaFileController.ge
 // Get language assets
 boxRouter.get('/language_assets', Middlewares.needIdToken, KaryaFileController.getLanguageAssets);
 
-// Send all newly creted workers
+// Send all newly created workers
 boxRouter.put('/new_workers', Middlewares.needIdToken, BodyParser(), WorkerController.newWorkers);
 
-// Send all newly creted workers
+// Send all updated workers
 boxRouter.put('/workers', Middlewares.needIdToken, BodyParser(), WorkerController.updateWorkers);
+
+// Get all udpated workers
+boxRouter.get('/workers', Middlewares.needIdToken, WorkerController.updateWorkers);
 
 // Get new task assignments
 boxRouter.get('/task_assignments', Middlewares.needIdToken, TaskController.getTaskAssignments);

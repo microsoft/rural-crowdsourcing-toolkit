@@ -77,3 +77,27 @@ export const updateWorkers: BoxRouteMiddleware = async (ctx) => {
     HttpResponse.BadRequest(ctx, 'Unknown error occured while adding new workers');
   }
 };
+
+/**
+ * Get all updated workers. The server can only update the tags
+ */
+export const get: BoxRouteMiddleware = async (ctx) => {
+  let from = ctx.query.from || new Date(0).toISOString();
+  if (from instanceof Array) from = from[0];
+
+  try {
+    const workers = await BasicModel.ngGetRecords(
+      'worker',
+      { box_id: ctx.state.entity.id },
+      [],
+      [['tags_updated_at', from, null]]
+    );
+    const response = workers.map((w) => {
+      return { id: w.id, tags: w.tags, tags_updated_at: w.tags_updated_at };
+    });
+    HttpResponse.OK(ctx, response);
+  } catch (e) {
+    // TODO convert this to internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error occured while fetching workers');
+  }
+};
