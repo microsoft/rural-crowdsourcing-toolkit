@@ -18,7 +18,6 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
-import kotlin.jvm.Throws
 
 object FileUtils {
 
@@ -117,7 +116,6 @@ object FileUtils {
     tarStream.close()
     gzipStream.close()
     fileStream.close()
-
   }
 
   /**

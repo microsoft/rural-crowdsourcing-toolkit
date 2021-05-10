@@ -62,7 +62,7 @@ constructor(
       if (isAssistantAvailable()) {
         if (assistantPlayer.isPlaying) assistantPlayer.stop()
 
-        assistantPlayer.setOnCompletionListener{ onCompletionListener() }
+        assistantPlayer.setOnCompletionListener { onCompletionListener() }
 
         assistantPlayer.setOnErrorListener { _: MediaPlayer, _: Int, _: Int ->
           onErrorListener()
