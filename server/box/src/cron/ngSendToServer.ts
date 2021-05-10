@@ -3,8 +3,8 @@
 //
 // Send files and information to the server
 
-import { BasicModel, knex } from '@karya/common';
-import { BoxRecord, KaryaFileRecord, TaskAssignmentRecord, TaskRecord } from '@karya/core';
+import { BasicModel } from '@karya/common';
+import { BoxRecord, KaryaFileRecord } from '@karya/core';
 import { envGetString } from '@karya/misc-utils';
 import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';

@@ -8,7 +8,7 @@ import { axios } from './ngHttpUtils';
 import { cronLogger } from '../utils/Logger';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import { uploadKaryaFilesToServer } from './ngSendToServer';
-import { getMicrotasks, getTaskAssignments } from './ngReceiveFromServer';
+import { getMicrotasks, getNewSASTokens, getTaskAssignments, downloadPendingKaryaFiles } from './ngReceiveFromServer';
 
 /**
  * Sync specified box with server
@@ -60,11 +60,7 @@ export async function syncBoxWithServer(box: BoxRecord) {
   }
 
   // Upload files to the server
-  try {
-    await uploadKaryaFilesToServer(box, axios);
-  } catch (e) {
-    cronLogger.error('Upload stage had errors. Check log file for errors.');
-  }
+  await uploadKaryaFilesToServer(box, axios);
 
   // Send newly created workers to server
 
@@ -75,4 +71,10 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Get all microtasks
   await getMicrotasks(box, axios);
+
+  // Get new SAS tokens
+  await getNewSASTokens(axios);
+
+  // Download all pending files
+  await downloadPendingKaryaFiles();
 }

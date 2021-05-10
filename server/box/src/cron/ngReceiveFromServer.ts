@@ -13,15 +13,18 @@ import {
   TaskRecord,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
-import { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { cronLogger } from '../utils/Logger';
+import { getChecksum } from '../models/KaryaFileModel';
+import { envGetString } from '@karya/misc-utils';
+import fs from 'fs';
 
 /**
  *
  * @param box Box record
- * @param axios Axios instance with defaults
+ * @param axiosLocal Axios instance with defaults
  */
-export async function getTaskAssignments(box: BoxRecord, axios: AxiosInstance) {
+export async function getTaskAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get latest receive time on task assignments
   const response = await knex<TaskAssignmentRecord>('task_assignment').max('received_from_server_at');
   const latest_receive_time = response[0].max || new Date(0).toISOString();
@@ -34,7 +37,7 @@ export async function getTaskAssignments(box: BoxRecord, axios: AxiosInstance) {
 
   let assignmentData: TaskAssignmentResponse;
   try {
-    const response = await axios.get<TaskAssignmentResponse>('/task_assignments', {
+    const response = await axiosLocal.get<TaskAssignmentResponse>('/task_assignments', {
       params: { from: latest_receive_time },
     });
     assignmentData = response.data;
@@ -68,7 +71,7 @@ export async function getTaskAssignments(box: BoxRecord, axios: AxiosInstance) {
 /**
  * Get new microtasks for incomplete task assignments
  */
-export async function getMicrotasks(box: BoxRecord, axios: AxiosInstance) {
+export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get incomplete task assignments
   const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id, status: 'assigned' });
   const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -100,7 +103,7 @@ export async function getMicrotasks(box: BoxRecord, axios: AxiosInstance) {
 
       // Send request to get microtasks
       try {
-        const response = await axios.get<MicrotasksResponse>(`/task/${task.id}/microtasks`, {
+        const response = await axiosLocal.get<MicrotasksResponse>(`/task/${task.id}/microtasks`, {
           params: { from: latest_update, limit },
         });
         microtasksData = response.data;
@@ -128,5 +131,92 @@ export async function getMicrotasks(box: BoxRecord, axios: AxiosInstance) {
 
       responseLength = granularity == 'group' ? groups.length : microtasks.length;
     }
+    cronLogger.info(`Received microtasks for task ${task.id}`);
+  });
+}
+
+/**
+ * Get SAS tokens for pending karya files: url = null;
+ */
+export async function getNewSASTokens(axiosLocal: AxiosInstance) {
+  try {
+    // Extract all pending karya files. Those in the server but not in the box
+    const pendingFiles = await BasicModel.ngGetRecords('karya_file', {
+      in_server: true,
+      in_box: false,
+      url: null,
+    });
+
+    if (pendingFiles.length > 0) {
+      cronLogger.info(`Getting SAS tokens for ${pendingFiles.length} files`);
+    }
+
+    const failedFiles: string[] = [];
+    await BBPromise.mapSeries(pendingFiles, async (file) => {
+      try {
+        const response = await axiosLocal.get<KaryaFileRecord>(`/karya_file/${file.id}`);
+        await BasicModel.updateSingle('karya_file', { id: file.id }, { url: response.data.url });
+      } catch (e) {
+        failedFiles.push(file.id);
+      }
+    });
+    // TODO: Handle failed files.length > 0
+  } catch (e) {
+    cronLogger.error('Unknown error while getting SAS token');
+  }
+}
+
+/**
+ * Download pending karya files
+ */
+export async function downloadPendingKaryaFiles() {
+  try {
+    // Local folder
+    const localFolder = envGetString('LOCAL_FOLDER');
+    const localFolderPath = `${process.cwd()}/${localFolder}`;
+
+    const pendingFiles = await BasicModel.ngGetRecords('karya_file', { in_server: true, in_box: false });
+
+    if (pendingFiles.length > 0) {
+      cronLogger.info(`Downloading ${pendingFiles.length} files`);
+    }
+
+    const failedFiles: string[] = [];
+    await BBPromise.mapSeries(pendingFiles, async (file) => {
+      if (file.url == null) return;
+      const filepath = `${localFolderPath}/${file.container_name}/${file.name}`;
+
+      try {
+        // Download file
+        await downloadKaryaFile(file.url, filepath);
+        // Check checksum
+        const checksum = await getChecksum(filepath, file.algorithm);
+        if (checksum != file.checksum) {
+          throw new Error('Checksum error');
+        }
+        // Update db
+        await BasicModel.updateSingle('karya_file', { id: file.id }, { in_box: true, url: null });
+      } catch (e) {
+        failedFiles.push(file.id);
+        await BasicModel.updateSingle('karya_file', { id: file.id }, { url: null });
+      }
+    });
+  } catch (e) {
+    cronLogger.error('Unknown error while downloading karya files');
+  }
+}
+
+/**
+ * Download a Karya File using the URL into the target path.
+ * @param url Blob URL of the karya file
+ * @param filepath Local target path for downloaded file
+ */
+async function downloadKaryaFile(url: string, filepath: string) {
+  const writer = fs.createWriteStream(filepath);
+  const response = await axios.get(url, { responseType: 'stream' });
+  response.data.pipe(writer);
+  return new Promise((resolve, reject) => {
+    writer.on('finish', resolve);
+    writer.on('error', reject);
   });
 }

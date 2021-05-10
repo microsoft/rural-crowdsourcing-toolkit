@@ -7,8 +7,11 @@ import { KaryaFileRecord } from '@karya/core';
 import { BoxRouteMiddleware } from '../routes/BoxRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { getChecksum } from '../models/KaryaFileModel';
-import { BasicModel, uploadBlobFromFileWithName } from '@karya/common';
+import { BasicModel, getBlobSASURL, uploadBlobFromFileWithName } from '@karya/common';
 
+/**
+ * Upload a file from a box to the server.
+ */
 export const upload: BoxRouteMiddleware = async (ctx, next) => {
   // Extract the file record from the request
   let fileRecord: KaryaFileRecord;
@@ -50,6 +53,40 @@ export const upload: BoxRouteMiddleware = async (ctx, next) => {
   }
 };
 
-export const get: BoxRouteMiddleware = async (ctx, next) => {};
+/**
+ * Get SAS token for a karya file
+ */
+export const get: BoxRouteMiddleware = async (ctx, next) => {
+  // Get karya file id from params
+  const id = ctx.params.id;
 
+  // Fetch karya file
+  let karyaFile: KaryaFileRecord;
+  try {
+    karyaFile = await BasicModel.getSingle('karya_file', { id });
+  } catch (e) {
+    HttpResponse.NotFound(ctx, 'No karya file with given ID');
+    return;
+  }
+
+  const url = karyaFile.url;
+  if (!url) {
+    HttpResponse.NotFound(ctx, 'File not uploaded to server yet');
+    return;
+  }
+
+  // Generate SAS token
+  try {
+    const sasURL = getBlobSASURL(url, 'r', 120);
+    karyaFile.url = sasURL;
+    HttpResponse.OK(ctx, karyaFile);
+  } catch (e) {
+    HttpResponse.BadRequest(ctx, 'Unable to generate SAS token');
+    return;
+  }
+};
+
+/**
+ * Get all langauge assets
+ */
 export const getLanguageAssets: BoxRouteMiddleware = async (ctx, next) => {};
