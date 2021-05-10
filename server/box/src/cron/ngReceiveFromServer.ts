@@ -11,6 +11,7 @@ import {
   MicrotaskRecord,
   TaskAssignmentRecord,
   TaskRecord,
+  WorkerRecord,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import axios, { AxiosInstance } from 'axios';
@@ -20,7 +21,41 @@ import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
 
 /**
- *
+ * Get all workers whose tags have been updated
+ */
+export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
+  // Get the latest time tags were updated
+  const response = await knex<WorkerRecord>('worker').max('tags_updated_at');
+  const latest_tag_updated_time = response[0].max || new Date(0).toISOString();
+
+  // Response type for get updated workes query
+  type UpdatedWorkerRespnse = Pick<WorkerRecord, 'id' | 'tags' | 'tags_updated_at'>[];
+
+  // Get updated workers
+  let updatedWorkerData: UpdatedWorkerRespnse;
+  try {
+    const response = await axiosLocal.get<UpdatedWorkerRespnse>('/workers', {
+      params: { from: latest_tag_updated_time },
+    });
+    updatedWorkerData = response.data;
+  } catch (e) {
+    cronLogger.error(`Failed to receive updated workers`);
+    return;
+  }
+
+  // Update tag information for workers
+  try {
+    await BBPromise.mapSeries(updatedWorkerData, async (worker) => {
+      const { id, tags, tags_updated_at } = worker;
+      await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+    });
+  } catch (e) {
+    cronLogger.error(`Failed to update tag information about workers`);
+  }
+}
+
+/**
+ * Get all (new/updated) task assignments for this box
  * @param box Box record
  * @param axiosLocal Axios instance with defaults
  */
