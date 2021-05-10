@@ -90,7 +90,8 @@ export const get: BoxRouteMiddleware = async (ctx) => {
       'worker',
       { box_id: ctx.state.entity.id },
       [],
-      [['tags_updated_at', from, null]]
+      [['tags_updated_at', from, null]],
+      'tags_updated_at'
     );
     const response = workers.map((w) => {
       return { id: w.id, tags: w.tags, tags_updated_at: w.tags_updated_at };
