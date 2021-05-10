@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.dashboard
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -50,8 +51,16 @@ class DashboardActivity : AppCompatActivity() {
       }
 
       syncCv.setOnClickListener {
-        viewModel.fetchNewTasks()
-        viewModel.submitCompletedTasks()
+        syncCv.isClickable = false
+        // TODO: START TO SHOW PROGRESS BAR AND THEN FINISH IT
+        try {
+          viewModel.syncWithServer()
+        } catch (e: Exception) {
+          Log.d("DASHBOARD_ACTIVITY", e.toString())
+          // TODO: Add appropriate Error Handling here
+        }
+        syncCv.isClickable = true
+
       }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
