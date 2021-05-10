@@ -6,7 +6,8 @@
 import { BoxRouteMiddleware, BoxRouteState } from '../routes/BoxRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { BasicModel, getBlobSASURL } from '@karya/common';
-import { MicrotaskGroupRecord, MicrotaskRecord, TaskRecord } from '@karya/core';
+import { MicrotaskAssignmentRecord, MicrotaskGroupRecord, MicrotaskRecord, TaskRecord } from '@karya/core';
+import { Promise as BBPromise } from 'bluebird';
 
 type TaskState = {
   task: TaskRecord;
@@ -107,9 +108,78 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
   }
 };
 
-export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx, next) => {};
+/**
+ * Submit new assignments created by the box
+ */
+export const submitNewAssignments: TaskRouteMiddleware = async (ctx) => {
+  const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
 
-export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx, next) => {};
+  // get current time
+  const sent_to_server_at = new Date().toISOString();
+
+  // Upsert all new assignments
+  try {
+    const response = await BBPromise.mapSeries(assignments, async (assignment) => {
+      await BasicModel.upsertRecord('microtask_assignment', { ...assignment, sent_to_server_at });
+      return { id: assignment.id, sent_to_server_at };
+    });
+    HttpResponse.OK(ctx, response);
+  } catch (e) {
+    // Conver this to internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error occured while inserting assignments');
+  }
+};
+
+export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
+  const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
+
+  // get current time
+  const submitted_to_server_at = new Date().toISOString();
+
+  // Upsert all new assignments
+  try {
+    const response = await BBPromise.mapSeries(assignments, async (assignment) => {
+      await BasicModel.upsertRecord('microtask_assignment', { ...assignment, submitted_to_server_at });
+      return { id: assignment.id, submitted_to_server_at };
+    });
+
+    // TODO: Execute trigger to initiate task chain
+
+    HttpResponse.OK(ctx, response);
+  } catch (e) {
+    // Conver this to internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error occured while inserting assignments');
+  }
+};
+
+/**
+ * Get all verified assignments for a given task.
+ */
+export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
+  let from = ctx.query.from || new Date(0).toISOString();
+  if (from instanceof Array) from = from[0];
+
+  let limitString = ctx.query.limit;
+  if (limitString instanceof Array) limitString = limitString[0];
+  const limit = limitString ? Number.parseInt(limitString) : undefined;
+
+  const task = ctx.state.task;
+
+  try {
+    const verified = await BasicModel.ngGetRecords(
+      'microtask_assignment',
+      { task_id: task.id, status: 'verified' },
+      [],
+      [['verified_at', from, null]],
+      'verified_at',
+      limit
+    );
+    HttpResponse.OK(ctx, verified);
+  } catch (e) {
+    // Conver this to internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error occured while fetching verified assignments');
+  }
+};
 
 /**
  * Set task from ID in params.

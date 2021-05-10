@@ -79,6 +79,16 @@ boxRouter.get<TaskController.TaskRouteState, {}>(
 
 // Submit completed assignments for the specified task
 boxRouter.put<TaskController.TaskRouteState, {}>(
+  '/task/:id/new_assignments',
+  Middlewares.needIdToken,
+  TaskController.setTask,
+  BodyParser(),
+  // @ts-ignore Lack of full understanding of router types
+  TaskController.submitNewAssignments
+);
+
+// Submit completed assignments for the specified task
+boxRouter.put<TaskController.TaskRouteState, {}>(
   '/task/:id/completed_assignments',
   Middlewares.needIdToken,
   TaskController.setTask,
