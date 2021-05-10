@@ -7,6 +7,7 @@ import { BasicModel, knex } from '@karya/common';
 import {
   BoxRecord,
   KaryaFileRecord,
+  MicrotaskAssignmentRecord,
   MicrotaskGroupRecord,
   MicrotaskRecord,
   TaskAssignmentRecord,
@@ -253,5 +254,54 @@ async function downloadKaryaFile(url: string, filepath: string) {
   return new Promise((resolve, reject) => {
     writer.on('finish', resolve);
     writer.on('error', reject);
+  });
+}
+
+/**
+ * Get verified assignments for all tasks
+ */
+export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
+  // Get incomplete task assignments
+  const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id });
+  const task_ids = task_assignments.map((ta) => ta.task_id);
+
+  // Get all tasks
+  const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+
+  // For each task, get all microtasks
+  await BBPromise.mapSeries(tasks, async (task) => {
+    const limit = 1000;
+
+    let responseLength = limit;
+
+    while (responseLength >= limit) {
+      let verifiedAssignments: MicrotaskAssignmentRecord[];
+      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment').max('verified_at');
+      const latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
+
+      // Send request to get microtasks
+      try {
+        const response = await axiosLocal.get<MicrotaskAssignmentRecord[]>(`/task/${task.id}/verified_assignments`, {
+          params: { from: latest_verified, limit },
+        });
+        verifiedAssignments = response.data;
+      } catch (e) {
+        cronLogger.error('Failed to get verified assignemts');
+        return;
+      }
+
+      // Upsert records
+      try {
+        await BBPromise.mapSeries(verifiedAssignments, async (assignment) => {
+          await BasicModel.upsertRecord('microtask_assignment', assignment);
+        });
+      } catch (e) {
+        cronLogger.error('Failed to update local assignments');
+        return;
+      }
+
+      responseLength = verifiedAssignments.length;
+    }
+    cronLogger.info(`Received verified assignments for task ${task.id}`);
   });
 }

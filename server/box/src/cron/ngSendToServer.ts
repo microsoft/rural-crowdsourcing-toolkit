@@ -4,7 +4,7 @@
 // Send files and information to the server
 
 import { BasicModel, knex } from '@karya/common';
-import { BoxRecord, KaryaFileRecord, WorkerRecord } from '@karya/core';
+import { BoxRecord, KaryaFileRecord, MicrotaskAssignmentRecord, WorkerRecord } from '@karya/core';
 import { envGetString } from '@karya/misc-utils';
 import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
@@ -126,5 +126,86 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
     });
   } catch (e) {
     cronLogger.error('Failed to send new workers to server');
+  }
+}
+
+/**
+ * Send newly created microtask assignments to the server
+ */
+export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
+  try {
+    // Get all task assignments for the box
+    const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id });
+    const task_ids = task_assignments.map((ta) => ta.task_id);
+    const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+
+    type SendNewAssignmentsResponse = Pick<MicrotaskAssignmentRecord, 'id' | 'sent_to_server_at'>[];
+
+    const batch_size = 1000;
+    // For each task send all newly created assignments in batches
+    await BBPromise.mapSeries(tasks, async (task) => {
+      const assignments = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+        .where({
+          box_id: box.id,
+          task_id: task.id,
+          status: 'assigned',
+        })
+        .whereRaw('sent_to_server_at < created_at');
+
+      let batch_id = 0;
+      let batch: MicrotaskAssignmentRecord[];
+      do {
+        batch = assignments.slice(batch_id * batch_size, (batch_id + 1) * batch_size);
+        const response = await axiosLocal.put<SendNewAssignmentsResponse>(`/task/${task.id}/new_assignments`, batch);
+        const updates = response.data;
+        await BBPromise.mapSeries(updates, async ({ id, sent_to_server_at }) => {
+          await BasicModel.updateSingle('microtask_assignment', { id }, { sent_to_server_at });
+        });
+      } while (batch.length >= batch_size);
+    });
+  } catch (e) {
+    cronLogger.error('Unknown error while sending assignments');
+  }
+}
+
+/**
+ * Send completed microtask assignments to the server
+ */
+export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
+  try {
+    // Get all task assignments for the box
+    const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id });
+    const task_ids = task_assignments.map((ta) => ta.task_id);
+    const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+
+    type SendNewAssignmentsResponse = Pick<MicrotaskAssignmentRecord, 'id' | 'submitted_to_server_at'>[];
+
+    const batch_size = 1000;
+    // For each task send all newly created assignments in batches
+    await BBPromise.mapSeries(tasks, async (task) => {
+      const assignments = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+        .where({
+          box_id: box.id,
+          task_id: task.id,
+          status: 'completed',
+        })
+        .whereRaw('submitted_to_server_at < completed_at');
+
+      let batch_id = 0;
+      let batch: MicrotaskAssignmentRecord[];
+      do {
+        batch = assignments.slice(batch_id * batch_size, (batch_id + 1) * batch_size);
+        const response = await axiosLocal.put<SendNewAssignmentsResponse>(
+          `/task/${task.id}/completed_assignments`,
+          batch
+        );
+        const updates = response.data;
+        await BBPromise.mapSeries(updates, async ({ id, submitted_to_server_at }) => {
+          await BasicModel.updateSingle('microtask_assignment', { id }, { submitted_to_server_at });
+        });
+      } while (batch.length >= batch_size);
+    });
+  } catch (e) {
+    cronLogger.error('Unknown error while sending assignments');
   }
 }
