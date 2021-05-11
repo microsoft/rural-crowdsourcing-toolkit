@@ -94,7 +94,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     worker: {
       columns: [
         ['access_code', ['string', 32], 'unique', 'not nullable', 'not mutable'],
-        ['registered', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['registered_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
         ['reg_mechanism', ['string', 32, 'RegistrationMechanism'], 'not unique', 'nullable', 'mutable'],
         ['phone_number', ['string', 16], 'not unique', 'nullable', 'mutable'],
         ['otp', ['string', 8], 'not unique', 'nullable', 'mutable'],
