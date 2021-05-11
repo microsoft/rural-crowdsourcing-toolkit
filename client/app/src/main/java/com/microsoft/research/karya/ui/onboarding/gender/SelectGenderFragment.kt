@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewLifecycle
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +20,6 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
   private val binding by viewBinding(FragmentSelectGenderBinding::bind)
   private val viewModel by viewModels<SelectGenderViewModel>()
-  var gender = "not_specified"
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -32,39 +32,36 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
 
   private fun setupViews() {
     with(binding) {
-      maleBtn.setOnClickListener {
-        gender = "male"
-        maleBtn.isSelected = true
-        femaleBtn.isSelected = false
-        enableGenderSubmitButton()
-      }
+      maleBtn.setOnClickListener { viewModel.setGender(Gender.MALE) }
 
       femaleBtn.setOnClickListener {
-        gender = "female"
+        viewModel.setGender(Gender.FEMALE)
         femaleBtn.isSelected = true
         maleBtn.isSelected = false
         enableGenderSubmitButton()
       }
 
-      submitGenderIb.setOnClickListener { viewModel.updateWorkerGender(gender) }
+      submitGenderIb.setOnClickListener { viewModel.updateWorkerGender() }
 
       appTb.setTitle(getString(R.string.s_gender_title))
+
+      disableGenderSubmitButton()
     }
   }
 
   private fun observeUi() {
-    viewModel.selectGenderUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.selectGenderUiState.observe(viewLifecycle, viewLifecycleScope) { state ->
       when (state) {
+        is SelectGenderUiState.Success -> showSuccessUi(state.gender)
         is SelectGenderUiState.Error -> showErrorUi(state.throwable.message!!)
         SelectGenderUiState.Initial -> showInitialUi()
         SelectGenderUiState.Loading -> showLoadingUi()
-        SelectGenderUiState.Success -> showSuccessUi()
       }
     }
   }
 
   private fun observeEffects() {
-    viewModel.selectGenderEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+    viewModel.selectGenderEffects.observe(viewLifecycle, viewLifecycleScope) { effect ->
       when (effect) {
         SelectGenderEffects.Navigate -> navigateToAgeGroupFragment()
       }
@@ -85,10 +82,16 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
     }
   }
 
-  private fun showSuccessUi() {
+  private fun showSuccessUi(gender: Gender) {
     with(binding) {
       hideLoading()
       enableGenderSubmitButton()
+      when (gender) {
+        Gender.MALE -> selectMaleButton()
+        Gender.FEMALE -> selectFemaleButton()
+        Gender.OTHER -> TODO()
+        Gender.NOT_SPECIFIED -> TODO()
+      }
     }
   }
 
@@ -113,8 +116,22 @@ class SelectGenderFragment : Fragment(R.layout.fragment_select_gender) {
     }
   }
 
+  fun selectMaleButton() {
+    with(binding) {
+      maleBtn.isSelected = true
+      femaleBtn.isSelected = false
+    }
+  }
+
+  fun selectFemaleButton() {
+    with(binding) {
+      maleBtn.isSelected = false
+      femaleBtn.isSelected = true
+    }
+  }
+
   private fun navigateToAgeGroupFragment() {
-    findNavController().navigate(R.id.action_selectGenderFragment_to_selectAgeGroupFragment)
+    findNavController().navigate(R.id.action_selectGenderFragment2_to_selectAgeGroupFragment2)
   }
 
   private fun showLoading() {

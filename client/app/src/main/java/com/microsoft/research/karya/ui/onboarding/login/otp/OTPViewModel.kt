@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
+import com.microsoft.research.karya.ui.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -71,10 +72,9 @@ constructor(
   private suspend fun handleNavigation(worker: WorkerRecord) {
     val destination =
       when {
-        worker.profilePicturePath.isNullOrEmpty() -> OTPDestination.ProfilePicSelection
-        worker.gender.isNullOrEmpty() -> OTPDestination.GenderSelection
-        worker.age.isNullOrEmpty() -> OTPDestination.AgeSelection
-        else -> OTPDestination.Dashboard
+        worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
+        worker.age.isNullOrEmpty() -> Destination.MandatoryDataFlow
+        else -> Destination.Dashboard
       }
 
     _otpEffects.emit(OTPEffects.Navigate(destination))

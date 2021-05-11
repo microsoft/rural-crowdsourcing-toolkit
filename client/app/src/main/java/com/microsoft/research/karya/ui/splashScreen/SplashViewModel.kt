@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
+import com.microsoft.research.karya.ui.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -19,8 +20,8 @@ constructor(
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
-  private val _splashDestination: MutableStateFlow<SplashDestination> = MutableStateFlow(SplashDestination.Splash)
-  val splashDestination = _splashDestination.asStateFlow()
+  private val _splashDestination = MutableSharedFlow<Destination>()
+  val splashDestination = _splashDestination.asSharedFlow()
 
   fun navigate() {
     viewModelScope.launch {
@@ -42,25 +43,25 @@ constructor(
     return authManager.fetchLoggedInWorker()
   }
 
-  private suspend fun isWorkerRegistrationComplete(): Boolean {
-    return authManager.isWorkerRegistered()
-  }
-
   private suspend fun handleNewUser() {
-    _splashDestination.value = SplashDestination.AccessCode
+    _splashDestination.emit(Destination.AccessCodeFlow)
   }
 
   private suspend fun handleSingleUser() {
     val worker = getLoggedInWorker()
 
-    if (worker.idToken.isNullOrEmpty()) {
-      _splashDestination.value = SplashDestination.Registration
-    } else {
-      _splashDestination.value = SplashDestination.Dashboard
-    }
+    val destination =
+      when {
+        worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
+        worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
+        worker.age.isNullOrEmpty() -> Destination.MandatoryDataFlow
+        else -> Destination.Dashboard
+      }
+
+    _splashDestination.emit(destination)
   }
 
   private suspend fun handleMultipleUsers() {
-    _splashDestination.value = SplashDestination.UserSelection
+    _splashDestination.emit(Destination.UserSelection)
   }
 }

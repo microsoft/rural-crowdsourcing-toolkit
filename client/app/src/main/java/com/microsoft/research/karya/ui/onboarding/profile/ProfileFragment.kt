@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
+import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -66,7 +67,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
   private fun observeEffects() {
     viewModel.profileEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
       when (effect) {
-        ProfileEffects.Navigate -> navigateToSelectGenderFragment()
+        is ProfileEffects.Navigate -> handleNavigation(effect.destination)
       }
     }
   }
@@ -106,8 +107,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
     }
   }
 
+  private fun handleNavigation(destination: Destination) {
+    when (destination) {
+      Destination.MandatoryDataFlow -> navigateToSelectGenderFragment()
+      Destination.Dashboard -> navigateToDashboard()
+    }
+  }
+
   private fun navigateToSelectGenderFragment() {
-    findNavController().navigate(R.id.action_profilePictureFragment_to_selectGenderFragment)
+    findNavController().navigate(R.id.action_profileFragment_to_mandatoryDataFlow)
+  }
+
+  private fun navigateToDashboard() {
+    findNavController().navigate(R.id.action_global_dashboardActivity4)
   }
 
   private fun disableRotateButton() {

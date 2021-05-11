@@ -27,22 +27,29 @@ constructor(
   private val _selectGenderEffects: MutableSharedFlow<SelectGenderEffects> = MutableSharedFlow()
   val selectGenderEffects = _selectGenderEffects.asSharedFlow()
 
-  fun updateWorkerGender(gender: String) {
+  private var selectedGender: Gender = Gender.NOT_SPECIFIED
+
+  fun updateWorkerGender() {
     viewModelScope.launch {
       _selectGenderUiState.value = SelectGenderUiState.Loading
 
       val worker = authManager.fetchLoggedInWorker()
-      val newWorker = worker.copy(gender = gender)
+      val newWorker = worker.copy(gender = selectedGender.gender)
 
       checkNotNull(worker.idToken)
 
       try {
         workerRepository.upsertWorker(newWorker)
-        _selectGenderUiState.value = SelectGenderUiState.Success
+        _selectGenderUiState.value = SelectGenderUiState.Success(selectedGender)
         _selectGenderEffects.emit(SelectGenderEffects.Navigate)
       } catch (throwable: Throwable) {
         _selectGenderUiState.value = SelectGenderUiState.Error(throwable)
       }
     }
+  }
+
+  fun setGender(gender: Gender) {
+    selectedGender = gender
+    _selectGenderUiState.value = SelectGenderUiState.Success(gender)
   }
 }
