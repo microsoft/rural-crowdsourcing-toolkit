@@ -44,42 +44,54 @@
         android:paddingVertical="@dimen/_10sdp"
         android:textAlignment="center"
         android:textSize="@dimen/_18ssp"
-        app:layout_constraintEnd_toStartOf="@id/creationCodeStatusIv"
+        app:layout_constraintEnd_toStartOf="@id/loadingContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv" />
+
+    <FrameLayout
+        android:id="@+id/loadingContainer"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        app:layout_constraintStart_toEndOf="@id/creationCodeEt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/creationCodeEt"
+        app:layout_constraintBottom_toBottomOf="@id/creationCodeEt">
+
+        <ImageView
+            android:id="@+id/submitAccessCodeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next"
+            app:srcCompat="@drawable/ic_next_disabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/creationCodeStatusIv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:contentDescription="@string/status_check"
-        app:layout_constraintBottom_toBottomOf="@id/creationCodeEt"
+        app:layout_constraintStart_toStartOf="@id/creationCodeEt"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/creationCodeEt"
+        app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
         app:layout_constraintWidth_percent="0.1"
-        app:srcCompat="@drawable/ic_check_grey" />
+        app:srcCompat="@drawable/ic_cross_off" />
 
 
     <TextView
         android:id="@+id/creationCodeErrorTv"
         style="@style/multilineError"
         android:layout_width="@dimen/_0sdp"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_16sdp"
         app:layout_constraintEnd_toEndOf="@id/creationCodeEt"
-        app:layout_constraintStart_toStartOf="@id/creationCodeEt"
-        app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
+        app:layout_constraintStart_toEndOf="@id/creationCodeStatusIv"
+        app:layout_constraintTop_toTopOf="@id/creationCodeStatusIv"
         tools:text="@string/invalid_creation_code_desc" />
-
-    <ProgressBar
-        android:id="@+id/loadingPb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/creationCodeErrorTv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
-import com.microsoft.research.karya.utils.Result
-import com.microsoft.research.karya.utils.extensions.mapToResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -18,26 +22,29 @@ class AccessCodeViewModel
 @Inject
 constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) : ViewModel() {
 
-  // Stores the current worker access code during the access code flow
-  // TODO: Use a savedStateHandle here
-  var workerAccessCode: String = ""
-  var workerLanguage: Int = -1
+  private val _accessCodeUiState: MutableStateFlow<AccessCodeUiState> = MutableStateFlow(AccessCodeUiState.Initial)
+  val accessCodeUiState = _accessCodeUiState.asStateFlow()
 
-  fun checkAccessCode(accessCode: String): Flow<Result> {
-    return workerRepository
+  private val _accessCodeEffects: MutableSharedFlow<AccessCodeEffects> = MutableSharedFlow()
+  val accessCodeEffects = _accessCodeEffects.asSharedFlow()
+
+  fun checkAccessCode(accessCode: String) {
+    workerRepository
       .verifyAccessCode(accessCode)
+      .onStart { _accessCodeUiState.value = AccessCodeUiState.Loading }
       .onEach { worker ->
         createWorker(accessCode, worker)
         authManager.updateLoggedInWorker(accessCode)
+        _accessCodeUiState.value = AccessCodeUiState.Success(worker.appLanguage.toString())
+        _accessCodeEffects.emit(AccessCodeEffects.Navigate)
       }
-      .mapToResult()
+      .catch { exception -> _accessCodeUiState.value = AccessCodeUiState.Error(exception) }
+      .launchIn(viewModelScope)
   }
 
   private fun createWorker(accessCode: String, workerRecord: WorkerRecord) {
     val dbWorker = workerRecord.copy(accessCode = accessCode)
 
-    workerAccessCode = accessCode
-    workerLanguage = workerRecord.appLanguage
     viewModelScope.launch { workerRepository.upsertWorker(dbWorker) }
   }
 }
