@@ -7,9 +7,7 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.Result
 import java.io.File
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -23,12 +21,9 @@ constructor(
   private val karyaFileRepository: KaryaFileRepository,
   private val filesDirPath: String,
 ) {
-  private val job = Job()
-
-  private val coroutineScope = CoroutineScope(job + Dispatchers.IO)
 
   fun areLanguageResourcesAvailable(languageId: Int): Boolean {
-    val languageResFolder = File(getAudioFolderPath(languageId))
+    val languageResFolder = File(getAudioFolderPath(languageId.toString()))
 
     return languageResFolder.exists() &&
       languageResFolder.isDirectory &&
@@ -65,23 +60,27 @@ constructor(
         }
         .single()
 
+    // TODO: Use new apis
     withContext(Dispatchers.IO) {
-      FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(languageId))
-      FileUtils.extractTarBallIntoDirectory(getTarballPath(languageId), getAudioFolderPath(languageId))
+      FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(languageId.toString()))
+      FileUtils.extractTarBallIntoDirectory(
+        getTarballPath(languageId.toString()),
+        getAudioFolderPath(languageId.toString())
+      )
     }
 
     emit(Result.Success(Unit))
   }
 
-  private fun getTarballPath(languageId: Int): String {
+  private fun getTarballPath(languageId: String): String {
     return "$filesDirPath/$RELATIVE_TARBALL_PATH/$languageId.tar"
   }
 
-  private fun getAudioFolderPath(languageId: Int): String {
+  private fun getAudioFolderPath(languageId: String): String {
     return "$filesDirPath/$RELATIVE_AUDIO_FILE_PATH/$languageId"
   }
 
-  fun getAudioFilePath(languageId: Int, fileNameWithExtension: String): String {
+  fun getAudioFilePath(languageId: String, fileNameWithExtension: String): String {
     return "$filesDirPath/$RELATIVE_AUDIO_FILE_PATH/$languageId/$fileNameWithExtension"
   }
 

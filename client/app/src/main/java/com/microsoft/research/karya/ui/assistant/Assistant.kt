@@ -5,15 +5,47 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.coroutineScope
+import com.microsoft.research.karya.data.local.enum.AssistantAudio
+import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.ResourceManager
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class Assistant(lifecycleOwner: LifecycleOwner) : LifecycleObserver {
-
+class Assistant
+@AssistedInject
+constructor(
+  @Assisted lifecycleOwner: LifecycleOwner,
+  private val resourceManager: ResourceManager,
+  private val authManager: AuthManager,
+) : LifecycleObserver {
   private lateinit var assistantPlayer: MediaPlayer
   private val lifecycle: Lifecycle = lifecycleOwner.lifecycle
 
   init {
     lifecycleOwner.lifecycle.addObserver(this)
+  }
+
+  fun playAssistantAudio(
+    assistantAudio: AssistantAudio,
+    uiCue: () -> Unit = {},
+    onCompletionListener: (player: MediaPlayer) -> Unit = {},
+    onErrorListener: () -> Unit = {},
+  ) {
+    lifecycle.coroutineScope.launch {
+      val workerLanguage =
+        withContext(Dispatchers.IO) {
+          // TODO: Implement a logged-in worker cache in authManager
+          return@withContext authManager.fetchLoggedInWorker().appLanguage
+        }
+
+      val audioFilePath = resourceManager.getAudioFilePath(workerLanguage.toString(), assistantAudio.name)
+      playAssistantAudio(audioFilePath, uiCue, onCompletionListener, onErrorListener)
+    }
   }
 
   fun playAssistantAudio(
