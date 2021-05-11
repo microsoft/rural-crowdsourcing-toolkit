@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 import BBPromise from 'bluebird';
-import box_id from '../config/box_id';
 import {
   AssignmentOrder,
   MicrotaskAssignmentRecord,
@@ -31,7 +30,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
   // get all available tasks i.e. all of which are in assigned state
   const taskAssignments = await BasicModel.getRecords('task_assignment', {
-    box_id,
+    box_id: worker.box_id,
     status: 'assigned',
   });
 
@@ -44,7 +43,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     // Get task for the assignment
     const task = await BasicModel.getSingle('task', { id: taskAssignment.task_id });
 
-    const policy_name = taskAssignment.policy as PolicyName;
+    const policy_name = taskAssignment.policy;
     const policy = policyMap[policy_name];
 
     const chosenMicrotaskGroups: MicrotaskGroupRecord[] = [];
@@ -107,6 +106,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     // Assign all microtask groups and microtasks to the user
     await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
       await BasicModel.insertRecord('microtask_group_assignment', {
+        box_id: worker.box_id,
         group_id: group.id,
         worker_id: worker.id,
         status: 'assigned',
@@ -115,6 +115,8 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
     await BBPromise.mapSeries(chosenMicrotasks, async (microtask) => {
       await BasicModel.insertRecord('microtask_assignment', {
+        box_id: worker.box_id,
+        task_id: task.id,
         microtask_id: microtask.id,
         worker_id: worker.id,
         status: 'assigned',
@@ -136,7 +138,7 @@ export async function handleMicrotaskAssignmentCompletion(microtaskAssignment: M
   // fetch task assignment using the task id and the box id
   const taskAssignment = await BasicModel.getSingle('task_assignment', {
     task_id: microtask.task_id,
-    box_id,
+    box_id: microtaskAssignment.box_id,
   });
 
   const policy_name = taskAssignment.policy as PolicyName;
