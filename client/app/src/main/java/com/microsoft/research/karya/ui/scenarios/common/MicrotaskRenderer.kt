@@ -18,7 +18,7 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
-import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
+import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.assistant.Assistant
 import com.microsoft.research.karya.utils.DateUtils.getCurrentDate
 import com.microsoft.research.karya.utils.FileUtils
@@ -54,7 +54,7 @@ abstract class MicrotaskRenderer(
   /** Assistant */
   protected lateinit var assistant: Assistant
 
-  @Inject @FilesDirQualifier lateinit var fileDirPath: String
+  @Inject @FilesDir lateinit var fileDirPath: String
 
   protected lateinit var task: TaskRecord
   private lateinit var microtaskAssignmentIDs: List<String>

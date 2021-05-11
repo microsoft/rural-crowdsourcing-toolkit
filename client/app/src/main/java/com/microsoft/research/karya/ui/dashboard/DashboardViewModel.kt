@@ -14,7 +14,7 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
-import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
+import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.FileUtils.createTarBall
 import com.microsoft.research.karya.utils.FileUtils.getMD5Digest
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
@@ -45,7 +45,7 @@ constructor(
   private val assignmentRepository: AssignmentRepository,
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
-  @FilesDirQualifier private val fileDirPath: String,
+  @FilesDir private val fileDirPath: String,
   private val authManager: AuthManager,
 ) : ViewModel() {
 
@@ -124,7 +124,7 @@ constructor(
   private suspend fun uploadTarBall(
     assignment: MicroTaskAssignmentRecord,
     assignmentTarBallPath: String,
-    tarBallName: String
+    tarBallName: String,
   ) {
     val idToken = authManager.fetchLoggedInWorkerIdToken()
     val requestFile = RequestBody.create("application/tgz".toMediaTypeOrNull(), File(assignmentTarBallPath))
