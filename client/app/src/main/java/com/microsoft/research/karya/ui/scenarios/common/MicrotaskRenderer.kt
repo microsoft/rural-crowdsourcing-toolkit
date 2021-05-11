@@ -20,12 +20,11 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentSt
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
 import com.microsoft.research.karya.ui.assistant.Assistant
-import com.microsoft.research.karya.ui.base.BaseActivity
 import com.microsoft.research.karya.utils.DateUtils.getCurrentDate
 import com.microsoft.research.karya.utils.FileUtils
-import com.microsoft.research.karya.utils.LANG_RES
-import com.microsoft.research.karya.utils.MICROTASK_ASSIGNMENT_OUTPUT
-import com.microsoft.research.karya.utils.MICROTASK_INPUT
+import com.microsoft.research.karya.utils.LangRes
+import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
+import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import com.microsoft.research.karya.utils.extensions.getContainerDirectory
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,6 +91,10 @@ abstract class MicrotaskRenderer(
 
   // Flag to indicate if this is the first time the user is performing the task
   protected var firstTimeActivityVisit: Boolean = false
+
+  private var assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
+  private var microtaskInputContainer = MicrotaskInput(fileDirPath)
+  private var langResourceContainer = LangRes(fileDirPath)
 
   /** Function to return the set of permission needed for the task */
   open fun requiredPermissions(): Array<String> {
@@ -171,8 +174,7 @@ abstract class MicrotaskRenderer(
 
   /** Get the file path for an output file for the current assignment and [params] pair */
   protected fun getAssignmentOutputFilePath(params: Pair<String, String>): String {
-    val directory = getContainerDirectory(MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath))
-    // TODO: Remove KaryaFileContainer from BaseActivity
+    val directory = assignmentOutputContainer.getContainerDirectory()
     val fileName = getAssignmentFileName(params)
     return "$directory/$fileName"
   }
@@ -204,7 +206,7 @@ abstract class MicrotaskRenderer(
 
   /** Get Microtask input directory */
   private fun getMicrotaskInputDirectory(): String {
-    val microtaskInputName = BaseActivity.KaryaFileContainer.MICROTASK_INPUT.cname
+    val microtaskInputName = microtaskInputContainer.cname
     val microtaskId = currentMicroTask.id
     val microtaskInputDirectory = getDir("${microtaskInputName}_$microtaskId", MODE_PRIVATE)
     return microtaskInputDirectory.path
@@ -239,7 +241,7 @@ abstract class MicrotaskRenderer(
       .markComplete(microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
 
     /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.assigned) {
+    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
       completedMicrotasks++
       uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
@@ -344,7 +346,7 @@ abstract class MicrotaskRenderer(
         do {
           val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
           val microtaskAssignment = karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
-          if (microtaskAssignment.status == MicrotaskAssignmentStatus.assigned) {
+          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
             break
           }
           currentAssignmentIndex++
@@ -451,7 +453,7 @@ abstract class MicrotaskRenderer(
       var microtaskInputFileJob: Job? = null
       var inputFileDoesNotExist = false
       if (currentMicroTask.input_file_id != null) {
-        val microtaskTarBallPath = getBlobPath(MICROTASK_INPUT(fileDirPath), currentMicroTask.id)
+        val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
         val microtaskInputDirectory = getMicrotaskInputDirectory()
 
         if (!File(microtaskTarBallPath).exists()) {
@@ -516,6 +518,6 @@ abstract class MicrotaskRenderer(
   }
 
   protected fun getAudioFilePath(audioResourceId: Int): String {
-    return getBlobPath(LANG_RES(fileDirPath), audioResourceId.toString(), thisWorker.appLanguage.toString())
+    return langResourceContainer.getBlobPath(audioResourceId.toString(), thisWorker.appLanguage.toString())
   }
 }

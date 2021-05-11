@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.dashboard
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -50,17 +49,7 @@ class DashboardActivity : AppCompatActivity() {
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener {
-        syncCv.isClickable = false
-        // TODO: START TO SHOW PROGRESS BAR AND THEN FINISH IT
-        try {
-          viewModel.syncWithServer()
-        } catch (e: Exception) {
-          Log.d("DASHBOARD_ACTIVITY", e.toString())
-          // TODO: Add appropriate Error Handling here
-        }
-        syncCv.isClickable = true
-      }
+      syncCv.setOnClickListener { viewModel.syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
     }
@@ -128,7 +117,7 @@ class DashboardActivity : AppCompatActivity() {
     */
     // task.scenarioID for now
     val nextIntent =
-      when ("speech-data") { //TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+      when ("speech-data") { // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
         // Use [ScenarioType] enum once we migrate to it.
         "story-speech" -> Intent(this, StorySpeechMain::class.java)
         "speech-data" -> Intent(this, SpeechDataMain::class.java)

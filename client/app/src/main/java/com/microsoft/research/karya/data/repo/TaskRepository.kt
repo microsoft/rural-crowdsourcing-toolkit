@@ -17,10 +17,10 @@ constructor(
   fun getAllTasksFlow(): Flow<List<TaskRecord>> = taskDao.getAllAsFlow()
 
   suspend fun getTaskStatus(taskId: String): TaskStatus {
-    val available = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.assigned)
-    val completed = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.completed)
-    val submitted = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.submitted)
-    val verified = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.verified)
+    val available = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.ASSIGNED)
+    val completed = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.COMPLETED)
+    val submitted = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.SUBMITTED)
+    val verified = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.VERIFIED)
 
     return TaskStatus(available, completed, submitted, verified)
   }

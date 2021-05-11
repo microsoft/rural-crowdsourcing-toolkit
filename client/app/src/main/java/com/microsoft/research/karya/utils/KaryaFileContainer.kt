@@ -27,7 +27,7 @@ sealed class KaryaFileContainer(val cname: String, val fileDirPath: String) {
   abstract fun getBlobName(vararg params: String): String
 }
 
-class LANG_RES(fileDirPath: String) : KaryaFileContainer("lang-res", fileDirPath) {
+class LangRes(fileDirPath: String) : KaryaFileContainer("lang-res", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val lrId = params[0]
     val languageId = params[1]
@@ -36,23 +36,7 @@ class LANG_RES(fileDirPath: String) : KaryaFileContainer("lang-res", fileDirPath
   }
 }
 
-class L_LRVS(fileDirPath: String) : KaryaFileContainer("l-lrvs", fileDirPath) {
-  override fun getBlobName(vararg params: String): String {
-    val languageId = params[0]
-    val ext = "tar"
-    return "L-$languageId.$ext"
-  }
-}
-
-class LR_LRVS(fileDirPath: String) : KaryaFileContainer("lr-lrvs", fileDirPath) {
-  override fun getBlobName(vararg params: String): String {
-    val lrId = params[0]
-    val ext = "tar"
-    return "LR-$lrId.$ext"
-  }
-}
-
-class MICROTASK_INPUT(fileDirPath: String) : KaryaFileContainer("microtask-input", fileDirPath) {
+class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val microtaskId = params[0]
     val ext = "tgz"
@@ -60,8 +44,7 @@ class MICROTASK_INPUT(fileDirPath: String) : KaryaFileContainer("microtask-input
   }
 }
 
-class MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath: String) :
-  KaryaFileContainer("microtask-assignment-output", fileDirPath) {
+class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("microtask-assignment-output", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val assignmentId = params[0]
     val ext = "tgz"
@@ -69,7 +52,7 @@ class MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath: String) :
   }
 }
 
-class WORKER_LOGS(fileDirPath: String) : KaryaFileContainer("worker-logs", fileDirPath) {
+class WorkerLogs(fileDirPath: String) : KaryaFileContainer("worker-logs", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val workerId = params[0]
     val timestamp = params[1]
