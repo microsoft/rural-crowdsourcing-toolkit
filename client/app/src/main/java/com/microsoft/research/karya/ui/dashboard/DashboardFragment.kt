@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -8,7 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
-import com.microsoft.research.karya.databinding.ActivityDashboardBinding
+import com.microsoft.research.karya.databinding.FragmentDashboardBinding
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
+import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
+import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -16,9 +20,9 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(R.layout.activity_dashboard) {
+class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
-  val binding by viewBinding(ActivityDashboardBinding::bind)
+  val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,7 +49,7 @@ class DashboardFragment : Fragment(R.layout.activity_dashboard) {
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener { viewModel.fetchNewTasks() }
+      syncCv.setOnClickListener { viewModel.syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
     }
@@ -127,5 +131,21 @@ class DashboardFragment : Fragment(R.layout.activity_dashboard) {
 
       startActivity(nextIntent)
     */
+
+    val nextIntent =
+      when ("speech-data") {
+        // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+        // Use [ScenarioType] enum once we migrate to it.
+        "story-speech" -> Intent(requireContext(), StorySpeechMain::class.java)
+        "speech-data" -> Intent(requireContext(), SpeechDataMain::class.java)
+        "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
+        else -> {
+          throw Exception("Unimplemented scenario")
+        }
+      }
+
+    nextIntent.putExtra("taskID", task.taskID)
+
+    startActivity(nextIntent)
   }
 }
