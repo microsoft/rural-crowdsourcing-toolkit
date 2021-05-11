@@ -34,8 +34,14 @@ router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
 // OTP routes
 router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, OTPHandler.generate);
 router.put<WorkerOTPState, {}>('/worker/otp/resend', OTPHandler.checkPhoneNumber, OTPHandler.resend);
-// @ts-ignore Not sure why this error is happening
-router.put<WorkerOTPState, {}>('/worker/otp/verify', OTPHandler.checkPhoneNumber, OTPHandler.verify, generateToken);
+router.put<WorkerOTPState, {}>(
+  '/worker/otp/verify',
+  OTPHandler.checkPhoneNumber,
+  OTPHandler.verify,
+  generateToken,
+  // @ts-ignore Incorrect route typing. Need to fix
+  WorkerController.registerWorker
+);
 
 // Karya file get routes
 router.get<KaryaFileController.KaryaFileGetRouteState, {}>(
