@@ -63,7 +63,7 @@ boxRouter.put('/new_workers', Middlewares.needIdToken, BodyParser(), WorkerContr
 boxRouter.put('/workers', Middlewares.needIdToken, BodyParser(), WorkerController.updateWorkers);
 
 // Get all udpated workers
-boxRouter.get('/workers', Middlewares.needIdToken, WorkerController.updateWorkers);
+boxRouter.get('/workers', Middlewares.needIdToken, WorkerController.get);
 
 // Get new task assignments
 boxRouter.get('/task_assignments', Middlewares.needIdToken, TaskController.getTaskAssignments);
