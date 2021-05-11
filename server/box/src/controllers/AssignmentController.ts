@@ -43,10 +43,15 @@ export const get: KaryaMiddleware = async (ctx) => {
     } else {
       // TODO: Adjust max credits
       await assignMicrotasksForWorker(worker, 1000);
-      const assignments = await BasicModel.getRecords('microtask_assignment', {
-        worker_id: worker.id,
-        status: 'assigned',
-      });
+      const assignments = await BasicModel.getRecords(
+        'microtask_assignment',
+        {
+          worker_id: worker.id,
+          status: 'assigned',
+        },
+        {},
+        { from }
+      );
       const mtIds = assignments.map((mta) => mta.microtask_id);
       const microtasks = await BasicModel.getRecords('microtask', {}, {}, {}, [['id', mtIds]]);
       // This can be optimized to just be distinct task_ids
