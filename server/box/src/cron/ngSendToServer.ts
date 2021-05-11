@@ -125,7 +125,7 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
       await BasicModel.updateSingle('worker', { id: worker.id }, { sent_to_server_at: worker.sent_to_server_at });
     });
   } catch (e) {
-    cronLogger.error('Failed to send new workers to server');
+    cronLogger.error('Failed to send updated workers to server');
   }
 }
 
