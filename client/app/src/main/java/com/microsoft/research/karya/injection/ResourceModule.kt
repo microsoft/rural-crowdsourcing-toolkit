@@ -4,7 +4,7 @@ import android.content.Context
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
-import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
+import com.microsoft.research.karya.injection.qualifier.FilesDir
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -18,7 +18,7 @@ class ResourceModule {
 
   @Provides
   @Reusable
-  @FilesDirQualifier
+  @FilesDir
   fun providesContextDirectoryPath(@ApplicationContext context: Context): String = context.filesDir.path
 
   @Provides
@@ -26,7 +26,7 @@ class ResourceModule {
   fun providesResourceManager(
     languageRepository: LanguageRepository,
     karyaFileRepository: KaryaFileRepository,
-    @FilesDirQualifier filesDirPath: String
+    @FilesDir filesDirPath: String
   ): ResourceManager {
     return ResourceManager(languageRepository, karyaFileRepository, filesDirPath)
   }

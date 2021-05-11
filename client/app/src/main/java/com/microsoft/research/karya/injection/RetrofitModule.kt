@@ -5,7 +5,7 @@ import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
-import com.microsoft.research.karya.injection.qualifier.BaseUrlQualifier
+import com.microsoft.research.karya.injection.qualifier.BaseUrl
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -28,7 +28,7 @@ class RetrofitModule {
 
   @Provides
   @Reusable
-  @BaseUrlQualifier
+  @BaseUrl
   fun provideBaseUrl(): String {
     return "https://karyabox2.eastus.cloudapp.azure.com"
   }
@@ -54,7 +54,7 @@ class RetrofitModule {
   @Provides
   @Reusable
   fun provideRetrofitInstance(
-    @BaseUrlQualifier baseUrl: String,
+    @BaseUrl baseUrl: String,
     converterFactory: GsonConverterFactory,
     okHttpClient: OkHttpClient
   ): Retrofit {

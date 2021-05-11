@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSplashScreenBinding
 import com.microsoft.research.karya.ui.Destination
+import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.viewLifecycle
@@ -27,6 +28,8 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
     navController = findNavController()
     handleNavigation()
+    observeEffects()
+
     viewModel.navigate()
   }
 
@@ -42,6 +45,18 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
         Destination.Splash -> {}
       }
     }
+  }
+
+  private fun observeEffects() {
+    viewModel.splashEffects.observe(viewLifecycle, viewLifecycleScope) { effect ->
+      when (effect) {
+        is SplashEffects.UpdateLanguage -> updateActivityLanguage(effect.language)
+      }
+    }
+  }
+
+  private fun updateActivityLanguage(language: String) {
+    (requireActivity() as MainActivity).setActivityLocale(language)
   }
 
   private fun navigateToUserSelection() {
