@@ -69,17 +69,19 @@ constructor(
     }
   }
 
-  suspend fun fetchNewTasks() {
-    val idToken = authManager.fetchLoggedInWorkerIdToken()
+  fun fetchNewTasks() {
+    viewModelScope.launch {
+      val idToken = authManager.fetchLoggedInWorkerIdToken()
 
-    // Get Assignment DB updates
-    assignmentRepository
-      .getAssignments(idToken, "new", "")
-      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
-      .collect()
+      // Get Assignment DB updates
+      assignmentRepository
+        .getAssignments(idToken, "new", "")
+        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+        .collect()
+    }
   }
 
-  suspend fun submitCompletedTasks() {
+  private suspend fun submitCompletedTasks() {
     uploadOutputFiles()
     sendDbUpdates()
   }
