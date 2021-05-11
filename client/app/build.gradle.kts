@@ -56,10 +56,6 @@ ktfmt {
     removeUnusedImports.set(true)
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 tasks.register<com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask>("ktfmtPrecommit") {
     source = project.fileTree(rootDir)
     include("**/*.kt")
