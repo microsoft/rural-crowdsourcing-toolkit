@@ -83,7 +83,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       hideError()
       hideLoading()
       disableNextButton()
-      otpEt.enable()
     }
   }
 
@@ -92,7 +91,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       hideError()
       showLoading()
       disableNextButton()
-      otpEt.disable()
     }
   }
 
@@ -101,7 +99,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       hideError()
       hideLoading()
       enableNextButton()
-      otpEt.enable()
     }
   }
 
@@ -110,7 +107,6 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
       showError(message)
       hideLoading()
       disableNextButton()
-      otpEt.enable()
       requestSoftKeyFocus(binding.otpEt)
     }
   }
@@ -152,6 +148,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     with(binding) {
       loadingPb.visible()
       otpNextIv.gone()
+      otpEt.disable()
     }
   }
 
@@ -159,6 +156,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     with(binding) {
       loadingPb.gone()
       otpNextIv.visible()
+      otpEt.enable()
     }
   }
 
