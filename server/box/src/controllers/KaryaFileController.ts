@@ -138,35 +138,43 @@ type KaryaFileSubmitMiddleware = KaryaMiddleware<KaryaFileSubmitRouteState>;
  * @param ctx Karya request context
  */
 export const verifyFile: KaryaFileSubmitMiddleware = async (ctx, next) => {
-  const { files } = ctx.request;
-  if (!files || !files.file) {
-    HttpResponse.BadRequest(ctx, 'No file attached for upload');
-    return;
-  }
-
-  let karya_file: KaryaFile;
   try {
-    karya_file = JSON.parse(ctx.request.body.data);
+    const { files } = ctx.request;
+    if (!files || !files.file) {
+      HttpResponse.BadRequest(ctx, 'No file attached for upload');
+      return;
+    }
+
+    let karya_file: KaryaFile;
+    try {
+      karya_file = JSON.parse(ctx.request.body.data);
+    } catch (e) {
+      HttpResponse.BadRequest(ctx, 'Invalid JSON object');
+      return;
+    }
+
+    const file = files.file;
+    if (file instanceof Array) {
+      HttpResponse.BadRequest(ctx, 'Cannot upload multiple files in a single request');
+      return;
+    }
+
+    // Set file path
+    ctx.state.filePath = file.path;
+
+    // TODO: Compute and verify checksum
+    // TODO: Validate the input fields
+
+    // Set checksum and timestamp
+    ctx.state.karya_file = {
+      algorithm: karya_file.algorithm,
+      checksum: karya_file.checksum,
+      timestamp: karya_file.timestamp,
+    };
   } catch (e) {
-    HttpResponse.BadRequest(ctx, 'Invalid JSON object');
+    HttpResponse.BadRequest(ctx, 'Something went wrong');
     return;
   }
-
-  const file = files.file;
-  if (file instanceof Array) {
-    HttpResponse.BadRequest(ctx, 'Cannot upload multiple files in a single request');
-    return;
-  }
-
-  // Set file path
-  ctx.state.filePath = file.path;
-
-  // TODO: Compute and verify checksum
-
-  // Set checksum and timestamp
-  ctx.state.karya_file.algorithm = karya_file.algorithm;
-  ctx.state.karya_file.checksum = karya_file.checksum;
-  ctx.state.karya_file.timestamp = karya_file.timestamp;
   await next();
 };
 
