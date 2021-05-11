@@ -99,7 +99,7 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     }
 
     // Ensure that phone number is 10 digits
-    if (!/^\d(10)$/.test(phone_number)) {
+    if (!/^\d+$/.test(phone_number) || phone_number.length != 10) {
       HttpResponse.BadRequest(ctx, `Invalid phone number '${phone_number}'`);
       return;
     }
