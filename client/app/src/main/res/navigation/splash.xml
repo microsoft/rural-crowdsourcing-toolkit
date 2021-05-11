@@ -25,7 +25,7 @@
         android:label="NgDashboardActivity" />
     <activity
         android:id="@+id/accessCodeActivity"
-        android:name="com.microsoft.research.karya.ui.accesscode.AccessCodeActivity"
+        android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeActivity"
         android:label="AccessCodeActivity" />
     <activity
         android:id="@+id/registrationActivity"

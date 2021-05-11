@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -53,7 +52,7 @@
         app:layout_constraintVertical_bias="0.040" />
 
     <Button
-        android:id="@+id/youthBtn"
+        android:id="@+id/youngAgeBtn"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_40sdp"
@@ -63,7 +62,7 @@
         android:layout_marginRight="@dimen/_40sdp"
         android:background="@drawable/age_selector"
         android:padding="@dimen/_10sdp"
-        android:text="@string/s_age_prompt"
+        android:text="@string/s_age_young"
         android:textAllCaps="false"
         android:textColor="@drawable/gender_text_color_selector"
         android:textSize="@dimen/_20ssp"
@@ -86,6 +85,7 @@
         android:layout_marginRight="@dimen/_40sdp"
         android:background="@drawable/age_selector"
         android:padding="@dimen/_10sdp"
+        android:text="@string/s_age_middle"
         android:textAllCaps="false"
         android:textColor="@drawable/gender_text_color_selector"
         android:textSize="@dimen/_20ssp"
@@ -95,8 +95,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/youthBtn"
-        tools:text="25 - 50" />
+        app:layout_constraintTop_toBottomOf="@+id/youngAgeBtn" />
 
     <Button
         android:id="@+id/oldAgeBtn"
@@ -109,28 +108,38 @@
         android:layout_marginRight="@dimen/_40sdp"
         android:background="@drawable/age_selector"
         android:padding="@dimen/_10sdp"
+        android:text="@string/s_age_old"
         android:textAllCaps="false"
         android:textColor="@drawable/gender_text_color_selector"
         android:textSize="@dimen/_20ssp"
-        app:layout_constraintBottom_toTopOf="@+id/submitAgeGroupIb"
+        app:layout_constraintBottom_toTopOf="@+id/loadingContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/middleAgeBtn"
-        tools:text="50 - above" />
+        app:layout_constraintTop_toBottomOf="@+id/middleAgeBtn" />
 
-    <ImageButton
-        android:id="@+id/submitAgeGroupIb"
+    <FrameLayout
+        android:id="@+id/loadingContainer"
         android:layout_width="@dimen/_55sdp"
         android:layout_height="@dimen/_55sdp"
         android:layout_marginTop="@dimen/_40sdp"
         android:layout_marginEnd="@dimen/_20sdp"
-        android:background="@drawable/ic_next_disabled"
-        android:contentDescription="@string/next"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/oldAgeBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/oldAgeBtn">
+
+        <ImageView
+            android:id="@+id/submitAgeGroupIb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next"
+            app:srcCompat="@drawable/ic_next_disabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/failToRegisterTv"
@@ -149,6 +158,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitAgeGroupIb" />
+        app:layout_constraintTop_toBottomOf="@+id/loadingContainer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

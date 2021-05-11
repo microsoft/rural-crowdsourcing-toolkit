@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.fileDownload
+package com.microsoft.research.karya.ui.onboarding.fileDownload
 
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.ResourceManager
-import com.microsoft.research.karya.ui.accesscode.AccessCodeViewModel
+import com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeViewModel
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.observe
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
     val fileDownloadFlow = resourceManager.downloadLanguageResources(accessCode, language)
 
-    fileDownloadFlow.observe(lifecycle, lifecycleScope) { result ->
+    fileDownloadFlow.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { result ->
       when (result) {
         is Result.Success<*> -> navigateToRegistration()
         is Result.Error -> {}

@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.accesscode
+package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

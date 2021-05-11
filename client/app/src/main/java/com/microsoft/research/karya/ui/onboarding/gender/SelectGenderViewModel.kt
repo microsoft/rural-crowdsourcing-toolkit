@@ -1,0 +1,48 @@
+package com.microsoft.research.karya.ui.onboarding.gender
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.repo.WorkerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+@HiltViewModel
+class SelectGenderViewModel
+@Inject
+constructor(
+  private val authManager: AuthManager,
+  private val workerRepository: WorkerRepository,
+) : ViewModel() {
+
+  private val _selectGenderUiState: MutableStateFlow<SelectGenderUiState> =
+    MutableStateFlow(SelectGenderUiState.Initial)
+  val selectGenderUiState = _selectGenderUiState.asStateFlow()
+
+  private val _selectGenderEffects: MutableSharedFlow<SelectGenderEffects> = MutableSharedFlow()
+  val selectGenderEffects = _selectGenderEffects.asSharedFlow()
+
+  fun updateWorkerGender(gender: String) {
+    viewModelScope.launch {
+      _selectGenderUiState.value = SelectGenderUiState.Loading
+
+      val worker = authManager.fetchLoggedInWorker()
+      val newWorker = worker.copy(gender = gender)
+
+      checkNotNull(worker.idToken)
+
+      try {
+        workerRepository.upsertWorker(newWorker)
+        _selectGenderUiState.value = SelectGenderUiState.Success
+        _selectGenderEffects.emit(SelectGenderEffects.Navigate)
+      } catch (throwable: Throwable) {
+        _selectGenderUiState.value = SelectGenderUiState.Error(throwable)
+      }
+    }
+  }
+}

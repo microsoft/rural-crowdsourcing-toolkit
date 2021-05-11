@@ -105,16 +105,27 @@
         app:layout_constraintTop_toBottomOf="@+id/femaleBtn"
         tools:layout_editor_absoluteX="229dp" />
 
-    <ImageButton
-        android:id="@+id/submitGenderIb"
+    <FrameLayout
+        android:id="@+id/loadingContainer"
         android:layout_width="@dimen/_55sdp"
         android:layout_height="@dimen/_55sdp"
         android:layout_marginTop="@dimen/_100sdp"
         android:layout_marginEnd="@dimen/_20sdp"
-        android:background="@drawable/ic_next_enabled"
-        android:contentDescription="@string/next"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/femaleBtn" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/femaleBtn">
+
+        <ImageView
+            android:id="@+id/submitGenderIb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next"
+            app:srcCompat="@drawable/ic_next_disabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

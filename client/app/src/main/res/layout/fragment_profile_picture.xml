@@ -58,21 +58,33 @@
         android:background="@drawable/ic_camera"
         android:contentDescription="@string/profile_picture"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@id/profilePictureNextIv"
+        app:layout_constraintBottom_toTopOf="@id/loadingContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilePicturePromptTv" />
 
-    <ImageButton
-        android:id="@+id/profilePictureNextIv"
+    <FrameLayout
+        android:id="@+id/loadingContainer"
         android:layout_width="@dimen/_55sdp"
         android:layout_height="@dimen/_55sdp"
         android:layout_marginEnd="@dimen/_40sdp"
         android:layout_marginBottom="@dimen/_25sdp"
-        android:background="@drawable/ic_next_enabled"
-        android:contentDescription="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0">
+
+        <ImageButton
+            android:id="@+id/profilePictureNextIv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next"
+            android:background="@drawable/ic_next_enabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <ImageButton
         android:id="@+id/rotateRightIb"

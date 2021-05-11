@@ -9,8 +9,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentSplashScreenBinding
+import com.microsoft.research.karya.utils.extensions.finish
 import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,21 +43,20 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
   private fun navigateToUserSelection() {
     // navController.navigate(R.id.action_splashScreenFragment_to_userSelectionFlow)
-    requireActivity().finish()
   }
 
   private fun navigateToAccessCode() {
     navController.navigate(R.id.action_splashScreenFragment_to_access_code_nav_graph)
-    requireActivity().finish()
+    finish()
   }
 
   private fun navigateToDashboard() {
     navController.navigate(R.id.action_splashScreenFragment_to_ngDashboardActivity)
-    requireActivity().finish()
+    finish()
   }
 
   private fun navigateToRegistration() {
     navController.navigate(R.id.action_splashScreenFragment_to_registration_navigation)
-    requireActivity().finish()
+    finish()
   }
 }

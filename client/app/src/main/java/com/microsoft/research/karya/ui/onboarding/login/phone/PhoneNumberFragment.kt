@@ -1,33 +1,36 @@
-package com.microsoft.research.karya.ui.registration
+package com.microsoft.research.karya.ui.onboarding.login.phone
 
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.model.karya.enums.OtpSendState
 import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
 import com.microsoft.research.karya.utils.AppConstants.PHONE_NUMBER_LENGTH
+import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.hideKeyboard
 import com.microsoft.research.karya.utils.extensions.invisible
+import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
+import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
-import com.microsoft.research.karya.utils.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
   private val binding by viewBinding(FragmentPhoneNumberBinding::bind)
-  private val viewModel by activityViewModels<RegistrationViewModel>()
+  private val viewModel by viewModels<PhoneNumberViewModel>()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
-    setupObservers()
+    observeUi()
+    observeEffects()
     requestSoftKeyFocus(binding.phoneNumberEt)
   }
 
@@ -49,37 +52,67 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
         }
       }
 
-      phoneNumberNextIv.setOnClickListener {
-        phoneNumberNextIv.invisible()
-        handleNextClick(phoneNumberEt.text.toString())
-      }
-      phoneNumberNextIv.isClickable = false
+      phoneNumberNextIv.setOnClickListener { handleNextClick(phoneNumberEt.text.toString()) }
 
       appTb.setTitle(getString(R.string.s_phone_number_title))
     }
   }
 
-  private fun setupObservers() {
-    viewModel.currOtpSendState.observe(viewLifecycleOwner) { sent ->
-      if (sent == OtpSendState.SUCCESS) {
-        onSendOtpSuccess()
-      }
-
-      if (sent == OtpSendState.FAIL) {
-        onSendOtpFailure()
+  private fun observeUi() {
+    viewModel.phoneNumberUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      when (state) {
+        is PhoneNumberUiState.Error -> showErrorUi(state.throwable.message!!)
+        PhoneNumberUiState.Initial -> showInitialUi()
+        PhoneNumberUiState.Loading -> showLoadingUi()
+        PhoneNumberUiState.Success -> showSuccessUi()
       }
     }
   }
 
-  private fun onSendOtpSuccess() {
-    binding.failToSendOtpTv.visibility = View.INVISIBLE
-    findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
-    viewModel.resetOtpSendState()
+  private fun observeEffects() {
+    viewModel.phoneNumberEffects.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { effect ->
+      when (effect) {
+        PhoneNumberEffects.Navigate -> navigateToOTPFragment()
+      }
+    }
   }
 
-  private fun onSendOtpFailure() {
-    binding.failToSendOtpTv.visibility = View.VISIBLE
-    binding.failToSendOtpTv.text = getString(viewModel.phoneNumberFragmentErrorId)
+  private fun navigateToOTPFragment() {
+    findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
+  }
+
+  private fun showInitialUi() {
+    with(binding) {
+      failToSendOtpTv.gone()
+      phoneNumberNextIv.handlePhoneNumberNotReady()
+      loadingPb.gone()
+    }
+  }
+
+  private fun showLoadingUi() {
+    with(binding) {
+      failToSendOtpTv.gone()
+      loadingPb.visible()
+      phoneNumberNextIv.invisible()
+    }
+  }
+
+  private fun showSuccessUi() {
+    with(binding) {
+      failToSendOtpTv.gone()
+      loadingPb.gone()
+      phoneNumberNextIv.visible()
+      phoneNumberNextIv.handlePhoneNumberReady()
+    }
+  }
+
+  private fun showErrorUi(message: String) {
+    with(binding) {
+      failToSendOtpTv.text = message
+      failToSendOtpTv.visible()
+      loadingPb.gone()
+      phoneNumberNextIv.handlePhoneNumberNotReady()
+    }
   }
 
   private fun handleNextClick(phoneNumber: String) {
@@ -94,7 +127,6 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
   }
 
   private fun ImageView.handlePhoneNumberNotReady() {
-    visible()
     setImageResource(0)
     setImageResource(R.drawable.ic_next_disabled)
     isClickable = false

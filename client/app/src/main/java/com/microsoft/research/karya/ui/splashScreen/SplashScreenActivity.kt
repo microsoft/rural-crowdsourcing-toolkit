@@ -3,7 +3,7 @@ package com.microsoft.research.karya.ui.splashScreen
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.microsoft.research.karya.databinding.ActivitySplashScreenBinding
-import com.microsoft.research.karya.utils.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
