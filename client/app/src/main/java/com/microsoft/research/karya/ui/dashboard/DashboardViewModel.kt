@@ -17,8 +17,8 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDirQualifier
 import com.microsoft.research.karya.utils.FileUtils.createTarBall
 import com.microsoft.research.karya.utils.FileUtils.getMD5Digest
-import com.microsoft.research.karya.utils.MICROTASK_ASSIGNMENT_OUTPUT
-import com.microsoft.research.karya.utils.MICROTASK_INPUT
+import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
+import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,8 +49,8 @@ constructor(
   private val authManager: AuthManager,
 ) : ViewModel() {
 
-  private val microtaskOutputContainer = MICROTASK_ASSIGNMENT_OUTPUT(fileDirPath)
-  private val microtaskInputContainer = MICROTASK_INPUT(fileDirPath)
+  private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
+  private val microtaskInputContainer = MicrotaskInput(fileDirPath)
 
   private val taskInfoComparator =
     compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
@@ -73,15 +73,15 @@ constructor(
     val idToken = authManager.fetchLoggedInWorkerIdToken()
 
     // Get Assignment DB updates
-    assignmentRepository.getAssignments(idToken, "new", "").catch { throw it }.collect()
-
-    Log.d("SYNC_ORDER", "FETCH_FINISH")
+    assignmentRepository
+      .getAssignments(idToken, "new", "")
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect()
   }
 
   suspend fun submitCompletedTasks() {
     uploadOutputFiles()
     sendDbUpdates()
-    Log.d("SYNC_ORDER", "SUBMIT_FINISH")
   }
 
   private suspend fun sendDbUpdates() {
@@ -93,9 +93,7 @@ constructor(
         }
       assignmentRepository
         .submitAssignments(authManager.fetchLoggedInWorkerIdToken(), microtaskAssignments)
-        .catch {
-          throw it // TODO: Inform the UI if any error
-        }
+        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
         .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
     }
   }
@@ -112,7 +110,7 @@ constructor(
       }
 
     for (assignment in filteredAssignments) {
-      val assignmentTarBallPath = getBlobPath(microtaskOutputContainer, assignment.id)
+      val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
       val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
       val outputDir = microtaskOutputContainer.getDirectory()
       val fileNames = assignment.output.get("files").asJsonArray.map { it.asString }
@@ -139,18 +137,23 @@ constructor(
     val dataPart = MultipartBody.Part.createFormData("data", Gson().toJson(uploadFileRequest))
 
     // Send the tarball
-    karyaFileRepository.uploadKaryaFile(idToken, dataPart, filePart).catch { throw it }.collect { fileRecord
-      -> // Because we want this to be synchronous
-      karyaFileRepository.insertKaryaFile(fileRecord)
-      assignmentRepository.updateOutputFileId(assignment.id, fileRecord.id)
-    }
+    karyaFileRepository
+      .uploadKaryaFile(idToken, dataPart, filePart)
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect { fileRecord -> // Because we want this to be synchronous
+        karyaFileRepository.insertKaryaFile(fileRecord)
+        assignmentRepository.updateOutputFileId(assignment.id, fileRecord.id)
+      }
   }
 
   fun fetchVerifiedTasks(from: String = "") {
     viewModelScope.launch {
       val idToken = authManager.fetchLoggedInWorkerIdToken()
 
-      assignmentRepository.getAssignments(idToken, "verified", from).catch { throw it }.collect()
+      assignmentRepository
+        .getAssignments(idToken, "verified", from)
+        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+        .collect()
     }
   }
 
@@ -174,7 +177,7 @@ constructor(
         val success = DashboardUiState.Success(taskInfoList.sortedWith(taskInfoComparator))
         _dashboardUiState.emit(success)
       }
-      .catch { throwable -> _dashboardUiState.emit(DashboardUiState.Error(throwable)) }
+      .catch { _dashboardUiState.emit(DashboardUiState.Error(it)) }
       .launchIn(viewModelScope)
   }
 
@@ -205,7 +208,7 @@ constructor(
     val microtaskIds = microTaskRepository.getSubmittedMicrotasksWithInputFiles()
     for (id in microtaskIds) {
       // input tarball
-      val tarBallPath = getBlobPath(microtaskOutputContainer, id)
+      val tarBallPath = microtaskOutputContainer.getBlobPath(id)
       val tarBall = File(tarBallPath)
       if (tarBall.exists()) {
         tarBall.delete()

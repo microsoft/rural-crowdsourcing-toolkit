@@ -321,7 +321,7 @@ open class SpeechDataMain(
     preRecordBufferConsumed[0] = 0
     preRecordBufferConsumed[1] = 0
 
-    if (currentAssignment.status != MicrotaskAssignmentStatus.completed) {
+    if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()

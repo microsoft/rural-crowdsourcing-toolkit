@@ -8,11 +8,11 @@
 package com.microsoft.research.karya.data.model.karya.enums
 
 enum class MicrotaskAssignmentStatus {
-  assigned,
-  incomplete,
-  skipped,
-  expired,
-  completed,
-  submitted,
-  verified
+  ASSIGNED,
+  INCOMPLETE,
+  SKIPPED,
+  EXPIRED,
+  COMPLETED,
+  SUBMITTED,
+  VERIFIED
 }
