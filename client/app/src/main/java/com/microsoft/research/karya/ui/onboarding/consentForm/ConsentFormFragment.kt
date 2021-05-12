@@ -57,7 +57,7 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
     viewLifecycleOwner.lifecycleScope.launch {
       val worker = authManager.fetchLoggedInWorker()
 
-      if (resourceManager.areLanguageResourcesAvailable(worker.appLanguage)) {
+      if (resourceManager.areLanguageResourcesAvailable(worker.language)) {
         navigateToLoginFlow()
       } else {
         navigateToResourceDownload()

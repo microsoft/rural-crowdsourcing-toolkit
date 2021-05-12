@@ -60,7 +60,7 @@ constructor(
       when {
         worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
         worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
-        worker.age.isNullOrEmpty() -> Destination.MandatoryDataFlow
+        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
         else -> Destination.Dashboard
       }
 
