@@ -34,7 +34,6 @@ constructor(
     viewModelScope.launch {
       _phoneNumberUiState.value = PhoneNumberUiState.Loading
 
-      // This is an O(1) call except for the first time when worker is fetched from preferences
       val worker = authManager.fetchLoggedInWorker()
       // Update worker's phone number in the DB.
       // We don't care if it is correct or not, if it's incorrect we can update it later when user

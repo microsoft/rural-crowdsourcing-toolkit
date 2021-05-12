@@ -2,21 +2,32 @@ package com.microsoft.research.karya.data.service
 
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PUT
-import retrofit2.http.Query
 
 interface WorkerAPI {
 
-  @PUT("/worker/otp")
-  suspend fun getOrVerifyOTP(
+  @PUT("/worker/otp/generate")
+  suspend fun generateOTP(
+    @Header("access-code") accessCode: String,
+    @Header("phone-number") phoneNumber: String,
+  ): Response<ResponseBody>
+
+  @PUT("/worker/otp/resend")
+  suspend fun resendOTP(
+    @Header("access-code") accessCode: String,
+    @Header("phone-number") phoneNumber: String,
+  ): Response<ResponseBody>
+
+  @PUT("/worker/otp/verify")
+  suspend fun verifyOTP(
     @Header("access-code") accessCode: String,
     @Header("phone-number") phoneNumber: String,
     @Header("otp") otp: String,
-    @Query("action") action: String, // TODO: Make this an enum class
   ): Response<WorkerRecord>
 
   /*
