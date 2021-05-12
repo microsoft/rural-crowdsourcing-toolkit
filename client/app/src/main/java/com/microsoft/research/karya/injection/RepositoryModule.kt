@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.data.local.daos.LanguageDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
@@ -22,8 +21,8 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideLanguageRepository(languageAPI: LanguageAPI, languageDao: LanguageDao): LanguageRepository {
-    return LanguageRepository(languageAPI, languageDao)
+  fun provideLanguageRepository(languageAPI: LanguageAPI): LanguageRepository {
+    return LanguageRepository(languageAPI)
   }
 
   @Provides

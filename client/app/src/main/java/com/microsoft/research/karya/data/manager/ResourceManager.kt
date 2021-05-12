@@ -1,75 +1,59 @@
 package com.microsoft.research.karya.data.manager
 
-import com.microsoft.research.karya.data.repo.KaryaFileRepository
+import android.util.Log
 import com.microsoft.research.karya.data.repo.LanguageRepository
+import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.Result
 import java.io.File
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.singleOrNull
+import kotlinx.coroutines.withContext
 
 class ResourceManager
 @Inject
 constructor(
   private val languageRepository: LanguageRepository,
-  private val karyaFileRepository: KaryaFileRepository,
   private val filesDirPath: String,
 ) {
 
-  fun areLanguageResourcesAvailable(languageId: Int): Boolean {
-    val languageResFolder = File(getAudioFolderPath(languageId.toString()))
+  fun areLanguageResourcesAvailable(language: String): Boolean {
+    val languageResFolder = File(getAudioFolderPath(language))
 
     return languageResFolder.exists() &&
       languageResFolder.isDirectory &&
       languageResFolder.listFiles()?.isNotEmpty() ?: false
   }
 
-  fun downloadLanguageResources(accessCode: String, language: String) =
-    flow<Result> {
-      emit(Result.Loading)
+  fun downloadLanguageResources(accessCode: String, language: String) = flow {
+    emit(Result.Loading)
 
-      /*
-      val languages =
-        languageRepository
-          .getLanguages(accessCode)
-          .flowOn(Dispatchers.IO)
-          .catch {
-            Log.d("ResourceManager", "Error downloading languageRecords")
-            emit(Result.Error(it))
-            return@catch
-          }
-          .single()
+    // If the flow is empty we have already emitted an error result so don't do anything else
+    val responseBody =
+      languageRepository
+        .getLanguageAssets(accessCode, language)
+        .flowOn(Dispatchers.IO)
+        .catch {
+          Log.d("ResourceManager", "Error downloading files for language: $language")
+          emit(Result.Error(it))
+          return@catch
+        }
+        .singleOrNull()
+        ?: return@flow
 
-      val languageRecord = languages.find { it.id == language }
-
-      // lrv_file_id is null for English atm
-      val karyaFileId = languageRecord?.lrv_file_id ?: "2"
-
-      val responseBody =
-        karyaFileRepository
-          .getKaryaFile(accessCode, "", karyaFileId)
-          .flowOn(Dispatchers.IO)
-          .catch {
-            Log.d("ResourceManager", "Error downloading KaryaFile")
-            emit(Result.Error(it))
-            return@catch
-          }
-          .single()
-
-      withContext(Dispatchers.IO) {
-        FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(languageId))
-        FileUtils.extractTarBallIntoDirectory(getTarballPath(languageId), getAudioFolderPath(languageId))
-      }
-
-      emit(Result.Success(Unit))
-      */
+    withContext(Dispatchers.IO) {
+      FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
+      FileUtils.extractTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
     }
+
+    emit(Result.Success(Unit))
+  }
 
   private fun getTarballPath(language: String): String {
     return "$filesDirPath/$RELATIVE_TARBALL_PATH/$language.tar"
-  }
-
-  private fun getTarballPath(languageId: String): String {
-    return "$filesDirPath/$RELATIVE_TARBALL_PATH/$languageId.tar"
   }
 
   private fun getAudioFolderPath(languageId: String): String {

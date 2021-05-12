@@ -2,7 +2,6 @@ package com.microsoft.research.karya.injection
 
 import android.content.Context
 import com.microsoft.research.karya.data.manager.ResourceManager
-import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import dagger.Module
@@ -23,11 +22,7 @@ class ResourceModule {
 
   @Provides
   @Reusable
-  fun providesResourceManager(
-    languageRepository: LanguageRepository,
-    karyaFileRepository: KaryaFileRepository,
-    @FilesDir filesDirPath: String
-  ): ResourceManager {
-    return ResourceManager(languageRepository, karyaFileRepository, filesDirPath)
+  fun providesResourceManager(languageRepository: LanguageRepository, @FilesDir filesDirPath: String): ResourceManager {
+    return ResourceManager(languageRepository, filesDirPath)
   }
 }

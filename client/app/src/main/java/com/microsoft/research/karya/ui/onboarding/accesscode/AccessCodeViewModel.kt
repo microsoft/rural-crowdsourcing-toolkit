@@ -35,7 +35,7 @@ constructor(private val workerRepository: WorkerRepository, private val authMana
       .onEach { worker ->
         createWorker(accessCode, worker)
         authManager.updateLoggedInWorker(accessCode)
-        _accessCodeUiState.value = AccessCodeUiState.Success(worker.language.toString())
+        _accessCodeUiState.value = AccessCodeUiState.Success(worker.language)
         _accessCodeEffects.emit(AccessCodeEffects.Navigate)
       }
       .catch { exception -> _accessCodeUiState.value = AccessCodeUiState.Error(exception) }

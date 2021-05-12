@@ -87,8 +87,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   }
 
   private fun showSuccessUi(languageCode: String) {
-    // TODO: use languageCode variable here with new apis
-    updateActivityLanguage("hi")
+    updateActivityLanguage(languageCode)
 
     hideLoading()
     hideError()
