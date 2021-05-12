@@ -46,7 +46,7 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
       PayoutMethodRecord::class,
       PayoutInfoRecord::class,
       PaymentRequestRecord::class],
-  version = 5,
+  version = 1,
   exportSchema = false
 )
 @TypeConverters(Converters::class)
