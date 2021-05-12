@@ -4,21 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
 import com.microsoft.research.karya.ui.MainActivity
-import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.extensions.gone
+import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewLifecycle
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
@@ -31,12 +29,14 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
+    observeUi()
+    observeEffects()
   }
 
   private fun setupViews() {
     with(binding) {
       appTb.setTitle(getString(R.string.s_access_code_title))
-      /** Add text change listener to creation code */
+
       creationCodeEt.addTextChangedListener(
         object : SeparatorTextWatcher('-', 4) {
           override fun onAfterTextChanged(text: String, position: Int) {
@@ -45,96 +45,120 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
               setSelection(position)
             }
 
-            /** If creation code length has reached max, call handler */
             if (creationCodeEt.length() == creationCodeEtMax) {
-              // TODO: call this once the user presses the button to move forward.
-              handleFullCreationCode()
+              enableButton()
             } else {
-              clearErrorMessages()
+              disableButton()
             }
           }
         }
       )
+
+      submitAccessCodeBtn.setOnClickListener {
+        val accessCode = binding.creationCodeEt.text.toString().replace("-", "")
+        viewModel.checkAccessCode(accessCode)
+      }
+
       requestSoftKeyFocus(creationCodeEt)
     }
   }
 
-  @Suppress("UNCHECKED_CAST")
-  private fun checkAccessCode(accessCode: String) {
-    viewModel
-      .checkAccessCode(accessCode)
-      .onEach { result ->
-        when (result) {
-          is Result.Success<*> -> onAccessCodeVerified(result.value as WorkerRecord)
-          // TODO: Use error codes and exceptions from Anurag's PR
-          is Result.Error -> onAccessCodeFailure(result.exception.message ?: "Error fetching data")
-          Result.Loading -> showLoading()
-        }
+  private fun observeUi() {
+    viewModel.accessCodeUiState.observe(viewLifecycle, viewLifecycleScope) { state ->
+      when (state) {
+        is AccessCodeUiState.Success -> showSuccessUi(state.languageCode)
+        is AccessCodeUiState.Error -> showErrorUi(state.throwable.message!!)
+        AccessCodeUiState.Initial -> showInitialUi()
+        AccessCodeUiState.Loading -> showLoadingUi()
       }
-      .launchIn(lifecycleScope)
+    }
+  }
+
+  private fun observeEffects() {
+    viewModel.accessCodeEffects.observe(viewLifecycle, viewLifecycleScope) { effect ->
+      when (effect) {
+        AccessCodeEffects.Navigate -> navigateToConsentFormFragment()
+      }
+    }
   }
 
   private fun navigateToConsentFormFragment() {
     findNavController().navigate(R.id.action_accessCodeFragment2_to_consentFormFragment2)
   }
 
-  private fun handleFullCreationCode() {
-    binding.creationCodeEt.isEnabled = false
-    val accessCode = binding.creationCodeEt.text.toString().replace("-", "")
-    checkAccessCode(accessCode)
-  }
-
-  private fun onAccessCodeVerified(workerRecord: WorkerRecord) {
-    hideLoading()
-    showSuccessUi()
-
-    // TODO: workerRecord.appLanguage
+  private fun showSuccessUi(languageCode: String) {
+    // TODO: use languageCode variable here with new apis
     updateActivityLanguage("hi")
 
-    navigateToConsentFormFragment()
-    resetViewState()
-  }
-
-  private fun onAccessCodeFailure(message: String) {
     hideLoading()
-    showErrorUi(message)
-  }
-
-  private fun showSuccessUi() {
-    with(binding) {
-      creationCodeStatusIv.setImageResource(0)
-      creationCodeStatusIv.setImageResource(R.drawable.ic_baseline_check_circle_outline_24)
-    }
+    hideError()
+    enableButton()
   }
 
   private fun showErrorUi(error: String) {
-    with(binding) {
-      creationCodeErrorTv.text = error
-      creationCodeStatusIv.setImageResource(0)
-      creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
-      creationCodeEt.isEnabled = true
-    }
+    showError(error)
+    hideLoading()
+    enableButton()
     requestSoftKeyFocus(binding.creationCodeEt)
   }
 
-  private fun clearErrorMessages() {
-    with(binding) {
-      creationCodeErrorTv.text = ""
-      creationCodeStatusIv.setImageResource(0)
-      creationCodeStatusIv.setImageResource(R.drawable.ic_check_grey)
-    }
-  }
-
-  private fun resetViewState() {
+  private fun showInitialUi() {
     hideLoading()
-    clearErrorMessages()
-    binding.creationCodeEt.isEnabled = true
+    disableButton()
+    hideError()
     binding.creationCodeEt.text.clear()
   }
 
-  private fun showLoading() = binding.loadingPb.visible()
+  private fun showLoadingUi() {
+    showLoading()
+    disableButton()
+  }
 
-  private fun hideLoading() = binding.loadingPb.gone()
+  private fun showError(message: String) {
+    with(binding) {
+      creationCodeErrorTv.text = message
+      creationCodeStatusIv.setImageResource(0)
+      creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
+      creationCodeStatusIv.visible()
+    }
+  }
+
+  private fun hideError() {
+    with(binding) {
+      creationCodeErrorTv.text = ""
+      creationCodeStatusIv.gone()
+    }
+  }
+
+  private fun showLoading() {
+    with(binding) {
+      loadingPb.visible()
+      submitAccessCodeBtn.gone()
+      creationCodeEt.isEnabled = false
+    }
+  }
+
+  private fun hideLoading() {
+    with(binding) {
+      loadingPb.gone()
+      submitAccessCodeBtn.visible()
+      creationCodeEt.isEnabled = true
+    }
+  }
+
+  private fun disableButton() {
+    with(binding) {
+      submitAccessCodeBtn.isClickable = false
+      submitAccessCodeBtn.setBackgroundResource(R.drawable.ic_next_disabled)
+    }
+  }
+
+  private fun enableButton() {
+    with(binding) {
+      submitAccessCodeBtn.isClickable = true
+      submitAccessCodeBtn.setBackgroundResource(R.drawable.ic_next_enabled)
+    }
+  }
 
   private fun updateActivityLanguage(language: String) {
     (requireActivity() as MainActivity).setActivityLocale(language)
