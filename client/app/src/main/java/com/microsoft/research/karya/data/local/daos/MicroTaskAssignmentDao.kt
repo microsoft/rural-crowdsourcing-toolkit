@@ -40,4 +40,7 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
     insertForUpsert(records)
     updateForUpsert(records)
   }
+
+  @Query("SELECT MAX(created_at) FROM microtask_assignment")
+  suspend fun getLatestAssignmentCreationTime(): String?
 }

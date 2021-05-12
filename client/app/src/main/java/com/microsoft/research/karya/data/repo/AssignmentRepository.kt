@@ -8,6 +8,7 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
+import com.microsoft.research.karya.utils.AppConstants
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -37,8 +38,8 @@ constructor(
 
     if (assignmentResponse != null) {
       saveTasks(assignmentResponse.tasks)
-      saveMicroTasks(assignmentResponse.microTasks)
-      saveMicroTaskAssignments(assignmentResponse.assignments)
+//      saveMicroTasks(assignmentResponse.microTasks)
+//      saveMicroTaskAssignments(assignmentResponse.assignments)
 
       emit(assignmentResponse)
     } else {
@@ -94,5 +95,9 @@ constructor(
 
   suspend fun getIncompleteAssignments(): List<MicroTaskAssignmentRecord> {
     return assignmentDaoExtra.getIncompleteAssignments()
+  }
+
+  suspend fun getLatestAssignmentCreationTime(): String {
+    return assignmentDao.getLatestAssignmentCreationTime() ?: AppConstants.INITIAL_TIME
   }
 }

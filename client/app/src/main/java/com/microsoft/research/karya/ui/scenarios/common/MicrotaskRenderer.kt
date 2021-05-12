@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 /** Code to request necessary permissions */
 private const val REQUEST_PERMISSIONS = 201
@@ -241,7 +242,7 @@ abstract class MicrotaskRenderer(
       .markComplete(microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
 
     /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
+    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED.name) {
       completedMicrotasks++
       uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
@@ -346,7 +347,7 @@ abstract class MicrotaskRenderer(
         do {
           val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
           val microtaskAssignment = karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
-          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
+          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED.name.toLowerCase(Locale.ROOT)) {
             break
           }
           currentAssignmentIndex++
@@ -488,26 +489,28 @@ abstract class MicrotaskRenderer(
       }
       currentMicrotaskGroupId = currentMicroTask.group_id
 
-      outputData =
-        if (currentAssignment.output.has("data")) {
-          currentAssignment.output.getAsJsonObject("data")
-        } else {
-          JsonObject()
-        }
+      if (currentAssignment.output != null) {
+        outputData =
+          if (currentAssignment.output!!.has("data")) {
+            currentAssignment.output!!.getAsJsonObject("data")
+          } else {
+            JsonObject()
+          }
 
-      logs =
-        if (currentAssignment.output.has("logs")) {
-          currentAssignment.output.getAsJsonArray("logs")
-        } else {
-          JsonArray()
-        }
+        logs =
+          if (currentAssignment.output!!.has("logs")) {
+            currentAssignment.output!!.getAsJsonArray("logs")
+          } else {
+            JsonArray()
+          }
 
-      outputFiles =
-        if (currentAssignment.output.has("files")) {
-          currentAssignment.output.getAsJsonArray("files")
-        } else {
-          JsonArray()
-        }
+        outputFiles =
+          if (currentAssignment.output!!.has("files")) {
+            currentAssignment.output!!.getAsJsonArray("files")
+          } else {
+            JsonArray()
+          }
+      }
 
       // setup microtask
       uiScope.launch {

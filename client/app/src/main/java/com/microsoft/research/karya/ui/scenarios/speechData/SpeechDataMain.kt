@@ -26,6 +26,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.collections.ArrayList
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -321,7 +323,8 @@ open class SpeechDataMain(
     preRecordBufferConsumed[0] = 0
     preRecordBufferConsumed[1] = 0
 
-    if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
+    if (
+      currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED.toString().toLowerCase(Locale.ROOT)) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()

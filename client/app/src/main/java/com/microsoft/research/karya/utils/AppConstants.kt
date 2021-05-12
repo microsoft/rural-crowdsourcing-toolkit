@@ -32,4 +32,6 @@ object AppConstants {
 
   const val PHONE_NUMBER_LENGTH = 10
   const val OTP_LENGTH = 6
+
+  const val INITIAL_TIME = "1970-01-01T00:00:00Z"
 }
