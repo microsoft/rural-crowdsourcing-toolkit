@@ -31,6 +31,11 @@ constructor(
   fun downloadLanguageResources(accessCode: String, language: String) = flow {
     emit(Result.Loading)
 
+    if (areLanguageResourcesAvailable(language)) {
+      emit(Result.Success(Unit))
+      return@flow
+    }
+
     // If the flow is empty we have already emitted an error result so don't do anything else
     val responseBody =
       languageRepository
