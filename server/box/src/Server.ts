@@ -1,23 +1,35 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import cors from '@koa/cors';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import Koa from 'koa';
-import config from './config/Index';
-import { setupDbConnection } from '@karya/db';
-import { SetBox, this_box } from './config/ThisBox';
-import { GET } from './cron/HttpUtils';
-import { authenticateRequest, httpRequestLogger } from './routes/Middlewares';
-import router from './routes/Routes';
-import { containerNames } from '@karya/blobstore';
+import { setupDbConnection } from '@karya/common';
+import { httpRequestLogger } from './controllers/Middlewares';
+import router, { authenticateRequest } from './routes/Routes';
+import { containerNames } from '@karya/core';
 import logger from './utils/Logger';
+import { envGetNumber, envGetString } from '@karya/misc-utils';
 
 // creates an instance of Koa app
 const app = new Koa();
 
 // app middleware
+app.use(async (ctx, next) => {
+  try {
+    await next();
+    console.log(ctx.method, ctx.path, ctx.status);
+    if (ctx.status >= 300) {
+      console.log(ctx.body);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
 app.use(cors());
 app.use(httpRequestLogger);
 app.use(authenticateRequest);
@@ -26,16 +38,14 @@ app.use(router.routes());
 
 // Main script to check for all dependencies and then start the box server.
 (async () => {
-  setupDbConnection(config.dbConfig);
-
-  // Set this box
-  await SetBox();
+  setupDbConnection();
 
   // Create all the local file folders
   logger.info(`Creating local folders for karya files`);
+  const folder = envGetString('LOCAL_FOLDER');
   await BBPromise.mapSeries(containerNames, async (cname) => {
     try {
-      await fsp.mkdir(`${config.filesFolder}/${cname}`, {
+      await fsp.mkdir(`${process.cwd()}/${folder}/${cname}`, {
         recursive: true,
       });
     } catch (e) {
@@ -43,23 +53,10 @@ app.use(router.routes());
       // TODO: Explicit check for other kinds of error
     }
   });
-
-  // Get the phone authentication info
-  if (!this_box.physical) {
-    logger.info(`Fetching phone authentication information`);
-    try {
-      const phoneOtp = await GET<{}, typeof config['phoneOtp']>('/rbox/phone-auth-info', {});
-      config.phoneOtp = { ...phoneOtp };
-      logger.info(`Phone auth available.`);
-    } catch (e) {
-      // Unable to fetch api_key
-      // Leave it as unavailable
-    }
-  }
 })()
   .then(() => {
     // Start the local web server
-    const port = 4040; // config.baseServerPort + box_id;
+    const port = envGetNumber('SERVER_PORT');
     app.listen(port);
     logger.info(`Server running on port ${port}`);
   })

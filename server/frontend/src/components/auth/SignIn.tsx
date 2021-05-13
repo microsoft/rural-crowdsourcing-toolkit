@@ -14,7 +14,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 /** Import async ops and action creators */
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Import templates */
 import { ErrorMessage, ProgressBar } from '../templates/Status';
@@ -64,7 +64,7 @@ class SignIn extends React.Component<SignInProps> {
   /** On google login success */
   onGoogleLoginSuccess = (googleUser: any) => {
     const id_token = googleUser.getAuthResponse().id_token;
-    const authHeader: AuthHeader = { 'auth-provider': 'google_oauth', 'id-token': id_token };
+    const authHeader: AuthHeader = { 'reg-mechanism': 'google-id-token', 'google-id-token': id_token };
     this.props.signInWorkProvider(authHeader);
   };
 

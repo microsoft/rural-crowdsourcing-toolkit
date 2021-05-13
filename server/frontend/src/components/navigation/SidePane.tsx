@@ -17,9 +17,6 @@ const SidePane = () => {
         <NavLink to='/profile'>Profile</NavLink>
       </li>
       <li>
-        <NavLink to='/language'>Languages</NavLink>
-      </li>
-      <li>
         <NavLink to='/work_provider'>Work Providers</NavLink>
       </li>
       <li>

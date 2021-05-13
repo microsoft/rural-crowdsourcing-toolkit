@@ -13,11 +13,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { store } from '../../index';
 import { AllState } from '../../store/AllReducer';
-import { DbParamsType } from '../../store/apis/APIs.auto';
+import { DbParamsType } from '../../store/apis/APIs';
 import { RootState } from '../../store/Index';
 
 // Types
-import { DbTableName } from '@karya/db';
+import { DbTableName } from '@karya/core';
 
 /**
  * Type listing the additional props that will be attached to a component when

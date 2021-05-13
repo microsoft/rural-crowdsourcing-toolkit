@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import M from 'materialize-css'
+import M from 'materialize-css';
 
 import React, { ChangeEventHandler, Component, FormEventHandler } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/Index';
 
 /** Import async ops and action creators */
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Template elements */
 import { SubmitOrCancel, TextInput } from '../templates/FormInputs';
@@ -22,7 +22,7 @@ import GoogleLogin from 'react-google-login';
 import config from '../../config/Index';
 
 /** Types needed for database tables */
-import { WorkProvider } from '@karya/db';
+import { ServerUser } from '@karya/core';
 
 /** Router props (for history) */
 type RouterProps = RouteComponentProps<{}>;
@@ -36,11 +36,12 @@ const mapStateToProps = (state: RootState) => {
 /** Map dispatch action creators to props */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    signUpWorkProvider: (wp: WorkProvider) => {
+    signUpServerUser: (wp: ServerUser, id_token: string) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'auth',
         label: 'SIGN_UP',
+        headers: { 'reg-mechanism': 'google-id-token', 'google-id-token': id_token, 'access-code': wp.access_code! },
         request: wp,
       };
       dispatch(action);
@@ -56,44 +57,42 @@ type SignUpProps = OwnProps & ConnectedProps<typeof connector>;
 
 /** Signup state */
 type SignUpState = {
-  wp: WorkProvider;
+  wp: ServerUser;
+  id_token: string;
 };
 
 class SignUp extends Component<SignUpProps, SignUpState> {
   /** Initial state */
   state: SignUpState = {
     wp: {
-      admin: false,
-      creation_code: '',
+      access_code: '',
       full_name: '',
-      phone_number: '',
       email: '',
     },
+    id_token: '',
   };
 
   /** Handle form cancel */
   handleFormCancel: FormEventHandler = (e) => {
     e.preventDefault();
-    const wp: WorkProvider = {
-      admin: false,
-      creation_code: '',
+    const wp: ServerUser = {
+      access_code: '',
       full_name: '',
-      phone_number: '',
       email: '',
     };
-    this.setState({ wp });
+    this.setState({ wp, id_token: '' });
   };
 
   /** Form ...this.state, field on change handler */
   handleFormChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const updatedWP: WorkProvider = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
+    const updatedWP: ServerUser = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ wp: updatedWP });
   };
 
   /** Form submission */
   handleFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    this.props.signUpWorkProvider(this.state.wp);
+    this.props.signUpServerUser(this.state.wp, this.state.id_token);
   };
 
   /**
@@ -103,17 +102,13 @@ class SignUp extends Component<SignUpProps, SignUpState> {
     const profile = googleUser.getBasicProfile();
     const id_token = googleUser.getAuthResponse().id_token;
 
-    const wp: WorkProvider = {
-      creation_code: '',
-      admin: false,
+    const wp: ServerUser = {
+      access_code: '',
       full_name: profile.getName(),
       email: profile.getEmail(),
-      phone_number: '',
-      auth_provider: 'google_oauth',
-      id_token,
     };
 
-    this.setState({ wp });
+    this.setState({ wp, id_token });
   };
 
   /**
@@ -177,9 +172,9 @@ class SignUp extends Component<SignUpProps, SignUpState> {
               <div className='card-content'>
                 <form onSubmit={this.handleFormSubmit}>
                   <TextInput
-                    id='creation_code'
-                    label='16-Digit Creation Code*'
-                    value={wp.creation_code}
+                    id='access_code'
+                    label='16-Character Access Code*'
+                    value={wp.access_code}
                     onChange={this.handleFormChange}
                     required={true}
                     width='s12 m8'
@@ -188,7 +183,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                   <TextInput
                     id='full_name'
                     label='Full name of the work provider*'
-                    value={wp.full_name}
+                    value={wp.full_name ?? ''}
                     onChange={this.handleFormChange}
                     required={true}
                     width='s12 m8'
@@ -197,15 +192,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                   <TextInput
                     id='email'
                     label='E-mail Address'
-                    value={wp.email}
-                    onChange={this.handleFormChange}
-                    width='s12 m8'
-                  />
-
-                  <TextInput
-                    id='phone_number'
-                    label='Phone Number'
-                    value={wp.phone_number}
+                    value={wp.email ?? ''}
                     onChange={this.handleFormChange}
                     width='s12 m8'
                   />

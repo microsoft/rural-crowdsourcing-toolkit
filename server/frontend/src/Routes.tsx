@@ -17,17 +17,10 @@ import Unauthorized from './components/auth/Unauthorized';
 import AdminDashboard from './components/dashboard/AdminDashboard';
 import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard';
 
-/** language components */
-import CreateUpdateLanguage from './components/language/CreateUpdateLanguage';
-import LanguageList from './components/language/LanguageList';
-
 /** task components */
 import CreateTask from './components/task/CreateTask';
 import TaskDetail from './components/task/TaskDetail';
 import TaskList from './components/task/TaskList';
-
-/** microtask components */
-import MicrotaskList from './components/microtask/MicrotaskList'
 
 /** work_provider components */
 import WorkProviderList from './components/work_provider/WorkProviderList';
@@ -51,11 +44,6 @@ const Routes = (
     <AdminRoute path='/admin-dashboard' component={AdminDashboard} />
     <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
 
-    {/**  Language routes */}
-    <WorkProviderRoute exact path='/language' component={LanguageList} />
-    <AdminRoute exact path='/language/create' component={CreateUpdateLanguage} />
-    <AdminRoute exact path='/language/update/:id' component={CreateUpdateLanguage} />
-
     {/** Task routes */}
     <WorkProviderRoute exact path='/task/create' component={CreateTask} />
     <WorkProviderRoute exact path='/task' component={TaskList} />
@@ -70,10 +58,6 @@ const Routes = (
     {/** Task assignment routes */}
     <AdminRoute exact path='/task-assignments' component={TaskAssignmentList} />
     <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
-
-    {/** Microtask lists */}
-    <WorkProviderRoute exact path='/task/:task_id/microtasks' component={MicrotaskList} />
-
   </Switch>
 );
 

@@ -2,4 +2,5 @@
 /scratch
 /logs
 /dist
-/files
+/local
+.box*

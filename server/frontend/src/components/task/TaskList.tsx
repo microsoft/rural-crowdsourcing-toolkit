@@ -10,9 +10,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // Store types and actions
-import { TaskRecord } from '@karya/db';
+import { TaskRecord } from '@karya/core';
 import { taskStatus } from './TaskUtils';
-
+import { scenarioMap, ScenarioName } from '@karya/core';
+import { languageMap, LanguageCode } from '@karya/core';
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
 
@@ -22,7 +23,7 @@ import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 // Data connector
-const dataConnector = withData('language', 'scenario', 'task');
+const dataConnector = withData('task');
 type TaskListProps = DataProps<typeof dataConnector>;
 
 // Task list component
@@ -38,17 +39,15 @@ class TaskList extends React.Component<TaskListProps> {
       ) : null;
 
     // scenario tag function
-    const scenarios = this.props.scenario.data;
     const scenarioTag = (task: TaskRecord) => {
-      const scenario = scenarios.find((s) => s.id === task.scenario_id);
+      const scenario = scenarioMap[task.scenario_name as ScenarioName];
       return scenario === undefined ? 'loading' : scenario.name;
     };
 
     // langauge tag function
-    const languages = this.props.language.data;
     const languageTag = (task: TaskRecord) => {
-      const language = languages.find((l) => l.id === task.language_id);
-      return language === undefined ? 'loading' : `${language.name} (${language.primary_language_name})`;
+      const language = languageMap[task.language_code as LanguageCode];
+      return `${language.name} (${language.primary_name})`;
     };
 
     // task details link

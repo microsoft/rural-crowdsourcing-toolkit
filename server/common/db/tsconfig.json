@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": true,
-    "lib": ["es2018", "dom"]
-  },
-  "references": [],
-  "exclude": ["node_modules", "dist", "dist-local"]
-}

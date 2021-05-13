@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist-local",
-    "rootDir": "./src-local"
-  },
-  "references": [],
-  "exclude": ["src", "dist-local"]
-}

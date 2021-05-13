@@ -1,56 +1,54 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+import { loadSecrets } from './secrets/Index';
 import cors from '@koa/cors';
 import Koa from 'koa';
-
-import config, { loadSecretsFromVault } from './config/Index';
+import Router from 'koa-router';
 import logger from './utils/Logger';
-
-import { authenticateRequest, logHttpRequests } from './routes/Middlewares';
-import router from './routes/Routes';
-
-import { setupDbConnection, BasicModel } from '@karya/db';
-import { registerScenarios } from './scenarios/Register';
-import { createBlobContainers, createLocalFolders, setupBlobStore } from './utils/AzureBlob';
-
-import { scenarioById } from './scenarios/Index';
-import { taskOutputGeneratorQueue } from './services/Index';
+import { userRouter } from './routes/UserRoutes';
+import { boxRouter } from './routes/BoxRoutes';
+import { setupDbConnection } from '@karya/common';
+import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
+import { envGetNumber, envGetString } from '@karya/misc-utils';
 
 // Setup Koa application
 const app = new Koa();
 
 // App middlewares
-app.use(cors(config.corsConfig));
-app.use(logHttpRequests);
-app.use(authenticateRequest);
-app.use(router.allowedMethods());
-app.use(router.routes());
+app.use(async (ctx, next) => {
+  try {
+    await next();
+    console.log(ctx.method, ctx.path, ctx.status);
+    if (ctx.status >= 300) {
+      console.log(ctx.body);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+app.use(cors({ origin: envGetString('CORS_ORIGIN', ''), credentials: true }));
+
+// Create the main router
+const mainRouter = new Router();
+mainRouter.use('/api_user', userRouter.allowedMethods(), userRouter.routes());
+mainRouter.use('/api_box', boxRouter.allowedMethods(), boxRouter.routes());
+
+// Connect app to main router
+app.use(mainRouter.routes());
 
 // Main script
 (async () => {
   let error = false;
 
-  logger.info(`Loaded '${config.name}' config`);
-
   // If config secrets are stored in key vault, fetch them
-  if (config.azureKeyVault !== null) {
-    logger.info('Loading secrets from key vault');
-    await loadSecretsFromVault();
-  }
+  await loadSecrets(['GOOGLE_CLIENT_ID', 'AZURE_BLOB_KEY', 'PHONE_OTP_API_KEY']);
 
   // Setup the database connection
-  setupDbConnection(config.dbConfig);
-
-  // Register scenarios
-  logger.info(`Syncing scenarios with the database`);
-  try {
-    await registerScenarios();
-    logger.info(`Completed registration of scenarios`);
-  } catch (e) {
-    logger.error('Failed to register scenarios. Check if the database is running');
-    error = true;
-  }
+  setupDbConnection();
 
   // Setup the blob store connection
   setupBlobStore();
@@ -68,25 +66,12 @@ app.use(router.routes());
   // Create local folders
   logger.info(`Creating local folders for the containers`);
   try {
-    await createLocalFolders();
+    const localFolder = envGetString('LOCAL_FOLDER');
+    await createLocalFolders(`${process.cwd()}/${localFolder}`);
     logger.info(`Created all local folders`);
   } catch (e) {
     logger.error('Failed to create local folders');
     error = true;
-  }
-
-  // Get list of incomplete tasks and add output generator cron jobs if they have one
-  await taskOutputGeneratorQueue.empty();
-  const incompleteTasks = await BasicModel.getRecords('task', {
-    status: 'approved',
-  });
-  for (const task of incompleteTasks) {
-    const scenarioObj = scenarioById[Number.parseInt(task.scenario_id, 10)];
-    if (scenarioObj.outputGenerator) {
-      taskOutputGeneratorQueue.add(task, {
-        repeat: { cron: `${task.id} 0 * * *` },
-      });
-    }
   }
 
   if (error) {
@@ -95,9 +80,10 @@ app.use(router.routes());
 })()
   .then((res) => {
     // Start the local web server
-    const server = app.listen(config.serverPort);
+    const port = envGetNumber('SERVER_PORT');
+    const server = app.listen(port);
     server.setTimeout(0);
-    logger.info(`Server running on port ${config.serverPort}`);
+    logger.info(`Server running on port ${port}`);
   })
   .catch((e) => {
     logger.error(e.message);

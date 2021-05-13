@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// Script to reset the database and initialize some basic tables
 
-/**
- * Script to reset the database and initialize some basic tables
- */
+import dotenv from 'dotenv';
+dotenv.config();
 
-import { knex, setupDbConnection, createAllTables, dropAllTables } from '@karya/db';
-import config from '../config/Index';
+import { knex, setupDbConnection, BoxDbFunctions } from '@karya/common';
 import logger from '../utils/Logger';
 
 /** Main Script to reset the DB */
@@ -15,8 +15,8 @@ import logger from '../utils/Logger';
 
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
-  setupDbConnection(config.dbConfig);
-  await dropAllTables();
-  await createAllTables('box');
+  setupDbConnection();
+  await BoxDbFunctions.dropAllTables();
+  await BoxDbFunctions.createAllTables();
   logger.info(`Tables recreated`);
 })().finally(() => knex.destroy());

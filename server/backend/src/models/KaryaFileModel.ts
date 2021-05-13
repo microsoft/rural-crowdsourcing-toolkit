@@ -5,10 +5,8 @@
  * Handle Karya File specific tasks
  */
 
-import md5File from 'md5-file';
-import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BasicModel } from '@karya/db';
-import { uploadBlobFromFile } from '../utils/AzureBlob';
-import { BlobParameters, getBlobName } from '@karya/blobstore';
+import { BasicModel, uploadBlobFromFile } from '@karya/common';
+import { ChecksumAlgorithm, getChecksum, KaryaFile, KaryaFileRecord, BlobParameters, getBlobName } from '@karya/core';
 
 /**
  * Handler to upload a karya file to the blob store, create its checksum and add
@@ -38,7 +36,8 @@ export async function upsertKaryaFile(
     name: blobName,
     url: blobURL,
     container_name: blobParams.cname,
-    creator: 'karya_server',
+    creator: 'SERVER',
+    creator_id: '0',
     algorithm: csAlgo,
     checksum,
     in_server: true,
@@ -49,21 +48,4 @@ export async function upsertKaryaFile(
     ? await BasicModel.updateSingle('karya_file', { id: currentFileID }, kf)
     : await BasicModel.insertRecord('karya_file', kf);
   return upsertedRecord;
-}
-
-/**
- * Compute the checksum for a file given the path and checksum algorithm
- * @param algo Checksum algorithm
- * @param filepath File path
- */
-export async function getChecksum(filepath: string, algo: ChecksumAlgorithm) {
-  switch (algo) {
-    case 'md5':
-      return md5File(filepath);
-    default:
-      ((obj: never) => {
-        // Typescript check
-      })(algo);
-      throw new Error('Unknown checksum algorithm');
-  }
 }

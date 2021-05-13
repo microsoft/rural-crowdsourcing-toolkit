@@ -1,64 +1,59 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import axios from 'axios';
 import * as fs from 'fs';
-import { boxInfo } from '../config/BoxInfo';
-import config from '../config/Index';
-import { knex, setupDbConnection, BoxRecord } from '@karya/db';
-import logger from '../utils/Logger';
+import { BasicModel, knex, setupDbConnection } from '@karya/common';
+import { Box, BoxRecord } from '@karya/core';
+import { envGetString, randomKey } from '@karya/misc-utils';
 
-/**
- * Register the box with the server
- * @param boxInfo Box record with required info
- */
-async function registerBoxWithServer() {
+/** Main registration script */
+(async () => {
+  setupDbConnection();
+
+  // Get box config file
+  const boxConfigFile = process.argv[2];
+  if (!boxConfigFile) {
+    throw new Error('Need to provide box config file as an argument');
+  }
+
+  // Extract box config
+  const configData = await fs.promises.readFile(boxConfigFile);
+  const box: Box = dotenv.parse(configData);
+  const access_code = box.access_code;
+  delete box.access_code;
+
+  // Generate random key for the box
+  box.key = randomKey(32);
+
+  // TODO: Validate box object
+
+  // Check if access code is already registered
   try {
-    const response = await axios.put<BoxRecord>(`${config.serverUrl}/api/box/update/cc`, boxInfo);
-    logger.info(`Successfully registered box with the server. Box ID = ${response.data.id}`);
-    return response.data;
-  } catch (err) {
-    logger.error(err);
-    logger.error('Failed to register box');
-    process.exit(2);
+    await BasicModel.getSingle('box', { access_code });
+    throw new Error('A box with the given access code is already registered');
+  } catch (e) {
+    // Box is not registered
   }
-}
 
-/**
- * Function to verify that there are no other boxes registed in the local DB
- */
-async function verifyNoBox() {
-  const boxes = await knex<BoxRecord>('box').select();
-  if (boxes.length > 0) {
-    logger.error('There is already a box registered with this device');
-    process.exit(1);
-  }
-}
+  // Register box with server
+  const serverUrl = envGetString('BACKEND_SERVER_URL');
+  const response = await axios.put<BoxRecord>(`${serverUrl}/api_box/register`, box, {
+    headers: { 'access-code': access_code },
+  });
 
-/**
- * Function to run the script. Ideally should not be necessary if
- * await can be used in a script
- */
-async function runScript() {
-  setupDbConnection(config.dbConfig);
-
-  // Ensure that there is no box
-  await verifyNoBox();
-
-  const box = await registerBoxWithServer();
-
-  const boxRecord = (await knex<BoxRecord>('box').insert(box).returning('*'))[0];
-
-  fs.writeFileSync(`${process.cwd()}/src/config/box_id.ts`, `export default '${boxRecord.id}';`);
-  logger.info('Successfully inserted box into local DB');
-}
-
-runScript()
-  .then(() => {
-    logger.info('Script completed successfully.');
+  // Insert box locally
+  const boxRecord = await BasicModel.insertRecord('box', response.data);
+  return boxRecord;
+})()
+  .then((box) => {
+    console.log(`Registered box successfully: ID = ${box.id}`);
   })
-  .catch((res) => {
-    logger.error(res);
-    logger.error('Script failed');
+  .catch((e) => {
+    console.log('Error: ', e.message);
+    console.log('Script failed');
   })
   .finally(() => knex.destroy());

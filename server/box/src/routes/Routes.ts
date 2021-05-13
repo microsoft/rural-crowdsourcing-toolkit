@@ -1,39 +1,84 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// This file implements the list of endpoints for the box server. The
+// OpenAPI specification for this server can be found at api/box-server-api.yaml
+// in the root of this repository.
 
+import Router from 'koa-router';
 import BodyParser from 'koa-body';
-import * as BoxRequestController from '../controllers/DbUpdatesController';
-import * as FileLRVController from '../controllers/FileLanguageResourceValueController';
-import { getInputFileForAssignment, uploadOutputFileForAssignment } from '../controllers/KaryaFileController';
+import { KaryaDefaultState } from '../KoaContextState';
+import { needIdToken } from '../controllers/Middlewares';
+
 import * as WorkerController from '../controllers/WorkerController';
-import * as WLSController from '../controllers/WorkerLanguageSkillController';
+import * as KaryaFileController from '../controllers/KaryaFileController';
+import * as AssignmentController from '../controllers/AssignmentController';
+import { KaryaIDTokenHandlerTemplate, KaryaIDTokenState } from '@karya/common';
+import { OTPHandlerTemplate, OTPState } from '@karya/common';
 
-// Import router from the automatically created routes
-// This router includes basic APIs that perform CRU operations on the tables
-import router from './Routes.auto';
+// Karya ID token handlers and type
+export const { generateToken, authenticateRequest } = KaryaIDTokenHandlerTemplate('worker');
+export type WorkerIdTokenState = KaryaIDTokenState<'worker'>;
 
-// GET LRV files
-router.get('/file_language_resource_value', FileLRVController.getLRVFile);
+// OTP handler and type
+const OTPHandler = OTPHandlerTemplate('worker');
+type WorkerOTPState = OTPState<'worker'>;
 
-// Worker requests
-router.get('/worker/checkin', WorkerController.checkIn);
-router.get('/worker/cc/:creation_code', WorkerController.checkCreationCode);
-router.put('/worker/phone-auth', BodyParser(), WorkerController.initiatePhoneAuthentication);
-router.put('/worker/update/cc', BodyParser(), WorkerController.updateWorkerWithCreationCode);
-router.put('/worker/refresh_token', WorkerController.refreshIdToken);
+// Router
+const router = new Router<KaryaDefaultState>();
 
-// Worker language skill creation
-router.post('/worker_language_skill/', BodyParser(), WLSController.insertRecord);
+// Worker get and update routes
+router.get('/worker', WorkerController.get);
+router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
 
-router.post('/db/updates-for-worker', BodyParser(), BoxRequestController.sendUpdatesForWorker);
-router.post(
-  '/db/updates-from-worker',
-  BodyParser({ jsonLimit: '10mb', textLimit: '10mb' }),
-  BoxRequestController.receiveUpdatesFromWorker
+// OTP routes
+router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, OTPHandler.generate);
+router.put<WorkerOTPState, {}>('/worker/otp/resend', OTPHandler.checkPhoneNumber, OTPHandler.resend);
+router.put<WorkerOTPState, {}>(
+  '/worker/otp/verify',
+  OTPHandler.checkPhoneNumber,
+  OTPHandler.verify,
+  generateToken,
+  // @ts-ignore Incorrect route typing. Need to fix
+  WorkerController.registerWorker
 );
 
-// Controller to send/receive input/output files for assignment
-router.get('/microtask_assignment/:id/input_file', getInputFileForAssignment);
-router.post('/microtask_assignment/:id/output_file', BodyParser({ multipart: true }), uploadOutputFileForAssignment);
+// Karya file get routes
+router.get<KaryaFileController.KaryaFileGetRouteState, {}>(
+  '/language_assets/:code',
+  KaryaFileController.checkLanguageAssets,
+  KaryaFileController.getFile
+);
+router.get<KaryaFileController.KaryaFileGetRouteState, {}>(
+  '/assignment/:id/input_file',
+  // @ts-ignore Possibly incorrect typing in koa
+  needIdToken,
+  KaryaFileController.checkMicrotaskInputFile,
+  KaryaFileController.getFile
+);
+
+// Karya file create routes
+router.post<KaryaFileController.KaryaFileSubmitRouteState, {}>(
+  '/assignment/:id/output_file',
+  needIdToken,
+  BodyParser({ multipart: true }),
+  KaryaFileController.verifyFile,
+  // @ts-ignore Possibly incorrect typing by koa
+  KaryaFileController.submitOutputFile,
+  KaryaFileController.submitFile
+);
+router.post<KaryaFileController.KaryaFileSubmitRouteState, {}>(
+  '/worker/log_file',
+  needIdToken,
+  BodyParser({ multipart: true }),
+  KaryaFileController.verifyFile,
+  // @ts-ignore Possibly incorrect typing by koa
+  KaryaFileController.submitLogFile,
+  KaryaFileController.submitFile
+);
+
+// Assignment routes
+router.put('/assignments', needIdToken, BodyParser({ jsonLimit: '10mb' }), AssignmentController.submit);
+router.get('/assignments', needIdToken, AssignmentController.get);
 
 export default router;

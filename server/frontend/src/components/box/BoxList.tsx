@@ -19,10 +19,10 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 // DB Types
-import { Box, BoxRecord } from '@karya/db';
+import { Box, BoxRecord } from '@karya/core';
 
 // HoCs
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 // Map dispatch to props
@@ -99,13 +99,13 @@ class BoxList extends React.Component<BoxListProps, BoxListState> {
     // Box table columns
     const tableColumns: Array<TableColumnType<BoxRecord>> = [
       { header: 'Name', type: 'field', field: 'name' },
-      { header: 'Location', type: 'field', field: 'location_name' },
-      { header: 'Creation Code', type: 'field', field: 'creation_code' },
+      { header: 'Location', type: 'field', field: 'location' },
+      { header: 'Access Code', type: 'field', field: 'access_code' },
     ];
 
     // Registered boxes
-    const registeredBoxes = boxes.filter((b) => b.key !== null);
-    const boxCreationCodes = boxes.filter((b) => b.key === null);
+    const registeredBoxes = boxes.filter((b) => b.id_token !== null);
+    const boxCreationCodes = boxes.filter((b) => b.id_token === null);
 
     // Creation code form
     const { ccForm } = this.state;
@@ -116,7 +116,7 @@ class BoxList extends React.Component<BoxListProps, BoxListState> {
             id='name'
             label='Name of the Box'
             required={true}
-            value={ccForm.name}
+            value={ccForm.name ?? 'Unnamed'}
             onChange={this.handleChange}
             width='s4'
           />
