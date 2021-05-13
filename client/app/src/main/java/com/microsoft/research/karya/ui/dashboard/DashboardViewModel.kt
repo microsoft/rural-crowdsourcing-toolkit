@@ -66,7 +66,7 @@ constructor(
       submitCompletedTasks()
       fetchNewTasks()
       cleanupKaryaFiles()
-      getAllTasks()
+      getAllTasks() // TODO: Remove it once we fix the hot flow issue
     }
   }
 

@@ -29,6 +29,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
     observeUi()
+
+    viewModel.getAllTasks()
   }
 
   private fun setupViews() {
