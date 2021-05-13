@@ -45,7 +45,7 @@ export const needIdToken: UserRouteMiddleware = async (ctx, next) => {
  * Only allow admins to pass through this middleware
  */
 export const onlyAdmin: UserRouteMiddleware = async (ctx, next) => {
-  if (ctx.state.entity.role != 'admin') {
+  if (ctx.state.entity.role != 'ADMIN') {
     HttpResponse.Forbidden(ctx, 'Only admin can access this endpoint');
     return;
   }

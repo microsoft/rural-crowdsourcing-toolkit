@@ -40,21 +40,21 @@ inputProcessorQueue.process(async (job) => {
 inputProcessorQueue.on('active', async (job) => {
   const taskOp = job.data.taskOp;
   const started_at = new Date().toISOString();
-  await BasicModel.updateSingle('task_op', { id: taskOp.id }, { status: 'running', started_at });
+  await BasicModel.updateSingle('task_op', { id: taskOp.id }, { status: 'RUNNING', started_at });
 });
 
 // Handler for successful completion of  input processor job
 inputProcessorQueue.on('completed', async (job) => {
   const taskOp = job.data.taskOp;
   const completed_at = new Date().toISOString();
-  await BasicModel.updateSingle('task_op', { id: taskOp.id }, { status: 'completed', completed_at });
+  await BasicModel.updateSingle('task_op', { id: taskOp.id }, { status: 'COMPLETED', completed_at });
 });
 
 // Handler for failure of input processor job
 inputProcessorQueue.on('failed', async (job, err) => {
   const taskOp = job.data.taskOp;
   const messages = [err.message || 'Input processing failed'];
-  await BasicModel.updateSingle('task_op', { id: taskOp.id }, { status: 'failed', messages: { messages } });
+  await BasicModel.updateSingle('task_op', { id: taskOp.id }, { status: 'FAILED', messages: { messages } });
 });
 
 /**

@@ -5,49 +5,49 @@
 // not defined anywhere else.
 
 // Server Role
-const serverRoles = ['admin', 'work_provider'] as const;
+const serverRoles = ['ADMIN', 'WORK_PROVIDER'] as const;
 export type ServerRole = typeof serverRoles[number];
 
 // Gender
-const genders = ['male', 'female', 'not_specified'] as const;
+const genders = ['MALE', 'FEMALE', 'NOT_SPECIFIED'] as const;
 export type Gender = typeof genders[number];
 
 // File Creator
-const fileCreators = ['server', 'box', 'worker'] as const;
+const fileCreators = ['SERVER', 'BOX', 'WORKER'] as const;
 export type FileCreator = typeof fileCreators[number];
 
 // Checksum Algorithm -- TODO: move this to checksum provider
-const checksumAlgorithms = ['md5'] as const;
+const checksumAlgorithms = ['MD5'] as const;
 export type ChecksumAlgorithm = typeof checksumAlgorithms[number];
 
 // Task Status
-const taskStatuses = ['submitted', 'approved', 'completed'] as const;
+const taskStatuses = ['SUBMITTED', 'APPROVED', 'COMPLETED'] as const;
 export type TaskStatus = typeof taskStatuses[number];
 
 // Microtask Status
-const microtaskStatuses = ['incomplete', 'completed'] as const;
+const microtaskStatuses = ['INCOMPLETE', 'COMPLETED'] as const;
 export type MicrotaskStatus = typeof microtaskStatuses[number];
 
 // Task Op Type -- TODO: move to task op handlers
-const taskOpTypes = ['process_input', 'generate_output'] as const;
+const taskOpTypes = ['PROCESS_INPUT', 'GENERATE_OUTPUT'] as const;
 export type TaskOpType = typeof taskOpTypes[number];
 
 // Task Op Status -- TODO: move to task op handlers
-const taskOpStatuses = ['created', 'running', 'completed', 'failed'] as const;
+const taskOpStatuses = ['CREATED', 'RUNNING', 'COMPLETED', 'FAILED'] as const;
 export type TaskOpStatus = typeof taskOpStatuses[number];
 
 // Chain Name -- TODO: move to task chaining module
-const chainNames = ['test'] as const;
+const chainNames = ['TEST'] as const;
 export type ChainName = typeof chainNames[number];
 
 // Chain Status -- TODO: move to task chaining module
-const chainStatuses = ['active', 'inactive'] as const;
+const chainStatuses = ['ACTIVE', 'INACTIVE'] as const;
 export type ChainStatus = typeof chainStatuses[number];
 
 // Task Assignment Status
-const taskAssignmentStatuses = ['assigned', 'completed'] as const;
+const taskAssignmentStatuses = ['ASSIGNED', 'COMPLETED'] as const;
 export type TaskAssignmentStatus = typeof taskAssignmentStatuses[number];
 
 // Microtask Assignment Status
-const microtaskAssignmentStatuses = ['assigned', 'completed', 'skipped', 'expired', 'verified'] as const;
+const microtaskAssignmentStatuses = ['ASSIGNED', 'COMPLETED', 'SKIPPED', 'EXPIRED', 'VERIFIED'] as const;
 export type MicrotaskAssignmentStatus = typeof microtaskAssignmentStatuses[number];

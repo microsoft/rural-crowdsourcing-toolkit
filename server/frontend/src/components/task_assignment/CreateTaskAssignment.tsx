@@ -134,7 +134,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
       box_id: this.state.box?.id,
       policy: this.state.policy,
       params: this.state.params,
-      status: 'assigned',
+      status: 'ASSIGNED',
     };
     this.props.createTaskAssignment(ta);
   };
@@ -145,7 +145,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     );
 
     // Task drop down
-    const tasks = this.props.task.data.filter((t) => t.status === 'submitted');
+    const tasks = this.props.task.data.filter((t) => t.status === 'SUBMITTED');
     const { task } = this.state;
     const task_id = task ? task.id : 0;
     const taskDropDown = (

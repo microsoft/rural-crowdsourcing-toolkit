@@ -15,7 +15,7 @@ import { ChecksumAlgorithm } from '@karya/core';
  */
 export async function getChecksum(filepath: string, algo: ChecksumAlgorithm) {
   switch (algo) {
-    case 'md5':
+    case 'MD5':
       return md5File(filepath);
     default:
       ((obj: never) => {

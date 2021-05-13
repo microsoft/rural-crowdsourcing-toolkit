@@ -29,7 +29,7 @@ type AdminRouteProps = RouteProps & ConnectedProps<typeof connector>;
 const LocalAdminRoute = (adminProps: AdminRouteProps) => {
   const { component, cwp, ...rest } = adminProps;
 
-  if (cwp && cwp.role === 'admin') {
+  if (cwp && cwp.role === 'ADMIN') {
     return <Route {...rest} component={component} />;
   } else if (cwp) {
     return <Redirect to='/unauthorized' />;

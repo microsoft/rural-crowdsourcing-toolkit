@@ -109,7 +109,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         box_id: worker.box_id,
         group_id: group.id,
         worker_id: worker.id,
-        status: 'assigned',
+        status: 'ASSIGNED',
       });
     });
 
@@ -119,7 +119,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         task_id: task.id,
         microtask_id: microtask.id,
         worker_id: worker.id,
-        status: 'assigned',
+        status: 'ASSIGNED',
       });
     });
   });

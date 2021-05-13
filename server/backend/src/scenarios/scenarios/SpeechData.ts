@@ -26,7 +26,7 @@ async function processInputFile(
       input: { data: sentence },
       deadline: task.deadline,
       credits: task.params.creditsPerRecording,
-      status: 'incomplete',
+      status: 'INCOMPLETE',
     };
     return mt;
   });

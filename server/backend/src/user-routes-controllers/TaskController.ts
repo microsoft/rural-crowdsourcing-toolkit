@@ -45,7 +45,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
   task.params = params;
 
   // update other fields
-  task.status = 'submitted';
+  task.status = 'SUBMITTED';
 
   try {
     const insertedRecord = await BasicModel.insertRecord('task', task);
@@ -63,7 +63,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
 export const getAll: UserRouteMiddleware = async (ctx) => {
   try {
     const user = ctx.state.entity;
-    const filter: Task = user.role == 'work_provider' ? { work_provider_id: ctx.state.entity.id } : {};
+    const filter: Task = user.role == 'WORK_PROVIDER' ? { work_provider_id: ctx.state.entity.id } : {};
     const records = await BasicModel.getRecords('task', filter);
     HttpResponse.OK(ctx, records);
   } catch (e) {
@@ -88,7 +88,7 @@ export const checkTask: TaskRouteMiddleware = async (ctx, next) => {
   }
 
   // Check if the user has access to the task. Allow admins to pass through.
-  if (ctx.state.entity.role != 'admin' && ctx.state.task.work_provider_id != ctx.state.entity.id) {
+  if (ctx.state.entity.role != 'ADMIN' && ctx.state.task.work_provider_id != ctx.state.entity.id) {
     HttpResponse.Forbidden(ctx, 'User does not have access to the task');
     return;
   }
@@ -166,14 +166,14 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     // Create the karya file
     const fileList = required.map((req) => `${uniqueName}.${req}`);
     await tar.create({ C: folderPath, gzip: true, file: inputBlobPath }, fileList);
-    const karyaFile = await upsertKaryaFile(inputBlobPath, 'md5', inputBlobParams);
+    const karyaFile = await upsertKaryaFile(inputBlobPath, 'MD5', inputBlobParams);
 
     // Create the task operation
     const taskOp = await BasicModel.insertRecord('task_op', {
       task_id: task.id,
-      op_type: 'process_input',
+      op_type: 'PROCESS_INPUT',
       file_id: karyaFile.id,
-      status: 'created',
+      status: 'CREATED',
       messages: { messages: [] },
     });
 

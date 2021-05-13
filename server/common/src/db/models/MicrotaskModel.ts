@@ -4,6 +4,8 @@
 import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/core';
 import { knex } from '../Client';
 
+// TODO: Many functions here can be optimized
+
 /**
  * Get a list of microtask records from the specified task that can
  * potentially be assigned to the specified worker, subject to a specified
@@ -28,7 +30,7 @@ export async function getAssignableMicrotasks(
 
   const microtasks = await knex<MicrotaskRecord>('microtask')
     .where('task_id', task.id)
-    .where('status', 'not in', ['completed', 'paid'])
+    .where('status', 'not in', ['COMPLETED'])
     .where('id', 'not in', knex.raw('?', [maxAssignedMicrotasks]))
     .where('id', 'not in', knex.raw('?', [workerAssignedMicrotasks]))
     .select();
@@ -43,7 +45,7 @@ export async function getAssignableMicrotasks(
 export async function getCompletedAssignmentsCount(microtask_id: string) {
   const completedAssignmentsCount = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('microtask_id', microtask_id)
-    .whereIn('status', ['completed', 'paid'])
+    .whereIn('status', ['COMPLETED', 'VERIFIED'])
     .count();
   return completedAssignmentsCount[0].count;
 }
@@ -55,7 +57,7 @@ export async function getCompletedAssignmentsCount(microtask_id: string) {
 export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolean> {
   const incompleteMicrotasks = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('worker_id', worker_id)
-    .whereIn('status', ['assigned', 'incomplete'])
+    .whereIn('status', ['ASSIGNED'])
     .select();
   return incompleteMicrotasks.length > 0;
 }
@@ -65,5 +67,5 @@ export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolea
  * @param microtask Microtask to be marked complete
  */
 export async function markComplete(microtask_id: string) {
-  await knex<MicrotaskRecord>('microtask').where('id', microtask_id).update({ status: 'completed' });
+  await knex<MicrotaskRecord>('microtask').where('id', microtask_id).update({ status: 'COMPLETED' });
 }

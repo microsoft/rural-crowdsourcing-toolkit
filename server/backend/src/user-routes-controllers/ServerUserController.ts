@@ -30,7 +30,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
   // Update box record with access code
   server_user.access_code = access_code;
-  server_user.role = 'work_provider';
+  server_user.role = 'WORK_PROVIDER';
 
   try {
     const record = await BasicModel.insertRecord('server_user', server_user);

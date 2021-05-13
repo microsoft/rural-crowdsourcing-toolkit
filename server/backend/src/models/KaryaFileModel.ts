@@ -37,7 +37,7 @@ export async function upsertKaryaFile(
     name: blobName,
     url: blobURL,
     container_name: blobParams.cname,
-    creator: 'server',
+    creator: 'SERVER',
     creator_id: '0',
     algorithm: csAlgo,
     checksum,
@@ -58,7 +58,7 @@ export async function upsertKaryaFile(
  */
 export async function getChecksum(filepath: string, algo: ChecksumAlgorithm) {
   switch (algo) {
-    case 'md5':
+    case 'MD5':
       return md5File(filepath);
     default:
       ((obj: never) => {

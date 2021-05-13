@@ -81,13 +81,13 @@ export const submit: KaryaMiddleware = async (ctx) => {
     await BBPromise.mapSeries(assignments, async (assignment) => {
       if (assignment.worker_id != worker.id) {
         // TODO: Internally log this error. User does not have access to assignment
-      } else if (assignment.status != 'completed' && assignment.status != 'skipped') {
+      } else if (assignment.status != 'COMPLETED' && assignment.status != 'SKIPPED') {
         // TODO: Internally log this error. Can only submit completed or skipped
         // assignments
       } else {
         const { id, ...updates } = assignment;
         await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
-        if (assignment.status == 'completed') {
+        if (assignment.status == 'COMPLETED') {
           // TODO: Handle microtask assignment completion, by invoking policy
         }
         ids.push(id);

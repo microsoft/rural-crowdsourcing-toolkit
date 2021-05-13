@@ -8,16 +8,16 @@ import { TaskRecord, TaskStatus } from '@karya/core';
 // task status function
 export const taskStatus = (task: TaskRecord): string => {
   switch (task.status) {
-    case 'submitted':
+    case 'SUBMITTED':
       return 'Submitted';
-    case 'approved':
+    case 'APPROVED':
       return 'Approved';
-    case 'completed':
+    case 'COMPLETED':
       return 'Completed';
   }
 };
 
 // Statuses in which the task can be edited, validated, or approved
-export const editStatuses: TaskStatus[] = ['submitted'];
-export const validateStatuses: TaskStatus[] = ['submitted'];
-export const approveStatuses: TaskStatus[] = ['submitted'];
+export const editStatuses: TaskStatus[] = ['SUBMITTED'];
+export const validateStatuses: TaskStatus[] = ['SUBMITTED'];
+export const approveStatuses: TaskStatus[] = ['SUBMITTED'];

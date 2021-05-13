@@ -34,7 +34,7 @@ export async function getAssignableMicrotaskGroups(
 
   const microtaskGroups = await knex<MicrotaskGroupRecord>('microtask_group')
     .where('task_id', task.id)
-    .where('status', 'not in', ['completed'])
+    .where('status', 'not in', ['COMPLETED'])
     .where('id', 'not in', knex.raw('?', [maxAssignedGroups]))
     .where('id', 'not in', knex.raw('?', [workerAssignedGroups]))
     .select();
@@ -58,7 +58,7 @@ export async function getTotalCredits(microtaskGroup: MicrotaskGroupRecord) {
 export async function getCompletedAssignmentsCount(microtaskGroup: MicrotaskGroupRecord) {
   const completedAssignmentsCount = await knex<MicrotaskGroupAssignmentRecord>('microtask_group_assignment')
     .where('microtask_group_id', microtaskGroup.id)
-    .whereIn('status', ['completed'])
+    .whereIn('status', ['COMPLETED'])
     .count();
   return completedAssignmentsCount[0].count;
 }
@@ -68,5 +68,5 @@ export async function getCompletedAssignmentsCount(microtaskGroup: MicrotaskGrou
  * @param microtask Microtask to be marked complete
  */
 export async function markComplete(microtaskGroup: MicrotaskGroupRecord) {
-  await knex<MicrotaskGroupRecord>('microtask_group').where('id', microtaskGroup.id).update({ status: 'completed' });
+  await knex<MicrotaskGroupRecord>('microtask_group').where('id', microtaskGroup.id).update({ status: 'COMPLETED' });
 }

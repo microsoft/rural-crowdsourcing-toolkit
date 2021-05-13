@@ -99,7 +99,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
       ) : null;
 
     const tableColumns: Array<TableColumnType<ServerUserRecord>> = [
-      { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'admin' ? 'Yes' : 'No') },
+      { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'ADMIN' ? 'Yes' : 'No') },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
       { type: 'function', header: 'Registration Type', function: (wp) => AuthProviderName(wp.reg_mechanism) },
@@ -111,7 +111,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
       if (a.role === b.role) {
         return new Date(a.created_at) < new Date(b.created_at) ? 1 : -1;
       }
-      return a.role === 'admin' ? -1 : 1;
+      return a.role === 'ADMIN' ? -1 : 1;
     };
 
     /** List of signed up work providers */

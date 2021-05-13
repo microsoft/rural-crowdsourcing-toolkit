@@ -210,7 +210,7 @@ export const submitOutputFile: KaryaFileSubmitMiddleware = async (ctx, next) => 
     ...ctx.state.karya_file,
     container_name: 'microtask-assignment-output',
     name: getBlobName(blobParams),
-    creator: 'worker',
+    creator: 'WORKER',
     creator_id: ctx.state.entity.id,
     in_box: true,
   };
@@ -226,7 +226,7 @@ export const submitLogFile: KaryaFileSubmitMiddleware = async (ctx, next) => {
   ctx.state.karya_file = {
     ...ctx.state.karya_file,
     container_name: 'worker-logs',
-    creator: 'worker',
+    creator: 'WORKER',
     creator_id: ctx.state.entity.id,
   };
 

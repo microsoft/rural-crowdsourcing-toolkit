@@ -148,7 +148,7 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
         .where({
           box_id: box.id,
           task_id: task.id,
-          status: 'assigned',
+          status: 'ASSIGNED',
         })
         .whereRaw('sent_to_server_at < created_at');
 
@@ -187,7 +187,7 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
         .where({
           box_id: box.id,
           task_id: task.id,
-          status: 'completed',
+          status: 'COMPLETED',
         })
         .whereRaw('submitted_to_server_at < completed_at');
 
