@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.onboarding.fileDownload
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -38,7 +39,10 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
       fileDownloadFlow.observe(viewLifecycle, viewLifecycleScope) { result ->
         when (result) {
           is Result.Success<*> -> navigateToRegistration()
-          is Result.Error -> navigateToRegistration()
+          is Result.Error -> {
+            Toast.makeText(requireContext(), "Could not download resources", Toast.LENGTH_LONG).show()
+            navigateToRegistration()
+          }
           Result.Loading -> {}
         }
       }
