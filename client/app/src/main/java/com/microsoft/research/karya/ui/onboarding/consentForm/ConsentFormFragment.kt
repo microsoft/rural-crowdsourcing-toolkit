@@ -6,30 +6,36 @@ import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
+import com.microsoft.research.karya.utils.extensions.disable
+import com.microsoft.research.karya.utils.extensions.enable
+import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewLifecycle
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
 
   private val binding by viewBinding(FragmentConsentFormBinding::bind)
+  private val viewModel by viewModels<ConsentFormViewModel>()
 
   @Inject lateinit var resourceManager: ResourceManager
-
   @Inject lateinit var authManager: AuthManager
 
   // TODO: add assistant
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
+    observeUi()
+    observeEffects()
   }
 
   private fun setupViews() {
@@ -47,29 +53,72 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
       consentFormTv.text = spannedText
       consentFormTv.movementMethod = ScrollingMovementMethod()
 
-      agreeBtn.setOnClickListener { handleNavigation() }
+      agreeBtn.setOnClickListener { viewModel.updateConsentFormStatus(true) }
 
       disagreeBtn.setOnClickListener { requireActivity().finish() }
     }
   }
 
-  private fun handleNavigation() {
-    viewLifecycleOwner.lifecycleScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
-
-      if (resourceManager.areLanguageResourcesAvailable(worker.language)) {
-        navigateToLoginFlow()
-      } else {
-        navigateToResourceDownload()
+  private fun observeUi() {
+    viewModel.consentFormUiState.observe(viewLifecycle, viewLifecycleScope) { state ->
+      when (state) {
+        is ConsentFormUiState.Error -> showErrorUi()
+        ConsentFormUiState.Initial -> showInitialUi()
+        ConsentFormUiState.Loading -> showLoadingUi()
+        ConsentFormUiState.Success -> showSuccessUi()
       }
+    }
+  }
+
+  private fun observeEffects() {
+    viewModel.consentFormEffects.observe(viewLifecycle, viewLifecycleScope) { effect ->
+      when (effect) {
+        ConsentFormEffects.Navigate -> navigateToLoginFlow()
+      }
+    }
+  }
+
+  private fun showInitialUi() {
+    with(binding) {
+      agreeBtn.isClickable = true
+      disagreeBtn.isClickable = true
+
+      agreeBtn.enable()
+      disagreeBtn.enable()
+    }
+  }
+
+  private fun showLoadingUi() {
+    with(binding) {
+      agreeBtn.isClickable = false
+      disagreeBtn.isClickable = false
+
+      agreeBtn.disable()
+      disagreeBtn.disable()
+    }
+  }
+
+  private fun showSuccessUi() {
+    with(binding) {
+      agreeBtn.isClickable = true
+      disagreeBtn.isClickable = true
+
+      agreeBtn.enable()
+      disagreeBtn.enable()
+    }
+  }
+
+  private fun showErrorUi() {
+    with(binding) {
+      agreeBtn.isClickable = true
+      disagreeBtn.isClickable = true
+
+      agreeBtn.enable()
+      disagreeBtn.enable()
     }
   }
 
   private fun navigateToLoginFlow() {
     findNavController().navigate(R.id.action_consentFormFragment2_to_loginFlow)
-  }
-
-  private fun navigateToResourceDownload() {
-    findNavController().navigate(R.id.action_consentFormFragment2_to_fileDownloadFragment2)
   }
 }

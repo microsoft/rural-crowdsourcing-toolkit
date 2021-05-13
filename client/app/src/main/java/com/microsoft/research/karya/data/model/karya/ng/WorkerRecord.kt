@@ -21,6 +21,7 @@ data class WorkerRecord(
   @SerializedName("phone_number") val phoneNumber: String?,
   @SerializedName("profile_picture") val profilePicturePath: String?,
   @SerializedName("username") val username: String?,
+  @SerializedName("isConsentProvided") val isConsentProvided: Boolean = false,
 ) {
   companion object {
     fun createEmptyWorker(): WorkerRecord {
