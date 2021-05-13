@@ -143,13 +143,13 @@ open class SpeechDataMain(
     setContentView(R.layout.speech_data_main)
 
     /** record instruction */
-    recordInstruction = task.params.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+    recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
     recordPromptTv.text = recordInstruction
 
     /** Forced replace */
     noForcedReplay =
       try {
-        task.params.get("noForcedReplay").asBoolean
+        task.params.asJsonObject.get("noForcedReplay").asBoolean
       } catch (e: Exception) {
         false
       }
@@ -306,7 +306,7 @@ open class SpeechDataMain(
     /** Write wav file */
     scratchRecordingFileInitJob = ioScope.launch { resetWavFile() }
 
-    sentenceTv.text = currentMicroTask.input.get("data").toString()
+    sentenceTv.text = currentMicroTask.input.asJsonObject.get("data").toString()
     totalRecordedBytes = 0
     playbackProgressPb.progress = 0
 
@@ -324,7 +324,7 @@ open class SpeechDataMain(
     preRecordBufferConsumed[1] = 0
 
     if (
-      currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED.toString().toLowerCase(Locale.ROOT)) {
+      currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()

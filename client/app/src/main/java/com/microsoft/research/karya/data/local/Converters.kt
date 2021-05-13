@@ -6,7 +6,7 @@ package com.microsoft.research.karya.data.local
 import android.util.Log
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.data.model.karya.AssignmentGranularityType
 import com.microsoft.research.karya.data.model.karya.AssignmentOrderType
@@ -20,7 +20,7 @@ import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
 import com.microsoft.research.karya.data.model.karya.ng.AuthType
 import java.math.BigInteger
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 class Converters {
 
@@ -51,19 +51,12 @@ class Converters {
   }
 
   @TypeConverter
-  fun fromStringToJsonObject(value: String?): JsonObject? {
-    if (value == null) {
-      return null
-    }
-    val listType = object : TypeToken<JsonObject>() {}.type
-    return Gson().fromJson(value, listType)
+  fun fromStringToJsonElement(value: String): JsonElement {
+    return Gson().fromJson(value, JsonElement::class.java)
   }
 
   @TypeConverter
-  fun fromJsonObjecttoString(list: JsonObject?): String? {
-    if (list == null) {
-      return null
-    }
+  fun fromJsonElementToString(list: JsonElement): String {
     val gson = Gson()
     return gson.toJson(list)
   }

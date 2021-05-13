@@ -11,7 +11,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.microsoft.research.karya.data.model.karya.enums.PayoutInfoStatus
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 
@@ -30,10 +30,10 @@ data class PayoutInfoRecord(
   var box_id: Int,
   var worker_id: String,
   var method_id: Int,
-  var info: JsonObject,
+  var info: JsonElement,
   var status: PayoutInfoStatus,
   var enabled: Boolean,
-  var params: JsonObject,
+  var params: JsonElement,
   var created_at: String,
   var last_updated_at: String,
 )

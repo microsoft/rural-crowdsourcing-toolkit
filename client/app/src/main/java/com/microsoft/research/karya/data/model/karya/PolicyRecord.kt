@@ -12,7 +12,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 
 @Entity(
   tableName = "policy",
@@ -27,7 +27,7 @@ data class PolicyRecord(
   var scenario_id: Int,
   var name: String,
   var description: String,
-  var params: JsonObject,
+  var params: JsonElement,
   var created_at: String,
   var last_updated_at: String,
 )

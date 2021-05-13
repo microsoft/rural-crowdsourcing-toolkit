@@ -4,12 +4,9 @@
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 
 @Entity(tableName = "microtask_assignment")
 data class MicroTaskAssignmentRecord(
@@ -20,9 +17,9 @@ data class MicroTaskAssignmentRecord(
   var task_id: String,
   var worker_id: String,
   var deadline: String?,
-  var status: String,
+  var status: MicrotaskAssignmentStatus,
   var completed_at: String?,
-  var output: JsonObject?,
+  var output: JsonElement,
   var output_file_id: String?,
   var credits: Float?,
   var created_at: String,

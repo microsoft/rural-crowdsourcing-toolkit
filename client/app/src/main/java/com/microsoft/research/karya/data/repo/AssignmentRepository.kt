@@ -38,8 +38,8 @@ constructor(
 
     if (assignmentResponse != null) {
       saveTasks(assignmentResponse.tasks)
-//      saveMicroTasks(assignmentResponse.microTasks)
-//      saveMicroTaskAssignments(assignmentResponse.assignments)
+      saveMicroTasks(assignmentResponse.microTasks)
+      saveMicroTaskAssignments(assignmentResponse.assignments)
 
       emit(assignmentResponse)
     } else {

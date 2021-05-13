@@ -5,6 +5,7 @@ package com.microsoft.research.karya.data.local.daosExtra
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
@@ -73,7 +74,7 @@ interface MicrotaskAssignmentDaoExtra {
   )
   suspend fun markComplete(
     id: String,
-    output: JsonObject,
+    output: JsonElement,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
     date: String,
   )
@@ -87,9 +88,9 @@ interface MicrotaskAssignmentDaoExtra {
 
   /** Query to get list of assignments whose output karya files are in the server */
   @Query(
-    "SELECT ma.* FROM microtask_assignment AS ma INNER JOIN karya_file AS kf ON ma.output_file_id = kf.id WHERE kf.in_server=:in_server"
+    "SELECT ma.* FROM microtask_assignment AS ma INNER JOIN karya_file AS kf ON ma.output_file_id = kf.id WHERE kf.in_box=:in_box"
   )
-  suspend fun getAssignmentsWithUploadedFiles(in_server: Boolean = true): List<MicroTaskAssignmentRecord>
+  suspend fun getAssignmentsWithUploadedFiles(in_box: Boolean = true): List<MicroTaskAssignmentRecord>
 
   /** Query to get count of assignments by status */
   @Query("SELECT COUNT(*) FROM microtask_assignment where status=:status")

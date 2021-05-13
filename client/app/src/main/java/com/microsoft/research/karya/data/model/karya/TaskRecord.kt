@@ -7,7 +7,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
 
 @Entity(tableName = "task")
@@ -18,7 +18,7 @@ data class TaskRecord(
   var name: String,
   var description: String,
   var display_name: String,
-  var params: JsonObject,
+  var params: JsonElement,
   var deadline: String?,
   var assignment_granularity: AssignmentGranularityType,
   var group_assignment_order: AssignmentOrderType,

@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.injection
 
+import com.google.gson.GsonBuilder
 import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
@@ -22,7 +23,7 @@ class RetrofitModule {
 
   @Provides
   @Reusable
-  fun provideGsonConverterFactory(): GsonConverterFactory {
+  fun provide(): GsonConverterFactory {
     return GsonConverterFactory.create()
   }
 

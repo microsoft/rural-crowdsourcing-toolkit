@@ -10,14 +10,14 @@ package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 
 @Entity(tableName = "payout_method")
 data class PayoutMethodRecord(
   @PrimaryKey var id: Int,
   var name: String,
   var description: String,
-  var required_info: JsonObject,
+  var required_info: JsonElement,
   var enabled: Boolean,
   var created_at: String,
   var last_updated_at: String,

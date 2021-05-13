@@ -242,7 +242,7 @@ abstract class MicrotaskRenderer(
       .markComplete(microtaskAssignmentIDs[currentAssignmentIndex], output, date = getCurrentDate())
 
     /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED.name) {
+    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
       completedMicrotasks++
       uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
@@ -318,7 +318,7 @@ abstract class MicrotaskRenderer(
       ioScope.launch {
         firstTimeActivityVisit =
           try {
-            !thisWorker.params!!.get(activityName).asBoolean
+            !thisWorker.params.asJsonObject.get(activityName).asBoolean
           } catch (e: Exception) {
             true
           }
@@ -347,7 +347,7 @@ abstract class MicrotaskRenderer(
         do {
           val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
           val microtaskAssignment = karyaDb.microtaskAssignmentDao().getById(microtaskAssignmentID)
-          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED.name.toLowerCase(Locale.ROOT)) {
+          if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
             break
           }
           currentAssignmentIndex++
@@ -394,7 +394,7 @@ abstract class MicrotaskRenderer(
 
   private suspend fun activityVisited() {
     val params = thisWorker.params
-    params!!.addProperty(activityName, true)
+    params.asJsonObject.addProperty(activityName, true)
     ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
   }
 
@@ -491,22 +491,22 @@ abstract class MicrotaskRenderer(
 
       if (currentAssignment.output != null) {
         outputData =
-          if (currentAssignment.output!!.has("data")) {
-            currentAssignment.output!!.getAsJsonObject("data")
+          if (currentAssignment.output.asJsonObject.has("data")) {
+            currentAssignment.output.asJsonObject.getAsJsonObject("data")
           } else {
             JsonObject()
           }
 
         logs =
-          if (currentAssignment.output!!.has("logs")) {
-            currentAssignment.output!!.getAsJsonArray("logs")
+          if (currentAssignment.output.asJsonObject.has("logs")) {
+            currentAssignment.output.asJsonObject.getAsJsonArray("logs")
           } else {
             JsonArray()
           }
 
         outputFiles =
-          if (currentAssignment.output!!.has("files")) {
-            currentAssignment.output!!.getAsJsonArray("files")
+          if (currentAssignment.output.asJsonObject.has("files")) {
+            currentAssignment.output.asJsonObject.getAsJsonArray("files")
           } else {
             JsonArray()
           }
