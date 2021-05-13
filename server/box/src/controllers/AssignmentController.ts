@@ -8,7 +8,7 @@ import * as HttpResponse from '@karya/http-response';
 import { MicrotaskAssignmentRecord } from '@karya/core';
 import { BasicModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
-import { assignMicrotasksForWorker } from '../scenarios/AssignmentService';
+import { assignMicrotasksForWorker } from '../assignments/AssignmentService';
 
 /**
  * Get list of (new or verified) assignments for a worker

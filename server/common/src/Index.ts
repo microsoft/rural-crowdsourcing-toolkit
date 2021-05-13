@@ -3,8 +3,6 @@
 //
 // Entry point for all the common modules in the platform.
 
-export * from './scenarios/Index';
-export * from './policies/Index';
 export * from './blobstore/Index';
 export * from './db/Index';
 export * from './auth/Index';

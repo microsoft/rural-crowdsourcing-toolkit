@@ -11,7 +11,7 @@ import {
   PolicyName,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel } from '@karya/common';
-import { policyMap } from '@karya/common';
+import { localPolicyMap } from './policies/Index';
 
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments
@@ -44,7 +44,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const task = await BasicModel.getSingle('task', { id: taskAssignment.task_id });
 
     const policy_name = taskAssignment.policy;
-    const policy = policyMap[policy_name];
+    const policy = localPolicyMap[policy_name];
 
     const chosenMicrotaskGroups: MicrotaskGroupRecord[] = [];
     let chosenMicrotasks: MicrotaskRecord[] = [];
@@ -142,7 +142,7 @@ export async function handleMicrotaskAssignmentCompletion(microtaskAssignment: M
   });
 
   const policy_name = taskAssignment.policy as PolicyName;
-  const policy = policyMap[policy_name];
+  const policy = localPolicyMap[policy_name];
 
   // Invoke handler for policy
   await policy.handleAssignmentCompletion(microtaskAssignment, taskAssignment.params);

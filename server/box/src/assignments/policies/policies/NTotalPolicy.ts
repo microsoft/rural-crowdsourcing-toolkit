@@ -5,27 +5,16 @@
 // workers, and if necessary additional workers, until there are a total of n
 // completed assignments for the microtask.
 
-import Joi from 'joi';
-import { PolicyInterface } from '../PolicyInterface';
-import { MicrotaskGroupModel, MicrotaskModel } from '../../db/Index';
+import { BoxPolicyInterface } from '../PolicyInterface';
+import { MicrotaskGroupModel, MicrotaskModel } from '@karya/common';
+import { policyMap } from '@karya/core';
 
 export type NTotalPolicyParams = {
   nTotal: number;
 };
 
-export const nTotalPolicy: PolicyInterface<NTotalPolicyParams> = {
-  name: 'n-total',
-  full_name: 'n Total Responses',
-
-  // Policy parameters
-  params: Joi.object({
-    nTotal: Joi.number()
-      .integer()
-      .min(1)
-      .label('Total number of responses')
-      .description('Number of completed responses before which a microtask is deemed complete')
-      .required(),
-  }),
+export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
+  ...policyMap['n-total'],
 
   /**
    * Return a list of assignable microtasks to the worker from a task

@@ -5,26 +5,16 @@
 // specific task should be assigned to different users. This file formally
 // specifies the interface that should be implemented by any new policy.
 
-import Joi from 'joi';
 import {
   MicrotaskAssignmentRecord,
   MicrotaskGroupRecord,
   MicrotaskRecord,
   TaskRecord,
   WorkerRecord,
-  PolicyName,
+  PolicyInterface,
 } from '@karya/core';
 
-export interface PolicyInterface<ParamsType = object> {
-  // Policy name
-  name: PolicyName;
-
-  // Full name of the policy
-  full_name: string;
-
-  // Parameters to be provided with the policy
-  params: Joi.ObjectSchema;
-
+export interface BoxPolicyInterface<ParamsType = object> extends PolicyInterface {
   /**
    * Get a list of assignable microtasks from a task to a particular user.
    * @param worker Record of worker to whom microtasks have to be assigned
