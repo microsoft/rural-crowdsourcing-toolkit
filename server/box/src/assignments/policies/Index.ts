@@ -13,5 +13,5 @@ import { PolicyName } from '@karya/core';
  * Map of policies from name to object.
  */
 export const localPolicyMap: { [key in PolicyName]: BoxPolicyInterface } = {
-  'n-total': nTotalPolicy,
+  N_TOTAL: nTotalPolicy,
 };

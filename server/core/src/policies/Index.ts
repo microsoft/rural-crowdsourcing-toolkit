@@ -11,7 +11,7 @@ export * from './PolicyInterface';
 export * from './policies/NTotalPolicy';
 
 // List of policy names
-export const policyNames = ['n-total'] as const;
+export const policyNames = ['N_TOTAL'] as const;
 export type PolicyName = typeof policyNames[number];
 
 /**
@@ -20,7 +20,7 @@ export type PolicyName = typeof policyNames[number];
  * Map of policies from name to object.
  */
 export const policyMap: { [key in PolicyName]: PolicyInterface } = {
-  'n-total': nTotalPolicy,
+  N_TOTAL: nTotalPolicy,
 };
 
 /**

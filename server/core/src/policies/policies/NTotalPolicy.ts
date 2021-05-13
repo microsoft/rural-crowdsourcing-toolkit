@@ -12,7 +12,7 @@ export type NTotalPolicyParams = {
 };
 
 export const nTotalPolicy: PolicyInterface = {
-  name: 'n-total',
+  name: 'N_TOTAL',
   full_name: 'n Total Responses',
 
   // Policy parameters

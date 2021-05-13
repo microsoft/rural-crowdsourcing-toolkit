@@ -14,7 +14,7 @@ export type NTotalPolicyParams = {
 };
 
 export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
-  ...policyMap['n-total'],
+  ...policyMap['N_TOTAL'],
 
   /**
    * Return a list of assignable microtasks to the worker from a task
