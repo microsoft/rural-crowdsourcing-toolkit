@@ -13,6 +13,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 
 class AssignmentRepository
 @Inject
@@ -61,6 +62,26 @@ constructor(
 
     if (successAssignmentIDS != null) {
       emit(successAssignmentIDS)
+    } else {
+      error("Request failed, response body was null")
+    }
+  }
+
+  fun submitAssignmentOutputFile(
+    idToken: String,
+    assignmentId: String,
+    json: MultipartBody.Part,
+    file: MultipartBody.Part
+  ) = flow {
+    val response = assignmentAPI.submitAssignmentOutputFile(idToken, assignmentId, json, file)
+    val responseBody = response.body()
+
+    if (!response.isSuccessful) {
+      error("Failed to upload file")
+    }
+
+    if (responseBody != null) {
+      emit(responseBody)
     } else {
       error("Request failed, response body was null")
     }

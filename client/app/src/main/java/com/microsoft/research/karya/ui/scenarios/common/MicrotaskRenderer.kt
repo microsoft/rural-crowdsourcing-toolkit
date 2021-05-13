@@ -494,7 +494,7 @@ abstract class MicrotaskRenderer(
       }
       currentMicrotaskGroupId = currentMicroTask.group_id
 
-      if (currentAssignment.output != null) {
+      if (!currentAssignment.output.isJsonNull) {
         outputData =
           if (currentAssignment.output.asJsonObject.has("data")) {
             currentAssignment.output.asJsonObject.getAsJsonObject("data")

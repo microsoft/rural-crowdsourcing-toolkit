@@ -306,7 +306,7 @@ open class SpeechDataMain(
     /** Write wav file */
     scratchRecordingFileInitJob = ioScope.launch { resetWavFile() }
 
-    sentenceTv.text = currentMicroTask.input.asJsonObject.get("data").toString()
+    sentenceTv.text = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
     playbackProgressPb.progress = 0
 

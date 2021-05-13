@@ -7,8 +7,8 @@
  */
 package com.microsoft.research.karya.data.model.karya
 
+import com.google.gson.annotations.SerializedName
+
 enum class FileCreator {
-  karya_server,
-  karya_box,
-  karya_client
+  @SerializedName("worker") WORKER
 }

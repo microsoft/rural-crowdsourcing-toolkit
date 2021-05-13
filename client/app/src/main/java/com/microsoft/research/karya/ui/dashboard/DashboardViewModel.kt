@@ -137,8 +137,8 @@ constructor(
     val dataPart = MultipartBody.Part.createFormData("data", Gson().toJson(uploadFileRequest))
 
     // Send the tarball
-    karyaFileRepository
-      .uploadKaryaFile(idToken, dataPart, filePart)
+    assignmentRepository
+      .submitAssignmentOutputFile(idToken, assignment.id, dataPart, filePart)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect { fileRecord -> // Because we want this to be synchronous
         karyaFileRepository.insertKaryaFile(fileRecord)
