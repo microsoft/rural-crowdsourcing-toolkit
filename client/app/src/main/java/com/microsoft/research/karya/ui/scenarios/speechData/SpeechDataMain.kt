@@ -564,24 +564,26 @@ open class SpeechDataMain(
   }
 
   private fun playRecordPrompt() {
-    val oldColor = sentenceTv.currentTextColor
-    val filePath = getAudioFilePath(R.string.audio_record_sentence)
-
-    assistant.playAssistantAudio(
-      filePath,
-      uiCue = {
-        sentenceTv.setTextColor(Color.parseColor("#CC6666"))
-        sentencePointerIv.visibility = View.VISIBLE
-      },
-      onCompletionListener = {
-        uiScope.launch {
-          sentenceTv.setTextColor(oldColor)
-          sentencePointerIv.visibility = View.INVISIBLE
-          delay(500)
-          playRecordAction()
-        }
-      }
-    )
+    // TODO: MOVE TO NEW ASSISTANT
+    moveToPrerecording()
+//    val oldColor = sentenceTv.currentTextColor
+//    val filePath = getAudioFilePath(R.string.audio_record_sentence)
+//
+//    assistant.playAssistantAudio(
+//      filePath,
+//      uiCue = {
+//        sentenceTv.setTextColor(Color.parseColor("#CC6666"))
+//        sentencePointerIv.visibility = View.VISIBLE
+//      },
+//      onCompletionListener = {
+//        uiScope.launch {
+//          sentenceTv.setTextColor(oldColor)
+//          sentencePointerIv.visibility = View.INVISIBLE
+//          delay(500)
+//          playRecordAction()
+//        }
+//      }
+//    )
   }
 
   private fun playRecordAction() {
@@ -608,23 +610,24 @@ open class SpeechDataMain(
   }
 
   private fun playStopAction() {
-    val filePath = getAudioFilePath(R.string.audio_stop_action)
-
-    uiScope.launch {
-      assistant.playAssistantAudio(
-        filePath,
-        uiCue = { recordPointerIv.visibility = View.VISIBLE },
-        onCompletionListener = {
-          uiScope.launch {
-            recordPointerIv.visibility = View.INVISIBLE
-            delay(500)
-            playListenAction()
-          }
-        }
-      )
-      delay(500)
-      recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-    }
+    // TODO: MOVE TO NEW ASSISTANT
+//    val filePath = getAudioFilePath(R.string.audio_stop_action)
+//
+//    uiScope.launch {
+//      assistant.playAssistantAudio(
+//        filePath,
+//        uiCue = { recordPointerIv.visibility = View.VISIBLE },
+//        onCompletionListener = {
+//          uiScope.launch {
+//            recordPointerIv.visibility = View.INVISIBLE
+//            delay(500)
+//            playListenAction()
+//          }
+//        }
+//      )
+//      delay(500)
+//      recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+//    }
   }
 
   private fun playListenAction() {
@@ -648,23 +651,24 @@ open class SpeechDataMain(
   }
 
   private fun playRerecordAction() {
-    val filePath = getAudioFilePath(R.string.audio_rerecord_action)
-
-    assistant.playAssistantAudio(
-      filePath,
-      uiCue = {
-        recordPointerIv.visibility = View.VISIBLE
-        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
-      },
-      onCompletionListener = {
-        uiScope.launch {
-          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-          recordPointerIv.visibility = View.INVISIBLE
-          delay(500)
-          playNextAction()
-        }
-      }
-    )
+    // TODO: MOVE TO NEW ASSISTANT
+//    val filePath = getAudioFilePath(R.string.audio_rerecord_action)
+//
+//    assistant.playAssistantAudio(
+//      filePath,
+//      uiCue = {
+//        recordPointerIv.visibility = View.VISIBLE
+//        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+//      },
+//      onCompletionListener = {
+//        uiScope.launch {
+//          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+//          recordPointerIv.visibility = View.INVISIBLE
+//          delay(500)
+//          playNextAction()
+//        }
+//      }
+//    )
   }
 
   private fun playNextAction() {
@@ -688,23 +692,24 @@ open class SpeechDataMain(
   }
 
   private fun playPreviousAction() {
-    val filePath = getAudioFilePath(R.string.audio_previous_action)
-
-    assistant.playAssistantAudio(
-      filePath,
-      uiCue = {
-        backPointerIv.visibility = View.VISIBLE
-        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
-      },
-      onCompletionListener = {
-        uiScope.launch {
-          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
-          backPointerIv.visibility = View.INVISIBLE
-          delay(500)
-          moveToPrerecording()
-        }
-      }
-    )
+    // TODO: MOVE TO NEW ASSISTANT
+//    val filePath = getAudioFilePath(R.string.audio_previous_action)
+//
+//    assistant.playAssistantAudio(
+//      filePath,
+//      uiCue = {
+//        backPointerIv.visibility = View.VISIBLE
+//        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
+//      },
+//      onCompletionListener = {
+//        uiScope.launch {
+//          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+//          backPointerIv.visibility = View.INVISIBLE
+//          delay(500)
+//          moveToPrerecording()
+//        }
+//      }
+//    )
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */

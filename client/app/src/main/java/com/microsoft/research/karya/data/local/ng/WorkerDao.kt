@@ -17,9 +17,6 @@ interface WorkerDao : BasicDao<WorkerRecord> {
   @Query("SELECT * FROM worker where accessCode == :accessCode")
   suspend fun getByAccessCode(accessCode: String): WorkerRecord?
 
-  @Query("UPDATE worker SET language=:appLanguage WHERE id == :id")
-  suspend fun updateAppLanguageForId(appLanguage: Int, id: String)
-
   @Query("UPDATE worker SET params=:params WHERE id == :id")
   suspend fun updateParamsForId(params: JsonElement, id: String)
 

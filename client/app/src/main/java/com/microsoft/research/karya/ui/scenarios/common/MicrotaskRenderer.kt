@@ -303,7 +303,7 @@ abstract class MicrotaskRenderer(
     langResourceContainer = LangRes(fileDirPath)
 
     // Setting up assistant
-    assistant = Assistant(this)
+//    assistant = Assistant(this)
 
     // Set db and API service
     karyaDb = KaryaDatabase.getInstance(this)!!
@@ -323,7 +323,7 @@ abstract class MicrotaskRenderer(
       ioScope.launch {
         firstTimeActivityVisit =
           try {
-            !thisWorker.params.asJsonObject.get(activityName).asBoolean
+            !thisWorker.params!!.asJsonObject.get(activityName).asBoolean
           } catch (e: Exception) {
             true
           }
@@ -399,8 +399,8 @@ abstract class MicrotaskRenderer(
 
   private suspend fun activityVisited() {
     val params = thisWorker.params
-    params.asJsonObject.addProperty(activityName, true)
-    ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
+//    params!!.asJsonObject.addProperty(activityName, true)
+//    ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
   }
 
   /** On permission result, if any permission is not granted, return immediately */
@@ -526,6 +526,6 @@ abstract class MicrotaskRenderer(
   }
 
   protected fun getAudioFilePath(audioResourceId: Int): String {
-    return langResourceContainer.getBlobPath(audioResourceId.toString(), thisWorker.appLanguage.toString())
+    return langResourceContainer.getBlobPath(audioResourceId.toString(), thisWorker.language)
   }
 }

@@ -51,12 +51,16 @@ class Converters {
   }
 
   @TypeConverter
-  fun fromStringToJsonElement(value: String): JsonElement {
+  fun fromStringToJsonElement(value: String?): JsonElement? {
+    if (value == null) return null
+
     return Gson().fromJson(value, JsonElement::class.java)
   }
 
   @TypeConverter
-  fun fromJsonElementToString(list: JsonElement): String {
+  fun fromJsonElementToString(list: JsonElement?): String? {
+    if (list == null) return null
+
     val gson = Gson()
     return gson.toJson(list)
   }

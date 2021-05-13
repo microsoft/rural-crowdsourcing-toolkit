@@ -18,6 +18,7 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import okhttp3.ResponseBody
 import retrofit2.Response
+import java.io.FileNotFoundException
 
 object FileUtils {
 
