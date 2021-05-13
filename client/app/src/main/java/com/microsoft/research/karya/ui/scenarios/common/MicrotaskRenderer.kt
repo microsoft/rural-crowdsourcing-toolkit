@@ -93,9 +93,9 @@ abstract class MicrotaskRenderer(
   // Flag to indicate if this is the first time the user is performing the task
   protected var firstTimeActivityVisit: Boolean = false
 
-  private var assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
-  private var microtaskInputContainer = MicrotaskInput(fileDirPath)
-  private var langResourceContainer = LangRes(fileDirPath)
+  private lateinit var assignmentOutputContainer:MicrotaskAssignmentOutput
+  private lateinit var microtaskInputContainer:MicrotaskInput
+  private lateinit var langResourceContainer:LangRes
 
   /** Function to return the set of permission needed for the task */
   open fun requiredPermissions(): Array<String> {
@@ -296,6 +296,10 @@ abstract class MicrotaskRenderer(
    */
   final override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
+    microtaskInputContainer = MicrotaskInput(fileDirPath)
+    langResourceContainer = LangRes(fileDirPath)
 
     // Setting up assistant
     assistant = Assistant(this)
