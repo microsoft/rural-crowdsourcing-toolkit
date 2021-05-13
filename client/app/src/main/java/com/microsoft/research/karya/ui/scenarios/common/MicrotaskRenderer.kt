@@ -303,7 +303,7 @@ abstract class MicrotaskRenderer(
     langResourceContainer = LangRes(fileDirPath)
 
     // Setting up assistant
-//    assistant = Assistant(this)
+    //    assistant = Assistant(this)
 
     // Set db and API service
     karyaDb = KaryaDatabase.getInstance(this)!!
@@ -399,8 +399,8 @@ abstract class MicrotaskRenderer(
 
   private suspend fun activityVisited() {
     val params = thisWorker.params
-//    params!!.asJsonObject.addProperty(activityName, true)
-//    ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
+    //    params!!.asJsonObject.addProperty(activityName, true)
+    //    ioScope.launch { karyaDb.workerDao().updateParamsForId(params, thisWorker.id) }
   }
 
   /** On permission result, if any permission is not granted, return immediately */
