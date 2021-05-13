@@ -13,11 +13,11 @@ import {
   TaskAssignmentRecord,
   TaskRecord,
   WorkerRecord,
+  getChecksum,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import axios, { AxiosInstance } from 'axios';
 import { cronLogger } from '../utils/Logger';
-import { getChecksum } from '../models/KaryaFileModel';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
 

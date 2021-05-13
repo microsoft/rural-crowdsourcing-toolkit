@@ -16,10 +16,6 @@ export type Gender = typeof genders[number];
 const fileCreators = ['SERVER', 'BOX', 'WORKER'] as const;
 export type FileCreator = typeof fileCreators[number];
 
-// Checksum Algorithm -- TODO: move this to checksum provider
-const checksumAlgorithms = ['MD5'] as const;
-export type ChecksumAlgorithm = typeof checksumAlgorithms[number];
-
 // Task Status
 const taskStatuses = ['SUBMITTED', 'APPROVED', 'COMPLETED'] as const;
 export type TaskStatus = typeof taskStatuses[number];

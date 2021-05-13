@@ -5,9 +5,8 @@
  * Handle Karya File specific tasks
  */
 
-import md5File from 'md5-file';
 import { BasicModel, uploadBlobFromFile } from '@karya/common';
-import { ChecksumAlgorithm, KaryaFile, KaryaFileRecord, BlobParameters, getBlobName } from '@karya/core';
+import { ChecksumAlgorithm, getChecksum, KaryaFile, KaryaFileRecord, BlobParameters, getBlobName } from '@karya/core';
 
 /**
  * Handler to upload a karya file to the blob store, create its checksum and add
@@ -49,21 +48,4 @@ export async function upsertKaryaFile(
     ? await BasicModel.updateSingle('karya_file', { id: currentFileID }, kf)
     : await BasicModel.insertRecord('karya_file', kf);
   return upsertedRecord;
-}
-
-/**
- * Compute the checksum for a file given the path and checksum algorithm
- * @param algo Checksum algorithm
- * @param filepath File path
- */
-export async function getChecksum(filepath: string, algo: ChecksumAlgorithm) {
-  switch (algo) {
-    case 'MD5':
-      return md5File(filepath);
-    default:
-      ((obj: never) => {
-        // Typescript check
-      })(algo);
-      throw new Error('Unknown checksum algorithm');
-  }
 }

@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-
-/**
- * Functions to handle box-local karya files
- */
+//
+// Entry point for checksum module
 
 import md5File from 'md5-file';
-import { ChecksumAlgorithm } from '@karya/core';
+
+// Checksum Algorithm
+const checksumAlgorithms = ['MD5'] as const;
+export type ChecksumAlgorithm = typeof checksumAlgorithms[number];
 
 /**
  * Compute the checksum for a file given the path and checksum algorithm

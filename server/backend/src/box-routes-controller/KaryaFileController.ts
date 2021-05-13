@@ -3,10 +3,9 @@
 //
 // Handler for karya file related routes with box
 
-import { KaryaFileRecord } from '@karya/core';
+import { KaryaFileRecord, getChecksum } from '@karya/core';
 import { BoxRouteMiddleware } from '../routes/BoxRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { getChecksum } from '../models/KaryaFileModel';
 import { BasicModel, getBlobSASURL, uploadBlobFromFileWithName } from '@karya/common';
 
 /**
