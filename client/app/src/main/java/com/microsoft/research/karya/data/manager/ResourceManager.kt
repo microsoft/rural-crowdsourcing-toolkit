@@ -49,12 +49,17 @@ constructor(
         .singleOrNull()
         ?: return@flow
 
-    withContext(Dispatchers.IO) {
-      FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
-      FileUtils.extractGZippedTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
+    runCatching {
+      withContext(Dispatchers.IO) {
+        FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
+        FileUtils.extractGZippedTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
+      }
     }
-
-    emit(Result.Success(Unit))
+      .onSuccess { emit(Result.Success(Unit)) }
+      .onFailure {
+        it.printStackTrace()
+        emit(Result.Error(it))
+      }
   }
 
   private fun getTarballPath(language: String): String {
