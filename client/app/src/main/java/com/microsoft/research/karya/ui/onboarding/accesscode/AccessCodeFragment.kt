@@ -83,12 +83,11 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   }
 
   private fun navigateToConsentFormFragment() {
-    findNavController().navigate(R.id.action_accessCodeFragment2_to_consentFormFragment2)
+    findNavController().navigate(R.id.action_accessCodeFragment2_to_fileDownloadFragment2)
   }
 
   private fun showSuccessUi(languageCode: String) {
-    // TODO: use languageCode variable here with new apis
-    updateActivityLanguage("hi")
+    updateActivityLanguage(languageCode)
 
     hideLoading()
     hideError()

@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
+import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.AppConstants.PHONE_NUMBER_LENGTH
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.hideKeyboard
@@ -21,7 +22,7 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
+class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
 
   private val binding by viewBinding(FragmentPhoneNumberBinding::bind)
   private val viewModel by viewModels<PhoneNumberViewModel>()
@@ -36,7 +37,7 @@ class PhoneNumberFragment : Fragment(R.layout.fragment_phone_number) {
 
   override fun onResume() {
     super.onResume()
-    // registrationActivity.onAssistantClick()
+    assistant.playAssistantAudio(AssistantAudio.PHONE_NUMBER_PROMPT)
   }
 
   private fun setupViews() {

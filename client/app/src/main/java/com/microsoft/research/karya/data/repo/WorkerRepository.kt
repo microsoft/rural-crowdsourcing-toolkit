@@ -15,17 +15,11 @@ import kotlinx.coroutines.withContext
 
 class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
 
-  enum class OtpAction {
-    GENERATE,
-    RESEND,
-    VERIFY
-  }
-
   fun getOTP(
     accessCode: String,
     phoneNumber: String,
   ) = flow {
-    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, "", "generate")
+    val response = workerAPI.generateOTP(accessCode, phoneNumber)
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {
@@ -50,7 +44,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     accessCode: String,
     phoneNumber: String,
   ) = flow {
-    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, "", "resend")
+    val response = workerAPI.resendOTP(accessCode, phoneNumber)
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {
@@ -74,7 +68,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     phoneNumber: String,
     otp: String,
   ) = flow {
-    val response = workerAPI.getOrVerifyOTP(accessCode, phoneNumber, otp, "verify")
+    val response = workerAPI.verifyOTP(accessCode, phoneNumber, otp)
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {
@@ -130,7 +124,7 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
     accessCode: String,
     registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
   ) = flow {
-    val response = workerAPI.updateWorker(idToken, registerOrUpdateWorkerRequest)
+    val response = workerAPI.updateWorker(idToken, registerOrUpdateWorkerRequest, "register")
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

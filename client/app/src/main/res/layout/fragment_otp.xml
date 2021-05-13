@@ -33,7 +33,6 @@
         android:layout_height="@dimen/_50sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_24sdp"
-        android:autofillHints=""
         android:background="@drawable/blue_rounded_border"
         android:fontFamily="monospace"
         android:hint="@string/otp_hint"
@@ -43,8 +42,7 @@
         android:textSize="@dimen/_26ssp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/otpPromptTv"
-        app:layout_constraintTop_toBottomOf="@+id/otpPromptTv"
-        app:layout_constraintVertical_bias="0.149" />
+        app:layout_constraintTop_toBottomOf="@+id/otpPromptTv" />
 
     <FrameLayout
         android:id="@+id/loadingContainer"
@@ -98,10 +96,12 @@
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_15sdp"
         android:text="@string/s_invalid_otp"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        android:minHeight="@dimen/_35sdp"
+        android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@id/otpStatusIv"
-        app:layout_constraintTop_toTopOf="@id/otpStatusIv" />
+        app:layout_constraintTop_toTopOf="@id/otpStatusIv"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

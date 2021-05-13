@@ -32,10 +32,7 @@
     <string name="s_gender_prompt">Please choose your gender. If you do not wish to state your gender, you can skip this step</string>
     <string name="s_male">Male</string>
     <string name="s_female">Female</string>
-    <string name="s_age_prompt">Please choose your age group</string>
-    <string name="s_age_young">18–25 years</string>
-    <string name="s_age_middle">26–50 years</string>
-    <string name="s_age_old">50+ years</string>
+    <string name="s_age_prompt">Please enter your year of birth</string>
     <string name="s_years">years</string>
     <string name="s_registering_worker">Registering worker with the server</string>
     <string name="s_phone_number_already_used">Your phone number is already registered. Please try with another phone number.</string>

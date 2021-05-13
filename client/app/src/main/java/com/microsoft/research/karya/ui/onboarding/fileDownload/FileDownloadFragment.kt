@@ -34,21 +34,22 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
     viewLifecycleScope.launch {
       val worker = authManager.fetchLoggedInWorker()
 
-      val fileDownloadFlow = resourceManager.downloadLanguageResources(worker.accessCode, worker.appLanguage)
+      val fileDownloadFlow = resourceManager.downloadLanguageResources(worker.accessCode, worker.language)
 
       fileDownloadFlow.observe(viewLifecycle, viewLifecycleScope) { result ->
         when (result) {
           is Result.Success<*> -> navigateToRegistration()
-          is Result.Error -> {}
-          Result.Loading -> {
-            Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+          is Result.Error -> {
+            Toast.makeText(requireContext(), "Could not download resources", Toast.LENGTH_LONG).show()
+            navigateToRegistration()
           }
+          Result.Loading -> {}
         }
       }
     }
   }
 
   private fun navigateToRegistration() {
-    findNavController().navigate(R.id.action_fileDownloadFragment2_to_loginFlow)
+    findNavController().navigate(R.id.action_fileDownloadFragment2_to_consentFormFragment22)
   }
 }

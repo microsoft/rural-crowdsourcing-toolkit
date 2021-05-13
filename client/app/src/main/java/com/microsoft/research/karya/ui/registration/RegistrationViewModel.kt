@@ -21,7 +21,6 @@ import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRe
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.FileOutputStream
-import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 import kotlinx.coroutines.flow.catch
@@ -169,6 +168,7 @@ constructor(
   fun updateWorkerAge(currentAge: AgeGroup) {
     viewModelScope.launch {
       val worker = authManager.fetchLoggedInWorker()
+      checkNotNull(worker.gender)
       val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(currentAge.name, worker.gender)
 
       checkNotNull(worker.idToken)
@@ -187,7 +187,7 @@ constructor(
   fun updateWorkerGender(gender: String) {
     viewModelScope.launch {
       val worker = authManager.fetchLoggedInWorker()
-      val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(worker.age ?: "", gender)
+      val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(worker.yob ?: "", gender)
 
       checkNotNull(worker.idToken)
 

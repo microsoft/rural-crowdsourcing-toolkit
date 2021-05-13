@@ -24,7 +24,6 @@
     <string name="s_gender_prompt">कृपया अपना लिंग बताएं। यदि आप अपने लिंग को बताना नहीं चाहते हैं, तो आप इस चरण को छोड़ सकते हैं</string>
     <string name="s_male">पुरुष</string>
     <string name="s_female">महिला</string>
-    <string name="s_age_prompt">कृपया अपना आयु वर्ग चुनें</string>
     <string name="s_years">साल</string>
     <string name="s_registering_worker">सर्वर के साथ श्रमिक का पंजीकरण करना</string>
     <string name="s_phone_number_already_used">आपका फ़ोन नंबर पहले से पंजीकृत है। कृपया किसी अन्य फ़ोन नंबर के साथ प्रयास करें।</string>

@@ -8,8 +8,10 @@ import com.microsoft.research.karya.utils.jtar.TarInputStream
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.zip.GZIPInputStream
+import kotlin.jvm.Throws
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -67,12 +69,14 @@ object FileUtils {
   }
 
   /** Extract files in a GZipped tar ball into a directory. Does not delete the tar ball. */
+  @Throws(FileNotFoundException::class)
   fun extractGZippedTarBallIntoDirectory(tarBallPath: String, directoryPath: String) {
     val fis = FileInputStream(tarBallPath)
     val bufferedStream = BufferedInputStream(fis)
     val gzipInputStream = GZIPInputStream(bufferedStream)
     val tarStream = TarInputStream(gzipInputStream)
 
+    // TODO: Discuss if we should continue extraction when there's an error in one entry
     var entry = tarStream.nextEntry
     while (entry != null) {
       val fileName = entry.name

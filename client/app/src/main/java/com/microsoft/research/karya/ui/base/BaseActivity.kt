@@ -91,59 +91,67 @@ abstract class BaseActivity() : AppCompatActivity() {
     initialise()
   }
 
+  fun initialise() {}
+
+  /*
+
   fun initialise() {
     appLanguageChanged = false
 
     // Reset worker
     setWorker()
 
-    /** Get app language ID */
-    setAppLanguageJob =
-      ioScope.launch {
-        setWorkerJob.join()
-        val oldAppLanguageId = appLanguageId
-        appLanguageId =
-          if (this@BaseActivity::thisWorker.isInitialized) thisWorker.appLanguage else WorkerInformation.app_language
-        if (appLanguageId != oldAppLanguageId && appLanguageId != null) {
-          appLanguageChanged = true
-        }
-      }
+    */
+  /** Get app language ID */
+  /*
 
-    // Get strings
-    getStringsJob =
-      ioScope.launch {
-        setAppLanguageJob.join()
+      setAppLanguageJob =
+        ioScope.launch {
+          setWorkerJob.join()
+          val oldAppLanguageId = appLanguageId
+          appLanguageId =
+            if (this@BaseActivity::thisWorker.isInitialized) thisWorker.language else WorkerInformation.app_language
+          if (appLanguageId != oldAppLanguageId && appLanguageId != null) {
+            appLanguageChanged = true
+          }
+        }
+
+      // Get strings
+      getStringsJob =
+        ioScope.launch {
+          setAppLanguageJob.join()
+          if (appLanguageChanged) {
+
+            //                salutation = getValueFromName(R.string.salutation)
+            // Set various Strings for the Activity
+            getStringsForActivity()
+          }
+        }
+
+      // Update UI
+      runBlocking {
+        getStringsJob.join()
         if (appLanguageChanged) {
-
-          //                salutation = getValueFromName(R.string.salutation)
-          // Set various Strings for the Activity
-          getStringsForActivity()
+          // title.text = salutation
+          setInitialUIStrings()
         }
       }
 
-    // Update UI
-    runBlocking {
-      getStringsJob.join()
-      if (appLanguageChanged) {
-        // title.text = salutation
-        setInitialUIStrings()
-      }
-    }
+      if (useAssistant) {
+        assistantCv.setOnClickListener { onAssistantClick() }
+        assistantCv.visibility = View.VISIBLE
 
-    if (useAssistant) {
-      assistantCv.setOnClickListener { onAssistantClick() }
-      assistantCv.visibility = View.VISIBLE
-
-      if (playAssistantOnResume) {
-        if (assistantPaused) {
-          assistantPlayer.start()
-          assistantPaused = false
-        } else {
-          onAssistantClick()
+        if (playAssistantOnResume) {
+          if (assistantPaused) {
+            assistantPlayer.start()
+            assistantPaused = false
+          } else {
+            onAssistantClick()
+          }
         }
       }
     }
-  }
+  */
 
   /** Set assistant player on start */
   override fun onStart() {

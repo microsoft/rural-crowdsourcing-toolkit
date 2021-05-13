@@ -117,7 +117,7 @@ constructor(
 
     val destination =
       when {
-        worker.age.isNullOrEmpty() -> Destination.MandatoryDataFlow
+        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
         else -> Destination.Dashboard
       }
 

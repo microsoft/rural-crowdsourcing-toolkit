@@ -60,7 +60,7 @@ constructor(
       workerRepository
         .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
         .onEach { worker ->
-          updateWorker(worker)
+          updateWorker(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
           handleNavigation(worker)
         }
@@ -73,7 +73,7 @@ constructor(
     val destination =
       when {
         worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
-        worker.age.isNullOrEmpty() -> Destination.MandatoryDataFlow
+        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
         else -> Destination.Dashboard
       }
 

@@ -9,13 +9,13 @@ interface MicroTaskAssignmentAPI {
 
   @PUT("/assignments")
   suspend fun submitAssignments(
-    @Header("id-token") idTokenHeader: String,
+    @Header("karya-id-token") idTokenHeader: String,
     @Body updates: List<MicroTaskAssignmentRecord>,
   ): Response<List<String>>
 
   @GET("/assignments")
   suspend fun getAssignments(
-    @Header("id-token") idTokenHeader: String,
+    @Header("karya-id-token") idTokenHeader: String,
     @Query("type") type: String, // TODO: Make this an enum class
     @Query("from") from: String,
   ): Response<GetAssignmentsResponse>
