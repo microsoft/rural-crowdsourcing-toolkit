@@ -3,12 +3,13 @@ package com.microsoft.research.karya.ui.onboarding.login.otp
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
 import com.microsoft.research.karya.ui.Destination
+import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.AppConstants
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
@@ -23,7 +24,7 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OTPFragment : Fragment(R.layout.fragment_otp) {
+class OTPFragment : BaseFragment(R.layout.fragment_otp) {
 
   private val binding by viewBinding(FragmentOtpBinding::bind)
   private val viewModel by viewModels<OTPViewModel>()
@@ -33,6 +34,11 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     setupView()
     observeUi()
     observeEffects()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT)
   }
 
   private fun setupView() {

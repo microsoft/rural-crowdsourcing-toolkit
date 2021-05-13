@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
+import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.observe
@@ -22,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
+class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
 
   private val binding by viewBinding(FragmentConsentFormBinding::bind)
   private val viewModel by viewModels<ConsentFormViewModel>()
@@ -36,6 +37,11 @@ class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
     setupViews()
     observeUi()
     observeEffects()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY)
   }
 
   private fun setupViews() {
