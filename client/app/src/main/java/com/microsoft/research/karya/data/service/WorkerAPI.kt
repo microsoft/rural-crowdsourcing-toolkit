@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PUT
+import retrofit2.http.Query
 
 interface WorkerAPI {
 
@@ -43,18 +44,19 @@ interface WorkerAPI {
    * */
   @GET("/worker")
   suspend fun getWorkerUsingIdToken(
-    @Header("id-token") idToken: String,
+    @Header("karya-id-token") idToken: String,
   ): Response<WorkerRecord>
 
   @PUT("/worker")
   suspend fun updateWorker(
-    @Header("id-token") idToken: String,
+    @Header("karya-id-token") idToken: String,
     @Body registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
+    @Query("action") action: String,
   ): Response<WorkerRecord>
 
   @PUT("/worker")
   suspend fun updateWorker(
-    @Header("id-token") idToken: String,
+    @Header("karya-id-token") idToken: String,
     @Body worker: WorkerRecord,
   ): Response<WorkerRecord>
 }

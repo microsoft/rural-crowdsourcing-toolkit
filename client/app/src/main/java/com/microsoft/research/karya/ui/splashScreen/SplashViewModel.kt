@@ -57,6 +57,7 @@ constructor(
 
     val destination =
       when {
+        worker.isConsentProvided -> Destination.AccessCodeFlow
         worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
         worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
         worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow

@@ -168,6 +168,7 @@ constructor(
   fun updateWorkerAge(currentAge: AgeGroup) {
     viewModelScope.launch {
       val worker = authManager.fetchLoggedInWorker()
+      checkNotNull(worker.gender)
       val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(currentAge.name, worker.gender)
 
       checkNotNull(worker.idToken)

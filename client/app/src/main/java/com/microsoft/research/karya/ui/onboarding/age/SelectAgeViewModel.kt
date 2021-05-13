@@ -3,7 +3,6 @@ package com.microsoft.research.karya.ui.onboarding.age
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.model.karya.enums.AgeGroup
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,14 +30,15 @@ constructor(
   private val _selectAgeEffects: MutableSharedFlow<SelectAgeEffects> = MutableSharedFlow()
   val selectAgeEffects = _selectAgeEffects.asSharedFlow()
 
-  fun updateWorkerAge(currentAge: AgeGroup) {
+  fun updateWorkerYOB(yob: String) {
     viewModelScope.launch {
       _selectAgeUiState.value = SelectAgeUiState.Loading
 
       val worker = authManager.fetchLoggedInWorker()
-      val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(currentAge.name, worker.gender)
-
       checkNotNull(worker.idToken)
+      checkNotNull(worker.gender)
+
+      val registerOrUpdateWorkerRequest = RegisterOrUpdateWorkerRequest(yob, worker.gender)
 
       workerRepository
         .updateWorker(worker.idToken, worker.accessCode, registerOrUpdateWorkerRequest)
