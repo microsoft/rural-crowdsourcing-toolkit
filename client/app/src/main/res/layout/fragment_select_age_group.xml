@@ -47,28 +47,27 @@
 
     <EditText
         android:id="@+id/ageEt"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/_55sdp"
         android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/blue_rounded_border"
         android:fontFamily="monospace"
         android:inputType="number"
         android:maxLength="4"
+        android:hint="----"
         android:paddingHorizontal="@dimen/_32sdp"
         android:textSize="@dimen/_26ssp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintEnd_toStartOf="@id/loadingContainer"
-        app:layout_constraintStart_toStartOf="@id/ageGroupPromptTv"
         app:layout_constraintTop_toBottomOf="@+id/ageGroupPromptTv" />
 
     <FrameLayout
         android:id="@+id/loadingContainer"
         android:layout_width="@dimen/_55sdp"
         android:layout_height="@dimen/_55sdp"
-        android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ageEt"
         app:layout_constraintTop_toTopOf="@id/ageEt"
         app:layout_constraintBottom_toBottomOf="@id/ageEt">
 

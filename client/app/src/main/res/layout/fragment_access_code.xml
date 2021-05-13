@@ -31,7 +31,7 @@
 
     <EditText
         android:id="@+id/creationCodeEt"
-        android:layout_width="@dimen/_0sdp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/_50sdp"
         android:layout_margin="@dimen/_16sdp"
         android:background="@drawable/blue_rounded_border"
@@ -41,8 +41,8 @@
         android:importantForAutofill="no"
         android:inputType="number"
         android:maxLength="19"
+        android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:textAlignment="center"
         android:textSize="@dimen/_18ssp"
         app:layout_constraintEnd_toStartOf="@id/loadingContainer"
         app:layout_constraintStart_toStartOf="parent"
