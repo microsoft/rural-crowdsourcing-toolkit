@@ -29,6 +29,7 @@ import com.microsoft.research.karya.utils.extensions.getBlobPath
 import com.microsoft.research.karya.utils.extensions.getContainerDirectory
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +37,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.*
 
 /** Code to request necessary permissions */
 private const val REQUEST_PERMISSIONS = 201
@@ -93,9 +93,9 @@ abstract class MicrotaskRenderer(
   // Flag to indicate if this is the first time the user is performing the task
   protected var firstTimeActivityVisit: Boolean = false
 
-  private lateinit var assignmentOutputContainer:MicrotaskAssignmentOutput
-  private lateinit var microtaskInputContainer:MicrotaskInput
-  private lateinit var langResourceContainer:LangRes
+  private lateinit var assignmentOutputContainer: MicrotaskAssignmentOutput
+  private lateinit var microtaskInputContainer: MicrotaskInput
+  private lateinit var langResourceContainer: LangRes
 
   /** Function to return the set of permission needed for the task */
   open fun requiredPermissions(): Array<String> {
@@ -297,6 +297,7 @@ abstract class MicrotaskRenderer(
   final override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    // Initialising containers
     assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
     microtaskInputContainer = MicrotaskInput(fileDirPath)
     langResourceContainer = LangRes(fileDirPath)

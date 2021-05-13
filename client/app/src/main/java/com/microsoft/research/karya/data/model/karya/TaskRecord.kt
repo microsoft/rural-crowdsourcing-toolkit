@@ -4,8 +4,6 @@
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.JsonElement
 import com.microsoft.research.karya.data.model.karya.enums.TaskStatus

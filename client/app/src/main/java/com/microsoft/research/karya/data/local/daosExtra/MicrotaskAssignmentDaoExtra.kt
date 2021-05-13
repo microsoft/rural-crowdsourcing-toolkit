@@ -6,7 +6,6 @@ package com.microsoft.research.karya.data.local.daosExtra
 import androidx.room.Dao
 import androidx.room.Query
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 

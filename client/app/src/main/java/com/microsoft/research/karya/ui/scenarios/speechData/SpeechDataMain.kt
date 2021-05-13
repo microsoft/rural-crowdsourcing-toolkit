@@ -19,6 +19,8 @@ import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.lang.Runnable
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +28,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.*
-import kotlin.collections.ArrayList
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -323,8 +323,7 @@ open class SpeechDataMain(
     preRecordBufferConsumed[0] = 0
     preRecordBufferConsumed[1] = 0
 
-    if (
-      currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
+    if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()
