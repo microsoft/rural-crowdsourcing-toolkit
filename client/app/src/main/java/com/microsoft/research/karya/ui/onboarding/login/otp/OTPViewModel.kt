@@ -60,7 +60,7 @@ constructor(
       workerRepository
         .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
         .onEach { worker ->
-          updateWorker(worker)
+          updateWorker(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
           handleNavigation(worker)
         }

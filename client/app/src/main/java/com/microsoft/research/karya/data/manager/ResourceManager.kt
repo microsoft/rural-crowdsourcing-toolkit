@@ -46,7 +46,7 @@ constructor(
 
     withContext(Dispatchers.IO) {
       FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
-      FileUtils.extractTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
+      FileUtils.extractGZippedTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
     }
 
     emit(Result.Success(Unit))

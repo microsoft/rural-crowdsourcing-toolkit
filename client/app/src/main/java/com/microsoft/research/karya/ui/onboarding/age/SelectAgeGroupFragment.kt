@@ -133,6 +133,5 @@ class SelectAgeGroupFragment : Fragment(R.layout.fragment_select_age_group) {
 
   private fun navigateToDashboard() {
     findNavController().navigate(R.id.action_global_dashboardActivity4)
-    requireActivity().finish()
   }
 }

@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.splashScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -52,12 +53,13 @@ constructor(
 
   private suspend fun handleSingleUser() {
     val worker = getLoggedInWorker()
-
     _splashEffects.emit(SplashEffects.UpdateLanguage(worker.language))
+
+    Log.d("Worker", worker.toString())
 
     val destination =
       when {
-        worker.isConsentProvided -> Destination.AccessCodeFlow
+        !worker.isConsentProvided -> Destination.AccessCodeFlow
         worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
         worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
         worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow

@@ -106,7 +106,7 @@ class OTPFragment : Fragment(R.layout.fragment_otp) {
     with(binding) {
       showError(message)
       hideLoading()
-      disableNextButton()
+      enableNextButton()
       requestSoftKeyFocus(binding.otpEt)
     }
   }

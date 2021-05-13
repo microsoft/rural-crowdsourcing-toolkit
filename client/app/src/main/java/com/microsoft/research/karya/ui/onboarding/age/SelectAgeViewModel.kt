@@ -43,7 +43,7 @@ constructor(
       workerRepository
         .updateWorker(worker.idToken, worker.accessCode, registerOrUpdateWorkerRequest)
         .onEach { workerRecord ->
-          workerRepository.upsertWorker(workerRecord)
+          workerRepository.upsertWorker(worker.copy(yob = workerRecord.yob))
           _selectAgeUiState.value = SelectAgeUiState.Success
           _selectAgeEffects.emit(SelectAgeEffects.Navigate)
         }
