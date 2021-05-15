@@ -77,7 +77,7 @@ export async function markComplete(microtask_id: string) {
  */
 export async function uniqueResponseCount(microtask_id: string): Promise<number> {
   const count = await knex.raw(
-    `SELECT COUNT(DISTINCT(output ->> 'data')) FROM microtask_assignment WHERE microtask_id = ?`,
+    `SELECT COUNT(DISTINCT(output::json ->> 'data'))::int FROM microtask_assignment WHERE microtask_id = ?`,
     [microtask_id]
   );
   return count.rows[0].count;
