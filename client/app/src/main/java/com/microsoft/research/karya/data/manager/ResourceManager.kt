@@ -63,7 +63,7 @@ constructor(
   }
 
   private fun getTarballPath(language: String): String {
-    return "$filesDirPath/$RELATIVE_TARBALL_PATH/$language.tar"
+    return "$filesDirPath/$RELATIVE_TARBALL_PATH/$language.tgz"
   }
 
   private fun getAudioFolderPath(languageId: String): String {

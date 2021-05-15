@@ -70,7 +70,13 @@ object FileUtils {
 
   /** Extract files in a GZipped tar ball into a directory. Does not delete the tar ball. */
   @Throws(FileNotFoundException::class)
-  fun extractGZippedTarBallIntoDirectory(tarBallPath: String, directoryPath: String) {
+  fun extractGZippedTarBallIntoDirectory(tarBallPath: String, directoryPath: String): Boolean {
+    val directory = File(directoryPath)
+
+    if (!directory.exists() && !directory.mkdirs()) {
+      return false
+    }
+
     val fis = FileInputStream(tarBallPath)
     val bufferedStream = BufferedInputStream(fis)
     val gzipInputStream = GZIPInputStream(bufferedStream)
@@ -80,6 +86,7 @@ object FileUtils {
     var entry = tarStream.nextEntry
     while (entry != null) {
       val fileName = entry.name
+      File(directoryPath, fileName).createNewFile()
       val outputStream = FileOutputStream("$directoryPath/$fileName")
       tarStream.copyTo(outputStream)
       outputStream.close()
@@ -90,5 +97,7 @@ object FileUtils {
     gzipInputStream.close()
     bufferedStream.close()
     fis.close()
+
+    return true
   }
 }
