@@ -64,14 +64,14 @@ constructor(
   fun syncWithServer() {
     viewModelScope.launch {
       _dashboardUiState.emit(DashboardUiState.Loading)
-      submitCompletedTasks()
-      fetchNewTasks()
+      submitCompletedAssignments()
+      fetchNewAssignments()
       cleanupKaryaFiles()
       getAllTasks() // TODO: Remove it once we fix the hot flow issue
     }
   }
 
-  private suspend fun fetchNewTasks() {
+  private suspend fun fetchNewAssignments() {
     receiveDbUpdates()
     downloadInputFiles()
   }
@@ -114,7 +114,7 @@ constructor(
       .collect()
   }
 
-  private suspend fun submitCompletedTasks() {
+  private suspend fun submitCompletedAssignments() {
     uploadOutputFiles()
     sendDbUpdates()
   }
@@ -179,7 +179,7 @@ constructor(
       }
   }
 
-  fun fetchVerifiedTasks(from: String = "") {
+  fun fetchVerifiedAssignments(from: String = "") {
     viewModelScope.launch {
       val idToken = authManager.fetchLoggedInWorkerIdToken()
       val from = assignmentRepository.getNewVerifiedAssignmentsFromTime()
