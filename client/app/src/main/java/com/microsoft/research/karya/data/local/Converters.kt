@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.data.model.karya.AssignmentGranularityType
 import com.microsoft.research.karya.data.model.karya.AssignmentOrderType
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
-import com.microsoft.research.karya.data.model.karya.FileCreator
+import com.microsoft.research.karya.data.model.karya.enums.FileCreator
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskStatus
 import com.microsoft.research.karya.data.model.karya.enums.PaymentRequestStatus
