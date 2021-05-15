@@ -20,6 +20,7 @@ export async function getAssignableMicrotasks(
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
   const maxAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
     .groupBy('microtask_id')
     .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
     .pluck('microtask_id');
@@ -68,4 +69,16 @@ export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolea
  */
 export async function markComplete(microtask_id: string) {
   await knex<MicrotaskRecord>('microtask').where('id', microtask_id).update({ status: 'COMPLETED' });
+}
+
+/**
+ * Get the number of unique responses received so far for a microtask
+ * @param microtask_id ID of the microtask
+ */
+export async function uniqueResponseCount(microtask_id: string): Promise<number> {
+  const count = await knex.raw(
+    `SELECT COUNT(DISTINCT(output ->> 'data')) FROM microtask_assignment WHERE microtask_id = ?`,
+    [microtask_id]
+  );
+  return count.rows[0].count;
 }

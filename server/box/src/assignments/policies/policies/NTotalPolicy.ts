@@ -7,11 +7,7 @@
 
 import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskGroupModel, MicrotaskModel } from '@karya/common';
-import { policyMap } from '@karya/core';
-
-export type NTotalPolicyParams = {
-  nTotal: number;
-};
+import { policyMap, NTotalPolicyParams } from '@karya/core';
 
 export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
   ...policyMap['N_TOTAL'],
@@ -20,7 +16,7 @@ export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
    * Return a list of assignable microtasks to the worker from a task
    */
   async assignableMicrotasks(worker, task, params) {
-    const microtasks = await MicrotaskModel.getAssignableMicrotasks(task, worker, params.nTotal);
+    const microtasks = await MicrotaskModel.getAssignableMicrotasks(task, worker, params.n);
     return microtasks;
   },
 
@@ -28,7 +24,7 @@ export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
    * Return a list of assignable microtask groups to the worker from a task
    */
   async assignableMicrotaskGroups(worker, task, params) {
-    const groups = await MicrotaskGroupModel.getAssignableMicrotaskGroups(task, worker, params.nTotal);
+    const groups = await MicrotaskGroupModel.getAssignableMicrotaskGroups(task, worker, params.n);
     return groups;
   },
 
@@ -37,7 +33,7 @@ export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
    */
   async handleAssignmentCompletion(assignment, params) {
     const completionCount = await MicrotaskModel.getCompletedAssignmentsCount(assignment.microtask_id);
-    if (completionCount > params.nTotal) {
+    if (completionCount > params.n) {
       await MicrotaskModel.markComplete(assignment.microtask_id);
     }
   },

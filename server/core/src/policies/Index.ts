@@ -5,13 +5,15 @@
 
 import { PolicyInterface } from './PolicyInterface';
 import { nTotalPolicy } from './policies/NTotalPolicy';
+import { nUniquePolicy } from './policies/NUniquePolicy';
 import { MicrotaskResponseType } from '../scenarios/Index';
 
 export * from './PolicyInterface';
 export * from './policies/NTotalPolicy';
+export * from './policies/NUniquePolicy';
 
 // List of policy names
-export const policyNames = ['N_TOTAL'] as const;
+export const policyNames = ['N_TOTAL', 'N_UNIQUE'] as const;
 export type PolicyName = typeof policyNames[number];
 
 /**
@@ -21,6 +23,7 @@ export type PolicyName = typeof policyNames[number];
  */
 export const policyMap: { [key in PolicyName]: PolicyInterface } = {
   N_TOTAL: nTotalPolicy,
+  N_UNIQUE: nUniquePolicy,
 };
 
 /**
@@ -35,6 +38,6 @@ export const policyMap: { [key in PolicyName]: PolicyInterface } = {
  */
 export const policyList: { [key in MicrotaskResponseType]: PolicyInterface[] } = {
   unique: [nTotalPolicy],
-  'multiple-objective': [nTotalPolicy],
+  'multiple-objective': [nTotalPolicy, nUniquePolicy],
   'multiple-subjective': [nTotalPolicy],
 };

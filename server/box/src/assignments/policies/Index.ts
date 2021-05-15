@@ -5,6 +5,7 @@
 
 import { BoxPolicyInterface } from './PolicyInterface';
 import { nTotalPolicy } from './policies/NTotalPolicy';
+import { nUniquePolicy } from './policies/NUniquePolicy';
 import { PolicyName } from '@karya/core';
 
 /**
@@ -14,4 +15,5 @@ import { PolicyName } from '@karya/core';
  */
 export const localPolicyMap: { [key in PolicyName]: BoxPolicyInterface } = {
   N_TOTAL: nTotalPolicy,
+  N_UNIQUE: nUniquePolicy,
 };
