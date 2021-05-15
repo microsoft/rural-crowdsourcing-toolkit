@@ -4,9 +4,11 @@
 // Entry point for policy module
 
 import { BoxPolicyInterface } from './PolicyInterface';
+import { PolicyName } from '@karya/core';
+
 import { nTotalPolicy } from './policies/NTotalPolicy';
 import { nUniquePolicy } from './policies/NUniquePolicy';
-import { PolicyName } from '@karya/core';
+import { nMatchingPolicy } from './policies/NMatchingPolicy';
 
 /**
  * Policy map
@@ -16,4 +18,5 @@ import { PolicyName } from '@karya/core';
 export const localPolicyMap: { [key in PolicyName]: BoxPolicyInterface } = {
   N_TOTAL: nTotalPolicy,
   N_UNIQUE: nUniquePolicy,
+  N_MATCHING: nMatchingPolicy,
 };

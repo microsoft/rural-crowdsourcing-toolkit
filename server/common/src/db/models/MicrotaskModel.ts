@@ -82,3 +82,11 @@ export async function uniqueResponseCount(microtask_id: string): Promise<number>
   );
   return count.rows[0].count;
 }
+
+export async function matchingResponseCount(microtask_id: string): Promise<number> {
+  const count = await knex.raw(
+    `SELECT MAX(t.c)::int FROM (SELECT output::json ->> 'data' AS d, COUNT(*) AS c FROM microtask_assignment WHERE microtask_id = ? GROUP BY d) AS t WHERE t.d IS NOT NULL`,
+    [microtask_id]
+  );
+  return count.rows[0].max;
+}
