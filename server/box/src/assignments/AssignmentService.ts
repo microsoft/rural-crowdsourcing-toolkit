@@ -9,6 +9,7 @@ import {
   MicrotaskRecord,
   WorkerRecord,
   PolicyName,
+  TaskRecord,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
@@ -36,12 +37,13 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
   // iterate over all tasks to see which all can user perform
   await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
-    if (tasksAssigned) {
-      return;
-    }
+    if (tasksAssigned) return;
 
     // Get task for the assignment
     const task = await BasicModel.getSingle('task', { id: taskAssignment.task_id });
+
+    // check if the task is assignable to the worker
+    if (!assignable(task, worker)) return;
 
     const policy_name = taskAssignment.policy;
     const policy = localPolicyMap[policy_name];
@@ -169,4 +171,15 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
   } else {
     throw new Error('Invalid assignment order');
   }
+}
+
+/**
+ * Check if a task is assignable to a worker
+ * @param task Task record
+ * @param worker Worker record
+ */
+function assignable(task: TaskRecord, worker: WorkerRecord): boolean {
+  const workerTags = worker.tags.tags;
+  const taskTags = task.tags.tags;
+  return taskTags.every((tag) => workerTags.includes(tag));
 }
