@@ -19,7 +19,6 @@ class SpeechVerificationMain :
     activityName = "SPEECH_VERIFICATION",
     includeCompleted = false,
     finishOnGroupBoundary = false,
-    useAssistant = false
   ) {
   /** UI button states */
   private enum class ButtonState {
@@ -134,8 +133,8 @@ class SpeechVerificationMain :
     disableReview()
     reviewCompleted = false
 
-    val sentence = currentMicroTask.input.get("data").asString
-    val recordingFileName = currentMicroTask.input.get("files").asJsonArray[0].asString
+    val sentence = currentMicroTask.input.asJsonObject.get("data").asString
+    val recordingFileName = currentMicroTask.input.asJsonObject.get("files").asJsonArray[0].asString
     val recordingFile = getMicrotaskInputFilePath(recordingFileName)
 
     sentenceTv.text = sentence
@@ -173,12 +172,6 @@ class SpeechVerificationMain :
       alertDialog.show()
     }
   }
-
-  /** Function to get all string values needed for the activity */
-  override suspend fun getStringsForActivity() = Unit
-
-  /** Function to set the initial UI elements for the activity */
-  override suspend fun setInitialUIStrings() = Unit
 
   /** Set activity state */
   private fun setActivityState(targetState: ActivityState) {

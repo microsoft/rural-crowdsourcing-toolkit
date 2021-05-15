@@ -1,6 +1,8 @@
 package com.microsoft.research.karya.injection
 
+import com.microsoft.research.karya.data.local.daos.KaryaFileDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
+import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
@@ -27,8 +29,11 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideMicroTaskRepository(microTaskDao: MicroTaskDao): MicroTaskRepository {
-    return MicroTaskRepository(microTaskDao)
+  fun provideMicroTaskRepository(
+    microTaskDao: MicroTaskDao,
+    microtaskDaoExtra: MicrotaskDaoExtra
+  ): MicroTaskRepository {
+    return MicroTaskRepository(microTaskDao, microtaskDaoExtra)
   }
 
   @Provides
@@ -39,7 +44,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI): KaryaFileRepository {
-    return KaryaFileRepository(karyaFileAPI)
+  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI, karyaFileDao: KaryaFileDao): KaryaFileRepository {
+    return KaryaFileRepository(karyaFileAPI, karyaFileDao)
   }
 }

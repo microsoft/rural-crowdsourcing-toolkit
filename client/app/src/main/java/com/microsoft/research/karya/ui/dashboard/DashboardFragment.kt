@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -8,7 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
-import com.microsoft.research.karya.databinding.ActivityDashboardBinding
+import com.microsoft.research.karya.databinding.FragmentDashboardBinding
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
+import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
+import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -16,9 +20,9 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(R.layout.activity_dashboard) {
+class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
-  val binding by viewBinding(ActivityDashboardBinding::bind)
+  val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,7 +49,7 @@ class DashboardFragment : Fragment(R.layout.activity_dashboard) {
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener { viewModel.fetchNewTasks() }
+      syncCv.setOnClickListener { viewModel.syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
     }
@@ -79,53 +83,20 @@ class DashboardFragment : Fragment(R.layout.activity_dashboard) {
   private fun hideLoading() = binding.syncProgressBar.gone()
 
   fun onDashboardItemClick(task: TaskInfo) {
-    /*
-          var taskRecord: TaskRecord?
-          var scenarioRecord: ScenarioRecord? = null
-
-          runBlocking {
-              ioScope.launch {
-                  taskRecord = karyaDb.taskDao().getById(task.taskID)
-                  scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
-              }.join()
-          }
-
-          val nextIntent = when (scenarioRecord?.name) {
-              "story-speech" -> Intent(this, StorySpeechMain::class.java)
-              "speech-data" -> Intent(this, SpeechDataMain::class.java)
-              "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-              else -> {
-                  throw Exception("Unimplemented scenario")
-              }
-          }
-
-          nextIntent.putExtra("taskID", task.taskID)
-          nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
-          nextIntent.putExtra("completed", task.completedMicrotasks)
-
-      runBlocking {
-          ioScope.launch {
-              taskRecord = karyaDb.taskDao().getById(task.taskID)
-              scenarioRecord = karyaDb.scenarioDao().getById(taskRecord!!.scenario_id)
-          }.join()
+    val nextIntent =
+      when (task.scenarioName) {
+        // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+        // Use [ScenarioType] enum once we migrate to it.
+        "story-speech" -> Intent(requireContext(), StorySpeechMain::class.java)
+        "speech-data" -> Intent(requireContext(), SpeechDataMain::class.java)
+        "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
+        else -> {
+          throw Exception("Unimplemented scenario")
+        }
       }
 
-      // task.scenarioID for now
-      val nextIntent = when (task.scenarioName) {
-          // Use [ScenarioType] enum once we migrate to it.
-          "story-speech" -> Intent(this, StorySpeechMain::class.java)
-          "speech-data" -> Intent(this, SpeechDataMain::class.java)
-          "speech-verification" -> Intent(this, SpeechVerificationMain::class.java)
-          else -> {
-              throw Exception("Unimplemented scenario")
-          }
-      }
+    nextIntent.putExtra("taskID", task.taskID)
 
-      nextIntent.putExtra("taskID", task.taskID)
-      nextIntent.putExtra("incomplete", task.incompleteMicrotasks)
-      nextIntent.putExtra("completed", task.completedMicrotasks)
-
-      startActivity(nextIntent)
-    */
+    startActivity(nextIntent)
   }
 }

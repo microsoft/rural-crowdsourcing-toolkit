@@ -1,20 +1,14 @@
 package com.microsoft.research.karya.utils.extensions
 
-import android.content.Context
-import com.microsoft.research.karya.ui.base.BaseActivity
+import com.microsoft.research.karya.utils.KaryaFileContainer
 
-fun Context.getContainerDirectory(container: BaseActivity.KaryaFileContainer): String {
-  return container.getDirectory(this)
-}
-
-/** Get the blob name for a [container] with specific [params] */
-fun Context.getBlobName(container: BaseActivity.KaryaFileContainer, vararg params: String): String {
-  return container.getBlobName(*params)
+fun KaryaFileContainer.getContainerDirectory(): String {
+  return getDirectory()
 }
 
 /** Get the blob path for a blob in the [container] with specific [params] */
-fun Context.getBlobPath(container: BaseActivity.KaryaFileContainer, vararg params: String): String {
-  val dir = getContainerDirectory(container)
-  val name = getBlobName(container, *params)
+fun KaryaFileContainer.getBlobPath(vararg params: String): String {
+  val dir = getContainerDirectory()
+  val name = getBlobName(*params)
   return "$dir/$name"
 }

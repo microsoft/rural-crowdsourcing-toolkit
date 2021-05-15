@@ -11,7 +11,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import com.microsoft.research.karya.data.model.karya.enums.PaymentRequestStatus
 
 @Entity(
@@ -34,7 +34,7 @@ data class PaymentRequestRecord(
   var amount: Int,
   var status: PaymentRequestStatus,
   var reference: String?,
-  var params: JsonObject,
+  var params: JsonElement,
   var created_at: String,
   var last_updated_at: String,
 )

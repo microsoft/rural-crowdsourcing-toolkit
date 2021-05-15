@@ -1,8 +1,11 @@
 package com.microsoft.research.karya.injection
 
+import com.microsoft.research.karya.data.local.daos.KaryaFileDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
+import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
+import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.manager.KaryaDatabase
 import dagger.Module
@@ -37,5 +40,23 @@ class DaoModule {
   @Reusable
   fun provideMicroTaskAssignmentDao(karyaDatabase: KaryaDatabase): MicroTaskAssignmentDao {
     return karyaDatabase.microtaskAssignmentDao()
+  }
+
+  @Provides
+  @Reusable
+  fun provideKaryaFileDao(karyaDatabase: KaryaDatabase): KaryaFileDao {
+    return karyaDatabase.karyaFileDao()
+  }
+
+  @Provides
+  @Reusable
+  fun provideMicroTaskAssignmentDaoExtra(karyaDatabase: KaryaDatabase): MicrotaskAssignmentDaoExtra {
+    return karyaDatabase.microtaskAssignmentDaoExtra()
+  }
+
+  @Provides
+  @Reusable
+  fun provideMicroTaskDaoExtra(karyaDatabase: KaryaDatabase): MicrotaskDaoExtra {
+    return karyaDatabase.microtaskDaoExtra()
   }
 }

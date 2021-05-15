@@ -120,7 +120,7 @@
         android:id="@+id/dashboardActivity"
         android:name="com.microsoft.research.karya.ui.dashboard.DashboardFragment"
         android:label="activity_dashboard"
-        tools:layout="@layout/activity_dashboard" />
+        tools:layout="@layout/fragment_dashboard" />
     <action
         android:id="@+id/action_global_dashboardActivity4"
         app:destination="@id/dashboardActivity"

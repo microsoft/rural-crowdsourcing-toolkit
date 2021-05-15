@@ -7,7 +7,9 @@
  */
 package com.microsoft.research.karya.data.model.karya.enums
 
+import com.google.gson.annotations.SerializedName
+
 enum class MicrotaskStatus {
-  incomplete,
-  completed
+  @SerializedName("incomplete") INCOMPLETE,
+  @SerializedName("completed") COMPLETED
 }

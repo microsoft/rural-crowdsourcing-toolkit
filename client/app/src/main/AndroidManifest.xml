@@ -41,9 +41,6 @@
             android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.dashboard.DashboardActivity"
-            android:screenOrientation="portrait" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

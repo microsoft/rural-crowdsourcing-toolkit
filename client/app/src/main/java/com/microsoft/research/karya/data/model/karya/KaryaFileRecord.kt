@@ -9,7 +9,7 @@ package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
+import com.microsoft.research.karya.data.model.karya.enums.FileCreator
 
 @Entity(tableName = "karya_file")
 data class KaryaFileRecord(
@@ -25,7 +25,6 @@ data class KaryaFileRecord(
   var checksum: String,
   var in_box: Boolean,
   var in_server: Boolean,
-  var params: JsonObject,
   var created_at: String,
   var last_updated_at: String,
 )

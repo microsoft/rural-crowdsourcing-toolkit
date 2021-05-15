@@ -1,43 +1,23 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-/**
- * This file was auto-generated using specs and scripts in the db-schema repository. DO NOT EDIT
- * DIRECTLY.
- */
 package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.JsonObject
-import com.microsoft.research.karya.data.model.karya.enums.MicrotaskStatus
+import com.google.gson.JsonElement
+import com.google.gson.annotations.SerializedName
 
-@Entity(
-  tableName = "microtask",
-  foreignKeys =
-    arrayOf(
-      ForeignKey(entity = TaskRecord::class, parentColumns = arrayOf("id"), childColumns = arrayOf("task_id")),
-      ForeignKey(
-        entity = KaryaFileRecord::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("input_file_id")
-      )
-    ),
-  indices = arrayOf(Index("task_id"), Index("group_id"), Index("input_file_id"))
-)
+@Entity(tableName = "microtask")
 data class MicroTaskRecord(
   @PrimaryKey var id: String,
-  var task_id: String,
-  var group_id: String?,
-  var input: JsonObject,
-  var input_file_id: String?,
-  var deadline: String?,
-  var credits: Float,
-  var status: MicrotaskStatus,
-  var output: JsonObject,
-  var params: JsonObject,
-  var created_at: String,
-  var last_updated_at: String,
+  @SerializedName("task_id") var task_id: String,
+  @SerializedName("group_id") var group_id: String?,
+  @SerializedName("input") var input: JsonElement,
+  @SerializedName("input_file_id") var input_file_id: String?,
+  @SerializedName("deadline") var deadline: String?,
+  @SerializedName("credits") var credits: Int,
+  @SerializedName("output") var output: JsonElement,
+  @SerializedName("created_at") var created_at: String,
+  @SerializedName("last_updated_at") var last_updated_at: String,
 )

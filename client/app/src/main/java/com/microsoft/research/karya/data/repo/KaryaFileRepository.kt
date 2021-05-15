@@ -1,11 +1,17 @@
 package com.microsoft.research.karya.data.repo
 
+import com.microsoft.research.karya.data.local.daos.KaryaFileDao
+import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 
-class KaryaFileRepository @Inject constructor(private val karyaFileAPI: KaryaFileAPI) {
+class KaryaFileRepository
+@Inject
+constructor(private val karyaFileAPI: KaryaFileAPI, private val karyaFileDao: KaryaFileDao) {
 
   fun uploadKaryaFile(idToken: String, json: MultipartBody.Part, file: MultipartBody.Part) = flow {
     val response = karyaFileAPI.uploadKaryaFile(idToken, json, file)
@@ -30,5 +36,9 @@ class KaryaFileRepository @Inject constructor(private val karyaFileAPI: KaryaFil
     }
 
     emit(response)
+  }
+
+  suspend fun insertKaryaFile(karyaFileRecord: KaryaFileRecord) {
+    withContext(Dispatchers.IO) { karyaFileDao.insert(karyaFileRecord) }
   }
 }

@@ -2,6 +2,7 @@ package com.microsoft.research.karya.data.model.karya.ng
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
@@ -17,7 +18,7 @@ data class WorkerRecord(
   @SerializedName("gender") val gender: String?,
   @SerializedName("id_token") val idToken: String?,
   @SerializedName("auth_id") val authId: String?,
-  @SerializedName("params") val params: JsonObject?,
+  @SerializedName("params") val params: JsonElement?,
   @SerializedName("phone_number") val phoneNumber: String?,
   @SerializedName("profile_picture") val profilePicturePath: String?,
   @SerializedName("username") val username: String?,
