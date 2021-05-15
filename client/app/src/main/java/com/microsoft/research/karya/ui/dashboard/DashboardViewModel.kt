@@ -9,6 +9,7 @@ import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
+import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
@@ -51,6 +52,7 @@ constructor(
 
   private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
+  private lateinit var loggedInWorker: WorkerRecord
 
   private val taskInfoComparator =
     compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
@@ -64,6 +66,9 @@ constructor(
   fun syncWithServer() {
     viewModelScope.launch {
       _dashboardUiState.emit(DashboardUiState.Loading)
+      // Refresh loggedIn Worker
+      loggedInWorker = authManager.fetchLoggedInWorker()
+
       submitCompletedAssignments()
       fetchNewAssignments()
       cleanupKaryaFiles()
@@ -95,7 +100,7 @@ constructor(
     // Download each file
     for (assignment in filteredAssignments) {
       assignmentRepository
-        .getInputFile(authManager.fetchLoggedInWorkerIdToken(), assignment.id)
+        .getInputFile(loggedInWorker.idToken!!, assignment.id)
         .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
         .collect() { response ->
           downloadFileToLocalPath(response, microtaskInputContainer.getBlobPath(assignment.microtask_id))
@@ -104,8 +109,8 @@ constructor(
   }
 
   private suspend fun receiveDbUpdates() {
-    val idToken = authManager.fetchLoggedInWorkerIdToken()
-    val from = assignmentRepository.getNewAssignmentsFromTime()
+    val idToken = loggedInWorker.idToken!!
+    val from = assignmentRepository.getNewAssignmentsFromTime(loggedInWorker.id)
 
     // Get Assignment DB updates
     assignmentRepository
@@ -126,7 +131,7 @@ constructor(
         it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
       }
     assignmentRepository
-      .submitAssignments(authManager.fetchLoggedInWorkerIdToken(), microtaskAssignments)
+      .submitAssignments(loggedInWorker.idToken!!, microtaskAssignments)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }
@@ -159,7 +164,7 @@ constructor(
     assignmentTarBallPath: String,
     tarBallName: String,
   ) {
-    val idToken = authManager.fetchLoggedInWorkerIdToken()
+    val idToken = loggedInWorker.idToken!!
     val requestFile = RequestBody.create("application/tgz".toMediaTypeOrNull(), File(assignmentTarBallPath))
     val filePart = MultipartBody.Part.createFormData("file", tarBallName, requestFile)
 
@@ -181,8 +186,8 @@ constructor(
 
   fun fetchVerifiedAssignments(from: String = "") {
     viewModelScope.launch {
-      val idToken = authManager.fetchLoggedInWorkerIdToken()
-      val from = assignmentRepository.getNewVerifiedAssignmentsFromTime()
+      val idToken = loggedInWorker.idToken!!
+      val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(loggedInWorker.id)
 
       assignmentRepository
         .getAssignments(idToken, "verified", from)

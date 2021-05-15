@@ -22,7 +22,7 @@ class RetrofitModule {
 
   @Provides
   @Reusable
-  fun provide(): GsonConverterFactory {
+  fun provideGsonConverterFactory(): GsonConverterFactory {
     return GsonConverterFactory.create()
   }
 

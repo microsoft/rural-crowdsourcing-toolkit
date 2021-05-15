@@ -128,10 +128,10 @@ constructor(
     return assignmentDaoExtra.getIncompleteAssignments()
   }
 
-  suspend fun getNewAssignmentsFromTime(): String {
-    return assignmentDao.getNewAssignmentsFromTime() ?: AppConstants.INITIAL_TIME
+  suspend fun getNewAssignmentsFromTime(worker_id: String): String {
+    return assignmentDao.getNewAssignmentsFromTime(worker_id) ?: AppConstants.INITIAL_TIME
   }
-  suspend fun getNewVerifiedAssignmentsFromTime(): String {
-    return assignmentDao.getNewVerifiedAssignmentsFromTime() ?: AppConstants.INITIAL_TIME
+  suspend fun getNewVerifiedAssignmentsFromTime(worker_id: String): String {
+    return assignmentDao.getNewVerifiedAssignmentsFromTime(worker_id) ?: AppConstants.INITIAL_TIME
   }
 }
