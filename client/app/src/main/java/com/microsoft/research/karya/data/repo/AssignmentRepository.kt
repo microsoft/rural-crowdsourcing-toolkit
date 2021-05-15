@@ -87,6 +87,16 @@ constructor(
     }
   }
 
+  fun getInputFile(idToken: String, assignmentId: String) = flow {
+    val response = assignmentAPI.getInputFile(idToken, assignmentId)
+
+    if (!response.isSuccessful) {
+      error("Failed to get file")
+    }
+
+    emit(response)
+  }
+
   private suspend fun saveMicroTaskAssignments(assignments: List<MicroTaskAssignmentRecord>) {
     assignmentDao.upsert(assignments)
   }

@@ -16,6 +16,7 @@ import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.FileUtils.createTarBall
+import com.microsoft.research.karya.utils.FileUtils.downloadFileToLocalPath
 import com.microsoft.research.karya.utils.FileUtils.getMD5Digest
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
@@ -71,6 +72,38 @@ constructor(
   }
 
   private suspend fun fetchNewTasks() {
+    receiveDbUpdates()
+    downloadInputFiles()
+  }
+
+  private suspend fun downloadInputFiles() {
+    // Get the list of assignments for which the input file has to be downloaded
+    val filteredAssignments =
+      assignmentRepository
+        .getIncompleteAssignments()
+        .filter(
+          fun(assignment): Boolean {
+            val microtask = microTaskRepository.getById(assignment.task_id)
+            // If the microtask has no input file id then no need to download
+            if (microtask.input_file_id == null) return false
+            // If the file is already downloaded, then no need to download
+            val path = microtaskInputContainer.getBlobPath(assignment.microtask_id)
+            return !File(path).exists()
+          }
+        )
+
+    // Download each file
+    for (assignment in filteredAssignments) {
+      assignmentRepository
+        .getInputFile(authManager.fetchLoggedInWorkerIdToken(), assignment.id)
+        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+        .collect() { response ->
+          downloadFileToLocalPath(response, microtaskInputContainer.getBlobPath(assignment.microtask_id))
+        }
+    }
+  }
+
+  private suspend fun receiveDbUpdates() {
     val idToken = authManager.fetchLoggedInWorkerIdToken()
     val from = assignmentRepository.getNewAssignmentsFromTime()
 

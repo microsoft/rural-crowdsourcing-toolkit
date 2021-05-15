@@ -4,6 +4,7 @@ import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.remote.response.GetAssignmentsResponse
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -30,4 +31,10 @@ interface MicroTaskAssignmentAPI {
     @Part json: MultipartBody.Part,
     @Part file: MultipartBody.Part,
   ): Response<KaryaFileRecord>
+
+  @GET("/assignment/{id}/input_file")
+  suspend fun getInputFile(
+    @Header("karya-id-token") idToken: String,
+    @Path("id") assignmentId: String,
+  ): Response<ResponseBody>
 }
