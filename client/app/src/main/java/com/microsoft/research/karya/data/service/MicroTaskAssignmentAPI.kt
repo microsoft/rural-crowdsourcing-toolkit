@@ -19,9 +19,16 @@ interface MicroTaskAssignmentAPI {
   @GET("/assignments")
   suspend fun getAssignments(
     @Header("karya-id-token") idTokenHeader: String,
-    @Query("type") type: String, // TODO: Make this an enum class
     @Query("from") from: String,
+    @Query("type") type: String = "new",
   ): Response<GetAssignmentsResponse>
+
+  @GET("/assignments")
+  suspend fun getVerifiedAssignments(
+    @Header("karya-id-token") idTokenHeader: String,
+    @Query("from") from: String,
+    @Query("type") type: String = "verified",
+  ): Response<List<MicroTaskAssignmentRecord>>
 
   @Multipart
   @POST("/assignment/{id}/output_file")

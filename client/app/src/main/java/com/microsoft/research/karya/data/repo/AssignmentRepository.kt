@@ -25,12 +25,12 @@ constructor(
   private val taskDao: TaskDao,
 ) {
 
-  fun getAssignments(idToken: String, type: String, from: String) = flow {
+  fun getNewAssignments(idToken: String, from: String) = flow {
     if (idToken.isEmpty()) {
       error("Either Access Code or ID Token is required")
     }
 
-    val response = assignmentAPI.getAssignments(idToken, type, from)
+    val response = assignmentAPI.getAssignments(idToken, from)
     val assignmentResponse = response.body()
 
     if (!response.isSuccessful) {
@@ -42,6 +42,26 @@ constructor(
       saveMicroTasks(assignmentResponse.microTasks)
       saveMicroTaskAssignments(assignmentResponse.assignments)
 
+      emit(assignmentResponse)
+    } else {
+      error("Request failed, response body was null")
+    }
+  }
+
+  fun getVerifiedAssignments(idToken: String, from: String) = flow {
+    if (idToken.isEmpty()) {
+      error("Either Access Code or ID Token is required")
+    }
+
+    val response = assignmentAPI.getVerifiedAssignments(idToken, from)
+    val assignmentResponse = response.body()
+
+    if (!response.isSuccessful) {
+      error("Failed to get assignments")
+    }
+
+    if (assignmentResponse != null) {
+      saveMicroTaskAssignments(assignmentResponse)
       emit(assignmentResponse)
     } else {
       error("Request failed, response body was null")

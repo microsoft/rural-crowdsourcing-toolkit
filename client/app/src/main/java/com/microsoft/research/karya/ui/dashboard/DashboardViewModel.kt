@@ -24,8 +24,6 @@ import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,6 +35,8 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.io.File
+import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel
@@ -71,6 +71,7 @@ constructor(
 
       submitCompletedAssignments()
       fetchNewAssignments()
+      fetchVerifiedAssignments()
       cleanupKaryaFiles()
       getAllTasks() // TODO: Remove it once we fix the hot flow issue
     }
@@ -103,7 +104,10 @@ constructor(
         .getInputFile(loggedInWorker.idToken!!, assignment.id)
         .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
         .collect() { response ->
-          downloadFileToLocalPath(response, microtaskInputContainer.getBlobPath(assignment.microtask_id))
+          downloadFileToLocalPath(
+            response,
+            microtaskInputContainer.getBlobPath(assignment.microtask_id)
+          )
         }
     }
   }
@@ -114,7 +118,7 @@ constructor(
 
     // Get Assignment DB updates
     assignmentRepository
-      .getAssignments(idToken, "new", from)
+      .getNewAssignments(idToken, from)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
@@ -133,7 +137,11 @@ constructor(
     assignmentRepository
       .submitAssignments(loggedInWorker.idToken!!, microtaskAssignments)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
-      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
+      .collect { assignmentIds ->
+        assignmentRepository.markMicrotaskAssignmentsSubmitted(
+          assignmentIds
+        )
+      }
   }
 
   /** Upload the Files of completed Assignments */
@@ -170,7 +178,12 @@ constructor(
 
     val md5sum = getMD5Digest(assignmentTarBallPath)
     val uploadFileRequest =
-      UploadFileRequest(microtaskOutputContainer.cname, tarBallName, ChecksumAlgorithm.md5.toString(), md5sum)
+      UploadFileRequest(
+        microtaskOutputContainer.cname,
+        tarBallName,
+        ChecksumAlgorithm.md5.toString(),
+        md5sum
+      )
 
     val dataPart = MultipartBody.Part.createFormData("data", Gson().toJson(uploadFileRequest))
 
@@ -184,16 +197,14 @@ constructor(
       }
   }
 
-  fun fetchVerifiedAssignments(from: String = "") {
-    viewModelScope.launch {
-      val idToken = loggedInWorker.idToken!!
-      val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(loggedInWorker.id)
+  private suspend fun fetchVerifiedAssignments(from: String = "") {
+    val idToken = authManager.fetchLoggedInWorkerIdToken()
+    val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(loggedInWorker.id)
 
-      assignmentRepository
-        .getAssignments(idToken, "verified", from)
-        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
-        .collect()
-    }
+    assignmentRepository
+      .getVerifiedAssignments(idToken, from)
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect()
   }
 
   /**
@@ -209,7 +220,14 @@ constructor(
 
         taskList.forEach { taskRecord ->
           val taskStatus = fetchTaskStatus(taskRecord.id)
-          taskInfoList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
+          taskInfoList.add(
+            TaskInfo(
+              taskRecord.id,
+              taskRecord.name,
+              taskRecord.scenario_name,
+              taskStatus
+            )
+          )
         }
 
         val success = DashboardUiState.Success(taskInfoList.sortedWith(taskInfoComparator))
@@ -253,7 +271,8 @@ constructor(
       }
 
       // input folder
-      val microtaskInputDirectory = "${microtaskInputContainer.getDirectory()}/${microtaskInputContainer.cname}_$id"
+      val microtaskInputDirectory =
+        "${microtaskInputContainer.getDirectory()}/${microtaskInputContainer.cname}_$id"
       Log.d("MICRTSK_INPUT_DIRECTORY", microtaskInputDirectory)
       val microtaskDirectory = File(microtaskInputDirectory)
       for (file in microtaskDirectory.listFiles()!!) {
