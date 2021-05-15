@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -64,6 +63,7 @@ constructor(
 
   fun syncWithServer() {
     viewModelScope.launch {
+      _dashboardUiState.emit(DashboardUiState.Loading)
       submitCompletedTasks()
       fetchNewTasks()
       cleanupKaryaFiles()
@@ -83,7 +83,7 @@ constructor(
         .getIncompleteAssignments()
         .filter(
           fun(assignment): Boolean {
-            val microtask = microTaskRepository.getById(assignment.task_id)
+            val microtask = microTaskRepository.getById(assignment.microtask_id)
             // If the microtask has no input file id then no need to download
             if (microtask.input_file_id == null) return false
             // If the file is already downloaded, then no need to download
@@ -199,7 +199,6 @@ constructor(
   fun getAllTasks() {
     taskRepository
       .getAllTasksFlow()
-      .onStart { _dashboardUiState.emit(DashboardUiState.Loading) }
       .onEach { taskList ->
         val taskInfoList = mutableListOf<TaskInfo>()
 
