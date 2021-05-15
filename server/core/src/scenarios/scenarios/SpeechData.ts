@@ -86,8 +86,8 @@ export const SpeechDataScenario: BaseScenarioInterface = {
   microtask_input_files,
   microtask_output,
   microtask_output_files,
-  assignment_granularity: 'microtask',
-  group_assignment_order: 'either',
-  microtask_assignment_order: 'either',
-  response_type: 'multiple-subjective',
+  assignment_granularity: 'MICROTASK',
+  group_assignment_order: 'EITHER',
+  microtask_assignment_order: 'EITHER',
+  response_type: 'MULTIPLE_SUBJECTIVE',
 };

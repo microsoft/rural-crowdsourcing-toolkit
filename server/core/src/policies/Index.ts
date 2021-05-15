@@ -41,7 +41,7 @@ export const policyMap: { [key in PolicyName]: PolicyInterface } = {
  * The policy will be used when assigning a specific task to a box.
  */
 export const policyList: { [key in MicrotaskResponseType]: PolicyInterface[] } = {
-  unique: [nTotalPolicy, nMatchingPolicy],
-  'multiple-objective': [nTotalPolicy, nUniquePolicy],
-  'multiple-subjective': [nTotalPolicy],
+  UNIQUE: [nTotalPolicy, nMatchingPolicy],
+  MULTIPLE_OBJECTIVE: [nTotalPolicy, nUniquePolicy],
+  MULTIPLE_SUBJECTIVE: [nTotalPolicy],
 };

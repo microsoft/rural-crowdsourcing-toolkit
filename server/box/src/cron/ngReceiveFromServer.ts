@@ -118,7 +118,7 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
   // For each task, get all microtasks
   await BBPromise.mapSeries(tasks, async (task) => {
     const granularity = task.assignment_granularity;
-    const limit = granularity == 'group' ? 10 : 1000;
+    const limit = granularity == 'GROUP' ? 10 : 1000;
 
     type MicrotasksResponse = {
       groups: MicrotaskGroupRecord[];
@@ -131,7 +131,7 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
     while (responseLength >= limit) {
       let microtasksData: MicrotasksResponse;
       const latest_update_response =
-        granularity == 'group'
+        granularity == 'GROUP'
           ? await knex<MicrotaskGroupRecord>('microtask_group').where('task_id', task.id).max('last_updated_at')
           : await knex<MicrotaskRecord>('microtask').where('task_id', task.id).max('last_updated_at');
 
@@ -165,7 +165,7 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
         return;
       }
 
-      responseLength = granularity == 'group' ? groups.length : microtasks.length;
+      responseLength = granularity == 'GROUP' ? groups.length : microtasks.length;
     }
     cronLogger.info(`Received microtasks for task ${task.id}`);
   });

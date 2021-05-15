@@ -12,38 +12,38 @@ import Joi from 'joi';
  * Assignment granularity: Specifies the granularity at which microtasks of a
  * scenario should be assigned to users.
  *
- * 'microtask': Assignments are made at the individual microtask granularity.
- * 'group': All microtasks belonging to a group are assigned together.
- * 'either': Can be either of the above and specified at the time of task creation.
+ * 'MICROTASK': Assignments are made at the individual microtask granularity.
+ * 'GROUP': All microtasks belonging to a group are assigned together.
+ * 'EITHER': Can be either of the above and specified at the time of task creation.
  */
-export type AssignmentGranularity = 'microtask' | 'group' | 'either';
+export type AssignmentGranularity = 'MICROTASK' | 'GROUP' | 'EITHER';
 
 /**
  * Assignment order: Specifies the order in which microtasks of a scenario
  * should be assigned to users.
  *
- * 'sequential': Microtasks or groups are assigned sequentially by creation time.
- * 'random': Microtasks or groups are randomly chosen.
- * 'either': Can be either of the above and specified at the time of task creation.
+ * 'SEQUENTIAL': Microtasks or groups are assigned sequentially by creation time.
+ * 'RANDOM': Microtasks or groups are randomly chosen.
+ * 'EITHER': Can be either of the above and specified at the time of task creation.
  */
-export type AssignmentOrder = 'sequential' | 'random' | 'either';
+export type AssignmentOrder = 'SEQUENTIAL' | 'RANDOM' | 'EITHER';
 
 /**
  * Microtask response type for the scenario: Specifies the type of response
  * expected for the microtasks of the scenario.
  *
- * 'unique': Each microtask is expected to have a unique objective response.
+ * 'UNIQUE': Each microtask is expected to have a unique objective response.
  *   Example is handwritten image transcription or speech transcription.
  *
- * 'multiple-objective': Each microtask may have multiple responses but
+ * 'MULTIPLE_OBJECTIVE': Each microtask may have multiple responses but
  *   different responses can be objectively compared to one another. Example is
  *   text-to-text translation.
  *
- * 'multiple-subjective': Each microtask may have multiple responses but
+ * 'MULTIPLE_SUBJECTIVE': Each microtask may have multiple responses but
  *   different responses cannot be objectively compared to one another. Example
  *   is speech data collection.
  */
-export type MicrotaskResponseType = 'unique' | 'multiple-objective' | 'multiple-subjective';
+export type MicrotaskResponseType = 'UNIQUE' | 'MULTIPLE_OBJECTIVE' | 'MULTIPLE_SUBJECTIVE';
 
 /**
  * Scenario Interface

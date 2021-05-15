@@ -192,7 +192,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <div className='col'>Assignment Granularity: </div>
             <div className='col'>{task.assignment_granularity}</div>
           </div>
-          {task.assignment_granularity === 'group' ? (
+          {task.assignment_granularity === 'GROUP' ? (
             <div className='row' style={{ marginBottom: '0px' }}>
               <div className='col'>Group Assignment Order: </div>
               <div className='col'>{task.group_assignment_order}</div>

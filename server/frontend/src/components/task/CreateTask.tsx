@@ -277,10 +277,10 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           </div>
 
           {/** Assignment parameters */}
-          {[assignment_granularity, group_assignment_order, microtask_assignment_order].includes('either') ? (
+          {[assignment_granularity, group_assignment_order, microtask_assignment_order].includes('EITHER') ? (
             <div className='section'>
               <h5 className='red-text'>Assignment Parameters</h5>
-              {assignment_granularity === 'either' ? (
+              {assignment_granularity === 'EITHER' ? (
                 <div className='row'>
                   <div className='col s4'>
                     <select
@@ -289,16 +289,16 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                       onChange={this.handleInputChange}
                       required={true}
                     >
-                      <option value='either' disabled={true}>
+                      <option value='EITHER' disabled={true}>
                         Select an Assignment Granularity
                       </option>
-                      <option value='group'>Assign tasks in group granularity</option>
-                      <option value='microtask'>Assign tasks in microtask granularity</option>
+                      <option value='GROUP'>Assign tasks in group granularity</option>
+                      <option value='MICROTASK'>Assign tasks in microtask granularity</option>
                     </select>
                   </div>
                 </div>
               ) : null}
-              {group_assignment_order === 'either' && assignment_granularity !== 'microtask' ? (
+              {group_assignment_order === 'EITHER' && assignment_granularity !== 'MICROTASK' ? (
                 <div className='row'>
                   <div className='col s4'>
                     <select
@@ -307,16 +307,16 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                       onChange={this.handleInputChange}
                       required={true}
                     >
-                      <option value='either' disabled={true}>
+                      <option value='EITHER' disabled={true}>
                         Select the Group Assignment Order
                       </option>
-                      <option value='sequential'>Assign groups in sequence</option>
-                      <option value='random'>Assign groups randomly</option>
+                      <option value='SEQUENTIAL'>Assign groups in sequence</option>
+                      <option value='RANDOM'>Assign groups randomly</option>
                     </select>
                   </div>
                 </div>
               ) : null}
-              {microtask_assignment_order === 'either' ? (
+              {microtask_assignment_order === 'EITHER' ? (
                 <div className='row'>
                   <div className='col s4'>
                     <select
@@ -325,11 +325,11 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                       onChange={this.handleInputChange}
                       required={true}
                     >
-                      <option value='either' disabled={true}>
+                      <option value='EITHER' disabled={true}>
                         Select the Microtask Assignment Order
                       </option>
-                      <option value='sequential'>Assign microtasks in sequence</option>
-                      <option value='random'>Assign microtasks randomly</option>
+                      <option value='SEQUENTIAL'>Assign microtasks in sequence</option>
+                      <option value='RANDOM'>Assign microtasks randomly</option>
                     </select>
                   </div>
                 </div>

@@ -51,7 +51,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const chosenMicrotaskGroups: MicrotaskGroupRecord[] = [];
     let chosenMicrotasks: MicrotaskRecord[] = [];
 
-    if (task.assignment_granularity === 'group') {
+    if (task.assignment_granularity === 'GROUP') {
       // Get all assignable microtask groups
       const assignableGroups = await policy.assignableMicrotaskGroups(worker, task, taskAssignment.params);
 
@@ -81,7 +81,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
         chosenMicrotasks = chosenMicrotasks.concat(microtasks);
       });
-    } else if (task.assignment_granularity === 'microtask') {
+    } else if (task.assignment_granularity === 'MICROTASK') {
       // get all assignable microtasks
       const assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
 
@@ -155,7 +155,7 @@ export async function handleMicrotaskAssignmentCompletion(microtaskAssignment: M
  * @param array Array to be shuffled
  */
 function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
-  if (order === 'random') {
+  if (order === 'RANDOM') {
     let currentIndex = array.length;
     let temporaryValue: T;
     let randomIndex: number;
@@ -166,7 +166,7 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-  } else if (order === 'sequential') {
+  } else if (order === 'SEQUENTIAL') {
     array.sort((m1, m2) => Number.parseInt(m1.id, 10) - Number.parseInt(m2.id, 10));
   } else {
     throw new Error('Invalid assignment order');
