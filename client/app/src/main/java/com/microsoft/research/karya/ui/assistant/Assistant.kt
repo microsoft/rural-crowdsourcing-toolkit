@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.ui.assistant
 
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -43,7 +44,8 @@ constructor(
           return@withContext authManager.fetchLoggedInWorker().language
         }
 
-      val audioFilePath = resourceManager.getAudioFilePath(workerLanguage, assistantAudio.name)
+      val audioFilePath = resourceManager.getAudioFilePath(workerLanguage, assistantAudio.fileName)
+      Log.d("AudioFile", audioFilePath)
       playAssistantAudio(audioFilePath, uiCue, onCompletionListener, onErrorListener)
     }
   }
