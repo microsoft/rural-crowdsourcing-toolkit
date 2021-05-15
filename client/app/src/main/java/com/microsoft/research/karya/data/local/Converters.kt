@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.data.model.karya.AssignmentGranularityType
 import com.microsoft.research.karya.data.model.karya.AssignmentOrderType
@@ -51,8 +52,8 @@ class Converters {
   }
 
   @TypeConverter
-  fun fromStringToJsonElement(value: String?): JsonElement? {
-    if (value == null) return null
+  fun fromStringToJsonElement(value: String?): JsonElement {
+    if (value == null) return JsonNull.INSTANCE
 
     return Gson().fromJson(value, JsonElement::class.java)
   }

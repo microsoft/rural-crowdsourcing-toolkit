@@ -41,5 +41,9 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
     updateForUpsert(records)
   }
 
-  @Query("SELECT MAX(created_at) FROM microtask_assignment") suspend fun getLatestAssignmentCreationTime(): String?
+  @Query("SELECT MAX(created_at) FROM microtask_assignment WHERE status != :status")
+  suspend fun getNewAssignmentsFromTime(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED): String?
+
+  @Query("SELECT MAX(created_at) FROM microtask_assignment WHERE status == :status")
+  suspend fun getNewVerifiedAssignmentsFromTime(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED): String?
 }

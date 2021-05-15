@@ -7,6 +7,7 @@ import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoE
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.utils.AppConstants
 import javax.inject.Inject
@@ -118,7 +119,10 @@ constructor(
     return assignmentDaoExtra.getIncompleteAssignments()
   }
 
-  suspend fun getLatestAssignmentCreationTime(): String {
-    return assignmentDao.getLatestAssignmentCreationTime() ?: AppConstants.INITIAL_TIME
+  suspend fun getNewAssignmentsFromTime(): String {
+    return assignmentDao.getNewAssignmentsFromTime() ?: AppConstants.INITIAL_TIME
+  }
+  suspend fun getNewVerifiedAssignmentsFromTime(): String {
+    return assignmentDao.getNewVerifiedAssignmentsFromTime() ?: AppConstants.INITIAL_TIME
   }
 }

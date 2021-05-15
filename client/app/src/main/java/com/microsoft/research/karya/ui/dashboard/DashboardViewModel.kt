@@ -72,7 +72,7 @@ constructor(
 
   private suspend fun fetchNewTasks() {
     val idToken = authManager.fetchLoggedInWorkerIdToken()
-    val from = assignmentRepository.getLatestAssignmentCreationTime()
+    val from = assignmentRepository.getNewAssignmentsFromTime()
 
     // Get Assignment DB updates
     assignmentRepository
@@ -90,7 +90,7 @@ constructor(
 
     val microtaskAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
-        it.output == null || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
+        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
       }
     assignmentRepository
       .submitAssignments(authManager.fetchLoggedInWorkerIdToken(), microtaskAssignments)
@@ -106,7 +106,7 @@ constructor(
       updates.filter {
         // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if
         // the file was already uploaded
-        it.output_file_id == null && it.output != null && it.output.asJsonObject.get("files").asJsonArray.size() > 0
+        it.output_file_id == null && !it.output.isJsonNull && it.output.asJsonObject.get("files").asJsonArray.size() > 0
       }
 
     for (assignment in filteredAssignments) {
@@ -149,6 +149,7 @@ constructor(
   fun fetchVerifiedTasks(from: String = "") {
     viewModelScope.launch {
       val idToken = authManager.fetchLoggedInWorkerIdToken()
+      val from = assignmentRepository.getNewVerifiedAssignmentsFromTime()
 
       assignmentRepository
         .getAssignments(idToken, "verified", from)
