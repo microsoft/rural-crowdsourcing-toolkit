@@ -15,7 +15,7 @@ import { BasicModel } from '@karya/common';
 
 // Local scenario Map
 const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<any, object, any, object, any> } = {
-  'speech-data': backendSpeechDataScenario,
+  SPEECH_DATA: backendSpeechDataScenario,
 };
 
 // Task input processor queue

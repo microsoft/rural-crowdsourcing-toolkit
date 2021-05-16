@@ -89,7 +89,7 @@ const task_input_file: BaseSpeechDataScenario['task_input_file'] = {
  * Speech data scenario implementation
  */
 export const baseSpeechDataScenario: BaseSpeechDataScenario = {
-  name: 'speech-data',
+  name: 'SPEECH_DATA',
   full_name: 'Speech Data Collection',
   description: 'This scenario allows for collection of speech data from a text corpus.',
   task_input,
