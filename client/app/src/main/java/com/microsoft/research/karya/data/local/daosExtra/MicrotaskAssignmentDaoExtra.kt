@@ -96,6 +96,9 @@ interface MicrotaskAssignmentDaoExtra {
   suspend fun getCountByStatus(status: MicrotaskAssignmentStatus): Int
 
   /** Query to get the total amount earned so far */
-  @Query("SELECT SUM(credits) FROM microtask_assignment where status=:status")
-  suspend fun getTotalCreditsEarned(status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED): Float?
+  @Query("SELECT SUM(credits) FROM microtask_assignment where status=:status AND worker_id=:worker_id")
+  suspend fun getTotalCreditsEarned(
+    worker_id: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+  ): Float?
 }

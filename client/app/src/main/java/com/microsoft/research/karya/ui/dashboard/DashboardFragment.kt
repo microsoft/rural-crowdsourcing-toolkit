@@ -18,6 +18,7 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
@@ -65,9 +66,18 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
   }
 
-  private fun showSuccessUi(taskInfoList: List<TaskInfo>) {
+  private fun showSuccessUi(data: DashboardStateSucess) {
     hideLoading()
-    (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoList)
+    data.apply {
+      (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
+      // Show total credits if it is greater than 0
+      if (totalCreditsEarned != null && totalCreditsEarned > 0.0f) {
+        binding.rupeesEarnedCl.visible()
+        rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+      } else {
+        binding.rupeesEarnedCl.gone()
+      }
+    }
   }
 
   private fun showErrorUi(throwable: Throwable) {

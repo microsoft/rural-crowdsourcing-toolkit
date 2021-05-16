@@ -60,7 +60,7 @@ constructor(
     }
 
   private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
-    MutableStateFlow(DashboardUiState.Success(emptyList()))
+    MutableStateFlow(DashboardUiState.Success(DashboardStateSucess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
   fun syncWithServer() {
@@ -71,6 +71,7 @@ constructor(
 
       submitCompletedAssignments()
       fetchNewAssignments()
+      fetchVerifiedAssignments()
       cleanupKaryaFiles()
       getAllTasks() // TODO: Remove it once we fix the hot flow issue
     }
@@ -114,7 +115,7 @@ constructor(
 
     // Get Assignment DB updates
     assignmentRepository
-      .getAssignments(idToken, "new", from)
+      .getNewAssignments(idToken, from)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
@@ -184,16 +185,14 @@ constructor(
       }
   }
 
-  fun fetchVerifiedAssignments(from: String = "") {
-    viewModelScope.launch {
-      val idToken = loggedInWorker.idToken!!
-      val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(loggedInWorker.id)
+  private suspend fun fetchVerifiedAssignments(from: String = "") {
+    val idToken = authManager.fetchLoggedInWorkerIdToken()
+    val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(loggedInWorker.id)
 
-      assignmentRepository
-        .getAssignments(idToken, "verified", from)
-        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
-        .collect()
-    }
+    assignmentRepository
+      .getVerifiedAssignments(idToken, from)
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect()
   }
 
   /**
@@ -212,7 +211,11 @@ constructor(
           taskInfoList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
         }
 
-        val success = DashboardUiState.Success(taskInfoList.sortedWith(taskInfoComparator))
+        val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+        val success =
+          DashboardUiState.Success(
+            DashboardStateSucess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+          )
         _dashboardUiState.emit(success)
       }
       .catch { _dashboardUiState.emit(DashboardUiState.Error(it)) }
