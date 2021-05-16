@@ -32,6 +32,10 @@ class KaryaToolbar : Toolbar {
     }
   }
 
+  fun showProfilePicture() {
+    binding.profilePictureIv.visible()
+  }
+
   fun setProfilePicture(profilePicture: Bitmap) {
     binding.profilePictureIv.apply {
       setImageBitmap(profilePicture)

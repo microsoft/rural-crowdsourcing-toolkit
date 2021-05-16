@@ -20,15 +20,14 @@
         android:layout_height="wrap_content"
         android:paddingRight="@dimen/_5sdp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePictureIv"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_marginEnd="@dimen/_16sdp"
-            android:adjustViewBounds="true"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:contentDescription="profile picture"
-            android:scaleType="fitXY"
             android:visibility="gone"
+            app:civ_border_width="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/title"
             app:layout_constraintHorizontal_bias="0.0"

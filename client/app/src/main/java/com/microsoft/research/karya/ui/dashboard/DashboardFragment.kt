@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.ui.dashboard
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
@@ -19,7 +21,9 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_dashboard.*
+import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
@@ -32,6 +36,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
       viewModel.updateTaskStatus(taskId)
     }
+
+  @Inject lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -60,6 +66,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       syncCv.setOnClickListener { viewModel.syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
+      loadProfilePic()
     }
   }
 
@@ -80,7 +87,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       // Show total credits if it is greater than 0
       if (totalCreditsEarned != null && totalCreditsEarned > 0.0f) {
         binding.rupeesEarnedCl.visible()
-        rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
       } else {
         binding.rupeesEarnedCl.gone()
       }
@@ -98,6 +105,19 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun showLoading() = binding.syncProgressBar.visible()
 
   private fun hideLoading() = binding.syncProgressBar.gone()
+
+  private fun loadProfilePic() {
+    binding.appTb.showProfilePicture()
+
+    lifecycleScope.launchWhenStarted {
+      withContext(Dispatchers.IO) {
+        val profilePicPath = authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
+        val bitmap = BitmapFactory.decodeFile(profilePicPath)
+
+        withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }
+      }
+    }
+  }
 
   fun onDashboardItemClick(task: TaskInfo) {
     val nextIntent =

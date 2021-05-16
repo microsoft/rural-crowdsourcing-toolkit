@@ -93,6 +93,7 @@ object Dependencies {
 
   object ThirdParty {
 
+    const val circleImageView = "de.hdodenhof:circleimageview:3.1.0"
     const val debugDB = "com.amitshekhar.android:debug-db:1.0.6"
     const val glide = "com.github.bumptech.glide:glide:4.12.0"
     const val stateProgressBar = "com.kofigyan.stateprogressbar:stateprogressbar:1.0.0"
