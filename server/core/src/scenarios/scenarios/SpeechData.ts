@@ -6,12 +6,47 @@
 import { TaskRecord } from '../../Index';
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { ParameterDefinition } from '@karya/parameter-specs';
+import { MicrotaskAssignmentRecord, MicrotaskRecord } from '../../auto/TableInterfaces';
+import { MicrotaskInput, MicrotaskOutput } from '../../types/CustomObjects';
+
+// Speech data task input parameters
+type SpeechDataTaskInputParameters = {
+  instruction: string;
+  numRecordings: number;
+  creditsPerRecording: number;
+};
+
+// Speech data input format
+type SpeechDataMicrotaskInput = { sentence: string };
+type SpeechDataMicrotaskInputFiles = {};
+
+// Speech data output format
+type SpeechDataMicrotaskOutput = {};
+type SpeechDataMicrotaskOutputFiles = { recording: string };
+
+// Speech data task, microtask, microtask assignment types
+export type SpeechDataTaskRecord = TaskRecord & { params: SpeechDataTaskInputParameters };
+export type SpeechDataMicrotaskRecord = MicrotaskRecord & {
+  input: MicrotaskInput<SpeechDataMicrotaskInput, SpeechDataMicrotaskInputFiles>;
+  output: MicrotaskOutput<SpeechDataMicrotaskOutput, SpeechDataMicrotaskOutputFiles>;
+};
+export type SpeechDataAssignmentRecord = MicrotaskAssignmentRecord & {
+  output: MicrotaskOutput<SpeechDataMicrotaskOutput, SpeechDataMicrotaskOutputFiles>;
+};
+
+// Base speech data scenario type
+export type BaseSpeechDataScenario = BaseScenarioInterface<
+  SpeechDataTaskInputParameters,
+  SpeechDataMicrotaskInput,
+  SpeechDataMicrotaskInputFiles,
+  SpeechDataMicrotaskOutput,
+  SpeechDataMicrotaskOutputFiles
+>;
 
 /**
  * Task parameter input and file formats.
  */
-const task_input: ParameterDefinition[] = [
+const task_input: BaseSpeechDataScenario['task_input'] = [
   {
     id: 'instruction',
     type: 'string',
@@ -37,14 +72,8 @@ const task_input: ParameterDefinition[] = [
   },
 ];
 
-export type SpeechDataTaskInputParameters = {
-  instruction: string;
-  numRecordings: number;
-  creditsPerRecording: number;
-};
-
 // Task input file format for speech data task
-const task_input_file: BaseScenarioInterface['task_input_file'] = {
+const task_input_file: BaseSpeechDataScenario['task_input_file'] = {
   json: {
     required: true,
     description: `\
@@ -56,36 +85,19 @@ const task_input_file: BaseScenarioInterface['task_input_file'] = {
   tgz: { required: false },
 };
 
-// Microtask input format
-const microtask_input = Joi.object({ sentence: Joi.string() });
-const microtask_input_files: string[] = [];
-
-export type SpeechDataMicrotaskInput = { sentence: string };
-export type SpeechDataMicrotaskInputFiles = {};
-
-// Microtask output format
-const microtask_output = Joi.object({});
-const microtask_output_files = ['recording'];
-
-export type SpeechDataMicrotaskOutput = {};
-export type SpeechDataMicrotaskOutputFiles = { recording: string };
-
-// Speech data task type
-export type SpeechDataTaskRecord = TaskRecord & { params: SpeechDataTaskInputParameters };
-
 /**
  * Speech data scenario implementation
  */
-export const SpeechDataScenario: BaseScenarioInterface = {
+export const baseSpeechDataScenario: BaseSpeechDataScenario = {
   name: 'speech-data',
   full_name: 'Speech Data Collection',
   description: 'This scenario allows for collection of speech data from a text corpus.',
   task_input,
   task_input_file,
-  microtask_input,
-  microtask_input_files,
-  microtask_output,
-  microtask_output_files,
+  microtask_input: Joi.object({ sentence: Joi.string() }),
+  microtask_input_files: [],
+  microtask_output: Joi.object({}),
+  microtask_output_files: ['recording'],
   assignment_granularity: 'MICROTASK',
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',

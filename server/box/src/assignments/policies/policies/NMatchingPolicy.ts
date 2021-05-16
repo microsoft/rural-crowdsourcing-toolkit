@@ -5,10 +5,10 @@
 
 import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskModel } from '@karya/common';
-import { policyMap, NMatchingPolicyParams } from '@karya/core';
+import { nMatchingBasePolicy, NMatchingPolicyParams } from '@karya/core';
 
 export const nMatchingPolicy: BoxPolicyInterface<NMatchingPolicyParams> = {
-  ...policyMap['N_MATCHING'],
+  ...nMatchingBasePolicy,
 
   /**
    * Return a list of assignable microtasks to the worker from a task. For the

@@ -5,10 +5,10 @@
 
 import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskModel } from '@karya/common';
-import { policyMap, NUniquePolicyParams } from '@karya/core';
+import { nUniqueBasePolicy, NUniquePolicyParams } from '@karya/core';
 
 export const nUniquePolicy: BoxPolicyInterface<NUniquePolicyParams> = {
-  ...policyMap['N_UNIQUE'],
+  ...nUniqueBasePolicy,
 
   /**
    * Return a list of assignable microtasks to the worker from a task. For the

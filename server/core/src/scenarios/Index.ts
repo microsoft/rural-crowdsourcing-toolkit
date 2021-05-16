@@ -4,7 +4,7 @@
 // Entry file for the scenarios
 
 import { BaseScenarioInterface } from './ScenarioInterface';
-import { SpeechDataScenario } from './scenarios/SpeechData';
+import { baseSpeechDataScenario } from './scenarios/SpeechData';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -13,6 +13,6 @@ export * from './scenarios/SpeechData';
 export const scenarioNames = ['speech-data'] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
-export const scenarioMap: { [key in ScenarioName]: BaseScenarioInterface } = {
-  'speech-data': SpeechDataScenario,
+export const scenarioMap: { [key in ScenarioName]: BaseScenarioInterface<any, object, any, object, any> } = {
+  'speech-data': baseSpeechDataScenario,
 };

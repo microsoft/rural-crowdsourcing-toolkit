@@ -3,12 +3,12 @@
 //
 // Helper to render a parameter definition spec to a section in the form.
 
-import { ParameterDefinition } from '@karya/parameter-specs';
+import { ParameterArray } from '@karya/parameter-specs';
 import { ChangeEventHandler } from 'react';
 import { ColTextInput } from './FormInputs';
 
 type ParamterSectionProps = {
-  params: ParameterDefinition[];
+  params: ParameterArray<any>;
   data: { [id: string]: string | boolean };
   onChange: ChangeEventHandler;
   onBooleanChange: ChangeEventHandler;

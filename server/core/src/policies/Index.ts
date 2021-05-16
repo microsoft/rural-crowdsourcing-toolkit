@@ -3,12 +3,12 @@
 //
 // Entry point for policy module
 
-import { PolicyInterface } from './PolicyInterface';
+import { BasePolicyInterface } from './PolicyInterface';
 import { MicrotaskResponseType } from '../scenarios/Index';
 
-import { nTotalPolicy } from './policies/NTotalPolicy';
-import { nUniquePolicy } from './policies/NUniquePolicy';
-import { nMatchingPolicy } from './policies/NMatchingPolicy';
+import { nTotalBasePolicy } from './policies/NTotalPolicy';
+import { nUniqueBasePolicy } from './policies/NUniquePolicy';
+import { nMatchingBasePolicy } from './policies/NMatchingPolicy';
 
 export * from './PolicyInterface';
 export * from './policies/NTotalPolicy';
@@ -24,10 +24,10 @@ export type PolicyName = typeof policyNames[number];
  *
  * Map of policies from name to object.
  */
-export const policyMap: { [key in PolicyName]: PolicyInterface } = {
-  N_TOTAL: nTotalPolicy,
-  N_UNIQUE: nUniquePolicy,
-  N_MATCHING: nMatchingPolicy,
+export const policyMap: { [key in PolicyName]: BasePolicyInterface<any> } = {
+  N_TOTAL: nTotalBasePolicy,
+  N_UNIQUE: nUniqueBasePolicy,
+  N_MATCHING: nMatchingBasePolicy,
 };
 
 /**
@@ -40,8 +40,8 @@ export const policyMap: { [key in PolicyName]: PolicyInterface } = {
  *
  * The policy will be used when assigning a specific task to a box.
  */
-export const policyList: { [key in MicrotaskResponseType]: PolicyInterface[] } = {
-  UNIQUE: [nTotalPolicy, nMatchingPolicy],
-  MULTIPLE_OBJECTIVE: [nTotalPolicy, nUniquePolicy],
-  MULTIPLE_SUBJECTIVE: [nTotalPolicy],
+export const policyList: { [key in MicrotaskResponseType]: BasePolicyInterface<any>[] } = {
+  UNIQUE: [nTotalBasePolicy, nMatchingBasePolicy],
+  MULTIPLE_OBJECTIVE: [nTotalBasePolicy, nUniqueBasePolicy],
+  MULTIPLE_SUBJECTIVE: [nTotalBasePolicy],
 };

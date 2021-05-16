@@ -24,7 +24,19 @@ export type MicrotaskList = {
 
 // Extend base scenario interface with functions to process input files and
 // generate output files
-export interface BackendScenarioInterface extends BaseScenarioInterface {
+export interface BackendScenarioInterface<
+  ScenarioParams,
+  MicrotaskInput,
+  MicrotaskInputFiles,
+  MicrotaskOutput,
+  MicrotaskOutputFiles
+> extends BaseScenarioInterface<
+    ScenarioParams,
+    MicrotaskInput,
+    MicrotaskInputFiles,
+    MicrotaskOutput,
+    MicrotaskOutputFiles
+  > {
   /**
    * Process a newly submitted input for a specific task.
    * @param task Task record for the submitted input files
@@ -46,3 +58,8 @@ export interface BackendScenarioInterface extends BaseScenarioInterface {
    */
   generateOutput?(task: TaskRecord, task_folder?: string): Promise<void>;
 }
+
+// Shorthand for backend scenario interface type
+export type IBackendScenarioInterface<S> = S extends BaseScenarioInterface<infer A, infer B, infer C, infer D, infer E>
+  ? BackendScenarioInterface<A, B, C, D, E>
+  : never;

@@ -15,7 +15,7 @@ import { nMatchingPolicy } from './policies/NMatchingPolicy';
  *
  * Map of policies from name to object.
  */
-export const localPolicyMap: { [key in PolicyName]: BoxPolicyInterface } = {
+export const localPolicyMap: { [key in PolicyName]: BoxPolicyInterface<any> } = {
   N_TOTAL: nTotalPolicy,
   N_UNIQUE: nUniquePolicy,
   N_MATCHING: nMatchingPolicy,

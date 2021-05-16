@@ -5,8 +5,17 @@
 
 import Joi from 'joi';
 
-export type ParameterDefinition = {
-  id: string;
+/**
+ * Parameter specification
+ *
+ * id: Identifier for the parameter. Should be unique within an array of parameters.
+ * type: Type of the parameter. Used to define the Joi Schema type
+ * label: Label for the parameter. Used as label in React text input
+ * description: Full description of the parameter. Used as part of React text input
+ * required: Indicated if the parameter is required or optional
+ */
+export type ParameterDefinition<T> = {
+  id: Extract<T, string>;
   type: 'string' | 'int' | 'float' | 'boolean';
   label: string;
   description: string;
@@ -14,12 +23,17 @@ export type ParameterDefinition = {
 };
 
 /**
- * Converts a parameter definition list to a Joi schema that can be used to
+ * Array of parameter definitions
+ */
+export type ParameterArray<T> = ParameterDefinition<keyof T>[];
+
+/**
+ * Converts a parameter array to a Joi schema that can be used to
  * validate an object of that type.
  * @param params List of parameters
  */
-export function joiSchema(params: ParameterDefinition[]): Joi.ObjectSchema {
-  const schemaMap: Joi.SchemaMap = {};
+export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.ObjectSchema<ParamsType> {
+  const schemaMap: Joi.SchemaMap<ParamsType> = {};
   params.forEach((param) => {
     const { id, label, description, required } = param;
     let base: Joi.StringSchema | Joi.BooleanSchema | Joi.NumberSchema;

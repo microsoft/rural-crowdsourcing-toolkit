@@ -7,10 +7,10 @@
 
 import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskGroupModel, MicrotaskModel } from '@karya/common';
-import { policyMap, NTotalPolicyParams } from '@karya/core';
+import { nTotalBasePolicy, NTotalPolicyParams } from '@karya/core';
 
 export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
-  ...policyMap['N_TOTAL'],
+  ...nTotalBasePolicy,
 
   /**
    * Return a list of assignable microtasks to the worker from a task

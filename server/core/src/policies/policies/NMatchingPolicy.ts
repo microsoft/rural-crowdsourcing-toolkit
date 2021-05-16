@@ -5,14 +5,14 @@
 // workers, and if necessary additional workers, until there are a total of n
 // completed assignments each with n matching responses for the microtask.
 
-import { PolicyInterface } from '../PolicyInterface';
+import { BasePolicyInterface } from '../PolicyInterface';
 
 export type NMatchingPolicyParams = {
   n: number;
   max: number;
 };
 
-export const nMatchingPolicy: PolicyInterface = {
+export const nMatchingBasePolicy: BasePolicyInterface<NMatchingPolicyParams> = {
   name: 'N_MATCHING',
   full_name: 'n Matching Responses',
 

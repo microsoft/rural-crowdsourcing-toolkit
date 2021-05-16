@@ -11,10 +11,10 @@ import {
   MicrotaskRecord,
   TaskRecord,
   WorkerRecord,
-  PolicyInterface,
+  BasePolicyInterface,
 } from '@karya/core';
 
-export interface BoxPolicyInterface<ParamsType = object> extends PolicyInterface {
+export interface BoxPolicyInterface<ParamsType> extends BasePolicyInterface<ParamsType> {
   /**
    * Get a list of assignable microtasks from a task to a particular user.
    * @param worker Record of worker to whom microtasks have to be assigned

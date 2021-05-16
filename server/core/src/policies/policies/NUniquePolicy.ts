@@ -5,14 +5,14 @@
 // workers, and if necessary additional workers, until there are a total of n
 // completed assignments each with a unique response for the microtask.
 
-import { PolicyInterface } from '../PolicyInterface';
+import { BasePolicyInterface } from '../PolicyInterface';
 
 export type NUniquePolicyParams = {
   n: number;
   max: number;
 };
 
-export const nUniquePolicy: PolicyInterface = {
+export const nUniqueBasePolicy: BasePolicyInterface<NUniquePolicyParams> = {
   name: 'N_UNIQUE',
   full_name: 'n Unique Responses',
 

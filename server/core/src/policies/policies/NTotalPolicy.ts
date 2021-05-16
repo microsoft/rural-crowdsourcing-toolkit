@@ -5,13 +5,13 @@
 // workers, and if necessary additional workers, until there are a total of n
 // completed assignments for the microtask.
 
-import { PolicyInterface } from '../PolicyInterface';
+import { BasePolicyInterface } from '../PolicyInterface';
 
 export type NTotalPolicyParams = {
   n: number;
 };
 
-export const nTotalPolicy: PolicyInterface = {
+export const nTotalBasePolicy: BasePolicyInterface<NTotalPolicyParams> = {
   name: 'N_TOTAL',
   full_name: 'n Total Responses',
 

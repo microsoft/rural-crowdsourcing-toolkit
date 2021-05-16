@@ -6,9 +6,9 @@
 // specifies the interface that should be implemented by any new policy.
 
 import { PolicyName } from './Index';
-import { ParameterDefinition } from '@karya/parameter-specs';
+import { ParameterArray } from '@karya/parameter-specs';
 
-export interface PolicyInterface {
+export interface BasePolicyInterface<ParamsType> {
   // Policy name
   name: PolicyName;
 
@@ -16,5 +16,5 @@ export interface PolicyInterface {
   full_name: string;
 
   // Parameters to be provided with the policy
-  params: ParameterDefinition[];
+  params: ParameterArray<ParamsType>;
 }

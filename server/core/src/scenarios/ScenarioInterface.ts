@@ -5,7 +5,7 @@
 // interface.
 
 import { ScenarioName } from './Index';
-import { ParameterDefinition } from '@karya/parameter-specs';
+import { ParameterArray } from '@karya/parameter-specs';
 import Joi from 'joi';
 
 /**
@@ -50,7 +50,13 @@ export type MicrotaskResponseType = 'UNIQUE' | 'MULTIPLE_OBJECTIVE' | 'MULTIPLE_
  *
  * This interface a formal specification of a scenario on the Karya platform.
  */
-export interface BaseScenarioInterface {
+export interface BaseScenarioInterface<
+  ScenarioParams,
+  MicrotaskInput,
+  MicrotaskInputFiles,
+  MicrotaskOutput,
+  MicrotaskOutputFiles
+> {
   // Unique identifier for the scenario
   name: ScenarioName;
 
@@ -61,7 +67,7 @@ export interface BaseScenarioInterface {
   description: string;
 
   // Parameters to be supplied with new tasks of this type.
-  task_input: ParameterDefinition[];
+  task_input: ParameterArray<ScenarioParams>;
 
   // Format for the input files for a task of this scenario. Each input can be a
   // combination of a JSON file and a tar ball. If a JSON file is required, then
@@ -86,17 +92,17 @@ export interface BaseScenarioInterface {
   // components. A JSON input and a set of file inputs.
 
   // Schema for the JSON input for the microtask
-  microtask_input: Joi.ObjectSchema;
+  microtask_input: Joi.ObjectSchema<MicrotaskInput>;
   // List of keys for the input files for the microtask
-  microtask_input_files: string[];
+  microtask_input_files: Array<keyof MicrotaskInputFiles>;
 
   // Output format for microtasks of this scenario. Microtask output contains two
   // components. A JSON output and a set of file outputs.
 
   // Schema for the JSON output for the microtask
-  microtask_output: Joi.ObjectSchema;
+  microtask_output: Joi.ObjectSchema<MicrotaskOutput>;
   // List of keys for the output files for the microtask
-  microtask_output_files: string[];
+  microtask_output_files: Array<keyof MicrotaskOutputFiles>;
 
   // Assignment granularity and order
   assignment_granularity: AssignmentGranularity;

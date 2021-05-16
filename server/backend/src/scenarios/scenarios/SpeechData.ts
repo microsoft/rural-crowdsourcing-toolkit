@@ -3,8 +3,8 @@
 //
 // Implementation of the speech-data scenario
 
-import { MicrotaskList, BackendScenarioInterface } from '../ScenarioInterface';
-import { Microtask, SpeechDataTaskRecord, SpeechDataScenario } from '@karya/core';
+import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
+import { Microtask, SpeechDataTaskRecord, baseSpeechDataScenario, BaseSpeechDataScenario } from '@karya/core';
 
 /**
  * Process the input file for the speech data task.
@@ -35,7 +35,7 @@ async function processInputFile(
 }
 
 // Backend speech data scenario
-export const backendSpeechDataScenario: BackendScenarioInterface = {
-  ...SpeechDataScenario,
+export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechDataScenario> = {
+  ...baseSpeechDataScenario,
   processInputFile,
 };
