@@ -59,22 +59,24 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun observeUi() {
     viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
       when (dashboardUiState) {
-        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.taskInfoData, dashboardUiState.totalCreditsEarned)
+        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
         is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable)
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
   }
 
-  private fun showSuccessUi(taskInfoList: List<TaskInfo>, totalCreditsEarned: Float?) {
+  private fun showSuccessUi(data: DashboardStateSucess) {
     hideLoading()
-    (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoList)
-    // Show total credits if it is greater than 0
-    if (totalCreditsEarned != null && totalCreditsEarned > 0) {
-      binding.rupeesEarnedCl.visible()
-      rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
-    } else {
-      binding.rupeesEarnedCl.gone()
+    data.apply {
+      (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
+      // Show total credits if it is greater than 0
+      if (totalCreditsEarned != null && totalCreditsEarned > 0.0f) {
+        binding.rupeesEarnedCl.visible()
+        rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+      } else {
+        binding.rupeesEarnedCl.gone()
+      }
     }
   }
 

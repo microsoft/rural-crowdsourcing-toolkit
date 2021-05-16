@@ -60,7 +60,7 @@ constructor(
     }
 
   private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
-    MutableStateFlow(DashboardUiState.Success(emptyList(), null))
+    MutableStateFlow(DashboardUiState.Success(DashboardStateSucess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
   fun syncWithServer() {
@@ -211,8 +211,11 @@ constructor(
           taskInfoList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
         }
 
-        val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id)
-        val success = DashboardUiState.Success(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+        val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+        val success =
+          DashboardUiState.Success(
+            DashboardStateSucess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+          )
         _dashboardUiState.emit(success)
       }
       .catch { _dashboardUiState.emit(DashboardUiState.Error(it)) }
