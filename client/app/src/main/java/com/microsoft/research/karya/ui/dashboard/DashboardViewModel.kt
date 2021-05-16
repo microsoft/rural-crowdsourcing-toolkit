@@ -55,7 +55,7 @@ constructor(
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
   private lateinit var loggedInWorker: WorkerRecord
 
-  private val taskInfoList = mutableListOf<TaskInfo>()
+  private var taskInfoList = listOf<TaskInfo>()
   private val taskInfoComparator =
     compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
       taskInfo.taskID
@@ -210,8 +210,10 @@ constructor(
       .distinctUntilChanged()
       .onEach { taskList ->
         taskList.forEach { taskRecord ->
+          val tempList = mutableListOf<TaskInfo>()
           val taskStatus = fetchTaskStatus(taskRecord.id)
-          taskInfoList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
+          tempList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
+          taskInfoList = tempList
         }
 
         val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
@@ -228,14 +230,17 @@ constructor(
   fun updateTaskStatus(taskId: String) {
     viewModelScope.launch {
       val taskStatus = fetchTaskStatus(taskId)
-      taskInfoList.map { taskInfo ->
-        if (taskInfo.taskID == taskId) {
-          taskInfo.copy(taskStatus = taskStatus)
-        } else {
-          taskInfo
-        }
-      }
 
+      val updatedList =
+        taskInfoList.map { taskInfo ->
+          if (taskInfo.taskID == taskId) {
+            taskInfo.copy(taskStatus = taskStatus)
+          } else {
+            taskInfo
+          }
+        }
+
+      taskInfoList = updatedList
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
     }
