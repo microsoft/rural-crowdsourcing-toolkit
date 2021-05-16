@@ -18,6 +18,7 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
@@ -58,16 +59,23 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun observeUi() {
     viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
       when (dashboardUiState) {
-        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
+        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.taskInfoData, dashboardUiState.totalCreditsEarned)
         is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable)
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
   }
 
-  private fun showSuccessUi(taskInfoList: List<TaskInfo>) {
+  private fun showSuccessUi(taskInfoList: List<TaskInfo>, totalCreditsEarned: Float?) {
     hideLoading()
     (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoList)
+    // Show total credits if it is greater than 0
+    if (totalCreditsEarned != null && totalCreditsEarned > 0) {
+      binding.rupeesEarnedCl.visible()
+      rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+    } else {
+      binding.rupeesEarnedCl.gone()
+    }
   }
 
   private fun showErrorUi(throwable: Throwable) {

@@ -154,4 +154,8 @@ constructor(
   suspend fun getNewVerifiedAssignmentsFromTime(worker_id: String): String {
     return assignmentDao.getNewVerifiedAssignmentsFromTime(worker_id) ?: AppConstants.INITIAL_TIME
   }
+
+  suspend fun getTotalCreditsEarned(worker_id: String): Float? {
+    return assignmentDaoExtra.getTotalCreditsEarned(worker_id)
+  }
 }
