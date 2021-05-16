@@ -30,7 +30,7 @@ constructor(
       error("Either Access Code or ID Token is required")
     }
 
-    val response = assignmentAPI.getAssignments(idToken, from)
+    val response = assignmentAPI.getNewAssignments(idToken, from)
     val assignmentResponse = response.body()
 
     if (!response.isSuccessful) {

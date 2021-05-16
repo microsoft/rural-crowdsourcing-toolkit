@@ -17,7 +17,7 @@ interface MicroTaskAssignmentAPI {
   ): Response<List<String>>
 
   @GET("/assignments")
-  suspend fun getAssignments(
+  suspend fun getNewAssignments(
     @Header("karya-id-token") idTokenHeader: String,
     @Query("from") from: String,
     @Query("type") type: String = "new",
