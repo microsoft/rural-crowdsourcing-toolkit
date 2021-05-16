@@ -3,6 +3,7 @@
 
 package com.microsoft.research.karya.ui.scenarios.common
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
@@ -266,6 +267,7 @@ abstract class MicrotaskRenderer(
       currentAssignmentIndex++
       getAndSetupMicrotask()
     } else {
+      setResult(Activity.RESULT_OK, intent)
       finish()
     }
   }
@@ -279,6 +281,7 @@ abstract class MicrotaskRenderer(
       currentAssignmentIndex--
       getAndSetupMicrotask()
     } else {
+      setResult(Activity.RESULT_OK, intent)
       finish()
     }
   }
@@ -345,6 +348,7 @@ abstract class MicrotaskRenderer(
 
         // If there are no microtasks, move back to the dashboard
         if (microtaskAssignmentIDs.isEmpty()) {
+          setResult(Activity.RESULT_OK, intent)
           finish()
         }
 
@@ -417,12 +421,18 @@ abstract class MicrotaskRenderer(
     /** If any of the permissions were not granted, return */
     for (result in grantResults) {
       if (result != PackageManager.PERMISSION_GRANTED) {
+        setResult(Activity.RESULT_CANCELED, intent)
         finish()
         return
       }
     }
 
     hasAllPermissions = true
+  }
+
+  override fun onBackPressed() {
+    setResult(Activity.RESULT_OK, intent)
+    super.onBackPressed()
   }
 
   /** On stop, just cleanup */
@@ -470,7 +480,10 @@ abstract class MicrotaskRenderer(
             alertDialogBuilder.setMessage(
               "Input files were not fully downloaded. Please sync with server to download all files"
             )
-            alertDialogBuilder.setPositiveButton("Okay") { _, _ -> finish() }
+            alertDialogBuilder.setPositiveButton("Okay") { _, _ ->
+              setResult(Activity.RESULT_CANCELED, intent)
+              finish()
+            }
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
           }
@@ -490,6 +503,7 @@ abstract class MicrotaskRenderer(
           currentMicroTask.group_id != null &&
           currentMicroTask.group_id != currentMicrotaskGroupId
       ) {
+        setResult(Activity.RESULT_OK, intent)
         finish()
       }
       currentMicrotaskGroupId = currentMicroTask.group_id

@@ -3,6 +3,7 @@
 
 package com.microsoft.research.karya.ui.scenarios.speechData
 
+import android.app.Activity
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
@@ -954,18 +955,21 @@ open class SpeechDataMain(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING, -> {
+        setResult(Activity.RESULT_OK, intent)
         finish()
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED, -> {
         runBlocking {
           encodeRecording()
           completeAndSaveCurrentMicrotask()
+          setResult(Activity.RESULT_OK, intent)
           finish()
         }
       }
       ActivityState.ENCODING_NEXT, ActivityState.ENCODING_BACK, -> {
         runBlocking {
           encodingJob?.join()
+          setResult(Activity.RESULT_OK, intent)
           finish()
         }
       }
