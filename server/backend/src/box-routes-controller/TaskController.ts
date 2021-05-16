@@ -69,7 +69,7 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
     let groups: MicrotaskGroupRecord[] = [];
 
     // Get all groups+microtasks or microtasks
-    if (task.assignment_granularity == 'group') {
+    if (task.assignment_granularity == 'GROUP') {
       groups = await BasicModel.ngGetRecords(
         'microtask_group',
         { task_id: ctx.state.task.id },
