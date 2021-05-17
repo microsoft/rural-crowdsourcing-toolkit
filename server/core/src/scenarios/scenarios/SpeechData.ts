@@ -94,7 +94,7 @@ export const baseSpeechDataScenario: BaseSpeechDataScenario = {
   description: 'This scenario allows for collection of speech data from a text corpus.',
   task_input,
   task_input_file,
-  microtask_input: Joi.object({ sentence: Joi.string() }),
+  microtask_input: Joi.object({ sentence: Joi.string().required() }),
   microtask_input_files: [],
   microtask_output: Joi.object({}),
   microtask_output_files: ['recording'],
