@@ -76,7 +76,8 @@ constructor(
       fetchVerifiedAssignments()
       cleanupKaryaFiles()
 
-      _dashboardUiState.emit(DashboardUiState.Success(taskInfoList))
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+      _dashboardUiState.emit(DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned)))
     }
   }
 
@@ -235,7 +236,8 @@ constructor(
         }
       }
 
-      _dashboardUiState.value = DashboardUiState.Success(taskInfoList)
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
     }
   }
 
