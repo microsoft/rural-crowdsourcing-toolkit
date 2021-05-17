@@ -5,20 +5,24 @@
 // execution of task operations: processing input files, and generating output
 // files.
 
-import { ScenarioName, TaskOpRecord, TaskRecord } from '@karya/core';
+import { BlobParameters, getBlobName, ScenarioName, TaskOpRecord, TaskRecord } from '@karya/core';
 import { BackendScenarioInterface } from './ScenarioInterface';
 import Bull from 'bull';
 import { promises as fsp } from 'fs';
 import { Promise as BBPromise } from 'bluebird';
 import { BasicModel } from '@karya/common';
+import tar from 'tar';
+import { upsertKaryaFile } from '../models/KaryaFileModel';
 
 import { backendSpeechDataScenario } from './scenarios/SpeechData';
 import { backendTextTranslationScenario } from './scenarios/TextTranslation';
+import { backendSpeechVerificationScenario } from './scenarios/SpeechVerification';
 
 // Local scenario Map
 const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<any, object, any, object, any> } = {
   SPEECH_DATA: backendSpeechDataScenario,
   TEXT_TRANSLATION: backendTextTranslationScenario,
+  SPEECH_VERIFICATION: backendSpeechVerificationScenario,
 };
 
 // Task input processor queue
@@ -100,7 +104,7 @@ async function processInputFile(task: TaskRecord, jsonFilePath?: string, tgzFile
     if (!tgzFilePath) {
       throw new Error('Task requires tgz file input');
     }
-    // TODO: Extract tgz files?
+    await tar.x({ file: tgzFilePath, C: taskFolder });
   }
 
   // Process input files for the scenario
@@ -115,11 +119,25 @@ async function processInputFile(task: TaskRecord, jsonFilePath?: string, tgzFile
 
     // extract microtasks and create them
     await BBPromise.mapSeries(microtasks, async (microtask) => {
-      await BasicModel.insertRecord('microtask', { ...microtask, group_id });
+      const mtRecord = await BasicModel.insertRecord('microtask', { ...microtask, group_id });
 
-      // TODO: create and upload microtask input files if necessary
-      // TODO: Microtask object should always carry an input
-      if (microtask.input?.files) {
+      // create and upload microtask input files if necessary
+      if (mtRecord.input.files) {
+        const fileList = Object.values(mtRecord.input.files);
+        const inputBlobParams: BlobParameters = {
+          cname: 'microtask-input',
+          microtask_id: mtRecord.id,
+          ext: 'tgz',
+        };
+        const inputTgzFileName = getBlobName(inputBlobParams);
+        const inputTgzFilePath = `${taskFolder}/${inputTgzFileName}`;
+
+        // Create the tar ball
+        await tar.c({ C: taskFolder, file: inputTgzFilePath, gzip: true }, fileList);
+        const fileRecord = await upsertKaryaFile(inputTgzFilePath, 'MD5', inputBlobParams);
+
+        // Update the microtask record
+        await BasicModel.updateSingle('microtask', { id: mtRecord.id }, { input_file_id: fileRecord.id });
       }
     });
   });
