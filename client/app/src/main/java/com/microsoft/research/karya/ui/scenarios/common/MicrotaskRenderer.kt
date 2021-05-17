@@ -330,7 +330,7 @@ abstract class MicrotaskRenderer(
       ioScope.launch { task = karyaDb.taskDao().getById(taskId) }.join()
 
       ioScope.launch {
-        val firstRunKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_RUN)
+        val firstRunKey = booleanPreferencesKey(PreferenceKeys.SPEECH_DATA_ACTIVITY_VISITED)
         val data = applicationContext.dataStore.data.first()
         firstTimeActivityVisit = data[firstRunKey] ?: true
         applicationContext.dataStore.edit { prefs -> prefs[firstRunKey] = false }

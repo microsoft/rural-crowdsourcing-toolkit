@@ -19,6 +19,8 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.Butto
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ENABLED
 import com.microsoft.research.karya.utils.RawToAACEncoder
+import com.microsoft.research.karya.utils.extensions.invisible
+import com.microsoft.research.karya.utils.extensions.visible
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
@@ -571,12 +573,12 @@ open class SpeechDataMain(
       AssistantAudio.RECORD_SENTENCE,
       uiCue = {
         sentenceTv.setTextColor(Color.parseColor("#CC6666"))
-        sentencePointerIv.visibility = View.VISIBLE
+        sentencePointerIv.visible()
       },
       onCompletionListener = {
         uiScope.launch {
           sentenceTv.setTextColor(oldColor)
-          sentencePointerIv.visibility = View.INVISIBLE
+          sentencePointerIv.invisible()
           delay(500)
           playRecordAction()
         }
@@ -590,12 +592,12 @@ open class SpeechDataMain(
       assistant.playAssistantAudio(
         AssistantAudio.RECORD_ACTION,
         uiCue = {
-          recordPointerIv.visibility = View.VISIBLE
+          recordPointerIv.visible()
           recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
         },
         onCompletionListener = {
           uiScope.launch {
-            recordPointerIv.visibility = View.INVISIBLE
+            recordPointerIv.invisible()
             delay(500)
             playStopAction()
           }
@@ -611,10 +613,10 @@ open class SpeechDataMain(
     uiScope.launch {
       assistant.playAssistantAudio(
         AssistantAudio.STOP_ACTION,
-        uiCue = { recordPointerIv.visibility = View.VISIBLE },
+        uiCue = { recordPointerIv.visible() },
         onCompletionListener = {
           uiScope.launch {
-            recordPointerIv.visibility = View.INVISIBLE
+            recordPointerIv.invisible()
             delay(500)
             playListenAction()
           }
@@ -630,13 +632,13 @@ open class SpeechDataMain(
     assistant.playAssistantAudio(
       AssistantAudio.LISTEN_ACTION,
       uiCue = {
-        playPointerIv.visibility = View.VISIBLE
+        playPointerIv.visible()
         playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
       },
       onCompletionListener = {
         uiScope.launch {
           playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
-          playPointerIv.visibility = View.INVISIBLE
+          playPointerIv.invisible()
           delay(500)
           playRerecordAction()
         }
@@ -649,13 +651,13 @@ open class SpeechDataMain(
     assistant.playAssistantAudio(
       AssistantAudio.RERECORD_ACTION,
       uiCue = {
-        recordPointerIv.visibility = View.VISIBLE
+        recordPointerIv.visible()
         recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
       },
       onCompletionListener = {
         uiScope.launch {
           recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-          recordPointerIv.visibility = View.INVISIBLE
+          recordPointerIv.invisible()
           delay(500)
           playNextAction()
         }
@@ -668,13 +670,13 @@ open class SpeechDataMain(
     assistant.playAssistantAudio(
       AssistantAudio.NEXT_ACTION,
       uiCue = {
-        nextPointerIv.visibility = View.VISIBLE
+        nextPointerIv.visible()
         nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
       },
       onCompletionListener = {
         uiScope.launch {
           nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
-          nextPointerIv.visibility = View.INVISIBLE
+          nextPointerIv.invisible()
           delay(500)
           playPreviousAction()
         }
@@ -687,13 +689,13 @@ open class SpeechDataMain(
     assistant.playAssistantAudio(
       AssistantAudio.PREVIOUS_ACTION,
       uiCue = {
-        backPointerIv.visibility = View.VISIBLE
+        backPointerIv.visible()
         backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
       },
       onCompletionListener = {
         uiScope.launch {
           backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
-          backPointerIv.visibility = View.INVISIBLE
+          backPointerIv.invisible()
           delay(500)
           moveToPrerecording()
         }
