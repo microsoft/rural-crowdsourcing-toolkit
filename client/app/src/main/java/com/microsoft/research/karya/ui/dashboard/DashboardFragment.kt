@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.dashboard
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +26,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
+  val taskActivityLauncher =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+      val taskId = result.data?.getStringExtra("taskID") ?: return@registerForActivityResult
+
+      viewModel.updateTaskStatus(taskId)
+    }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -106,7 +113,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       }
 
     nextIntent.putExtra("taskID", task.taskID)
-
-    startActivity(nextIntent)
+    taskActivityLauncher.launch(nextIntent)
   }
 }

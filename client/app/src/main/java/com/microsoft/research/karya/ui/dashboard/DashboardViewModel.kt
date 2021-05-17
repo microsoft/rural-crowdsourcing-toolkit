@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -54,6 +55,7 @@ constructor(
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
   private lateinit var loggedInWorker: WorkerRecord
 
+  private val taskInfoList = mutableListOf<TaskInfo>()
   private val taskInfoComparator =
     compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
       taskInfo.taskID
@@ -73,7 +75,9 @@ constructor(
       fetchNewAssignments()
       fetchVerifiedAssignments()
       cleanupKaryaFiles()
-      getAllTasks() // TODO: Remove it once we fix the hot flow issue
+
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+      _dashboardUiState.emit(DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned)))
     }
   }
 
@@ -203,9 +207,8 @@ constructor(
   fun getAllTasks() {
     taskRepository
       .getAllTasksFlow()
+      .distinctUntilChanged()
       .onEach { taskList ->
-        val taskInfoList = mutableListOf<TaskInfo>()
-
         taskList.forEach { taskRecord ->
           val taskStatus = fetchTaskStatus(taskRecord.id)
           taskInfoList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
@@ -220,6 +223,22 @@ constructor(
       }
       .catch { _dashboardUiState.emit(DashboardUiState.Error(it)) }
       .launchIn(viewModelScope)
+  }
+
+  fun updateTaskStatus(taskId: String) {
+    viewModelScope.launch {
+      val taskStatus = fetchTaskStatus(taskId)
+      taskInfoList.map { taskInfo ->
+        if (taskInfo.taskID == taskId) {
+          taskInfo.copy(taskStatus = taskStatus)
+        } else {
+          taskInfo
+        }
+      }
+
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
+    }
   }
 
   private suspend fun fetchTaskStatus(taskId: String): TaskStatus {
