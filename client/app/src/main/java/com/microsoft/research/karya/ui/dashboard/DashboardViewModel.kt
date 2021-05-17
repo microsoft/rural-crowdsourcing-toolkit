@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -74,6 +73,14 @@ constructor(
       fetchNewAssignments()
       fetchVerifiedAssignments()
       cleanupKaryaFiles()
+
+      // This is a hack to refresh the list if no new assignments were fetched from the API.
+      val tempList = mutableListOf<TaskInfo>()
+      taskInfoList.forEach { taskInfo ->
+        val taskStatus = fetchTaskStatus(taskInfo.taskID)
+        tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
+      }
+      taskInfoList = tempList
 
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
@@ -220,7 +227,6 @@ constructor(
 
       taskRepository
         .getAllTasksFlow()
-        .distinctUntilChanged()
         .flowOn(Dispatchers.IO)
         .onEach { taskList ->
           val tempList = mutableListOf<TaskInfo>()
