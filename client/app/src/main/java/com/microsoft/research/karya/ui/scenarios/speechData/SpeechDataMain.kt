@@ -4,6 +4,7 @@
 package com.microsoft.research.karya.ui.scenarios.speechData
 
 import android.app.Activity
+import android.graphics.Color
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
@@ -11,16 +12,16 @@ import android.media.MediaRecorder
 import android.view.View
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.*
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ACTIVE
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.DISABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.ButtonState.ENABLED
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
-import java.lang.Runnable
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -564,34 +565,30 @@ open class SpeechDataMain(
   }
 
   private fun playRecordPrompt() {
-    // TODO: MOVE TO NEW ASSISTANT
-    moveToPrerecording()
-    //    val oldColor = sentenceTv.currentTextColor
-    //    val filePath = getAudioFilePath(R.string.audio_record_sentence)
-    //
-    //    assistant.playAssistantAudio(
-    //      filePath,
-    //      uiCue = {
-    //        sentenceTv.setTextColor(Color.parseColor("#CC6666"))
-    //        sentencePointerIv.visibility = View.VISIBLE
-    //      },
-    //      onCompletionListener = {
-    //        uiScope.launch {
-    //          sentenceTv.setTextColor(oldColor)
-    //          sentencePointerIv.visibility = View.INVISIBLE
-    //          delay(500)
-    //          playRecordAction()
-    //        }
-    //      }
-    //    )
+    val oldColor = sentenceTv.currentTextColor
+
+    assistant.playAssistantAudio(
+      AssistantAudio.RECORD_SENTENCE,
+      uiCue = {
+        sentenceTv.setTextColor(Color.parseColor("#CC6666"))
+        sentencePointerIv.visibility = View.VISIBLE
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          sentenceTv.setTextColor(oldColor)
+          sentencePointerIv.visibility = View.INVISIBLE
+          delay(500)
+          playRecordAction()
+        }
+      }
+    )
   }
 
   private fun playRecordAction() {
-    val filePath = getAudioFilePath(R.string.audio_record_action)
 
     uiScope.launch {
       assistant.playAssistantAudio(
-        filePath,
+        AssistantAudio.RECORD_ACTION,
         uiCue = {
           recordPointerIv.visibility = View.VISIBLE
           recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
@@ -610,31 +607,28 @@ open class SpeechDataMain(
   }
 
   private fun playStopAction() {
-    // TODO: MOVE TO NEW ASSISTANT
-    //    val filePath = getAudioFilePath(R.string.audio_stop_action)
-    //
-    //    uiScope.launch {
-    //      assistant.playAssistantAudio(
-    //        filePath,
-    //        uiCue = { recordPointerIv.visibility = View.VISIBLE },
-    //        onCompletionListener = {
-    //          uiScope.launch {
-    //            recordPointerIv.visibility = View.INVISIBLE
-    //            delay(500)
-    //            playListenAction()
-    //          }
-    //        }
-    //      )
-    //      delay(500)
-    //      recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-    //    }
+
+    uiScope.launch {
+      assistant.playAssistantAudio(
+        AssistantAudio.STOP_ACTION,
+        uiCue = { recordPointerIv.visibility = View.VISIBLE },
+        onCompletionListener = {
+          uiScope.launch {
+            recordPointerIv.visibility = View.INVISIBLE
+            delay(500)
+            playListenAction()
+          }
+        }
+      )
+      delay(500)
+      recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+    }
   }
 
   private fun playListenAction() {
-    val filePath = getAudioFilePath(R.string.audio_listen_action)
 
     assistant.playAssistantAudio(
-      filePath,
+      AssistantAudio.LISTEN_ACTION,
       uiCue = {
         playPointerIv.visibility = View.VISIBLE
         playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
@@ -651,31 +645,28 @@ open class SpeechDataMain(
   }
 
   private fun playRerecordAction() {
-    // TODO: MOVE TO NEW ASSISTANT
-    //    val filePath = getAudioFilePath(R.string.audio_rerecord_action)
-    //
-    //    assistant.playAssistantAudio(
-    //      filePath,
-    //      uiCue = {
-    //        recordPointerIv.visibility = View.VISIBLE
-    //        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
-    //      },
-    //      onCompletionListener = {
-    //        uiScope.launch {
-    //          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
-    //          recordPointerIv.visibility = View.INVISIBLE
-    //          delay(500)
-    //          playNextAction()
-    //        }
-    //      }
-    //    )
+
+    assistant.playAssistantAudio(
+      AssistantAudio.RERECORD_ACTION,
+      uiCue = {
+        recordPointerIv.visibility = View.VISIBLE
+        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+          recordPointerIv.visibility = View.INVISIBLE
+          delay(500)
+          playNextAction()
+        }
+      }
+    )
   }
 
   private fun playNextAction() {
-    val filePath = getAudioFilePath(R.string.audio_next_action)
 
     assistant.playAssistantAudio(
-      filePath,
+      AssistantAudio.NEXT_ACTION,
       uiCue = {
         nextPointerIv.visibility = View.VISIBLE
         nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
@@ -692,24 +683,22 @@ open class SpeechDataMain(
   }
 
   private fun playPreviousAction() {
-    // TODO: MOVE TO NEW ASSISTANT
-    //    val filePath = getAudioFilePath(R.string.audio_previous_action)
-    //
-    //    assistant.playAssistantAudio(
-    //      filePath,
-    //      uiCue = {
-    //        backPointerIv.visibility = View.VISIBLE
-    //        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
-    //      },
-    //      onCompletionListener = {
-    //        uiScope.launch {
-    //          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
-    //          backPointerIv.visibility = View.INVISIBLE
-    //          delay(500)
-    //          moveToPrerecording()
-    //        }
-    //      }
-    //    )
+
+    assistant.playAssistantAudio(
+      AssistantAudio.PREVIOUS_ACTION,
+      uiCue = {
+        backPointerIv.visibility = View.VISIBLE
+        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
+      },
+      onCompletionListener = {
+        uiScope.launch {
+          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+          backPointerIv.visibility = View.INVISIBLE
+          delay(500)
+          moveToPrerecording()
+        }
+      }
+    )
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
@@ -873,10 +862,10 @@ open class SpeechDataMain(
     setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
 
     when (activityState) {
-      ActivityState.COMPLETED_PRERECORDING, ActivityState.OLD_PLAYING, ActivityState.OLD_PAUSED, -> {
+      ActivityState.COMPLETED_PRERECORDING, ActivityState.OLD_PLAYING, ActivityState.OLD_PAUSED -> {
         setActivityState(ActivityState.SIMPLE_NEXT)
       }
-      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED, -> {
+      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
         setActivityState(ActivityState.ENCODING_NEXT)
       }
@@ -915,7 +904,7 @@ open class SpeechDataMain(
       ActivityState.OLD_PAUSED, -> {
         setActivityState(ActivityState.SIMPLE_BACK)
       }
-      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED, -> {
+      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
         setActivityState(ActivityState.ENCODING_BACK)
       }
@@ -958,7 +947,7 @@ open class SpeechDataMain(
         setResult(Activity.RESULT_OK, intent)
         finish()
       }
-      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED, -> {
+      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         runBlocking {
           encodeRecording()
           completeAndSaveCurrentMicrotask()
@@ -966,7 +955,7 @@ open class SpeechDataMain(
           finish()
         }
       }
-      ActivityState.ENCODING_NEXT, ActivityState.ENCODING_BACK, -> {
+      ActivityState.ENCODING_NEXT, ActivityState.ENCODING_BACK -> {
         runBlocking {
           encodingJob?.join()
           setResult(Activity.RESULT_OK, intent)
