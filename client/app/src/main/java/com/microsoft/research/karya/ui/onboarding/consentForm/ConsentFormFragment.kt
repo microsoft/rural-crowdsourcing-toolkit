@@ -56,7 +56,7 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
 
     with(binding) {
       appTb.setTitle(getString(R.string.s_consent_form_title))
-      appTb.setAssistant { assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY) }
+      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY) }
 
       consentFormTv.text = spannedText
       consentFormTv.movementMethod = ScrollingMovementMethod()

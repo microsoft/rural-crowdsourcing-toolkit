@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -66,6 +67,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       syncCv.setOnClickListener { viewModel.syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
+      appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
       loadProfilePic()
     }
   }
@@ -80,7 +82,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
   }
 
-  private fun showSuccessUi(data: DashboardStateSucess) {
+  private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
