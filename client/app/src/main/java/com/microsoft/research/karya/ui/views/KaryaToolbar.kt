@@ -43,6 +43,13 @@ class KaryaToolbar : Toolbar {
     }
   }
 
+  fun setProfileClickListener(onClick: () -> Unit) {
+    binding.profilePictureIv.apply {
+      visible()
+      setOnClickListener { onClick() }
+    }
+  }
+
   fun setAssistantClickListener(onClick: () -> Unit) {
     binding.assistantCv.apply {
       visible()
