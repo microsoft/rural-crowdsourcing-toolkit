@@ -10,6 +10,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -21,11 +23,14 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentSt
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.assistant.Assistant
+import com.microsoft.research.karya.ui.assistant.AssistantFactory
 import com.microsoft.research.karya.utils.DateUtils.getCurrentDate
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.LangRes
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
+import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import com.microsoft.research.karya.utils.extensions.getContainerDirectory
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +41,7 @@ import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -54,7 +60,8 @@ abstract class MicrotaskRenderer(
 ) : AppCompatActivity() {
 
   /** Assistant */
-  protected lateinit var assistant: Assistant
+  @Inject lateinit var assistantFactory: AssistantFactory
+  lateinit var assistant: Assistant
 
   @Inject @FilesDir lateinit var fileDirPath: String
 
@@ -306,7 +313,7 @@ abstract class MicrotaskRenderer(
     langResourceContainer = LangRes(fileDirPath)
 
     // Setting up assistant
-    //    assistant = Assistant(this)
+    assistant = assistantFactory.create(this)
 
     // Set db and API service
     karyaDb = KaryaDatabase.getInstance(this)!!
@@ -322,14 +329,11 @@ abstract class MicrotaskRenderer(
       /** Fetch the task */
       ioScope.launch { task = karyaDb.taskDao().getById(taskId) }.join()
 
-      // TODO: Maybe pass an intent extra rather than storing in database
       ioScope.launch {
-        firstTimeActivityVisit =
-          try {
-            !thisWorker.params!!.asJsonObject.get(activityName).asBoolean
-          } catch (e: Exception) {
-            true
-          }
+        val firstRunKey = booleanPreferencesKey(PreferenceKeys.SPEECH_DATA_ACTIVITY_VISITED)
+        val data = applicationContext.dataStore.data.first()
+        firstTimeActivityVisit = data[firstRunKey] ?: true
+        applicationContext.dataStore.edit { prefs -> prefs[firstRunKey] = false }
       }
 
       /** Mark the activity as visited */
