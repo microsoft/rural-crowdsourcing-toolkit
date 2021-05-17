@@ -49,7 +49,7 @@ class SelectGenderFragment : BaseFragment(R.layout.fragment_select_gender) {
       submitGenderIb.setOnClickListener { viewModel.updateWorkerGender() }
 
       appTb.setTitle(getString(R.string.s_gender_title))
-      appTb.setAssistant { assistant.playAssistantAudio(AssistantAudio.GENDER_PROMPT) }
+      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.GENDER_PROMPT) }
 
       disableGenderSubmitButton()
     }

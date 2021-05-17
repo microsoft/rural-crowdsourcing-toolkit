@@ -56,7 +56,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
       rotateRightIb.setOnClickListener { viewModel.rotateProfileImage() }
 
       appTb.setTitle(getString(R.string.s_profile_pic_title))
-      appTb.setAssistant { assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT) }
+      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT) }
     }
   }
 

@@ -43,7 +43,7 @@ class KaryaToolbar : Toolbar {
     }
   }
 
-  fun setAssistant(onClick: () -> Unit) {
+  fun setAssistantClickListener(onClick: () -> Unit) {
     binding.assistantCv.apply {
       visible()
       setOnClickListener { onClick() }
