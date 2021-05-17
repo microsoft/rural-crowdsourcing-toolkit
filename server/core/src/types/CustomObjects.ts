@@ -5,13 +5,13 @@
 // not defined anywhere else.
 
 // Microtask Input
-export type MicrotaskInput<InputData = object, InputFile = string> = {
+export type MicrotaskInput<InputData = object, InputFiles = { [id: string]: string }> = {
   data: InputData;
-  files?: InputFile[];
+  files?: InputFiles;
 };
 
 // Microtask Output
-export type MicrotaskOutput<OutputData = object, OutputFile = string> = {
+export type MicrotaskOutput<OutputData = object, OutputFiles = { [id: string]: string }> = {
   data: OutputData;
-  files?: OutputFile[];
+  files?: OutputFiles;
 };
