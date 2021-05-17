@@ -80,7 +80,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
   }
 
-  private fun showSuccessUi(data: DashboardStateSucess) {
+  private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)

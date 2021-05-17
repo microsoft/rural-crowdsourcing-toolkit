@@ -61,7 +61,7 @@ constructor(
     }
 
   private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
-    MutableStateFlow(DashboardUiState.Success(DashboardStateSucess(emptyList(), 0.0f)))
+    MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
   fun syncWithServer() {
@@ -76,7 +76,7 @@ constructor(
       cleanupKaryaFiles()
 
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
-      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
+      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
     }
   }
 
@@ -233,7 +233,7 @@ constructor(
           val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
           val success =
             DashboardUiState.Success(
-              DashboardStateSucess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+              DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
             )
           _dashboardUiState.value = success
         }
@@ -259,7 +259,7 @@ constructor(
 
       taskInfoList = updatedList
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
-      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
+      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
     }
   }
 
