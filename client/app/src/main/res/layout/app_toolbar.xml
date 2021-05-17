@@ -22,8 +22,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePictureIv"
-            android:layout_width="@dimen/_35sdp"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:contentDescription="profile picture"
             android:visibility="gone"
@@ -51,8 +51,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/assistantCv"
-            android:layout_width="@dimen/_34sdp"
-            android:layout_height="@dimen/_34sdp"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
             android:layout_marginVertical="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_5sdp"
             android:clickable="true"
@@ -61,7 +61,7 @@
             android:padding="@dimen/_5sdp"
             android:translationZ="@dimen/_5sdp"
             android:visibility="gone"
-            app:cardCornerRadius="@dimen/_17sdp"
+            app:cardCornerRadius="@dimen/_18sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

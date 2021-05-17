@@ -4,13 +4,14 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
 import com.microsoft.research.karya.ui.Destination
+import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -18,7 +19,7 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
 
   private val binding by viewBinding(FragmentProfilePictureBinding::bind)
   private val viewModel by viewModels<ProfileViewModel>()
@@ -41,6 +42,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
     // disableRotateButton()
   }
 
+  override fun onResume() {
+    super.onResume()
+    assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT)
+  }
+
   private fun setupView() {
     with(binding) {
       mainProfilePictureIv.setOnClickListener { selectPicture.launch(null) }
@@ -50,6 +56,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile_picture) {
       rotateRightIb.setOnClickListener { viewModel.rotateProfileImage() }
 
       appTb.setTitle(getString(R.string.s_profile_pic_title))
+      appTb.setAssistant { assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT) }
     }
   }
 
