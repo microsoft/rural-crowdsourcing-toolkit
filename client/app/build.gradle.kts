@@ -112,6 +112,7 @@ dependencies {
     implementation(Dependencies.Kotlin.Coroutines.core)
     implementation(Dependencies.Kotlin.Coroutines.coroutines)
 
+    implementation(Dependencies.ThirdParty.circleImageView)
     implementation(Dependencies.ThirdParty.glide)
     implementation(Dependencies.ThirdParty.okhttp)
     implementation(Dependencies.ThirdParty.loggingInterceptor)

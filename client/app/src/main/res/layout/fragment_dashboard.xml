@@ -10,6 +10,8 @@
 
     <com.microsoft.research.karya.ui.views.KaryaToolbar
         android:id="@+id/appTb"
+        android:paddingBottom="@dimen/_8sdp"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
