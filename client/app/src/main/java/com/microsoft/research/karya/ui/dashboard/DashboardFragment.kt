@@ -17,12 +17,15 @@ import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
+import com.microsoft.research.karya.utils.extensions.disable
+import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -84,6 +87,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
+    syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
@@ -98,10 +102,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showErrorUi(throwable: Throwable) {
     hideLoading()
+    syncCv.enable()
   }
 
   private fun showLoadingUi() {
     showLoading()
+    syncCv.disable()
   }
 
   private fun showLoading() = binding.syncProgressBar.visible()
