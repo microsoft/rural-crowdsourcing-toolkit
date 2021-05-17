@@ -8,14 +8,17 @@
 import { ScenarioName, TaskOpRecord, TaskRecord } from '@karya/core';
 import { BackendScenarioInterface } from './ScenarioInterface';
 import Bull from 'bull';
-import { backendSpeechDataScenario } from './scenarios/SpeechData';
 import { promises as fsp } from 'fs';
 import { Promise as BBPromise } from 'bluebird';
 import { BasicModel } from '@karya/common';
 
+import { backendSpeechDataScenario } from './scenarios/SpeechData';
+import { backendTextTranslationScenario } from './scenarios/TextTranslation';
+
 // Local scenario Map
 const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<any, object, any, object, any> } = {
   SPEECH_DATA: backendSpeechDataScenario,
+  TEXT_TRANSLATION: backendTextTranslationScenario,
 };
 
 // Task input processor queue
