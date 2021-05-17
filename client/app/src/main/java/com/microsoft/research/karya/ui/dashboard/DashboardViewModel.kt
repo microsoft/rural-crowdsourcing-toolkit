@@ -9,7 +9,6 @@ import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
@@ -26,13 +25,14 @@ import com.microsoft.research.karya.utils.extensions.getBlobPath
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -53,7 +53,6 @@ constructor(
 
   private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
-  private lateinit var loggedInWorker: WorkerRecord
 
   private var taskInfoList = listOf<TaskInfo>()
   private val taskInfoComparator =
@@ -67,17 +66,17 @@ constructor(
 
   fun syncWithServer() {
     viewModelScope.launch {
-      _dashboardUiState.emit(DashboardUiState.Loading)
+      _dashboardUiState.value = DashboardUiState.Loading
       // Refresh loggedIn Worker
-      loggedInWorker = authManager.fetchLoggedInWorker()
+      val worker = authManager.fetchLoggedInWorker()
 
       submitCompletedAssignments()
       fetchNewAssignments()
       fetchVerifiedAssignments()
       cleanupKaryaFiles()
 
-      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
-      _dashboardUiState.emit(DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned)))
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
+      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
     }
   }
 
@@ -88,6 +87,9 @@ constructor(
 
   private suspend fun downloadInputFiles() {
     // Get the list of assignments for which the input file has to be downloaded
+    val worker = authManager.fetchLoggedInWorker()
+    checkNotNull(worker.idToken) { "Worker's idToken was null" }
+
     val filteredAssignments =
       assignmentRepository
         .getIncompleteAssignments()
@@ -105,21 +107,23 @@ constructor(
     // Download each file
     for (assignment in filteredAssignments) {
       assignmentRepository
-        .getInputFile(loggedInWorker.idToken!!, assignment.id)
+        .getInputFile(worker.idToken, assignment.id)
         .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
-        .collect() { response ->
+        .collect { response ->
           downloadFileToLocalPath(response, microtaskInputContainer.getBlobPath(assignment.microtask_id))
         }
     }
   }
 
   private suspend fun receiveDbUpdates() {
-    val idToken = loggedInWorker.idToken!!
-    val from = assignmentRepository.getNewAssignmentsFromTime(loggedInWorker.id)
+    val worker = authManager.fetchLoggedInWorker()
+    checkNotNull(worker.idToken) { "Worker's idToken was null" }
+
+    val from = assignmentRepository.getNewAssignmentsFromTime(worker.id)
 
     // Get Assignment DB updates
     assignmentRepository
-      .getNewAssignments(idToken, from)
+      .getNewAssignments(worker.idToken, from)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
@@ -130,13 +134,15 @@ constructor(
   }
 
   private suspend fun sendDbUpdates() {
+    val worker = authManager.fetchLoggedInWorker()
+    checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val microtaskAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
         it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
       }
     assignmentRepository
-      .submitAssignments(loggedInWorker.idToken!!, microtaskAssignments)
+      .submitAssignments(worker.idToken, microtaskAssignments)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }
@@ -169,7 +175,9 @@ constructor(
     assignmentTarBallPath: String,
     tarBallName: String,
   ) {
-    val idToken = loggedInWorker.idToken!!
+    val worker = authManager.fetchLoggedInWorker()
+    checkNotNull(worker.idToken) { "Worker's idToken was null" }
+
     val requestFile = RequestBody.create("application/tgz".toMediaTypeOrNull(), File(assignmentTarBallPath))
     val filePart = MultipartBody.Part.createFormData("file", tarBallName, requestFile)
 
@@ -181,7 +189,7 @@ constructor(
 
     // Send the tarball
     assignmentRepository
-      .submitAssignmentOutputFile(idToken, assignment.id, dataPart, filePart)
+      .submitAssignmentOutputFile(worker.idToken, assignment.id, dataPart, filePart)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect { fileRecord -> // Because we want this to be synchronous
         karyaFileRepository.insertKaryaFile(fileRecord)
@@ -190,11 +198,13 @@ constructor(
   }
 
   private suspend fun fetchVerifiedAssignments(from: String = "") {
-    val idToken = authManager.fetchLoggedInWorkerIdToken()
-    val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(loggedInWorker.id)
+    val worker = authManager.fetchLoggedInWorker()
+    checkNotNull(worker.idToken) { "Worker's idToken was null" }
+
+    val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(worker.id)
 
     assignmentRepository
-      .getVerifiedAssignments(idToken, from)
+      .getVerifiedAssignments(worker.idToken, from)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
@@ -205,30 +215,37 @@ constructor(
    */
   @Suppress("USELESS_CAST")
   fun getAllTasks() {
-    taskRepository
-      .getAllTasksFlow()
-      .distinctUntilChanged()
-      .onEach { taskList ->
-        taskList.forEach { taskRecord ->
-          val tempList = mutableListOf<TaskInfo>()
-          val taskStatus = fetchTaskStatus(taskRecord.id)
-          tempList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
-          taskInfoList = tempList
-        }
+    viewModelScope.launch {
+      val worker = authManager.fetchLoggedInWorker()
 
-        val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
-        val success =
-          DashboardUiState.Success(
-            DashboardStateSucess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
-          )
-        _dashboardUiState.emit(success)
-      }
-      .catch { _dashboardUiState.emit(DashboardUiState.Error(it)) }
-      .launchIn(viewModelScope)
+      taskRepository
+        .getAllTasksFlow()
+        .distinctUntilChanged()
+        .flowOn(Dispatchers.IO)
+        .onEach { taskList ->
+          val tempList = mutableListOf<TaskInfo>()
+          taskList.forEach { taskRecord ->
+            val taskStatus = fetchTaskStatus(taskRecord.id)
+            tempList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
+          }
+          taskInfoList = tempList
+
+          val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
+          val success =
+            DashboardUiState.Success(
+              DashboardStateSucess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+            )
+          _dashboardUiState.value = success
+        }
+        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+        .collect()
+    }
   }
 
   fun updateTaskStatus(taskId: String) {
     viewModelScope.launch {
+      val worker = authManager.fetchLoggedInWorker()
+
       val taskStatus = fetchTaskStatus(taskId)
 
       val updatedList =
@@ -241,7 +258,7 @@ constructor(
         }
 
       taskInfoList = updatedList
-      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(loggedInWorker.id) ?: 0.0f
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSucess(taskInfoList, totalCreditsEarned))
     }
   }
