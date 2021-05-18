@@ -136,7 +136,8 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['description', ['text'], 'not unique', 'not nullable', 'mutable'],
         ['display_name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['params', ['kv'], 'not unique', 'not nullable', 'mutable'],
-        ['tags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
+        ['itags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
+        ['otags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         [
           'assignment_granularity',
@@ -147,6 +148,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ],
         ['group_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
         ['microtask_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
+        ['assignment_batch_size', ['int', 10000], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 16, 'TaskStatus'], 'not unique', 'not nullable', 'mutable'],
       ],
     },

@@ -19,6 +19,8 @@ function typescriptType<T extends string, S extends string, O extends string>(
       return 'string';
     case 'bigint':
       return 'string';
+    case 'int':
+      return 'number';
     case 'float':
       return 'number';
     case 'boolean':
@@ -73,6 +75,9 @@ export function basicKnexField<T extends string, S extends string, O extends str
 
     case 'bigint':
       return `bigInteger('${name}')`;
+
+    case 'int':
+      return `integer('${name}')`;
 
     case 'float':
       return `float('${name}')`;

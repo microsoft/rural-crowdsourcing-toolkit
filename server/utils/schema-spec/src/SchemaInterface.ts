@@ -9,6 +9,7 @@
 export type TableColumnType<TableName extends string, CustomStringType = string, CustomObjectType = string> =
   | ['bigserial']
   | ['bigint', number?]
+  | ['int', number?]
   | ['float', number?]
   | ['boolean', boolean?]
   | ['string', number, CustomStringType?]

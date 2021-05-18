@@ -65,7 +65,7 @@ type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
 type CreateTaskState = {
   task: Task;
   params: { [id: string]: string | boolean };
-  tags: string;
+  itags: string;
   scenario?: BaseScenarioInterface<any, object, any, object, any>;
   language_code?: LanguageCode;
 };
@@ -77,7 +77,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
       description: '',
       display_name: '',
     },
-    tags: '',
+    itags: '',
     params: {},
   };
 
@@ -139,7 +139,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
   // Handle param input change
   handleTagsChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    this.setState({ tags: e.currentTarget.value });
+    this.setState({ itags: e.currentTarget.value });
   };
 
   // Handle param input change
@@ -161,7 +161,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     task.scenario_name = this.state.scenario?.name;
     task.language_code = this.state.language_code;
     task.params = this.state.params;
-    task.tags = { tags: this.state.tags.split(',') };
+    task.itags = { itags: this.state.itags.split(',') };
     this.props.createTask(task);
   };
 
@@ -245,7 +245,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 id='tags'
                 label={`List of task tags (comma seperated)`}
                 width='s4'
-                value={this.state.tags}
+                value={this.state.itags}
                 onChange={this.handleTagsChange}
                 required={true}
               />

@@ -180,6 +180,6 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
  */
 function assignable(task: TaskRecord, worker: WorkerRecord): boolean {
   const workerTags = worker.tags.tags;
-  const taskTags = task.tags.tags;
+  const taskTags = task.itags.itags;
   return taskTags.every((tag) => workerTags.includes(tag));
 }
