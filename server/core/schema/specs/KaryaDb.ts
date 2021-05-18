@@ -131,7 +131,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       columns: [
         ['work_provider_id', ['>', 'server_user'], 'not unique', 'not nullable', 'not mutable'],
         ['language_code', ['string', 8, 'LanguageCode'], 'not unique', 'not nullable', 'not mutable'],
-        ['scenario_name', ['string', 16, 'ScenarioName'], 'not unique', 'not nullable', 'not mutable'],
+        ['scenario_name', ['string', 32, 'ScenarioName'], 'not unique', 'not nullable', 'not mutable'],
         ['name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['description', ['text'], 'not unique', 'not nullable', 'mutable'],
         ['display_name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
