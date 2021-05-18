@@ -148,7 +148,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ],
         ['group_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
         ['microtask_assignment_order', ['string', 16, 'AssignmentOrder'], 'not unique', 'not nullable', 'mutable'],
-        ['assignment_batch_size', ['int', 10000], 'not unique', 'not nullable', 'mutable'],
+        ['assignment_batch_size', ['int'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'TaskStatus'], 'not unique', 'not nullable', 'mutable'],
       ],
     },
