@@ -76,8 +76,11 @@ export function basicKnexField<T extends string, S extends string, O extends str
     case 'bigint':
       return `bigInteger('${name}')`;
 
-    case 'int':
-      return `integer('${name}')`;
+    case 'int': {
+      const field = `integer('${name}')`;
+      const def = ctype[1];
+      return def ? `${field}.defaultTo(${def})` : field;
+    }
 
     case 'float':
       return `float('${name}')`;
@@ -108,7 +111,7 @@ export function basicKnexField<T extends string, S extends string, O extends str
       return `bigInteger('${name}')`;
 
     case 'stringarray':
-      return `json('${name}')`;
+      return `json('${name}').defaultTo('{ "${name}": [] }')`;
 
     case 'kv':
       return `json('${name}')`;
