@@ -239,11 +239,11 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 <div className='col s4  file-field input-field'>
                   <div className='btn btn-small'>
                     <i className='material-icons'>attach_file</i>
-                    <input type='file' id='json' onChange={this.handleParamFileChange} />
+                    <input type='file' id='tgz' onChange={this.handleParamFileChange} />
                   </div>
                   <div className='file-path-wrapper'>
-                    <label htmlFor='json-name'>Task JSON File</label>
-                    <input id='json-name' type='text' className='file-path validate' />
+                    <label htmlFor='tgz-name'>Task TGZ File</label>
+                    <input id='tgz-name' type='text' className='file-path validate' />
                   </div>
                 </div>
               </div>
