@@ -23,36 +23,39 @@ export type TaskRouteState = UserRouteState<TaskState>;
  * Create a new task.
  */
 export const create: UserRouteMiddleware = async (ctx) => {
-  const user = ctx.state.entity;
-  const task: Task = ctx.request.body;
-
-  // Set the work provider id
-  task.work_provider_id = user.id;
-
-  // TODO: Validate the task object
-
-  // Validate the task parameters
-  const scenario = scenarioMap[task.scenario_name!];
-  const schema = joiSchema(scenario.task_input);
-  const { value: params, error: paramsError } = schema.validate(task.params);
-
-  if (paramsError) {
-    HttpResponse.BadRequest(ctx, 'Invalid task parameters');
-    return;
-  }
-
-  // update params
-  task.params = params;
-
-  // update other fields
-  task.status = 'SUBMITTED';
-
   try {
-    const insertedRecord = await BasicModel.insertRecord('task', task);
-    HttpResponse.OK(ctx, insertedRecord);
+    const user = ctx.state.entity;
+    const task: Task = ctx.request.body;
+
+    // Set the work provider id
+    task.work_provider_id = user.id;
+
+    // TODO: Validate the task object
+
+    // Validate the task parameters
+    const scenario = scenarioMap[task.scenario_name!];
+    const schema = joiSchema(scenario.task_input);
+    const { value: params, error: paramsError } = schema.validate(task.params);
+
+    if (paramsError) {
+      HttpResponse.BadRequest(ctx, 'Invalid task parameters');
+      return;
+    }
+
+    // update params
+    task.params = params;
+
+    // update other fields
+    task.status = 'SUBMITTED';
+
+    try {
+      const insertedRecord = await BasicModel.insertRecord('task', task);
+      HttpResponse.OK(ctx, insertedRecord);
+    } catch (e) {
+      // Internal server error
+      HttpResponse.BadRequest(ctx, 'Unknown error occured');
+    }
   } catch (e) {
-    // Internal server error
-    console.log(e);
     HttpResponse.BadRequest(ctx, 'Unknown error occured');
   }
 };
