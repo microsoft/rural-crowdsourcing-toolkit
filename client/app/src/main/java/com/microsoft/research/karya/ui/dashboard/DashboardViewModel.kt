@@ -8,7 +8,6 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
-import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
@@ -53,9 +52,8 @@ constructor(
   private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
 
-  private var taskInfoList = listOf<TaskInfo>()
   private val taskInfoComparator =
-    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.assignedMicrotasks }.thenBy { taskInfo ->
+    compareByDescending<TaskInfo> { taskInfo -> taskInfo.assignedMicrotasks }.thenBy { taskInfo ->
       taskInfo.taskID
     }
 
@@ -66,24 +64,11 @@ constructor(
   fun syncWithServer() {
     viewModelScope.launch {
       _dashboardUiState.value = DashboardUiState.Loading
-      // Refresh loggedIn Worker
-      val worker = authManager.fetchLoggedInWorker()
 
       submitCompletedAssignments()
       fetchNewAssignments()
       fetchVerifiedAssignments()
       cleanupKaryaFiles()
-
-      // This is a hack to refresh the list if no new assignments were fetched from the API.
-      val tempList = mutableListOf<TaskInfo>()
-      taskInfoList.forEach { taskInfo ->
-        val taskStatus = fetchTaskStatus(taskInfo.taskID)
-        tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
-      }
-      taskInfoList = tempList.sortedWith(taskInfoComparator)
-
-      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
-      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
     }
   }
 
@@ -220,22 +205,14 @@ constructor(
    * Returns a hot flow connected to the DB
    * @return [Flow] of list of [TaskRecord] wrapper in a [Result]
    */
-  @Suppress("USELESS_CAST")
   fun getAllTasks() {
     viewModelScope.launch {
       val worker = authManager.fetchLoggedInWorker()
 
       taskRepository
-        .getAllTasksFlow()
+        .getTaskInfoAsFlow()
         .flowOn(Dispatchers.IO)
-        .onEach { taskList ->
-          val tempList = mutableListOf<TaskInfo>()
-          taskList.forEach { taskRecord ->
-            val taskStatus = fetchTaskStatus(taskRecord.id)
-            tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus))
-          }
-          taskInfoList = tempList
-
+        .onEach { taskInfoList ->
           val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
           val success =
             DashboardUiState.Success(
@@ -246,31 +223,6 @@ constructor(
         .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
         .collect()
     }
-  }
-
-  fun updateTaskStatus(taskId: String) {
-    viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
-
-      val taskStatus = fetchTaskStatus(taskId)
-
-      val updatedList =
-        taskInfoList.map { taskInfo ->
-          if (taskInfo.taskID == taskId) {
-            taskInfo.copy(taskStatus = taskStatus)
-          } else {
-            taskInfo
-          }
-        }
-
-      taskInfoList = updatedList
-      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
-      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
-    }
-  }
-
-  private suspend fun fetchTaskStatus(taskId: String): TaskStatus {
-    return taskRepository.getTaskStatus(taskId)
   }
 
   /**

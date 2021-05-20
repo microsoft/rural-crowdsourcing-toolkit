@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -31,12 +30,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
-  val taskActivityLauncher =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-      val taskId = result.data?.getStringExtra("taskID") ?: return@registerForActivityResult
-
-      viewModel.updateTaskStatus(taskId)
-    }
 
   @Inject lateinit var authManager: AuthManager
 
@@ -44,7 +37,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
     observeUi()
+  }
 
+  override fun onResume() {
+    super.onResume()
     viewModel.getAllTasks()
   }
 
@@ -135,6 +131,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       }
 
     nextIntent.putExtra("taskID", task.taskID)
-    taskActivityLauncher.launch(nextIntent)
+    startActivity(nextIntent)
   }
 }
