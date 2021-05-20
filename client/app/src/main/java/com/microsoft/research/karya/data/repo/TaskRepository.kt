@@ -14,4 +14,8 @@ constructor(
   private val microTaskAssignmentDao: MicroTaskAssignmentDao,
 ) {
   suspend fun getTaskInfo(): List<TaskInfo> = withContext(Dispatchers.IO) { microTaskAssignmentDao.getTaskInfo() }
+
+  suspend fun getById(taskId: String): TaskRecord {
+    return taskDao.getById(taskId)
+  }
 }
