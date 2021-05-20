@@ -22,6 +22,8 @@ import com.microsoft.research.karya.utils.LangRes
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
@@ -32,15 +34,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 abstract class BaseMTRendererViewModel
+@AssistedInject
 constructor(
-  @Inject private val assignmentRepository: AssignmentRepository,
-  @Inject private val taskRepository: TaskRepository,
-  @Inject private val microTaskRepository: MicroTaskRepository,
-  @Inject @FilesDir private val fileDirPath: String,
-  @Inject private val authManager: AuthManager,
-  private val taskId: String,
-  private val incompleteMta: Int,
-  private val completedMta: Int
+  private val assignmentRepository: AssignmentRepository,
+  private val taskRepository: TaskRepository,
+  private val microTaskRepository: MicroTaskRepository,
+  @FilesDir private val fileDirPath: String,
+  private val authManager: AuthManager,
+  @Assisted private val taskId: String,
+  @Assisted private val incompleteMta: Int,
+  @Assisted private val completedMta: Int
 ) : ViewModel() {
 
   // TODO: Mark First visited in Speech Data collection
@@ -48,7 +51,6 @@ constructor(
   // Initialising containers
   private val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
-  private val langResourceContainer = LangRes(fileDirPath)
 
   protected lateinit var task: TaskRecord
   private lateinit var microtaskAssignmentIDs: List<String>
