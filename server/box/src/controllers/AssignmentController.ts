@@ -36,7 +36,7 @@ export const get: KaryaMiddleware = async (ctx) => {
     if (assignment_type == 'verified') {
       const records = await BasicModel.getRecords(
         'microtask_assignment',
-        { worker_id: worker.id, status: 'verified' },
+        { worker_id: worker.id, status: 'VERIFIED' },
         { from }
       );
       HttpResponse.OK(ctx, records);
@@ -47,7 +47,7 @@ export const get: KaryaMiddleware = async (ctx) => {
         'microtask_assignment',
         {
           worker_id: worker.id,
-          status: 'assigned',
+          status: 'ASSIGNED',
         },
         {},
         { from }

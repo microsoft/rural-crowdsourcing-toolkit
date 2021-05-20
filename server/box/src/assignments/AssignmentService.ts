@@ -32,7 +32,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
   // get all available tasks i.e. all of which are in assigned state
   const taskAssignments = await BasicModel.getRecords('task_assignment', {
     box_id: worker.box_id,
-    status: 'assigned',
+    status: 'ASSIGNED',
   });
 
   // iterate over all tasks to see which all can user perform

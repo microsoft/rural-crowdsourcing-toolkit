@@ -109,7 +109,7 @@ export async function getTaskAssignments(box: BoxRecord, axiosLocal: AxiosInstan
  */
 export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get incomplete task assignments
-  const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id, status: 'assigned' });
+  const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
   const task_ids = task_assignments.map((ta) => ta.task_id);
 
   // Get all tasks
