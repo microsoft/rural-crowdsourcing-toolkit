@@ -145,4 +145,22 @@ object FileUtils {
     // Fill to 32 chars
     return "%32s".format(output).replace(' ', '0')
   }
+
+  fun createDirectory(dirPath: String): String {
+
+    val dir = File(dirPath)
+
+    var success = true
+    if (!dir.exists()) {
+      success = dir.mkdirs()
+    }
+
+    if (success) {
+      return dirPath
+    } else {
+      throw FileNotFoundException()
+    }
+
+  }
+
 }
