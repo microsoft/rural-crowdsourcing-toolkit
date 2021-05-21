@@ -8,5 +8,5 @@
 package com.microsoft.research.karya.data.model.karya
 
 enum class ChecksumAlgorithm {
-  md5
+  MD5
 }

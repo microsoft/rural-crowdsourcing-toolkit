@@ -17,6 +17,7 @@ import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
+import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -129,6 +130,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         "story-speech" -> Intent(requireContext(), StorySpeechMain::class.java)
         "speech-data" -> Intent(requireContext(), SpeechDataMain::class.java)
         "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
+        "TEXT_TRANSLATION" -> Intent(requireContext(), TextToTextTranslationMain::class.java)
         else -> {
           throw Exception("Unimplemented scenario")
         }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_header" />
+
+    <TextView
+        android:id="@+id/instructionTvdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/text_translation_instruction_desc"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <TextView
+        android:id="@+id/sourceSentenceDropDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="He is reading a book"
+        android:textColor="#505050"
+        android:textSize="@dimen/_18ssp"
+        android:background="@drawable/border_black"
+        app:layout_constraintTop_toBottomOf="@id/instructionTvdd" />
+
+
+    <com.microsoft.inmt_lite.INMTLiteDropDown
+        android:id="@+id/textTranslationDropdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/border_black"
+        android:completionThreshold="1"
+        android:dropDownHeight="wrap_content"
+        android:textSize="@dimen/_16ssp"
+        android:textColor="#000000"
+        android:hint="Type your translation here"
+
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:paddingVertical="15dp"
+        android:paddingHorizontal="20dp"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
+        app:base_url="http://karya.southeastasia.cloudapp.azure.com:4040/"
+        app:langspec="en-hi"
+        app:layout_constraintTop_toBottomOf="@id/sourceSentenceDropDown"
+        app:n_suggestions="5"
+        app:n_words="2"
+        app:maxDropDownHeight = "300"
+        app:online_mode="true"
+        app:src_text="He is reading a book" />
+
+
+    <ImageButton
+        android:id="@+id/nextBtnDropdown"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
+        android:background="@drawable/ic_next_enabled"
+        android:contentDescription="@string/next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

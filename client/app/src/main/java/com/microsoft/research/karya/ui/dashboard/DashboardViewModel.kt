@@ -190,7 +190,7 @@ constructor(
 
     val md5sum = getMD5Digest(assignmentTarBallPath)
     val uploadFileRequest =
-      UploadFileRequest(microtaskOutputContainer.cname, tarBallName, ChecksumAlgorithm.md5.toString(), md5sum)
+      UploadFileRequest(microtaskOutputContainer.cname, tarBallName, ChecksumAlgorithm.MD5.toString(), md5sum)
 
     val dataPart = MultipartBody.Part.createFormData("data", Gson().toJson(uploadFileRequest))
 
@@ -232,7 +232,7 @@ constructor(
           val tempList = mutableListOf<TaskInfo>()
           taskList.forEach { taskRecord ->
             val taskStatus = fetchTaskStatus(taskRecord.id)
-            tempList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
+            tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus))
           }
           taskInfoList = tempList
 

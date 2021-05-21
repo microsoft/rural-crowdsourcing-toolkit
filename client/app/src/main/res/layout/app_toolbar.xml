@@ -41,13 +41,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/appLanguageTextColor"
-            android:textSize="@dimen/_15ssp"
-            android:visibility="gone"
+            android:textSize="@dimen/_24ssp"
+            android:text="Project Karya"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/profilePictureIv"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Hi" />
+             />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/assistantCv"
