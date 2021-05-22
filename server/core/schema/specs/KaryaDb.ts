@@ -83,7 +83,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['name', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['location', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['gps', ['string', 64], 'not unique', 'nullable', 'mutable'],
-        ['url', ['string', 128], 'not unique', 'nullable', 'mutable'],
+        ['url', ['string', 512], 'not unique', 'nullable', 'mutable'],
         ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
         ['last_received_from_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
