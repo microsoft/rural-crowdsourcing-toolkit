@@ -83,7 +83,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['name', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['location', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['gps', ['string', 64], 'not unique', 'nullable', 'mutable'],
-        ['url', ['string', 512], 'not unique', 'nullable', 'mutable'],
+        ['url', ['string', 256], 'not unique', 'nullable', 'mutable'],
         ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
         ['last_received_from_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
@@ -116,7 +116,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       columns: [
         ['container_name', ['string', 64, 'ContainerName'], 'not unique', 'not nullable', 'not mutable'],
         ['name', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
-        ['url', ['string', 128], 'unique', 'nullable', 'mutable'],
+        ['url', ['string', 512], 'unique', 'nullable', 'mutable'],
         ['creator', ['string', 16, 'FileCreator'], 'not unique', 'not nullable', 'not mutable'],
         ['creator_id', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['timestamp', ['timestamp'], 'not unique', 'nullable', 'mutable'],
