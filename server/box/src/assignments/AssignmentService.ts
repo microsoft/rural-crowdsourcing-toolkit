@@ -30,7 +30,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
   let tasksAssigned = false;
 
   // get all available tasks i.e. all of which are in assigned state
-  const taskAssignments = await BasicModel.getRecords('task_assignment', {
+  const taskAssignments = await BasicModel.ngGetRecords('task_assignment', {
     box_id: worker.box_id,
     status: 'ASSIGNED',
   });
@@ -72,7 +72,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
       // Add all microtasks from the selected groups to microtasks
       await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
-        const microtasks = await BasicModel.getRecords('microtask', {
+        const microtasks = await BasicModel.ngGetRecords('microtask', {
           group_id: group.id,
         });
 

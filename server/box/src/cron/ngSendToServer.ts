@@ -19,7 +19,7 @@ import { cronLogger } from '../utils/Logger';
  */
 export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get all files that are yet to be uploaded to the server
-  const files = await BasicModel.getRecords('karya_file', { box_id: box.id, in_box: true, in_server: false });
+  const files = await BasicModel.ngGetRecords('karya_file', { box_id: box.id, in_box: true, in_server: false });
 
   // Local folder
   const localFolder = envGetString('LOCAL_FOLDER');

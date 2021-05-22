@@ -67,7 +67,7 @@ export const getAll: UserRouteMiddleware = async (ctx) => {
   try {
     const user = ctx.state.entity;
     const filter: Task = user.role == 'WORK_PROVIDER' ? { work_provider_id: ctx.state.entity.id } : {};
-    const records = await BasicModel.getRecords('task', filter);
+    const records = await BasicModel.ngGetRecords('task', filter);
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: convert this into an internal server error

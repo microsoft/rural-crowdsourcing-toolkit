@@ -141,43 +141,6 @@ export async function upsertRecord<TableName extends DbTableName>(
  * @param whereIns Where In filters
  * @returns Retrieved records
  */
-export async function getRecords<TableName extends DbTableName, ColumnType extends keyof DbRecordType<TableName>>(
-  tableName: TableName,
-  match: DbObjectType<TableName> | {} = {},
-  updateDuration: { from?: string; to?: string } = {},
-  createDuration: { from?: string; to?: string } = {},
-  whereIns: [c: ColumnType, values: DbRecordType<TableName>[ColumnType][]][] = []
-): Promise<DbRecordType<TableName>[]> {
-  let query = knex(tableName).where(match);
-  // add whereIns
-  whereIns.forEach((filter) => {
-    query = query.whereIn(filter[0], filter[1]);
-  });
-  // add udpate duration filter
-  const uFrom = updateDuration.from;
-  const uTo = updateDuration.to;
-  if (uFrom) query = query.where('last_updated_at', '>', uFrom);
-  if (uTo) query = query.where('last_updated_at', '<=', uTo);
-  // add create duration filter
-  const cFrom = createDuration.from;
-  const cTo = createDuration.to;
-  if (cFrom) query = query.where('created_at', '>', cFrom);
-  if (cTo) query = query.where('created_at', '<=', cTo);
-
-  // retrieve the records and return
-  const records = await query;
-  return records as DbRecordType<TableName>[];
-}
-
-/**
- * Get records from a particular table with a set of filters.
- * @param tableName Name of the table
- * @param match Object for exact match
- * @param updateDuration Duration of the updates
- * @param createDuration Duration of creation
- * @param whereIns Where In filters
- * @returns Retrieved records
- */
 export async function ngGetRecords<TableName extends DbTableName, ColumnType extends keyof DbRecordType<TableName>>(
   tableName: TableName,
   match: DbObjectType<TableName> | {} = {},

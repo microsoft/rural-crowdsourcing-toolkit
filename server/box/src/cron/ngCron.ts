@@ -8,7 +8,7 @@ dotenv.config();
 
 import cron from 'node-cron';
 import { syncBoxWithServer } from './ngSyncWithServer';
-import { BasicModel, setupDbConnection, knex } from '@karya/common';
+import { BasicModel, setupDbConnection } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { cronLogger } from '../utils/Logger';
 import { Promise as BBPromise } from 'bluebird';
@@ -23,8 +23,7 @@ let cronRunning = false;
 setupDbConnection();
 
 /** Cron job to sync with server */
-//cron.schedule(cronInterval, async () => {
-(async () => {
+const cronJob = async () => {
   // If the cron job is running, quit.
   if (cronRunning) {
     cronLogger.info(`Previous cron job is still running. Exiting cron job.`);
@@ -36,7 +35,7 @@ setupDbConnection();
   cronLogger.info(`Starting cron job to sync with the server`);
 
   // Get all boxes
-  const boxes = await BasicModel.getRecords('box', {});
+  const boxes = await BasicModel.ngGetRecords('box', {});
 
   // sync each box with server one after the other
   await BBPromise.mapSeries(boxes, async (box) => {
@@ -45,7 +44,11 @@ setupDbConnection();
 
   cronRunning = false;
   return;
-})()
+};
+
+// Schedule the cron job
+cron.schedule(cronInterval, cronJob);
+
+cronJob()
   .then(() => console.log('Test successful'))
-  .catch((e) => console.log(e))
-  .finally(() => knex.destroy());
+  .catch((e) => console.log(e));
