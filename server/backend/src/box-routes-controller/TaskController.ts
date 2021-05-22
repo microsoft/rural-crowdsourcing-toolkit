@@ -32,7 +32,7 @@ export const getTaskAssignments: BoxRouteMiddleware = async (ctx) => {
   // Get all relevant task assignment and task records
   try {
     const currentTime = new Date().toISOString();
-    const task_assignments = await BasicModel.ngGetRecords(
+    const task_assignments = await BasicModel.getRecords(
       'task_assignment',
       { box_id: ctx.state.entity.id },
       [],
@@ -43,7 +43,7 @@ export const getTaskAssignments: BoxRouteMiddleware = async (ctx) => {
     });
 
     const task_ids = task_assignments.map((ta) => ta.task_id);
-    const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]], []);
+    const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]], []);
     HttpResponse.OK(ctx, { task_assignments, tasks });
   } catch (e) {
     // TODO: convert this to internal server error
@@ -70,7 +70,7 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
 
     // Get all groups+microtasks or microtasks
     if (task.assignment_granularity == 'GROUP') {
-      groups = await BasicModel.ngGetRecords(
+      groups = await BasicModel.getRecords(
         'microtask_group',
         { task_id: ctx.state.task.id },
         [],
@@ -79,9 +79,9 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
         limit
       );
       const group_ids = groups.map((g) => g.id);
-      microtasks = await BasicModel.ngGetRecords('microtask', {}, [['group_id', group_ids]]);
+      microtasks = await BasicModel.getRecords('microtask', {}, [['group_id', group_ids]]);
     } else {
-      microtasks = await BasicModel.ngGetRecords(
+      microtasks = await BasicModel.getRecords(
         'microtask',
         { task_id: ctx.state.task.id },
         [],
@@ -93,7 +93,7 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
 
     // Get any input files for these microtasks
     const karya_file_ids = microtasks.map((mt) => mt.input_file_id).filter((id): id is string => id != null);
-    const karya_files = await BasicModel.ngGetRecords('karya_file', {}, [['id', karya_file_ids]]);
+    const karya_files = await BasicModel.getRecords('karya_file', {}, [['id', karya_file_ids]]);
 
     // Get SAS tokens for the karya files
     karya_files.forEach((kf) => {
@@ -166,7 +166,7 @@ export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
   const task = ctx.state.task;
 
   try {
-    const verified = await BasicModel.ngGetRecords(
+    const verified = await BasicModel.getRecords(
       'microtask_assignment',
       { task_id: task.id, status: 'verified' },
       [],

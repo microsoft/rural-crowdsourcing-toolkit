@@ -109,11 +109,11 @@ export async function getTaskAssignments(box: BoxRecord, axiosLocal: AxiosInstan
  */
 export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get incomplete task assignments
-  const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
+  const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
   const task_ids = task_assignments.map((ta) => ta.task_id);
 
   // Get all tasks
-  const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+  const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]]);
 
   // For each task, get all microtasks
   await BBPromise.mapSeries(tasks, async (task) => {
@@ -177,7 +177,7 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
 export async function getNewSASTokens(axiosLocal: AxiosInstance) {
   try {
     // Extract all pending karya files. Those in the server but not in the box
-    const pendingFiles = await BasicModel.ngGetRecords('karya_file', {
+    const pendingFiles = await BasicModel.getRecords('karya_file', {
       in_server: true,
       in_box: false,
       url: null,
@@ -211,7 +211,7 @@ export async function downloadPendingKaryaFiles() {
     const localFolder = envGetString('LOCAL_FOLDER');
     const localFolderPath = `${process.cwd()}/${localFolder}`;
 
-    const pendingFiles = await BasicModel.ngGetRecords('karya_file', { in_server: true, in_box: false });
+    const pendingFiles = await BasicModel.getRecords('karya_file', { in_server: true, in_box: false });
 
     if (pendingFiles.length > 0) {
       cronLogger.info(`Downloading ${pendingFiles.length} files`);
@@ -262,11 +262,11 @@ async function downloadKaryaFile(url: string, filepath: string) {
  */
 export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get incomplete task assignments
-  const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id });
+  const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
   const task_ids = task_assignments.map((ta) => ta.task_id);
 
   // Get all tasks
-  const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+  const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]]);
 
   // For each task, get all microtasks
   await BBPromise.mapSeries(tasks, async (task) => {

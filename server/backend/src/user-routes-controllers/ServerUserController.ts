@@ -46,7 +46,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
  */
 export const getAll: UserRouteMiddleware = async (ctx) => {
   try {
-    const records = await BasicModel.ngGetRecords('server_user', {});
+    const records = await BasicModel.getRecords('server_user', {});
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Conver this to internal server error

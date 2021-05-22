@@ -141,7 +141,7 @@ export async function upsertRecord<TableName extends DbTableName>(
  * @param whereIns Where In filters
  * @returns Retrieved records
  */
-export async function ngGetRecords<TableName extends DbTableName, ColumnType extends keyof DbRecordType<TableName>>(
+export async function getRecords<TableName extends DbTableName, ColumnType extends keyof DbRecordType<TableName>>(
   tableName: TableName,
   match: DbObjectType<TableName> | {} = {},
   whereIns: [c: ColumnType, values: DbRecordType<TableName>[ColumnType][]][] = [],

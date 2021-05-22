@@ -86,7 +86,7 @@ export const get: BoxRouteMiddleware = async (ctx) => {
   if (from instanceof Array) from = from[0];
 
   try {
-    const workers = await BasicModel.ngGetRecords(
+    const workers = await BasicModel.getRecords(
       'worker',
       { box_id: ctx.state.entity.id },
       [],

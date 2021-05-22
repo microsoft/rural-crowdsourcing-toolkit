@@ -15,7 +15,7 @@ import { getCreationCode } from '@karya/misc-utils';
  */
 export async function bootstrapAuth() {
   /** Ensure there are no records */
-  const currentRecords = await BasicModel.ngGetRecords('server_user', {});
+  const currentRecords = await BasicModel.getRecords('server_user', {});
   if (currentRecords.length > 0) {
     throw new Error('There are already work provider records. Not bootstrapping');
   }

@@ -35,7 +35,7 @@ const cronJob = async () => {
   cronLogger.info(`Starting cron job to sync with the server`);
 
   // Get all boxes
-  const boxes = await BasicModel.ngGetRecords('box', {});
+  const boxes = await BasicModel.getRecords('box', {});
 
   // sync each box with server one after the other
   await BBPromise.mapSeries(boxes, async (box) => {

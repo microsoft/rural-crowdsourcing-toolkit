@@ -34,7 +34,7 @@ export const get: KaryaMiddleware = async (ctx) => {
 
   try {
     if (assignment_type == 'verified') {
-      const records = await BasicModel.ngGetRecords(
+      const records = await BasicModel.getRecords(
         'microtask_assignment',
         { worker_id: worker.id, status: 'VERIFIED' },
         [],
@@ -45,7 +45,7 @@ export const get: KaryaMiddleware = async (ctx) => {
     } else {
       // TODO: Adjust max credits
       await assignMicrotasksForWorker(worker, 1000);
-      const assignments = await BasicModel.ngGetRecords(
+      const assignments = await BasicModel.getRecords(
         'microtask_assignment',
         { worker_id: worker.id, status: 'ASSIGNED' },
         [],
@@ -53,10 +53,10 @@ export const get: KaryaMiddleware = async (ctx) => {
         'created_at'
       );
       const mtIds = assignments.map((mta) => mta.microtask_id);
-      const microtasks = await BasicModel.ngGetRecords('microtask', {}, [['id', mtIds]]);
+      const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
       // This can be optimized to just be distinct task_ids
       const taskIds = microtasks.map((t) => t.task_id);
-      const tasks = await BasicModel.ngGetRecords('task', {}, [['id', taskIds]]);
+      const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
       HttpResponse.OK(ctx, { tasks, microtasks, assignments });
     }
   } catch (e) {

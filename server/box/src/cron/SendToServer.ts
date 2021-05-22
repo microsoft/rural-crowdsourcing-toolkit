@@ -19,7 +19,7 @@ import { cronLogger } from '../utils/Logger';
  */
 export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: AxiosInstance) {
   // Get all files that are yet to be uploaded to the server
-  const files = await BasicModel.ngGetRecords('karya_file', { box_id: box.id, in_box: true, in_server: false });
+  const files = await BasicModel.getRecords('karya_file', { box_id: box.id, in_box: true, in_server: false });
 
   // Local folder
   const localFolder = envGetString('LOCAL_FOLDER');
@@ -135,9 +135,9 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
 export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   try {
     // Get all task assignments for the box
-    const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id });
+    const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
     const task_ids = task_assignments.map((ta) => ta.task_id);
-    const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+    const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]]);
 
     type SendNewAssignmentsResponse = Pick<MicrotaskAssignmentRecord, 'id' | 'sent_to_server_at'>[];
 
@@ -174,9 +174,9 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
 export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   try {
     // Get all task assignments for the box
-    const task_assignments = await BasicModel.ngGetRecords('task_assignment', { box_id: box.id });
+    const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
     const task_ids = task_assignments.map((ta) => ta.task_id);
-    const tasks = await BasicModel.ngGetRecords('task', {}, [['id', task_ids]]);
+    const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]]);
 
     type SendNewAssignmentsResponse = Pick<MicrotaskAssignmentRecord, 'id' | 'submitted_to_server_at'>[];
 
