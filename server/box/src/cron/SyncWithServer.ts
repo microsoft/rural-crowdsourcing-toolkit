@@ -4,7 +4,7 @@
 // Sync box with main server
 
 import { BoxRecord } from '@karya/core';
-import { axios } from './ngHttpUtils';
+import { axios } from './HttpUtils';
 import { cronLogger } from '../utils/Logger';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import {
@@ -13,7 +13,7 @@ import {
   sendNewWorkers,
   sendUpdatedWorkers,
   uploadKaryaFilesToServer,
-} from './ngSendToServer';
+} from './SendToServer';
 import {
   getMicrotasks,
   getNewSASTokens,
@@ -21,7 +21,7 @@ import {
   downloadPendingKaryaFiles,
   getUpdatedWorkers,
   getVerifiedAssignments,
-} from './ngReceiveFromServer';
+} from './ReceiveFromServer';
 
 /**
  * Sync specified box with server

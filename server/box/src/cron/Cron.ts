@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import cron from 'node-cron';
-import { syncBoxWithServer } from './ngSyncWithServer';
+import { syncBoxWithServer } from './SyncWithServer';
 import { BasicModel, setupDbConnection } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { cronLogger } from '../utils/Logger';
