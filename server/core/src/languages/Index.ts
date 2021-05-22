@@ -3,7 +3,7 @@
 //
 // List of language codes
 
-export const languageCodes = ['en'] as const;
+export const languageCodes = ['EN'] as const;
 export type LanguageCode = typeof languageCodes[number];
 
 /**
@@ -26,8 +26,8 @@ export interface LanguageInterface {
  * Language map from language code to language interface
  */
 export const languageMap: { [key in LanguageCode]: LanguageInterface } = {
-  en: {
-    code: 'en',
+  EN: {
+    code: 'EN',
     name: 'English',
     primary_name: 'English',
     basic_support: false,
