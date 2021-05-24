@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/microtaskTb"
-        layout="@layout/microtask_header" />
+        layout="@layout/microtask_header_2" />
 
     <TextView
         android:id="@+id/recordPromptTv"

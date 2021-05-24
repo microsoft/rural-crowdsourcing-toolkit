@@ -56,10 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:text="Text Translation"
+            android:text="Karya"
             android:textColor="?attr/appLanguageTextColor"
-            android:textSize="@dimen/_20ssp"
-
+            android:textSize="@dimen/_18ssp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/karyaLogo"
             app:layout_constraintEnd_toEndOf="parent"
