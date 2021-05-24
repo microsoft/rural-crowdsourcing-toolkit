@@ -7,11 +7,12 @@
 
 import axios, { AxiosError } from 'axios';
 import config from '../../config/Index';
+import { AuthHeader } from '../../db/Auth.extra';
 import { ErrorBody } from './HttpResponseTypes';
 
 /** Set axios base server URL prefix from config */
 const { url } = config.backend;
-axios.defaults.baseURL = `${url}/api`;
+axios.defaults.baseURL = `${url}/api_user`;
 
 /** Send credentials with all requests */
 axios.defaults.withCredentials = true;
@@ -57,10 +58,11 @@ export async function PUT<RequestType = any, ResponseType = any>(
   endpoint: string,
   obj: RequestType,
   files?: { [id: string]: File },
+  headers?: AuthHeader,
 ): Promise<ResponseType> {
   if (files === undefined) {
     // If no files, send directly
-    const response = await axios.put<ResponseType>(endpoint, obj);
+    const response = await axios.put<ResponseType>(endpoint, obj, { headers });
     return response.data;
   } else {
     // If files, send multipart request
@@ -84,8 +86,9 @@ export async function PUT<RequestType = any, ResponseType = any>(
 export async function GET<ParamsType = any, ResponseType = any>(
   endpoint: string,
   params?: ParamsType,
+  headers?: AuthHeader,
 ): Promise<ResponseType> {
-  const response = await axios.get<ResponseType>(endpoint, { params });
+  const response = await axios.get<ResponseType>(endpoint, { params, headers });
   return response.data;
 }
 

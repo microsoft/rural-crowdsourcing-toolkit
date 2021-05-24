@@ -16,7 +16,7 @@ import { RootState } from '../../store/Index';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Import async ops and action creators */
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Define Router match params props */
 type RouterProps = RouteComponentProps<{}>;

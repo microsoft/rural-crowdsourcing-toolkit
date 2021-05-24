@@ -1,114 +1,103 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// Sync box with main server
 
-/** Function to execute sequence of steps to sync with the server */
-
-import config from '../config/Index';
-import logger from '../utils/Logger';
-
-import * as BasicModel from '../models/BasicModel';
-
+import { BoxRecord } from '@karya/core';
+import { axios } from './HttpUtils';
+import { cronLogger } from '../utils/Logger';
+import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import {
-  downloadPendingKaryaFiles,
+  sendCompletedAssignments,
+  sendNewAssignments,
+  sendNewWorkers,
+  sendUpdatedWorkers,
+  uploadKaryaFilesToServer,
+} from './SendToServer';
+import {
+  getMicrotasks,
   getNewSASTokens,
-} from './DownloadFilesFromBlobStore';
-import { getUpdatesFromServer } from './GetUpdatesFromServer';
-import { sendUpdatesToServer } from './SendUpdatesToServer';
-import { uploadKaryaFilesToServer } from './UploadFilesToServer';
-
-// Box info
-import box_id from '../config/box_id';
-import { SetBox, this_box } from '../config/ThisBox';
-
-// HTTP Utils
-import { GET, PUT } from './HttpUtils';
+  getTaskAssignments,
+  downloadPendingKaryaFiles,
+  getUpdatedWorkers,
+  getVerifiedAssignments,
+} from './ReceiveFromServer';
 
 /**
- * Cron function to periodically synchronize with the server
+ * Sync specified box with server
  */
-export async function syncWithServer() {
+export async function syncBoxWithServer(box: BoxRecord) {
+  cronLogger.info(`Syncing box ${box.id} with server`);
+
+  // set request header
+  const headers = { 'karya-id-token': box.id_token };
+
+  // Renew ID token
+  let newBoxRecord: BoxRecord;
   try {
-    // Ensure that the box is set
-    await SetBox();
-
-    // Checkin with the server
-    try {
-      logger.info(`Checking in with the server`);
-      await PUT<{}, {}>('/rbox/checkin', {});
-    } catch (e) {
-      logger.info(`No connection to the server. Exiting cron job.`);
-      return;
-    }
-
-    // Get the phone authentication info
-    if (!this_box.physical) {
-      logger.info(`Fetching phone authentication information`);
-      try {
-        const phoneOtp = await GET<{}, typeof config['phoneOtp']>(
-          '/rbox/phone-auth-info',
-          {},
-        );
-        config.phoneOtp = { ...phoneOtp };
-        logger.info(`Phone auth available.`);
-      } catch (e) {
-        // Unable to fetch api_key
-        // Leave it as unavailable
-      }
-    }
-
-    // Upload files to server
-    const sendTime = new Date().toISOString();
-    logger.info(`Uploading karya files to the server`);
-    const uploadStatus = await uploadKaryaFilesToServer();
-    if (uploadStatus) {
-      logger.info(`Upload stage successfully`);
-    } else {
-      logger.error(`There were errors in the upload stage`);
-    }
-
-    // Send all updates to the server
-    logger.info(`Sending database updates to the server`);
-    const sendStatus = await sendUpdatesToServer(sendTime);
-    if (sendStatus) {
-      await BasicModel.updateSingle(
-        'box',
-        { id: box_id },
-        { last_sent_to_server_at: sendTime },
-      );
-      logger.info(`Send stage finished successfully`);
-    } else {
-      logger.error(`Send stage failed with errors`);
-    }
-
-    // Get new SAS URLs for files
-    logger.info(`Get SAS tokens for files with null URL`);
-    await getNewSASTokens();
-
-    // Receive new updates from the server
-    const receiveTime = new Date().toISOString();
-    logger.info(`Receiving database updates from the server`);
-    const receiveStatus = await getUpdatesFromServer();
-    if (receiveStatus) {
-      await BasicModel.updateSingle(
-        'box',
-        { id: box_id },
-        { last_received_from_server_at: receiveTime },
-      );
-      logger.info(`Receive stage finished successfully`);
-    } else {
-      logger.error(`Receive stage failed with errors`);
-    }
-
-    // Download karya files from the blob store
-    logger.info(`Downloading karya files from the database`);
-    const downloadStatus = await downloadPendingKaryaFiles();
-    if (downloadStatus) {
-      logger.info(`Download stage finished successfully`);
-    } else {
-      logger.error(`Download stage failed with errors`);
-    }
+    cronLogger.info('Renewing box token');
+    const response = await axios.get<BoxRecord>('/renew-token', { headers });
+    newBoxRecord = response.data;
   } catch (e) {
-    logger.error(`Uncaught exception while syncing with server`);
-    logger.error(e.message);
+    // No connection to server. Quit cron job.
+    cronLogger.info('No connection to server');
+    return;
   }
+
+  // Update box record with new id token
+  try {
+    const { id, id_token } = newBoxRecord;
+    await BasicModel.updateSingle('box', { id }, { id_token });
+    headers['karya-id-token'] = id_token;
+  } catch (e) {
+    cronLogger.warn('Failed to update box with renewed ID token. Continuing with old token');
+  }
+
+  // Set axios default header
+  axios.defaults.headers = headers;
+
+  // Check if OTP service is available
+  if (!box.physical) {
+    try {
+      const response = await axios.get<PhoneOTPConfig>('/phone-auth');
+      const otpConfig = response.data;
+      if (!otpConfig.available) {
+        throw new Error('OTP service is not available');
+      }
+      setOTPConfig(otpConfig);
+      cronLogger.info('OTP service is available');
+    } catch (e) {
+      cronLogger.warn('OTP service is not available');
+      process.env.PHONE_OTP_AVAILABLE = 'false';
+    }
+  }
+
+  // Upload files to the server
+  await uploadKaryaFilesToServer(box, axios);
+
+  // Send newly created workers and updated workers to server
+  await sendNewWorkers(box, axios);
+  await sendUpdatedWorkers(box, axios);
+
+  // Send all created/completed microtask (group) assignments
+  await sendNewAssignments(box, axios);
+  await sendCompletedAssignments(box, axios);
+
+  // Get workers with updated tag information
+  await getUpdatedWorkers(axios);
+
+  // Get task assignments from the server
+  await getTaskAssignments(box, axios);
+
+  // Get all microtasks
+  await getMicrotasks(box, axios);
+
+  // Get new SAS tokens
+  await getNewSASTokens(axios);
+
+  // Download all pending files
+  await downloadPendingKaryaFiles();
+
+  // Get verified assignments
+  await getVerifiedAssignments(box, axios);
 }

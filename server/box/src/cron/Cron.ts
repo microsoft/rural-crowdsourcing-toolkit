@@ -1,39 +1,54 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// Cron job to periodically sync box with the server
 
-/**
- * Cron job to periodically sync with the server
- */
+import dotenv from 'dotenv';
+dotenv.config();
 
-import * as cron from 'node-cron';
+import cron from 'node-cron';
+import { syncBoxWithServer } from './SyncWithServer';
+import { BasicModel, setupDbConnection } from '@karya/common';
+import { envGetString } from '@karya/misc-utils';
+import { cronLogger } from '../utils/Logger';
+import { Promise as BBPromise } from 'bluebird';
 
-import config from '../config/Index';
-import logger from '../utils/Logger';
-
-import { syncWithServer } from './SyncWithServer';
+// Get cron interval from the environment
+const cronInterval = envGetString('CRON_INTERVAL');
 
 // Status of active cron job
 let cronRunning = false;
 
+// setup Db connection
+setupDbConnection();
+
 /** Cron job to sync with server */
-cron.schedule(config.cronInterval, async () => {
+const cronJob = async () => {
   // If the cron job is running, quit.
   if (cronRunning) {
-    logger.info(`Previous cron job is still running. Exiting cron job.`);
+    cronLogger.info(`Previous cron job is still running. Exiting cron job.`);
     return;
   }
 
   // set flag
   cronRunning = true;
+  cronLogger.info(`Starting cron job to sync with the server`);
 
-  logger.info(`Starting cron job to sync with the server`);
+  // Get all boxes
+  const boxes = await BasicModel.getRecords('box', {});
 
-  // sync with server
-  await syncWithServer();
+  // sync each box with server one after the other
+  await BBPromise.mapSeries(boxes, async (box) => {
+    await syncBoxWithServer(box);
+  });
 
   cronRunning = false;
   return;
-});
+};
 
-// Run sync on start
-syncWithServer();
+// Schedule the cron job
+cron.schedule(cronInterval, cronJob);
+
+cronJob()
+  .then(() => console.log('Test successful'))
+  .catch((e) => console.log(e));

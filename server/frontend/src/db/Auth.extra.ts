@@ -3,18 +3,18 @@
 
 /** Additional types needed for authentication */
 
-import { AuthProviderType } from './TableInterfaces.auto';
+import { RegistrationMechanism } from '@karya/core';
 
 /** Auth header to be attached to each request */
 export type AuthHeader = {
-  'auth-provider': AuthProviderType;
-  'id-token': string;
+  'reg-mechanism': RegistrationMechanism;
+  [id: string]: string;
 };
 
 /** Auth provider names */
-export const AuthProviderName = (apt: AuthProviderType | null) => {
+export const AuthProviderName = (apt: RegistrationMechanism | null) => {
   switch (apt) {
-    case 'google_oauth':
+    case 'google-id-token':
       return 'Google OAuth2';
     default:
       return 'None';

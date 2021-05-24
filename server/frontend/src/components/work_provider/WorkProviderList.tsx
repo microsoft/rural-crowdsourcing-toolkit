@@ -16,18 +16,18 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
 import { AuthProviderName } from '../../db/Auth.extra';
-import { WorkProvider, WorkProviderRecord } from '../../db/TableInterfaces.auto';
+import { ServerUser, ServerUserRecord } from '@karya/core';
 
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 /** Map get languages action creator to props */
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    generateWorkProviderCC: (wp: WorkProvider) => {
+    generateServerUserCC: (wp: ServerUser) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
-        store: 'work_provider',
+        store: 'server_user',
         label: 'GENERATE_CC',
         request: wp,
       };
@@ -38,27 +38,27 @@ const mapDispatchToProps = (dispatch: any) => {
 
 /** Create the connector HoC */
 const reduxConnector = connect(null, mapDispatchToProps);
-const dataConnector = withData('work_provider');
+const dataConnector = withData('server_user');
 const connector = compose(dataConnector, reduxConnector);
 
 /** LanugageList has only connected props */
-type WorkProviderListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type ServerUserListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
 /** Component only tracks status of existing request */
-type WorkProviderListState = {
-  ccForm: WorkProvider;
+type ServerUserListState = {
+  ccForm: ServerUser;
 };
 
-/** WorkProviderList component */
-class WorkProviderList extends React.Component<WorkProviderListProps, WorkProviderListState> {
+/** ServerUserList component */
+class ServerUserList extends React.Component<ServerUserListProps, ServerUserListState> {
   // setup creation code state
-  state: WorkProviderListState = {
+  state: ServerUserListState = {
     ccForm: { full_name: '', email: '', phone_number: '' },
   };
 
   // clear form
   clearForm = () => {
-    const ccForm: WorkProvider = { full_name: '', email: '', phone_number: '' };
+    const ccForm: ServerUser = { full_name: '', email: '', phone_number: '' };
     this.setState({ ccForm });
   };
 
@@ -71,7 +71,7 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
   // handle form submit
   handleCCFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    this.props.generateWorkProviderCC(this.state.ccForm);
+    this.props.generateServerUserCC(this.state.ccForm);
   };
 
   // On mount, get all work providers
@@ -80,43 +80,43 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
   }
 
   // On update, update text fields
-  componentDidUpdate(prevProps: WorkProviderListProps) {
-    if (prevProps.work_provider.status === 'IN_FLIGHT' && this.props.work_provider.status === 'SUCCESS') {
+  componentDidUpdate(prevProps: ServerUserListProps) {
+    if (prevProps.server_user.status === 'IN_FLIGHT' && this.props.server_user.status === 'SUCCESS') {
       this.clearForm();
     }
     M.updateTextFields();
   }
 
   render() {
-    const work_providers = this.props.work_provider.data;
+    const server_users = this.props.server_user.data;
 
     /** Extract error message element */
     const errorMessageElement =
-      this.props.work_provider.status === 'FAILURE' ? (
+      this.props.server_user.status === 'FAILURE' ? (
         <div>
-          <ErrorMessage message={this.props.work_provider.messages} />
+          <ErrorMessage message={this.props.server_user.messages} />
         </div>
       ) : null;
 
-    const tableColumns: Array<TableColumnType<WorkProviderRecord>> = [
-      { header: 'Admin', type: 'function', function: (wp) => (wp.admin ? 'Yes' : 'No') },
+    const tableColumns: Array<TableColumnType<ServerUserRecord>> = [
+      { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'ADMIN' ? 'Yes' : 'No') },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
-      { type: 'function', header: 'Authentication Type', function: (wp) => AuthProviderName(wp.auth_provider) },
-      { type: 'field', field: 'creation_code', header: 'Creation Code' },
+      { type: 'function', header: 'Registration Type', function: (wp) => AuthProviderName(wp.reg_mechanism) },
+      { type: 'field', field: 'access_code', header: 'Access Code' },
     ];
 
     /** Function to sort the work providers */
-    const sortWorkProviders = (a: WorkProviderRecord, b: WorkProviderRecord) => {
-      if (a.admin === b.admin) {
+    const sortServerUsers = (a: ServerUserRecord, b: ServerUserRecord) => {
+      if (a.role === b.role) {
         return new Date(a.created_at) < new Date(b.created_at) ? 1 : -1;
       }
-      return a.admin ? -1 : 1;
+      return a.role === 'ADMIN' ? -1 : 1;
     };
 
     /** List of signed up work providers */
-    const signedUpWorkProviders = work_providers.filter((wp) => wp.auth_provider !== null).sort(sortWorkProviders);
-    const createdWorkProviders = work_providers.filter((wp) => wp.auth_provider === null).sort(sortWorkProviders);
+    const signedUpServerUsers = server_users.filter((wp) => wp.reg_mechanism !== null).sort(sortServerUsers);
+    const createdServerUsers = server_users.filter((wp) => wp.reg_mechanism === null).sort(sortServerUsers);
 
     /** Creation code form */
     const { ccForm } = this.state;
@@ -128,25 +128,17 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
               id='full_name'
               label='Full Name'
               required={true}
-              value={ccForm.full_name}
+              value={ccForm.full_name ?? 'Unnamed'}
               onChange={this.handleChange}
-              width='s3'
+              width='s4'
             />
             <ColTextInput
               id='email'
               label='Email'
               required={true}
-              value={ccForm.email}
+              value={ccForm.email ?? 'No mail'}
               onChange={this.handleChange}
-              width='s3'
-            />
-            <ColTextInput
-              id='phone_number'
-              label='Phone Number'
-              required={true}
-              value={ccForm.phone_number}
-              onChange={this.handleChange}
-              width='s3'
+              width='s4'
             />
             <div className='col s2'>
               <button className='btn red'>Generate Code</button>
@@ -160,15 +152,15 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
       <div className='tmar20'>
         {errorMessageElement}
         <Fragment>
-          <TableList<WorkProviderRecord>
+          <TableList<ServerUserRecord>
             columns={tableColumns}
-            rows={signedUpWorkProviders}
+            rows={signedUpServerUsers}
             emptyMessage='No signed up work providers'
           />
-          {this.props.work_provider.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
-          <TableList<WorkProviderRecord>
+          {this.props.server_user.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
+          <TableList<ServerUserRecord>
             columns={tableColumns}
-            rows={createdWorkProviders}
+            rows={createdServerUsers}
             emptyMessage='No new creation codes'
           />
         </Fragment>
@@ -177,4 +169,4 @@ class WorkProviderList extends React.Component<WorkProviderListProps, WorkProvid
   }
 }
 
-export default connector(WorkProviderList);
+export default connector(ServerUserList);

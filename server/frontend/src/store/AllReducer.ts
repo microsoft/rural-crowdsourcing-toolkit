@@ -9,10 +9,10 @@
 import { Reducer } from 'redux';
 
 // Actions
-import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSuccessAction } from './apis/APIs.auto';
+import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSuccessAction } from './apis/APIs';
 
 // Types for state
-import { DbRecordType, DbTableName, WorkProviderRecord } from '../db/TableInterfaces.auto';
+import { DbRecordType, DbTableName, ServerUserRecord } from '@karya/core';
 
 // Table state
 type RequestStatus = { status: 'IN_FLIGHT' } | { status: 'SUCCESS' } | { status: 'FAILURE'; messages: string[] };
@@ -26,7 +26,7 @@ export type StoreState<Table extends DbTableName> = {
 export type AllState = {
   [id in DbTableName]: StoreState<id>;
 } & {
-  auth: { cwp: WorkProviderRecord | null } & RequestStatus;
+  auth: { cwp: ServerUserRecord | null } & RequestStatus;
 };
 
 // Store actions
@@ -37,23 +37,16 @@ type StoreReducer = Reducer<AllState, StoreActions>;
 
 // Initial state
 const initState: AllState = {
-  language: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  language_resource: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  language_resource_value: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  scenario: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  work_provider: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  server_user: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  worker_language_skill: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  task_op: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  task_chain: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_group: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_group_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  payment_request: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  payout_info: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  payout_method: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  policy: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   box: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   karya_file: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   auth: { cwp: null, status: 'SUCCESS' },
@@ -95,24 +88,6 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
-  if (action.store === 'microtask_assignment' && action.label === 'GET_ALL') {
-    const assignments = action.response.assignments;
-    const files = action.response.files;
-    return {
-      ...state,
-      microtask_assignment: {
-        data: assignments.sort(defaultSorter),
-        last_fetched_at: new Date(),
-        status,
-      },
-      karya_file: {
-        data: files,
-        last_fetched_at: new Date(),
-        status,
-      },
-    };
-  }
-
   // GET_ALL action
   if (action.label === 'GET_ALL') {
     const { store, response } = action;
@@ -121,8 +96,8 @@ const storeReducer: StoreReducer = (state = initState, action) => {
 
   const last_fetched_at = state[action.store].last_fetched_at;
 
-  // GET_BY_ID action
-  if (action.label === 'GET_BY_ID' || action.label === 'UPDATE_BY_ID' || action.label === 'CREATE') {
+  // CREATE action
+  if (action.label === 'CREATE') {
     const { store, response } = action;
     const oldData = state[store]?.data || [];
     const data = mergeData(oldData, response);
@@ -131,43 +106,13 @@ const storeReducer: StoreReducer = (state = initState, action) => {
 
   // Handle custom actions
 
-  // Language
-  if (action.store === 'language') {
-    const oldData = state.language?.data || [];
-    if (action.label === 'UPDATE_SUPPORTED') {
-      const { response } = action;
-      const data = mergeData(oldData, response);
-      return { ...state, language: { data, last_fetched_at, status } };
-    }
-  }
-
-  // LRV table
-  if (action.store === 'language_resource_value') {
-    const oldData = state.language_resource_value?.data || [];
-    if (action.label === 'FILE_CREATE' || action.label === 'FILE_UPDATE_BY_ID') {
-      const { response } = action;
-      const data = mergeData(oldData, response);
-      return { ...state, language_resource_value: { data, last_fetched_at, status } };
-    }
-  }
-
-  // Task table
-  if (action.store === 'task') {
-    const oldData = state.task?.data || [];
-    if (action.label === 'APPROVE' || action.label === 'VALIDATE') {
-      const { response } = action;
-      const data = mergeData(oldData, response);
-      return { ...state, task: { data, last_fetched_at, status } };
-    }
-  }
-
   // Work provider table
-  if (action.store === 'work_provider') {
+  if (action.store === 'server_user') {
     if (action.label === 'GENERATE_CC') {
-      const oldData = state.work_provider?.data || [];
+      const oldData = state.server_user?.data || [];
       const { response } = action;
       const data = mergeData(oldData, response);
-      return { ...state, work_provider: { data, last_fetched_at, status } };
+      return { ...state, server_user: { data, last_fetched_at, status } };
     }
   }
 
@@ -181,18 +126,21 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
-  // Microtask extra
-  if (action.store === 'microtask') {
-    if (action.label === 'GET_ALL_WITH_COMPLETED') {
-      return { ...state, microtask: { data: action.response, last_fetched_at, status } };
+  // Submit input files
+  if (action.store === 'task_op') {
+    const oldData = state.task_op?.data || [];
+    if (action.label === 'SUBMIT_INPUT_FILE') {
+      const { response } = action;
+      const data = mergeData(oldData, response);
+      return { ...state, task_op: { data, last_fetched_at, status } };
     }
   }
 
   // All action should be covered by now
   ((obj: never) => {
+    throw new Error('Should never have come here');
     // This is a typescript check
   })(action);
-  throw new Error('Should never have come here');
 };
 
 /**
@@ -200,7 +148,7 @@ const storeReducer: StoreReducer = (state = initState, action) => {
  * @param data Array of records
  * @param updatedRecord Updated record
  */
-function mergeData<RecordType extends { id: number }>(
+function mergeData<RecordType extends { id: string }>(
   data: RecordType[] | undefined,
   updatedRecord: RecordType,
 ): RecordType[] {
