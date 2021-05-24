@@ -217,8 +217,9 @@ abstract class MicrotaskRenderer(
   private fun getMicrotaskInputDirectory(): String {
     val microtaskInputName = microtaskInputContainer.cname
     val microtaskId = currentMicroTask.id
-    val microtaskInputDirectory = getDir("${microtaskInputName}_$microtaskId", MODE_PRIVATE)
-    return microtaskInputDirectory.path
+    return microtaskInputContainer.getDirectory(microtaskId)
+//    val microtaskInputDirectory = getDir("files/${microtaskInputName}/$microtaskId", MODE_PRIVATE)
+//    return microtaskInputDirectory.path
   }
 
   /** Get microtask input file path */

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
@@ -23,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
+class ConsentFormFragment : Fragment(R.layout.fragment_consent_form) {
 
   private val binding by viewBinding(FragmentConsentFormBinding::bind)
   private val viewModel by viewModels<ConsentFormViewModel>()
@@ -41,7 +42,7 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
 
   override fun onResume() {
     super.onResume()
-    assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY)
+//    assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY)
   }
 
   private fun setupViews() {
@@ -56,7 +57,7 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
 
     with(binding) {
       appTb.setTitle(getString(R.string.s_consent_form_title))
-      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY) }
+//      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY) }
 
       consentFormTv.text = spannedText
       consentFormTv.movementMethod = ScrollingMovementMethod()

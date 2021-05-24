@@ -55,7 +55,7 @@ constructor(
 
   private var taskInfoList = listOf<TaskInfo>()
   private val taskInfoComparator =
-    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
+    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.assignedMicrotasks }.thenBy { taskInfo ->
       taskInfo.taskID
     }
 
@@ -131,7 +131,9 @@ constructor(
     // Get Assignment DB updates
     assignmentRepository
       .getNewAssignments(worker.idToken, from)
-      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .catch {
+        _dashboardUiState.value = DashboardUiState.Error(it)
+      }
       .collect()
   }
 
@@ -303,7 +305,7 @@ constructor(
       }
 
       // input folder
-      val microtaskInputDirectory = "${microtaskInputContainer.getDirectory()}/${microtaskInputContainer.cname}_$id"
+      val microtaskInputDirectory = microtaskInputContainer.getDirectory(id)
       Log.d("MICRTSK_INPUT_DIRECTORY", microtaskInputDirectory)
       val microtaskDirectory = File(microtaskInputDirectory)
       for (file in microtaskDirectory.listFiles()!!) {

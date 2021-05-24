@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/appLanguageTextColor"
-            android:textSize="@dimen/_24ssp"
+            android:textSize="@dimen/_20ssp"
             android:text="Project Karya"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

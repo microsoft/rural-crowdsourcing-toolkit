@@ -7,8 +7,8 @@ import java.io.FileNotFoundException
 sealed class KaryaFileContainer(val cname: String, val fileDirPath: String) {
 
   /** Get the local directory path for a container */
-  fun getDirectory(): String {
-    val dirPath = "$fileDirPath/$cname"
+  fun getDirectory(path: String = ""): String {
+    var dirPath = "$fileDirPath/$cname/$path"
     val dir = File(dirPath)
 
     var success = true
