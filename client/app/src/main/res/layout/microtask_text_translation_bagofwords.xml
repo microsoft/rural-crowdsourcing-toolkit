@@ -30,7 +30,7 @@
         android:gravity="center"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:text="Today is a beautiful day"
+        android:text=""
         android:textColor="#505050"
         android:textSize="@dimen/_18ssp"
         android:background="@drawable/border_black"

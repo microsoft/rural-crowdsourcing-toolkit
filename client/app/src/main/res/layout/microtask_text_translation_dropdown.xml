@@ -30,7 +30,7 @@
         android:gravity="center"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:text="He is reading a book"
+        android:text=""
         android:textColor="#505050"
         android:textSize="@dimen/_18ssp"
         android:background="@drawable/border_black"
@@ -49,7 +49,6 @@
         android:textSize="@dimen/_16ssp"
         android:textColor="#000000"
         android:hint="Type your translation here"
-
         android:inputType="textMultiLine"
         android:maxLines="4"
         android:paddingVertical="15dp"
