@@ -80,7 +80,7 @@ constructor(
         val taskStatus = fetchTaskStatus(taskInfo.taskID)
         tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
       }
-      taskInfoList = tempList
+      taskInfoList = tempList.sortedWith(taskInfoComparator)
 
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
