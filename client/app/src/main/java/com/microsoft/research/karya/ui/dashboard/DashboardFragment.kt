@@ -16,7 +16,6 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
-import com.microsoft.research.karya.ui.scenarios.storySpeech.StorySpeechMain
 import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe

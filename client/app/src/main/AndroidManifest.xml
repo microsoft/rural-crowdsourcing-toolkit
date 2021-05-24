@@ -25,9 +25,6 @@
             android:name=".ui.scenarios.speechData.SpeechDataMain"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.scenarios.storySpeech.StorySpeechMain"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.scenarios.speechVerification.SpeechVerificationMain"
             android:screenOrientation="portrait" />
         <activity
