@@ -10,7 +10,7 @@
         layout="@layout/microtask_header" />
 
     <TextView
-        android:id="@+id/instructionTv"
+        android:id="@+id/instructionTvnone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -18,7 +18,7 @@
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:text="@string/text_translation_instruction_desc"
-        android:textColor="#BBBBBB"
+        android:textColor="#606060"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
@@ -30,23 +30,30 @@
         android:gravity="center"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:text="Today is a beautiful day"
+        android:text="He is reading a book"
         android:textColor="#505050"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintTop_toBottomOf="@id/instructionTv" />
+        android:textSize="@dimen/_18ssp"
+        android:background="@drawable/border_black"
+        app:layout_constraintTop_toBottomOf="@id/instructionTvnone" />
 
     <EditText
         android:id="@+id/textTranslationNone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="#E8E8E8"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/border_black"
         android:completionThreshold="1"
         android:dropDownHeight="wrap_content"
-        android:hint="@string/typing_hint"
+        android:textSize="@dimen/_16ssp"
+        android:textColor="#000000"
+        android:hint="Type your translation here"
         android:inputType="textMultiLine"
-        android:lines="2"
+        android:maxLines="3"
         android:padding="5dp"
+        android:paddingVertical="15dp"
+        android:paddingHorizontal="20dp"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
         app:layout_constraintTop_toBottomOf="@id/sourceSentenceNone"

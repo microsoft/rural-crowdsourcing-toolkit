@@ -97,6 +97,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
 
             else -> {
                 setContentView(R.layout.microtask_text_translation_none)
+                instructionTvnone.text = instruction
                 nextBtnNone.setOnClickListener { handleNextClick() }
                 handleTextChange()
                 setButtonStates(ButtonState.DISABLED)
