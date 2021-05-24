@@ -127,9 +127,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       when (task.scenarioName) {
         // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
         // Use [ScenarioType] enum once we migrate to it.
-        "story-speech" -> Intent(requireContext(), StorySpeechMain::class.java)
-        "speech-data" -> Intent(requireContext(), SpeechDataMain::class.java)
-        "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
+        "SPEECH_DATA" -> Intent(requireContext(), SpeechDataMain::class.java)
+        "SPEECH_VERIFICATION" -> Intent(requireContext(), SpeechVerificationMain::class.java)
         "TEXT_TRANSLATION" -> Intent(requireContext(), TextToTextTranslationMain::class.java)
         else -> {
           throw Exception("Unimplemented scenario")
