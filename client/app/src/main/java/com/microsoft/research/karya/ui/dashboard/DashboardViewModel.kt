@@ -19,19 +19,14 @@ import com.microsoft.research.karya.utils.FileUtils.downloadFileToLocalPath
 import com.microsoft.research.karya.utils.FileUtils.getMD5Digest
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
-import com.microsoft.research.karya.utils.Result
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -69,6 +64,7 @@ constructor(
       fetchNewAssignments()
       fetchVerifiedAssignments()
       cleanupKaryaFiles()
+      getAllTasks()
     }
   }
 
@@ -201,27 +197,23 @@ constructor(
       .collect()
   }
 
-  /**
-   * Returns a hot flow connected to the DB
-   * @return [Flow] of list of [TaskRecord] wrapper in a [Result]
-   */
+  /** Fetches a list of tasks */
   fun getAllTasks() {
     viewModelScope.launch {
       val worker = authManager.fetchLoggedInWorker()
 
-      taskRepository
-        .getTaskInfoAsFlow()
-        .flowOn(Dispatchers.IO)
-        .onEach { taskInfoList ->
-          val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
-          val success =
-            DashboardUiState.Success(
-              DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
-            )
-          _dashboardUiState.value = success
-        }
-        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
-        .collect()
+      try {
+        val taskInfoList = taskRepository.getTaskInfo()
+
+        val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
+        val success =
+          DashboardUiState.Success(
+            DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+          )
+        _dashboardUiState.value = success
+      } catch (throwable: Throwable) {
+        _dashboardUiState.value = DashboardUiState.Error(throwable)
+      }
     }
   }
 
