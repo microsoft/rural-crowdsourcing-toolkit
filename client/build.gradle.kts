@@ -5,6 +5,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
 
         // TODO: Remove JCenter
         @Suppress("JcenterRepositoryObsolete")
@@ -23,6 +24,7 @@ buildscript {
         classpath(Plugins.gms)
         classpath(Plugins.crashlytics)
         classpath(Plugins.safeArgs)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files
     }
@@ -32,6 +34,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven(url = "https://jitpack.io")
 
         // TODO: Remove JCenter

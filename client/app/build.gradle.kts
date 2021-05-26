@@ -92,6 +92,8 @@ dependencies {
 
     implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
     implementation(Dependencies.AndroidX.Navigation.uiKtx)
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
     kapt(Dependencies.AndroidX.Room.roomCompiler)
 
@@ -117,6 +119,7 @@ dependencies {
     implementation(Dependencies.ThirdParty.okhttp)
     implementation(Dependencies.ThirdParty.loggingInterceptor)
     implementation(Dependencies.ThirdParty.stateProgressBar)
+    implementation(Dependencies.ThirdParty.cameraview)
 
     implementation(Dependencies.ThirdParty.Retrofit.retrofit)
     implementation(Dependencies.ThirdParty.Retrofit.gsonConverter)

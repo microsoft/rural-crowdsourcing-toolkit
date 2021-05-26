@@ -154,6 +154,7 @@ abstract class MicrotaskRenderer(
   }
 
   /** Add a file to the assignment with the given output */
+  // Argument: Key, params (old)
   protected fun addOutputFile(params: Pair<String, String>) {
     val fileName = getAssignmentFileName(params)
     // Add file if it is not already present

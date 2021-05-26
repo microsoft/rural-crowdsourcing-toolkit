@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/sign_video_nav"
+    app:startDestination="@id/signVideoMain">
+    <activity
+        android:id="@+id/signVideoMain"
+        android:name="com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain"
+        android:label="SignVideoMain" />
+</navigation>

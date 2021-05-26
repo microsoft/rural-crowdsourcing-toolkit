@@ -236,4 +236,5 @@
     <string name="s_previous_action"> You can press this button to go to the previous sentence.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="video_record_button">I Understand and start recording</string>
 </resources>
