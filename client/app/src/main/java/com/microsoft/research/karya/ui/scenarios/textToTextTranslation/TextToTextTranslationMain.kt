@@ -36,6 +36,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
     var nWords = 2
     var bagOfWords = ""
     var bagOfWordsCount = 0
+    var dropDownCount = 0
     var sourceLanguage = "English"
     var targetLanguage = "Hindi"
     var langspec = "en-hi"
@@ -80,7 +81,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                 val editTextParams = getEditTextParams()
                 editText!!.layoutParams = editTextParams
                 textBagOfWords.setupINMTBagOfWords(editText, editTextParams)
-
+                handleTextChange()
                 nextBtnBOW.setOnClickListener { handleNextClick() }
                 setButtonStates(ButtonState.DISABLED)
             }
@@ -129,13 +130,13 @@ class TextToTextTranslationMain : MicrotaskRenderer(
             "bow" -> {
                 log(srcSentence)
                 sourceSentenceBOW.text = srcSentence
-
+                bagOfWordsCount = 0
                 bagOfWords = currentMicroTask.input.asJsonObject.getAsJsonObject("data").asJsonObject.get("bow").asString
 
                 val textBagOfWords = findViewById<INMTLiteBagOfWords>(R.id.textTranslationBOW)
 
 
-                handleTextChange()
+
                 GlobalScope.launch(Dispatchers.Main) {
                     textBagOfWords.resetINMTBagOfWords(
                         srcSentence,
@@ -152,11 +153,12 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                     findViewById<INMTLiteDropDown>(R.id.textTranslationDropdown)
                 sourceSentenceDropDown.text = srcSentence
                 textTranslationDropdown.setText("")
+                dropDownCount = 0
                 if (support == "dd2")
                     nWords = 2
                 textToTextTranslation.resetINMTLiteDropdown(
                     srcSentence,
-                    sourceLanguage,
+                    sourceLanguage,//
                     targetLanguage,
                     langspec,
                     nWords
@@ -197,10 +199,10 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                 outputData.addProperty("sentence", editText.getText().toString())
                 val textBagOfWords = findViewById<INMTLiteBagOfWords>(R.id.textTranslationBOW)
                 setButtonStates(ButtonState.DISABLED)
-                bagOfWordsCount = 0
                 textBagOfWords.clearINMTBOW()
             }
             "dd1", "dd2" -> {
+                log("Total clicks in dd:$dropDownCount")
                 outputData.addProperty(
                     "sentence",
                     textTranslationDropdown.getText().toString()
@@ -348,6 +350,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                     }
 
                     override fun afterTextChanged(s: Editable) {
+                        dropDownCount += 1
                         if (textTranslationDropdown.text.toString() != "") {
                             setButtonStates(ButtonState.ENABLED)
                         } else {

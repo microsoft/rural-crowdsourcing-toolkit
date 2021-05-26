@@ -514,26 +514,30 @@ abstract class MicrotaskRenderer(
       currentMicrotaskGroupId = currentMicroTask.group_id
 
       if (!currentAssignment.output.isJsonNull) {
-        outputData =
-          if (currentAssignment.output.asJsonObject.has("data")) {
-            currentAssignment.output.asJsonObject.getAsJsonObject("data")
-          } else {
-            JsonObject()
-          }
+          outputData =
+              if (currentAssignment.output.asJsonObject.has("data")) {
+                  currentAssignment.output.asJsonObject.getAsJsonObject("data")
+              } else {
+                  JsonObject()
+              }
 
-        logs =
-          if (currentAssignment.output.asJsonObject.has("logs")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("logs")
-          } else {
-            JsonArray()
-          }
+          logs =
+              if (currentAssignment.output.asJsonObject.has("logs")) {
+                  currentAssignment.output.asJsonObject.getAsJsonArray("logs")
+              } else {
+                  JsonArray()
+              }
 
-        outputFiles =
-          if (currentAssignment.output.asJsonObject.has("files")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("files")
-          } else {
-            JsonArray()
-          }
+          outputFiles =
+              if (currentAssignment.output.asJsonObject.has("files")) {
+                  currentAssignment.output.asJsonObject.getAsJsonArray("files")
+              } else {
+                  JsonArray()
+              }
+      } else {
+          outputData = JsonObject()
+          logs = JsonArray()
+          outputFiles = JsonArray()
       }
 
       // setup microtask
