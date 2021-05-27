@@ -17,12 +17,14 @@ import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { backendSpeechDataScenario } from './scenarios/SpeechData';
 import { backendTextTranslationScenario } from './scenarios/TextTranslation';
 import { backendSpeechVerificationScenario } from './scenarios/SpeechVerification';
+import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 
 // Local scenario Map
 const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<any, object, any, object, any> } = {
   SPEECH_DATA: backendSpeechDataScenario,
   TEXT_TRANSLATION: backendTextTranslationScenario,
   SPEECH_VERIFICATION: backendSpeechVerificationScenario,
+  SIGN_LANGUAGE_VIDEO: backendSignLanguageVideoScenario,
 };
 
 // Task input processor queue
