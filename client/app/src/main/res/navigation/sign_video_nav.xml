@@ -6,4 +6,8 @@
         android:id="@+id/signVideoMain"
         android:name="com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain"
         android:label="SignVideoMain" />
+    <fragment
+        android:id="@+id/signVideoRecord"
+        android:name="com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoRecord"
+        android:label="SignVideoRecord" />
 </navigation>

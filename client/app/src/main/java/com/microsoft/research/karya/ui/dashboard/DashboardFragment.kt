@@ -14,6 +14,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
+import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
@@ -126,7 +127,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       when (task.scenarioName) {
         // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
         // Use [ScenarioType] enum once we migrate to it.
-        "SPEECH_DATA" -> Intent(requireContext(), SpeechDataMain::class.java)
+        "SPEECH_DATA" -> Intent(requireContext(), SignVideoMain::class.java)
         "SPEECH_VERIFICATION" -> Intent(requireContext(), SpeechVerificationMain::class.java)
         "TEXT_TRANSLATION" -> Intent(requireContext(), TextToTextTranslationMain::class.java)
         else -> {

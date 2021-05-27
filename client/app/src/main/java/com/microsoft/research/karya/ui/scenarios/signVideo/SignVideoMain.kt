@@ -4,31 +4,24 @@
 package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.app.Activity
-import android.graphics.Color
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaPlayer
-import android.media.MediaRecorder
-import android.view.View
+import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.local.enum.AssistantAudio
-import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
-import com.microsoft.research.karya.utils.RawToAACEncoder
-import com.microsoft.research.karya.utils.extensions.invisible
-import com.microsoft.research.karya.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_sign_video_init.*
-import java.io.DataOutputStream
-import java.io.FileOutputStream
-import java.io.RandomAccessFile
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.android.synthetic.main.fragment_sign_video_init.backBtn
+import kotlinx.android.synthetic.main.fragment_sign_video_init.nextBtn
+import kotlinx.android.synthetic.main.fragment_sign_video_init.recordBtn
+import kotlinx.android.synthetic.main.fragment_sign_video_init.sentenceTv
+import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+
+const val BUTTON_COOLDOWN_TIME: Long = 3000
 
 /**
  * Microtask renderer for the speech-data scenario. Each microtask is a sentence. The activity
@@ -44,6 +37,16 @@ open class SignVideoMain(
     includeCompleted = includeCompleted,
     finishOnGroupBoundary = finishOnGroupBoundary,
   ) {
+
+  val recordVideoLauncher =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+
+      if (result.resultCode == RESULT_OK) {
+        videoPlayer.setVideoPath(outputRecordingFilePath)
+        videoPlayer.start()
+      }
+    }
+
   /**
    * UI button states
    *
@@ -51,8 +54,7 @@ open class SignVideoMain(
    */
   private enum class ButtonState {
     DISABLED,
-    ENABLED,
-    ACTIVE
+    ENABLED
   }
 
   /** Activity states */
@@ -71,48 +73,16 @@ open class SignVideoMain(
   private lateinit var recordInstruction: String
   private var noForcedReplay: Boolean = false
 
-  /** Audio recorder and media player */
-  private var audioRecorder: AudioRecord? = null
-  private var mediaPlayer: MediaPlayer? = null
-
-  /** Audio recorder config parameters */
-  private val _minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
-  private val _recorderBufferSize = _minBufferSize * 4
-  private val _recorderBufferBytes = _recorderBufferSize
-
   /** UI State */
   private var activityState: ActivityState = ActivityState.INIT
   private var previousActivityState: ActivityState = ActivityState.INIT
   private var recordBtnState = ButtonState.DISABLED
-  private var playBtnState = ButtonState.DISABLED
   private var nextBtnState = ButtonState.DISABLED
   private var backBtnState = ButtonState.DISABLED
 
-
-  private lateinit var preRecordBuffer: Array<ByteArray>
-  private var preRecordBufferConsumed: Array<Int> = Array(2) { 0 }
-  private var currentPreRecordBufferIndex = 0
-  private var totalRecordedBytes = 0
-  private var preRecordingJob: Job? = null
-
-  private var recordBuffers: ArrayList<ByteArray> = arrayListOf()
-  private var currentRecordBufferConsumed = 0
-  private var recordingJob: Job? = null
-  private var audioFileFlushJob: Job? = null
-
-  /** scratch WAV file */
-  private val scratchRecordingFileParams = Pair("", "wav")
-  private lateinit var scratchRecordingFilePath: String
-  private lateinit var scratchRecordingFile: DataOutputStream
-  private lateinit var scratchRecordingFileInitJob: Job
-
   /** Final recording file */
-  private val outputRecordingFileParams = Pair("", "m4a")
+  private val outputRecordingFileParams = Pair("", "mp4")
   private lateinit var outputRecordingFilePath: String
-  private var encodingJob: Job? = null
-
-  /** Playback progress thread */
-  private var playbackProgressThread: Thread? = null
 
   /** This activity requires audio recording permissions */
   override fun requiredPermissions(): Array<String> {
@@ -127,10 +97,39 @@ open class SignVideoMain(
     flushButtonStates()
   }
 
+  /** Flush button states */
+  private fun flushButtonStates() {
+    // Set the clickable states first
+    recordBtn.isClickable = recordBtnState != ButtonState.DISABLED
+    backBtn.isClickable = backBtnState != ButtonState.DISABLED
+    nextBtn.isClickable = nextBtnState != ButtonState.DISABLED
+
+    recordBtn.alpha =
+      when (recordBtnState) {
+        ButtonState.DISABLED -> 0.5F
+        ButtonState.ENABLED -> 1F
+      }
+
+    nextBtn.setBackgroundResource(
+      when (nextBtnState) {
+        ButtonState.DISABLED -> R.drawable.ic_next_disabled
+        ButtonState.ENABLED -> R.drawable.ic_next_enabled
+      }
+    )
+
+    backBtn.setBackgroundResource(
+      when (backBtnState) {
+        ButtonState.DISABLED -> R.drawable.ic_back_disabled
+        ButtonState.ENABLED -> R.drawable.ic_back_enabled
+      }
+    )
+
+  }
+
   /** Activity setup function. Set view. */
   final override fun setupActivity() {
     /** setup view */
-    setContentView(R.layout.sign_video_main)
+    setContentView(R.layout.fragment_sign_video_init)
 
     setActivityState(ActivityState.INIT)
 
@@ -176,8 +175,20 @@ open class SignVideoMain(
 
 
     sentenceTv.text = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
-    totalRecordedBytes = 0
-    setActivityState(ActivityState.COMPLETED_SETUP)
+
+    if (activityState == ActivityState.INIT){
+      setActivityState(ActivityState.COMPLETED_SETUP)
+    }
+    startCooldownTimer()
+  }
+
+  private fun startCooldownTimer() {
+
+    lifecycleScope.launch {
+      delay(BUTTON_COOLDOWN_TIME)
+      setActivityState(ActivityState.COOLDOWN_COMPLETE)
+    }
+
   }
 
   /** Set the state of the activity to the target state */
@@ -200,129 +211,42 @@ open class SignVideoMain(
        * transition to next state
        */
       ActivityState.INIT -> {
-        releasePlayer()
-        releaseRecorder()
+        setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
+      }
+
+      ActivityState.COMPLETED_SETUP -> {
+        setButtonStates(ButtonState.ENABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
 
       /** COMPLETED: release the media player */
       ActivityState.COMPLETED -> {
-//        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.DISABLED)
+      }
+
+      ActivityState.COOLDOWN_COMPLETE -> {
+        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.DISABLED)
       }
 
       /**
-       * NEW_PLAYING: if coming from paused state, start player. Else initialize and start the
-       * player. Set the onCompletion listener to go back to the completed state
+       * NEW_PLAYING
        */
       ActivityState.NEW_PLAYING -> {
-        if (previousActivityState == ActivityState.NEW_PAUSED) {
-          mediaPlayer!!.start()
-        } else if (previousActivityState == ActivityState.COMPLETED) {
-          initializePlayer()
-          mediaPlayer!!.setOnCompletionListener {
-            playbackProgressPb.progress = playbackProgressPb.max
-            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
-            setActivityState(ActivityState.COMPLETED)
-          }
-          playFile(scratchRecordingFilePath)
-        }
-        updatePlaybackProgress(ActivityState.NEW_PLAYING)
+        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
       }
 
-      /** NEW_PAUSED: pause the player */
+      /** NEW_PAUSED */
       ActivityState.NEW_PAUSED -> {
-        mediaPlayer!!.pause()
+        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
       }
 
-      /**
-       * OLD_PLAYING: if coming from paused state, start player. Else initialize and start the
-       * player. Set the onCompletion listener to go back to the completed state. Play old output
-       * file.
-       */
-      ActivityState.OLD_PLAYING -> {
-        if (previousActivityState == ActivityState.OLD_PAUSED) {
-          mediaPlayer!!.start()
-        } else if (previousActivityState == ActivityState.COMPLETED_PRERECORDING) {
-          initializePlayer()
-          mediaPlayer!!.setOnCompletionListener {
-            playbackProgressPb.progress = playbackProgressPb.max
-            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
-            setActivityState(ActivityState.COMPLETED_PRERECORDING)
-          }
-          playFile(outputRecordingFilePath)
-        }
-        updatePlaybackProgress(ActivityState.OLD_PLAYING)
+      /** FIRST PLAYBACK */
+      ActivityState.FIRST_PLAYBACK -> {
+        setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
 
-      /** OLD_PAUSED: pause the player */
-      ActivityState.OLD_PAUSED -> {
-        mediaPlayer!!.pause()
-      }
-
-      /**
-       * SIMPLE_NEXT: If prerecording, then wait for prerecording job to finish. Then move to next
-       * microtask
-       */
-      ActivityState.SIMPLE_NEXT -> {
-        runBlocking {
-          if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
-          }
-          moveToNextMicrotask()
-          setActivityState(ActivityState.INIT)
-        }
-      }
-
-      /**
-       * SIMPLE_BACK: If prerecording, then wait for prerecording job to finish. Then move to
-       * previous microtask
-       */
-      ActivityState.SIMPLE_BACK -> {
-        runBlocking {
-          if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
-          }
-          moveToPreviousMicrotask()
-          setActivityState(ActivityState.INIT)
-        }
-      }
-
-      /** ENCODING_NEXT: Encode scratch file to compressed output file. Move to next microtask. */
-      ActivityState.ENCODING_NEXT -> {
-        runBlocking {
-          encodingJob =
-            ioScope.launch {
-              encodeRecording()
-              completeAndSaveCurrentMicrotask()
-            }
-          encodingJob?.join()
-          moveToNextMicrotask()
-          setActivityState(ActivityState.INIT)
-        }
-      }
-
-      /**
-       * ENCODING_BACK: Encode scratch file to compressed output file. Move to previous microtask.
-       */
-      ActivityState.ENCODING_BACK -> {
-        runBlocking {
-          encodingJob =
-            ioScope.launch {
-              encodeRecording()
-              completeAndSaveCurrentMicrotask()
-            }
-          encodingJob?.join()
-          moveToPreviousMicrotask()
-          setActivityState(ActivityState.INIT)
-        }
-      }
-      ActivityState.ASSISTANT_PLAYING -> {
-        /** This is a dummy state to trigger events before assistant can be played */
-      }
-      ActivityState.ACTIVITY_STOPPED -> {
-        /**
-         * This is a dummy state to trigger events (e.g., end recordings). [cleanupOnStop] should
-         * take care of handling actual cleanup.
-         */
+      /** FIRST PLAYBACK PAUSED */
+      ActivityState.FIRST_PLAYBACK_PAUSED -> {
+        setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
     }
   }
@@ -340,79 +264,10 @@ open class SignVideoMain(
     log(message)
 
     /** Determine action based on current state */
+    val intent = Intent(this, SignVideoRecord::class.java)
+    intent.putExtra("video_file_path", outputRecordingFilePath)
+    recordVideoLauncher.launch(intent)
 
-  }
-
-  /** Handle play button click */
-  private fun handlePlayClick() {
-    // log the state transition
-    val message = JsonObject()
-    message.addProperty("type", "o")
-    message.addProperty("button", "PLAY")
-    message.addProperty("state", playBtnState.toString())
-    log(message)
-
-    when (activityState) {
-      /** If coming from first play back, just move to pause */
-      ActivityState.FIRST_PLAYBACK -> {
-        setButtonStates(DISABLED, DISABLED, ENABLED, DISABLED)
-        setActivityState(ActivityState.FIRST_PLAYBACK_PAUSED)
-      }
-
-      /** If coming from first playback paused, resume player */
-      ActivityState.FIRST_PLAYBACK_PAUSED -> {
-        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
-        setActivityState(ActivityState.FIRST_PLAYBACK)
-      }
-
-      /** If coming from completed, play the scratch wav file */
-      ActivityState.COMPLETED -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
-        setActivityState(ActivityState.NEW_PLAYING)
-      }
-
-      /** on NEW_PLAYING, move to NEW_PAUSED */
-      ActivityState.NEW_PLAYING -> {
-        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
-        setActivityState(ActivityState.NEW_PAUSED)
-      }
-
-      /** on NEW_PAUSED, move to NEW_PLAYING */
-      ActivityState.NEW_PAUSED -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
-        setActivityState(ActivityState.NEW_PLAYING)
-      }
-
-      /** COMPLETED_PRERECORDING: Move to old playing */
-      ActivityState.COMPLETED_PRERECORDING -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
-        setActivityState(ActivityState.OLD_PLAYING)
-      }
-
-      /** OLD_PLAYING: Move to old paused */
-      ActivityState.OLD_PLAYING -> {
-        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
-        setActivityState(ActivityState.OLD_PAUSED)
-      }
-
-      /** OLD_PAUSED: Move to old playing */
-      ActivityState.OLD_PAUSED -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
-        setActivityState(ActivityState.OLD_PLAYING)
-      }
-      ActivityState.INIT,
-      ActivityState.PRERECORDING,
-      ActivityState.RECORDED,
-      ActivityState.RECORDING,
-      ActivityState.ENCODING_BACK,
-      ActivityState.ENCODING_NEXT,
-      ActivityState.SIMPLE_BACK,
-      ActivityState.SIMPLE_NEXT,
-      ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
-        // throw Exception("Play button should not be clicked in '$activityState' state")
-      }
-    }
   }
 
   /** Handle next button click */
@@ -423,32 +278,8 @@ open class SignVideoMain(
     message.addProperty("button", "NEXT")
     log(message)
 
-    /** Disable all buttons when NEXT is clicked */
-    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
-
-    when (activityState) {
-      ActivityState.COMPLETED_PRERECORDING, ActivityState.OLD_PLAYING, ActivityState.OLD_PAUSED -> {
-        setActivityState(ActivityState.SIMPLE_NEXT)
-      }
-      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
-        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
-        setActivityState(ActivityState.ENCODING_NEXT)
-      }
-      ActivityState.INIT,
-      ActivityState.PRERECORDING,
-      ActivityState.RECORDING,
-      ActivityState.RECORDED,
-      ActivityState.FIRST_PLAYBACK,
-      ActivityState.FIRST_PLAYBACK_PAUSED,
-      ActivityState.ENCODING_NEXT,
-      ActivityState.ENCODING_BACK,
-      ActivityState.SIMPLE_NEXT,
-      ActivityState.SIMPLE_BACK,
-      ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
-        // throw Exception("Next button should not be clicked in '$activityState' state")
-      }
-    }
+    moveToNextMicrotask()
+    setActivityState(ActivityState.INIT)
   }
 
   /** Handle back button click */
@@ -459,34 +290,8 @@ open class SignVideoMain(
     message.addProperty("button", "BACK")
     log(message)
 
-    /** Disable all buttons when NEXT is clicked */
-    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
-
-    when (activityState) {
-      ActivityState.PRERECORDING,
-      ActivityState.COMPLETED_PRERECORDING,
-      ActivityState.OLD_PLAYING,
-      ActivityState.OLD_PAUSED, -> {
-        setActivityState(ActivityState.SIMPLE_BACK)
-      }
-      ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
-        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
-        setActivityState(ActivityState.ENCODING_BACK)
-      }
-      ActivityState.INIT,
-      ActivityState.RECORDING,
-      ActivityState.RECORDED,
-      ActivityState.FIRST_PLAYBACK,
-      ActivityState.FIRST_PLAYBACK_PAUSED,
-      ActivityState.ENCODING_NEXT,
-      ActivityState.ENCODING_BACK,
-      ActivityState.SIMPLE_NEXT,
-      ActivityState.SIMPLE_BACK,
-      ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
-        // throw Exception("Back button should not be clicked in '$activityState' state")
-      }
-    }
+    moveToPreviousMicrotask()
+    setActivityState(ActivityState.INIT)
   }
 
   override fun onBackPressed() {
@@ -497,333 +302,14 @@ open class SignVideoMain(
     log(message)
 
     when (activityState) {
-      ActivityState.INIT,
-      ActivityState.PRERECORDING,
-      ActivityState.COMPLETED_PRERECORDING,
-      ActivityState.RECORDING,
-      ActivityState.RECORDED,
-      ActivityState.FIRST_PLAYBACK,
-      ActivityState.FIRST_PLAYBACK_PAUSED,
-      ActivityState.OLD_PLAYING,
-      ActivityState.OLD_PAUSED,
-      ActivityState.SIMPLE_NEXT,
-      ActivityState.SIMPLE_BACK,
-      ActivityState.ASSISTANT_PLAYING, -> {
-        setResult(Activity.RESULT_OK, intent)
-        finish()
-      }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         runBlocking {
-          encodeRecording()
           completeAndSaveCurrentMicrotask()
           setResult(Activity.RESULT_OK, intent)
           finish()
         }
       }
-      ActivityState.ENCODING_NEXT, ActivityState.ENCODING_BACK -> {
-        runBlocking {
-          encodingJob?.join()
-          setResult(Activity.RESULT_OK, intent)
-          finish()
-        }
-      }
-      ActivityState.ACTIVITY_STOPPED -> {
-        // throw Exception("Android back button cannot not be clicked in '$activityState' state")
-      }
     }
   }
 
-  /** Initialize [audioRecorder] */
-  private fun initializeAndStartRecorder() {
-    audioRecorder =
-      AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, _recorderBufferSize)
-    audioRecorder!!.startRecording()
-  }
-
-  /** Reset recording length */
-  private fun resetRecordingLength(duration: Int? = null) {
-    uiScope.launch {
-      val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
-      val centiSeconds = (milliseconds / 10) % 100
-      val seconds = milliseconds / 1000
-      recordSecondsTv.text = "%d".format(seconds)
-      recordCentiSecondsTv.text = "%02d".format(centiSeconds)
-    }
-  }
-
-  /** Initialize [mediaPlayer] */
-  private fun initializePlayer() {
-    mediaPlayer = MediaPlayer()
-  }
-
-  /** Play [mediaFilePath] */
-  private fun playFile(mediaFilePath: String) {
-    val player: MediaPlayer = mediaPlayer!!
-    player.setDataSource(mediaFilePath)
-    player.prepare()
-    playbackProgressPb.max = player.duration
-    player.start()
-  }
-
-  /** Update the progress bar for the player as long as the activity is in the specific state. */
-  private fun updatePlaybackProgress(state: ActivityState) {
-    val runnable = Runnable {
-      while (state == activityState) {
-        val currentPosition = mediaPlayer?.currentPosition
-        playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
-        Thread.sleep(100)
-      }
-    }
-    playbackProgressThread = Thread(runnable)
-    playbackProgressThread?.start()
-  }
-
-  /** Is the current state prerecording? */
-  private fun isPrerecordingState(state: ActivityState): Boolean {
-    return state == ActivityState.PRERECORDING || state == ActivityState.COMPLETED_PRERECORDING
-  }
-
-  /** Start prerecording. In this phase, the data from the audio recorder goes into a buffer. */
-  private fun writeAudioDataToPrerecordBuffer() {
-    /** Keep reading until prerecording */
-    preRecordingJob =
-      ioScope.launch {
-        while (isPrerecordingState(activityState)) {
-          val currentBuffer = preRecordBuffer[currentPreRecordBufferIndex]
-          val consumedBytes = preRecordBufferConsumed[currentPreRecordBufferIndex]
-          val remainingBytes = maxPreRecordBytes - consumedBytes
-
-          val readBytes = audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
-          preRecordBufferConsumed[currentPreRecordBufferIndex] += readBytes
-
-          if (readBytes == remainingBytes) {
-            currentPreRecordBufferIndex = 1 - currentPreRecordBufferIndex
-            preRecordBufferConsumed[currentPreRecordBufferIndex] = 0
-          }
-        }
-      }
-  }
-
-  /**
-   * Start recording. Wait for prerecording to complete, if coming from prerecording state. Write
-   * recorded data directly to the wav file.
-   */
-  private fun writeAudioDataToRecordBuffer() {
-    recordingJob =
-      ioScope.launch {
-        if (isPrerecordingState(previousActivityState)) {
-          preRecordingJob!!.join()
-        }
-
-        totalRecordedBytes = preRecordBufferConsumed[0] + preRecordBufferConsumed[1]
-        totalRecordedBytes = if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
-
-        var data = ByteArray(_recorderBufferBytes)
-        currentRecordBufferConsumed = 0
-        var remainingSpace = _recorderBufferBytes
-
-        var readBytes = 0
-        while (activityState == ActivityState.RECORDING || readBytes > 0) {
-          readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
-          if (readBytes > 0) {
-            currentRecordBufferConsumed += readBytes
-            remainingSpace -= readBytes
-            if (remainingSpace == 0) {
-              recordBuffers.add(data)
-              data = ByteArray(_recorderBufferBytes)
-              currentRecordBufferConsumed = 0
-              remainingSpace = _recorderBufferBytes
-            }
-            totalRecordedBytes += readBytes
-            resetRecordingLength()
-          }
-        }
-
-        recordBuffers.add(data)
-      }
-  }
-
-  /** Finish recording and finalize the wav file (update the file size) */
-  private fun finishRecordingAndFinalizeWavFile() {
-    runBlocking {
-      audioFileFlushJob =
-        ioScope.launch {
-          delay(postRecordingTime.toLong())
-          audioRecorder!!.stop()
-
-          recordingJob!!.join()
-          audioRecorder!!.release()
-
-          /** Write data to file */
-          scratchRecordingFileInitJob.join()
-
-          /** Write the prerecord buffer to file */
-          val bufferIndex = currentPreRecordBufferIndex
-          val otherIndex = 1 - bufferIndex
-          var currentBufferBytes = preRecordBufferConsumed[bufferIndex]
-          val otherBufferBytes = preRecordBufferConsumed[otherIndex]
-
-          if (currentBufferBytes < 0) {
-            currentBufferBytes = 0
-          }
-
-          val currentBuffer = preRecordBuffer[bufferIndex]
-          val otherBuffer = preRecordBuffer[otherIndex]
-
-          // If other buffer is not empty, first write tail from other buffer
-          if (otherBufferBytes != 0) {
-            scratchRecordingFile.write(otherBuffer, currentBufferBytes, maxPreRecordBytes - currentBufferBytes)
-            totalRecordedBytes = maxPreRecordBytes - currentBufferBytes
-          }
-
-          // write current buffer
-          scratchRecordingFile.write(currentBuffer, 0, currentBufferBytes)
-          totalRecordedBytes += currentBufferBytes
-
-          /** Write the main record buffer */
-          for (i in 0 until recordBuffers.lastIndex) {
-            scratchRecordingFile.write(recordBuffers[i], 0, _recorderBufferBytes)
-            totalRecordedBytes += _recorderBufferBytes
-          }
-
-          /** Write the last buffer */
-          try {
-            if (currentRecordBufferConsumed > 0) {
-              val lastBuffer = recordBuffers.last()
-              scratchRecordingFile.write(lastBuffer, 0, currentRecordBufferConsumed)
-              totalRecordedBytes += currentRecordBufferConsumed
-            }
-          } catch (e: Exception) {
-            // Ignore (rare) errors
-          }
-
-          resetRecordingLength()
-
-          /** Close the file */
-          scratchRecordingFile.close()
-
-          /** Fix the file size fields in the wav file */
-          val dataSize = totalRecordedBytes
-          val scratchFile = RandomAccessFile(scratchRecordingFilePath, "rw")
-          writeIntAtLocation(scratchFile, dataSize + 36, 4)
-          writeIntAtLocation(scratchFile, dataSize, 40)
-          scratchFile.close()
-        }
-
-      /**
-       * If still in recorded state, switch to playback. User may have stopped activity by pressing
-       * home button.
-       */
-      uiScope.launch {
-        audioFileFlushJob!!.join()
-        if (activityState == ActivityState.RECORDED) {
-          if (noForcedReplay) {
-            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
-            setActivityState(ActivityState.COMPLETED)
-          } else {
-            setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
-            setActivityState(ActivityState.FIRST_PLAYBACK)
-          }
-        }
-      }
-    }
-  }
-
-  /** Release the audio recorder */
-  private fun releaseRecorder() {
-    if (audioRecorder?.state == AudioRecord.STATE_INITIALIZED) {
-      if (audioRecorder?.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
-        audioRecorder?.stop()
-      }
-    }
-    audioRecorder?.release()
-    audioRecorder = null
-  }
-
-  /** Release the media player and hide seek bar */
-  private fun releasePlayer() {
-    mediaPlayer?.stop()
-    mediaPlayer?.reset()
-    mediaPlayer?.release()
-    mediaPlayer = null
-  }
-
-  /** Flush button states */
-  private fun flushButtonStates() {
-    // Set the clickable states first
-    recordBtn.isClickable = recordBtnState != ButtonState.DISABLED
-    backBtn.isClickable = backBtnState != ButtonState.DISABLED
-    nextBtn.isClickable = nextBtnState != ButtonState.DISABLED
-  }
-
-  /** Reset wav file on a new recording creation */
-  private fun resetWavFile() {
-    val wavFileHandle = getAssignmentScratchFile(scratchRecordingFileParams)
-    scratchRecordingFile = DataOutputStream(FileOutputStream(wavFileHandle))
-    writeWavFileHeader()
-  }
-
-  /** Write WAV file header */
-  private fun writeWavFileHeader() {
-    writeString(scratchRecordingFile, "RIFF")
-    writeInt(scratchRecordingFile, 0)
-    writeString(scratchRecordingFile, "WAVE")
-    writeString(scratchRecordingFile, "fmt ")
-    writeInt(scratchRecordingFile, 16)
-    writeShort(scratchRecordingFile, 1.toShort())
-    writeShort(scratchRecordingFile, 1.toShort())
-    writeInt(scratchRecordingFile, SAMPLE_RATE)
-    writeInt(scratchRecordingFile, SAMPLE_RATE * 2)
-    writeShort(scratchRecordingFile, 2.toShort())
-    writeShort(scratchRecordingFile, 16.toShort())
-    writeString(scratchRecordingFile, "data")
-    writeInt(scratchRecordingFile, 0)
-  }
-
-  /** Encode the scratch wav recording file into a compressed main file. */
-  private suspend fun encodeRecording() {
-    CoroutineScope(Dispatchers.Default)
-      .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
-      .join()
-    addOutputFile(outputRecordingFileParams)
-  }
-
-  /** Helper methods to convert [time] in milliseconds to number of samples */
-  private fun timeToSamples(time: Int): Int {
-    return time * SAMPLE_RATE / 1000
-  }
-
-  /** Helper method to convert number of [samples] to time in milliseconds */
-  private fun samplesToTime(samples: Int): Int {
-    return ((samples.toFloat() / SAMPLE_RATE) * 1000).toInt()
-  }
-
-  /** Helper methods to write data in little endian format */
-  private fun writeInt(output: DataOutputStream, value: Int) {
-    output.write(value shr 0)
-    output.write(value shr 8)
-    output.write(value shr 16)
-    output.write(value shr 24)
-  }
-
-  private fun writeIntAtLocation(output: RandomAccessFile, value: Int, location: Long) {
-    val data = ByteArray(4)
-    data[0] = (value shr 0).toByte()
-    data[1] = (value shr 8).toByte()
-    data[2] = (value shr 16).toByte()
-    data[3] = (value shr 24).toByte()
-    output.seek(location)
-    output.write(data)
-  }
-
-  private fun writeShort(output: DataOutputStream, value: Short) {
-    output.write(value.toInt() shr 0)
-    output.write(value.toInt() shr 8)
-  }
-
-  private fun writeString(output: DataOutputStream, value: String) {
-    for (element in value) {
-      output.writeBytes(element.toString())
-    }
-  }
 }

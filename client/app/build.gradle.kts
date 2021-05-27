@@ -90,10 +90,14 @@ dependencies {
     implementation(Dependencies.AndroidX.Room.roomKtx)
     implementation(Dependencies.AndroidX.Room.roomRuntime)
 
+    implementation(Dependencies.Support.support_core_utils)
+
     implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
     implementation(Dependencies.AndroidX.Navigation.uiKtx)
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
     kapt(Dependencies.AndroidX.Room.roomCompiler)
 

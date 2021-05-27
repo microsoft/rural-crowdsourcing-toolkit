@@ -32,6 +32,10 @@ object Dependencies {
     }
   }
 
+  object Support {
+    const val support_core_utils = "com.android.support:support-core-utils:28.0.0"
+  }
+
   object AndroidX {
 
     const val appcompat = "androidx.appcompat:appcompat:1.3.0-rc01"
@@ -99,7 +103,7 @@ object Dependencies {
     const val stateProgressBar = "com.kofigyan.stateprogressbar:stateprogressbar:1.0.0"
     const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.1"
     const val okhttp = "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
-    const val cameraview = "com.otaliastudios:cameraview:1.5.1"
+    const val cameraview = "com.otaliastudios:cameraview:2.7.0"
 
     object Retrofit {
       private const val version = "2.9.0"

@@ -18,8 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeGray"
         android:usesCleartextTraffic="true">
-
-
+        <activity android:name=".ui.scenarios.signVideo.SignVideoRecord"></activity>
+        <activity android:name=".ui.scenarios.signVideo.SignVideoMain"></activity>
         <activity android:name=".ui.registration.RegistrationActivity" /> <!-- Microtask rendering activities -->
         <activity
             android:name=".ui.scenarios.speechData.SpeechDataMain"
@@ -31,7 +31,7 @@
             android:name=".ui.scenarios.textToTextTranslation.TextToTextTranslationMain"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".ui.splashScreen.SplashScreenActivity"></activity>
+        <activity android:name=".ui.splashScreen.SplashScreenActivity" />
         <activity
             android:name=".ui.onboarding.accesscode.AccessCodeActivity"
             android:screenOrientation="portrait" />
