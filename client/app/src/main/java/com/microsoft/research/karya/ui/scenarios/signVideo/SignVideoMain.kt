@@ -5,11 +5,13 @@ package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.MediaController
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
+import com.potyvideo.library.globalInterfaces.AndExoPlayerListener
 import kotlinx.android.synthetic.main.fragment_sign_video_init.*
 import kotlinx.android.synthetic.main.fragment_sign_video_init.backBtn
 import kotlinx.android.synthetic.main.fragment_sign_video_init.nextBtn
@@ -42,8 +44,20 @@ open class SignVideoMain(
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
       if (result.resultCode == RESULT_OK) {
-        videoPlayer.setVideoPath(outputRecordingFilePath)
-        videoPlayer.start()
+        videoPlayer.setSource(outputRecordingFilePath)
+
+        if (activityState == ActivityState.COOLDOWN_COMPLETE) {
+          setActivityState(ActivityState.FIRST_PLAYBACK)
+        }
+
+        videoPlayer.startPlayer()
+        videoPlayer.setShowControllers(false)
+        videoPlayer.setAndExoPlayerListener(object : AndExoPlayerListener {
+          override fun onExoEnded() {
+            super.onExoEnded()
+            setActivityState(ActivityState.COMPLETED)
+          }
+        })
       }
     }
 
@@ -178,8 +192,8 @@ open class SignVideoMain(
 
     if (activityState == ActivityState.INIT){
       setActivityState(ActivityState.COMPLETED_SETUP)
+      startCooldownTimer()
     }
-    startCooldownTimer()
   }
 
   private fun startCooldownTimer() {
@@ -220,7 +234,7 @@ open class SignVideoMain(
 
       /** COMPLETED: release the media player */
       ActivityState.COMPLETED -> {
-        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.DISABLED)
+        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
       }
 
       ActivityState.COOLDOWN_COMPLETE -> {

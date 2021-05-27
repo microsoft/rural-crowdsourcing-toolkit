@@ -129,6 +129,7 @@ dependencies {
     implementation(Dependencies.ThirdParty.Retrofit.gsonConverter)
 
     debugImplementation(Dependencies.ThirdParty.debugDB)
+    implementation("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
 
     implementation(project(":app-dropdown"))
     implementation(project(":app-bow"))
