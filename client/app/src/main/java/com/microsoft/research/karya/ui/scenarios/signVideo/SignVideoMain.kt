@@ -5,6 +5,7 @@ package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.JsonObject
@@ -13,6 +14,7 @@ import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain.ButtonState.ENABLED
 import com.microsoft.research.karya.utils.extensions.gone
+import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.visible
 import com.potyvideo.library.globalInterfaces.AndExoPlayerListener
 import kotlinx.android.synthetic.main.fragment_sign_video_init.*
@@ -20,7 +22,6 @@ import kotlinx.android.synthetic.main.fragment_sign_video_init.backBtn
 import kotlinx.android.synthetic.main.fragment_sign_video_init.nextBtn
 import kotlinx.android.synthetic.main.fragment_sign_video_init.recordBtn
 import kotlinx.android.synthetic.main.fragment_sign_video_init.sentenceTv
-import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -153,7 +154,7 @@ open class SignVideoMain(
     /** record instruction */
     recordInstruction =
       task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_video_desc)
-    videoRecordPromptTv.text = recordInstruction
+    recordPromptTv.text = recordInstruction
 
     /** Forced replace */
     noForcedReplay =
@@ -171,11 +172,11 @@ open class SignVideoMain(
 
   fun showVideoPlayer() {
     videoPlayer.visible()
-    videoPlayerPlaceHolder.gone()
+    videoPlayerPlaceHolder.invisible()
   }
 
   fun hideVideoPlayer() {
-    videoPlayer.gone()
+    videoPlayer.invisible()
     videoPlayerPlaceHolder.visible()
   }
 
@@ -201,9 +202,10 @@ open class SignVideoMain(
     /** Get the scratch and output file paths */
     outputRecordingFilePath = getAssignmentOutputFilePath(outputRecordingFileParams)
 
+    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    sentenceTv.text = sentence
 
-    sentenceTv.text =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    Log.i("VIDEO_SENTENCE", sentence)
 
     if (activityState == ActivityState.INIT) {
       setActivityState(ActivityState.COMPLETED_SETUP)

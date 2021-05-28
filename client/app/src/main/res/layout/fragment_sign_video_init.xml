@@ -10,7 +10,7 @@
         layout="@layout/microtask_header_2" />
 
     <TextView
-        android:id="@+id/videoRecordPromptTv"
+        android:id="@+id/recordPromptTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -43,7 +43,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recordPromptTv"
-        app:layout_constraintBottom_toTopOf="@id/videoPlayer"/>
+        app:layout_constraintBottom_toTopOf="@id/videoPlayerPlaceHolder"/>
 
 
     <com.potyvideo.library.AndExoPlayerView
@@ -110,8 +110,9 @@
         android:layout_height="0dp"
         android:text="@string/video_record_button"
         android:layout_margin="@dimen/_8sdp"
-        android:background="#00AAAA"
+        android:background="#CC0000"
         android:paddingHorizontal="@dimen/_5sdp"
+        android:textColor="#FFFFFF"
         app:layout_constraintLeft_toRightOf="@id/backBtnCl"
         app:layout_constraintRight_toLeftOf="@id/nextBtnCl"
         app:layout_constraintBottom_toBottomOf="@id/backBtnCl"
