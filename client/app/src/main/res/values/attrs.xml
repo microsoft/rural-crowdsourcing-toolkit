@@ -30,4 +30,9 @@
     <attr name="card1Color" format="reference" />
     <attr name="card2Color" format="reference" />
     <attr name="card3Color" format="reference" />
+
+    <declare-styleable name="OutlineTextView">
+        <attr name="outlineSize" format="dimension"/>
+        <attr name="outlineColor" format="color|reference"/>
+    </declare-styleable>
 </resources>

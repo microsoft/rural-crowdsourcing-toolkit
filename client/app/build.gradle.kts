@@ -39,9 +39,6 @@ android {
     lintOptions {
         isAbortOnError = false
     }
-    androidExtensions {
-        isExperimental = true
-    }
     buildFeatures {
         dataBinding = true
         viewBinding = true
@@ -83,7 +80,6 @@ dependencies {
     implementation(Dependencies.AndroidX.constraintLayout)
     implementation(Dependencies.AndroidX.datastorePrefs)
     implementation(Dependencies.AndroidX.fragmentKtx)
-    implementation(Dependencies.AndroidX.legacy_support)
     implementation(Dependencies.AndroidX.multidex)
     implementation(Dependencies.AndroidX.work_runtime)
 
@@ -117,7 +113,6 @@ dependencies {
 
     kapt(Dependencies.AndroidX.Hilt.daggerCompiler)
     kapt(Dependencies.AndroidX.Hilt.daggerHiltCompiler)
-
 
     implementation(Dependencies.Kotlin.Coroutines.core)
     implementation(Dependencies.Kotlin.Coroutines.coroutines)
