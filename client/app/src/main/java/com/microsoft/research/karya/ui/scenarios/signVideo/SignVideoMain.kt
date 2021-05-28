@@ -5,12 +5,15 @@ package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.MediaController
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
+import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain.ButtonState.DISABLED
+import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMain.ButtonState.ENABLED
+import com.microsoft.research.karya.utils.extensions.gone
+import com.microsoft.research.karya.utils.extensions.visible
 import com.potyvideo.library.globalInterfaces.AndExoPlayerListener
 import kotlinx.android.synthetic.main.fragment_sign_video_init.*
 import kotlinx.android.synthetic.main.fragment_sign_video_init.backBtn
@@ -148,7 +151,8 @@ open class SignVideoMain(
     setActivityState(ActivityState.INIT)
 
     /** record instruction */
-    recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_video_desc)
+    recordInstruction =
+      task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_video_desc)
     videoRecordPromptTv.text = recordInstruction
 
     /** Forced replace */
@@ -163,6 +167,16 @@ open class SignVideoMain(
     recordBtn.setOnClickListener { handleRecordClick() }
     nextBtn.setOnClickListener { handleNextClick() }
     backBtn.setOnClickListener { handleBackClick() }
+  }
+
+  fun showVideoPlayer() {
+    videoPlayer.visible()
+    videoPlayerPlaceHolder.gone()
+  }
+
+  fun hideVideoPlayer() {
+    videoPlayer.gone()
+    videoPlayerPlaceHolder.visible()
   }
 
   /**
@@ -188,9 +202,10 @@ open class SignVideoMain(
     outputRecordingFilePath = getAssignmentOutputFilePath(outputRecordingFileParams)
 
 
-    sentenceTv.text = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    sentenceTv.text =
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
 
-    if (activityState == ActivityState.INIT){
+    if (activityState == ActivityState.INIT) {
       setActivityState(ActivityState.COMPLETED_SETUP)
       startCooldownTimer()
     }
@@ -225,16 +240,23 @@ open class SignVideoMain(
        * transition to next state
        */
       ActivityState.INIT -> {
+        hideVideoPlayer()
         setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
 
       ActivityState.COMPLETED_SETUP -> {
+        hideVideoPlayer()
         setButtonStates(ButtonState.ENABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
 
       /** COMPLETED: release the media player */
       ActivityState.COMPLETED -> {
-        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
+        showVideoPlayer()
+        addOutputFile(outputRecordingFileParams)
+        lifecycleScope.launch {
+          completeAndSaveCurrentMicrotask()
+          setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
+        }
       }
 
       ActivityState.COOLDOWN_COMPLETE -> {
@@ -245,27 +267,29 @@ open class SignVideoMain(
        * NEW_PLAYING
        */
       ActivityState.NEW_PLAYING -> {
+        showVideoPlayer()
         setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
       }
 
       /** NEW_PAUSED */
       ActivityState.NEW_PAUSED -> {
+        showVideoPlayer()
         setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
       }
 
       /** FIRST PLAYBACK */
       ActivityState.FIRST_PLAYBACK -> {
+        showVideoPlayer()
         setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
 
       /** FIRST PLAYBACK PAUSED */
       ActivityState.FIRST_PLAYBACK_PAUSED -> {
+        showVideoPlayer()
         setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
       }
     }
   }
-
-
 
 
   /** Handle record button click */
@@ -309,6 +333,7 @@ open class SignVideoMain(
   }
 
   override fun onBackPressed() {
+    super.onBackPressed()
     // log the state transition
     val message = JsonObject()
     message.addProperty("type", "o")

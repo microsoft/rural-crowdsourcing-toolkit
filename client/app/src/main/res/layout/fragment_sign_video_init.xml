@@ -55,7 +55,18 @@
         app:layout_constraintBottom_toTopOf="@id/backBtnCl"
         android:layout_margin="@dimen/_8sdp"
         />
-
+    <TextView
+        android:id="@+id/videoPlayerPlaceHolder"
+        android:text="@string/record_preview_message"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:background="#000"
+        android:textColor="#FFF"
+        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintBottom_toTopOf="@id/backBtnCl"
+        android:layout_margin="@dimen/_8sdp"
+        />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
