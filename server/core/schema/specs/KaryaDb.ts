@@ -135,7 +135,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['description', ['text'], 'not unique', 'not nullable', 'mutable'],
         ['display_name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-        ['params', ['kv'], 'not unique', 'not nullable', 'mutable'],
+        ['params', ['template', 'ParamsType'], 'not unique', 'not nullable', 'mutable'],
         ['itags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['otags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
@@ -151,6 +151,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['assignment_batch_size', ['int'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'TaskStatus'], 'not unique', 'not nullable', 'mutable'],
       ],
+      templates: [['ParamsType', 'kv']],
     },
 
     microtask_group: {
@@ -165,12 +166,24 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       columns: [
         ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
         ['group_id', ['>', 'microtask_group'], 'not unique', 'nullable', 'not mutable'],
-        ['input', ['object', 'MicrotaskInput'], 'not unique', 'not nullable', 'not mutable'],
+        [
+          'input',
+          ['object', 'MicrotaskInput', ['InputData', 'InputFiles']],
+          'not unique',
+          'not nullable',
+          'not mutable',
+        ],
         ['input_file_id', ['>', 'karya_file'], 'not unique', 'nullable', 'not mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['credits', ['float'], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 16, 'MicrotaskStatus'], 'not unique', 'not nullable', 'mutable'],
-        ['output', ['object', 'MicrotaskOutput'], 'not unique', 'nullable', 'mutable'],
+        ['output', ['object', 'MicrotaskOutput', ['OutputData', 'OutputFiles']], 'not unique', 'nullable', 'mutable'],
+      ],
+      templates: [
+        ['InputData', 'object'],
+        ['InputFiles', 'stringdict'],
+        ['OutputData', 'object'],
+        ['OutputFiles', 'stringdict'],
       ],
     },
 
@@ -224,7 +237,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'MicrotaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
         ['completed_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
-        ['output', ['object', 'MicrotaskOutput'], 'not unique', 'nullable', 'mutable'],
+        ['output', ['object', 'MicrotaskOutput', ['OutputData', 'OutputFiles']], 'not unique', 'nullable', 'mutable'],
         ['output_file_id', ['>', 'karya_file'], 'unique', 'nullable', 'mutable'],
         ['logs', ['stringarray'], 'not unique', 'nullable', 'mutable'],
         ['submitted_to_box_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
@@ -232,6 +245,10 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['verified_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['report', ['object'], 'not unique', 'nullable', 'mutable'],
         ['credits', ['float'], 'not unique', 'nullable', 'mutable'],
+      ],
+      templates: [
+        ['OutputData', 'object'],
+        ['OutputFiles', 'stringdict'],
       ],
     },
   },
