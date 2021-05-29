@@ -10,7 +10,7 @@ import { TableColumnSpec, TableColumnType } from '../SchemaInterface';
  * @param ctype Table column type
  * @param name Name of the column
  */
-function typescriptType<T extends string, S extends string, O extends string>(
+export function typescriptType<T extends string, S extends string, O extends string>(
   name: string,
   ctype: TableColumnType<T, S, O>
 ): string {
@@ -37,8 +37,17 @@ function typescriptType<T extends string, S extends string, O extends string>(
       return `{ ${name}: string[] }`;
     case 'kv':
       return '{ [id: string]: string | number | boolean}';
-    case 'object':
-      return ctype[1] ? `Custom.${ctype[1]}` : 'object';
+    case 'stringdict':
+      return '{ [id: string]: string }';
+    case 'object': {
+      const objType = ctype[1];
+      const templates = ctype[2];
+      if (!objType) return 'object';
+      const templateString = templates ? `<${templates.join(',')}>` : '';
+      return `Custom.${objType} ${templateString}`;
+    }
+    case 'template':
+      return ctype[1];
     default:
       ((obj: never) => {
         throw new Error(`Invalid column type '${obj}'`);
@@ -116,7 +125,13 @@ export function basicKnexField<T extends string, S extends string, O extends str
     case 'kv':
       return `json('${name}')`;
 
+    case 'stringdict':
+      return `json('${name}')`;
+
     case 'object':
+      return `json('${name}')`;
+
+    case 'template':
       return `json('${name}')`;
 
     default:
