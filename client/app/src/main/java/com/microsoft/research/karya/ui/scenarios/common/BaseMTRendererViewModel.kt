@@ -29,20 +29,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import javax.inject.Inject
 
 @HiltViewModel
 abstract class BaseMTRendererViewModel
-@AssistedInject
 constructor(
-  private val assignmentRepository: AssignmentRepository,
-  private val taskRepository: TaskRepository,
-  private val microTaskRepository: MicroTaskRepository,
-  @FilesDir private val fileDirPath: String,
-  private val authManager: AuthManager,
-  @Assisted private val taskId: String,
-  @Assisted private val incompleteMta: Int,
-  @Assisted private val completedMta: Int
+  private val taskId: String,
+  private val incompleteMta: Int,
+  private val completedMta: Int
 ) : ViewModel() {
+
+  @Inject lateinit var assignmentRepository: AssignmentRepository
+  @Inject lateinit var taskRepository: TaskRepository
+  @Inject lateinit var microTaskRepository: MicroTaskRepository
+  @Inject @FilesDir lateinit var fileDirPath: String
+  @Inject lateinit var authManager: AuthManager
 
   // TODO: Mark First visited in Speech Data collection
 

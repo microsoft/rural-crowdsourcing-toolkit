@@ -19,7 +19,7 @@ private const val REQUEST_PERMISSIONS = 201
 // Flag to indicate if app has all permissions
 private var hasAllPermissions: Boolean = true
 
-abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int, VM: BaseMTRendererViewModel) : BaseFragment(contentLayoutId) {
+abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
 
   protected lateinit var viewmodel: BaseMTRendererViewModel
 
