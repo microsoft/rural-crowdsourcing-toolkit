@@ -25,6 +25,7 @@ type TextTranslationMicrotaskOutputFiles = {};
 
 // Base text translation scenario type
 export type BaseTextTranslationScenario = BaseScenarioInterface<
+  'TEXT_TRANSLATION',
   TextTranslationTaskInputParameters,
   TextTranslationMicrotaskInput,
   TextTranslationMicrotaskInputFiles,

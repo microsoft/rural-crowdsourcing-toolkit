@@ -5,7 +5,7 @@
 // execution of task operations: processing input files, and generating output
 // files.
 
-import { BlobParameters, getBlobName, ScenarioName, TaskOpRecord, TaskRecord } from '@karya/core';
+import { BlobParameters, getBlobName, ScenarioName, TaskOpRecord, TaskRecordType } from '@karya/core';
 import { BackendScenarioInterface } from './ScenarioInterface';
 import Bull from 'bull';
 import { promises as fsp } from 'fs';
@@ -20,7 +20,7 @@ import { backendSpeechVerificationScenario } from './scenarios/SpeechVerificatio
 import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 
 // Local scenario Map
-const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<any, object, any, object, any> } = {
+const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<key, any, object, any, object, any> } = {
   SPEECH_DATA: backendSpeechDataScenario,
   TEXT_TRANSLATION: backendTextTranslationScenario,
   SPEECH_VERIFICATION: backendSpeechVerificationScenario,
@@ -30,7 +30,7 @@ const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<any,
 // Task input processor queue
 
 export type TaskInputProcessorObject = {
-  task: TaskRecord;
+  task: TaskRecordType;
   jsonFilePath: string | undefined;
   tgzFilePath: string | undefined;
   folderPath: string;
@@ -73,7 +73,12 @@ inputProcessorQueue.on('failed', async (job, err) => {
  * @param tgzFilePath Tar file associated with the input
  * @param localFolder Local parent folder for task files
  */
-async function processInputFile(task: TaskRecord, jsonFilePath?: string, tgzFilePath?: string, taskFolder?: string) {
+async function processInputFile(
+  task: TaskRecordType,
+  jsonFilePath?: string,
+  tgzFilePath?: string,
+  taskFolder?: string
+) {
   // Extract the scenario corresponding to the task
   const scenario_name = task.scenario_name;
   const scenario = backendScenarioMap[scenario_name];
@@ -113,6 +118,7 @@ async function processInputFile(task: TaskRecord, jsonFilePath?: string, tgzFile
   const groups = await scenario.processInputFile(task, taskJsonInput, tgzFilePath, taskFolder);
 
   // Create microtask groups and microtasks
+  // @ts-ignore -- Not sure what this error is
   await BBPromise.mapSeries(groups, async (group) => {
     // extract group info and create microtask group if necessary
     const { mg, microtasks } = group;

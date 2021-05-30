@@ -23,6 +23,7 @@ type SignLanguageVideoMicrotaskOutputFiles = { recording: string };
 
 // Base sign langauge video data scenario type
 export type BaseSignLanguageVideoScenario = BaseScenarioInterface<
+  'SIGN_LANGUAGE_VIDEO',
   SignLanguageVideoTaskInputParameters,
   SignLanguageVideoMicrotaskInput,
   SignLanguageVideoMicrotaskInputFiles,

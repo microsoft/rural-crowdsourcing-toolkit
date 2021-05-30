@@ -51,6 +51,7 @@ export type MicrotaskResponseType = 'UNIQUE' | 'MULTIPLE_OBJECTIVE' | 'MULTIPLE_
  * This interface a formal specification of a scenario on the Karya platform.
  */
 export interface BaseScenarioInterface<
+  SN extends ScenarioName,
   ScenarioParams,
   MicrotaskInput,
   MicrotaskInputFiles,
@@ -58,7 +59,7 @@ export interface BaseScenarioInterface<
   MicrotaskOutputFiles
 > {
   // Unique identifier for the scenario
-  name: ScenarioName;
+  name: SN;
 
   // Full name of the scenario in English
   full_name: string;

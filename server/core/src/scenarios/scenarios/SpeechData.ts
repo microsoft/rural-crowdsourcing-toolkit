@@ -23,6 +23,7 @@ type SpeechDataMicrotaskOutputFiles = { recording: string };
 
 // Base speech data scenario type
 export type BaseSpeechDataScenario = BaseScenarioInterface<
+  'SPEECH_DATA',
   SpeechDataTaskInputParameters,
   SpeechDataMicrotaskInput,
   SpeechDataMicrotaskInputFiles,

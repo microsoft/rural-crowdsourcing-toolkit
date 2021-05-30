@@ -66,7 +66,7 @@ type CreateTaskState = {
   task: Task;
   params: { [id: string]: string | boolean };
   itags: string;
-  scenario?: BaseScenarioInterface<any, object, any, object, any>;
+  scenario?: BaseScenarioInterface<ScenarioName, any, object, any, object, any>;
   language_code?: LanguageCode;
 };
 

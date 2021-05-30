@@ -27,6 +27,7 @@ type SpeechVerificationMicrotaskOutputFiles = {};
 
 // Base speech verification scenario type
 export type BaseSpeechVerificationScenario = BaseScenarioInterface<
+  'SPEECH_VERIFICATION',
   SpeechVerificationTaskInputParameters,
   SpeechVerificationMicrotaskInput,
   SpeechVerificationMicrotaskInputFiles,

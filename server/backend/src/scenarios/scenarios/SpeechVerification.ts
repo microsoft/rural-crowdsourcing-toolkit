@@ -25,7 +25,7 @@ async function processInputFile(
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
-): Promise<MicrotaskList> {
+): Promise<MicrotaskList<'SPEECH_VERIFICATION'>> {
   // Get all the objects from the json Data
   const verifications: { sentence: string; recording: string }[] = jsonData!;
 

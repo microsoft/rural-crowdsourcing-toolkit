@@ -32,7 +32,9 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   : never;
 
 // Scenario name to instance map
-export const scenarioMap: { [key in ScenarioName]: BaseScenarioInterface<any, object, any, object, any> } = {
+export const scenarioMap: {
+  [key in ScenarioName]: BaseScenarioInterface<key, any, object, any, object, any>;
+} = {
   SPEECH_DATA: baseSpeechDataScenario,
   TEXT_TRANSLATION: baseTextTranslationScenario,
   SPEECH_VERIFICATION: baseSpeechVerificationScenario,
@@ -40,19 +42,23 @@ export const scenarioMap: { [key in ScenarioName]: BaseScenarioInterface<any, ob
 };
 
 // Utility types to extract task, microtask, assignment record types
-export type TaskRecordType<SN extends ScenarioName> = ScenarioType<SN> extends BaseScenarioInterface<
+export type TaskRecordType<SN extends ScenarioName = ScenarioName> = ScenarioType<SN> extends BaseScenarioInterface<
+  SN,
   infer TaskParamsType,
   infer _InputDataType,
   infer _InputFilesType,
   infer _OutputDataType,
   infer _OutputFilesType
 >
-  ? TaskRecord<TaskParamsType> & { scenario_name: SN }
+  ? TaskRecord<TaskParamsType>
   : never;
 
-export type TaskType<SN extends ScenarioName> = Partial<TaskRecordType<SN>>;
+export type TaskType<SN extends ScenarioName = ScenarioName> = Partial<TaskRecordType<SN>>;
 
-export type MicrotaskRecordType<SN extends ScenarioName> = ScenarioType<SN> extends BaseScenarioInterface<
+export type MicrotaskRecordType<
+  SN extends ScenarioName = ScenarioName
+> = ScenarioType<SN> extends BaseScenarioInterface<
+  SN,
   infer _TaskParamsType,
   infer InputDataType,
   infer InputFilesType,
@@ -62,9 +68,12 @@ export type MicrotaskRecordType<SN extends ScenarioName> = ScenarioType<SN> exte
   ? MicrotaskRecord<InputDataType, InputFilesType, OutputDataType, OutputFilesType>
   : never;
 
-export type MicrotaskType<SN extends ScenarioName> = Partial<MicrotaskRecordType<SN>>;
+export type MicrotaskType<SN extends ScenarioName = ScenarioName> = Partial<MicrotaskRecordType<SN>>;
 
-export type AssignmentRecordType<SN extends ScenarioName> = ScenarioType<SN> extends BaseScenarioInterface<
+export type AssignmentRecordType<
+  SN extends ScenarioName = ScenarioName
+> = ScenarioType<SN> extends BaseScenarioInterface<
+  SN,
   infer _TaskParamsType,
   infer _InputDataType,
   infer _InputFilesType,
@@ -74,4 +83,4 @@ export type AssignmentRecordType<SN extends ScenarioName> = ScenarioType<SN> ext
   ? MicrotaskAssignmentRecord<OutputDataType, OutputFilesType>
   : never;
 
-export type AssignmentType<SN extends ScenarioName> = Partial<AssignmentRecordType<SN>>;
+export type AssignmentType<SN extends ScenarioName = ScenarioName> = Partial<AssignmentRecordType<SN>>;

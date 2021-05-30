@@ -18,7 +18,7 @@ async function processInputFile(
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
-): Promise<MicrotaskList> {
+): Promise<MicrotaskList<'TEXT_TRANSLATION'>> {
   const sentences: { sentence: string }[] = jsonData!!;
   const microtasks = sentences.map((sentence) => {
     const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
