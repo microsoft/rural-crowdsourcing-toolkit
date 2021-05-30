@@ -4,12 +4,7 @@
 // Backend implementation of the text-translation scenario
 
 import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
-import {
-  Microtask,
-  TextTranslationTaskRecord,
-  baseTextTranslationScenario,
-  BaseTextTranslationScenario,
-} from '@karya/core';
+import { baseTextTranslationScenario, BaseTextTranslationScenario, TaskRecordType, MicrotaskType } from '@karya/core';
 
 /**
  * Process the input file for the text translation task.
@@ -19,14 +14,14 @@ import {
  * @param task_folder Task folder path
  */
 async function processInputFile(
-  task: TextTranslationTaskRecord,
+  task: TaskRecordType<'TEXT_TRANSLATION'>,
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList> {
   const sentences: { sentence: string }[] = jsonData!!;
   const microtasks = sentences.map((sentence) => {
-    const mt: Microtask = {
+    const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,

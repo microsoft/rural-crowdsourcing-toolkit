@@ -3,11 +3,8 @@
 //
 // Implementation of the sign language video data collection
 
-import { TaskRecord } from '../../Index';
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { MicrotaskAssignmentRecord, MicrotaskRecord } from '../../auto/TableInterfaces';
-import { MicrotaskInput, MicrotaskOutput } from '../../types/CustomObjects';
 
 // Sign language video data task input parameters
 type SignLanguageVideoTaskInputParameters = {
@@ -23,16 +20,6 @@ type SignLanguageVideoMicrotaskInputFiles = {};
 // Sign language video data output format
 type SignLanguageVideoMicrotaskOutput = {};
 type SignLanguageVideoMicrotaskOutputFiles = { recording: string };
-
-// Sign langauge video data task, microtask, microtask assignment types
-export type SignLanguageVideoTaskRecord = TaskRecord & { params: SignLanguageVideoTaskInputParameters };
-export type SignLanguageVideoMicrotaskRecord = MicrotaskRecord & {
-  input: MicrotaskInput<SignLanguageVideoMicrotaskInput, SignLanguageVideoMicrotaskInputFiles>;
-  output: MicrotaskOutput<SignLanguageVideoMicrotaskOutput, SignLanguageVideoMicrotaskOutputFiles>;
-};
-export type SignLanguageVideoAssignmentRecord = MicrotaskAssignmentRecord & {
-  output: MicrotaskOutput<SignLanguageVideoMicrotaskOutput, SignLanguageVideoMicrotaskOutputFiles>;
-};
 
 // Base sign langauge video data scenario type
 export type BaseSignLanguageVideoScenario = BaseScenarioInterface<

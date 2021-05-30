@@ -3,11 +3,8 @@
 //
 // Base implementation of the speech-verification scenario
 
-import { TaskRecord } from '../../Index';
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { MicrotaskAssignmentRecord, MicrotaskRecord } from '../../auto/TableInterfaces';
-import { MicrotaskInput, MicrotaskOutput } from '../../types/CustomObjects';
 
 // Speech verification task input parameters
 type SpeechVerificationTaskInputParameters = {
@@ -27,16 +24,6 @@ type SpeechVerificationMicrotaskOutput = {
   volume: number;
 };
 type SpeechVerificationMicrotaskOutputFiles = {};
-
-// Speech verification task, microtask, assignment record types
-export type SpeechVerificationTaskRecord = TaskRecord & { params: SpeechVerificationTaskInputParameters };
-export type SpeechVerificationMicrotaskRecord = MicrotaskRecord & {
-  input: MicrotaskInput<SpeechVerificationMicrotaskInput, SpeechVerificationMicrotaskInputFiles>;
-  output: MicrotaskOutput<SpeechVerificationMicrotaskOutput, SpeechVerificationMicrotaskOutputFiles>;
-};
-export type SpeechVerificationAssignmentRecord = MicrotaskAssignmentRecord & {
-  output: MicrotaskOutput<SpeechVerificationMicrotaskOutput, SpeechVerificationMicrotaskOutputFiles>;
-};
 
 // Base speech verification scenario type
 export type BaseSpeechVerificationScenario = BaseScenarioInterface<

@@ -3,11 +3,8 @@
 //
 // Implementation of the speech-data scenario
 
-import { TaskRecord } from '../../Index';
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { MicrotaskAssignmentRecord, MicrotaskRecord } from '../../auto/TableInterfaces';
-import { MicrotaskInput, MicrotaskOutput } from '../../types/CustomObjects';
 
 // Speech data task input parameters
 type SpeechDataTaskInputParameters = {
@@ -23,16 +20,6 @@ type SpeechDataMicrotaskInputFiles = {};
 // Speech data output format
 type SpeechDataMicrotaskOutput = {};
 type SpeechDataMicrotaskOutputFiles = { recording: string };
-
-// Speech data task, microtask, microtask assignment types
-export type SpeechDataTaskRecord = TaskRecord & { params: SpeechDataTaskInputParameters };
-export type SpeechDataMicrotaskRecord = MicrotaskRecord & {
-  input: MicrotaskInput<SpeechDataMicrotaskInput, SpeechDataMicrotaskInputFiles>;
-  output: MicrotaskOutput<SpeechDataMicrotaskOutput, SpeechDataMicrotaskOutputFiles>;
-};
-export type SpeechDataAssignmentRecord = MicrotaskAssignmentRecord & {
-  output: MicrotaskOutput<SpeechDataMicrotaskOutput, SpeechDataMicrotaskOutputFiles>;
-};
 
 // Base speech data scenario type
 export type BaseSpeechDataScenario = BaseScenarioInterface<

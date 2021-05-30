@@ -4,7 +4,7 @@
 // Implementation of the speech-data scenario
 
 import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
-import { Microtask, SpeechDataTaskRecord, baseSpeechDataScenario, BaseSpeechDataScenario } from '@karya/core';
+import { baseSpeechDataScenario, BaseSpeechDataScenario, TaskRecordType, MicrotaskType } from '@karya/core';
 
 /**
  * Process the input file for the speech data task.
@@ -14,14 +14,14 @@ import { Microtask, SpeechDataTaskRecord, baseSpeechDataScenario, BaseSpeechData
  * @param task_folder Task folder path
  */
 async function processInputFile(
-  task: SpeechDataTaskRecord,
+  task: TaskRecordType<'SPEECH_DATA'>,
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList> {
   const sentences: { sentence: string }[] = jsonData!!;
   const microtasks = sentences.map((sentence) => {
-    const mt: Microtask = {
+    const mt: MicrotaskType<'SPEECH_DATA'> = {
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,

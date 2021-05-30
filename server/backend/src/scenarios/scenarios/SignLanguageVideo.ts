@@ -5,10 +5,10 @@
 
 import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
 import {
-  Microtask,
-  SignLanguageVideoTaskRecord,
   baseSignLanguageVideoScenario,
   BaseSignLanguageVideoScenario,
+  TaskRecordType,
+  MicrotaskType,
 } from '@karya/core';
 
 /**
@@ -19,14 +19,14 @@ import {
  * @param task_folder Task folder path
  */
 async function processInputFile(
-  task: SignLanguageVideoTaskRecord,
+  task: TaskRecordType<'SIGN_LANGUAGE_VIDEO'>,
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList> {
   const sentences: { sentence: string }[] = jsonData!!;
   const microtasks = sentences.map((sentence) => {
-    const mt: Microtask = {
+    const mt: MicrotaskType<'SIGN_LANGUAGE_VIDEO'> = {
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,

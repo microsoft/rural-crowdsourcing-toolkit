@@ -7,8 +7,8 @@ import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
 import {
   baseSpeechVerificationScenario,
   BaseSpeechVerificationScenario,
-  Microtask,
-  SpeechVerificationTaskRecord,
+  MicrotaskType,
+  TaskRecordType,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
@@ -21,7 +21,7 @@ import { promises as fsp } from 'fs';
  * @param task_folder Task folder path
  */
 async function processInputFile(
-  task: SpeechVerificationTaskRecord,
+  task: TaskRecordType<'SPEECH_VERIFICATION'>,
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
@@ -35,7 +35,7 @@ async function processInputFile(
     try {
       await fsp.access(filePath);
 
-      const microtask: Microtask = {
+      const microtask: MicrotaskType<'SPEECH_VERIFICATION'> = {
         task_id: task.id,
         input: {
           data: { sentence },

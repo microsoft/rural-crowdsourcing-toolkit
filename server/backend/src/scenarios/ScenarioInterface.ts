@@ -45,7 +45,7 @@ export interface BackendScenarioInterface<
    * @param task_folder Temporary folder for processing the request
    */
   processInputFile(
-    task: TaskRecord,
+    task: TaskRecord<ScenarioParams>,
     jsonData?: any,
     tarFilePath?: string,
     task_folder?: string
