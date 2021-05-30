@@ -73,12 +73,12 @@ export type ChainGroupingType = 'WORKER' | 'MICROTASK' | 'NEITHER' | 'EITHER';
 /**
  * Base chain interface.
  */
-export interface BaseChainInterface {
+export interface BaseChainInterface<FromScenario extends ScenarioName, ToScenario extends ScenarioName> {
   name: ChainName;
 
   // From and To scenarios
-  fromScenario: ScenarioName;
-  toScenario: ScenarioName;
+  fromScenario: FromScenario;
+  toScenario: ToScenario;
 
   // Blocking type
   blocking: ChainBlockingType;

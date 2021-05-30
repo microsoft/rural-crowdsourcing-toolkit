@@ -5,7 +5,7 @@
 
 import { BaseChainInterface } from '../BaseChainInterface';
 
-export const baseSpeechValidationChain: BaseChainInterface = {
+export const baseSpeechValidationChain: BaseChainInterface<'SPEECH_DATA', 'SPEECH_VERIFICATION'> = {
   name: 'SPEECH_VALIDATION',
   fromScenario: 'SPEECH_DATA',
   toScenario: 'SPEECH_VERIFICATION',
