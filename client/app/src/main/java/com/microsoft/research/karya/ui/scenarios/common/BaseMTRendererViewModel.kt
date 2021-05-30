@@ -18,7 +18,6 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
-import com.microsoft.research.karya.utils.LangRes
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
@@ -30,7 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import javax.inject.Inject
 
 @HiltViewModel
 abstract class BaseMTRendererViewModel
@@ -73,11 +71,11 @@ constructor(
       task = taskRepository.getById(taskId)
       microtaskAssignmentIDs = assignmentRepository.getUnsubmittedIDsForTask(
         task.id,
-        true
+        false
       ) // TODO: Generalise the includeCompleted parameter
 
       if (microtaskAssignmentIDs.isEmpty()) {
-        // TODO: SET a flag to denote that there are no assignements
+        // TODO: SET a flag to denote that there are no assignments
         //  and maybe show a corresponding dialogue box
       }
       // Move to the first incomplete (assigned) microtask or the last microtask
@@ -90,6 +88,7 @@ constructor(
         currentAssignmentIndex++
       } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
 
+      getAndSetupMicrotask()
     }
   }
 
@@ -168,7 +167,7 @@ constructor(
     /** Update progress bar */
     if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
       completedMicrotasks++
-      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
+//      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
 
   }
@@ -202,12 +201,12 @@ constructor(
       currentAssignmentIndex--
       getAndSetupMicrotask()
     } else {
-      // TODO: Signal that there are no previous microtasks in the UI
+      // TODO: Signal that there are no previous microtasks in the UI and finish
     }
   }
 
   /** Get the microtask record for the current assignment and setup the microtask */
-  private fun getAndSetupMicrotask() {
+  fun getAndSetupMicrotask() {
     viewModelScope.launch {
       val assignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
 
