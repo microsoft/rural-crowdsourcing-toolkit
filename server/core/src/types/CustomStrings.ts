@@ -32,14 +32,6 @@ export type TaskOpType = typeof taskOpTypes[number];
 const taskOpStatuses = ['CREATED', 'RUNNING', 'COMPLETED', 'FAILED'] as const;
 export type TaskOpStatus = typeof taskOpStatuses[number];
 
-// Chain Name -- TODO: move to task chaining module
-const chainNames = ['TEST'] as const;
-export type ChainName = typeof chainNames[number];
-
-// Chain Status -- TODO: move to task chaining module
-const chainStatuses = ['ACTIVE', 'INACTIVE'] as const;
-export type ChainStatus = typeof chainStatuses[number];
-
 // Task Assignment Status
 const taskAssignmentStatuses = ['ASSIGNED', 'COMPLETED'] as const;
 export type TaskAssignmentStatus = typeof taskAssignmentStatuses[number];
