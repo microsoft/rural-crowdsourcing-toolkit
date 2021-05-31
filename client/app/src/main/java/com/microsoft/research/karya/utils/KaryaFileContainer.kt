@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.utils
 
 import androidx.appcompat.app.AppCompatActivity
+import com.microsoft.research.karya.utils.extensions.getContainerDirectory
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -69,6 +70,12 @@ class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("micro
     val extension = params.second
 
     return if (identifier == "") "$assignmentId.$extension" else "$assignmentId-$identifier.$extension"
+  }
+
+  fun getAssignmentOutputFilePath(assignmentId:String, params: Pair<String, String>): String {
+    val directory = getContainerDirectory()
+    val fileName = getAssignmentFileName(assignmentId, params)
+    return "$directory/$fileName"
   }
 
 }
