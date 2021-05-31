@@ -21,8 +21,6 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
@@ -30,42 +28,51 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 @HiltViewModel
 abstract class BaseMTRendererViewModel
+@Inject
 constructor(
-  private val taskId: String,
-  private val incompleteMta: Int,
-  private val completedMta: Int
+  var assignmentRepository: AssignmentRepository,
+  var taskRepository: TaskRepository,
+  var microTaskRepository: MicroTaskRepository,
+  @FilesDir var fileDirPath: String,
+  var authManager: AuthManager,
 ) : ViewModel() {
 
-  @Inject lateinit var assignmentRepository: AssignmentRepository
-  @Inject lateinit var taskRepository: TaskRepository
-  @Inject lateinit var microTaskRepository: MicroTaskRepository
-  @Inject @FilesDir lateinit var fileDirPath: String
-  @Inject lateinit var authManager: AuthManager
+  private lateinit var taskId: String
+  private var incompleteMta by Delegates.notNull<Int>()
+  private var completedMta by Delegates.notNull<Int>()
+
+  fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
+    this.taskId = taskId
+    this.incompleteMta = incompleteMta
+    this.completedMta = completedMta
+  }
 
   // TODO: Mark First visited in Speech Data collection
 
   // Initialising containers
-  private val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
-  private val microtaskInputContainer = MicrotaskInput(fileDirPath)
+  val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
+  val microtaskInputContainer = MicrotaskInput(fileDirPath)
 
-  protected lateinit var task: TaskRecord
-  private lateinit var microtaskAssignmentIDs: List<String>
-  private var currentAssignmentIndex: Int = 0
+
+  lateinit var task: TaskRecord
+  protected lateinit var microtaskAssignmentIDs: List<String>
+  protected var currentAssignmentIndex: Int = 0
 
   protected lateinit var currentMicroTask: MicroTaskRecord
   protected lateinit var currentAssignment: MicroTaskAssignmentRecord
 
-  private var totalMicrotasks = incompleteMta + completedMta
-  private var completedMicrotasks: Int = 0
+  protected var totalMicrotasks = incompleteMta + completedMta
+  protected var completedMicrotasks: Int = 0
 
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
   protected var outputData: JsonObject = JsonObject()
-  private var outputFiles: JsonArray = JsonArray()
-  private var logs: JsonArray = JsonArray()
+  protected var outputFiles: JsonArray = JsonArray()
+  protected var logs: JsonArray = JsonArray()
 
   init {
     viewModelScope.launch {
@@ -174,12 +181,12 @@ constructor(
   }
 
   /** Is there a next microtask (for navigation) */
-  private fun hasNextMicrotask(): Boolean {
+  protected fun hasNextMicrotask(): Boolean {
     return currentAssignmentIndex < (microtaskAssignmentIDs.size - 1)
   }
 
   /** Is there a previous microtask (for navigation) */
-  private fun hasPreviousMicrotask(): Boolean {
+  protected fun hasPreviousMicrotask(): Boolean {
     return currentAssignmentIndex > 0
   }
 
@@ -263,8 +270,37 @@ constructor(
   }
 
 
-  private fun getRelativePath(s: String): String {
+  protected fun getRelativePath(s: String): String {
     return "$fileDirPath/$s"
+  }
+
+  /**
+   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a
+   * file identifier and extension. The file name is usually the current assignmentID appended with
+   * the identifier. The full file name is unique for a unique [params] pair.
+   */
+  private fun getAssignmentFileName(params: Pair<String, String>): String {
+    val identifier = params.first
+    val extension = params.second
+    val assignmentId = microtaskAssignmentIDs[currentAssignmentIndex]
+
+    return if (identifier == "") "$assignmentId.$extension" else "$assignmentId-$identifier.$extension"
+  }
+
+  /** Get the file path for a scratch file for the current assignment and [params] pair */
+  protected fun getAssignmentScratchFilePath(params: Pair<String, String>): String {
+    val directory = "$fileDirPath/microtask-assignment-scratch"
+    val fileName = getAssignmentFileName(params)
+    return "$directory/$fileName"
+  }
+
+  /** Get the file path for an output file for the current assignment and [params] pair */
+  protected fun getAssignmentScratchFile(params: Pair<String, String>): File {
+    val filePath = getAssignmentScratchFilePath(params)
+    val file = File(filePath)
+    if (file.exists()) file.delete()
+    file.createNewFile()
+    return file
   }
 
   /** Reset existing microtask. Useful on activity restart. */
