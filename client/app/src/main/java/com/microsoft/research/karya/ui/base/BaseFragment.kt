@@ -15,6 +15,9 @@ abstract class BaseFragment : Fragment {
   constructor() : super()
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
+  abstract val TAG: String
+  val audioTag by lazy { "${TAG}_AUDIO" }
+
   @Inject lateinit var assistantFactory: AssistantFactory
   lateinit var assistant: Assistant
 
