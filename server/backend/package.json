@@ -12,40 +12,29 @@
   "dependencies": {
     "@azure/identity": "^1.1.0",
     "@azure/keyvault-secrets": "^4.1.0",
-    "@azure/storage-blob": "^12.5.0",
+    "@karya/common": "^2.0.0",
+    "@karya/core": "^2.0.0",
+    "@karya/http-response": "^2.0.0",
     "@karya/logger": "^2.0.0",
+    "@karya/misc-utils": "^2.0.0",
+    "@karya/parameter-specs": "^2.0.0",
     "@koa/cors": "^2.2.2",
     "bluebird": "^3.5.5",
     "bull": "^3.18.0",
-    "cookies": "^0.8.0",
-    "formidable": "^1.2.2",
-    "google-auth-library": "^7.0.2",
-    "jwt-simple": "^0.5.6",
-    "knex": "^0.21.1",
+    "dotenv": "^8.2.0",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
     "koa-router": "^7.4.0",
-    "md5-file": "^5.0.0",
-    "pg": "^8.0.3",
-    "raw-body": "^2.4.1",
-    "tar": "^6.0.5",
-    "typescript": "^3.9.7",
-    "uuid": "^7.0.3"
+    "tar": "^6.0.5"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.32",
     "@types/bull": "^3.14.4",
-    "@types/knex": "^0.16.1",
     "@types/koa": "^2.11.4",
     "@types/koa-router": "^7.4.1",
     "@types/koa__cors": "^3.0.2",
-    "@types/md5-file": "^4.0.2",
     "@types/node": "^13.13.46",
     "@types/tar": "^4.0.3",
-    "@types/uuid": "^7.0.4"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
+    "typescript": "^4.2.3"
   }
 }

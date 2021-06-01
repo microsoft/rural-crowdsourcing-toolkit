@@ -7,14 +7,12 @@
  */
 package com.microsoft.research.karya.data.model.karya.enums
 
-import com.google.gson.annotations.SerializedName
-
 enum class MicrotaskAssignmentStatus {
-  @SerializedName("assigned") ASSIGNED,
-  @SerializedName("incomplete") INCOMPLETE,
-  @SerializedName("skipped") SKIPPED,
-  @SerializedName("expired") EXPIRED,
-  @SerializedName("completed") COMPLETED,
-  @SerializedName("submitted") SUBMITTED,
-  @SerializedName("verified") VERIFIED
+  ASSIGNED,
+  INCOMPLETE,
+  SKIPPED,
+  EXPIRED,
+  COMPLETED,
+  SUBMITTED,
+  VERIFIED
 }

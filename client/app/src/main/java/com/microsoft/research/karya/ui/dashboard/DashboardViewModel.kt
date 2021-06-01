@@ -55,7 +55,7 @@ constructor(
 
   private var taskInfoList = listOf<TaskInfo>()
   private val taskInfoComparator =
-    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.completedMicrotasks }.thenBy { taskInfo ->
+    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.assignedMicrotasks }.thenBy { taskInfo ->
       taskInfo.taskID
     }
 
@@ -80,7 +80,7 @@ constructor(
         val taskStatus = fetchTaskStatus(taskInfo.taskID)
         tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
       }
-      taskInfoList = tempList
+      taskInfoList = tempList.sortedWith(taskInfoComparator)
 
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
@@ -190,7 +190,7 @@ constructor(
 
     val md5sum = getMD5Digest(assignmentTarBallPath)
     val uploadFileRequest =
-      UploadFileRequest(microtaskOutputContainer.cname, tarBallName, ChecksumAlgorithm.md5.toString(), md5sum)
+      UploadFileRequest(microtaskOutputContainer.cname, tarBallName, ChecksumAlgorithm.MD5.toString(), md5sum)
 
     val dataPart = MultipartBody.Part.createFormData("data", Gson().toJson(uploadFileRequest))
 
@@ -232,7 +232,7 @@ constructor(
           val tempList = mutableListOf<TaskInfo>()
           taskList.forEach { taskRecord ->
             val taskStatus = fetchTaskStatus(taskRecord.id)
-            tempList.add(TaskInfo(taskRecord.id, taskRecord.name, taskRecord.scenario_name, taskStatus))
+            tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus))
           }
           taskInfoList = tempList
 
@@ -303,7 +303,7 @@ constructor(
       }
 
       // input folder
-      val microtaskInputDirectory = "${microtaskInputContainer.getDirectory()}/${microtaskInputContainer.cname}_$id"
+      val microtaskInputDirectory = microtaskInputContainer.getDirectory(id)
       Log.d("MICRTSK_INPUT_DIRECTORY", microtaskInputDirectory)
       val microtaskDirectory = File(microtaskInputDirectory)
       for (file in microtaskDirectory.listFiles()!!) {

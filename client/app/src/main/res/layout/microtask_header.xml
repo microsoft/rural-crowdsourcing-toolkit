@@ -7,7 +7,8 @@
 
     <include
         android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+        layout="@layout/app_toolbar"
+         />
 
     <ProgressBar
         android:id="@+id/microtaskProgressPb"
@@ -16,9 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_0sdp"
         android:padding="@dimen/_0sdp"
+        android:visibility="visible"
         android:progressBackgroundTint="@color/colorLightGrey2"
         android:progressTint="#6C6"
-        android:scaleY="2"
+        android:scaleY="1"
         android:translationZ="@dimen/_20sdp"
         app:layout_constraintTop_toBottomOf="@id/appTb"
         tools:max="5"

@@ -1,15 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
+//
+// Script to reset the database and initialize some basic tables
 
-/**
- * Script to reset the database and initialize some basic tables
- */
+import dotenv from 'dotenv';
+dotenv.config();
 
-import { Promise as BBPromise } from 'bluebird';
-
-import { knex } from '../db/Client';
-import { createAllTables } from '../db/CreateTableFunctions.auto';
-import { dropAllTables } from '../db/DropTableFunctions.auto';
+import { knex, setupDbConnection, BoxDbFunctions } from '@karya/common';
 import logger from '../utils/Logger';
 
 /** Main Script to reset the DB */
@@ -18,7 +15,8 @@ import logger from '../utils/Logger';
 
   // Drop all tables and then create them
   logger.info(`Recreating all tables`);
-  await dropAllTables();
-  await createAllTables();
+  setupDbConnection();
+  await BoxDbFunctions.dropAllTables();
+  await BoxDbFunctions.createAllTables();
   logger.info(`Tables recreated`);
 })().finally(() => knex.destroy());

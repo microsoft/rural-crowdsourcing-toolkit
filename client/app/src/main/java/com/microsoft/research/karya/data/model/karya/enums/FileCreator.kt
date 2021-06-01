@@ -5,7 +5,7 @@ package com.microsoft.research.karya.data.model.karya.enums
 import com.google.gson.annotations.SerializedName
 
 enum class FileCreator {
-  @SerializedName("worker") WORKER,
-  @SerializedName("box") BOX,
-  @SerializedName("server") SERVER
+  @SerializedName("WORKER") WORKER,
+  @SerializedName("BOX") BOX,
+  @SerializedName("SERVER") SERVER
 }

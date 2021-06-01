@@ -70,4 +70,9 @@
 
     <!-- Speech verification instruction -->
     <string name="speech_verification_instruction_desc">Verify if the recording exactly matches the sentence in the box below</string>
+
+    <!-- Text translation instruction -->
+    <string name="text_translation_instruction_desc" translatable="false">Translate the following sentence from English to Hindi. You can use the dropdown suggestions to aid your translation. </string>
+    <string name="text_translation_instruction_desc_none" translatable="false">Translate the following sentence from English to Hindi </string>
+    <string name="text_translation_instruction_desc_bow" translatable="false">Translate the following sentence from English to Hindi. You can use the suggestions to aid your translation. </string>
 </resources>

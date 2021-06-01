@@ -16,7 +16,7 @@ data class MicroTaskRecord(
   @SerializedName("input") var input: JsonElement,
   @SerializedName("input_file_id") var input_file_id: String?,
   @SerializedName("deadline") var deadline: String?,
-  @SerializedName("credits") var credits: Int,
+  @SerializedName("credits") var credits: Float,
   @SerializedName("output") var output: JsonElement,
   @SerializedName("created_at") var created_at: String,
   @SerializedName("last_updated_at") var last_updated_at: String,

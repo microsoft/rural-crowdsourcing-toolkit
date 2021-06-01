@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/microtaskTb"
-        layout="@layout/microtask_header" />
+        layout="@layout/microtask_header_2" />
 
     <TextView
         android:id="@+id/instructionTv"
@@ -21,32 +21,25 @@
         android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
-    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sentenceCv"
+    <TextView
+        android:id="@+id/sentenceTv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:background="@drawable/border_black"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_20sdp"
+        android:textColor="#000000"
+        app:autoSizeMaxTextSize="@dimen/_30ssp"
+        app:autoSizeMinTextSize="@dimen/_12ssp"
+        app:autoSizeStepGranularity="@dimen/_2ssp"
+        app:autoSizeTextType="uniform"
+        app:fontFamily="sans-serif"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
-        card_view:cardBackgroundColor="#DCDCDC"
-        card_view:cardCornerRadius="18dp"
-        card_view:cardUseCompatPadding="true"
-        card_view:layout_constraintBottom_toTopOf="@id/recordLengthLL">
-
-        <TextView
-            android:id="@+id/sentenceTv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/_20sdp"
-            app:autoSizeMaxTextSize="@dimen/_30ssp"
-            app:autoSizeMinTextSize="@dimen/_12ssp"
-            app:autoSizeStepGranularity="@dimen/_2ssp"
-            app:autoSizeTextType="uniform"
-            app:fontFamily="sans-serif"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"/>
 
     <LinearLayout
         android:id="@+id/recordLengthLL"
@@ -387,8 +380,8 @@
         android:background="@drawable/ic_pointer"
         android:elevation="@dimen/_20sdp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/sentenceCv"
-        app:layout_constraintEnd_toEndOf="@id/sentenceCv" />
+        app:layout_constraintBottom_toBottomOf="@id/sentenceTv"
+        app:layout_constraintEnd_toEndOf="@id/sentenceTv" />
 
     <ImageView
         android:id="@+id/backPointerIv"

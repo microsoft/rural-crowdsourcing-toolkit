@@ -6,29 +6,27 @@
  */
 
 // React stuff
-import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import React, { ChangeEventHandler } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
-// Types and actions
-import { ParameterDefinition } from '../../db/ParameterTypes';
+import { scenarioMap, ScenarioName } from '@karya/core';
 
 // Utils
-import { approveStatuses, editStatuses, taskStatus, validateStatuses } from './TaskUtils';
+import { taskStatus } from './TaskUtils';
 
 // HoCs
 import { AuthProps, withAuth } from '../hoc/WithAuth';
-import { DataProps, withData } from '../hoc/WithData';
 
 // HTML helpers
-import { BackendRequestInitAction } from '../../store/apis/APIs.auto';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
-import moment from 'moment';
+import { LanguageCode, languageMap } from '@karya/core';
 
 /** Props */
 
@@ -45,40 +43,32 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const { data, ...request } = state.all.task;
   return {
     request,
-    task: data.find((t) => t.id.toString() === task_id),
+    task: data.find((t) => t.id === task_id),
   };
 };
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
-  const id = Number.parseInt(ownProps.match.params.id, 10);
+  const task_id = ownProps.match.params.id;
   return {
     getTask: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'task',
-        label: 'GET_BY_ID',
-        id,
+        label: 'GET_ALL',
+        params: {},
       };
       dispatch(action);
     },
-    validateTask: () => {
+
+    submitInputFiles: (files: { [id: string]: File }) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
-        store: 'task',
-        label: 'VALIDATE',
+        store: 'task_op',
+        label: 'SUBMIT_INPUT_FILE',
+        task_id,
         request: {},
-        id,
-      };
-      dispatch(action);
-    },
-    approveTask: () => {
-      const action: BackendRequestInitAction = {
-        type: 'BR_INIT',
-        store: 'task',
-        label: 'APPROVE',
-        request: {},
-        id,
+        files,
       };
       dispatch(action);
     },
@@ -87,21 +77,22 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const dataConnector = withData('language', 'scenario');
-const connector = compose(withAuth, dataConnector, reduxConnector);
+const connector = compose(withAuth, reduxConnector);
 
 // Task detail props
-type TaskDetailProps = OwnProps & AuthProps & DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector>;
 
-class TaskDetail extends React.Component<TaskDetailProps> {
-  /** Validate task */
-  validateTask = () => {
-    this.props.validateTask();
+type TaskDetailState = {
+  files: { [id: string]: File };
+};
+
+class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
+  state = {
+    files: {},
   };
 
-  /** Approve task */
-  approveTask = () => {
-    this.props.approveTask();
+  submitInputFiles = () => {
+    this.props.submitInputFiles(this.state.files);
   };
 
   componentDidMount() {
@@ -109,6 +100,15 @@ class TaskDetail extends React.Component<TaskDetailProps> {
       this.props.getTask();
     }
   }
+
+  // Handle file change
+  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (e.currentTarget.files) {
+      const file = e.currentTarget.files[0];
+      const files = { ...this.state.files, [e.currentTarget.id]: file };
+      this.setState({ files });
+    }
+  };
 
   render() {
     const { task } = this.props;
@@ -134,35 +134,17 @@ class TaskDetail extends React.Component<TaskDetailProps> {
     const errorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
-    const scenario = this.props.scenario.data.find((s) => s.id === task.scenario_id);
-    const language = this.props.language.data.find((s) => s.id === task.language_id);
+    const scenario = scenarioMap[task.scenario_name as ScenarioName];
+    const language = languageMap[task.language_code as LanguageCode];
 
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
-    const language_name = language ? `${language.name} (${language.primary_language_name})` : '<Loading languages>';
+    const language_name = language ? `${language.name} (${language.primary_name})` : '<Loading languages>';
 
-    const { params: param_defs } = scenario
-      ? (scenario.task_params as { params: ParameterDefinition[] })
-      : { params: undefined };
-    const param_values = task.params as {
-      [id: string]: string | string[] | number | undefined | Array<[string, string, string | null]>;
-    };
-
-    const disableEdit = !editStatuses.includes(task.status);
-    const disableValidate = !validateStatuses.includes(task.status);
-    const disableApprove = !(this.props.cwp.admin && approveStatuses.includes(task.status));
-
-    const task_actions = task.actions as { uploads: string[] };
-    const task_errors = task.errors as { messages: string[] };
-
-    const uploads = task_actions.uploads || [];
-    const task_messages = task_errors.messages || [];
-
-    const outputFiles = param_values.outputFiles
-      ? (param_values.outputFiles as Array<[string, string, string | null]>)
-      : null;
+    const jsonInputFile = scenario.task_input_file.json;
+    const tarInputfile = scenario.task_input_file.tgz;
 
     return (
-      <div className='white z-depth-1 lpad20'>
+      <div className='white z-depth-1 lpad20 bpad20'>
         {errorElement !== null ? (
           <div className='section'>
             <div className='row'>{errorElement}</div>
@@ -173,46 +155,15 @@ class TaskDetail extends React.Component<TaskDetailProps> {
           <div className='row' style={{ marginBottom: '0px' }}>
             <div className='col m6'>
               <h5>
-                {`${task.name} (${task.primary_language_name})`}
+                {`${task.name} (${task.display_name})`}
                 <i className='material-icons right' onClick={this.props.getTask}>
                   refresh
                 </i>
               </h5>
               <p>{task.description}</p>
-              <p>{task.primary_language_description}</p>
             </div>
           </div>
         </div>
-
-        {uploads.length === 0 ? null : (
-          <div className='section'>
-            <div className='row'>
-              <div className='col'>
-                <h6 className='red-text'>Actions to be completed</h6>
-              </div>
-            </div>
-            {uploads.map((upload, index) => (
-              <div className='row' key={index} style={{ marginBottom: '0px' }}>
-                <div className='col'>{upload}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {task_messages.length === 0 ? null : (
-          <div className='section'>
-            <div className='row'>
-              <div className='col'>
-                <h6 className='red-text'>Task errors</h6>
-              </div>
-            </div>
-            {task_messages.map((err, index) => (
-              <div className='row' key={index} style={{ marginBottom: '0px' }}>
-                <div className='col'>{err}</div>
-              </div>
-            ))}
-          </div>
-        )}
 
         <div className='section'>
           <div className='row' style={{ marginBottom: '0px' }}>
@@ -234,26 +185,6 @@ class TaskDetail extends React.Component<TaskDetailProps> {
         <div className='section'>
           <div className='row'>
             <div className='col'>
-              <h6 className='red-text'>Task Parameters</h6>
-            </div>
-          </div>
-          {param_defs === undefined ? (
-            <div className='row'>
-              <div className='col'>Loading parameters ... </div>
-            </div>
-          ) : (
-            param_defs.map((param) => (
-              <div className='row' key={param.identifier} style={{ marginBottom: '0px' }}>
-                <div className='col'>{param.name}: </div>
-                <div className='col'>{param_values[param.identifier]}</div>
-              </div>
-            ))
-          )}
-        </div>
-
-        <div className='section'>
-          <div className='row'>
-            <div className='col'>
               <h6 className='red-text'>Assignment Parameters</h6>
             </div>
           </div>
@@ -261,7 +192,7 @@ class TaskDetail extends React.Component<TaskDetailProps> {
             <div className='col'>Assignment Granularity: </div>
             <div className='col'>{task.assignment_granularity}</div>
           </div>
-          {task.assignment_granularity === 'group' ? (
+          {task.assignment_granularity === 'GROUP' ? (
             <div className='row' style={{ marginBottom: '0px' }}>
               <div className='col'>Group Assignment Order: </div>
               <div className='col'>{task.group_assignment_order}</div>
@@ -276,72 +207,52 @@ class TaskDetail extends React.Component<TaskDetailProps> {
         <div className='section'>
           <div className='row' style={{ marginBottom: '0px' }}>
             <div className='col'>
-              <span className='red-text'>Estimated Budget: </span>
-              <span>{task.budget !== null ? task.budget : 'Not estimated yet'}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className='section'>
-          <div className='row' style={{ marginBottom: '0px' }}>
-            <div className='col'>
               <span className='red-text'>Task Status: </span>
               <span>{taskStatus(task)}</span>
             </div>
           </div>
         </div>
 
-        {disableEdit && disableValidate && disableApprove ? null : (
-          <div className='section'>
+        {jsonInputFile.required || tarInputfile.required ? (
+          <div className='secion'>
             <div className='row'>
-              {disableEdit ? null : (
-                <div className='col s2 center-align'>
-                  <button className='btn-small' disabled={disableEdit}>
-                    Edit Task
-                  </button>
-                </div>
-              )}
-              {disableValidate ? null : (
-                <div className='col s2 center-align'>
-                  <button className='btn-small' disabled={disableValidate} onClick={this.validateTask}>
-                    Validate Task
-                  </button>
-                </div>
-              )}
-              {disableApprove ? null : (
-                <div className='col s2 center-align'>
-                  <button className='btn-small' disabled={disableApprove} onClick={this.approveTask}>
-                    Approve Task
-                  </button>
-                </div>
-              )}
+              <div className='col'>
+                <h6 className='red-text'>Submit New Input Files</h6>
+              </div>
             </div>
-          </div>
-        )}
-
-        {task.status === 'approved' || task.status === 'completed' ? (
-          <div>
-            {!outputFiles ? null : (
-              <div className='section'>
-                <div className='row'>
-                  <div className='col'>
-                    <h6 className='red-text'>Output Files</h6>
+            {jsonInputFile.required ? (
+              <div className='row'>
+                <div className='col s4  file-field input-field'>
+                  <div className='btn btn-small'>
+                    <i className='material-icons'>attach_file</i>
+                    <input type='file' id='json' onChange={this.handleParamFileChange} />
+                  </div>
+                  <div className='file-path-wrapper'>
+                    <label htmlFor='json-name'>Task JSON File</label>
+                    <input id='json-name' type='text' className='file-path validate' />
                   </div>
                 </div>
-                {outputFiles.map(([timestamp, status, url], index) =>
-                  !url ? null : (
-                    <div className='row' key={index}>
-                      <div className='col'>
-                        <a href={url}>{moment(timestamp).format('LLL')}</a>
-                      </div>
-                    </div>
-                  ),
-                )}
               </div>
-            )}
-
-            <div className='section pad10'>
-              <Link to={`/task/${task.id}/microtasks`}>Show all microtasks</Link>
+            ) : null}
+            {tarInputfile.required ? (
+              <div className='row'>
+                <div className='col s4  file-field input-field'>
+                  <div className='btn btn-small'>
+                    <i className='material-icons'>attach_file</i>
+                    <input type='file' id='tgz' onChange={this.handleParamFileChange} />
+                  </div>
+                  <div className='file-path-wrapper'>
+                    <label htmlFor='tgz-name'>Task TGZ File</label>
+                    <input id='tgz-name' type='text' className='file-path validate' />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            <div className='row'>
+              <button className='btn' onClick={this.submitInputFiles}>
+                Submit Input Files
+                <i className='material-icons right'>send</i>
+              </button>
             </div>
           </div>
         ) : null}

@@ -10,7 +10,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // Store types and actions
-import { TaskAssignmentRecord } from '../../db/TableInterfaces.auto';
+import { TaskAssignmentRecord } from '@karya/core';
 
 // HTML helpers
 import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
@@ -40,12 +40,10 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
     // Task assignment status
     const taskAssignmentStatus = (ta: TaskAssignmentRecord) => {
       switch (ta.status) {
-        case 'assigned':
+        case 'ASSIGNED':
           return 'Assigned';
-        case 'completed':
+        case 'COMPLETED':
           return 'Completed';
-        case 'sent':
-          return 'Sent to Box';
       }
     };
 
@@ -53,7 +51,7 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
     const tableColumns: Array<TableColumnType<TaskAssignmentRecord>> = [
       { header: 'Task', type: 'field', field: 'task_id' },
       { header: 'Box', type: 'field', field: 'box_id' },
-      { header: 'Policy', type: 'field', field: 'policy_id' },
+      { header: 'Policy', type: 'field', field: 'policy' },
       { header: 'Status', type: 'function', function: taskAssignmentStatus },
     ];
 
