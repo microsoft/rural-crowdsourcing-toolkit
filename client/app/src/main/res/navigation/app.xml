@@ -120,7 +120,15 @@
         android:id="@+id/dashboardActivity"
         android:name="com.microsoft.research.karya.ui.dashboard.DashboardFragment"
         android:label="activity_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboardActivity_to_speechDataMainFragment2"
+            app:destination="@id/speechDataMainFragment2" >
+            <argument
+                android:name="taskId"
+                android:defaultValue="null" />
+        </action>
+    </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
         app:destination="@id/dashboardActivity"
@@ -134,4 +142,14 @@
     <action
         android:id="@+id/action_global_tempDataFlow"
         app:destination="@id/tempDataFlow" />
+    <fragment
+        android:id="@+id/speechDataMainFragment2"
+        android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"
+        android:label="SpeechDataMainFragment" >
+        <argument
+            android:name="taskId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
 </navigation>
