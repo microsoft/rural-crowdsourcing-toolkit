@@ -23,6 +23,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.DataOutputStream
@@ -110,10 +112,38 @@ constructor(
   @JvmField
   var activityState: ActivityState = ActivityState.INIT
   var previousActivityState: ActivityState = ActivityState.INIT
-  private var recordBtnState = DISABLED
-  private var playBtnState = DISABLED
-  private var nextBtnState = DISABLED
-  private var backBtnState = DISABLED
+
+  private val _recordBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(
+    DISABLED)
+  val recordBtnState = _recordBtnState.asStateFlow()
+
+  private val _playBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(
+    DISABLED)
+  val playBtnState = _playBtnState.asStateFlow()
+
+  private val _nextBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(
+    DISABLED)
+  val nextBtnState = _nextBtnState.asStateFlow()
+
+  private val _backBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(
+    DISABLED)
+  val backBtnState = _backBtnState.asStateFlow()
+
+  private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
+  val sentenceTvText = _sentenceTvText.asStateFlow()
+
+  private val _recordSecondsTvText: MutableStateFlow<String> = MutableStateFlow("")
+  val recordSecondsTvText = _recordSecondsTvText.asStateFlow()
+
+  private val _recordCentiSecondsTvText: MutableStateFlow<String> = MutableStateFlow("")
+  val recordCentiSecondsTvText = _recordCentiSecondsTvText.asStateFlow()
+
+  private val _playbackProgressPbProgress: MutableStateFlow<Int> = MutableStateFlow(0)
+  val playbackProgressPb = _playbackProgressPbProgress.asStateFlow()
+
+  private val _playbackProgressPbMax: MutableStateFlow<Int> = MutableStateFlow(0)
+  val playbackProgressPbMax = _playbackProgressPbMax.asStateFlow()
+
 
   /** Recording config and state */
   private val maxPreRecordBytes = timeToSamples(prerecordingTime) * 2
@@ -150,11 +180,10 @@ constructor(
 
   /** Shortcut to set and flush all four button states (in sequence) */
   private fun setButtonStates(b: ButtonState, r: ButtonState, p: ButtonState, n: ButtonState) {
-    backBtnState = b
-    recordBtnState = r
-    playBtnState = p
-    nextBtnState = n
-    flushButtonStates() // TODO: MAKE BUTTON STATES AS LIVEDATA
+    _backBtnState.value = b
+    _recordBtnState.value = r
+    _playBtnState.value = p
+    _nextBtnState.value = n
   }
 
   override fun setupMicrotask() {
@@ -169,16 +198,16 @@ constructor(
     /** Write wav file */
     scratchRecordingFileInitJob = CoroutineScope(Dispatchers.IO).launch { resetWavFile() }
 
-    sentenceTv.text =
+    _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
 
-    if (firstTimeActivityVisit) {
-      firstTimeActivityVisit = false
-      onAssistantClick()
-    } else {
-      moveToPrerecording()
-    }
+//    if (firstTimeActivityVisit) {
+//      firstTimeActivityVisit = false
+//      onAssistantClick()
+//    } else {
+//      moveToPrerecording()
+//    } TODO: IMPLEMENT FIRST TIME VISIT
 
   }
 
@@ -620,7 +649,7 @@ constructor(
        */
       ActivityState.RECORDING -> {
         if (!isPrerecordingState(previousActivityState)) initializeAndStartRecorder()
-        playbackProgressPb.progress = 0
+        _playbackProgressPbProgress.value = 0
         recordBuffers = arrayListOf()
         writeAudioDataToRecordBuffer()
       }
@@ -702,7 +731,7 @@ constructor(
         } else if (previousActivityState == ActivityState.COMPLETED_PRERECORDING) {
           initializePlayer()
           mediaPlayer!!.setOnCompletionListener {
-            playbackProgressPb.progress = playbackProgressPb.max
+            _playbackProgressPbProgress.value = _playbackProgressPbMax.value
             setButtonStates(
               ButtonState.ENABLED,
               ButtonState.ENABLED,
@@ -872,7 +901,7 @@ constructor(
     val player: MediaPlayer = mediaPlayer!!
     player.setDataSource(mediaFilePath)
     player.prepare()
-    playbackProgressPb.max = player.duration
+    _playbackProgressPbMax.value = player.duration
     player.start()
   }
 
@@ -881,7 +910,7 @@ constructor(
     val runnable = Runnable {
       while (state == activityState) {
         val currentPosition = mediaPlayer?.currentPosition
-        playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
+        _playbackProgressPbProgress.value = currentPosition ?: _playbackProgressPbProgress.value
         Thread.sleep(100)
       }
     }
@@ -908,8 +937,8 @@ constructor(
       val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
       val centiSeconds = (milliseconds / 10) % 100
       val seconds = milliseconds / 1000
-      recordSecondsTv.text = "%d".format(seconds)
-      recordCentiSecondsTv.text = "%02d".format(centiSeconds)
+      _recordSecondsTvText.value = "%d".format(seconds)
+      _recordCentiSecondsTvText.value = "%02d".format(centiSeconds)
     }
   }
 

@@ -5,10 +5,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.DISABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
 import com.microsoft.research.karya.utils.extensions.invisible
+import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.visible
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
@@ -16,12 +21,17 @@ import kotlinx.coroutines.launch
 
 class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main) {
   val vm: SpeechDataMainViewModel by viewModels()
+  val args: SpeechDataMainFragmentArgs by navArgs()
+
   override fun setViewmodel() {
     viewmodel = vm
+    vm.setupViewmodel(args.taskId!!, 0, 0)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    setupObservers()
 
     /** record instruction */
     val recordInstruction = vm.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
@@ -51,6 +61,73 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     playBtn.setOnClickListener { vm.handlePlayClick() }
     nextBtn.setOnClickListener { vm.handleNextClick() }
     backBtn.setOnClickListener { vm.handleBackClick() }
+
+  }
+
+  private fun setupObservers() {
+    vm.backBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      backBtn.isClickable = state != DISABLED
+      backBtn.setBackgroundResource(
+        when (state) {
+          DISABLED -> R.drawable.ic_back_disabled
+          ENABLED -> R.drawable.ic_back_enabled
+          ACTIVE -> R.drawable.ic_back_enabled
+        }
+      )
+    }
+
+    vm.recordBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      backBtn.isClickable = state != DISABLED
+      backBtn.setBackgroundResource(
+        when (state) {
+          DISABLED -> R.drawable.ic_mic_disabled
+          ENABLED -> R.drawable.ic_mic_enabled
+          ACTIVE -> R.drawable.ic_mic_enabled
+        }
+      )
+    }
+
+    vm.playBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      backBtn.isClickable = state != DISABLED
+      backBtn.setBackgroundResource(
+        when (state) {
+          DISABLED -> R.drawable.ic_speaker_disabled
+          ENABLED -> R.drawable.ic_speaker_enabled
+          ACTIVE -> R.drawable.ic_speaker_enabled
+        }
+      )
+    }
+
+    vm.nextBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      backBtn.isClickable = state != DISABLED
+      backBtn.setBackgroundResource(
+        when (state) {
+          DISABLED -> R.drawable.ic_next_disabled
+          ENABLED -> R.drawable.ic_next_enabled
+          ACTIVE -> R.drawable.ic_next_enabled
+        }
+      )
+    }
+
+    vm.sentenceTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+      sentenceTv.text = text
+    }
+
+    vm.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+      recordSecondsTv.text = text
+    }
+
+    vm.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+      recordSecondsTv.text = text
+    }
+
+    vm.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { progress ->
+      playbackProgressPb.progress = progress
+    }
+
+    vm.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) {max ->
+      playbackProgressPb.max = max
+    }
 
   }
 

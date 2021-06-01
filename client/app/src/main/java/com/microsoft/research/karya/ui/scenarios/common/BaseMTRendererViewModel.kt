@@ -30,9 +30,7 @@ import java.io.File
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-@HiltViewModel
 abstract class BaseMTRendererViewModel
-@Inject
 constructor(
   var assignmentRepository: AssignmentRepository,
   var taskRepository: TaskRepository,
