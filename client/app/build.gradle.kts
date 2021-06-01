@@ -46,7 +46,6 @@ android {
         dataBinding = true
         viewBinding = true
     }
-    buildToolsVersion = "31.0.0-rc3"
 }
 
 ktfmt {
