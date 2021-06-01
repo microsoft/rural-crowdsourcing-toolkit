@@ -16,7 +16,7 @@ export const karyaTableNames = [
   'microtask_group',
   'microtask',
   'task_op',
-  'task_chain',
+  'task_link',
   'task_assignment',
   'microtask_group_assignment',
   'microtask_assignment',
@@ -42,6 +42,7 @@ const karyaStrings = [
   'TaskOpStatus',
   'ChainName',
   'ChainStatus',
+  'ChainGroupingType',
   'PolicyName',
   'TaskAssignmentStatus',
   'MicrotaskAssignmentStatus',
@@ -199,11 +200,15 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       ],
     },
 
-    task_chain: {
+    task_link: {
       columns: [
         ['chain', ['string', 32, 'ChainName'], 'not unique', 'not nullable', 'not mutable'],
         ['from_task', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
         ['to_task', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
+        ['blocking', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['delay', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['grouping', ['string', 16, 'ChainGroupingType'], 'not unique', 'not nullable', 'mutable'],
+        ['params', ['kv'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'ChainStatus'], 'not unique', 'not nullable', 'mutable'],
       ],
     },
@@ -289,7 +294,7 @@ const serverTables: KaryaTableName[] = [
   'microtask_group',
   'microtask',
   'task_op',
-  'task_chain',
+  'task_link',
   'task_assignment',
 ];
 
