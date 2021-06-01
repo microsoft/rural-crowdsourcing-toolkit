@@ -130,6 +130,8 @@ dependencies {
 
     debugImplementation(Dependencies.ThirdParty.debugDB)
     implementation("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
+    implementation("com.google.android.gms:play-services-mlkit-face-detection:16.1.7")
+    implementation("com.google.mlkit:face-detection:16.0.1")
 
     implementation(project(":app-dropdown"))
     implementation(project(":app-bow"))

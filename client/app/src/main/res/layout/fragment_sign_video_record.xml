@@ -12,6 +12,11 @@
         android:layout_height="match_parent"
         />
 
+    <com.microsoft.research.karya.ui.scenarios.signVideo.facedetector.FaceBoundsOverlay
+        android:id="@+id/faceBoundsOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <TextView
         android:id="@+id/timerTextView"
         android:layout_width="wrap_content"
