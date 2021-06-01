@@ -130,6 +130,9 @@ export const submitNewAssignments: TaskRouteMiddleware = async (ctx) => {
   }
 };
 
+/**
+ * Submit completed assignments from the box
+ */
 export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
   const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
 
@@ -142,8 +145,6 @@ export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
       await BasicModel.upsertRecord('microtask_assignment', { ...assignment, submitted_to_server_at });
       return { id: assignment.id, submitted_to_server_at };
     });
-
-    // TODO: Execute trigger to initiate task chain
 
     HttpResponse.OK(ctx, response);
   } catch (e) {
