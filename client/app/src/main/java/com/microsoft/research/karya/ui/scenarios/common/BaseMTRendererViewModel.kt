@@ -25,9 +25,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
-import javax.inject.Inject
 import kotlin.properties.Delegates
 
 abstract class BaseMTRendererViewModel
@@ -47,33 +47,9 @@ constructor(
     this.taskId = taskId
     this.incompleteMta = incompleteMta
     this.completedMta = completedMta
-  }
 
-  // TODO: Mark First visited in Speech Data collection
-
-  // Initialising containers
-  val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
-  val microtaskInputContainer = MicrotaskInput(fileDirPath)
-
-
-  lateinit var task: TaskRecord
-  protected lateinit var microtaskAssignmentIDs: List<String>
-  protected var currentAssignmentIndex: Int = 0
-
-  protected lateinit var currentMicroTask: MicroTaskRecord
-  protected lateinit var currentAssignment: MicroTaskAssignmentRecord
-
-  protected var totalMicrotasks = incompleteMta + completedMta
-  protected var completedMicrotasks: Int = 0
-
-  // Output fields for microtask assignment
-  // TODO: Maybe make them a data class?
-  protected var outputData: JsonObject = JsonObject()
-  protected var outputFiles: JsonArray = JsonArray()
-  protected var logs: JsonArray = JsonArray()
-
-  init {
-    viewModelScope.launch {
+    // TODO: Shift this to init once we move to viewmodel factory
+    runBlocking {
       task = taskRepository.getById(taskId)
       microtaskAssignmentIDs = assignmentRepository.getUnsubmittedIDsForTask(
         task.id,
@@ -96,7 +72,31 @@ constructor(
 
       getAndSetupMicrotask()
     }
+
   }
+
+  // TODO: Mark First visited in Speech Data collection
+
+  // Initialising containers
+  val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
+  val microtaskInputContainer = MicrotaskInput(fileDirPath)
+
+
+  lateinit var task: TaskRecord
+  protected lateinit var microtaskAssignmentIDs: List<String>
+  protected var currentAssignmentIndex: Int = 0
+
+  protected lateinit var currentMicroTask: MicroTaskRecord
+  protected lateinit var currentAssignment: MicroTaskAssignmentRecord
+
+//  protected var totalMicrotasks = incompleteMta + completedMta
+  protected var completedMicrotasks: Int = 0
+
+  // Output fields for microtask assignment
+  // TODO: Maybe make them a data class?
+  protected var outputData: JsonObject = JsonObject()
+  protected var outputFiles: JsonArray = JsonArray()
+  protected var logs: JsonArray = JsonArray()
 
   /**
    * Setup microtask after updating [currentAssignmentIndex]. Called at the end of [onResume], and
@@ -287,12 +287,15 @@ constructor(
 
   /** Get the file path for a scratch file for the current assignment and [params] pair */
   protected fun getAssignmentScratchFilePath(params: Pair<String, String>): String {
-    val directory = "$fileDirPath/microtask-assignment-scratch"
+    val dir_path = "$fileDirPath/microtask-assignment-scratch"
+    val dir = File(dir_path)
+    dir.mkdirs()
     val fileName = getAssignmentFileName(params)
-    return "$directory/$fileName"
+    return "$dir_path/$fileName"
   }
 
   /** Get the file path for an output file for the current assignment and [params] pair */
+  // TODO: Move Scratch File functions to Karya Containers
   protected fun getAssignmentScratchFile(params: Pair<String, String>): File {
     val filePath = getAssignmentScratchFilePath(params)
     val file = File(filePath)

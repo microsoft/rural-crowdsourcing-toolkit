@@ -15,26 +15,23 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewMo
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.visible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main) {
-  val vm: SpeechDataMainViewModel by viewModels()
+  override val viewmodel: SpeechDataMainViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
-
-  override fun setViewmodel() {
-    viewmodel = vm
-    vm.setupViewmodel(args.taskId!!, 0, 0)
-  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    viewmodel.setupViewmodel(args.taskId!!, 0, 0)
 
     setupObservers()
 
     /** record instruction */
-    val recordInstruction = vm.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+    val recordInstruction = viewmodel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
     recordPromptTv.text = recordInstruction
 
     /** Set card corner radius */
@@ -57,15 +54,15 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     }
 
     /** Set on click listeners */
-    recordBtn.setOnClickListener { vm.handleRecordClick() }
-    playBtn.setOnClickListener { vm.handlePlayClick() }
-    nextBtn.setOnClickListener { vm.handleNextClick() }
-    backBtn.setOnClickListener { vm.handleBackClick() }
+    recordBtn.setOnClickListener { viewmodel.handleRecordClick() }
+    playBtn.setOnClickListener { viewmodel.handlePlayClick() }
+    nextBtn.setOnClickListener { viewmodel.handleNextClick() }
+    backBtn.setOnClickListener { viewmodel.handleBackClick() }
 
   }
 
   private fun setupObservers() {
-    vm.backBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewmodel.backBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       backBtn.isClickable = state != DISABLED
       backBtn.setBackgroundResource(
         when (state) {
@@ -76,9 +73,9 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    vm.recordBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
-      backBtn.isClickable = state != DISABLED
-      backBtn.setBackgroundResource(
+    viewmodel.recordBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      recordBtn.isClickable = state != DISABLED
+      recordBtn.setBackgroundResource(
         when (state) {
           DISABLED -> R.drawable.ic_mic_disabled
           ENABLED -> R.drawable.ic_mic_enabled
@@ -87,9 +84,9 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    vm.playBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
-      backBtn.isClickable = state != DISABLED
-      backBtn.setBackgroundResource(
+    viewmodel.playBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      playBtn.isClickable = state != DISABLED
+      playBtn.setBackgroundResource(
         when (state) {
           DISABLED -> R.drawable.ic_speaker_disabled
           ENABLED -> R.drawable.ic_speaker_enabled
@@ -98,9 +95,9 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    vm.nextBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
-      backBtn.isClickable = state != DISABLED
-      backBtn.setBackgroundResource(
+    viewmodel.nextBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+      nextBtn.isClickable = state != DISABLED
+      nextBtn.setBackgroundResource(
         when (state) {
           DISABLED -> R.drawable.ic_next_disabled
           ENABLED -> R.drawable.ic_next_enabled
@@ -109,23 +106,23 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    vm.sentenceTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewmodel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
       sentenceTv.text = text
     }
 
-    vm.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewmodel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
       recordSecondsTv.text = text
     }
 
-    vm.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
-      recordSecondsTv.text = text
+    viewmodel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+      recordCentiSecondsTv.text = text
     }
 
-    vm.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { progress ->
+    viewmodel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { progress ->
       playbackProgressPb.progress = progress
     }
 
-    vm.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) {max ->
+    viewmodel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) {max ->
       playbackProgressPb.max = max
     }
 
@@ -264,7 +261,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
           backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
           backPointerIv.invisible()
           delay(500)
-          vm.moveToPrerecording()
+          viewmodel.moveToPrerecording()
         }
       }
     )

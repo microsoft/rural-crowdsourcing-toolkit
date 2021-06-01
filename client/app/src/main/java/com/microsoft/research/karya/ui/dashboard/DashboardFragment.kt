@@ -16,7 +16,6 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragmentDirections
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
 import com.microsoft.research.karya.utils.PreferenceKeys
@@ -134,12 +133,11 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       when (task.scenarioName) {
         // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
         // Use [ScenarioType] enum once we migrate to it.
-        "story-speech" -> {
+        "SPEECH_DATA" -> {
 //          Intent(requireContext(), StorySpeechMain::class.java)
           val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
           findNavController().navigate(action)
         }
-        "speech-data" -> Intent(requireContext(), SpeechDataMain::class.java)
         "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
         else -> {
           throw Exception("Unimplemented scenario")

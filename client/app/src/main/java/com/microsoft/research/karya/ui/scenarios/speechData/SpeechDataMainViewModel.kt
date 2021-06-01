@@ -201,6 +201,7 @@ constructor(
     _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
+    moveToPrerecording()
 
 //    if (firstTimeActivityVisit) {
 //      firstTimeActivityVisit = false
