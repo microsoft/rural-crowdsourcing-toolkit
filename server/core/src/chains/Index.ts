@@ -7,7 +7,12 @@
 // from completed assignments of a different task. This concept will enable work
 // providers to easily create validationt tasks for their data collection tasks.
 
+import { ScenarioName } from '../scenarios/Index';
+import { BaseChainInterface } from './BaseChainInterface';
+import { baseSpeechValidationChain } from './chains/SpeechValidation';
+
 export * from './BaseChainInterface';
+export * from './chains/SpeechValidation';
 
 // List of chains
 export const chainNames = ['SPEECH_VALIDATION'] as const;
@@ -25,3 +30,8 @@ export type ChainName = typeof chainNames[number];
  */
 export const chainStatuses = ['ACTIVE', 'INACTIVE'] as const;
 export type ChainStatus = typeof chainStatuses[number];
+
+// Chain map
+export const baseChainMap: { [key in ChainName]: BaseChainInterface<ScenarioName, ScenarioName> } = {
+  SPEECH_VALIDATION: baseSpeechValidationChain,
+};
