@@ -29,6 +29,21 @@ android {
             setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
     }
+    flavorDimensions("version")
+    productFlavors {
+        create("dev") {
+            dimension = "version"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            buildConfigField("String", "SERVER_URL", "https://karyabox2.eastus.cloudapp.azure.com/")
+        }
+        create("staging") {
+            dimension = "version"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+            buildConfigField("String", "SERVER_URL", "https://karyatestbotbox.eastus.cloudapp.azure.com/")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
