@@ -1,17 +1,10 @@
 package com.microsoft.research.karya.ui.scenarios.common
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.fragment.app.viewModels
-import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 
 /** Code to request necessary permissions */
@@ -21,10 +14,7 @@ private var hasAllPermissions: Boolean = true
 
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
 
-  protected lateinit var viewmodel: BaseMTRendererViewModel
-
-  /** Initialise the viewmodel variable*/
-  protected abstract fun setViewmodel()
+  abstract val viewmodel: BaseMTRendererViewModel
 
 
   /** Function to return the set of permission needed for the task */
@@ -47,7 +37,8 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
     }
 
     if (hasAllPermissions) {
-      viewmodel.getAndSetupMicrotask()
+//      viewmodel.getAndSetupMicrotask()
+      // TODO: SHIFT PERMISSIONS TO EACH FRAGMENT
     }
   }
 
