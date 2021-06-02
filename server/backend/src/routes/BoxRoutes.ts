@@ -97,6 +97,14 @@ boxRouter.put<TaskController.TaskRouteState, {}>(
   TaskController.submitCompletedAssignments
 );
 
+boxRouter.post<TaskController.TaskRouteState, {}>(
+  '/task/:id/links',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.setTask,
+  TaskController.executeTaskLinks
+);
+
 // Get verified assignments for the specified task
 boxRouter.get<TaskController.TaskRouteState, {}>(
   '/task/:id/verified_assignments',
