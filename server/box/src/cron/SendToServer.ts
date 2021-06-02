@@ -204,6 +204,9 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
           await BasicModel.updateSingle('microtask_assignment', { id }, { submitted_to_server_at });
         });
       } while (batch.length >= batch_size);
+
+      // Send request to invoke the completion handler
+      await axiosLocal.post<{}>(`/task/${task.id}/links`, {});
     });
   } catch (e) {
     cronLogger.error('Unknown error while sending assignments');
