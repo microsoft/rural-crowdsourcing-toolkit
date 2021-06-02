@@ -191,7 +191,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     task_op: {
       columns: [
         ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
-        ['op_type', ['string', 16, 'TaskOpType'], 'not unique', 'not nullable', 'not mutable'],
+        ['op_type', ['string', 32, 'TaskOpType'], 'not unique', 'not nullable', 'not mutable'],
         ['file_id', ['>', 'karya_file'], 'unique', 'nullable', 'not mutable'],
         ['status', ['string', 16, 'TaskOpStatus'], 'not unique', 'not nullable', 'mutable'],
         ['started_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
@@ -249,6 +249,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['submitted_to_server_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['verified_at', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['report', ['object'], 'not unique', 'nullable', 'mutable'],
+        ['max_credits', ['float'], 'not unique', 'not nullable', 'mutable'],
         ['credits', ['float'], 'not unique', 'nullable', 'mutable'],
       ],
       templates: [
