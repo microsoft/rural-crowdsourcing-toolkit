@@ -106,4 +106,16 @@
         <item name="android:textColor">@color/colorRed</item>
     </style>
 
+    <style name="SplashText">
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:lineSpacingExtra">@dimen/_11ssp</item>
+        <item name="android:shadowColor">#bb86fc</item>
+        <item name="android:shadowDx">5</item>
+        <item name="android:shadowDy">5</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:textSize">@dimen/_60ssp</item>
+        <item name="outlineColor">#6200ee</item>
+        <item name="outlineSize">@dimen/_3sdp</item>
+    </style>
+
 </resources>
