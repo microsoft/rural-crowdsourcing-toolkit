@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.ui.base.BaseFragment
+import com.microsoft.research.karya.utils.extensions.observe
 
 /** Code to request necessary permissions */
 private const val REQUEST_PERMISSIONS = 201
@@ -24,6 +28,7 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    setUpObservers()
     /** Check if there are any permissions needed */
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
@@ -63,6 +68,14 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
 
     hasAllPermissions = true
     viewmodel.getAndSetupMicrotask()
+  }
+
+  private fun setUpObservers() {
+    viewmodel.navigateBack.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { pop ->
+      if (pop) {
+        findNavController().popBackStack()
+      }
+    }
   }
 
 }
