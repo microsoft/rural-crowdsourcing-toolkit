@@ -122,8 +122,14 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       playbackProgressPb.progress = progress
     }
 
-    viewmodel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) {max ->
+    viewmodel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { max ->
       playbackProgressPb.max = max
+    }
+
+    viewmodel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { play ->
+      if (play) {
+        playRecordPrompt()
+      }
     }
 
   }
