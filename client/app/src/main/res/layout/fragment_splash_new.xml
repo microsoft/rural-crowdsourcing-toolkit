@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_4sdp"
+        app:title="Task"
+        app:cutoutMargin="@dimen/_8sdp"
+        app:cutoutRoundedCornerRadius="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="@color/colorWhite">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:contentDescription="FAB"
+            android:tag="KARYA_ASSISTANT"
+            android:visibility="visible"
+            app:fabSize="normal" />
+    </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
+
     <com.microsoft.research.karya.ui.widgets.OutlineTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_32sdp"
-        android:layout_marginTop="@dimen/_32sdp"
-        android:text="@string/app_name"
-        android:textSize="@dimen/_60ssp"
-        android:textColor="#FFF"
-        android:lineSpacingExtra="@dimen/_11ssp"
-        android:elevation="1dp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:letterSpacing="0.02"
+        android:lineSpacingExtra="@dimen/_11ssp"
         android:shadowColor="#bb86fc"
         android:shadowDx="5"
         android:shadowDy="5"
-        app:outlineSize="@dimen/_3sdp"
-        app:outlineColor="#6200ee"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/app_name"
+        android:textColor="#FFF"
+        android:textSize="@dimen/_60ssp"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Karya\nApp"/>
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:outlineColor="#6200ee"
+        app:outlineSize="@dimen/_3sdp"
+        tools:text="Karya\nApp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

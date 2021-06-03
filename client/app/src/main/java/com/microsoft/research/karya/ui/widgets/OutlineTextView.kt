@@ -14,8 +14,9 @@ class OutlineTextView : androidx.appcompat.widget.AppCompatTextView {
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0) {
     setAttributes(attrs)
   }
-
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    setAttributes(attrs)
+  }
 
   companion object {
     private const val DEFAULT_OUTLINE_SIZE = 0f
