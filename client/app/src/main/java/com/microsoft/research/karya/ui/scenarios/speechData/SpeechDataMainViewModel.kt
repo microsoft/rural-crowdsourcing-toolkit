@@ -4,6 +4,10 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -16,7 +20,9 @@ import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
+import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.RawToAACEncoder
+import com.microsoft.research.karya.utils.extensions.dataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +31,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.DataOutputStream
@@ -45,7 +52,8 @@ constructor(
   taskRepository: TaskRepository,
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
-  authManager: AuthManager
+  authManager: AuthManager,
+  private val datastore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
@@ -129,6 +137,10 @@ constructor(
     DISABLED)
   val backBtnState = _backBtnState.asStateFlow()
 
+  private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(
+    false)
+  val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
+
   private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
   val sentenceTvText = _sentenceTvText.asStateFlow()
 
@@ -148,7 +160,7 @@ constructor(
   /** Recording config and state */
   private val maxPreRecordBytes = timeToSamples(prerecordingTime) * 2
 
-  private lateinit var preRecordBuffer: Array<ByteArray>
+  private var preRecordBuffer: Array<ByteArray>
   var preRecordBufferConsumed: Array<Int> = Array(2) { 0 }
   private var currentPreRecordBufferIndex = 0
   private var totalRecordedBytes = 0
@@ -173,9 +185,19 @@ constructor(
   /** Playback progress thread */
   private var playbackProgressThread: Thread? = null
 
+  private var firstTimeActivityVisit: Boolean = true
+
   init {
     /** setup [preRecordBuffer] */
     preRecordBuffer = Array(2) { ByteArray(maxPreRecordBytes) }
+
+    runBlocking {
+      val firstRunKey = booleanPreferencesKey(PreferenceKeys.SPEECH_DATA_ACTIVITY_VISITED)
+      val data = datastore.data.first()
+      firstTimeActivityVisit = data[firstRunKey] ?: true
+      datastore.edit { prefs -> prefs[firstRunKey] = false }
+    }
+
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
@@ -201,14 +223,13 @@ constructor(
     _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
-    moveToPrerecording()
 
-//    if (firstTimeActivityVisit) {
-//      firstTimeActivityVisit = false
-//      onAssistantClick()
-//    } else {
-//      moveToPrerecording()
-//    } TODO: IMPLEMENT FIRST TIME VISIT
+    if (firstTimeActivityVisit) {
+      firstTimeActivityVisit = false
+      onAssistantClick()
+    } else {
+      moveToPrerecording()
+    }
 
   }
 
@@ -585,6 +606,7 @@ constructor(
   }
 
   private fun playRecordPrompt() {
+    _playRecordPromptTrigger.value = true
     // TODO: Create a livedata and trigger playPrompt in Fragment
   }
 
