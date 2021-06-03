@@ -151,5 +151,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
+        <action
+            android:id="@+id/action_speechDataMainFragment2_to_dashboardActivity"
+            app:destination="@id/dashboardActivity"
+            app:popUpTo="@id/dashboardActivity" />
     </fragment>
 </navigation>

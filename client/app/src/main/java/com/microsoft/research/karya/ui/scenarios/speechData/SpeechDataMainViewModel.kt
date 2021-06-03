@@ -527,6 +527,7 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING, -> {
         //TODO: pop off this fragment
+
 //        setResult(Activity.RESULT_OK, intent)
 //        finish()
       }

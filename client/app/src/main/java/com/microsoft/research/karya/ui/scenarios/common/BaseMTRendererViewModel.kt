@@ -16,6 +16,8 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
+import com.microsoft.research.karya.ui.dashboard.DashboardStateSuccess
+import com.microsoft.research.karya.ui.dashboard.DashboardUiState
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
@@ -24,6 +26,8 @@ import com.microsoft.research.karya.utils.extensions.getBlobPath
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -42,6 +46,10 @@ constructor(
   private lateinit var taskId: String
   private var incompleteMta by Delegates.notNull<Int>()
   private var completedMta by Delegates.notNull<Int>()
+
+  private val _navigateBack: MutableStateFlow<Boolean> =
+    MutableStateFlow(false)
+  val navigateBack = _navigateBack.asStateFlow()
 
   fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
     this.taskId = taskId
@@ -195,6 +203,7 @@ constructor(
       getAndSetupMicrotask()
     } else {
       // TODO: Signal that all Microtasks are finsihed and finish
+      _navigateBack.value = true
     }
   }
 
@@ -208,6 +217,7 @@ constructor(
       getAndSetupMicrotask()
     } else {
       // TODO: Signal that there are no previous microtasks in the UI and finish
+      _navigateBack.value = true
     }
   }
 
