@@ -183,13 +183,12 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
     const batch_size = 1000;
     // For each task send all newly created assignments in batches
     await BBPromise.mapSeries(tasks, async (task) => {
-      const assignments = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
-        .where({
-          box_id: box.id,
-          task_id: task.id,
-          status: 'COMPLETED',
-        })
-        .whereRaw('submitted_to_server_at < completed_at');
+      const assignments = await knex<MicrotaskAssignmentRecord>('microtask_assignment').where({
+        box_id: box.id,
+        task_id: task.id,
+        status: 'COMPLETED',
+        submitted_to_server_at: null,
+      });
 
       let batch_id = 0;
       let batch: MicrotaskAssignmentRecord[];
