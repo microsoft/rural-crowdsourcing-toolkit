@@ -244,6 +244,9 @@ export const submitFile: KaryaFileSubmitMiddleware = async (ctx, next) => {
     const destination = `${process.cwd()}/${folder}/${container_name}/${name}`;
     await fs.promises.copyFile(ctx.state.filePath, destination);
 
+    // Include box_id
+    ctx.state.karya_file.box_id = ctx.state.entity.box_id;
+
     // TODO: Check if upsert is needed
     const fileRecord = await BasicModel.insertRecord('karya_file', ctx.state.karya_file);
     HttpResponse.OK(ctx, fileRecord);
