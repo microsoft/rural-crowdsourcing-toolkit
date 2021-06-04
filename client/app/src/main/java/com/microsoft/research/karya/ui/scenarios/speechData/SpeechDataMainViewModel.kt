@@ -22,7 +22,6 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewMo
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.RawToAACEncoder
-import com.microsoft.research.karya.utils.extensions.dataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -62,10 +61,7 @@ constructor(
   authManager
 ) {
 
-  //TODO: Remove this
-  protected val ioScope = CoroutineScope(Dispatchers.IO)
-
-  //TODO: Pass it in constructor or Bundle
+  //TODO: Pass it in constructor (once we have viewModel factory)
   private val postRecordingTime: Int = 250
   private val prerecordingTime: Int = 250
 
@@ -268,7 +264,7 @@ constructor(
           DISABLED
         )
 
-        scratchRecordingFileInitJob = ioScope.launch { resetWavFile() }
+        scratchRecordingFileInitJob = viewModelScope.launch(Dispatchers.IO) { resetWavFile() }
 
         totalRecordedBytes = 0
         setActivityState(ActivityState.RECORDING)
@@ -287,7 +283,7 @@ constructor(
         )
 
         releasePlayer()
-        scratchRecordingFileInitJob = ioScope.launch { resetWavFile() }
+        scratchRecordingFileInitJob = viewModelScope.launch(Dispatchers.IO) { resetWavFile() }
         setActivityState(ActivityState.RECORDING)
       }
 
@@ -547,30 +543,23 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING, -> {
-        //TODO: pop off this fragment
-
-//        setResult(Activity.RESULT_OK, intent)
-//        finish()
+        navigateBack()
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         runBlocking {
           encodeRecording()
           completeAndSaveCurrentMicrotask()
-          //TODO: pop off this fragment
-//          setResult(Activity.RESULT_OK, intent)
-//          finish()
+          navigateBack()
         }
       }
       ActivityState.ENCODING_NEXT, ActivityState.ENCODING_BACK -> {
         runBlocking {
           encodingJob?.join()
-          //TODO: pop off this fragment
-//          setResult(Activity.RESULT_OK, intent)
-//          finish()
+          navigateBack()
         }
       }
       ActivityState.ACTIVITY_STOPPED -> {
-        // throw Exception("Android back button cannot not be clicked in '$activityState' state")
+         throw Exception("Android back button cannot not be clicked in '$activityState' state")
       }
     }
   }
@@ -607,7 +596,6 @@ constructor(
 
   private fun playRecordPrompt() {
     _playRecordPromptTrigger.value = true
-    // TODO: Create a livedata and trigger playPrompt in Fragment
   }
 
   /** Move from init to pre-recording */
@@ -806,7 +794,7 @@ constructor(
       ActivityState.ENCODING_NEXT -> {
         runBlocking {
           encodingJob =
-            ioScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
               encodeRecording()
               completeAndSaveCurrentMicrotask()
             }
@@ -822,7 +810,7 @@ constructor(
       ActivityState.ENCODING_BACK -> {
         runBlocking {
           encodingJob =
-            ioScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
               encodeRecording()
               completeAndSaveCurrentMicrotask()
             }
@@ -982,7 +970,7 @@ constructor(
   private fun writeAudioDataToPrerecordBuffer() {
     /** Keep reading until prerecording */
     preRecordingJob =
-      ioScope.launch {
+      viewModelScope.launch(Dispatchers.IO) {
         while (isPrerecordingState(activityState)) {
           val currentBuffer = preRecordBuffer[currentPreRecordBufferIndex]
           val consumedBytes = preRecordBufferConsumed[currentPreRecordBufferIndex]
@@ -1005,7 +993,7 @@ constructor(
    */
   private fun writeAudioDataToRecordBuffer() {
     recordingJob =
-      ioScope.launch {
+      viewModelScope.launch(Dispatchers.IO) {
         if (isPrerecordingState(previousActivityState)) {
           preRecordingJob!!.join()
         }

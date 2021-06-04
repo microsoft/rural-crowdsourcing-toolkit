@@ -6,7 +6,6 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
@@ -18,7 +17,7 @@ private var hasAllPermissions: Boolean = true
 
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
 
-  abstract val viewmodel: BaseMTRendererViewModel
+  abstract val viewModel: BaseMTRendererViewModel
 
 
   /** Function to return the set of permission needed for the task */
@@ -61,17 +60,16 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
     /** If any of the permissions were not granted, return */
     for (result in grantResults) {
       if (result != PackageManager.PERMISSION_GRANTED) {
-        // TODO: Move back to dashboard and push back the information of selected task
-        return
+        findNavController().popBackStack()
       }
     }
 
     hasAllPermissions = true
-    viewmodel.getAndSetupMicrotask()
+    viewModel.getAndSetupMicrotask()
   }
 
   private fun setUpObservers() {
-    viewmodel.navigateBack.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { pop ->
+    viewModel.navigateBack.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { pop ->
       if (pop) {
         findNavController().popBackStack()
       }
