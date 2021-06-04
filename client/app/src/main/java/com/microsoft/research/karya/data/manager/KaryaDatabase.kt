@@ -4,6 +4,7 @@
 package com.microsoft.research.karya.data.manager
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -43,7 +44,10 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
       PayoutInfoRecord::class,
       PaymentRequestRecord::class],
   version = 1,
-  exportSchema = false
+  exportSchema = false,
+  autoMigrations = [
+    AutoMigration (from = 1, to = 2)
+  ]
 )
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
