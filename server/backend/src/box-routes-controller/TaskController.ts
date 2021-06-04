@@ -8,7 +8,7 @@ import * as HttpResponse from '@karya/http-response';
 import { BasicModel, getBlobSASURL } from '@karya/common';
 import { MicrotaskAssignmentRecord, MicrotaskGroupRecord, MicrotaskRecord, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
-import { assignmentCompletionHandlerQ } from '../task-ops/ops/AssignmentCompletionHandler';
+import { assignmentCompletionHandlerQ } from '../task-ops/Index';
 
 type TaskState = {
   task: TaskRecordType;
@@ -190,7 +190,7 @@ export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
   try {
     const verified = await BasicModel.getRecords(
       'microtask_assignment',
-      { task_id: task.id, status: 'verified' },
+      { task_id: task.id, status: 'VERIFIED' },
       [],
       [['verified_at', from, null]],
       'verified_at',

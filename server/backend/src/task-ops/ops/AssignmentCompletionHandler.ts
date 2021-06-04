@@ -10,32 +10,16 @@
 // of this instance of the handler and the previous invocation of the handler.
 
 import { BasicModel, knex } from '@karya/common';
-import { TaskOp, TaskOpRecord, TaskRecordType } from '@karya/core';
-import Bull from 'bull';
+import { TaskOp, TaskOpRecord } from '@karya/core';
+import { AssignmentCompletionHandlerObject } from '../Index';
 import { Promise as BBPromise } from 'bluebird';
-
-// Assignment completion handler object
-type AssignmentCompletionHandlerObject = {
-  taskOp: TaskOpRecord;
-  task: TaskRecordType;
-};
-
-// Bull queue
-export const assignmentCompletionHandlerQ = new Bull<AssignmentCompletionHandlerObject>(
-  'ASSIGNMENT_COMPLETION_HANDLER'
-);
-
-// Set the handler for the queue
-assignmentCompletionHandlerQ.process(async (job) => {
-  await handleCompletedAssignments(job.data);
-});
 
 /**
  * Handle all completed assignments of a particular task between the current and
  * previous invocation of the completion handler
  * @param achObject Completion handler object
  */
-async function handleCompletedAssignments(achObject: AssignmentCompletionHandlerObject) {
+export async function handleCompletedAssignments(achObject: AssignmentCompletionHandlerObject) {
   const { task, taskOp } = achObject;
 
   // Get the most recent assignment completion handler task op for this task
