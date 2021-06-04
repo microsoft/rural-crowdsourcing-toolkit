@@ -81,7 +81,6 @@ constructor(
         currentAssignmentIndex++
       } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
 
-      getAndSetupMicrotask()
     }
 
   }

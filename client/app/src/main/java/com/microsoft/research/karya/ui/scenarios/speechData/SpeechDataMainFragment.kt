@@ -2,8 +2,9 @@ package com.microsoft.research.karya.ui.scenarios.speechData
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,9 +27,23 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
   override val viewModel: SpeechDataMainViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
 
+  override fun requiredPermissions(): Array<String> {
+    return arrayOf(android.Manifest.permission.RECORD_AUDIO)
+  }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
+    // TODO: Remove this once we have viewModel Factory
+    viewModel.setupViewmodel(args.taskId!!, 0, 0)
+    return view
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    viewModel.setupViewmodel(args.taskId!!, 0, 0)
 
     setupObservers()
 
