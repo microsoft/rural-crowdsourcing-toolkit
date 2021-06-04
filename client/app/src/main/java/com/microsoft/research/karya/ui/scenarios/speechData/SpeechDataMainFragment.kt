@@ -3,6 +3,8 @@ package com.microsoft.research.karya.ui.scenarios.speechData
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -21,17 +23,22 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main) {
-  override val viewmodel: SpeechDataMainViewModel by viewModels()
+  override val viewModel: SpeechDataMainViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    viewmodel.setupViewmodel(args.taskId!!, 0, 0)
+    viewModel.setupViewmodel(args.taskId!!, 0, 0)
 
     setupObservers()
 
+    /** Set OnBackPressed callback */
+    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+      viewModel.onBackPressed()
+    }
+
     /** record instruction */
-    val recordInstruction = viewmodel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+    val recordInstruction = viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
     recordPromptTv.text = recordInstruction
 
     /** Set card corner radius */
@@ -54,15 +61,15 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     }
 
     /** Set on click listeners */
-    recordBtn.setOnClickListener { viewmodel.handleRecordClick() }
-    playBtn.setOnClickListener { viewmodel.handlePlayClick() }
-    nextBtn.setOnClickListener { viewmodel.handleNextClick() }
-    backBtn.setOnClickListener { viewmodel.handleBackClick() }
+    recordBtn.setOnClickListener { viewModel.handleRecordClick() }
+    playBtn.setOnClickListener { viewModel.handlePlayClick() }
+    nextBtn.setOnClickListener { viewModel.handleNextClick() }
+    backBtn.setOnClickListener { viewModel.handleBackClick() }
 
   }
 
   private fun setupObservers() {
-    viewmodel.backBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       backBtn.isClickable = state != DISABLED
       backBtn.setBackgroundResource(
         when (state) {
@@ -73,7 +80,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewmodel.recordBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.recordBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       recordBtn.isClickable = state != DISABLED
       recordBtn.setBackgroundResource(
         when (state) {
@@ -84,7 +91,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewmodel.playBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.playBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       playBtn.isClickable = state != DISABLED
       playBtn.setBackgroundResource(
         when (state) {
@@ -95,7 +102,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewmodel.nextBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.nextBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       nextBtn.isClickable = state != DISABLED
       nextBtn.setBackgroundResource(
         when (state) {
@@ -106,35 +113,33 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewmodel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewModel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
       sentenceTv.text = text
     }
 
-    viewmodel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewModel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
       recordSecondsTv.text = text
     }
 
-    viewmodel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewModel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
       recordCentiSecondsTv.text = text
     }
 
-    viewmodel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { progress ->
+    viewModel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { progress ->
       playbackProgressPb.progress = progress
     }
 
-    viewmodel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { max ->
+    viewModel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { max ->
       playbackProgressPb.max = max
     }
 
-    viewmodel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { play ->
+    viewModel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { play ->
       if (play) {
         playRecordPrompt()
       }
     }
 
   }
-
-  //TODO: Call onBackPressed from viewmodel
 
   private fun playRecordPrompt() {
     val oldColor = sentenceTv.currentTextColor
@@ -267,7 +272,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
           backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
           backPointerIv.invisible()
           delay(500)
-          viewmodel.moveToPrerecording()
+          viewModel.moveToPrerecording()
         }
       }
     )

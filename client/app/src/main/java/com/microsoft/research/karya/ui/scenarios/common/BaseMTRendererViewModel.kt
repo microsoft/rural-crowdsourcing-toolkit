@@ -51,6 +51,10 @@ constructor(
     MutableStateFlow(false)
   val navigateBack = _navigateBack.asStateFlow()
 
+  protected fun navigateBack() {
+    _navigateBack.value = true
+  }
+
   fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
     this.taskId = taskId
     this.incompleteMta = incompleteMta
@@ -62,11 +66,10 @@ constructor(
       microtaskAssignmentIDs = assignmentRepository.getUnsubmittedIDsForTask(
         task.id,
         false
-      ) // TODO: Generalise the includeCompleted parameter
+      ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel factory)
 
       if (microtaskAssignmentIDs.isEmpty()) {
-        // TODO: SET a flag to denote that there are no assignments
-        //  and maybe show a corresponding dialogue box
+        navigateBack()
       }
       // Move to the first incomplete (assigned) microtask or the last microtask
       do {
@@ -82,8 +85,6 @@ constructor(
     }
 
   }
-
-  // TODO: Mark First visited in Speech Data collection
 
   // Initialising containers
   val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
@@ -202,8 +203,7 @@ constructor(
       currentAssignmentIndex++
       getAndSetupMicrotask()
     } else {
-      // TODO: Signal that all Microtasks are finsihed and finish
-      _navigateBack.value = true
+      navigateBack()
     }
   }
 
@@ -216,8 +216,7 @@ constructor(
       currentAssignmentIndex--
       getAndSetupMicrotask()
     } else {
-      // TODO: Signal that there are no previous microtasks in the UI and finish
-      _navigateBack.value = true
+      navigateBack()
     }
   }
 
