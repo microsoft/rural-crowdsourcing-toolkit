@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.dashboard
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -14,19 +15,18 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
+import com.microsoft.research.karya.utils.extensions.isNetworkAvailable
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
@@ -40,7 +40,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       viewModel.updateTaskStatus(taskId)
     }
 
-  @Inject lateinit var authManager: AuthManager
+  @Inject
+  lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -86,7 +87,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
-    syncCv.enable()
+    binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
@@ -97,16 +98,46 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         binding.rupeesEarnedCl.gone()
       }
     }
+
+    // Show a dialog box to sync with server if completed tasks and internet available
+    if (requireContext().isNetworkAvailable()) {
+      for (taskInfo in data.taskInfoData) {
+        if (taskInfo.taskStatus.completedMicrotasks > 0) {
+          showDialogueToSync()
+        }
+      }
+    }
+
+  }
+
+  private fun showDialogueToSync() {
+    val builder: AlertDialog.Builder? = activity?.let {
+      AlertDialog.Builder(it)
+    }
+
+    builder?.setMessage(R.string.s_sync_prompt_message)
+
+    // Set buttons
+    builder?.apply {
+      setPositiveButton(R.string.s_yes
+      ) { _, _ ->
+        viewModel.syncWithServer()
+      }
+      setNegativeButton(R.string.s_no, null)
+    }
+
+    builder?.create()
+    builder?.show()
   }
 
   private fun showErrorUi(throwable: Throwable) {
     hideLoading()
-    syncCv.enable()
+    binding.syncCv.enable()
   }
 
   private fun showLoadingUi() {
     showLoading()
-    syncCv.disable()
+    binding.syncCv.disable()
   }
 
   private fun showLoading() = binding.syncProgressBar.visible()
@@ -118,7 +149,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
-        val profilePicPath = authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
+        val profilePicPath =
+          authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
         val bitmap = BitmapFactory.decodeFile(profilePicPath)
 
         withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }
@@ -128,19 +160,20 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   fun onDashboardItemClick(task: TaskInfo) {
 //    val nextIntent =
-      when (task.scenarioName) {
-        // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
-        // Use [ScenarioType] enum once we migrate to it.
-        "SPEECH_DATA" -> {
+    when (task.scenarioName) {
+      // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+      // Use [ScenarioType] enum once we migrate to it.
+      "SPEECH_DATA" -> {
 //          Intent(requireContext(), StorySpeechMain::class.java)
-          val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
-          findNavController().navigate(action)
-        }
-        "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
-        else -> {
-          throw Exception("Unimplemented scenario")
-        }
+        val action =
+          DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+        findNavController().navigate(action)
       }
+      "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
+      else -> {
+        throw Exception("Unimplemented scenario")
+      }
+    }
 
 //    nextIntent.putExtra("taskID", task.taskID)
 //    taskActivityLauncher.launch(nextIntent)
