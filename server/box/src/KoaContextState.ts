@@ -10,8 +10,6 @@ import Application, { ParameterizedContext } from 'koa';
 // Default koa state for box server requests
 export type KaryaDefaultState = AuthState & {
   entity: WorkerRecord;
-  // alias for entity
-  worker: WorkerRecord;
 };
 
 // Template for extra route state
