@@ -10,9 +10,10 @@
 // of this instance of the handler and the previous invocation of the handler.
 
 import { BasicModel, knex } from '@karya/common';
-import { TaskOp, TaskOpRecord } from '@karya/core';
+import { AssignmentRecordType, TaskOp, TaskOpRecord } from '@karya/core';
 import { AssignmentCompletionHandlerObject } from '../Index';
 import { Promise as BBPromise } from 'bluebird';
+import { executeForwardLink } from '../../chains/Index';
 
 /**
  * Handle all completed assignments of a particular task between the current and
@@ -34,12 +35,12 @@ export async function handleCompletedAssignments(achObject: AssignmentCompletion
   const currentOpTime = taskOp.created_at;
 
   // Get all completed assignments to be processed
-  const assignments = await BasicModel.getRecords(
+  const assignments = (await BasicModel.getRecords(
     'microtask_assignment',
     { task_id: task.id, status: 'COMPLETED' },
     [],
     [['submitted_to_server_at', lastOpTime, currentOpTime]]
-  );
+  )) as AssignmentRecordType[];
 
   // Get all active task links for the task
   const links = await BasicModel.getRecords('task_link', { from_task: task.id, status: 'ACTIVE' });
@@ -48,7 +49,7 @@ export async function handleCompletedAssignments(achObject: AssignmentCompletion
   let blocking = false;
   await BBPromise.mapSeries(links, async (link) => {
     if (link.blocking) blocking = true;
-    // execute the link
+    executeForwardLink(assignments, task, link);
   });
 
   // If no link is blocking, then mark assignments as verified
