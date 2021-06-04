@@ -41,8 +41,7 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
     }
 
     if (hasAllPermissions) {
-//      viewmodel.getAndSetupMicrotask()
-      // TODO: SHIFT PERMISSIONS TO EACH FRAGMENT
+      viewModel.getAndSetupMicrotask()
     }
   }
 
