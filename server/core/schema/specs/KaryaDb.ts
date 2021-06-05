@@ -136,6 +136,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['description', ['text'], 'not unique', 'not nullable', 'mutable'],
         ['display_name', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['policy', ['string', 16, 'PolicyName'], 'not unique', 'not nullable', 'not mutable'],
         ['params', ['template', 'ParamsType'], 'not unique', 'not nullable', 'mutable'],
         ['itags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['otags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
