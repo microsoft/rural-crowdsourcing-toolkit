@@ -9,7 +9,7 @@ import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskGroupModel, MicrotaskModel } from '@karya/common';
 import { nTotalBasePolicy, NTotalPolicyParams } from '@karya/core';
 
-export const nTotalPolicy: BoxPolicyInterface<NTotalPolicyParams> = {
+export const nTotalPolicy: BoxPolicyInterface<'N_TOTAL', NTotalPolicyParams> = {
   ...nTotalBasePolicy,
 
   /**

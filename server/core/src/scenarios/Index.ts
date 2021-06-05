@@ -9,6 +9,7 @@ import { BaseSpeechVerificationScenario, baseSpeechVerificationScenario } from '
 import { BaseTextTranslationScenario, baseTextTranslationScenario } from './scenarios/TextTranslation';
 import { BaseSignLanguageVideoScenario, baseSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord } from '../auto/TableInterfaces';
+import { PolicyName, PolicyParamsType } from '../policies/Index';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -42,7 +43,10 @@ export const scenarioMap: {
 };
 
 // Utility types to extract task, microtask, assignment record types
-export type TaskRecordType<SN extends ScenarioName = ScenarioName> = ScenarioType<SN> extends BaseScenarioInterface<
+export type TaskRecordType<
+  SN extends ScenarioName = ScenarioName,
+  PN extends PolicyName = PolicyName
+> = ScenarioType<SN> extends BaseScenarioInterface<
   SN,
   infer TaskParamsType,
   infer _InputDataType,
@@ -50,7 +54,7 @@ export type TaskRecordType<SN extends ScenarioName = ScenarioName> = ScenarioTyp
   infer _OutputDataType,
   infer _OutputFilesType
 >
-  ? TaskRecord<TaskParamsType>
+  ? TaskRecord<TaskParamsType & PolicyParamsType<PN>>
   : never;
 
 export type TaskType<SN extends ScenarioName = ScenarioName> = Partial<TaskRecordType<SN>>;

@@ -7,7 +7,7 @@ import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskModel } from '@karya/common';
 import { nMatchingBasePolicy, NMatchingPolicyParams } from '@karya/core';
 
-export const nMatchingPolicy: BoxPolicyInterface<NMatchingPolicyParams> = {
+export const nMatchingPolicy: BoxPolicyInterface<'N_MATCHING', NMatchingPolicyParams> = {
   ...nMatchingBasePolicy,
 
   /**

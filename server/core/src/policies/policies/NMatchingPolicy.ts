@@ -12,7 +12,7 @@ export type NMatchingPolicyParams = {
   max: number;
 };
 
-export const nMatchingBasePolicy: BasePolicyInterface<NMatchingPolicyParams> = {
+export const nMatchingBasePolicy: BasePolicyInterface<'N_MATCHING', NMatchingPolicyParams> = {
   name: 'N_MATCHING',
   full_name: 'n Matching Responses',
 

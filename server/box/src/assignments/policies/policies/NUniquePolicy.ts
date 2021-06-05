@@ -7,7 +7,7 @@ import { BoxPolicyInterface } from '../PolicyInterface';
 import { MicrotaskModel } from '@karya/common';
 import { nUniqueBasePolicy, NUniquePolicyParams } from '@karya/core';
 
-export const nUniquePolicy: BoxPolicyInterface<NUniquePolicyParams> = {
+export const nUniquePolicy: BoxPolicyInterface<'N_UNIQUE', NUniquePolicyParams> = {
   ...nUniqueBasePolicy,
 
   /**
