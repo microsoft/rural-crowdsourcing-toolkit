@@ -4,7 +4,7 @@
 // Entry point for module managing task operations
 
 import { BasicModel } from '@karya/common';
-import { handleCompletedAssignments } from './ops/AssignmentCompletionHandler';
+import { executeForwardTaskLinks } from './ops/AssignmentCompletionHandler';
 import { TaskOpRecord, TaskRecordType } from '@karya/core';
 import Bull from 'bull';
 
@@ -19,7 +19,7 @@ export const assignmentCompletionHandlerQ = new Bull<AssignmentCompletionHandler
 );
 
 assignmentCompletionHandlerQ.process(async (job) => {
-  await handleCompletedAssignments(job.data);
+  await executeForwardTaskLinks(job.data);
 });
 
 // Task operation queues

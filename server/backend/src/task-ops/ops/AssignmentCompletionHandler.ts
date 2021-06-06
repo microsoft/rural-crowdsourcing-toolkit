@@ -14,13 +14,14 @@ import { AssignmentRecordType, TaskOp, TaskOpRecord } from '@karya/core';
 import { AssignmentCompletionHandlerObject } from '../Index';
 import { Promise as BBPromise } from 'bluebird';
 import { executeForwardLink } from '../../chains/Index';
+import { handleNewlyCompletedAssignments } from '../policies/Index';
 
 /**
  * Handle all completed assignments of a particular task between the current and
  * previous invocation of the completion handler
  * @param achObject Completion handler object
  */
-export async function handleCompletedAssignments(achObject: AssignmentCompletionHandlerObject) {
+export async function executeForwardTaskLinks(achObject: AssignmentCompletionHandlerObject) {
   const { task, taskOp } = achObject;
 
   // Get the most recent assignment completion handler task op for this task
@@ -52,15 +53,8 @@ export async function handleCompletedAssignments(achObject: AssignmentCompletion
     executeForwardLink(assignments, task, link);
   });
 
-  // If no link is blocking, then mark assignments as verified
+  // If no link is blocking, then invoke verification policy for the assignments
   if (!blocking) {
-    await BBPromise.mapSeries(assignments, async (assignment) => {
-      const verified_at = new Date().toISOString();
-      await BasicModel.updateSingle(
-        'microtask_assignment',
-        { id: assignment.id },
-        { status: 'VERIFIED', credits: assignment.max_credits, verified_at }
-      );
-    });
+    await handleNewlyCompletedAssignments(assignments, task);
   }
 }
