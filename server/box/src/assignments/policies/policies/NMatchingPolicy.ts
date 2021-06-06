@@ -36,7 +36,7 @@ export const nMatchingPolicy: BoxPolicyInterface<'N_MATCHING', NMatchingPolicyPa
    * n matching responses.
    */
   async handleAssignmentCompletion(assignment, params) {
-    const count = await MicrotaskModel.uniqueResponseCount(assignment.microtask_id);
+    const count = await MicrotaskModel.matchingResponseCount(assignment.microtask_id);
     if (count >= params.n) {
       await MicrotaskModel.markComplete(assignment.microtask_id);
     }
