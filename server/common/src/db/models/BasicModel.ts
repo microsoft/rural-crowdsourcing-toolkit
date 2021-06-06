@@ -143,7 +143,7 @@ export async function upsertRecord<TableName extends DbTableName>(
  */
 export async function getRecords<TableName extends DbTableName, ColumnType extends keyof DbRecordType<TableName>>(
   tableName: TableName,
-  match: DbObjectType<TableName> | {} = {},
+  match: DbObjectType<TableName>,
   whereIns: [c: ColumnType, values: DbRecordType<TableName>[ColumnType][]][] = [],
   ranges: [
     c: ColumnType,
