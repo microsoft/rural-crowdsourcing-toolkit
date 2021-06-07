@@ -77,6 +77,14 @@ class SemiCircleEdgeCutoutTreatment(
     require(cutoutVerticalOffset >= 0) { "cutoutVerticalOffset must be positive but was $cutoutVerticalOffset" }
   }
 
+  fun updateCutoutDiameter(cutoutDiameter: Float) {
+    this.cutoutDiameter = cutoutDiameter
+  }
+
+  fun updateCutoutHorizontalOffset(cutoutHorizontalOffset: Float) {
+    this.cutoutHorizontalOffset = cutoutHorizontalOffset
+  }
+
   override fun getEdgePath(length: Float, center: Float, interpolation: Float, shapePath: ShapePath) {
     if (cutoutDiameter == 0f) {
       // There is no cutout to draw.

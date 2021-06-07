@@ -20,6 +20,7 @@ import com.google.android.material.resources.MaterialResources
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap
 import com.microsoft.research.karya.R
 import kotlin.properties.Delegates
 
@@ -28,20 +29,20 @@ class NGKaryaToolbar : Toolbar {
   private var cutoutRoundedCornerRadius by Delegates.notNull<Float>()
   private var cutoutVerticalOffset by Delegates.notNull<Float>()
 
-  private var materialShapeDrawable: MaterialShapeDrawable = MaterialShapeDrawable()
-  private var edgeCutoutTreatment: SemiCircleEdgeCutoutTreatment = SemiCircleEdgeCutoutTreatment()
-
   private lateinit var assistantView: View
+
+  private lateinit var materialShapeDrawable: MaterialShapeDrawable
+  private lateinit var edgeCutoutTreatment: KaryaToolbarEdgeCutoutTreatment
   private lateinit var shapeAppearanceModel: ShapeAppearanceModel
 
-  constructor(context: Context) : super(context, null)
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-    setAttributes(attrs, R.attr.toolbarStyle)
-  }
-
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+  constructor(context: Context) : this(context, null)
+  constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.toolbarStyle)
+  constructor(
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int
+  ) : super(wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr) {
     setAttributes(attrs, defStyleAttr)
-    setBackground()
   }
 
   private fun setAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
@@ -50,33 +51,40 @@ class NGKaryaToolbar : Toolbar {
     cutoutRoundedCornerRadius =
       a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_cutoutRoundedCornerRadius, 0).toFloat()
     cutoutVerticalOffset = a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_cutoutVerticalOffset, 0).toFloat()
+    val elevation = a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_elevation, 0).toFloat()
     val backgroundTint: ColorStateList? = getColorStateList(context, a, R.styleable.NGKaryaToolbar_backgroundTint)
 
+    setBackground(cutoutMargin, cutoutRoundedCornerRadius, cutoutVerticalOffset, elevation)
     backgroundTint?.let { setBackgroundTint(it) }
 
     a.recycle()
   }
 
-  private fun setBackground() {
+  private fun setBackground(
+    cutoutMargin: Float,
+    cutoutRoundedCornerRadius: Float,
+    cutoutVerticalOffset: Float,
+    elevation: Float
+  ) {
+    materialShapeDrawable = MaterialShapeDrawable()
+    edgeCutoutTreatment = KaryaToolbarEdgeCutoutTreatment(cutoutMargin, cutoutRoundedCornerRadius, cutoutVerticalOffset)
     shapeAppearanceModel = ShapeAppearanceModel.builder().setBottomEdge(edgeCutoutTreatment).build()
     materialShapeDrawable.shapeAppearanceModel = shapeAppearanceModel
     materialShapeDrawable.shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
     materialShapeDrawable.paintStyle = Paint.Style.FILL
     materialShapeDrawable.initializeElevationOverlay(context)
+    setElevation(elevation)
     DrawableCompat.setTintList(materialShapeDrawable, backgroundTintList)
+    ViewCompat.setBackground(this, materialShapeDrawable)
   }
 
   private fun updateCutout(child: View) {
-    edgeCutoutTreatment =
-      SemiCircleEdgeCutoutTreatment(
-        cutoutMargin,
-        cutoutRoundedCornerRadius,
-        cutoutVerticalOffset,
-        child.height.toFloat()
-      )
-    shapeAppearanceModel = ShapeAppearanceModel.builder().setBottomEdge(edgeCutoutTreatment).build()
-    materialShapeDrawable.shapeAppearanceModel = shapeAppearanceModel
-    ViewCompat.setBackground(this, materialShapeDrawable)
+    getBottomEdgeTreatment().setViewDiameter(child.height.toFloat())
+    materialShapeDrawable.invalidateSelf()
+  }
+
+  private fun getBottomEdgeTreatment(): KaryaToolbarEdgeCutoutTreatment {
+    return materialShapeDrawable.shapeAppearanceModel.bottomEdge as KaryaToolbarEdgeCutoutTreatment
   }
 
   private fun findAssistantView() {
@@ -98,15 +106,21 @@ class NGKaryaToolbar : Toolbar {
     return materialShapeDrawable.tintList
   }
 
+  override fun setElevation(elevation: Float) {
+    if (this::materialShapeDrawable.isInitialized) {
+      materialShapeDrawable.elevation = elevation
+    }
+  }
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-
     MaterialShapeUtils.setParentAbsoluteElevation(this, materialShapeDrawable)
 
     // Automatically don't clip children for the parent view of KaryaToolbar. This allows the shadow
     // to be drawn outside the bounds.
     if (parent is ViewGroup) {
       (parent as ViewGroup).clipChildren = false
+      materialShapeDrawable.invalidateSelf()
     }
   }
 
@@ -114,12 +128,14 @@ class NGKaryaToolbar : Toolbar {
     super.onLayout(changed, l, t, r, b)
     findAssistantView()
 
-    val left = (width / 2) - (assistantView.width / 2)
-    val right = (width / 2) + (assistantView.width / 2)
-    val top = height - (assistantView.height / 2) + cutoutVerticalOffset.toInt()
-    val bottom = top + assistantView.height
+    if (this::assistantView.isInitialized) {
+      val left = (width / 2) - (assistantView.width / 2)
+      val right = (width / 2) + (assistantView.width / 2)
+      val top = height - (assistantView.height / 2) + cutoutVerticalOffset.toInt()
+      val bottom = top + assistantView.height
 
-    assistantView.layout(left, top, right, bottom)
+      assistantView.layout(left, top, right, bottom)
+    }
   }
 
   companion object {

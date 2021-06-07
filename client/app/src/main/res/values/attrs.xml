@@ -41,5 +41,6 @@
         <attr name="cutoutMargin" format="dimension"/>
         <attr name="cutoutRoundedCornerRadius" format="dimension"/>
         <attr name="cutoutVerticalOffset" format="dimension"/>
+        <attr name="elevation" format="dimension"/>
     </declare-styleable>
 </resources>

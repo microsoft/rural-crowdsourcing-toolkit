@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -35,7 +36,10 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
   private fun setupViews() {
     with(binding) {
-      appTb.setTitle(getString(R.string.s_access_code_title))
+      (requireActivity() as AppCompatActivity).setSupportActionBar(appTb)
+      requireActivity().actionBar?.setHomeButtonEnabled(true)
+      requireActivity().actionBar?.setDisplayShowHomeEnabled(true)
+      requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
 
       creationCodeEt.addTextChangedListener(
         object : SeparatorTextWatcher('-', 4) {

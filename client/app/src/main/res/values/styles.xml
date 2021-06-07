@@ -118,4 +118,8 @@
         <item name="outlineSize">@dimen/_3sdp</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.CircleShape">
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>
