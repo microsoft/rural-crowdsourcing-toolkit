@@ -48,9 +48,7 @@ constructor(
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
 
   private val taskInfoComparator =
-    compareByDescending<TaskInfo> { taskInfo -> taskInfo.assignedMicrotasks }.thenBy { taskInfo ->
-      taskInfo.taskID
-    }
+    compareByDescending<TaskInfo> { taskInfo -> taskInfo.assignedMicrotasks }.thenBy { taskInfo -> taskInfo.taskID }
 
   private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
     MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
