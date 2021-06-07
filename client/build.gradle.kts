@@ -2,6 +2,7 @@
 
 buildscript {
     val kotlin_version by extra("1.4.32")
+    val nav_version = "2.3.5"
     repositories {
         google()
         mavenCentral()
@@ -23,7 +24,9 @@ buildscript {
         classpath(Plugins.gms)
         classpath(Plugins.crashlytics)
         classpath(Plugins.safeArgs)
-        // NOTE: Do not place your application dependencies here; they belong
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
+      // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files
     }
 }

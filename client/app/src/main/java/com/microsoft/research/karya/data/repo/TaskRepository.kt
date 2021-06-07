@@ -24,4 +24,8 @@ constructor(
 
     return TaskStatus(available, completed, submitted, verified)
   }
+
+  suspend fun getById(taskId: String): TaskRecord {
+    return taskDao.getById(taskId)
+  }
 }

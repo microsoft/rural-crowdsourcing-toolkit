@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.utils
 
+import androidx.appcompat.app.AppCompatActivity
+import com.microsoft.research.karya.utils.extensions.getContainerDirectory
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -42,6 +44,13 @@ class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input"
     val ext = "tgz"
     return "$microtaskId.$ext"
   }
+
+  /** Get Microtask input directory */
+  // TODO [Viewmodel_Refactor]: Ask the structure of input files directory
+  fun getMicrotaskInputDirectory(microtaskId: String): String {
+    return FileUtils.createDirectory("${cname}/$microtaskId")
+  }
+
 }
 
 class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("microtask-assignment-output", fileDirPath) {
@@ -50,6 +59,25 @@ class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("micro
     val ext = "tgz"
     return "$assignmentId.$ext"
   }
+
+  /**
+   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a
+   * file identifier and extension. The file name is usually the current assignmentID appended with
+   * the identifier. The full file name is unique for a unique [params] pair.
+   */
+  fun getAssignmentFileName(assignmentId:String, params: Pair<String, String>): String {
+    val identifier = params.first
+    val extension = params.second
+
+    return if (identifier == "") "$assignmentId.$extension" else "$assignmentId-$identifier.$extension"
+  }
+
+  fun getAssignmentOutputFilePath(assignmentId:String, params: Pair<String, String>): String {
+    val directory = getContainerDirectory()
+    val fileName = getAssignmentFileName(assignmentId, params)
+    return "$directory/$fileName"
+  }
+
 }
 
 class WorkerLogs(fileDirPath: String) : KaryaFileContainer("worker-logs", fileDirPath) {
