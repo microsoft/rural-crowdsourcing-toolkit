@@ -5,6 +5,7 @@ import com.microsoft.research.karya.data.repo.LanguageRepository
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.Result
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -43,6 +44,7 @@ constructor(
         .flowOn(Dispatchers.IO)
         .catch {
           Log.d("ResourceManager", "Error downloading files for language: $language")
+          it.printStackTrace()
           emit(Result.Error(it))
           return@catch
         }
