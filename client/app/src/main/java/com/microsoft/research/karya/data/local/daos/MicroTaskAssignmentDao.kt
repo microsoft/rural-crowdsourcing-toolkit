@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 
 @Dao
 interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
@@ -53,4 +54,6 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
     worker_id: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
   ): String?
+
+  @Query("SELECT * FROM TaskInfo") suspend fun getTaskInfo(): List<TaskInfo>
 }

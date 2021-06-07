@@ -4,7 +4,8 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
+import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -31,12 +34,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
-  val taskActivityLauncher =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-      val taskId = result.data?.getStringExtra("taskID") ?: return@registerForActivityResult
-
-      viewModel.updateTaskStatus(taskId)
-    }
 
   @Inject lateinit var authManager: AuthManager
 
@@ -44,7 +41,11 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
     observeUi()
+    fetchTasksOnFirstRun()
+  }
 
+  override fun onResume() {
+    super.onResume()
     viewModel.getAllTasks()
   }
 
@@ -135,6 +136,22 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       }
 
     nextIntent.putExtra("taskID", task.taskID)
-    taskActivityLauncher.launch(nextIntent)
+    startActivity(nextIntent)
+  }
+
+  private fun fetchTasksOnFirstRun() {
+    val firstFetchKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_FETCH)
+
+    lifecycleScope.launchWhenStarted {
+      this@DashboardFragment.requireContext().dataStore.edit { prefs ->
+        val isFirstFetch = prefs[firstFetchKey] ?: true
+
+        if (isFirstFetch) {
+          viewModel.syncWithServer()
+        }
+
+        prefs[firstFetchKey] = false
+      }
+    }
   }
 }
