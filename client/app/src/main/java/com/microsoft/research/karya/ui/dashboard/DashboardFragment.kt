@@ -39,6 +39,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
       viewModel.updateTaskStatus(taskId)
     }
+  private var dialog: AlertDialog? = null
 
   @Inject
   lateinit var authManager: AuthManager
@@ -104,6 +105,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       for (taskInfo in data.taskInfoData) {
         if (taskInfo.taskStatus.completedMicrotasks > 0) {
           showDialogueToSync()
+          return
         }
       }
     }
@@ -111,6 +113,9 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   private fun showDialogueToSync() {
+
+    if (dialog != null && dialog!!.isShowing) return
+
     val builder: AlertDialog.Builder? = activity?.let {
       AlertDialog.Builder(it)
     }
@@ -122,12 +127,13 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       setPositiveButton(R.string.s_yes
       ) { _, _ ->
         viewModel.syncWithServer()
+        dialog!!.dismiss()
       }
       setNegativeButton(R.string.s_no, null)
     }
 
-    builder?.create()
-    builder?.show()
+    dialog = builder?.create()
+    dialog!!.show()
   }
 
   private fun showErrorUi(throwable: Throwable) {
