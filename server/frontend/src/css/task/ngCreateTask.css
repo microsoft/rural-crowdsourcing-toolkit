@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap');
+
+#main {
+  background-image: linear-gradient(180deg, #fff 0%, #e7e7e8 91%);
+  font-family: 'Titillium Web', sans-serif;
+  border-radius: 0.3em;
+}
+
+#breadcrumbs-nav {
+  position: relative;
+  left: 2%;
+  width: 98%;
+  background-color: #fff;
+  box-shadow: 0px 1px 0px rgba(110, 110, 110, 0.15);
+  height: 3.5rem;
+}
+
+.breadcrumb {
+  color: #515153;
+  font-size: 16px;
+}
+
+.breadcrumb:before {
+  color: #515153;
+}
+
+.breadcrumb:last-child {
+  color: #272727;
+}
+
+#page-title {
+  font-size: 30px;
+  margin-left: 3%;
+  margin-top: 1%;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 300;
+}
+
+#select-txt {
+  font-size: 20px;
+  margin-left: 3%;
+  margin-top: 4%;
+}
+
+.scenario-names label:before,
+.scenario-names label:after {
+  position: absolute;
+  opacity: 0;
+}
+
+.scenario-card {
+  position: relative;
+  background-color: #fdfdfd;
+  border-radius: 5px;
+  padding-top: 1%;
+  margin: 4%;
+  margin-top: 6%;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  border: 1px solid #f2f8f9;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.scenario-card:hover {
+  transition: all 0.2s ease-out;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px,
+    rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 12px 12px;
+  top: -2px;
+  background-color: white;
+  border-radius: 7px;
+}
+
+input[type='radio']:checked + label {
+  background-color: tomato;
+}
+
+.scenario-name {
+  margin-left: 2%;
+  font-size: 14px;
+  color: #515153;
+  font-weight: 600;
+}
+
+.description {
+  margin-left: 3%;
+}
+
+form {
+  border-radius: 0.3em;
+  margin-left: 2%;
+}
+
+#form {
+  margin-left: 3%;
+}
+
+.form-heading {
+  font-size: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 300;
+}
+
+hr {
+  height: 1px;
+  background-color: #e0e0e7;
+  border: none;
+}
