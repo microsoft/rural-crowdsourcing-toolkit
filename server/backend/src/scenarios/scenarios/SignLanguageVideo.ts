@@ -1,31 +1,36 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 //
-// Backend implementation of the text-translation scenario
+// Backend implementation of the sign langauge video data scenario
 
 import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
-import { baseTextTranslationScenario, BaseTextTranslationScenario, TaskRecordType, MicrotaskType } from '@karya/core';
+import {
+  baseSignLanguageVideoScenario,
+  BaseSignLanguageVideoScenario,
+  TaskRecordType,
+  MicrotaskType,
+} from '@karya/core';
 
 /**
- * Process the input file for the text translation task.
- * @param task Text translation task record
+ * Process the input file for the speech data task.
+ * @param task Speech data task record
  * @param jsonFilePath Path to JSON file
  * @param tarFilePath --
  * @param task_folder Task folder path
  */
 async function processInputFile(
-  task: TaskRecordType<'TEXT_TRANSLATION'>,
+  task: TaskRecordType<'SIGN_LANGUAGE_VIDEO'>,
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
-): Promise<MicrotaskList<'TEXT_TRANSLATION'>> {
+): Promise<MicrotaskList<'SIGN_LANGUAGE_VIDEO'>> {
   const sentences: { sentence: string }[] = jsonData!!;
   const microtasks = sentences.map((sentence) => {
-    const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
+    const mt: MicrotaskType<'SIGN_LANGUAGE_VIDEO'> = {
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,
-      credits: task.params.creditsPerTranslation,
+      credits: task.params.creditsPerRecording,
       status: 'INCOMPLETE',
     };
     return mt;
@@ -34,8 +39,8 @@ async function processInputFile(
   return [{ mg: null, microtasks }];
 }
 
-// Backend text translation scenario
-export const backendTextTranslationScenario: IBackendScenarioInterface<BaseTextTranslationScenario> = {
-  ...baseTextTranslationScenario,
+// Backend speech data scenario
+export const backendSignLanguageVideoScenario: IBackendScenarioInterface<BaseSignLanguageVideoScenario> = {
+  ...baseSignLanguageVideoScenario,
   processInputFile,
 };

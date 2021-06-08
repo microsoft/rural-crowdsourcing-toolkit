@@ -25,20 +25,12 @@ const microtaskStatuses = ['INCOMPLETE', 'COMPLETED'] as const;
 export type MicrotaskStatus = typeof microtaskStatuses[number];
 
 // Task Op Type -- TODO: move to task op handlers
-const taskOpTypes = ['PROCESS_INPUT', 'GENERATE_OUTPUT'] as const;
+const taskOpTypes = ['PROCESS_INPUT', 'GENERATE_OUTPUT', 'HANDLE_ASSIGNMENT_COMPLETION'] as const;
 export type TaskOpType = typeof taskOpTypes[number];
 
 // Task Op Status -- TODO: move to task op handlers
 const taskOpStatuses = ['CREATED', 'RUNNING', 'COMPLETED', 'FAILED'] as const;
 export type TaskOpStatus = typeof taskOpStatuses[number];
-
-// Chain Name -- TODO: move to task chaining module
-const chainNames = ['TEST'] as const;
-export type ChainName = typeof chainNames[number];
-
-// Chain Status -- TODO: move to task chaining module
-const chainStatuses = ['ACTIVE', 'INACTIVE'] as const;
-export type ChainStatus = typeof chainStatuses[number];
 
 // Task Assignment Status
 const taskAssignmentStatuses = ['ASSIGNED', 'COMPLETED'] as const;

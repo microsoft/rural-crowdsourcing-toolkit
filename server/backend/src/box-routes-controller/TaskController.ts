@@ -6,11 +6,12 @@
 import { BoxRouteMiddleware, BoxRouteState } from '../routes/BoxRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { BasicModel, getBlobSASURL } from '@karya/common';
-import { MicrotaskAssignmentRecord, MicrotaskGroupRecord, MicrotaskRecord, TaskRecord } from '@karya/core';
+import { MicrotaskAssignmentRecord, MicrotaskGroupRecord, MicrotaskRecord, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
+import { assignmentCompletionHandlerQ } from '../task-ops/Index';
 
 type TaskState = {
-  task: TaskRecord;
+  task: TaskRecordType;
   from: string;
   limit: number | undefined;
 };
@@ -130,6 +131,9 @@ export const submitNewAssignments: TaskRouteMiddleware = async (ctx) => {
   }
 };
 
+/**
+ * Submit completed assignments from the box
+ */
 export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
   const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
 
@@ -143,12 +147,30 @@ export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
       return { id: assignment.id, submitted_to_server_at };
     });
 
-    // TODO: Execute trigger to initiate task chain
-
     HttpResponse.OK(ctx, response);
   } catch (e) {
     // Conver this to internal server error
     HttpResponse.BadRequest(ctx, 'Unknown error occured while inserting assignments');
+  }
+};
+
+/**
+ * Execute the task links for a particular task
+ */
+export const executeTaskLinks: TaskRouteMiddleware = async (ctx) => {
+  const task = ctx.state.task;
+
+  try {
+    const taskOp = await BasicModel.insertRecord('task_op', {
+      task_id: task.id,
+      op_type: 'HANDLE_ASSIGNMENT_COMPLETION',
+      status: 'CREATED',
+    });
+
+    await assignmentCompletionHandlerQ.add({ task, taskOp });
+    HttpResponse.OK(ctx, {});
+  } catch (e) {
+    HttpResponse.BadRequest(ctx, 'Unknown error occured while creating task op');
   }
 };
 
@@ -168,7 +190,7 @@ export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
   try {
     const verified = await BasicModel.getRecords(
       'microtask_assignment',
-      { task_id: task.id, status: 'verified' },
+      { task_id: task.id, status: 'VERIFIED' },
       [],
       [['verified_at', from, null]],
       'verified_at',
@@ -189,7 +211,7 @@ export const setTask: TaskRouteMiddleware = async (ctx, next) => {
 
   // Get and set task record
   try {
-    ctx.state.task = await BasicModel.getSingle('task', { id });
+    ctx.state.task = (await BasicModel.getSingle('task', { id })) as TaskRecordType;
   } catch (e) {
     HttpResponse.NotFound(ctx, `No task with id ${id}`);
     return;

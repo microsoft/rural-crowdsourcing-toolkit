@@ -5,7 +5,7 @@
 
 import camelcase from 'camelcase';
 import { TableSpec } from '../SchemaInterface';
-import { knexColumnSpec, typescriptColumnSpec } from './ColumnGenerators';
+import { knexColumnSpec, typescriptColumnSpec, typescriptType } from './ColumnGenerators';
 
 /**
  * Generate the typescript name for a table. Converts given name to pascal case.
@@ -14,6 +14,23 @@ import { knexColumnSpec, typescriptColumnSpec } from './ColumnGenerators';
  */
 export function typescriptTableName(name: string): string {
   return camelcase(name, { pascalCase: true });
+}
+
+/**
+ * Generate the table template string for the given specs
+ * @param templateSpec Spec for the table templates
+ */
+export function tableTemplate<T extends string, S extends string, O extends string>(
+  templateSpec: TableSpec<T, S, O>['templates'] | undefined,
+  includeValues: boolean = true
+): string {
+  const templateString = templateSpec
+    ?.map(([t, d]) => {
+      const dt = typescriptType('', [d]);
+      return includeValues ? `${t} = ${dt}` : t;
+    })
+    .join(',');
+  return templateString ? `<${templateString}>` : '';
 }
 
 /**
@@ -31,7 +48,7 @@ export function typescriptTableRecordSpec<T extends string, S extends string, O 
   const tsColSpecs = columns.map((column) => typescriptColumnSpec(column));
   const tableType = typescriptTableName(name);
   return `
-  export type ${tableType}${suffix} = {
+  export type ${tableType}${suffix} ${tableTemplate(spec.templates)} = {
     ${tsColSpecs.join('\n')}
   }`;
 }

@@ -4,7 +4,7 @@
 // Database level generators.
 
 import { DatabaseSpec } from '../SchemaInterface';
-import { knexTableSpec, typescriptTableName, typescriptTableRecordSpec } from './TableGenerators';
+import { knexTableSpec, tableTemplate, typescriptTableName, typescriptTableRecordSpec } from './TableGenerators';
 
 /**
  * Generate the typescript table interfaces for the entire database.
@@ -26,8 +26,11 @@ export function typescriptDbInterface<T extends string, S extends string, O exte
 
   // Table object types
   const tableObjectTypes = tableNames.map((name) => {
+    const tableSpec = tables[name as T];
+    const template = tableTemplate(tableSpec.templates);
+    const templateWoValues = tableTemplate(tableSpec.templates, false);
     const tsTableName = typescriptTableName(name);
-    return `export type ${tsTableName} = Partial<${tsTableName}Record>`;
+    return `export type ${tsTableName} ${template} = Partial<${tsTableName}Record ${templateWoValues}> `;
   });
 
   // Db record map

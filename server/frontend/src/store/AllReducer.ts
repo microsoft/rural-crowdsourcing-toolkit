@@ -41,7 +41,7 @@ const initState: AllState = {
   worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task_op: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
-  task_chain: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  task_link: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   task_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   microtask_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },

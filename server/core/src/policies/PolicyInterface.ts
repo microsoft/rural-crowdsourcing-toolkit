@@ -8,9 +8,9 @@
 import { PolicyName } from './Index';
 import { ParameterArray } from '@karya/parameter-specs';
 
-export interface BasePolicyInterface<ParamsType> {
+export interface BasePolicyInterface<PN extends PolicyName, ParamsType> {
   // Policy name
-  name: PolicyName;
+  name: PN;
 
   // Full name of the policy
   full_name: string;

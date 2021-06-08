@@ -3,8 +3,6 @@
 //
 // Base implementation of the text-translation scenario
 
-import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord } from '../../auto/TableInterfaces';
-import { MicrotaskInput, MicrotaskOutput } from '../../types/CustomObjects';
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
 
@@ -25,18 +23,9 @@ type TextTranslationMicrotaskInputFiles = {};
 type TextTranslationMicrotaskOutput = { sentence: string };
 type TextTranslationMicrotaskOutputFiles = {};
 
-// Text translation task, microtask, assignment types
-export type TextTranslationTaskRecord = TaskRecord & { params: TextTranslationTaskInputParameters };
-export type TextTranslationMicrotaskRecord = MicrotaskRecord & {
-  input: MicrotaskInput<TextTranslationMicrotaskInput, TextTranslationMicrotaskInputFiles>;
-  output: MicrotaskOutput<TextTranslationMicrotaskOutput, TextTranslationMicrotaskOutputFiles>;
-};
-export type TextTranslationAssignmentRecord = MicrotaskAssignmentRecord & {
-  output: MicrotaskOutput<TextTranslationMicrotaskOutput, TextTranslationMicrotaskOutputFiles>;
-};
-
 // Base text translation scenario type
 export type BaseTextTranslationScenario = BaseScenarioInterface<
+  'TEXT_TRANSLATION',
   TextTranslationTaskInputParameters,
   TextTranslationMicrotaskInput,
   TextTranslationMicrotaskInputFiles,

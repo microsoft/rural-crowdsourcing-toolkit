@@ -18,7 +18,9 @@ export type TableColumnType<TableName extends string, CustomStringType = string,
   | ['>', TableName]
   | ['stringarray']
   | ['kv']
-  | ['object', CustomObjectType?];
+  | ['stringdict']
+  | ['object', CustomObjectType?, string[]?]
+  | ['template', string];
 
 /**
  * Table column specification
@@ -37,6 +39,7 @@ export type TableColumnSpec<TableName extends string, CustomStringType = string,
 export type TableSpec<TableName extends string, CustomStringType = string, CustomObjectType = string> = {
   columns: TableColumnSpec<TableName, CustomStringType, CustomObjectType>[];
   triggers?: string[];
+  templates?: [string, 'kv' | 'stringdict' | 'object'][];
 };
 
 /**

@@ -11,7 +11,7 @@ export type NTotalPolicyParams = {
   n: number;
 };
 
-export const nTotalBasePolicy: BasePolicyInterface<NTotalPolicyParams> = {
+export const nTotalBasePolicy: BasePolicyInterface<'N_TOTAL', NTotalPolicyParams> = {
   name: 'N_TOTAL',
   full_name: 'n Total Responses',
 

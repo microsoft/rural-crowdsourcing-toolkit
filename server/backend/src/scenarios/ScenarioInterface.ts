@@ -3,7 +3,7 @@
 //
 // Extends base scenario interface to include backend specific functions
 
-import { BaseScenarioInterface, Microtask, MicrotaskGroup, TaskRecord } from '@karya/core';
+import { BaseScenarioInterface, MicrotaskGroup, MicrotaskType, ScenarioName, TaskRecordType } from '@karya/core';
 
 /**
  * MicrotaskList: Represents the response type of the microtask generator. This
@@ -17,20 +17,22 @@ import { BaseScenarioInterface, Microtask, MicrotaskGroup, TaskRecord } from '@k
  * If the scenario does not have the notion of a group, then this of groups,
  * then this object contains a single element with the group object set to null.
  */
-export type MicrotaskList = {
+export type MicrotaskList<SN extends ScenarioName = ScenarioName> = {
   mg: MicrotaskGroup | null;
-  microtasks: Microtask[];
+  microtasks: MicrotaskType<SN>[];
 }[];
 
 // Extend base scenario interface with functions to process input files and
 // generate output files
 export interface BackendScenarioInterface<
+  SN extends ScenarioName,
   ScenarioParams,
   MicrotaskInput,
   MicrotaskInputFiles,
   MicrotaskOutput,
   MicrotaskOutputFiles
 > extends BaseScenarioInterface<
+    SN,
     ScenarioParams,
     MicrotaskInput,
     MicrotaskInputFiles,
@@ -45,21 +47,28 @@ export interface BackendScenarioInterface<
    * @param task_folder Temporary folder for processing the request
    */
   processInputFile(
-    task: TaskRecord,
+    task: TaskRecordType<SN>,
     jsonData?: any,
     tarFilePath?: string,
     task_folder?: string
-  ): Promise<MicrotaskList>;
+  ): Promise<MicrotaskList<SN>>;
 
   /**
    * Generate output for a given task.
    * @param task Task for which output has to be generated
    * @param task_folder Temporary folder for processing the request
    */
-  generateOutput?(task: TaskRecord, task_folder?: string): Promise<void>;
+  generateOutput?(task: TaskRecordType<SN>, task_folder?: string): Promise<void>;
 }
 
 // Shorthand for backend scenario interface type
-export type IBackendScenarioInterface<S> = S extends BaseScenarioInterface<infer A, infer B, infer C, infer D, infer E>
-  ? BackendScenarioInterface<A, B, C, D, E>
+export type IBackendScenarioInterface<S> = S extends BaseScenarioInterface<
+  infer SN,
+  infer A,
+  infer B,
+  infer C,
+  infer D,
+  infer E
+>
+  ? BackendScenarioInterface<SN, A, B, C, D, E>
   : never;

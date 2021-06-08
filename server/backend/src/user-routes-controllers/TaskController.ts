@@ -5,7 +5,7 @@
 
 import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { Task, scenarioMap, TaskRecord, getBlobName, BlobParameters } from '@karya/core';
+import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
 import { BasicModel } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
@@ -15,7 +15,7 @@ import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { inputProcessorQueue } from '../scenarios/Index';
 
 // Task route state for routes dealing with a specific task
-type TaskState = { task: TaskRecord };
+type TaskState = { task: TaskRecordType };
 type TaskRouteMiddleware = UserRouteMiddleware<TaskState>;
 export type TaskRouteState = UserRouteState<TaskState>;
 
@@ -84,7 +84,7 @@ export const checkTask: TaskRouteMiddleware = async (ctx, next) => {
 
   // Check if the task exists
   try {
-    ctx.state.task = await BasicModel.getSingle('task', { id: task_id });
+    ctx.state.task = (await BasicModel.getSingle('task', { id: task_id })) as TaskRecordType;
   } catch (e) {
     HttpResponse.NotFound(ctx, 'Requested task not found');
     return;
@@ -103,7 +103,7 @@ export const checkTask: TaskRouteMiddleware = async (ctx, next) => {
  * Submit input files for a task
  */
 export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
-  const task = ctx.state.task;
+  const task = ctx.state.task as TaskRecordType;
   const { files } = ctx.request;
 
   // Task needs to have input files

@@ -83,6 +83,10 @@ export async function uniqueResponseCount(microtask_id: string): Promise<number>
   return count.rows[0].count;
 }
 
+/**
+ * Get the number of max matching responses received so far for a microtask
+ * @param microtask_id ID of the microtask
+ */
 export async function matchingResponseCount(microtask_id: string): Promise<number> {
   const count = await knex.raw(
     `SELECT MAX(t.c)::int FROM (SELECT output::json ->> 'data' AS d, COUNT(*) AS c FROM microtask_assignment WHERE microtask_id = ? GROUP BY d) AS t WHERE t.d IS NOT NULL`,

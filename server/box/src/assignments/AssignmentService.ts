@@ -121,6 +121,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         task_id: task.id,
         microtask_id: microtask.id,
         worker_id: worker.id,
+        max_credits: microtask.credits,
         status: 'ASSIGNED',
       });
     });

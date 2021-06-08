@@ -12,7 +12,7 @@ export type NUniquePolicyParams = {
   max: number;
 };
 
-export const nUniqueBasePolicy: BasePolicyInterface<NUniquePolicyParams> = {
+export const nUniqueBasePolicy: BasePolicyInterface<'N_UNIQUE', NUniquePolicyParams> = {
   name: 'N_UNIQUE',
   full_name: 'n Unique Responses',
 
