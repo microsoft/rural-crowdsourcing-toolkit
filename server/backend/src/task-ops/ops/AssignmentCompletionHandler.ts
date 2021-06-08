@@ -50,7 +50,7 @@ export async function executeForwardTaskLinks(achObject: AssignmentCompletionHan
   let blocking = false;
   await BBPromise.mapSeries(links, async (link) => {
     if (link.blocking) blocking = true;
-    executeForwardLink(assignments, task, link);
+    await executeForwardLink(assignments, task, link);
   });
 
   // If no link is blocking, then invoke verification policy for the assignments
