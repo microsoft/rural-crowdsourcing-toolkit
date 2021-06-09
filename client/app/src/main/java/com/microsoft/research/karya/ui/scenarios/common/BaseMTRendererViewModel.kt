@@ -1,7 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.common
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -16,17 +14,16 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
-import com.microsoft.research.karya.ui.dashboard.DashboardStateSuccess
-import com.microsoft.research.karya.ui.dashboard.DashboardUiState
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -44,21 +41,44 @@ constructor(
 ) : ViewModel() {
 
   private lateinit var taskId: String
-  private var incompleteMta by Delegates.notNull<Int>()
-  private var completedMta by Delegates.notNull<Int>()
+  private var incompleteAssignments by Delegates.notNull<Int>()
+  private var completedAssignments by Delegates.notNull<Int>()
 
-  private val _navigateBack: MutableStateFlow<Boolean> =
-    MutableStateFlow(false)
-  val navigateBack = _navigateBack.asStateFlow()
+  // Initialising containers
+  val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
+  val microtaskInputContainer = MicrotaskInput(fileDirPath)
+
+
+  lateinit var task: TaskRecord
+  protected lateinit var microtaskAssignmentIDs: List<String>
+  protected var currentAssignmentIndex: Int = 0
+
+  protected lateinit var currentMicroTask: MicroTaskRecord
+  protected lateinit var currentAssignment: MicroTaskAssignmentRecord
+
+  //  protected var totalMicrotasks = incompleteMta + completedMta
+  protected var completedMicrotasks: Int = 0
+
+  // Output fields for microtask assignment
+  // TODO: Maybe make them a data class?
+  protected var outputData: JsonObject = JsonObject()
+  protected var outputFiles: JsonArray = JsonArray()
+  protected var logs: JsonArray = JsonArray()
+
+  private val _navigateBack: MutableSharedFlow<Boolean> =
+    MutableSharedFlow(1)
+  val navigateBack = _navigateBack.asSharedFlow()
 
   protected fun navigateBack() {
-    _navigateBack.value = true
+    viewModelScope.launch {
+      _navigateBack.emit(true)
+    }
   }
 
   fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
     this.taskId = taskId
-    this.incompleteMta = incompleteMta
-    this.completedMta = completedMta
+    this.incompleteAssignments = incompleteMta
+    this.completedAssignments = completedMta
 
     // TODO: Shift this to init once we move to viewmodel factory
     runBlocking {
@@ -84,27 +104,6 @@ constructor(
     }
 
   }
-
-  // Initialising containers
-  val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
-  val microtaskInputContainer = MicrotaskInput(fileDirPath)
-
-
-  lateinit var task: TaskRecord
-  protected lateinit var microtaskAssignmentIDs: List<String>
-  protected var currentAssignmentIndex: Int = 0
-
-  protected lateinit var currentMicroTask: MicroTaskRecord
-  protected lateinit var currentAssignment: MicroTaskAssignmentRecord
-
-//  protected var totalMicrotasks = incompleteMta + completedMta
-  protected var completedMicrotasks: Int = 0
-
-  // Output fields for microtask assignment
-  // TODO: Maybe make them a data class?
-  protected var outputData: JsonObject = JsonObject()
-  protected var outputFiles: JsonArray = JsonArray()
-  protected var logs: JsonArray = JsonArray()
 
   /**
    * Setup microtask after updating [currentAssignmentIndex]. Called at the end of [onResume], and
@@ -316,9 +315,5 @@ constructor(
   protected fun resetMicrotask() {
     getAndSetupMicrotask()
   }
-
-  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-  /** Cleanup function called during [onStop]. */
-  protected abstract fun cleanupOnStop() // Set on Base Viewmodel class
 
 }

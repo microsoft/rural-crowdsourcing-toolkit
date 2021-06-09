@@ -831,7 +831,7 @@ constructor(
     }
   }
 
-  override fun cleanupOnStop() {
+  fun cleanupOnStop() {
     setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
     setActivityState(ActivityState.ACTIVITY_STOPPED)
 

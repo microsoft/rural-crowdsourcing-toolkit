@@ -17,6 +17,8 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewMo
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
+import com.microsoft.research.karya.utils.extensions.viewLifecycle
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.speech_data_main.*
@@ -38,7 +40,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
   ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewmodel(args.taskId!!, 0, 0)
+    viewModel.setupViewmodel(args.taskId, 0, 0)
     return view
   }
 
@@ -84,7 +86,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
   }
 
   private fun setupObservers() {
-    viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
       backBtn.isClickable = state != DISABLED
       backBtn.setBackgroundResource(
         when (state) {
@@ -95,7 +97,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewModel.recordBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.recordBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
       recordBtn.isClickable = state != DISABLED
       recordBtn.setBackgroundResource(
         when (state) {
@@ -106,7 +108,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewModel.playBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.playBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
       playBtn.isClickable = state != DISABLED
       playBtn.setBackgroundResource(
         when (state) {
@@ -117,7 +119,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewModel.nextBtnState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
+    viewModel.nextBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
       nextBtn.isClickable = state != DISABLED
       nextBtn.setBackgroundResource(
         when (state) {
@@ -128,27 +130,27 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
       )
     }
 
-    viewModel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewModel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       sentenceTv.text = text
     }
 
-    viewModel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewModel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       recordSecondsTv.text = text
     }
 
-    viewModel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { text ->
+    viewModel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       recordCentiSecondsTv.text = text
     }
 
-    viewModel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { progress ->
+    viewModel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { progress ->
       playbackProgressPb.progress = progress
     }
 
-    viewModel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { max ->
+    viewModel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { max ->
       playbackProgressPb.max = max
     }
 
-    viewModel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { play ->
+    viewModel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { play ->
       if (play) {
         playRecordPrompt()
       }
@@ -291,6 +293,11 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
         }
       }
     )
+  }
+
+  override fun onStop() {
+    super.onStop()
+    viewModel.cleanupOnStop()
   }
 
 }
