@@ -25,7 +25,12 @@ const microtaskStatuses = ['INCOMPLETE', 'COMPLETED'] as const;
 export type MicrotaskStatus = typeof microtaskStatuses[number];
 
 // Task Op Type -- TODO: move to task op handlers
-const taskOpTypes = ['PROCESS_INPUT', 'GENERATE_OUTPUT', 'HANDLE_ASSIGNMENT_COMPLETION'] as const;
+const taskOpTypes = [
+  'PROCESS_INPUT',
+  'GENERATE_OUTPUT',
+  'HANDLE_ASSIGNMENT_COMPLETION',
+  'EXECUTE_BACKWARD_TASK_LINK',
+] as const;
 export type TaskOpType = typeof taskOpTypes[number];
 
 // Task Op Status -- TODO: move to task op handlers
