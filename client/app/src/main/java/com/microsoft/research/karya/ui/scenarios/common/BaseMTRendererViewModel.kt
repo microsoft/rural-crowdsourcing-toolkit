@@ -19,17 +19,15 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import java.io.File
+import kotlin.properties.Delegates
 import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.File
-import kotlin.properties.Delegates
 
 abstract class BaseMTRendererViewModel
 constructor(
@@ -48,7 +46,6 @@ constructor(
   val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
   val microtaskInputContainer = MicrotaskInput(fileDirPath)
 
-
   lateinit var task: TaskRecord
   protected lateinit var microtaskAssignmentIDs: List<String>
   protected var currentAssignmentIndex: Int = 0
@@ -65,14 +62,11 @@ constructor(
   protected var outputFiles: JsonArray = JsonArray()
   protected var logs: JsonArray = JsonArray()
 
-  private val _navigateBack: MutableSharedFlow<Boolean> =
-    MutableSharedFlow(1)
+  private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
   val navigateBack = _navigateBack.asSharedFlow()
 
   protected fun navigateBack() {
-    viewModelScope.launch {
-      _navigateBack.emit(true)
-    }
+    viewModelScope.launch { _navigateBack.emit(true) }
   }
 
   fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
@@ -83,10 +77,12 @@ constructor(
     // TODO: Shift this to init once we move to viewmodel factory
     runBlocking {
       task = taskRepository.getById(taskId)
-      microtaskAssignmentIDs = assignmentRepository.getUnsubmittedIDsForTask(
-        task.id,
-        false
-      ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel factory)
+      microtaskAssignmentIDs =
+        assignmentRepository.getUnsubmittedIDsForTask(
+          task.id,
+          false
+        ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel
+      // factory)
 
       if (microtaskAssignmentIDs.isEmpty()) {
         navigateBack()
@@ -100,9 +96,7 @@ constructor(
         }
         currentAssignmentIndex++
       } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
-
     }
-
   }
 
   /**
@@ -180,9 +174,8 @@ constructor(
     /** Update progress bar */
     if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
       completedMicrotasks++
-//      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
+      //      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
     }
-
   }
 
   /** Is there a next microtask (for navigation) */
@@ -231,17 +224,13 @@ constructor(
       var inputFileDoesNotExist = false
       if (currentMicroTask.input_file_id != null) {
         val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
-        val microtaskInputDirectory =
-          microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
+        val microtaskInputDirectory = microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
 
         if (!File(microtaskTarBallPath).exists()) {
           inputFileDoesNotExist = true
           // TODO: Create a MutableLiveData to inform the UI about an alertbox
         } else {
-          FileUtils.extractGZippedTarBallIntoDirectory(
-            microtaskTarBallPath,
-            microtaskInputDirectory
-          )
+          FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
         }
       }
 
@@ -273,7 +262,6 @@ constructor(
       setupMicrotask()
     }
   }
-
 
   protected fun getRelativePath(s: String): String {
     return "$fileDirPath/$s"
@@ -315,5 +303,4 @@ constructor(
   protected fun resetMicrotask() {
     getAndSetupMicrotask()
   }
-
 }

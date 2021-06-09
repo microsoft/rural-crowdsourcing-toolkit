@@ -15,7 +15,6 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
 import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
 import com.microsoft.research.karya.utils.PreferenceKeys
@@ -129,20 +128,17 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   fun onDashboardItemClick(task: TaskInfo) {
-//    val nextIntent =
-      when (task.scenarioName) {
-        // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
-        // Use [ScenarioType] enum once we migrate to it.
-        "SPEECH_DATA" -> {
-//          Intent(requireContext(), StorySpeechMain::class.java)
-          val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
-          findNavController().navigate(action)
-        }
-        "speech-verification" -> Intent(requireContext(), SpeechVerificationMain::class.java)
-        else -> {
-          throw Exception("Unimplemented scenario")
-        }
+    //    val nextIntent =
+    when (task.scenarioName) {
+      // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+      // Use [ScenarioType] enum once we migrate to it.
+      "SPEECH_DATA" -> {
+        //          Intent(requireContext(), StorySpeechMain::class.java)
+        val action =
+          DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+        findNavController().navigate(action)
       }
+    }
   }
 
   private fun fetchTasksOnFirstRun() {
@@ -159,7 +155,5 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         prefs[firstFetchKey] = false
       }
     }
-//    nextIntent.putExtra("taskID", task.taskID)
-//    taskActivityLauncher.launch(nextIntent)
   }
 }

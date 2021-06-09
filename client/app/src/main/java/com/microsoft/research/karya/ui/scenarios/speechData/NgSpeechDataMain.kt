@@ -159,15 +159,15 @@ open class NgSpeechDataMain(
 
     /** Set card corner radius */
     recordBtnCv.addOnLayoutChangeListener {
-        _: View,
-        left: Int,
-        _: Int,
-        right: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
+      _: View,
+      left: Int,
+      _: Int,
+      right: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
     }
 

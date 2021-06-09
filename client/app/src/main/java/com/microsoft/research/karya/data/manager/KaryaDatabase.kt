@@ -4,7 +4,6 @@
 package com.microsoft.research.karya.data.manager
 
 import android.content.Context
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -47,10 +46,10 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
     ],
   views = [TaskInfo::class],
   version = 1,
-//  autoMigrations = [
-//    AutoMigration (from = 1, to = 2)
-//  ]
-)
+  //  autoMigrations = [
+  //    AutoMigration (from = 1, to = 2)
+  //  ]
+  )
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun microTaskDao(): MicroTaskDao

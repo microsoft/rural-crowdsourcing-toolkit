@@ -21,7 +21,6 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
     private var hasAllPermissions: Boolean = true
   }
 
-
   /** Function to return the set of permission needed for the task */
   open fun requiredPermissions(): Array<String> {
     return arrayOf()
@@ -76,5 +75,4 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
       }
     }
   }
-
 }
