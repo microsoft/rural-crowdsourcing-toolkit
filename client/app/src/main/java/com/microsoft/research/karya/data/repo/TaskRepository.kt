@@ -3,6 +3,7 @@ package com.microsoft.research.karya.data.repo
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
+import com.microsoft.research.karya.data.model.karya.TaskRecord
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
