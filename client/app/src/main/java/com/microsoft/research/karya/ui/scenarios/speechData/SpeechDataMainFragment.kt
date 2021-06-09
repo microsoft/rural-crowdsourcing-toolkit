@@ -12,20 +12,20 @@ import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 @AndroidEntryPoint
-class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main) {
+class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main) {
   override val viewModel: SpeechDataMainViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
 
@@ -33,11 +33,7 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     return arrayOf(android.Manifest.permission.RECORD_AUDIO)
   }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
     viewModel.setupViewmodel(args.taskId, 0, 0)
@@ -50,25 +46,24 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     setupObservers()
 
     /** Set OnBackPressed callback */
-    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-      viewModel.onBackPressed()
-    }
+    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.onBackPressed() }
 
     /** record instruction */
-    val recordInstruction = viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+    val recordInstruction =
+      viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
     recordPromptTv.text = recordInstruction
 
     /** Set card corner radius */
     recordBtnCv.addOnLayoutChangeListener {
-        _: View,
-        left: Int,
-        _: Int,
-        right: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
+      _: View,
+      left: Int,
+      _: Int,
+      right: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
     }
 
@@ -82,7 +77,6 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     playBtn.setOnClickListener { viewModel.handlePlayClick() }
     nextBtn.setOnClickListener { viewModel.handleNextClick() }
     backBtn.setOnClickListener { viewModel.handleBackClick() }
-
   }
 
   private fun setupObservers() {
@@ -155,7 +149,6 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
         playRecordPrompt()
       }
     }
-
   }
 
   private fun playRecordPrompt() {
@@ -299,5 +292,4 @@ class SpeechDataMainFragment: BaseMTRendererFragment (R.layout.speech_data_main)
     super.onStop()
     viewModel.cleanupOnStop()
   }
-
 }
