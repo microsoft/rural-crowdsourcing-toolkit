@@ -8,9 +8,10 @@
 
     <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
         android:id="@+id/appTb"
-        style="@style/Widget.MaterialComponents.BottomAppBar.PrimarySurface"
+        app:elevation="@dimen/_8sdp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_56sdp"
+        android:backgroundTint="@color/colorWhite"
         app:cutoutMargin="@dimen/_8sdp"
         app:cutoutRoundedCornerRadius="@dimen/_32sdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,11 +24,11 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/back_icon"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
                 android:layout_gravity="start"
                 android:visibility="visible"
-                app:srcCompat="@drawable/ic_check"
+                app:srcCompat="@drawable/ic_back_arrow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -37,7 +38,7 @@
                 android:layout_width="@dimen/_32sdp"
                 android:layout_height="@dimen/_32sdp"
                 android:layout_gravity="start"
-                app:srcCompat="@drawable/ic_check"
+                app:srcCompat="@drawable/access_code_title_icon"
                 android:visibility="visible"
                 android:layout_marginStart="@dimen/_4sdp"
                 app:layout_constraintStart_toEndOf="@id/back_icon"
@@ -65,36 +66,48 @@
             android:layout_width="@dimen/_56sdp"
             android:layout_height="@dimen/_56sdp"
             android:layout_gravity="center_horizontal|bottom"
-            android:background="@color/black"
+            android:background="@color/dk_blue"
             android:elevation="@dimen/_4sdp"
-            android:scaleType="centerInside"
-            android:src="@drawable/assistant"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_assistant"
             android:tag="KARYA_ASSISTANT"
             android:visibility="visible"
             app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
     </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
 
 
-    <TextView
-        android:id="@+id/creationCodePromptTv"
-        style="@style/multilineText"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/_24sdp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_32sdp"
+        android:layout_marginTop="@dimen/_64sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:srcCompat="@drawable/ic_lock" />
+
+
+    <TextView
+        android:id="@+id/creationCodePromptTv"
+        style="@style/multilineTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:text="@string/s_access_code_prompt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
-        tools:text="@string/access_code_prompt_desc" />
-
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintBottom_toBottomOf="@id/icon"/>
 
     <EditText
         android:id="@+id/creationCodeEt"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_50sdp"
-        android:layout_margin="@dimen/_16sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_32sdp"
         android:background="@drawable/blue_rounded_border"
         android:digits="0123456789"
         android:fontFamily="monospace"
@@ -119,12 +132,12 @@
         app:layout_constraintStart_toEndOf="@id/creationCodeEt"
         app:layout_constraintTop_toTopOf="@id/creationCodeEt">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/submitAccessCodeBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/next"
-            app:srcCompat="@drawable/ic_next_disabled" />
+            android:background="@drawable/next_arrow_button_selector" />
 
         <ProgressBar
             android:id="@+id/loadingPb"
@@ -132,27 +145,14 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/creationCodeStatusIv"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:contentDescription="@string/status_check"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@id/creationCodeEt"
-        app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
-        app:layout_constraintWidth_percent="0.1"
-        app:srcCompat="@drawable/ic_cross_off" />
-
-
     <TextView
         android:id="@+id/creationCodeErrorTv"
         style="@style/multilineError"
         android:layout_width="@dimen/_0sdp"
-        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="@id/creationCodeEt"
-        app:layout_constraintStart_toEndOf="@id/creationCodeStatusIv"
-        app:layout_constraintTop_toTopOf="@id/creationCodeStatusIv"
+        app:layout_constraintStart_toStartOf="@id/creationCodeEt"
+        app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
         tools:text="@string/invalid_creation_code_desc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

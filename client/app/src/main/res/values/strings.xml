@@ -179,7 +179,7 @@
  ]]>
     </string>
     <string name="s_consent_form_summary">Summary of the consent form</string>
-    <string name="s_access_code_prompt">You should have received a 16-digit access code from the project coordinator. Please enter that access code below.</string>
+    <string name="s_access_code_prompt">Enter 16-digit access code</string>
     <string name="s_invalid_creation_code">You have entered an invalid creation code.</string>
     <string name="s_creation_code_already_used">The creation code you have entered is already used. Please contact your project coordinator.</string>
     <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>

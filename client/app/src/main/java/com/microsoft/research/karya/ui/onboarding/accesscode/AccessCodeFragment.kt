@@ -10,13 +10,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
 import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -118,19 +112,11 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   }
 
   private fun showError(message: String) {
-    with(binding) {
-      creationCodeErrorTv.text = message
-      creationCodeStatusIv.setImageResource(0)
-      creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
-      creationCodeStatusIv.visible()
-    }
+    with(binding) { creationCodeErrorTv.text = message }
   }
 
   private fun hideError() {
-    with(binding) {
-      creationCodeErrorTv.text = ""
-      creationCodeStatusIv.gone()
-    }
+    with(binding) { creationCodeErrorTv.text = "" }
   }
 
   private fun showLoading() {
@@ -150,17 +136,11 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   }
 
   private fun disableButton() {
-    with(binding) {
-      submitAccessCodeBtn.isClickable = false
-      submitAccessCodeBtn.setBackgroundResource(R.drawable.ic_next_disabled)
-    }
+    binding.submitAccessCodeBtn.disable()
   }
 
   private fun enableButton() {
-    with(binding) {
-      submitAccessCodeBtn.isClickable = true
-      submitAccessCodeBtn.setBackgroundResource(R.drawable.ic_next_enabled)
-    }
+    binding.submitAccessCodeBtn.enable()
   }
 
   private fun updateActivityLanguage(language: String) {
