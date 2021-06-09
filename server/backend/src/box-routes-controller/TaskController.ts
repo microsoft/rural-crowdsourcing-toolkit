@@ -8,7 +8,7 @@ import * as HttpResponse from '@karya/http-response';
 import { BasicModel, getBlobSASURL } from '@karya/common';
 import { MicrotaskAssignmentRecord, MicrotaskGroupRecord, MicrotaskRecord, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
-import { assignmentCompletionHandlerQ } from '../task-ops/Index';
+import { forwardTaskLinkQ } from '../task-ops/Index';
 
 type TaskState = {
   task: TaskRecordType;
@@ -163,11 +163,11 @@ export const executeTaskLinks: TaskRouteMiddleware = async (ctx) => {
   try {
     const taskOp = await BasicModel.insertRecord('task_op', {
       task_id: task.id,
-      op_type: 'HANDLE_ASSIGNMENT_COMPLETION',
+      op_type: 'EXECUTE_FORWARD_TASK_LINK',
       status: 'CREATED',
     });
 
-    await assignmentCompletionHandlerQ.add({ task, taskOp });
+    await forwardTaskLinkQ.add({ task, taskOp });
     HttpResponse.OK(ctx, {});
   } catch (e) {
     HttpResponse.BadRequest(ctx, 'Unknown error occured while creating task op');

@@ -28,7 +28,7 @@ export type MicrotaskStatus = typeof microtaskStatuses[number];
 const taskOpTypes = [
   'PROCESS_INPUT',
   'GENERATE_OUTPUT',
-  'HANDLE_ASSIGNMENT_COMPLETION',
+  'EXECUTE_FORWARD_TASK_LINK',
   'EXECUTE_BACKWARD_TASK_LINK',
 ] as const;
 export type TaskOpType = typeof taskOpTypes[number];

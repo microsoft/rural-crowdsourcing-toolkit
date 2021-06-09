@@ -5,11 +5,15 @@
 // backward link handler for all the links for which the task is a "to" task.
 
 import { BasicModel, knex } from '@karya/common';
-import { TaskOp, TaskOpRecord } from '@karya/core';
+import { TaskOp, TaskOpRecord, TaskRecordType } from '@karya/core';
 import { ChainedMicrotaskRecordType } from '../../chains/BackendChainInterface';
-import { BackwardTaskLinkHandlerObject } from '../Index';
 import { Promise as BBPromise } from 'bluebird';
 import { executeBackwardLink } from '../../chains/Index';
+
+export type BackwardTaskLinkHandlerObject = {
+  taskOp: TaskOpRecord;
+  task: TaskRecordType;
+};
 
 /**
  * Execute all the backward links for a task. The set of completed microtasks is
