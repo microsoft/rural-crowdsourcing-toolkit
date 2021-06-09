@@ -150,15 +150,9 @@ object FileUtils {
 
     val dir = File(dirPath)
 
-    var success = true
-    if (!dir.exists()) {
-      success = dir.mkdirs()
-    }
+    if (dir.exists()) return dirPath
+    if (!dir.exists() && dir.mkdirs()) return dirPath
+    throw FileNotFoundException()
 
-    if (success) {
-      return dirPath
-    } else {
-      throw FileNotFoundException()
-    }
   }
 }
