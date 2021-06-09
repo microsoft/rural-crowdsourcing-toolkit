@@ -3,7 +3,7 @@
 //
 // Backend implementation of the speech validation chain
 
-import { AssignmentType, baseSpeechValidationChain, MicrotaskType } from '@karya/core';
+import { baseSpeechValidationChain, MicrotaskType } from '@karya/core';
 import { BackendChainInterface } from '../BackendChainInterface';
 
 export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH_VERIFICATION'> = {
@@ -35,8 +35,9 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
    * Handle completion of speech verification microtasks. Generate verification
    * updates for the corresponding assignments
    */
-  async handleCompletedToMicrotasks(fromTask, toTask, microtasks) {
-    const verificationUpdates = microtasks.map((microtask) => {
+  async handleCompletedToMicrotasks(fromTask, toTask, microtasks, assignments) {
+    const verificationUpdates = microtasks.map((microtask, i) => {
+      const assignment = assignments[i];
       const report = microtask.output!.data;
       const { accuracy, volume, quality } = report;
       let score = 0;
@@ -54,12 +55,9 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
       }
 
       const credits = score * fromTask.params.creditsPerRecording;
-      const update: AssignmentType<'SPEECH_DATA'> = {
-        id: microtask.input.chain.assignmentId,
-        credits,
-        report,
-      };
-      return update;
+      assignment.credits = credits;
+      assignment.report = report;
+      return assignment;
     });
     return verificationUpdates;
   },

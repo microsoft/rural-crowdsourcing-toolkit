@@ -6,8 +6,9 @@
 import { BasicModel } from '@karya/common';
 import { AssignmentRecordType, ChainName, MicrotaskRecordType, TaskLinkRecord, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
+import { handleNewlyCompletedAssignments } from '../task-ops/policies/Index';
 
-import { BackendChainInterface, ChainedMicrotaskType } from './BackendChainInterface';
+import { BackendChainInterface, ChainedMicrotaskRecordType, ChainedMicrotaskType } from './BackendChainInterface';
 import { speechValidationChain } from './chains/SpeechValidation';
 
 // Backend chain map
@@ -47,6 +48,7 @@ export async function executeForwardLink(
     const input: ChainedMicrotaskType['input'] = {
       ...mt.input!,
       chain: {
+        linkId: link.id,
         taskId: fromTask.id,
         workerId: assignment.worker_id,
         assignmentId: assignment.id,
@@ -64,4 +66,28 @@ export async function executeForwardLink(
   await BBPromise.mapSeries(chainedMicrotasks, async (mt) => {
     await BasicModel.insertRecord('microtask', mt);
   });
+}
+
+/**
+ * Execute a backward link on a set of completed microtasks
+ * @param microtasks List of completed microtasks
+ * @param link Link record
+ */
+export async function executeBackwardLink(microtasks: ChainedMicrotaskRecordType[], link: TaskLinkRecord) {
+  // Extract the chain object
+  const chainObj = backendChainMap[link.chain];
+
+  // Get the from and to task
+  const fromTask = (await BasicModel.getSingle('task', { id: link.from_task })) as TaskRecordType;
+  const toTask = (await BasicModel.getSingle('task', { id: link.to_task })) as TaskRecordType;
+
+  // Invoke the chain and get the verified assignments
+  const assignments = await BBPromise.mapSeries(microtasks, async (mt) => {
+    const assignment = await BasicModel.getSingle('microtask_assignment', { id: mt.input.chain.assignmentId });
+    return assignment as AssignmentRecordType;
+  });
+  const verifiedAssignments = await chainObj.handleCompletedToMicrotasks(fromTask, toTask, microtasks, assignments);
+
+  // Update the assignment verification status if link is blocking
+  if (link.blocking) await handleNewlyCompletedAssignments(verifiedAssignments, fromTask);
 }

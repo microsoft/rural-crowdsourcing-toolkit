@@ -5,6 +5,7 @@
 
 import { BasicModel } from '@karya/common';
 import { executeForwardTaskLinks } from './ops/AssignmentCompletionHandler';
+import { executeBackwardTaskLinks } from './ops/BackwardTaskLinkHandler';
 import { TaskOpRecord, TaskRecordType } from '@karya/core';
 import Bull from 'bull';
 
@@ -22,8 +23,20 @@ assignmentCompletionHandlerQ.process(async (job) => {
   await executeForwardTaskLinks(job.data);
 });
 
+// Backward task link handler
+export type BackwardTaskLinkHandlerObject = {
+  taskOp: TaskOpRecord;
+  task: TaskRecordType;
+};
+
+export const backwardTaskLinkQ = new Bull<BackwardTaskLinkHandlerObject>('BACKWARD_TASK_LINK');
+
+backwardTaskLinkQ.process(async (job) => {
+  await executeBackwardTaskLinks(job.data);
+});
+
 // Task operation queues
-const taskOpQueues = [assignmentCompletionHandlerQ] as const;
+const taskOpQueues = [assignmentCompletionHandlerQ, backwardTaskLinkQ] as const;
 
 // Set life-cycle event handlers for all queues
 taskOpQueues.forEach((queue) => {

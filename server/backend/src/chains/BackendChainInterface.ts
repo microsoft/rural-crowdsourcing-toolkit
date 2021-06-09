@@ -10,7 +10,6 @@
 
 import {
   AssignmentRecordType,
-  AssignmentType,
   BaseChainInterface,
   MicrotaskRecordType,
   MicrotaskType,
@@ -31,6 +30,7 @@ import {
 export type ChainedMicrotaskRecordType<SN extends ScenarioName = ScenarioName> = MicrotaskRecordType<SN> & {
   input: {
     chain: {
+      linkId: string;
       assignmentId: string;
       microtaskId: string;
       taskId: string;
@@ -67,6 +67,7 @@ export interface BackendChainInterface<FromScenario extends ScenarioName, ToScen
   handleCompletedToMicrotasks(
     fromTask: TaskRecordType<FromScenario>,
     toTask: TaskRecordType<ToScenario>,
-    microtasks: ChainedMicrotaskRecordType<ToScenario>[]
-  ): Promise<AssignmentType<FromScenario>[]>;
+    microtasks: ChainedMicrotaskRecordType<ToScenario>[],
+    assignments: AssignmentRecordType<FromScenario>[]
+  ): Promise<AssignmentRecordType<FromScenario>[]>;
 }

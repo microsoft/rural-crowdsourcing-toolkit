@@ -27,7 +27,6 @@ export async function executeForwardTaskLinks(achObject: AssignmentCompletionHan
   // Get the most recent assignment completion handler task op for this task
   const match: TaskOp = { task_id: task.id, op_type: 'HANDLE_ASSIGNMENT_COMPLETION' };
   const previousOp = await knex<TaskOpRecord>('task_op')
-    .where('task_id', task.id)
     .where(match)
     .whereNot('id', taskOp.id)
     .orderBy('created_at', 'desc')
