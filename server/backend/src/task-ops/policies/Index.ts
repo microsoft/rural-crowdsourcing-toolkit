@@ -6,6 +6,7 @@
 import { BasicModel, MicrotaskModel } from '@karya/common';
 import { AssignmentRecordType, MicrotaskRecordType, PolicyName, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
+import { backwardTaskLinkQ } from '../Index';
 
 import { BackendPolicyInterface } from './BackendPolicyInterface';
 import { nMatchingBackendPolicy } from './NMatchingPolicy';
@@ -55,5 +56,14 @@ export async function handleNewlyCompletedAssignments(assignments: AssignmentRec
     await MicrotaskModel.markComplete(microtask.id);
   });
 
+  // If there are any completed microtasks then
   // Execute any backward link for the completed microtasks
+  if (completedMicrotasks.length > 0) {
+    const taskOp = await BasicModel.insertRecord('task_op', {
+      task_id: task.id,
+      op_type: 'EXECUTE_BACKWARD_TASK_LINK',
+      status: 'CREATED',
+    });
+    await backwardTaskLinkQ.add({ task, taskOp });
+  }
 }
