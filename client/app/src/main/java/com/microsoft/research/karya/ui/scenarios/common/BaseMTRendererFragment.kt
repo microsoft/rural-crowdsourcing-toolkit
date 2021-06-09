@@ -10,14 +10,16 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 
-/** Code to request necessary permissions */
-private const val REQUEST_PERMISSIONS = 201
-// Flag to indicate if app has all permissions
-private var hasAllPermissions: Boolean = true
-
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
 
   abstract val viewModel: BaseMTRendererViewModel
+
+  companion object {
+    /** Code to request necessary permissions */
+    private const val REQUEST_PERMISSIONS = 201
+    // Flag to indicate if app has all permissions
+    private var hasAllPermissions: Boolean = true
+  }
 
 
   /** Function to return the set of permission needed for the task */
