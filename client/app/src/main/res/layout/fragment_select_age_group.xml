@@ -1,82 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.microsoft.research.karya.ui.views.KaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/_8sdp"
+        android:layout_height="@dimen/_56sdp"
+        app:backgroundTint="@color/colorWhite"
+        app:cutoutMargin="@dimen/_8sdp"
+        app:cutoutRoundedCornerRadius="@dimen/_32sdp"
+        app:elevation="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.kofigyan.stateprogressbar.StateProgressBar
-        android:id="@+id/dottedScreenPb"
-        android:layout_width="@dimen/_0sdp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back_icon"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_gravity="start"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_back_arrow" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logo"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:scaleType="centerInside"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_profile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/_88sdp"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="A very long string to measure the maximument size" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/fab"
+            android:layout_width="@dimen/_56sdp"
+            android:layout_height="@dimen/_56sdp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/dk_blue"
+            android:elevation="@dimen/_4sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_assistant"
+            android:tag="KARYA_ASSISTANT"
+            android:visibility="visible"
+            app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
+    </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
+
+    <TextView
+        android:id="@+id/screenProgress"
+        style="@style/multilineTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_64sdp"
+        android:text="3/3"
+        android:textColor="@color/dk_blue"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
-        app:spb_checkStateCompleted="true"
-        app:spb_currentStateDescriptionColor="?attr/colorAccent"
-        app:spb_currentStateNumber="three"
-        app:spb_maxStateNumber="three"
-        app:spb_stateBackgroundColor="#BDBDBD"
-        app:spb_stateDescriptionColor="#808080"
-        app:spb_stateForegroundColor="?attr/colorAccent"
-        app:spb_stateNumberBackgroundColor="#808080"
-        app:spb_stateNumberForegroundColor="#eeeeee" />
+        app:layout_constraintTop_toBottomOf="@id/appTb" />
 
     <TextView
         android:id="@+id/ageGroupPromptTv"
-        style="@style/multilineText"
-        android:layout_width="@dimen/_0sdp"
-        android:layout_marginStart="@dimen/_16sdp"
+        style="@style/multilineTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:gravity="center|center_vertical"
-        android:text="@string/s_age_prompt"
+        android:text="@string/s_age_title"
+        android:textColor="?attr/appLanguageTextColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dottedScreenPb" />
+        app:layout_constraintStart_toEndOf="@id/screenProgress"
+        app:layout_constraintTop_toTopOf="@id/screenProgress" />
 
     <EditText
         android:id="@+id/ageEt"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_55sdp"
+        android:layout_height="@dimen/_52sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/blue_rounded_border"
         android:fontFamily="monospace"
+        android:hint="----"
+        android:importantForAutofill="no"
         android:inputType="number"
         android:maxLength="4"
-        android:hint="----"
         android:paddingHorizontal="@dimen/_32sdp"
         android:textSize="@dimen/_26ssp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintEnd_toStartOf="@id/loadingContainer"
+        app:layout_constraintStart_toStartOf="@id/screenProgress"
         app:layout_constraintTop_toBottomOf="@+id/ageGroupPromptTv" />
 
     <FrameLayout
         android:id="@+id/loadingContainer"
-        android:layout_width="@dimen/_55sdp"
-        android:layout_height="@dimen/_55sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ageEt"
-        app:layout_constraintBottom_toBottomOf="@id/ageEt">
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintBottom_toBottomOf="@id/ageEt"
+        app:layout_constraintStart_toEndOf="@id/ageEt"
+        app:layout_constraintTop_toTopOf="@id/ageEt">
 
         <ImageView
             android:id="@+id/submitAgeGroupIb"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/next"
-            app:srcCompat="@drawable/ic_next_disabled" />
+            app:srcCompat="@drawable/next_arrow_button_selector" />
 
         <ProgressBar
             android:id="@+id/loadingPb"

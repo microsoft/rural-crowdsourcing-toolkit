@@ -11,7 +11,7 @@
     <string name="s_access_code_title">Enter Access Code</string>
     <string name="s_otp_title">Enter OTP</string>
     <string name="s_phone_number_title">Enter Phone Number</string>
-    <string name="s_age_title">Select Age Group</string>
+    <string name="s_age_title">Enter Year of Birth</string>
     <string name="s_gender_title">Select Gender</string>
     <string name="s_profile_pic_title">Select Profile Picture</string>
     <string name="s_dashboard_title">Dashboard</string>
