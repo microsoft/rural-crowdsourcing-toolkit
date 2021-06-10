@@ -3,6 +3,8 @@
 //
 // List of language codes
 
+import { ParameterDefinition } from '@karya/parameter-specs';
+
 export const languageCodes = ['EN', 'HI'] as const;
 export type LanguageCode = typeof languageCodes[number];
 
@@ -41,3 +43,25 @@ export const languageMap: { [key in LanguageCode]: LanguageInterface } = {
     assistant_support: false,
   },
 };
+
+/**
+ * Create a language parameter
+ * @param id ID of the language parameter
+ * @param label Label to be displayed in a form
+ * @param description Description for a form
+ */
+export function languageParameter<ID>(
+  id: Extract<ID, string>,
+  label: string,
+  description: string
+): ParameterDefinition<ID> {
+  const values = Object.values(languageMap).map((l) => [l.code, `${l.name} (${l.primary_name})`] as [string, string]);
+  return {
+    id,
+    label,
+    description,
+    required: true,
+    type: 'enum',
+    list: values,
+  };
+}
