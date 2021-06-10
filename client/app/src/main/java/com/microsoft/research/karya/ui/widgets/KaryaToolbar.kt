@@ -5,8 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.microsoft.research.karya.R
@@ -26,15 +29,24 @@ class KaryaToolbar : FrameLayout {
     initView(context)
   }
 
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    disableClipping()
+    updatePadding(bottom = (binding.assistant.height / 2))
+  }
+
   private fun initView(context: Context) {
     binding = KaryaToolbarBinding.inflate(LayoutInflater.from(context), this, true)
+    binding.backIcon.apply { setOnClickListener { findNavController().navigateUp() } }
   }
 
   private fun setAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-    val a = context.obtainStyledAttributes(attrs, R.styleable.KaryaToolbar, defStyleAttr, R.style.CardView)
+    val a =
+      context.obtainStyledAttributes(attrs, R.styleable.KaryaToolbar, defStyleAttr, R.style.Widget_AppCompat_Toolbar)
     val title = a.getString(R.styleable.KaryaToolbar_title)
     val startIcon = a.getDrawable(R.styleable.KaryaToolbar_startIcon)
     val endIcon = a.getDrawable(R.styleable.KaryaToolbar_endIcon)
+    val showBackButton = a.getBoolean(R.styleable.KaryaToolbar_showBackButton, false)
 
     if (title != null) {
       setTitle(title)
@@ -45,7 +57,22 @@ class KaryaToolbar : FrameLayout {
     if (endIcon != null) {
       setEndIcon(endIcon)
     }
+    showBackIcon(showBackButton)
     a.recycle()
+  }
+
+  /**
+   * We do not want our FrameLayout to clip our Assistant Button which draws beyond the the Toolbar.
+   * In order to do that we need to disable clipping from all the parents of the [KaryaToolbar].
+   * This recursive method does that by checking all the parents and then setting the `clipChildren`
+   * property to `false`.
+   */
+  private fun disableClipping() {
+    var parent = this.parent
+    while (parent is ViewGroup) {
+      parent.clipChildren = false
+      parent = parent.parent
+    }
   }
 
   fun setTitle(title: String) {
@@ -65,16 +92,14 @@ class KaryaToolbar : FrameLayout {
     }
 
     binding.startIcon.apply {
-      Glide.with(context).load(startIcon).into(this)
-
+      setImageDrawable(startIcon)
       visible()
     }
   }
 
   fun setEndIcon(endIcon: Drawable) {
     binding.startIcon.apply {
-      Glide.with(context).load(endIcon).into(this)
-
+      setImageDrawable(endIcon)
       visible()
     }
   }
@@ -97,13 +122,6 @@ class KaryaToolbar : FrameLayout {
 
   fun setProfileClickListener(onClick: () -> Unit) {
     binding.startIcon.apply {
-      visible()
-      setOnClickListener { onClick() }
-    }
-  }
-
-  fun setBackClickListener(onClick: () -> Unit) {
-    binding.backIcon.apply {
       visible()
       setOnClickListener { onClick() }
     }

@@ -31,6 +31,8 @@
     <attr name="card2Color" format="reference" />
     <attr name="card3Color" format="reference" />
 
+    <attr name="title" format="reference|string" />
+
     <declare-styleable name="OutlineTextView">
         <attr name="outlineSize" format="dimension" />
         <attr name="outlineColor" format="color|reference" />
@@ -45,14 +47,14 @@
     </declare-styleable>
 
     <declare-styleable name="GenderCard">
-        <attr name="title" format="string|reference" />
+        <attr name="title" />
         <attr name="icon" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="KaryaToolbar">
-        <attr name="title" format="string|reference" />
+        <attr name="title" />
         <attr name="startIcon" format="reference" />
         <attr name="endIcon" format="reference" />
-        <attr name="showBackIcon" format="boolean" />
+        <attr name="showBackButton" format="boolean" />
     </declare-styleable>
 </resources>

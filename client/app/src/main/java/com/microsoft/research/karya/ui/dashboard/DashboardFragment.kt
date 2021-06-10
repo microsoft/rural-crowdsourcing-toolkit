@@ -109,7 +109,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun hideLoading() = binding.syncProgressBar.gone()
 
   private fun loadProfilePic() {
-    binding.appTb.showProfilePicture()
+    //    binding.appTb.showProfilePicture()
 
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
