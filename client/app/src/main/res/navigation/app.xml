@@ -104,7 +104,9 @@
             tools:layout="@layout/fragment_consent_form">
             <action
                 android:id="@+id/action_consentFormFragment2_to_loginFlow"
-                app:destination="@id/loginFlow" />
+                app:destination="@id/loginFlow"
+                app:popUpTo="@id/app_nav_graph"
+                app:popUpToInclusive="true" />
         </fragment>
         <fragment
             android:id="@+id/accessCodeFragment2"
