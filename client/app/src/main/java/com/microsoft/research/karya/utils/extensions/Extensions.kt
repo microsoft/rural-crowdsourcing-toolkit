@@ -9,13 +9,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.content.getSystemService
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 val Fragment.viewLifecycle
   get() = viewLifecycleOwner.lifecycle

@@ -12,9 +12,12 @@ import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.ui.base.BaseFragment
+import com.microsoft.research.karya.utils.extensions.dataStore
+import com.microsoft.research.karya.utils.extensions.doOnlyOnce
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,6 +26,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
 
   private val binding by viewBinding(FragmentProfilePictureBinding::bind)
   private val viewModel by viewModels<ProfileViewModel>()
+  override val TAG: String = "PROFILE_FRAGMENT"
 
   private val selectPicture =
     registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
@@ -44,7 +48,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
 
   override fun onResume() {
     super.onResume()
-    assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT)
+    viewLifecycleScope.launchWhenResumed {
+      requireContext().dataStore.doOnlyOnce(audioTag) {
+        assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT)
+      }
+    }
   }
 
   private fun setupView() {
