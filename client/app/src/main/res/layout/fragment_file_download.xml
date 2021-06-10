@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/startIcon"
         android:layout_width="@dimen/_250sdp"
         android:layout_height="@dimen/_120sdp"
         android:contentDescription="@string/karya_logo"
@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintTop_toBottomOf="@id/startIcon"
         tools:progress="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

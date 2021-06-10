@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     app:layout_constraintTop_toBottomOf="@id/appTb">
 
-    <com.microsoft.research.karya.ui.views.KaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.KaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

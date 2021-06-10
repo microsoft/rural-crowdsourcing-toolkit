@@ -8,7 +8,7 @@
     android:animateLayoutChanges="true"
     tools:context=".ui.dashboard.DashboardFragment">
 
-    <com.microsoft.research.karya.ui.views.KaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.KaryaToolbar
         android:id="@+id/appTb"
         android:paddingBottom="@dimen/_8sdp"
         android:clipToPadding="false"

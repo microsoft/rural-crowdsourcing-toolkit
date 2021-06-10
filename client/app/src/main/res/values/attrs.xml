@@ -36,7 +36,7 @@
         <attr name="outlineColor" format="color|reference" />
     </declare-styleable>
 
-    <declare-styleable name="NGKaryaToolbar">
+    <declare-styleable name="AssistantToolbar">
         <attr name="backgroundTint" format="color|reference" />
         <attr name="cutoutMargin" format="dimension" />
         <attr name="cutoutRoundedCornerRadius" format="dimension" />
@@ -47,5 +47,12 @@
     <declare-styleable name="GenderCard">
         <attr name="title" format="string|reference" />
         <attr name="icon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="KaryaToolbar">
+        <attr name="title" format="string|reference" />
+        <attr name="startIcon" format="reference" />
+        <attr name="endIcon" format="reference" />
+        <attr name="showBackIcon" format="boolean" />
     </declare-styleable>
 </resources>

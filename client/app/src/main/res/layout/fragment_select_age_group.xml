@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.toolbar.AssistantToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_56sdp"
@@ -33,7 +33,7 @@
                 app:srcCompat="@drawable/ic_back_arrow" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/logo"
+                android:id="@+id/startIcon"
                 android:layout_width="@dimen/_32sdp"
                 android:layout_height="@dimen/_32sdp"
                 android:layout_gravity="start"
@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:maxWidth="@dimen/_88sdp"
                 android:maxLines="1"
+                android:layout_marginStart="@dimen/_4sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"
@@ -73,7 +74,7 @@
             android:tag="KARYA_ASSISTANT"
             android:visibility="visible"
             app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
-    </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
+    </com.microsoft.research.karya.ui.widgets.toolbar.AssistantToolbar>
 
     <TextView
         android:id="@+id/screenProgress"
