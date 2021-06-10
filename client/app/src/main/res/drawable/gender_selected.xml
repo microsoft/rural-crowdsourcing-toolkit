@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <corners android:radius="@dimen/_6sdp" />
-
+    <corners android:radius="@dimen/_12sdp" />
     <solid android:color="?attr/skillSelectionBgColor" />
-
     <stroke
-        android:width="3px"
+        android:width="@dimen/_2sdp"
         android:color="?attr/storyProgressTintColor" />
 
 </shape>

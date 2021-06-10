@@ -32,15 +32,20 @@
     <attr name="card3Color" format="reference" />
 
     <declare-styleable name="OutlineTextView">
-        <attr name="outlineSize" format="dimension"/>
-        <attr name="outlineColor" format="color|reference"/>
+        <attr name="outlineSize" format="dimension" />
+        <attr name="outlineColor" format="color|reference" />
     </declare-styleable>
 
     <declare-styleable name="NGKaryaToolbar">
-        <attr name="backgroundTint" format="color|reference"/>
-        <attr name="cutoutMargin" format="dimension"/>
-        <attr name="cutoutRoundedCornerRadius" format="dimension"/>
-        <attr name="cutoutVerticalOffset" format="dimension"/>
-        <attr name="elevation" format="dimension"/>
+        <attr name="backgroundTint" format="color|reference" />
+        <attr name="cutoutMargin" format="dimension" />
+        <attr name="cutoutRoundedCornerRadius" format="dimension" />
+        <attr name="cutoutVerticalOffset" format="dimension" />
+        <attr name="elevation" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="GenderCard">
+        <attr name="title" format="string|reference" />
+        <attr name="icon" format="reference" />
     </declare-styleable>
 </resources>

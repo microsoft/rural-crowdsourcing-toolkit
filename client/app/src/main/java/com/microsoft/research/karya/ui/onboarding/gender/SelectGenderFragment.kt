@@ -8,12 +8,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,19 +32,16 @@ class SelectGenderFragment : BaseFragment(R.layout.fragment_select_gender) {
 
   private fun setupViews() {
     with(binding) {
-      maleBtn.setOnClickListener { viewModel.setGender(Gender.MALE) }
-
-      femaleBtn.setOnClickListener {
-        viewModel.setGender(Gender.FEMALE)
-        femaleBtn.isSelected = true
-        maleBtn.isSelected = false
-        enableGenderSubmitButton()
-      }
+      cvMale.setOnClickListener { viewModel.setGender(Gender.MALE) }
+      cvFemale.setOnClickListener { viewModel.setGender(Gender.FEMALE) }
+      cvOther.setOnClickListener { viewModel.setGender(Gender.OTHER) }
 
       submitGenderIb.setOnClickListener { viewModel.updateWorkerGender() }
 
-      appTb.setTitle(getString(R.string.s_gender_title))
-      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.GENDER_PROMPT) }
+      appTb.title = getString(R.string.s_gender_title)
+
+      // appTb.setAssistantClickListener {
+      // assistant.playAssistantAudio(AssistantAudio.GENDER_PROMPT) }
 
       disableGenderSubmitButton()
     }
@@ -95,7 +87,7 @@ class SelectGenderFragment : BaseFragment(R.layout.fragment_select_gender) {
       when (gender) {
         Gender.MALE -> selectMaleButton()
         Gender.FEMALE -> selectFemaleButton()
-        Gender.OTHER -> TODO()
+        Gender.OTHER -> selectOtherButton()
         Gender.NOT_SPECIFIED -> TODO()
       }
     }
@@ -109,30 +101,34 @@ class SelectGenderFragment : BaseFragment(R.layout.fragment_select_gender) {
   }
 
   private fun disableGenderSubmitButton() {
-    with(binding) {
-      submitGenderIb.isClickable = false
-      submitGenderIb.setBackgroundResource(R.drawable.ic_next_disabled)
-    }
+    binding.submitGenderIb.disable()
   }
 
   private fun enableGenderSubmitButton() {
-    with(binding) {
-      submitGenderIb.isClickable = true
-      submitGenderIb.setBackgroundResource(R.drawable.ic_next_enabled)
-    }
+    binding.submitGenderIb.enable()
   }
 
   fun selectMaleButton() {
     with(binding) {
-      maleBtn.isSelected = true
-      femaleBtn.isSelected = false
+      cvMale.isSelected = true
+      cvOther.isSelected = false
+      cvFemale.isSelected = false
     }
   }
 
   fun selectFemaleButton() {
     with(binding) {
-      maleBtn.isSelected = false
-      femaleBtn.isSelected = true
+      cvMale.isSelected = false
+      cvOther.isSelected = false
+      cvFemale.isSelected = true
+    }
+  }
+
+  fun selectOtherButton() {
+    with(binding) {
+      cvMale.isSelected = false
+      cvFemale.isSelected = false
+      cvOther.isSelected = true
     }
   }
 

@@ -5,127 +5,165 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.microsoft.research.karya.ui.views.KaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/_8sdp"
+        android:layout_height="@dimen/_56sdp"
+        app:backgroundTint="@color/colorWhite"
+        app:cutoutMargin="@dimen/_8sdp"
+        app:cutoutRoundedCornerRadius="@dimen/_32sdp"
+        app:elevation="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.kofigyan.stateprogressbar.StateProgressBar
-        android:id="@+id/dottedScreenPb"
-        android:layout_width="@dimen/_0sdp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back_icon"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_gravity="start"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_back_arrow" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logo"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:scaleType="centerInside"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_profile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/_88sdp"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="A very long string to measure the maximument size" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/fab"
+            android:layout_width="@dimen/_56sdp"
+            android:layout_height="@dimen/_56sdp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/dk_blue"
+            android:elevation="@dimen/_4sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_assistant"
+            android:tag="KARYA_ASSISTANT"
+            android:visibility="visible"
+            app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
+    </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
+
+    <TextView
+        android:id="@+id/screenProgress"
+        style="@style/multilineTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginBottom="39dp"
-        app:layout_constraintBottom_toTopOf="@+id/selectGenderPromptTv"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_64sdp"
+        android:text="2/3"
+        android:textColor="@color/dk_blue"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb"
-        app:spb_checkStateCompleted="true"
-        app:spb_currentStateDescriptionColor="?attr/colorAccent"
-        app:spb_currentStateNumber="two"
-        app:spb_maxStateNumber="three"
-        app:spb_stateBackgroundColor="#BDBDBD"
-        app:spb_stateDescriptionColor="#808080"
-        app:spb_stateForegroundColor="?attr/colorAccent"
-        app:spb_stateNumberBackgroundColor="#808080"
-        app:spb_stateNumberForegroundColor="#eeeeee" />
+        app:layout_constraintTop_toBottomOf="@id/appTb" />
 
     <TextView
         android:id="@+id/selectGenderPromptTv"
-        style="@style/multilineText"
-        android:layout_width="match_parent"
+        style="@style/multilineTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginLeft="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginRight="@dimen/_16sdp"
-        android:text="@string/s_gender_prompt"
+        android:text="@string/s_gender_title"
         android:textColor="?attr/appLanguageTextColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dottedScreenPb" />
+        app:layout_constraintStart_toEndOf="@id/screenProgress"
+        app:layout_constraintTop_toTopOf="@id/screenProgress" />
 
-    <Button
-        android:id="@+id/maleBtn"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
-        android:layout_marginTop="@dimen/_40sdp"
-        android:background="@drawable/male_gender_selector"
-        android:gravity="center|bottom"
-        android:textColor="@drawable/gender_text_color_selector"
-        app:layout_constraintEnd_toStartOf="@+id/femaleBtn"
-        app:layout_constraintHorizontal_bias="0.5"
+    <com.microsoft.research.karya.ui.widgets.GenderCard
+        android:id="@+id/cv_male"
+        android:layout_width="@dimen/_128sdp"
+        android:layout_height="@dimen/_128sdp"
+        android:layout_marginTop="@dimen/_32sdp"
+        app:icon="@drawable/ic_gender_male"
+        app:layout_constraintEnd_toStartOf="@id/cv_female"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectGenderPromptTv" />
+        app:layout_constraintTop_toBottomOf="@id/screenProgress"
+        app:title="@string/s_male" />
 
-    <Button
-        android:id="@+id/femaleBtn"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
-        android:background="@drawable/female_gender_selector"
-        android:gravity="center|bottom"
-        android:textColor="@drawable/gender_text_color_selector"
+    <com.microsoft.research.karya.ui.widgets.GenderCard
+        android:id="@+id/cv_female"
+        android:layout_width="@dimen/_128sdp"
+        android:layout_height="@dimen/_128sdp"
+        app:icon="@drawable/ic_gender_female"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/maleBtn"
-        app:layout_constraintTop_toTopOf="@+id/maleBtn" />
+        app:layout_constraintStart_toEndOf="@id/cv_male"
+        app:layout_constraintTop_toTopOf="@id/cv_male"
+        app:title="@string/s_female" />
 
-    <TextView
-        android:id="@+id/maleTv"
-        style="@style/Widget.textMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:text="@string/s_male"
-        android:textSize="@dimen/_20ssp"
-        app:layout_constraintEnd_toEndOf="@+id/maleBtn"
-        app:layout_constraintLeft_toLeftOf="@+id/maleBtn"
-        app:layout_constraintRight_toRightOf="@+id/maleBtn"
-        app:layout_constraintStart_toStartOf="@+id/maleBtn"
-        app:layout_constraintTop_toBottomOf="@+id/maleBtn" />
-
-    <TextView
-        android:id="@+id/femaleTv"
-        style="@style/Widget.textMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:text="@string/s_female"
-        android:textSize="@dimen/_20ssp"
-        app:layout_constraintEnd_toEndOf="@+id/femaleBtn"
-        app:layout_constraintLeft_toLeftOf="@+id/femaleBtn"
-        app:layout_constraintRight_toRightOf="@+id/femaleBtn"
-        app:layout_constraintStart_toStartOf="@+id/femaleBtn"
-        app:layout_constraintTop_toBottomOf="@+id/femaleBtn"
-        tools:layout_editor_absoluteX="229dp" />
+    <com.microsoft.research.karya.ui.widgets.GenderCard
+        android:id="@+id/cv_other"
+        android:layout_width="@dimen/_128sdp"
+        android:layout_height="@dimen/_128sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:icon="@drawable/ic_gender_other"
+        app:layout_constraintEnd_toEndOf="@id/cv_female"
+        app:layout_constraintStart_toStartOf="@id/cv_male"
+        app:layout_constraintTop_toBottomOf="@id/cv_male"
+        app:title="@string/s_other" />
 
     <FrameLayout
         android:id="@+id/loadingContainer"
-        android:layout_width="@dimen/_55sdp"
-        android:layout_height="@dimen/_55sdp"
-        android:layout_marginTop="@dimen/_100sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_32sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintTop_toBottomOf="@+id/femaleBtn">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_other">
 
-        <ImageView
+        <Button
             android:id="@+id/submitGenderIb"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/next_rounded_button_selector"
             android:contentDescription="@string/next"
-            app:srcCompat="@drawable/ic_next_disabled" />
+            android:drawableEnd="@drawable/ic_arrow_forward"
+            android:drawablePadding="@dimen/_4sdp"
+            android:elevation="@dimen/_4sdp"
+            android:paddingStart="@dimen/_32sdp"
+            android:paddingEnd="@dimen/_28sdp"
+            android:text="@string/s_next"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_15ssp"
+            android:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/loadingPb"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

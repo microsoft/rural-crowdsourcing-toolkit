@@ -233,7 +233,9 @@
     <string name="s_listen_action"> The app will play back the recorded audio. Listen to it carefully to ensure it is correct and that there is no other background voice.</string>
     <string name="s_rerecord_action">If your recording is not correct, you can record again using the record button.</string>
     <string name="s_next_action">If you are happy with the recording, you can press this button to go to the next sentence.</string>
+    <string name="s_next">Next</string>
     <string name="s_previous_action"> You can press this button to go to the previous sentence.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="s_other">Other</string>
 </resources>
