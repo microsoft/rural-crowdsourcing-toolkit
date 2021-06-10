@@ -7,14 +7,14 @@ import { ParameterArray } from '@karya/parameter-specs';
 import { ChangeEventHandler } from 'react';
 import { ColTextInput } from './FormInputs';
 
-type ParamterSectionProps = {
+type ParameterSectionProps = {
   params: ParameterArray<any>;
   data: { [id: string]: string | boolean };
   onChange: ChangeEventHandler;
   onBooleanChange: ChangeEventHandler;
 };
 
-export const ParameterSection = (props: ParamterSectionProps) => {
+export const ParameterSection = (props: ParameterSectionProps) => {
   return (
     <div>
       {props.params.map((param) => {
@@ -42,7 +42,27 @@ export const ParameterSection = (props: ParamterSectionProps) => {
                 </label>
               </div>
             );
+          case 'enum':
+            return (
+              <div className='col s4 input-field'>
+                <select id={param.id} onChange={props.onChange}>
+                  <option value='null' disabled={true}>
+                    {param.label}
+                  </option>
+                  {param.list.map(([value, label]) => {
+                    return (
+                      <option value={value} key={value}>
+                        {label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            );
           default:
+            ((obj: never) => {
+              // Unhandled parameter type
+            })(param);
             return null;
         }
       })}

@@ -5,6 +5,13 @@
 
 import Joi from 'joi';
 
+type ParameterType =
+  | { type: 'string' }
+  | { type: 'int' }
+  | { type: 'float' }
+  | { type: 'boolean' }
+  | { type: 'enum'; list: [string, string][] };
+
 /**
  * Parameter specification
  *
@@ -16,11 +23,10 @@ import Joi from 'joi';
  */
 export type ParameterDefinition<T> = {
   id: Extract<T, string>;
-  type: 'string' | 'int' | 'float' | 'boolean';
   label: string;
   description: string;
   required: boolean;
-};
+} & ParameterType;
 
 /**
  * Array of parameter definitions
@@ -50,6 +56,11 @@ export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.O
       case 'float':
         base = Joi.number().positive();
         break;
+      case 'enum': {
+        const values = param.list.map((l) => l[0]);
+        base = Joi.string().valid(values);
+        break;
+      }
     }
     base = base.label(label).description(description);
     schemaMap[id] = required ? base.required() : base;
