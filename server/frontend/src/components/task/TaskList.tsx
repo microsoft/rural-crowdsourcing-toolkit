@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { TaskRecord } from '@karya/core';
 import { taskStatus } from './TaskUtils';
 import { scenarioMap, ScenarioName } from '@karya/core';
-import { languageMap, LanguageCode } from '@karya/core';
+import { languageMap } from '@karya/core';
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
 
@@ -46,7 +46,7 @@ class TaskList extends React.Component<TaskListProps> {
 
     // langauge tag function
     const languageTag = (task: TaskRecord) => {
-      const language = languageMap[task.language_code as LanguageCode];
+      const language = languageMap['EN'];
       return `${language.name} (${language.primary_name})`;
     };
 

@@ -159,7 +159,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     e.preventDefault();
     const task: Task = { ...this.state.task };
     task.scenario_name = this.state.scenario?.name;
-    task.language_code = this.state.language_code;
     task.params = this.state.params;
     task.itags = { itags: this.state.itags.split(',') };
     this.props.createTask(task);

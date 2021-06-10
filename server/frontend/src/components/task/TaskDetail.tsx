@@ -26,7 +26,7 @@ import { AuthProps, withAuth } from '../hoc/WithAuth';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
-import { LanguageCode, languageMap } from '@karya/core';
+import { languageMap } from '@karya/core';
 
 /** Props */
 
@@ -135,7 +135,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
     const scenario = scenarioMap[task.scenario_name as ScenarioName];
-    const language = languageMap[task.language_code as LanguageCode];
+    const language = languageMap['EN'];
 
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
     const language_name = language ? `${language.name} (${language.primary_name})` : '<Loading languages>';
