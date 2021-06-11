@@ -76,16 +76,6 @@
             app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
     </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
 
-<!--    <com.microsoft.research.karya.ui.views.KaryaToolbar-->
-<!--        android:id="@+id/appTb"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:clipToPadding="false"-->
-<!--        android:paddingBottom="@dimen/_8sdp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
         android:layout_width="@dimen/_26sdp"
