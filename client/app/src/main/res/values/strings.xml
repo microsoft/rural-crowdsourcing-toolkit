@@ -182,7 +182,7 @@
     <string name="s_access_code_prompt">Enter 16-digit access code</string>
     <string name="s_invalid_creation_code">You have entered an invalid creation code.</string>
     <string name="s_creation_code_already_used">The creation code you have entered is already used. Please contact your project coordinator.</string>
-    <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
+    <string name="s_phone_number_prompt">Enter your 10-digit mobile number</string>
     <string name="s_sending_otp">Sending OTP to your phone</string>
     <string name="s_unable_to_send_otp">We were unable to send OTP to your number. Please try again later.</string>
     <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>

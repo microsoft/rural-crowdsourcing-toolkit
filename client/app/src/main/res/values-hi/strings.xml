@@ -14,7 +14,7 @@
     <string name="s_access_code_prompt">आपको प्रोजेक्ट समन्वयक से 16 अंकों का एक्सेस कोड प्राप्त होना चाहिए। कृपया नीचे उस एक्सेस कोड को दर्ज करें।</string>
     <string name="s_invalid_creation_code">आपने एक गलत एक्सेस कोड दर्ज किया है।</string>
     <string name="s_creation_code_already_used">आपके द्वारा दर्ज किया गया एक्सेस कोड पहले से ही उपयोग किया जाता है। कृपया अपने परियोजना समन्वयक से संपर्क करें।</string>
-    <string name="s_phone_number_prompt">कार्य का उपयोग करने के लिए, आपको अपने फ़ोन नंबर का उपयोग करके हमारे आवेदन के साथ पंजीकरण करना होगा। कृपया नीचे अपना फ़ोन नंबर दर्ज करें।</string>
+    <string name="s_phone_number_prompt">अपना 10 अंकों का मोबाइल नंबर दर्ज करें</string>
     <string name="s_sending_otp">अपने फोन पर ओटीपी भेज रहा है</string>
     <string name="s_unable_to_send_otp">हम आपके नंबर पर ओटीपी भेजने में असमर्थ थे। बाद में पुन: प्रयास करें।</string>
     <string name="s_otp_prompt">हमने आपको एसएमएस के माध्यम से 6 अंकों का ओटीपी भेजा है। कृपया उस ओटीपी को नीचे दर्ज करें</string>
