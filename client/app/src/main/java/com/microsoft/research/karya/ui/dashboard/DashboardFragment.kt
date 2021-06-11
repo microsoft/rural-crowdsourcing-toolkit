@@ -3,13 +3,21 @@ package com.microsoft.research.karya.ui.dashboard
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
@@ -23,18 +31,26 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
-  val viewModel: DashboardViewModel by viewModels()
+  val viewModel: NgDashboardViewModel by viewModels()
+  private lateinit var syncWorkRequest: OneTimeWorkRequest
+  val taskActivityLauncher =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+      val taskId = result.data?.getStringExtra("taskID") ?: return@registerForActivityResult
 
-  @Inject lateinit var authManager: AuthManager
+      viewModel.updateTaskStatus(taskId)
+    }
+
+  @Inject
+  lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -49,6 +65,16 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   private fun setupViews() {
+
+    // TODO: SHIFT IT FROM HERE
+    val constraints = Constraints.Builder()
+      .setRequiredNetworkType(NetworkType.CONNECTED)
+      .build()
+
+    syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>()
+      .setConstraints(constraints)
+      .build()
+
     with(binding) {
       // TODO: Convert this to one string instead of joining multiple strings
       val syncText =
@@ -64,12 +90,16 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener { viewModel.syncWithServer() }
+      binding.syncCv.setOnClickListener { syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
       appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
       loadProfilePic()
     }
+  }
+
+  private fun syncWithServer() {
+    WorkManager.getInstance(requireContext()).enqueue(syncWorkRequest)
   }
 
   private fun observeUi() {
@@ -80,11 +110,25 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
+
+    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
+      .observe(viewLifecycleOwner, Observer { workInfo ->
+        // Check if the current work's state is "successfully finished"
+        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+          lifecycleScope.launch {
+            viewModel.refreshList()
+          }
+        }
+        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
+          viewModel.setLoading()
+        }
+      })
+
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
-    syncCv.enable()
+    binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
@@ -99,12 +143,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showErrorUi(throwable: Throwable) {
     hideLoading()
-    syncCv.enable()
+    binding.syncCv.enable()
   }
 
   private fun showLoadingUi() {
     showLoading()
-    syncCv.disable()
+    binding.syncCv.disable()
   }
 
   private fun showLoading() = binding.syncProgressBar.visible()
@@ -116,7 +160,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
-        val profilePicPath = authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
+        val profilePicPath =
+          authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
         val bitmap = BitmapFactory.decodeFile(profilePicPath)
 
         withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }
@@ -153,7 +198,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         val isFirstFetch = prefs[firstFetchKey] ?: true
 
         if (isFirstFetch) {
-          viewModel.syncWithServer()
+          syncWithServer()
         }
 
         prefs[firstFetchKey] = false
