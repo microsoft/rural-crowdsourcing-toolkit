@@ -44,10 +44,11 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   private fun setupView() {
     // registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
     binding.appTb.setTitle(getString(R.string.s_otp_title))
-    binding.appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT) }
+    //    binding.appTb.setAssistantClickListener {
+    // assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT) }
 
     binding.resendOTPBtn.setOnClickListener {
-      binding.resendOTPBtn.gone()
+      binding.resendOTPBtn.disable()
       viewModel.resendOTP()
     }
 
@@ -136,19 +137,11 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun enableNextButton() {
-    binding.otpNextIv.apply {
-      setImageResource(0)
-      setImageResource(R.drawable.ic_next_enabled)
-      isClickable = true
-    }
+    binding.otpNextIv.enable()
   }
 
   private fun disableNextButton() {
-    binding.otpNextIv.apply {
-      setImageResource(0)
-      setImageResource(R.drawable.ic_next_disabled)
-      isClickable = false
-    }
+    binding.otpNextIv.disable()
   }
 
   private fun showLoading() {
