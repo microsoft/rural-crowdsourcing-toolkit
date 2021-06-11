@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.onboarding.login.phone
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +15,6 @@ import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.hideKeyboard
-import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -58,7 +56,8 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
       phoneNumberNextIv.setOnClickListener { handleNextClick(phoneNumberEt.text.toString()) }
 
       appTb.setTitle(getString(R.string.s_phone_number_title))
-//      appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.PHONE_NUMBER_PROMPT) }
+      //      appTb.setAssistantClickListener {
+      // assistant.playAssistantAudio(AssistantAudio.PHONE_NUMBER_PROMPT) }
     }
   }
 
