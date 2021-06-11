@@ -9,7 +9,6 @@ import Joi from 'joi';
 // Sign language video data task input parameters
 type SignLanguageVideoTaskInputParameters = {
   instruction: string;
-  numRecordings: number;
   creditsPerRecording: number;
 };
 
@@ -40,14 +39,6 @@ const task_input: BaseSignLanguageVideoScenario['task_input'] = [
     type: 'string',
     label: 'Recording Instruction',
     description: 'Recording instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'numRecordings',
-    type: 'int',
-    label: 'Number of Recordings',
-    description: 'Number of recordings needed for each sentence in the input corpus',
     required: true,
   },
 

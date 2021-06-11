@@ -5,12 +5,13 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
+import { LanguageCode, languageParameter } from '../../languages/Index';
 
 // Text translation task input parameters
 type TextTranslationTaskInputParameters = {
+  sourceLanguage: LanguageCode;
+  targetLanguage: LanguageCode;
   instruction: string;
-  numUniqueTranslations: number;
-  numTranslations: number;
   creditsPerTranslation: number;
   mode: string;
 };
@@ -35,6 +36,9 @@ export type BaseTextTranslationScenario = BaseScenarioInterface<
 
 // Text translation task input parameters description
 const task_input: BaseTextTranslationScenario['task_input'] = [
+  languageParameter('sourceLanguage', 'Source Language', 'Language of the source sentences'),
+  languageParameter('targetLanguage', 'Target Language', 'Language to which sentences must be ranslated'),
+
   {
     id: 'instruction',
     type: 'string',
@@ -44,27 +48,17 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
   },
 
   {
-    id: 'numTranslations',
-    type: 'int',
-    label: 'Limit on Number of Translations',
-    description: 'Maximum number of translations required for each sentence',
-    required: true,
-  },
-
-  {
-    id: 'numUniqueTranslations',
-    type: 'int',
-    label: 'Number of Unique Translations',
-    description: 'Number of unique translations required for each sentence',
-    required: true,
-  },
-
-  {
     id: 'mode',
-    type: 'string',
+    type: 'enum',
     label: 'AI support (none | bow | dd1 | dd2)',
     description:
       'Provide support for translation through an ML model. none: No support. bow: Bag of words. dd1: Drop down suggestions with 1 word. dd2: Drop down suggestions with 2 words',
+    list: [
+      ['none', 'No AI Support'],
+      ['bow', 'Bag of Words (displayed as buttons)'],
+      ['dd1', 'Dropdown suggestions (one word at a time)'],
+      ['dd2', 'Dropdown suggestions (two words at a time)'],
+    ],
     required: true,
   },
 

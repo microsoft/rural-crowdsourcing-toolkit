@@ -5,11 +5,12 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
+import { LanguageCode, languageParameter } from '../../languages/Index';
 
 // Speech data task input parameters
 type SpeechDataTaskInputParameters = {
+  language: LanguageCode;
   instruction: string;
-  numRecordings: number;
   creditsPerRecording: number;
 };
 
@@ -35,19 +36,13 @@ export type BaseSpeechDataScenario = BaseScenarioInterface<
  * Task parameter input and file formats.
  */
 const task_input: BaseSpeechDataScenario['task_input'] = [
+  languageParameter('language', 'Language', 'Language in which the recordings are collected'),
+
   {
     id: 'instruction',
     type: 'string',
     label: 'Recording Instruction',
     description: 'Recording instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'numRecordings',
-    type: 'int',
-    label: 'Number of Recordings',
-    description: 'Number of recordings needed for each sentence in the input corpus',
     required: true,
   },
 

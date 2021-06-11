@@ -5,11 +5,12 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
+import { LanguageCode, languageParameter } from '../../languages/Index';
 
 // Speech verification task input parameters
 type SpeechVerificationTaskInputParameters = {
+  language: LanguageCode;
   instruction: string;
-  numVerifications: number;
   creditsPerVerification: number;
 };
 
@@ -37,19 +38,13 @@ export type BaseSpeechVerificationScenario = BaseScenarioInterface<
 
 // Speech verification task inputs
 const task_input: BaseSpeechVerificationScenario['task_input'] = [
+  languageParameter('language', 'Language', 'Language of the recordings and transcript'),
+
   {
     id: 'instruction',
     type: 'string',
     label: 'Verification Instruction',
     description: 'Verification instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'numVerifications',
-    type: 'int',
-    label: 'Number of Verifications',
-    description: 'Number of verifications needed for each sentence/recording pair in the input corpus',
     required: true,
   },
 
