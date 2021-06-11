@@ -55,7 +55,6 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
 
       phoneNumberNextIv.setOnClickListener { handleNextClick(phoneNumberEt.text.toString()) }
 
-      appTb.setTitle(getString(R.string.s_phone_number_title))
       appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.PHONE_NUMBER_PROMPT) }
     }
   }

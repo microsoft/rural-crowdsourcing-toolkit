@@ -1,37 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/startIcon"
-        android:layout_width="@dimen/_250sdp"
-        android:layout_height="@dimen/_120sdp"
-        android:contentDescription="@string/karya_logo"
-        android:src="@drawable/karya_logo"
-        app:layout_constraintBottom_toTopOf="@id/progressBar"
+    <com.microsoft.research.karya.ui.widgets.KaryaToolbar
+        android:id="@+id/appTb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:showBackButton="true"
+        app:startIcon="@drawable/access_code_title_icon" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_64sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:srcCompat="@drawable/ic_download" />
+
+    <TextView
+        android:id="@+id/downloadPromptTv"
+        style="@style/multilineTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_32sdp"
-        android:layout_marginTop="@dimen/_32sdp"
-        android:layout_marginEnd="@dimen/_32sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:text="@string/s_download_prompt"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:layout_width="@dimen/_128sdp"
+        android:layout_height="@dimen/_128sdp"
         android:indeterminate="true"
-        android:max="2"
-        android:scaleY="2"
+        app:indicatorSize="@dimen/_128sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startIcon"
-        tools:progress="1" />
+        app:layout_constraintTop_toBottomOf="@id/downloadPromptTv"
+        app:layout_constraintVertical_bias="0.4"
+        app:trackColor="#E7CDFE"
+        app:indicatorDirectionCircular="clockwise"
+        app:indicatorColor="#6A11B8"
+        app:trackThickness="@dimen/_2sdp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

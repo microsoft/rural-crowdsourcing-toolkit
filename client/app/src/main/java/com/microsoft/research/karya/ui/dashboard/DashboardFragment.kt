@@ -66,7 +66,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
       syncCv.setOnClickListener { viewModel.syncWithServer() }
 
-      appTb.setTitle(getString(R.string.s_dashboard_title))
       appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
       loadProfilePic()
     }
