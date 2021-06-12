@@ -20,7 +20,9 @@ import { backendSpeechVerificationScenario } from './scenarios/SpeechVerificatio
 import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 
 // Local scenario Map
-const backendScenarioMap: { [key in ScenarioName]: BackendScenarioInterface<key, any, object, any, object, any> } = {
+export const backendScenarioMap: {
+  [key in ScenarioName]: BackendScenarioInterface<key, any, object, any, object, any>;
+} = {
   SPEECH_DATA: backendSpeechDataScenario,
   TEXT_TRANSLATION: backendTextTranslationScenario,
   SPEECH_VERIFICATION: backendSpeechVerificationScenario,

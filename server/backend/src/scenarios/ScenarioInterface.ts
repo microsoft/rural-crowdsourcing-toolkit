@@ -3,7 +3,15 @@
 //
 // Extends base scenario interface to include backend specific functions
 
-import { BaseScenarioInterface, MicrotaskGroup, MicrotaskType, ScenarioName, TaskRecordType } from '@karya/core';
+import {
+  AssignmentRecordType,
+  BaseScenarioInterface,
+  MicrotaskGroup,
+  MicrotaskRecordType,
+  MicrotaskType,
+  ScenarioName,
+  TaskRecordType,
+} from '@karya/core';
 
 /**
  * MicrotaskList: Represents the response type of the microtask generator. This
@@ -54,11 +62,22 @@ export interface BackendScenarioInterface<
   ): Promise<MicrotaskList<SN>>;
 
   /**
-   * Generate output for a given task.
-   * @param task Task for which output has to be generated
-   * @param task_folder Temporary folder for processing the request
+   * Generate output files for a particular task. All the output files are
+   * stored in the task folder. The function returns a list of files that have
+   * to be zipped together and uploaded.
+   * @param task Task record for the which output should be generated
+   * @param assignments List of verified assignments from the last output generation
+   * @param microtasks  List of completed microtasks from the last output generation
+   * @param task_folder Task folder to store the list of files
+   * @param timestamp Unique timestamp associated with the output
    */
-  generateOutput?(task: TaskRecordType<SN>, task_folder?: string): Promise<void>;
+  generateOutput(
+    task: TaskRecordType<SN>,
+    assignments: AssignmentRecordType<SN>[],
+    microtasks: MicrotaskRecordType<SN>[],
+    task_folder: string,
+    timestamp: string
+  ): Promise<string[]>;
 }
 
 // Shorthand for backend scenario interface type

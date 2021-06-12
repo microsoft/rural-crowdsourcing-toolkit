@@ -7,6 +7,7 @@ import { BasicModel } from '@karya/common';
 import { executeForwardTaskLinks, ForwardTaskLinkHandlerObject } from './ops/ForwardTaskLinkHandler';
 import { executeBackwardTaskLinks, BackwardTaskLinkHandlerObject } from './ops/BackwardTaskLinkHandler';
 import Bull from 'bull';
+import { generateTaskOutput, TaskOutputGeneratorObject } from './ops/OutputGenerator';
 
 // Forward task link handler
 export const forwardTaskLinkQ = new Bull<ForwardTaskLinkHandlerObject>('FORWARD_TASK_LINK');
@@ -20,8 +21,14 @@ backwardTaskLinkQ.process(async (job) => {
   await executeBackwardTaskLinks(job.data);
 });
 
+// Output generator
+export const outputGeneratorQ = new Bull<TaskOutputGeneratorObject>('TASK_OUTPUT');
+outputGeneratorQ.process(async (job) => {
+  await generateTaskOutput(job.data);
+});
+
 // Task operation queues
-const taskOpQueues = [forwardTaskLinkQ, backwardTaskLinkQ] as const;
+const taskOpQueues = [forwardTaskLinkQ, backwardTaskLinkQ, outputGeneratorQ] as const;
 
 // Set life-cycle event handlers for all queues
 taskOpQueues.forEach((queue) => {
