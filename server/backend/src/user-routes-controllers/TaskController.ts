@@ -7,12 +7,13 @@ import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
-import { BasicModel } from '@karya/common';
+import { BasicModel, TaskOpModel } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { inputProcessorQueue } from '../scenarios/Index';
+import { outputGeneratorQ } from '../task-ops/Index';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -189,5 +190,35 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     // TODO: internal server error
     HttpResponse.BadRequest(ctx, 'Something went wrong');
     return;
+  }
+};
+
+/**
+ * Trigger output file generation for the given task
+ */
+export const generateOutput: TaskRouteMiddleware = async (ctx) => {
+  const task = ctx.state.task;
+
+  // Check the last time output was generated for this task
+  const latestOpTime = await TaskOpModel.latestOpTime(task.id, 'GENERATE_OUTPUT');
+  const diff = new Date().getTime() - new Date(latestOpTime).getTime();
+  if (diff < 1 * 1 * 60 * 1000) {
+    HttpResponse.BadRequest(ctx, 'Insufficient time gap between two output generations');
+    return;
+  }
+
+  try {
+    // Create a output generation task op
+    const taskOp = await BasicModel.insertRecord('task_op', {
+      task_id: task.id,
+      op_type: 'GENERATE_OUTPUT',
+      status: 'CREATED',
+      messages: { messages: [] },
+    });
+
+    await outputGeneratorQ.add({ task, taskOp });
+    HttpResponse.OK(ctx, taskOp);
+  } catch (e) {
+    HttpResponse.BadRequest(ctx, 'Unknown error occured');
   }
 };

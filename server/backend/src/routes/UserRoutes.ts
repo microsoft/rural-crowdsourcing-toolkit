@@ -114,6 +114,15 @@ userRouter.post<TaskController.TaskRouteState, {}>(
 // Get all tasks
 userRouter.get('/tasks', Middlewares.needIdToken, TaskController.getAll);
 
+// Trigger output file creation
+userRouter.post<TaskController.TaskRouteState, {}>(
+  '/task/:id/output_file',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  TaskController.generateOutput
+);
+
 /**
  * Task assignment routes. Create/update task assignments
  */

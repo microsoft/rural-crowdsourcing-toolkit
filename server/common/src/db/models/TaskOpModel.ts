@@ -3,7 +3,7 @@
 //
 // Extra task op table models
 
-import { TaskOpRecord } from '@karya/core';
+import { TaskOpRecord, TaskOpType } from '@karya/core';
 import { knex } from '../Client';
 
 /**
@@ -21,4 +21,19 @@ export async function previousOpTime(taskOp: TaskOpRecord): Promise<string> {
     .orderBy('created_at', 'desc')
     .first();
   return previousOp?.created_at ?? new Date(0).toISOString();
+}
+
+/**
+ * Get the last time an operation was invoked on a particular task
+ * @param task_id ID of the task
+ * @param op_type Op type
+ * @returns
+ */
+export async function latestOpTime(task_id: string, op_type: TaskOpType): Promise<string> {
+  const latestOp = await knex<TaskOpRecord>('task_op')
+    .where({ task_id, op_type })
+    .whereNot('status', 'FAILED')
+    .orderBy('created_at', 'desc')
+    .first();
+  return latestOp?.created_at ?? new Date(0).toISOString();
 }
