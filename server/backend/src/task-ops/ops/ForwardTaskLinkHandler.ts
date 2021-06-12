@@ -9,8 +9,8 @@
 // the completed state that were submitted to the server between the invocation
 // of this instance of the handler and the previous invocation of the handler.
 
-import { BasicModel, knex } from '@karya/common';
-import { AssignmentRecordType, TaskOp, TaskOpRecord, TaskRecordType } from '@karya/core';
+import { BasicModel, TaskOpModel } from '@karya/common';
+import { AssignmentRecordType, TaskOpRecord, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import { executeForwardLink } from '../../chains/Index';
 import { handleNewlyCompletedAssignments } from '../policies/Index';
@@ -29,16 +29,7 @@ export async function executeForwardTaskLinks(achObject: ForwardTaskLinkHandlerO
   const { task, taskOp } = achObject;
 
   // Get the most recent assignment completion handler task op for this task
-  const match: TaskOp = {
-    task_id: task.id,
-    op_type: 'EXECUTE_FORWARD_TASK_LINK',
-  };
-  const previousOp = await knex<TaskOpRecord>('task_op')
-    .where(match)
-    .whereNot('id', taskOp.id)
-    .orderBy('created_at', 'desc')
-    .first();
-  const lastOpTime = previousOp ? previousOp.created_at : new Date(0).toISOString();
+  const lastOpTime = await TaskOpModel.previousOpTime(taskOp);
   const currentOpTime = taskOp.created_at;
 
   // Get all completed assignments to be processed

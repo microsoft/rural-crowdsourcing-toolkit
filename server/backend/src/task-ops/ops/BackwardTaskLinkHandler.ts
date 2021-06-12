@@ -4,8 +4,8 @@
 // Handler to handle completed microtasks of a task. This handler invokes the
 // backward link handler for all the links for which the task is a "to" task.
 
-import { BasicModel, knex } from '@karya/common';
-import { TaskOp, TaskOpRecord, TaskRecordType } from '@karya/core';
+import { BasicModel, TaskOpModel } from '@karya/common';
+import { TaskOpRecord, TaskRecordType } from '@karya/core';
 import { ChainedMicrotaskRecordType } from '../../chains/BackendChainInterface';
 import { Promise as BBPromise } from 'bluebird';
 import { executeBackwardLink } from '../../chains/Index';
@@ -25,13 +25,7 @@ export async function executeBackwardTaskLinks(btlObject: BackwardTaskLinkHandle
   const { task, taskOp } = btlObject;
 
   // Get the most recent backward task link handlers for this task
-  const match: TaskOp = { task_id: task.id, op_type: 'EXECUTE_BACKWARD_TASK_LINK' };
-  const previousOp = await knex<TaskOpRecord>('task_op')
-    .where(match)
-    .whereNot('id', taskOp.id)
-    .orderBy('created_at', 'desc')
-    .first();
-  const lastOpTime = previousOp?.created_at ?? new Date(0).toISOString();
+  const lastOpTime = await TaskOpModel.previousOpTime(taskOp);
   const currentOpTime = taskOp.created_at;
 
   // Get all completed microtasks t be processed
