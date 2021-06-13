@@ -8,6 +8,14 @@ import { executeForwardTaskLinks, ForwardTaskLinkHandlerObject } from './ops/For
 import { executeBackwardTaskLinks, BackwardTaskLinkHandlerObject } from './ops/BackwardTaskLinkHandler';
 import Bull from 'bull';
 import { generateTaskOutput, TaskOutputGeneratorObject } from './ops/OutputGenerator';
+import { processInputFile, TaskInputProcessorObject } from './ops/InputProcessor';
+
+// Input processor queue
+export const inputProcessorQ = new Bull<TaskInputProcessorObject>('TASK_INPUT');
+inputProcessorQ.process(async (job) => {
+  const { task, jsonFilePath, tgzFilePath, folderPath } = job.data;
+  await processInputFile(task, jsonFilePath, tgzFilePath, folderPath);
+});
 
 // Forward task link handler
 export const forwardTaskLinkQ = new Bull<ForwardTaskLinkHandlerObject>('FORWARD_TASK_LINK');
@@ -28,7 +36,7 @@ outputGeneratorQ.process(async (job) => {
 });
 
 // Task operation queues
-const taskOpQueues = [forwardTaskLinkQ, backwardTaskLinkQ, outputGeneratorQ] as const;
+const taskOpQueues = [inputProcessorQ, forwardTaskLinkQ, backwardTaskLinkQ, outputGeneratorQ] as const;
 
 // Set life-cycle event handlers for all queues
 taskOpQueues.forEach((queue) => {

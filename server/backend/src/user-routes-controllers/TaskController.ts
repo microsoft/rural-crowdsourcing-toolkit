@@ -12,8 +12,7 @@ import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
-import { inputProcessorQueue } from '../scenarios/Index';
-import { outputGeneratorQ } from '../task-ops/Index';
+import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -182,7 +181,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     });
 
     // Asynchronously process the input
-    await inputProcessorQueue.add({ task, jsonFilePath, tgzFilePath, folderPath, taskOp });
+    await inputProcessorQ.add({ task, jsonFilePath, tgzFilePath, folderPath, taskOp });
 
     // Return success response with the task op record
     HttpResponse.OK(ctx, taskOp);
