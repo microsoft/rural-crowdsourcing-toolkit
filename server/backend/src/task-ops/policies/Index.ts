@@ -6,6 +6,7 @@
 import { BasicModel, MicrotaskModel } from '@karya/common';
 import { AssignmentRecordType, MicrotaskRecordType, PolicyName, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
+import { backendScenarioMap } from '../../scenarios/Index';
 import { backwardTaskLinkQ } from '../Index';
 
 import { BackendPolicyInterface } from './BackendPolicyInterface';
@@ -34,8 +35,9 @@ export async function handleNewlyCompletedAssignments(assignments: AssignmentRec
   const microtask_ids = assignments.map((a) => a.microtask_id).filter((v, i, self) => self.indexOf(v) === i);
   const microtasks = (await BasicModel.getRecords('microtask', {}, [['id', microtask_ids]])) as MicrotaskRecordType[];
 
-  // Get the policy object
+  // Get the policy and scenario object
   const policyObj = backendPolicyMap[task.policy];
+  const scenarioObj = backendScenarioMap[task.scenario_name];
 
   // @ts-ignore -- Need to revisit task record typing
   const [verifiedAssignments, completedMicrotasks] = await policyObj.verify(assignments, microtasks, task);
@@ -53,7 +55,13 @@ export async function handleNewlyCompletedAssignments(assignments: AssignmentRec
 
   // Mark all completed microtasks as completed
   await BBPromise.mapSeries(completedMicrotasks, async (microtask) => {
-    await MicrotaskModel.markComplete(microtask.id);
+    const assignments = await BasicModel.getRecords('microtask_assignment', {
+      microtask_id: microtask.id,
+      status: 'VERIFIED',
+    });
+    // @ts-ignore
+    const output = scenarioObj.microtaskOutput(task, microtask, assignments);
+    await MicrotaskModel.markComplete(microtask.id, output);
   });
 
   // If there are any completed microtasks then

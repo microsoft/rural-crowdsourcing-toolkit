@@ -3,6 +3,7 @@
 
 import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/core';
 import { knex } from '../Client';
+import { updateSingle } from './BasicModel';
 
 // TODO: Many functions here can be optimized
 
@@ -67,8 +68,8 @@ export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolea
  * Mark a microtask as completed. This update will not be
  * @param microtask Microtask to be marked complete
  */
-export async function markComplete(microtask_id: string) {
-  await knex<MicrotaskRecord>('microtask').where('id', microtask_id).update({ status: 'COMPLETED' });
+export async function markComplete(microtask_id: string, output: any = null) {
+  await updateSingle('microtask', { id: microtask_id }, { status: 'COMPLETED', output });
 }
 
 /**
