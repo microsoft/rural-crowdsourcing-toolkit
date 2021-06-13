@@ -84,4 +84,25 @@ export const backendSpeechVerificationScenario: IBackendScenarioInterface<BaseSp
     });
     return files;
   },
+
+  /**
+   * Generate speech verification microtaks output from a list of verified
+   * assignments.
+   * TODO: Temporarily return just the average. Does not work well with the
+   * speech validation
+   */
+  async microtaskOutput(task, microtask, assignments) {
+    // TODO: Make the reduction function dependent on a task parameter?
+
+    const data = assignments
+      .map((mta) => mta.output!.data)
+      .reduce((value, current) => {
+        return {
+          accuracy: current.accuracy + value.accuracy,
+          quality: current.quality + value.quality,
+          volume: current.volume + value.volume,
+        };
+      });
+    return { data };
+  },
 };

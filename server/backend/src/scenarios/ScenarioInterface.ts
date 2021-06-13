@@ -78,6 +78,19 @@ export interface BackendScenarioInterface<
     task_folder: string,
     timestamp: string
   ): Promise<string[]>;
+
+  /**
+   * Generate and return the microtask output for a given microtask. Return null
+   * if no output.
+   * @param task Task record corresponding to the microtask
+   * @param microtask Microtask for which output has to be generated
+   * @param assignments List of verified assignments for the microtask
+   */
+  microtaskOutput(
+    task: TaskRecordType<SN>,
+    microtask: MicrotaskRecordType<SN>,
+    assignments: AssignmentRecordType<SN>[]
+  ): Promise<MicrotaskRecordType<SN>['output'] | null>;
 }
 
 // Shorthand for backend scenario interface type

@@ -86,4 +86,14 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
 
     return files;
   },
+
+  /**
+   * Speech data microtask output
+   * TODO: Temporarily returning null, as microtask output can be generated
+   * directly from the task level output and is typically not necessary for
+   * chaining.
+   */
+  async microtaskOutput(task, microtask, assignments) {
+    return null;
+  },
 };
