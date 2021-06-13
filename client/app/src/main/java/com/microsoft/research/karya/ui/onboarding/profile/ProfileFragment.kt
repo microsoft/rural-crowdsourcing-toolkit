@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.onboarding.profile
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,10 +13,7 @@ import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentProfilePictureBinding
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.ui.base.BaseFragment
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,11 +49,14 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
     with(binding) {
       mainProfilePictureIv.setOnClickListener { selectPicture.launch(null) }
 
-      profilePictureNextIv.setOnClickListener { viewModel.saveProfileData("") }
+      profilePictureNextBtn.setOnClickListener { viewModel.saveProfileData("") }
 
-      rotateRightIb.setOnClickListener { viewModel.rotateProfileImage() }
+      ivRotateLeft.setOnClickListener { viewModel.rotateProfileImage(Direction.LEFT) }
+      ivRotateRight.setOnClickListener { viewModel.rotateProfileImage(Direction.RIGHT) }
 
       appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.PROFILE_PICTURE_PROMPT) }
+
+      retakeButton.setOnClickListener { selectPicture.launch(null) }
     }
   }
 
@@ -79,38 +80,36 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
   }
 
   private fun showInitialUi() {
-    with(binding) {
-      hideLoading()
-      rotateRightIb.gone()
-    }
+    hideLoading()
+    hideRotationButtons()
+    disableRetakeButton()
   }
 
   private fun showLoadingUi() {
-    with(binding) {
-      showLoading()
-      rotateRightIb.gone()
-    }
+    showLoading()
+    hideRotationButtons()
+    disableRetakeButton()
   }
 
   private fun showSuccessUi(bitmapPath: String?) {
-    with(binding) {
-      hideLoading()
-      rotateRightIb.visible()
-      enableRotateButton()
+    hideLoading()
+    showRotationButtons()
+    enableRetakeButton()
 
-      if (!bitmapPath.isNullOrEmpty()) {
-        val bitmap = BitmapFactory.decodeFile(bitmapPath)
-        mainProfilePictureIv.setImageBitmap(bitmap)
+    if (!bitmapPath.isNullOrEmpty()) {
+      val bitmap = BitmapFactory.decodeFile(bitmapPath)
+      binding.mainProfilePictureIv.apply {
+        scaleType = ImageView.ScaleType.FIT_XY
+        setImageBitmap(bitmap)
+        setOnClickListener(null)
       }
     }
   }
 
   private fun showErrorUi(message: String) {
-    with(binding) {
-      hideLoading()
-      rotateRightIb.gone()
-      disableRotateButton()
-    }
+    hideLoading()
+    hideRotationButtons()
+    disableRetakeButton()
   }
 
   private fun handleNavigation(destination: Destination) {
@@ -128,26 +127,32 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile_picture) {
     findNavController().navigate(R.id.action_global_dashboardActivity4)
   }
 
-  private fun disableRotateButton() {
-    binding.rotateRightIb.visibility = View.INVISIBLE
-  }
-
-  private fun enableRotateButton() {
-    binding.rotateRightIb.visibility = View.VISIBLE
-    binding.rotateRightIb.isClickable = true
-  }
-
   private fun showLoading() {
-    with(binding) {
-      binding.loadingPb.visible()
-      binding.profilePictureNextIv.gone()
-    }
+    binding.loadingPb.visible()
+    binding.profilePictureNextBtn.gone()
+    binding.retakeButton.disable()
+  }
+
+  private fun hideRotationButtons() {
+    binding.ivRotateLeft.gone()
+    binding.ivRotateRight.gone()
+  }
+
+  private fun showRotationButtons() {
+    binding.ivRotateLeft.visible()
+    binding.ivRotateRight.visible()
+  }
+
+  private fun enableRetakeButton() {
+    binding.retakeButton.enable()
+  }
+
+  private fun disableRetakeButton() {
+    binding.retakeButton.disable()
   }
 
   private fun hideLoading() {
-    with(binding) {
-      binding.loadingPb.gone()
-      binding.profilePictureNextIv.visible()
-    }
+    binding.loadingPb.gone()
+    binding.profilePictureNextBtn.visible()
   }
 }

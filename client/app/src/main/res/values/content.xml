@@ -6,6 +6,7 @@
     <string name="otp_hint"> ------ </string>
     <string name="phone_number_hint">----------</string>
     <string name="next">next</string>
+    <string name="retake">Retake</string>
     <string name="back">back</string>
     <string name="profile_picture">profile picture</string>
     <string name="rotate_right">rotate</string>
