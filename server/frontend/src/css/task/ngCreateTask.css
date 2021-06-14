@@ -11,35 +11,51 @@
   left: 2%;
   width: 98%;
   background-color: #fff;
-  box-shadow: 0px 1px 0px rgba(110, 110, 110, 0.15);
-  height: 3.5rem;
+  box-shadow: rgba(27, 31, 35, 0.07) 0px 1px 0px, rgba(255, 255, 255, 0.28) 0px 1px 0px inset;
+  height: 3.3rem;
+  border-top-right-radius: 0.3em;
 }
 
 .breadcrumb {
-  color: #515153;
-  font-size: 16px;
+  color: #2ba196;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+  font-weight: 500;
 }
 
 .breadcrumb:before {
-  color: #515153;
+  font-size: 16px;
+  color: #2ba196;
+}
+
+.breadcrumb:hover {
+  color: #1ccfbd;
 }
 
 .breadcrumb:last-child {
-  color: #272727;
+  color: #1ccfbd;
+  display: inline;
 }
 
 #page-title {
-  font-size: 30px;
-  margin-left: 3%;
-  margin-top: 1%;
+  font-size: 28px;
+  letter-spacing: 2px;
+  padding-left: 5%;
+  padding-bottom: 2.5%;
+  margin-top: 0.5%;
   font-family: 'Segoe UI', sans-serif;
   font-weight: 300;
+  box-shadow: rgba(27, 31, 35, 0.08) 0px 1px 0px, rgba(255, 255, 255, 0.3) 0px 1px 0px inset;
 }
 
 #select-txt {
   font-size: 20px;
+  letter-spacing: 1px;
   margin-left: 3%;
   margin-top: 4%;
+  font-weight: 300;
 }
 
 .scenario-names label:before,
@@ -71,10 +87,6 @@
   border-radius: 7px;
 }
 
-input[type='radio']:checked + label {
-  background-color: tomato;
-}
-
 .scenario-name {
   margin-left: 2%;
   font-size: 14px;
@@ -91,18 +103,13 @@ form {
   margin-left: 2%;
 }
 
-#form {
+#task-form {
   margin-left: 3%;
 }
 
 .form-heading {
+  letter-spacing: 1px;
   font-size: 24px;
   font-family: 'Segoe UI', sans-serif;
   font-weight: 300;
-}
-
-hr {
-  height: 1px;
-  background-color: #e0e0e7;
-  border: none;
 }

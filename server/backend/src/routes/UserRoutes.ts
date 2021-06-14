@@ -111,6 +111,15 @@ userRouter.post<TaskController.TaskRouteState, {}>(
   TaskController.submitInputFiles
 );
 
+// Get input and output files of a task
+userRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/:id/input_files',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  TaskController.getFiles
+);
+
 // Get all tasks
 userRouter.get('/tasks', Middlewares.needIdToken, TaskController.getAll);
 

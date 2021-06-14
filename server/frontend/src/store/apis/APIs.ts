@@ -109,6 +109,13 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
+      store: 'task_op';
+      label: 'GET_ALL';
+      task_id: string;
+      params: DBT.TaskOp;
+    }
+  | {
+      type: 'BR_INIT';
       store: 'task_assignment';
       label: 'CREATE';
       request: DBT.TaskAssignment;
@@ -189,6 +196,12 @@ export type BackendRequestSuccessAction =
       store: 'task_op';
       label: 'SUBMIT_INPUT_FILE';
       response: DBT.TaskOpRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task_op';
+      label: 'GET_ALL';
+      response: DBT.TaskOpRecord[];
     }
   | {
       type: 'BR_SUCCESS';
@@ -322,6 +335,16 @@ export async function backendRequest(
         store,
         label,
         response: await POST(`/task/${action.task_id}/input_files`, {}, {}, action.files),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get all input files submitted for a task
+    if (action.store === 'task_op' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET(`/task/${action.task_id}/input_files`),
       } as BackendRequestSuccessAction;
     }
 

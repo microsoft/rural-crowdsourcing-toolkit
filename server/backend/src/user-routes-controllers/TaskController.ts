@@ -35,7 +35,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
     // Validate the task parameters
     const scenario = scenarioMap[task.scenario_name!];
     const schema = joiSchema(scenario.task_input);
-    const { value: params, error: paramsError } = schema.validate(task.params);
+    const { value: params, error: paramsError } = schema.validate(task.params, { allowUnknown: true });
 
     if (paramsError) {
       HttpResponse.BadRequest(ctx, 'Invalid task parameters');
@@ -189,5 +189,21 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     // TODO: internal server error
     HttpResponse.BadRequest(ctx, 'Something went wrong');
     return;
+  }
+};
+
+/**
+ * Get input and output files of a task
+ */
+export const getFiles: TaskRouteMiddleware = async (ctx) => {
+  try {
+    const task = ctx.state.task as TaskRecordType;
+    const records = await BasicModel.getRecords('task_op', { task_id: task.id }, [
+      ['op_type', ['PROCESS_INPUT', 'GENERATE_OUTPUT']],
+    ]);
+    HttpResponse.OK(ctx, records);
+  } catch (e) {
+    // TODO: Conver this to an internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };

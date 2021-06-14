@@ -22,6 +22,7 @@ import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard'
 import CreateTask from './components/task/CreateTask';
 import ngCreateTask from './components/task/ngCreateTask';
 import TaskDetail from './components/task/TaskDetail';
+import ngTaskDetail from './components/task/ngTaskDetail';
 import TaskList from './components/task/TaskList';
 
 /** work_provider components */
@@ -52,6 +53,7 @@ const Routes = (
     <WorkProviderRoute exact path='/task' component={TaskList} />
     <WorkProviderRoute exact path='/task/:id' component={TaskDetail} />
     <WorkProviderRoute exact path='/tasks/create' component={ngCreateTask} />
+    <WorkProviderRoute exact path='/tasks/:id' component={ngTaskDetail} />
 
     {/** Work Provider routes */}
     <AdminRoute exact path='/work_provider' component={WorkProviderList} />
