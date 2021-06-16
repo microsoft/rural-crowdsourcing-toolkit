@@ -127,11 +127,16 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   fun onDashboardItemClick(task: TaskInfo) {
     //    val nextIntent =
     when (task.scenarioName) {
-      // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+      // TODO: CONVERT TO TODO
       // Use [ScenarioType] enum once we migrate to it.
       "SPEECH_DATA" -> {
-        //          Intent(requireContext(), StorySpeechMain::class.java)
-        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+//        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+//        findNavController().navigate(action)
+        val action = DashboardFragmentDirections.actionDashboardActivityToTransliterationMainFragment(task.taskID)
+        findNavController().navigate(action)
+      }
+      "TRANSLITERATION" -> {
+        val action = DashboardFragmentDirections.actionDashboardActivityToTransliterationMainFragment(task.taskID)
         findNavController().navigate(action)
       }
     }
