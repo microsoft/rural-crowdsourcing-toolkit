@@ -59,7 +59,7 @@ constructor(
   val wordTvText = _wordTvText.asStateFlow()
 
   override fun setupMicrotask() {
-    _wordTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("MV_XLITERATION").asString
+    _wordTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
   }
 
   /** Handle next button click */
