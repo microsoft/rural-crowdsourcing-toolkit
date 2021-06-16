@@ -45,7 +45,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   override fun onResume() {
     super.onResume()
-    viewModel.getAllTasks()
+    viewModel.getAllTasks() // TODO: Remove onResume and get taskId from scenario viewmodel (similar to onActivity Result)
   }
 
   private fun setupViews() {

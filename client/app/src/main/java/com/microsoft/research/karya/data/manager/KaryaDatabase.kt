@@ -44,7 +44,6 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
       PayoutInfoRecord::class,
       PaymentRequestRecord::class,
     ],
-  views = [TaskInfo::class],
   version = 1,
   //  autoMigrations = [
   //    AutoMigration (from = 1, to = 2)

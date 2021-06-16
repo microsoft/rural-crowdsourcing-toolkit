@@ -58,10 +58,10 @@ class TaskListAdapter(
         task.apply {
           taskNameTv.text = taskName
           scenarioNameTv.text = scenarioName
-          numIncompleteTv.text = assignedMicrotasks.toString()
-          numCompletedTv.text = completedMicrotasks.toString()
-          numSubmittedTv.text = submittedMicrotasks.toString()
-          numVerifiedTv.text = verifiedMicrotasks.toString()
+          numIncompleteTv.text = taskStatus.assignedMicrotasks.toString()
+          numCompletedTv.text = taskStatus.completedMicrotasks.toString()
+          numSubmittedTv.text = taskStatus.submittedMicrotasks.toString()
+          numVerifiedTv.text = taskStatus.verifiedMicrotasks.toString()
         }
       }
     }
@@ -69,17 +69,17 @@ class TaskListAdapter(
     private fun setViews(binding: ItemTaskBinding, task: TaskInfo) {
       with(binding) {
         task.apply {
-          completedTasksPb.max = assignedMicrotasks + completedMicrotasks
-          completedTasksPb.progress = completedMicrotasks
+          completedTasksPb.max = taskStatus.assignedMicrotasks + taskStatus.completedMicrotasks
+          completedTasksPb.progress = taskStatus.completedMicrotasks
 
-          incompleteCl.apply { if (assignedMicrotasks > 0) visible() else gone() }
-          completedCl.apply { if (completedMicrotasks > 0) visible() else gone() }
-          submittedCl.apply { if (submittedMicrotasks > 0) visible() else gone() }
-          verifiedCl.apply { if (verifiedMicrotasks > 0) visible() else gone() }
+          incompleteCl.apply { if (taskStatus.assignedMicrotasks > 0) visible() else gone() }
+          completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
+          submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
+          verifiedCl.apply { if (taskStatus.verifiedMicrotasks > 0) visible() else gone() }
         }
 
         taskLl.apply {
-          val clickableAndEnabled = task.assignedMicrotasks > 0
+          val clickableAndEnabled = task.taskStatus.assignedMicrotasks > 0
           isClickable = clickableAndEnabled
           isEnabled = clickableAndEnabled
 

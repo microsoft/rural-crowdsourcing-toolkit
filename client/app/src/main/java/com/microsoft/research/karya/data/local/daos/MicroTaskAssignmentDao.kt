@@ -54,6 +54,4 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
     worker_id: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
   ): String?
-
-  @Query("SELECT * FROM TaskInfo") suspend fun getTaskInfo(): List<TaskInfo>
 }
