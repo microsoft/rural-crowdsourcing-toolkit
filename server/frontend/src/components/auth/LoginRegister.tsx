@@ -117,6 +117,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
     const id_token = googleUser.getAuthResponse().id_token;
 
     const wp: ServerUser = {
+      access_code: this.state.wp.access_code,
       full_name: profile.getName(),
       email: profile.getEmail(),
     };
