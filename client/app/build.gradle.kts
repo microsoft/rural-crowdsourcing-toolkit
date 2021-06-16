@@ -136,5 +136,6 @@ dependencies {
     implementation(project(":app-dropdown"))
     implementation(project(":app-bow"))
     implementation("com.mcxiaoke.volley:library:1.0.19")
+  implementation("com.nex3z:flow-layout:1.3.4-beta01")
 
 }

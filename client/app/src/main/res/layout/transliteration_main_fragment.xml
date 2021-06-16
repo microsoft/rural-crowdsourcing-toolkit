@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_header_2" />
+
+    <TextView
+        android:id="@+id/instructionTvnone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/text_transliteration_desc"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <EditText
+        android:id="@+id/textTranslationNone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:background="@drawable/border_black"
+        android:completionThreshold="1"
+        android:dropDownHeight="wrap_content"
+        android:textSize="@dimen/_16ssp"
+        android:textColor="#000000"
+        android:hint="Type your translation here"
+        android:inputType="textMultiLine"
+        android:maxLines="3"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
+        app:layout_constraintTop_toBottomOf="@id/instructionTvnone"
+        app:layout_constraintRight_toLeftOf="@id/addBtnNone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <com.nex3z.flowlayout.FlowLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        app:flChildSpacing="20dp"
+        app:flRowSpacing="8dp"
+        app:layout_constraintLeft_toLeftOf="@id/textTranslationNone"
+        app:layout_constraintTop_toBottomOf="@id/textTranslationNone"
+        app:layout_constraintRight_toRightOf="@id/addBtnNone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SUN"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MON"/>
+
+        <!--...-->
+
+    </com.nex3z.flowlayout.FlowLayout>
+
+
+    <ImageButton
+        android:id="@+id/addBtn"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@drawable/ic_check"
+        android:contentDescription="@string/next"
+        app:layout_constraintLeft_toRightOf="@id/textTranslationNone"
+        app:layout_constraintTop_toTopOf="@id/textTranslationNone"
+        app:layout_constraintBottom_toBottomOf="@id/textTranslationNone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

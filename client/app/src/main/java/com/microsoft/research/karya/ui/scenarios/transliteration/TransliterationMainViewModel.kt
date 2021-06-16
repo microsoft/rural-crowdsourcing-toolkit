@@ -63,7 +63,7 @@ constructor(
   }
 
   /** Handle next button click */
-  private fun handleNextClick() {
+  fun handleNextClick() {
 
     /** Log button press */
     val message = JsonObject()

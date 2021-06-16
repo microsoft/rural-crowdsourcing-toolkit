@@ -12,21 +12,19 @@ import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.DISABLED
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
-import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainViewModel
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.speech_data_main.*
+import kotlinx.android.synthetic.main.item_float_word.*
+import kotlinx.android.synthetic.main.item_float_word.view.*
+import kotlinx.android.synthetic.main.transliteration_main_fragment.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TransliterationMainFragment : BaseMTRendererFragment(R.layout.speech_data_main) {
+class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliteration_main_fragment) {
   override val viewModel: TransliterationMainViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
 
@@ -46,31 +44,17 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.speech_data_
 
     setupObservers()
 
-    /** Set OnBackPressed callback */
-    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.onBackPressed() }
-
     /** record instruction */
     val recordInstruction =
-      viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
-    recordPromptTv.text = recordInstruction
+      viewModel.task.params.asJsonObject.get("instruction").asString ?: ""
+    wordTextView.text = recordInstruction
 
-    /** Set card corner radius */
-    recordBtnCv.addOnLayoutChangeListener {
-        _: View,
-        left: Int,
-        _: Int,
-        right: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int,
-        _: Int ->
-      recordBtnCv.radius = (right - left).toFloat() / 2
-    }
-
-    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
-      ->
-      playBtnCv.radius = (right - left).toFloat() / 2
+    addBtn.setOnClickListener {
+      val view = layoutInflater.inflate(R.layout.item_float_word, null)
+      view.word.text = textTranslationNone.text.toString()
+      view.removeImageView.setOnClickListener { flowLayout.removeView(view) }
+      textTranslationNone.text.clear()
+      flowLayout.addView(view, 0)
     }
 
     /** Set on click listeners */
