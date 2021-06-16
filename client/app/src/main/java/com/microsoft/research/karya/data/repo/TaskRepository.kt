@@ -19,4 +19,8 @@ constructor(
   suspend fun getById(taskId: String): TaskRecord {
     return taskDao.getById(taskId)
   }
+
+  suspend fun getById(taskId: String): TaskRecord {
+    return taskDao.getById(taskId)
+  }
 }
