@@ -131,8 +131,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       // Use [ScenarioType] enum once we migrate to it.
       "SPEECH_DATA" -> {
         //          Intent(requireContext(), StorySpeechMain::class.java)
-        val action =
-          DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
         findNavController().navigate(action)
       }
     }
