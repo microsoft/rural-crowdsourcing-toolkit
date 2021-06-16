@@ -5,7 +5,7 @@
 
 import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType } from '@karya/core';
+import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType, policyMap } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
 import { BasicModel, TaskOpModel } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
@@ -34,8 +34,10 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
     // Validate the task parameters
     const scenario = scenarioMap[task.scenario_name!];
-    const schema = joiSchema(scenario.task_input);
-    const { value: params, error: paramsError } = schema.validate(task.params, { allowUnknown: true });
+    const policy = policyMap[task.policy!];
+
+    const schema = joiSchema(scenario.task_input.concat(policy.params));
+    const { value: params, error: paramsError } = schema.validate(task.params);
 
     if (paramsError) {
       HttpResponse.BadRequest(ctx, 'Invalid task parameters');
