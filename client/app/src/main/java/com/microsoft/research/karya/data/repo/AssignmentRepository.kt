@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.data.repo
 
+import com.google.gson.JsonElement
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
@@ -7,6 +8,7 @@ import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoE
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.utils.AppConstants
 import javax.inject.Inject
@@ -129,6 +131,10 @@ constructor(
     taskDao.upsert(tasks)
   }
 
+  suspend fun getAssignmentById(assignmentId: String): MicroTaskAssignmentRecord {
+    return assignmentDao.getById(assignmentId)
+  }
+
   suspend fun getLocalCompletedAssignments(): List<MicroTaskAssignmentRecord> {
     return assignmentDaoExtra.getCompletedAssignments()
   }
@@ -139,6 +145,15 @@ constructor(
 
   suspend fun updateOutputFileId(assignmentId: String, fileRecordId: String) =
     withContext(Dispatchers.IO) { assignmentDaoExtra.updateOutputFileID(assignmentId, fileRecordId) }
+
+  suspend fun markComplete(
+    id: String,
+    output: JsonElement,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
+    date: String,
+  ) {
+    assignmentDaoExtra.markComplete(id, output, status, date)
+  }
 
   suspend fun markMicrotaskAssignmentsSubmitted(assignmentIds: List<String>) {
     assignmentIds.forEach { assignmentId -> assignmentDaoExtra.markSubmitted(assignmentId) }
@@ -157,5 +172,9 @@ constructor(
 
   suspend fun getTotalCreditsEarned(worker_id: String): Float? {
     return assignmentDaoExtra.getTotalCreditsEarned(worker_id)
+  }
+
+  suspend fun getUnsubmittedIDsForTask(task_id: String, includeCompleted: Boolean): List<String> {
+    return assignmentDaoExtra.getUnsubmittedIDsForTask(task_id, includeCompleted)
   }
 }

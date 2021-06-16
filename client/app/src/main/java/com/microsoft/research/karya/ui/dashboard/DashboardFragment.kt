@@ -1,10 +1,10 @@
 package com.microsoft.research.karya.ui.dashboard
 
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,15 +14,17 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
-import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
-import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
+import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
+import com.microsoft.research.karya.utils.extensions.disable
+import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,12 +33,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
-  val taskActivityLauncher =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-      val taskId = result.data?.getStringExtra("taskID") ?: return@registerForActivityResult
-
-      viewModel.updateTaskStatus(taskId)
-    }
 
   @Inject lateinit var authManager: AuthManager
 
@@ -44,8 +40,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
     observeUi()
+    fetchTasksOnFirstRun()
+  }
 
-    viewModel.getAllTasks()
+  override fun onResume() {
+    super.onResume()
+    viewModel.getAllTasks() // TODO: Remove onResume and get taskId from scenario viewmodel (similar to onActivity Result)
   }
 
   private fun setupViews() {
@@ -84,6 +84,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
+    syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
@@ -98,10 +99,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showErrorUi(throwable: Throwable) {
     hideLoading()
+    syncCv.enable()
   }
 
   private fun showLoadingUi() {
     showLoading()
+    syncCv.disable()
   }
 
   private fun showLoading() = binding.syncProgressBar.visible()
@@ -122,19 +125,34 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   fun onDashboardItemClick(task: TaskInfo) {
-    val nextIntent =
-      when (task.scenarioName) {
-        // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
-        // Use [ScenarioType] enum once we migrate to it.
-        "SPEECH_DATA" -> Intent(requireContext(), SpeechDataMain::class.java)
-        "SPEECH_VERIFICATION" -> Intent(requireContext(), SpeechVerificationMain::class.java)
-        "TEXT_TRANSLATION" -> Intent(requireContext(), TextToTextTranslationMain::class.java)
-        else -> {
-          throw Exception("Unimplemented scenario")
-        }
+    //    val nextIntent =
+    when (task.scenarioName) {
+      // TODO: CONVERT TO TODO
+      // Use [ScenarioType] enum once we migrate to it.
+      "SPEECH_DATA" -> {
+        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+        findNavController().navigate(action)
       }
+      "MV_XLITERATION" -> {
+        val action = DashboardFragmentDirections.actionDashboardActivityToTransliterationMainFragment(task.taskID)
+        findNavController().navigate(action)
+      }
+    }
+  }
 
-    nextIntent.putExtra("taskID", task.taskID)
-    taskActivityLauncher.launch(nextIntent)
+  private fun fetchTasksOnFirstRun() {
+    val firstFetchKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_FETCH)
+
+    lifecycleScope.launchWhenStarted {
+      this@DashboardFragment.requireContext().dataStore.edit { prefs ->
+        val isFirstFetch = prefs[firstFetchKey] ?: true
+
+        if (isFirstFetch) {
+          viewModel.syncWithServer()
+        }
+
+        prefs[firstFetchKey] = false
+      }
+    }
   }
 }

@@ -14,6 +14,10 @@ constructor(
   private val taskDao: TaskDao,
   private val microTaskAssignmentDao: MicroTaskAssignmentDao,
 ) {
+  suspend fun getById(taskId: String): TaskRecord {
+    return taskDao.getById(taskId)
+  }
+
   fun getAllTasksFlow(): Flow<List<TaskRecord>> = taskDao.getAllAsFlow()
 
   suspend fun getTaskStatus(taskId: String): TaskStatus {
@@ -24,4 +28,5 @@ constructor(
 
     return TaskStatus(available, completed, submitted, verified)
   }
+
 }

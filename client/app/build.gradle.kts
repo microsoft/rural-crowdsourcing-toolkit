@@ -46,7 +46,17 @@ android {
         dataBinding = true
         viewBinding = true
     }
-    buildToolsVersion = "31.0.0-rc3"
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/LICENSE.txt")
+        exclude("META-INF/license.txt")
+        exclude("META-INF/NOTICE")
+        exclude("META-INF/NOTICE.txt")
+        exclude("META-INF/notice.txt")
+        exclude("META-INF/ASL2.0")
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 ktfmt {
@@ -93,7 +103,7 @@ dependencies {
     implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
     implementation(Dependencies.AndroidX.Navigation.uiKtx)
 
-    kapt(Dependencies.AndroidX.Room.roomCompiler)
+  kapt(Dependencies.AndroidX.Room.roomCompiler)
 
     implementation(Dependencies.Google.gson)
     implementation(Dependencies.Google.material)
@@ -126,5 +136,6 @@ dependencies {
     implementation(project(":app-dropdown"))
     implementation(project(":app-bow"))
     implementation("com.mcxiaoke.volley:library:1.0.19")
+  implementation("com.nex3z:flow-layout:1.3.4-beta01")
 
 }

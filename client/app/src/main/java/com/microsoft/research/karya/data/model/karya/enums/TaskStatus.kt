@@ -7,13 +7,11 @@
  */
 package com.microsoft.research.karya.data.model.karya.enums
 
-import com.google.gson.annotations.SerializedName
-
 enum class TaskStatus {
   CREATED,
   SUBMITTED,
-    VALIDATING,
-   VALIDATED,
+  VALIDATING,
+  VALIDATED,
   INVALID,
   APPROVING,
   APPROVED,
