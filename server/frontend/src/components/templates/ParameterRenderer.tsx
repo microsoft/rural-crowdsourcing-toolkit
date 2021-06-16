@@ -46,7 +46,7 @@ export const ParameterSection = (props: ParameterSectionProps) => {
             return (
               <div className='col s4 input-field'>
                 <select id={param.id} onChange={props.onChange}>
-                  <option value='null' disabled={true}>
+                  <option value='null' disabled={true} selected={true}>
                     {param.label}
                   </option>
                   {param.list.map(([value, label]) => {

@@ -58,7 +58,7 @@ export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.O
         break;
       case 'enum': {
         const values = param.list.map((l) => l[0]);
-        base = Joi.string().valid(values);
+        base = Joi.string().valid(...values);
         break;
       }
     }
