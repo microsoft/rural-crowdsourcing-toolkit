@@ -59,9 +59,11 @@ constructor(
   }
 
   fun addWord(word: String) {
-    val new_arr = ArrayList(_transliterations.value)
-    new_arr.add(0, word)
-    _transliterations.value = new_arr
+    if (word.isNotEmpty()) {
+      val new_arr = ArrayList(_transliterations.value)
+      new_arr.add(0, word)
+      _transliterations.value = new_arr
+    }
   }
 
   fun removeWord(word: String) {

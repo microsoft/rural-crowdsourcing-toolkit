@@ -236,6 +236,6 @@
     <string name="s_previous_action"> You can press this button to go to the previous sentence.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="transliteration_hint">Type your transliteration here</string>
+    <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
 </resources>

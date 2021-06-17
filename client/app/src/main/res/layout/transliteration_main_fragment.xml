@@ -46,7 +46,7 @@
         android:textSize="@dimen/_16ssp"
         android:textColor="#000000"
         android:hint="@string/transliteration_hint"
-        android:maxLines="3"
+        android:maxLines="1"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
         app:layout_constraintTop_toBottomOf="@id/wordTv"

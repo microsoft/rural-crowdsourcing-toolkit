@@ -1,9 +1,15 @@
 package com.microsoft.research.karya.ui.scenarios.speechData
 
 import android.os.Bundle
+import android.text.InputType
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
@@ -35,19 +41,27 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
 
     setupObservers()
 
+    textTransliteration.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+
     /** record instruction */
     val recordInstruction =
       viewModel.task.params.asJsonObject.get("instruction").asString ?: ""
     wordTv.text = recordInstruction
 
-    addBtn.setOnClickListener {
-      // Add the word to the transliteration list
-      viewModel.addWord(textTransliteration.text.toString())
-      // Clear the edittext
-      textTransliteration.setText("")
-    }
+    addBtn.setOnClickListener { addWord() }
+
+    textTransliteration.onSubmit { addWord() }
 
     nextBtn.setOnClickListener { viewModel.handleNextClick() }
+  }
+
+  private fun addWord() {
+    val word = textTransliteration.text.toString()
+    if (word.contains(" ")) {
+      Toast.makeText(requireContext(), "Only 1 word allowed", Toast.LENGTH_LONG).show()
+      return
+    }
+    viewModel.addWord(word)
   }
 
   private fun setupObservers() {
@@ -63,7 +77,20 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
         view.removeImageView.setOnClickListener { viewModel.removeWord(word) }
         flowLayout.addView(view)
       }
+      // Clear the edittext
+      textTransliteration.setText("")
     }
 
   }
+
+  fun EditText.onSubmit(func: () -> Unit) {
+    setOnEditorActionListener { _, actionId, _ ->
+
+      if (actionId == EditorInfo.IME_ACTION_DONE) {
+        func()
+      }
+      true
+    }
+  }
+
 }
