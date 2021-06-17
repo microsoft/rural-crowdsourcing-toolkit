@@ -41,9 +41,9 @@ export const backendMVXliterationVerificationScenario: IBackendScenarioInterface
 
   /**
    * Microtask output
-   * TODO: Temporarily returning null
+   * TODO: Temporarily returning the output of the first assignment
    */
   async microtaskOutput(task, microtask, assignments) {
-    return null;
+    return assignments[0].output;
   },
 };
