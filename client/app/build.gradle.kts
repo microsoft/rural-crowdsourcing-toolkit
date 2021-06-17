@@ -26,12 +26,7 @@ android {
   buildTypes {
     named("release") {
       isMinifyEnabled = false
-      setProguardFiles(
-        listOf(
-          getDefaultProguardFile("proguard-android-optimize.txt"),
-          "proguard-rules.pro"
-        )
-      )
+      setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
     }
   }
   compileOptions {
@@ -107,12 +102,6 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
   implementation(Dependencies.AndroidX.Navigation.uiKtx)
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
-  implementation("com.google.android.material:material:1.2.1")
-  implementation("androidx.appcompat:appcompat:1.3.0")
-  implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-  implementation("androidx.navigation:navigation-fragment-ktx:2.3.0")
-  implementation("androidx.navigation:navigation-ui-ktx:2.3.0")
 
   kapt(Dependencies.AndroidX.Room.roomCompiler)
 

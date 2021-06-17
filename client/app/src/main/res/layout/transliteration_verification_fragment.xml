@@ -10,7 +10,7 @@
         layout="@layout/microtask_header_2" />
 
     <TextView
-        android:id="@+id/instructionTvnone"
+        android:id="@+id/instructionTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -30,9 +30,10 @@
         android:paddingVertical="@dimen/_10sdp"
         android:text="HOWDY"
         android:textSize="@dimen/_24sdp"
-        app:layout_constraintTop_toBottomOf="@id/instructionTvnone" />
+        app:layout_constraintTop_toBottomOf="@id/instructionTv" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/verificationRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_8sdp"
@@ -46,7 +47,7 @@
 
     </androidx.recyclerview.widget.RecyclerView>
     <ImageButton
-        android:id="@+id/nextBtnDropdown"
+        android:id="@+id/nextBtn"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:layout_marginEnd="@dimen/_20sdp"

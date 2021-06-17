@@ -63,6 +63,10 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
   }
 
   private fun onNextClick() {
+    if (viewModel.transliterations.value.size < 0) {
+      Toast.makeText(requireContext(), "Please enter atleast one word", Toast.LENGTH_LONG).show()
+      return
+    }
     flowLayout.removeAllViews()
     viewModel.handleNextClick()
   }
