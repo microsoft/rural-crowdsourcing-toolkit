@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.scenarios.speechData
+package com.microsoft.research.karya.ui.scenarios.transliteration
 
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonArray

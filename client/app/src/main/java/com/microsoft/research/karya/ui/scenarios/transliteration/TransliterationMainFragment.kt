@@ -1,12 +1,10 @@
-package com.microsoft.research.karya.ui.scenarios.speechData
+package com.microsoft.research.karya.ui.scenarios.transliteration
 
 import android.os.Bundle
 import android.text.InputType
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
@@ -23,7 +21,7 @@ import kotlinx.android.synthetic.main.transliteration_main_fragment.*
 @AndroidEntryPoint
 class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliteration_main_fragment) {
   override val viewModel: TransliterationMainViewModel by viewModels()
-  val args: SpeechDataMainFragmentArgs by navArgs()
+  val args: TransliterationMainFragmentArgs by navArgs()
 
   override fun requiredPermissions(): Array<String> {
     return emptyArray()
@@ -91,7 +89,9 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
   fun EditText.onSubmit(func: () -> Unit) {
     setOnEditorActionListener { _, actionId, _ ->
 
-      if (actionId == EditorInfo.IME_ACTION_DONE) {
+      if (actionId == EditorInfo.IME_ACTION_DONE ||
+      actionId == EditorInfo.IME_ACTION_NEXT ||
+      actionId == EditorInfo.IME_ACTION_GO) {
         func()
       }
       true
