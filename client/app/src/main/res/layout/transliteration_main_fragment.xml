@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/instructionTvnone" />
 
     <EditText
-        android:id="@+id/textTranslationNone"
+        android:id="@+id/textTransliteration"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
@@ -61,8 +61,8 @@
         android:layout_marginVertical="@dimen/_8sdp"
         app:flChildSpacing="@dimen/_8sdp"
         app:flRowSpacing="@dimen/_8sdp"
-        app:layout_constraintLeft_toLeftOf="@id/textTranslationNone"
-        app:layout_constraintTop_toBottomOf="@id/textTranslationNone"
+        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
+        app:layout_constraintTop_toBottomOf="@id/textTransliteration"
         app:layout_constraintRight_toRightOf="@id/addBtn">
 
 
@@ -76,9 +76,9 @@
         android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/ic_add_button"
         android:contentDescription="@string/next"
-        app:layout_constraintTop_toTopOf="@id/textTranslationNone"
+        app:layout_constraintTop_toTopOf="@id/textTransliteration"
 
-        app:layout_constraintBottom_toBottomOf="@id/textTranslationNone"
+        app:layout_constraintBottom_toBottomOf="@id/textTransliteration"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

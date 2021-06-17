@@ -41,11 +41,10 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
     wordTv.text = recordInstruction
 
     addBtn.setOnClickListener {
-      val view = layoutInflater.inflate(R.layout.item_float_word, null)
-      view.word.text = textTranslationNone.text.toString()
-      view.removeImageView.setOnClickListener { flowLayout.removeView(view) }
-      textTranslationNone.text.clear()
-      flowLayout.addView(view, 0)
+      // Add the word to the transliteration list
+      viewModel.addWord(textTransliteration.text.toString())
+      // Clear the edittext
+      textTransliteration.setText("")
     }
 
     nextBtn.setOnClickListener { viewModel.handleNextClick() }
@@ -53,5 +52,18 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
 
   private fun setupObservers() {
     viewModel.wordTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text -> wordTv.text = text }
+
+    viewModel.transliterations.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { array ->
+
+      flowLayout.removeAllViews()
+
+      for (word in array) {
+        val view = layoutInflater.inflate(R.layout.item_float_word, null)
+        view.word.text = word
+        view.removeImageView.setOnClickListener { viewModel.removeWord(word) }
+        flowLayout.addView(view)
+      }
+    }
+
   }
 }

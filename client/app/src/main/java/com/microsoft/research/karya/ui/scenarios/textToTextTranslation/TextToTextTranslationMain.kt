@@ -13,7 +13,6 @@ import com.microsoft.inmt_lite.INMTLiteDropDown
 import com.microsoft.inmtbow.INMTLiteBagOfWords
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
-import kotlinx.android.synthetic.main.microtask_speech_verification.*
 import kotlinx.android.synthetic.main.microtask_text_translation_bagofwords.*
 import kotlinx.android.synthetic.main.microtask_text_translation_bagofwords.nextBtnBOW
 import kotlinx.android.synthetic.main.microtask_text_translation_dropdown.*
@@ -134,7 +133,7 @@ class TextToTextTranslationMain :
       }
       else -> {
         sourceSentenceNone.text = srcSentence
-        textTranslationNone.setText("")
+        textTransliteration.setText("")
       }
     }
   }
@@ -173,7 +172,7 @@ class TextToTextTranslationMain :
         setButtonStates(ButtonState.DISABLED)
       }
       else -> {
-        outputData.addProperty("sentence", textTranslationNone.getText().toString())
+        outputData.addProperty("sentence", textTransliteration.getText().toString())
         setButtonStates(ButtonState.DISABLED)
       }
     }
@@ -286,14 +285,14 @@ class TextToTextTranslationMain :
         )
       }
       else -> {
-        textTranslationNone.addTextChangedListener(
+        textTransliteration.addTextChangedListener(
           object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence, i1: Int, i2: Int, i3: Int) {}
 
             override fun afterTextChanged(s: Editable) {
-              if (textTranslationNone.text.toString() != "") {
+              if (textTransliteration.text.toString() != "") {
                 setButtonStates(ButtonState.ENABLED)
               } else {
                 setButtonStates(ButtonState.DISABLED)
