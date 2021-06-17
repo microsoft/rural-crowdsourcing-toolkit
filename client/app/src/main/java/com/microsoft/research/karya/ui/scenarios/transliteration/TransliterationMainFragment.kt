@@ -52,7 +52,7 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
 
     textTransliteration.onSubmit { addWord() }
 
-    nextBtn.setOnClickListener { viewModel.handleNextClick() }
+    nextBtn.setOnClickListener { onNextClick() }
   }
 
   private fun addWord() {
@@ -62,6 +62,11 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
       return
     }
     viewModel.addWord(word)
+  }
+
+  private fun onNextClick() {
+    flowLayout.removeAllViews()
+    viewModel.handleNextClick()
   }
 
   private fun setupObservers() {
