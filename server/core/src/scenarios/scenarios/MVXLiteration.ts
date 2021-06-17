@@ -59,7 +59,7 @@ export const baseMVXliterationScenario: BaseMVXliterationScenario = {
   task_input_file: {
     json: {
       required: true,
-      description: `JSON file containting an array of objects. Each object must contain a word field that contains the source word and a limit indicating the maximum number of variants requested for that word.`,
+      description: `JSON file containing an array of objects. Each object must contain a word field that contains the source word and a limit indicating the maximum number of variants requested for that word.`,
       schema: Joi.array().items(Joi.object({ word: Joi.string(), limit: Joi.number() }).unknown(true)),
     },
     tgz: { required: false },
