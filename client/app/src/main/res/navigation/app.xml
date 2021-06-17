@@ -164,7 +164,7 @@
     </fragment>
     <fragment
         android:id="@+id/transliterationMainFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.speechData.TransliterationMainFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
         android:label="TransliterationMainFragment"
         tools:layout="@layout/transliteration_main_fragment">
         <argument
