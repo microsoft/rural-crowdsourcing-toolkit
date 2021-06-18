@@ -60,7 +60,7 @@ export async function handleNewlyCompletedAssignments(assignments: AssignmentRec
       status: 'VERIFIED',
     });
     // @ts-ignore
-    const output = scenarioObj.microtaskOutput(task, microtask, assignments);
+    const output = await scenarioObj.microtaskOutput(task, microtask, assignments);
     await MicrotaskModel.markComplete(microtask.id, output);
   });
 
