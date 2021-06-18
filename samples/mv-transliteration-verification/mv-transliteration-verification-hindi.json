@@ -1,0 +1,9 @@
+[
+  { "word": "यह", "variants": ["yeh", "ye", "y"] },
+  { "word": "है", "variants": ["hai", "hi"] },
+  { "word": "मोटा", "variants": ["mota", "motaa", "moota"] },
+  { "word": "राजा", "variants": ["raja", "raaja", "raajaa", "rajaa"] },
+  { "word": "मोटे", "variants": ["mote", "mte", "moote"] },
+  { "word": "दुबला", "variants": ["dhubla", "dubla", "dhublaa"] },
+  { "word": "कुत्ता", "variants": ["kutha", "kutta", "kuththa"] }
+]

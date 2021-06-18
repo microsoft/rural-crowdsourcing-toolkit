@@ -49,9 +49,9 @@ const Routes = (
     <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
 
     {/** Task routes */}
-    <WorkProviderRoute exact path='/task/create' component={CreateTask} />
+    <WorkProviderRoute exact path='/task/create' component={ngCreateTask} />
     <WorkProviderRoute exact path='/task' component={TaskList} />
-    <WorkProviderRoute exact path='/task/:id' component={TaskDetail} />
+    <WorkProviderRoute exact path='/task/:id' component={ngTaskDetail} />
     <WorkProviderRoute exact path='/tasks/create' component={ngCreateTask} />
     <WorkProviderRoute exact path='/tasks/:id' component={ngTaskDetail} />
 

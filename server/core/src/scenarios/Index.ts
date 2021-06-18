@@ -12,6 +12,10 @@ import { BaseSpeechVerificationScenario, baseSpeechVerificationScenario } from '
 import { BaseTextTranslationScenario, baseTextTranslationScenario } from './scenarios/TextTranslation';
 import { BaseSignLanguageVideoScenario, baseSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 import { baseMVXliterationScenario, BaseMVXliterationScenario } from './scenarios/MVXLiteration';
+import {
+  baseMVXliterationVerificationScenario,
+  BaseMVXliterationVerificationScenario,
+} from './scenarios/MVXLiterationVerification';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -19,6 +23,7 @@ export * from './scenarios/TextTranslation';
 export * from './scenarios/SpeechVerification';
 export * from './scenarios/SignLanguageVideo';
 export * from './scenarios/MVXLiteration';
+export * from './scenarios/MVXLiterationVerification';
 
 // List of scenario names
 export const scenarioNames = [
@@ -27,6 +32,7 @@ export const scenarioNames = [
   'SPEECH_VERIFICATION',
   'SIGN_LANGUAGE_VIDEO',
   'MV_XLITERATION',
+  'MV_XLITERATION_VERIFICATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -41,6 +47,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseSignLanguageVideoScenario
   : SN extends 'MV_XLITERATION'
   ? BaseMVXliterationScenario
+  : SN extends 'MV_XLITERATION_VERIFICATION'
+  ? BaseMVXliterationVerificationScenario
   : never;
 
 // Scenario name to instance map
@@ -52,6 +60,7 @@ export const scenarioMap: {
   SPEECH_VERIFICATION: baseSpeechVerificationScenario,
   SIGN_LANGUAGE_VIDEO: baseSignLanguageVideoScenario,
   MV_XLITERATION: baseMVXliterationScenario,
+  MV_XLITERATION_VERIFICATION: baseMVXliterationVerificationScenario,
 };
 
 // Utility types to extract task, microtask, assignment record types
