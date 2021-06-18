@@ -7,7 +7,7 @@ import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType, policyMap } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
-import { BasicModel, TaskOpModel } from '@karya/common';
+import { BasicModel, MicrotaskModel, TaskOpModel } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
@@ -233,6 +233,20 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
     const records = await BasicModel.getRecords('task_op', { task_id: task.id }, [
       ['op_type', ['PROCESS_INPUT', 'GENERATE_OUTPUT']],
     ]);
+    HttpResponse.OK(ctx, records);
+  } catch (e) {
+    // TODO: Conver this to an internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error');
+  }
+};
+
+/**
+ * Get all microtask info for a particular task. Add additional info about
+ * microtask assignments to the extras object.
+ */
+export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
+  try {
+    const records = await MicrotaskModel.microtasksSummary(ctx.state.task.id);
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Conver this to an internal server error
