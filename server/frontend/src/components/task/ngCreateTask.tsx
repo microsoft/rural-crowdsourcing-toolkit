@@ -163,7 +163,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   // Handle policy change
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
-    console.log(policy);
     this.setState({ policy, params: {} });
   };
 
@@ -193,7 +192,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
             <div className='scenario-card'>
               <span className='scenario-name'>{s.full_name}</span>
-              <p className='description'>Description</p>
+              <p className='description'>{s.description}</p>
             </div>
           </label>
         ))}

@@ -19,9 +19,7 @@ import AdminDashboard from './components/dashboard/AdminDashboard';
 import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard';
 
 /** task components */
-import CreateTask from './components/task/CreateTask';
 import ngCreateTask from './components/task/ngCreateTask';
-import TaskDetail from './components/task/TaskDetail';
 import ngTaskDetail from './components/task/ngTaskDetail';
 import TaskList from './components/task/TaskList';
 
@@ -49,11 +47,9 @@ const Routes = (
     <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
 
     {/** Task routes */}
-    <WorkProviderRoute exact path='/task/create' component={CreateTask} />
+    <WorkProviderRoute exact path='/task/create' component={ngCreateTask} />
     <WorkProviderRoute exact path='/task' component={TaskList} />
-    <WorkProviderRoute exact path='/task/:id' component={TaskDetail} />
-    <WorkProviderRoute exact path='/tasks/create' component={ngCreateTask} />
-    <WorkProviderRoute exact path='/tasks/:id' component={ngTaskDetail} />
+    <WorkProviderRoute exact path='/task/:id' component={ngTaskDetail} />
 
     {/** Work Provider routes */}
     <AdminRoute exact path='/work_provider' component={WorkProviderList} />

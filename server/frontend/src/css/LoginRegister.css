@@ -2,7 +2,7 @@
 
 #main-card {
   background-image: linear-gradient(180deg, #fff 0%, #e7e7e8 91%);
-  border-radius: 0.5em;
+  border-radius: 7px;
 }
 
 .card-title {
@@ -25,9 +25,24 @@
   text-align: center;
 }
 
-#register-btn {
+#register-btn-div {
+  font-family: 'Titillium Web', sans-serif;
   margin-top: 12%;
   text-align: center;
+}
+
+#register-btn {
+  background-color: #ef5350;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  font-weight: 600;
+  border-radius: 5px;
+}
+
+#register-btn:hover {
+  background-color: #f44336;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  transition: 0.5s;
 }
 
 #choose-btn {
@@ -62,8 +77,8 @@
 @media only screen and (min-width: 600px) {
   .wrapper {
     margin-right: 4%;
-    margin-top: 7%;
-    height: 18rem;
+    margin-top: 6%;
+    height: 20em;
     display: flex;
     justify-content: center;
   }
@@ -77,7 +92,7 @@
   }
 
   .vertical-line {
-    border-left: 1px solid #c8c8ce;
+    border-left: 0.1px solid rgba(200, 200, 206, 0.8);
     flex-grow: 1;
     width: 1px;
   }

@@ -338,7 +338,7 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    // Get all input files submitted for a task
+    // Get input and output files of a task
     if (action.store === 'task_op' && action.label === 'GET_ALL') {
       return {
         type: 'BR_SUCCESS',

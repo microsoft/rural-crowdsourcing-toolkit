@@ -26,6 +26,12 @@ import { AuthProps, withAuth } from '../hoc/WithAuth';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
+// Recharts library
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+// @ts-ignore
+import data from './graph.json';
+
 import '../../css/task/ngTaskDetail.css';
 
 /** Props */
@@ -41,9 +47,11 @@ type OwnProps = RouterProps;
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const task_id = ownProps.match.params.id;
   const { data, ...request } = state.all.task;
+  const records = state.all.task_op.data;
   return {
     request,
-    task: data.find((t) => t.id === task_id),
+    task: data.find(t => t.id === task_id),
+    records,
   };
 };
 
@@ -95,25 +103,29 @@ type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnect
 
 type TaskDetailState = {
   files: { [id: string]: File };
+  show_form: boolean;
 };
 
 class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   state = {
     files: {},
+    show_form: false,
   };
 
   submitInputFiles = () => {
     this.props.submitInputFiles(this.state.files);
+    this.setState({ show_form: false });
   };
 
   componentDidMount() {
+    this.props.getFiles();
     if (this.props.task === undefined) {
       this.props.getTask();
     }
   }
 
   // Handle file change
-  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = e => {
     if (e.currentTarget.files) {
       const file = e.currentTarget.files[0];
       const files = { ...this.state.files, [e.currentTarget.id]: file };
@@ -123,6 +135,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
   render() {
     const { task } = this.props;
+    const { records } = this.props;
 
     // If request in flight, show progress bar
     if (this.props.request.status === 'IN_FLIGHT') {
@@ -142,6 +155,49 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
       );
     }
 
+    let inputFilesTable = null;
+    let i = 0;
+    if (records.length !== 0) {
+      inputFilesTable = (
+        <div className='section' id='io-files'>
+          <div className='row'>
+            <h2>Input Files Submitted</h2>
+          </div>
+          <table id='input-table'>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Input File</th>
+                <th>Status</th>
+                <th>Time of Submission</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {records.map(r => (
+                <tr>
+                  <td>{++i}</td>
+                  <td>File{i}</td>
+                  <td>{r.status}</td>
+                  <td>{r.created_at}</td>
+                  {r.extras ? (
+                    <td>
+                      {
+                        // @ts-ignore
+                        <a href={r.extras.url}>
+                          <i className='material-icons left'>file_download</i>
+                        </a>
+                      }
+                    </td>
+                  ) : null}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
     const errorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
@@ -150,11 +206,15 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
     const language_name = '<Remove this>';
 
+    const microtasks = data.length;
+    const completed_assignments = data.reduce((prev, current) => prev + current.completed, 0);
+    const cost = data.reduce((prev, current) => prev + current.earned, 0);
+
     const jsonInputFile = scenario.task_input_file.json;
     const tarInputfile = scenario.task_input_file.tgz;
 
     return (
-      <div className='white z-depth-1 lpad20 bpad20' id='main'>
+      <div className='white z-depth-1 lpad20' id='main'>
         {errorElement !== null ? (
           <div className='section'>
             <div className='row'>{errorElement}</div>
@@ -179,9 +239,37 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </div>
           </div>
 
+          <div className='row'>
+            <div className='number-col'>
+              <h2>Microtasks</h2>
+              <p>{microtasks}</p>
+            </div>
+            <div className='number-col'>
+              <h2>Completed Assignments</h2>
+              <p>{completed_assignments}</p>
+            </div>
+            <div className='number-col'>
+              <h2>Total Cost</h2>
+              <p>{cost}</p>
+            </div>
+          </div>
+
+          <ResponsiveContainer width='90%' height={400}>
+            <LineChart data={data} margin={{ top: 50, right: 30, left: 20, bottom: 50 }}>
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='id' tick={false} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type='monotone' dataKey='completed' stroke='#8884d8' dot={false} />
+              <Line type='monotone' dataKey='verified' stroke='#82ca9d' dot={false} />
+              <Line type='monotone' dataKey='earned' stroke='#ffb74d' dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+
           <div className='section' id='task-details'>
-            <div className='row task-details-row'>
-              <div className='col s6'>
+            <div className='row' id='task-details-row'>
+              <div id='task-details-col'>
                 <h2>
                   Scenario: <span>{scenario_name}</span>
                 </h2>
@@ -193,8 +281,8 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 </h2>
               </div>
 
-              <div className='col s6'>
-                <h2 className='red-text'>Assignment Parameters</h2>
+              <div id='task-details-col'>
+                <h2>Assignment Parameters</h2>
                 <h3>
                   Assignment Granularity: <span>{task.assignment_granularity}</span>
                 </h3>
@@ -213,46 +301,65 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           </div>
 
           {jsonInputFile.required || tarInputfile.required ? (
-            <div className='section' id='io-files'>
-              <div className='row'>
-                <h2 className='red-text'>Input Files</h2>
-              </div>
+            <>
+              {inputFilesTable}
 
-              {jsonInputFile.required ? (
-                <div className='row'>
-                  <div className='col s4  file-field input-field'>
-                    <div className='btn btn-small'>
-                      <i className='material-icons'>attach_file</i>
-                      <input type='file' id='json' onChange={this.handleParamFileChange} />
-                    </div>
-                    <div className='file-path-wrapper'>
-                      <label htmlFor='json-name'>Task JSON File</label>
-                      <input id='json-name' type='text' className='file-path validate' />
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-              {tarInputfile.required ? (
-                <div className='row'>
-                  <div className='col s4  file-field input-field'>
-                    <div className='btn btn-small'>
-                      <i className='material-icons'>attach_file</i>
-                      <input type='file' id='tgz' onChange={this.handleParamFileChange} />
-                    </div>
-                    <div className='file-path-wrapper'>
-                      <label htmlFor='tgz-name'>Task TGZ File</label>
-                      <input id='tgz-name' type='text' className='file-path validate' />
+              <div
+                className='card'
+                id='submit-form'
+                style={{ display: this.state.show_form === true ? 'block' : 'none' }}
+              >
+                {jsonInputFile.required ? (
+                  <div className='row'>
+                    <p>Kindly upload a JSON file.</p>
+                    <p>
+                      <i>Description of file</i>
+                    </p>
+                    <div className='col s8 file-field input-field'>
+                      <div className='btn btn-small'>
+                        <i className='material-icons'>attach_file</i>
+                        <input type='file' id='json' onChange={this.handleParamFileChange} />
+                      </div>
+                      <div className='file-path-wrapper'>
+                        <label htmlFor='json-name'>Task JSON File</label>
+                        <input id='json-name' type='text' className='file-path validate' />
+                      </div>
                     </div>
                   </div>
+                ) : null}
+                {tarInputfile.required ? (
+                  <div className='row'>
+                    <div className='col s8 file-field input-field'>
+                      <div className='btn btn-small'>
+                        <i className='material-icons'>attach_file</i>
+                        <input type='file' id='tgz' onChange={this.handleParamFileChange} />
+                      </div>
+                      <div className='file-path-wrapper'>
+                        <label htmlFor='tgz-name'>Task TGZ File</label>
+                        <input id='tgz-name' type='text' className='file-path validate' />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+                <div className='row' id='btns-row'>
+                  <button className='btn red lighten-1' onClick={this.submitInputFiles}>
+                    Upload
+                    <i className='material-icons right'>upload</i>
+                  </button>
+                  <button
+                    className='btn grey lighten-2 black-text lmar20'
+                    onClick={() => this.setState({ show_form: false })}
+                  >
+                    Cancel
+                    <i className='material-icons right'>close</i>
+                  </button>
                 </div>
-              ) : null}
-              <div className='row'>
-                <button className='btn' onClick={this.submitInputFiles}>
-                  Submit Input Files
-                  <i className='material-icons right'>send</i>
-                </button>
               </div>
-            </div>
+              <button className='btn' id='submit-new-btn' onClick={() => this.setState({ show_form: true })}>
+                <i className='material-icons left'>add</i>
+                Submit New
+              </button>
+            </>
           ) : null}
         </div>
       </div>

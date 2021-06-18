@@ -19,7 +19,7 @@ import { RootState } from '../../store/Index';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Import templates */
-import { Submit, TextInput } from '../templates/FormInputs';
+import { TextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
@@ -98,13 +98,13 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
   };
 
   /** Form ...this.state, field on change handler */
-  handleFormChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  handleFormChange: ChangeEventHandler<HTMLInputElement> = e => {
     const updatedWP: ServerUser = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ wp: updatedWP });
   };
 
   /** Form submission */
-  handleFormSubmit: FormEventHandler = (e) => {
+  handleFormSubmit: FormEventHandler = e => {
     e.preventDefault();
     this.props.signUpServerUser(this.state.wp, this.state.id_token);
   };
@@ -117,6 +117,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
     const id_token = googleUser.getAuthResponse().id_token;
 
     const wp: ServerUser = {
+      access_code: this.state.wp.access_code,
       full_name: profile.getName(),
       email: profile.getEmail(),
     };
@@ -248,8 +249,12 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
                     </div>
                   )}
 
-                  <div id='register-btn'>
-                    <Submit submitString='Register!' submitColor='red' disabled={!this.state.showProfileDetails} />
+                  <div id='register-btn-div'>
+                    <div className='input-field'>
+                      <button className='btn' id='register-btn' disabled={!this.state.showProfileDetails}>
+                        Register <i className='material-icons right'>send</i>
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
