@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.transliterationVerification
 
 import androidx.lifecycle.viewModelScope
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -51,13 +52,18 @@ constructor(
     _wordTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
 
-    //TODO: Replace with real data from API response
-    val temp = ArrayList<String>()
-    val strs = arrayOf("This", "is", "a", "stream", "of", "random", "string", "testing")
-    for (i in 1..5) { temp.add(strs.random()) }
-    _transliterations.value = temp
+    val temp = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonArray
+    val list = ArrayList<String>()
+    for (variant in temp) { list.add(variant.toString()) }
+    _transliterations.value = list
 
-    userValidations = IntArray(_transliterations.value.size) { Response.NOT_ATTEMPTED.ordinal }
+    //TODO: Replace with real data from API response
+//    val temp = ArrayList<String>()
+//    val strs = arrayOf("This", "is", "a", "stream", "of", "random", "string", "testing")
+//    for (i in 1..5) { temp.add(strs.random()) }
+//    _transliterations.value = temp
+//
+//    userValidations = IntArray(_transliterations.value.size) { Response.NOT_ATTEMPTED.ordinal }
 
   }
 

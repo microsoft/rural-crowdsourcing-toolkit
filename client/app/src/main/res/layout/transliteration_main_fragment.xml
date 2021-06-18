@@ -54,6 +54,18 @@
         app:layout_constraintLeft_toLeftOf="@id/wordTv"
         tools:ignore="MissingConstraints" />
 
+    <TextView
+        android:id="@+id/errorTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
+        app:layout_constraintTop_toBottomOf="@id/textTransliteration"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/colorRed"
+        android:visibility="gone"
+        tools:text="THIS IS AN ERROR MESSAGE" />
+
     <com.nex3z.flowlayout.FlowLayout
         android:id="@+id/flowLayout"
         android:layout_width="0dp"
@@ -62,7 +74,7 @@
         app:flChildSpacing="@dimen/_8sdp"
         app:flRowSpacing="@dimen/_8sdp"
         app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
-        app:layout_constraintTop_toBottomOf="@id/textTransliteration"
+        app:layout_constraintTop_toBottomOf="@id/errorTv"
         app:layout_constraintRight_toRightOf="@id/addBtn">
 
 

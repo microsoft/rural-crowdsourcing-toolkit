@@ -14,6 +14,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 @HiltViewModel
 class TransliterationMainViewModel
@@ -32,8 +33,11 @@ constructor(
   private val _transliterations: MutableStateFlow<ArrayList<String>> = MutableStateFlow(ArrayList())
   val transliterations = _transliterations.asStateFlow()
 
+  var limit by Delegates.notNull<Int>()
+
   override fun setupMicrotask() {
     _wordTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
+    limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
   }
 
   /** Handle next button click */

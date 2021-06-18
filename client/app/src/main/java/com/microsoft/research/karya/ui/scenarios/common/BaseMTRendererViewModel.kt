@@ -50,7 +50,7 @@ constructor(
   protected lateinit var microtaskAssignmentIDs: List<String>
   protected var currentAssignmentIndex: Int = 0
 
-  protected lateinit var currentMicroTask: MicroTaskRecord
+  lateinit var currentMicroTask: MicroTaskRecord
   protected lateinit var currentAssignment: MicroTaskAssignmentRecord
 
   //  protected var totalMicrotasks = incompleteMta + completedMta
