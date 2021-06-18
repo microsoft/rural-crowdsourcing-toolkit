@@ -50,11 +50,13 @@ class WordListAdapter(
     viewHolder.wordTv.text = words[position]
 
     viewHolder.correctIb.setOnClickListener {
-      viewHolder.correctIb.setImageResource(R.drawable.ic_tick_on)
+      viewHolder.correctIb.setBackgroundResource(R.drawable.ic_tick_on)
+      viewHolder.incorrectIb.setBackgroundResource(R.drawable.ic_cross_off)
       viewModel.markCorrect(position)
     }
     viewHolder.incorrectIb.setOnClickListener {
-      viewHolder.incorrectIb.setImageResource(R.drawable.ic_tick_off)
+      viewHolder.incorrectIb.setBackgroundResource(R.drawable.ic_cross_on)
+      viewHolder.correctIb.setBackgroundResource(R.drawable.ic_tick_off)
       viewModel.markIncorrect(position)
     }
   }

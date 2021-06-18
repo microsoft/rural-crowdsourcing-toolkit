@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +53,13 @@ class TransliterationVerificationFragment : BaseMTRendererFragment(R.layout.tran
     viewModel.transliterations.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { array ->
       val adapter = WordListAdapter(array, viewModel)
       verificationRecyclerView.adapter = adapter
+    }
+
+    viewModel.error.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { error ->
+      if (error.isNotEmpty()) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+        viewModel.resetError()
+      }
     }
 
   }
