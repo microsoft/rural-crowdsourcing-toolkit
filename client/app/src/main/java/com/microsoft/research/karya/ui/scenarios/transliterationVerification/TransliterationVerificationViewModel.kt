@@ -63,7 +63,7 @@ constructor(
 //    for (i in 1..5) { temp.add(strs.random()) }
 //    _transliterations.value = temp
 //
-//    userValidations = IntArray(_transliterations.value.size) { Response.NOT_ATTEMPTED.ordinal }
+    userValidations = IntArray(_transliterations.value.size) { Response.NOT_ATTEMPTED.ordinal }
 
   }
 

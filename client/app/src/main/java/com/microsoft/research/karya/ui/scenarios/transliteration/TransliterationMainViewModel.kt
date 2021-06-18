@@ -51,7 +51,7 @@ constructor(
 
     val array = JsonArray()
     for (word in _transliterations.value) { array.add(word) }
-    outputData.add("transliterations", array)
+    outputData.add("variants", array)
 
     // Clear up the transliterations list
     _transliterations.value.clear()
