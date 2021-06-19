@@ -10,10 +10,12 @@ import { handleNewlyCompletedAssignments } from '../task-ops/policies/Index';
 
 import { BackendChainInterface, ChainedMicrotaskRecordType, ChainedMicrotaskType } from './BackendChainInterface';
 import { speechValidationChain } from './chains/SpeechValidation';
+import { xliterationValidationChain } from './chains/XliterationValidation';
 
 // Backend chain map
 export const backendChainMap: { [key in ChainName]: BackendChainInterface<any, any> } = {
   SPEECH_VALIDATION: speechValidationChain,
+  XLITERATION_VALIDATION: xliterationValidationChain,
 };
 
 /**

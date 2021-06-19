@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@id/instructionTvnone" />
 
     <EditText
-        android:id="@+id/textTranslationNone"
+        android:id="@+id/textTransliteration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"

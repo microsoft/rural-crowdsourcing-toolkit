@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.Toolbar
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.AppToolbar2Binding
-import com.microsoft.research.karya.databinding.AppToolbarBinding
 import com.microsoft.research.karya.utils.extensions.visible
 
 class KaryaToolbar : Toolbar {
@@ -15,7 +14,7 @@ class KaryaToolbar : Toolbar {
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-  private lateinit var binding:AppToolbar2Binding
+  private lateinit var binding: AppToolbar2Binding
 
   init {
     initView(context)

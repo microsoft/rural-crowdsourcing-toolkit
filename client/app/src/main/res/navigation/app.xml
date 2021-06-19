@@ -37,7 +37,8 @@
             app:popUpTo="@id/splashScreenFragment2"
             app:popUpToInclusive="true" />
     </fragment>
-    <navigation android:id="@+id/loginFlow"
+    <navigation
+        android:id="@+id/loginFlow"
         app:startDestination="@id/phoneNumberFragment2">
         <fragment
             android:id="@+id/phoneNumberFragment2"
@@ -52,24 +53,26 @@
             android:id="@+id/OTPFragment2"
             android:name="com.microsoft.research.karya.ui.onboarding.login.otp.OTPFragment"
             android:label="OTPFragment"
-            tools:layout="@layout/fragment_otp" >
+            tools:layout="@layout/fragment_otp">
             <action
                 android:id="@+id/action_OTPFragment2_to_tempDataFlow"
                 app:destination="@id/tempDataFlow" />
         </fragment>
     </navigation>
-    <navigation android:id="@+id/tempDataFlow"
+    <navigation
+        android:id="@+id/tempDataFlow"
         app:startDestination="@id/profileFragment">
         <fragment
             android:id="@+id/profileFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.profile.ProfileFragment"
-            android:label="ProfileFragment" >
+            android:label="ProfileFragment">
             <action
                 android:id="@+id/action_profileFragment_to_mandatoryDataFlow"
                 app:destination="@id/mandatoryDataFlow" />
         </fragment>
     </navigation>
-    <navigation android:id="@+id/mandatoryDataFlow"
+    <navigation
+        android:id="@+id/mandatoryDataFlow"
         app:startDestination="@id/selectGenderFragment2">
         <fragment
             android:id="@+id/selectAgeGroupFragment2"
@@ -84,7 +87,8 @@
                 app:destination="@id/selectAgeGroupFragment2" />
         </fragment>
     </navigation>
-    <navigation android:id="@+id/accessCodeFlow"
+    <navigation
+        android:id="@+id/accessCodeFlow"
         app:startDestination="@id/accessCodeFragment2">
         <fragment
             android:id="@+id/fileDownloadFragment2"
@@ -120,7 +124,23 @@
         android:id="@+id/dashboardActivity"
         android:name="com.microsoft.research.karya.ui.dashboard.DashboardFragment"
         android:label="activity_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboardActivity_to_speechDataMainFragment2"
+            app:destination="@id/speechDataMainFragment2">
+            <argument android:name="taskId" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_transliterationMainFragment"
+            app:destination="@id/transliterationMainFragment">
+            <argument android:name="taskId" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_transliterationVerificationFragment"
+            app:destination="@id/transliterationVerificationFragment">
+            <argument android:name="taskId" />
+        </action>
+    </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
         app:destination="@id/dashboardActivity"
@@ -134,4 +154,40 @@
     <action
         android:id="@+id/action_global_tempDataFlow"
         app:destination="@id/tempDataFlow" />
+    <fragment
+        android:id="@+id/speechDataMainFragment2"
+        android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"
+        android:label="SpeechDataMainFragment"
+        tools:layout="@layout/speech_data_main">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_speechDataMainFragment2_to_dashboardActivity"
+            app:destination="@id/dashboardActivity"
+            app:popUpTo="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/transliterationMainFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
+        android:label="TransliterationMainFragment"
+        tools:layout="@layout/transliteration_main_fragment">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_transliterationMainFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/transliterationVerificationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.transliterationVerification.TransliterationVerificationFragment"
+        android:label="TransliterationVerificationFragment" >
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_transliterationVerificationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
 </navigation>

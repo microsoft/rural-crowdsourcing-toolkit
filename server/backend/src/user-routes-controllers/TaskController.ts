@@ -5,9 +5,9 @@
 
 import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType } from '@karya/core';
+import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType, policyMap } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
-import { BasicModel, TaskOpModel, getBlobSASURL } from '@karya/common';
+import { BasicModel, MicrotaskModel, TaskOpModel, getBlobSASURL } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
@@ -34,8 +34,10 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
     // Validate the task parameters
     const scenario = scenarioMap[task.scenario_name!];
-    const schema = joiSchema(scenario.task_input);
-    const { value: params, error: paramsError } = schema.validate(task.params, { allowUnknown: true });
+    const policy = policyMap[task.policy!];
+
+    const schema = joiSchema(scenario.task_input.concat(policy.params));
+    const { value: params, error: paramsError } = schema.validate(task.params);
 
     if (paramsError) {
       HttpResponse.BadRequest(ctx, 'Invalid task parameters');
@@ -242,6 +244,20 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error');
+  }
+};
+
+/**
+ * Get all microtask info for a particular task. Add additional info about
+ * microtask assignments to the extras object.
+ */
+export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
+  try {
+    const records = await MicrotaskModel.microtasksSummary(ctx.state.task.id);
+    HttpResponse.OK(ctx, records);
+  } catch (e) {
+    // TODO: Conver this to an internal server error
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };

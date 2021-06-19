@@ -27,6 +27,7 @@ import com.microsoft.research.karya.data.model.karya.PayoutMethodRecord
 import com.microsoft.research.karya.data.model.karya.PolicyRecord
 import com.microsoft.research.karya.data.model.karya.ScenarioRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
+import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 
 @Database(
@@ -41,10 +42,13 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
       MicroTaskAssignmentRecord::class,
       PayoutMethodRecord::class,
       PayoutInfoRecord::class,
-      PaymentRequestRecord::class],
+      PaymentRequestRecord::class,
+    ],
   version = 1,
-  exportSchema = false
-)
+  //  autoMigrations = [
+  //    AutoMigration (from = 1, to = 2)
+  //  ]
+  )
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun microTaskDao(): MicroTaskDao

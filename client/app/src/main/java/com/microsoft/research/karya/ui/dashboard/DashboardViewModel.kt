@@ -131,9 +131,7 @@ constructor(
     // Get Assignment DB updates
     assignmentRepository
       .getNewAssignments(worker.idToken, from)
-      .catch {
-        _dashboardUiState.value = DashboardUiState.Error(it)
-      }
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
 

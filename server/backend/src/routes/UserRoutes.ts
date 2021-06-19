@@ -132,6 +132,14 @@ userRouter.post<TaskController.TaskRouteState, {}>(
   TaskController.generateOutput
 );
 
+userRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/:id/microtask_summary',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  TaskController.getMicrotasksSummary
+);
+
 /**
  * Task assignment routes. Create/update task assignments
  */
