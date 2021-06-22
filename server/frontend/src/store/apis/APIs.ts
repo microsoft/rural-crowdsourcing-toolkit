@@ -110,9 +110,15 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'task_op';
+      label: 'CREATE';
+      task_id: string;
+      request: {};
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'task_op';
       label: 'GET_ALL';
       task_id: string;
-      params: DBT.TaskOp;
     }
   | {
       type: 'BR_INIT';
@@ -126,6 +132,12 @@ export type BackendRequestInitAction =
       store: 'task_assignment';
       label: 'GET_ALL';
       params: DBT.TaskAssignment;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'microtask_assignment';
+      label: 'GET_ALL';
+      task_id: string;
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -200,6 +212,12 @@ export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
       store: 'task_op';
+      label: 'CREATE';
+      response: DBT.TaskOpRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task_op';
       label: 'GET_ALL';
       response: DBT.TaskOpRecord[];
     }
@@ -214,6 +232,12 @@ export type BackendRequestSuccessAction =
       store: 'task_assignment';
       label: 'GET_ALL';
       response: DBT.TaskAssignmentRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'microtask_assignment';
+      label: 'GET_ALL';
+      response: any;
     };
 
 export type BackendRequestFailureAction = {
@@ -338,6 +362,16 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
+    // Create output generation task op for a task
+    if (action.store === 'task_op' && action.label === 'CREATE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST(`/task/${action.task_id}/output_file`, {}),
+      } as BackendRequestSuccessAction;
+    }
+
     // Get input and output files of a task
     if (action.store === 'task_op' && action.label === 'GET_ALL') {
       return {
@@ -368,10 +402,20 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
+    // Get all microtask info for a particular task
+    if (action.store === 'microtask_assignment' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET(`/task/${action.task_id}/microtask_summary`),
+      } as BackendRequestSuccessAction;
+    }
+
     ((obj: never) => {
       throw new Error(`Unknown request type '${label}' to '${store}'`);
     })(action);
-  } catch (err: any) {
+  } catch (err) {
     const messages = handleError(err);
     return {
       type: 'BR_FAILURE',
