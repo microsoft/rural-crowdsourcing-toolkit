@@ -51,12 +51,17 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const chosenMicrotaskGroups: MicrotaskGroupRecord[] = [];
     let chosenMicrotasks: MicrotaskRecord[] = [];
 
+    // TODO: Hack
+    const batchSize = task.assignment_batch_size ?? 1000;
+
     if (task.assignment_granularity === 'GROUP') {
       // Get all assignable microtask groups
-      const assignableGroups = await policy.assignableMicrotaskGroups(worker, task, taskAssignment.params);
+      let assignableGroups = await policy.assignableMicrotaskGroups(worker, task, taskAssignment.params);
 
       // Reorder the groups based on assignment order
       reorder(assignableGroups, task.group_assignment_order);
+
+      assignableGroups = assignableGroups.slice(0, batchSize);
 
       // Identify the prefix that fits within max credits
       for (const group of assignableGroups) {
@@ -83,10 +88,12 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       });
     } else if (task.assignment_granularity === 'MICROTASK') {
       // get all assignable microtasks
-      const assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
+      let assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
 
       // reorder according to task spec
       reorder(assignableMicrotasks, task.microtask_assignment_order);
+
+      assignableMicrotasks = assignableMicrotasks.slice(0, batchSize);
 
       // Identify prefix that fits within max credits
       for (const microtask of assignableMicrotasks) {

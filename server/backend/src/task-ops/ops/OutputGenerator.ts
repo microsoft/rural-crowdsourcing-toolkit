@@ -11,8 +11,8 @@ import {
   TaskOpRecord,
   TaskRecordType,
 } from '@karya/core';
-import { BasicModel, downloadBlob, TaskOpModel } from '../../../../common/dist/Index';
-import { envGetString } from '../../../../utils/misc/dist/Index';
+import { BasicModel, downloadBlob, TaskOpModel } from '@karya/common';
+import { envGetString } from '@karya/misc-utils';
 import { backendScenarioMap } from '../../scenarios/Index';
 import { promises as fsp } from 'fs';
 import tar from 'tar';

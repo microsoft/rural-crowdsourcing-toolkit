@@ -7,7 +7,7 @@ import { baseMVXliterationScenario, BaseMVXliterationScenario, MicrotaskRecordTy
 import { IBackendScenarioInterface } from '../ScenarioInterface';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
-import { BasicModel } from '../../../../common/dist/Index';
+import { BasicModel } from '@karya/common';
 
 // Multi-variant transliteration scenario
 export const backendMVXliterationScenario: IBackendScenarioInterface<BaseMVXliterationScenario> = {
