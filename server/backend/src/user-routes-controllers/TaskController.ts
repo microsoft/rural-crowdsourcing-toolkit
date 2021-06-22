@@ -237,10 +237,9 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
     const files = await BasicModel.getRecords('karya_file', {}, [['id', records.map((r) => r.file_id)]]);
     for (let i = 0; i < records.length; i++) {
       // @ts-ignore
-      records[i].extras = { url: getBlobSASURL(files[i].url, 'r') };
+      records[i].extras = files[i] ? { url: getBlobSASURL(files[i].url, 'r') } : null;
       records[i].created_at = records[i].created_at.toLocaleString();
     }
-    console.log(records);
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error
@@ -257,7 +256,7 @@ export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
     const records = await MicrotaskModel.microtasksSummary(ctx.state.task.id);
     HttpResponse.OK(ctx, records);
   } catch (e) {
-    // TODO: Conver this to an internal server error
+    // TODO: Convert this to an internal server error
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };
