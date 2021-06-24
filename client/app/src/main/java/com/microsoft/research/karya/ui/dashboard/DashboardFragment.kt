@@ -134,7 +134,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         findNavController().navigate(action)
       }
       "MV_XLITERATION" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToTransliterationMainFragment(task.taskID)
+        val action = DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
         findNavController().navigate(action)
       }
       "MV_XLITERATION_VERIFICATION" -> {
