@@ -94,7 +94,7 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
       return
     }
     errorTv.gone()
-    flowLayout.removeAllViews()
+    userVariantLayout.removeAllViews()
     viewModel.handleNextClick()
   }
 
@@ -103,13 +103,13 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
 
     viewModel.transliterations.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { array ->
 
-      flowLayout.removeAllViews()
+      userVariantLayout.removeAllViews()
 
       for (word in array) {
         val view = layoutInflater.inflate(R.layout.item_float_word, null)
         view.word.text = word
         view.removeImageView.setOnClickListener { viewModel.removeWord(word) }
-        flowLayout.addView(view)
+        userVariantLayout.addView(view)
       }
       // Clear the edittext
       textTransliteration.setText("")

@@ -36,6 +36,8 @@
         android:id="@+id/textTransliteration"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:inputType="textFilter"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:paddingHorizontal="@dimen/_10sdp"
@@ -67,7 +69,7 @@
         tools:text="THIS IS AN ERROR MESSAGE" />
 
     <com.nex3z.flowlayout.FlowLayout
-        android:id="@+id/flowLayout"
+        android:id="@+id/userVariantLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
@@ -75,10 +77,18 @@
         app:flRowSpacing="@dimen/_8sdp"
         app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
         app:layout_constraintTop_toBottomOf="@id/errorTv"
-        app:layout_constraintRight_toRightOf="@id/addBtn">
+        app:layout_constraintRight_toRightOf="@id/addBtn" />
 
-
-    </com.nex3z.flowlayout.FlowLayout>
+    <com.nex3z.flowlayout.FlowLayout
+        android:id="@+id/verifyFlowLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        app:flChildSpacing="@dimen/_8sdp"
+        app:flRowSpacing="@dimen/_8sdp"
+        app:layout_constraintLeft_toLeftOf="@id/userVariantLayout"
+        app:layout_constraintTop_toBottomOf="@id/userVariantLayout"
+        app:layout_constraintRight_toRightOf="@id/userVariantLayout" />
 
 
     <ImageButton

@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/_1sdp"
     app:cardCornerRadius="@dimen/_16sdp"
-    android:padding="8dp"
     android:backgroundTint="@color/light_green">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,14 +14,13 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-
-        android:layout_marginVertical="@dimen/_8sdp">
+>
 
         <TextView
             android:id="@+id/word"
             android:layout_weight="3"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/_16ssp"
             android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -33,8 +32,8 @@
         <ImageView
             android:id="@+id/removeImageView"
             android:layout_marginLeft="@dimen/_4sdp"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
             app:layout_constraintTop_toTopOf="@id/word"
             app:layout_constraintBottom_toBottomOf="@id/word"
             app:layout_constraintLeft_toRightOf="@id/word"

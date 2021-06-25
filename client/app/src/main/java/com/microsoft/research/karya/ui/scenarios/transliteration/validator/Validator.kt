@@ -4,7 +4,7 @@ class Validator {
   companion object {
 
     fun isValid(word: String): Boolean {
-      if (word.startsWith("aa")) { return false }
+      if (word.startsWith("xyz")) { return false }
       return true
     }
 

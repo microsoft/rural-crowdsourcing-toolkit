@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.core.view.size
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
@@ -74,7 +75,7 @@ class UniversalTransliterationMainFragment :
 
     val outputVariants = viewModel.outputVariants.value!!
     if (outputVariants.values.count { wordDetail ->
-        wordDetail.verificationStatus == WordVerificationStatus.UNKNOWN
+        wordDetail.verificationStatus == WordVerificationStatus.NEW
       } == viewModel.limit) {
       showError("Only upto ${viewModel.limit} words are allowed.")
       return
@@ -104,7 +105,7 @@ class UniversalTransliterationMainFragment :
       return
     }
     errorTv.gone()
-    flowLayout.removeAllViews()
+    userVariantLayout.removeAllViews()
     viewModel.handleNextClick()
   }
 
@@ -116,7 +117,8 @@ class UniversalTransliterationMainFragment :
 
     viewModel.outputVariants.observe(viewLifecycleOwner) { variants ->
 
-      flowLayout.removeAllViews()
+      userVariantLayout.removeAllViews()
+      verifyFlowLayout.removeAllViews()
 
       for (word in variants.keys.reversed()) {
         val view = layoutInflater.inflate(R.layout.item_float_word, null)
@@ -144,8 +146,11 @@ class UniversalTransliterationMainFragment :
 
         }
 
-        flowLayout.addView(view)
-
+        if (variants[word]!!.verificationStatus == WordVerificationStatus.NEW) {
+          userVariantLayout.addView(view)
+        } else {
+          verifyFlowLayout.addView(view)
+        }
 
       }
       // Clear the edittext

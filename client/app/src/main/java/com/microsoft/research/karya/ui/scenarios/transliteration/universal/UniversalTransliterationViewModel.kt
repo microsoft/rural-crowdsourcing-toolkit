@@ -94,10 +94,23 @@ constructor(
     log(message)
 
     val variants = JsonObject()
+
+    for (word in _outputVariants.value!!.keys.reversed()) {
+      val wordObject = JsonObject()
+      val wordDetail = _outputVariants.value!![word]!!
+      wordObject.addProperty("origin", wordDetail.origin.name)
+      if (wordDetail.verificationStatus == NEW){
+        wordObject.addProperty("status", UNKNOWN.name)
+      }
+      variants.add(word, wordObject)
+    }
+
     for ((word, wordDetail) in _outputVariants.value!!) {
       val wordObject = JsonObject()
       wordObject.addProperty("origin", wordDetail.origin.name)
-      wordObject.addProperty("status", wordDetail.verificationStatus.name)
+      if (wordDetail.verificationStatus != NEW){
+        wordObject.addProperty("status", wordDetail.verificationStatus.name)
+      }
       variants.add(word, wordObject)
     }
 
