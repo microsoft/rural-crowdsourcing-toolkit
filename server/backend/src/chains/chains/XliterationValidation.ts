@@ -6,7 +6,7 @@
 import { baseXliterationValidationChain, MicrotaskType } from '@karya/core';
 import { BackendChainInterface } from '../BackendChainInterface';
 
-export const xliterationValidationChain: BackendChainInterface<'MV_XLITERATION', 'MV_XLITERATION_VERIFICATION'> = {
+export const xliterationValidationChain: BackendChainInterface<'XLITERATION_DATA', 'XLITERATION_DATA'> = {
   ...baseXliterationValidationChain,
 
   /**
@@ -16,16 +16,20 @@ export const xliterationValidationChain: BackendChainInterface<'MV_XLITERATION',
   async handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks) {
     const chainedMicrotasks = assignments.map((assignment, i) => {
       const microtask = microtasks[i];
-      const chainedMicrotask: MicrotaskType<'MV_XLITERATION_VERIFICATION'> = {
+      const chainedMicrotask: MicrotaskType<'XLITERATION_DATA'> = {
         task_id: toTask.id,
         input: {
           data: {
             word: microtask.input.data.word,
-            variants: assignment.output!.data.variants,
+            limit: microtask.input.data.limit,
+            variants: {
+              ...microtask.input.data.variants,
+              ...assignment.output!.data.variants,
+            },
           },
         },
         deadline: toTask.deadline,
-        credits: toTask.params.creditsPerVerification,
+        credits: toTask.params.creditsPerValidation,
         status: 'INCOMPLETE',
       };
       return chainedMicrotask;
@@ -38,15 +42,17 @@ export const xliterationValidationChain: BackendChainInterface<'MV_XLITERATION',
    * verification updates for the corresponding assignments
    */
   async handleCompletedToMicrotasks(fromTask, toTask, microtasks, assignments) {
-    const verificatioUpdates = microtasks.map((microtask, i) => {
+    const verificationUpdates = microtasks.map((microtask, i) => {
       const assignment = assignments[i];
-      const validations = microtask.output!.data.validations;
-      const sum = validations.map((v) => (v ? 1 : (0 as number))).reduce((a, b) => a + b, 0);
+      const variants = microtask.output!.data.variants;
+      const sum = Object.values(variants)
+        .map((v) => (v.status == 'VALID' ? 1 : (0 as number)))
+        .reduce((a, b) => a + b, 0);
       const credits = sum * fromTask.params.creditsPerVariant;
-      assignment.report = { validations };
+      assignment.report = { variants };
       assignment.credits = credits;
       return assignment;
     });
-    return verificatioUpdates;
+    return verificationUpdates;
   },
 };
