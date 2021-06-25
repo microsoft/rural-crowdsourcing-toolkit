@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.scenarios.transliteration.universal
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.content.ContextCompat
-import androidx.core.view.size
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
@@ -52,7 +52,13 @@ class UniversalTransliterationMainFragment :
 
     setupObservers()
 
-    textTransliteration.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS)
+    textTransliteration.inputType =
+      InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+    textTransliteration.filters = arrayOf(
+      InputFilter { source, start, end, dest, dstart, dend ->
+        return@InputFilter source.replace(Regex("[^a-zA-Z ]*"), "")
+      }
+    )
 
     /** record instruction */
     val recordInstruction =

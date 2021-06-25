@@ -238,4 +238,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
+    <string name="alphanumericString">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 </resources>
