@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/_1sdp"
     app:cardCornerRadius="@dimen/_16sdp"
+    app:cardElevation="@dimen/_0sdp"
     android:backgroundTint="@color/light_green">
 
     <androidx.constraintlayout.widget.ConstraintLayout
