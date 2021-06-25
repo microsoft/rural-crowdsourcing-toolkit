@@ -109,6 +109,28 @@ class UniversalTransliterationMainFragment :
     if (viewModel.outputVariants.value!!.size == 0) {
       showError("Please enter atleast one word")
       return
+    } else if (viewModel.allowValidation) {
+      var atleastOneValidNew = false
+      var noUnknowns = true
+      for ((word, wordDetail) in viewModel.outputVariants.value!!) {
+        when (wordDetail.verificationStatus) {
+          WordVerificationStatus.UNKNOWN -> {
+            noUnknowns = false
+            break
+          }
+          WordVerificationStatus.NEW, WordVerificationStatus.VALID -> {
+            atleastOneValidNew = true
+          }
+        }
+      }
+      if (!noUnknowns) {
+        showError("Please validate all variants")
+        return
+      }
+      if (!atleastOneValidNew) {
+        showError("Please enter at least one valid or new variant")
+        return
+      }
     }
     errorTv.gone()
     userVariantLayout.removeAllViews()

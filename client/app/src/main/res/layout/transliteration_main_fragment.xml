@@ -24,13 +24,29 @@
 
     <TextView
         android:id="@+id/wordTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/TextTvStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:paddingVertical="@dimen/_10sdp"
-        tools:text="HOWDY"
+        android:layout_marginEnd="@dimen/_8sdp"
         android:textSize="@dimen/_24ssp"
-        app:layout_constraintTop_toBottomOf="@id/instructionTvnone" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/nextBtn"
+        app:layout_constraintTop_toBottomOf="@id/instructionTvnone"
+        tools:text="HOWDY" />
+
+    <ImageButton
+        android:id="@+id/nextBtn"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_8sdp"
+        android:background="@drawable/ic_next_enabled"
+        app:layout_constraintBottom_toBottomOf="@id/wordTv"
+        app:layout_constraintTop_toTopOf="@id/wordTv"
+        app:layout_constraintRight_toRightOf="parent"
+        android:contentDescription="@string/back"
+        android:soundEffectsEnabled="false" />
+
 
     <EditText
         android:id="@+id/textTransliteration"
@@ -103,17 +119,6 @@
         app:layout_constraintBottom_toBottomOf="@id/textTransliteration"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageButton
-        android:id="@+id/nextBtn"
-        android:layout_width="@dimen/_55sdp"
-        android:layout_height="@dimen/_55sdp"
-        android:layout_margin="@dimen/_8sdp"
-        android:background="@drawable/ic_next_enabled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:contentDescription="@string/back"
-        android:soundEffectsEnabled="false" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

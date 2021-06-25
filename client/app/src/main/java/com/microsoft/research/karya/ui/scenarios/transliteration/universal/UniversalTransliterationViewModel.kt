@@ -33,11 +33,11 @@ constructor(
   authManager: AuthManager,
 ) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
 
-  enum class WordOrigin{
+  enum class WordOrigin {
     HUMAN, MACHINE
   }
 
-  enum class WordVerificationStatus{
+  enum class WordVerificationStatus {
     UNKNOWN, NEW, VALID, INVALID
   }
 
@@ -48,6 +48,7 @@ constructor(
 
   private val _wordTvText: MutableStateFlow<String> = MutableStateFlow("")
   val wordTvText = _wordTvText.asStateFlow()
+  var allowValidation = false
 
   private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> = MutableLiveData(mutableMapOf())
   val outputVariants: LiveData<MutableMap<String, WordDetail>> = _outputVariants
@@ -55,32 +56,33 @@ constructor(
   var limit by Delegates.notNull<Int>()
 
   override fun setupMicrotask() {
+    allowValidation = task.params.asJsonObject.get("allowValidation").asBoolean
     _wordTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
-//    val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
-//    val temp = mutableMapOf<String, WordDetail>()
+    val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
+    val temp = mutableMapOf<String, WordDetail>()
 
-//    for (word in variantsJsonObject.keySet()) {
-//      val detail = variantsJsonObject.getAsJsonObject(word)
-//      val wordDetail = WordDetail(
-//        WordOrigin.valueOf(
-//          detail.get("origin").asString
-//        ),
-//        WordVerificationStatus.valueOf(
-//          detail.get("status").asString
-//        )
-//      )
-//      temp[word] = wordDetail
-//    }
+    for (word in variantsJsonObject.keySet()) {
+      val detail = variantsJsonObject.getAsJsonObject(word)
+      val wordDetail = WordDetail(
+        WordOrigin.valueOf(
+          detail.get("origin").asString
+        ),
+        WordVerificationStatus.valueOf(
+          detail.get("status").asString
+        )
+      )
+      temp[word] = wordDetail
+    }
 
     // TODO: Add Code to parse other data paramaters
 
     // TODO: Move to Gson
     // Code to add dummy api response[Word_Detail]. TODO: Remove once we take data from the API
-    val temp = mutableMapOf<String, WordDetail>()
-    val strs = arrayOf("This", "iss", "afs", "flsl", "ofsf", "alb", "bla", "bla")
-    val origin = arrayOf(HUMAN, MACHINE)
-    for (i in 1..5) { temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN)) }
+//    val temp = mutableMapOf<String, WordDetail>()
+//    val strs = arrayOf("This", "iss", "afs", "flsl", "ofsf", "alb", "bla", "bla")
+//    val origin = arrayOf(HUMAN, MACHINE)
+//    for (i in 1..5) { temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN)) }
     _outputVariants.value = temp
   }
 
@@ -95,24 +97,25 @@ constructor(
 
     val variants = JsonObject()
 
-    for (word in _outputVariants.value!!.keys.reversed()) {
-      val wordObject = JsonObject()
-      val wordDetail = _outputVariants.value!![word]!!
-      wordObject.addProperty("origin", wordDetail.origin.name)
-      if (wordDetail.verificationStatus == NEW){
-        wordObject.addProperty("status", UNKNOWN.name)
-      }
-      variants.add(word, wordObject)
-    }
-
     for ((word, wordDetail) in _outputVariants.value!!) {
       val wordObject = JsonObject()
       wordObject.addProperty("origin", wordDetail.origin.name)
-      if (wordDetail.verificationStatus != NEW){
+      if (wordDetail.verificationStatus == NEW) {
+        wordObject.addProperty("status", UNKNOWN.name)
+      } else {
         wordObject.addProperty("status", wordDetail.verificationStatus.name)
       }
       variants.add(word, wordObject)
     }
+
+//    for ((word, wordDetail) in _outputVariants.value!!) {
+//      val wordObject = JsonObject()
+//      wordObject.addProperty("origin", wordDetail.origin.name)
+//      if (wordDetail.verificationStatus != NEW){
+//        wordObject.addProperty("status", wordDetail.verificationStatus.name)
+//      }
+//      variants.add(word, wordObject)
+//    }
 
     outputData.add("variants", variants)
 
