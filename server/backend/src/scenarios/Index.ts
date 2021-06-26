@@ -12,8 +12,6 @@ import { backendSpeechDataScenario } from './scenarios/SpeechData';
 import { backendTextTranslationScenario } from './scenarios/TextTranslation';
 import { backendSpeechVerificationScenario } from './scenarios/SpeechVerification';
 import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
-import { backendMVXliterationScenario } from './scenarios/MVXliteration';
-import { backendMVXliterationVerificationScenario } from './scenarios/MVXliterationVerification';
 import { backendXliterationDataScenario } from './scenarios/XliterationData';
 
 // Local scenario Map
@@ -24,7 +22,5 @@ export const backendScenarioMap: {
   TEXT_TRANSLATION: backendTextTranslationScenario,
   SPEECH_VERIFICATION: backendSpeechVerificationScenario,
   SIGN_LANGUAGE_VIDEO: backendSignLanguageVideoScenario,
-  MV_XLITERATION: backendMVXliterationScenario,
-  MV_XLITERATION_VERIFICATION: backendMVXliterationVerificationScenario,
   XLITERATION_DATA: backendXliterationDataScenario,
 };

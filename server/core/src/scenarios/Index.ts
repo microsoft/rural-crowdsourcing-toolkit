@@ -11,11 +11,6 @@ import { BaseSpeechDataScenario, baseSpeechDataScenario } from './scenarios/Spee
 import { BaseSpeechVerificationScenario, baseSpeechVerificationScenario } from './scenarios/SpeechVerification';
 import { BaseTextTranslationScenario, baseTextTranslationScenario } from './scenarios/TextTranslation';
 import { BaseSignLanguageVideoScenario, baseSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
-import { baseMVXliterationScenario, BaseMVXliterationScenario } from './scenarios/MVXLiteration';
-import {
-  baseMVXliterationVerificationScenario,
-  BaseMVXliterationVerificationScenario,
-} from './scenarios/MVXLiterationVerification';
 import { baseXliterationDataScenario, BaseXliterationDataScenario } from './scenarios/XliterationData';
 
 export * from './ScenarioInterface';
@@ -23,8 +18,6 @@ export * from './scenarios/SpeechData';
 export * from './scenarios/TextTranslation';
 export * from './scenarios/SpeechVerification';
 export * from './scenarios/SignLanguageVideo';
-export * from './scenarios/MVXLiteration';
-export * from './scenarios/MVXLiterationVerification';
 export * from './scenarios/XliterationData';
 
 // List of scenario names
@@ -34,8 +27,6 @@ export const scenarioNames = [
   'SPEECH_VERIFICATION',
   'SIGN_LANGUAGE_VIDEO',
   'XLITERATION_DATA',
-  'MV_XLITERATION',
-  'MV_XLITERATION_VERIFICATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -48,10 +39,6 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseSpeechVerificationScenario
   : SN extends 'SIGN_LANGUAGE_VIDEO'
   ? BaseSignLanguageVideoScenario
-  : SN extends 'MV_XLITERATION'
-  ? BaseMVXliterationScenario
-  : SN extends 'MV_XLITERATION_VERIFICATION'
-  ? BaseMVXliterationVerificationScenario
   : SN extends 'XLITERATION_DATA'
   ? BaseXliterationDataScenario
   : never;
@@ -64,8 +51,6 @@ export const scenarioMap: {
   TEXT_TRANSLATION: baseTextTranslationScenario,
   SPEECH_VERIFICATION: baseSpeechVerificationScenario,
   SIGN_LANGUAGE_VIDEO: baseSignLanguageVideoScenario,
-  MV_XLITERATION: baseMVXliterationScenario,
-  MV_XLITERATION_VERIFICATION: baseMVXliterationVerificationScenario,
   XLITERATION_DATA: baseXliterationDataScenario,
 };
 
