@@ -246,7 +246,7 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
  */
 export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
   try {
-    const records = await MicrotaskModel.microtasksSummary(ctx.state.task.id);
+    const records = await MicrotaskModel.microtasksWithAssignmentSummary(ctx.state.task.id);
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Conver this to an internal server error

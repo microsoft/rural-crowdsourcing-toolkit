@@ -99,11 +99,11 @@ export async function matchingResponseCount(microtask_id: string): Promise<numbe
 /**
  * Get all microtask info for a task. Include summary of assignments
  */
-export async function getMicrotasksWithAssignmentSummary(task_id: string): Promise<any[]> {
+export async function microtasksWithAssignmentSummary(task_id: string): Promise<any[]> {
   const response = await knex.raw(`
   SELECT
     mt.*,
-    (mta.assigned + mta.completed + mta.verified) as total,
+    (mta.assigned + mta.completed + mta.verified) as assigned,
     (mta.completed + mta.verified) as completed,
     (mta.verified) as verified,
     (mta.cost) as cost
