@@ -1,28 +1,29 @@
 #all-content {
   background-color: #fff;
-  margin-left: 2%;
-  padding-left: 2%;
   padding-top: 3%;
 }
 
 #task-title {
-  font-size: 28px;
-  letter-spacing: 2px;
   padding-left: 2%;
   padding-bottom: 2%;
   margin-top: 2%;
-  font-family: 'Segoe UI', sans-serif;
-  font-weight: 300;
-  box-shadow: rgba(27, 31, 35, 0.08) 0px 1px 0px, rgba(255, 255, 255, 0.3) 0px 1px 0px inset;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.45em;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #6e768d;
+  border-bottom: 2px solid #ebedec;
 }
 
-#description {
+#desc {
   margin-left: 5%;
-  font-size: 18px;
-  font-weight: 300;
-  font-family: 'Segoe UI', sans-serif;
-  letter-spacing: 1px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   margin-bottom: 4%;
+  margin-top: 4%;
+  color: #717787;
 }
 
 .number-col {

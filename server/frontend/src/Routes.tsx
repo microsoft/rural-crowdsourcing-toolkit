@@ -9,9 +9,7 @@ import { AdminRoute, WorkProviderRoute } from './components/auth/ProtectedRoutes
 
 /** Auth components */
 import LoginRegister from './components/auth/LoginRegister';
-import SignIn from './components/auth/SignIn';
 import SignOut from './components/auth/SignOut';
-import SignUp from './components/auth/SignUp';
 import Unauthorized from './components/auth/Unauthorized';
 
 /** Dashboard components */
@@ -36,8 +34,6 @@ import TaskAssignmentList from './components/task_assignment/TaskAssignmentList'
 const Routes = (
   <Switch>
     {/** Auth routes */}
-    <Route exact path='/signup' component={SignUp} />
-    <Route exact path='/signin' component={SignIn} />
     <Route exact path='/signout' component={SignOut} />
     <Route exact path='/unauthorized' component={Unauthorized} />
     <Route exact path='/login' component={LoginRegister} />

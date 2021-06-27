@@ -299,7 +299,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           <div className='row'>
             <div className='col s12'>
               <h1 id='task-title'>{`${task.name} (${task.display_name})`}</h1>
-              <h2 id='description'>{task.description}</h2>
+              <h2 id='desc'>{task.description}</h2>
             </div>
           </div>
 

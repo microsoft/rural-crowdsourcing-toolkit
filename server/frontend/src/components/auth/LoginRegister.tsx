@@ -153,7 +153,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
     const { auth } = this.props;
     const locationState = this.props.location.state;
 
-    const { from } = locationState || { from: { pathname: '/wp-dashboard' } };
+    const { from } = locationState || { from: { pathname: '/task' } };
 
     /** If logged in, redirect to original location or the dashboard */
     if (auth.cwp !== null && auth.status === 'SUCCESS') {
@@ -227,7 +227,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
 
                   {this.state.showProfileDetails && (
                     <div className='row'>
-                      <div className='profile-details col s8 offset-s1'>
+                      <div className='profile-details col s10 offset-s1 l8 offset-l1'>
                         <input
                           type='text'
                           id='full_name'

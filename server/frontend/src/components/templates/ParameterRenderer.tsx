@@ -17,7 +17,7 @@ type ParameterSectionProps = {
 export const ParameterSection = (props: ParameterSectionProps) => {
   return (
     <div>
-      {props.params.map((param) => {
+      {props.params.map(param => {
         switch (param.type) {
           case 'string':
           case 'int':
@@ -27,7 +27,7 @@ export const ParameterSection = (props: ParameterSectionProps) => {
                 <ColTextInput
                   id={param.id}
                   label={param.label}
-                  width='s4'
+                  width='s10 m8 l5'
                   onChange={props.onChange}
                   required={param.required}
                 />
@@ -35,28 +35,32 @@ export const ParameterSection = (props: ParameterSectionProps) => {
             );
           case 'boolean':
             return (
-              <div className='col s4 input-field'>
-                <label>
-                  <input type='checkbox' id={param.id} onChange={props.onBooleanChange} />
-                  <span>{param.label}</span>
-                </label>
+              <div className='row' key={param.id}>
+                <div className='col s10 m8 l5 input-field'>
+                  <label>
+                    <input type='checkbox' id={param.id} onChange={props.onBooleanChange} />
+                    <span>{param.label}</span>
+                  </label>
+                </div>
               </div>
             );
           case 'enum':
             return (
-              <div className='col s4 input-field'>
-                <select id={param.id} onChange={props.onChange}>
-                  <option value='null' disabled={true} selected={true}>
-                    {param.label}
-                  </option>
-                  {param.list.map(([value, label]) => {
-                    return (
-                      <option value={value} key={value}>
-                        {label}
-                      </option>
-                    );
-                  })}
-                </select>
+              <div className='row' key={param.id}>
+                <div className='col s10 m8 l5 input-field'>
+                  <select id={param.id} onChange={props.onChange}>
+                    <option value='null' disabled={true} selected={true}>
+                      {param.label}
+                    </option>
+                    {param.list.map(([value, label]) => {
+                      return (
+                        <option value={value} key={value}>
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
               </div>
             );
           default:
