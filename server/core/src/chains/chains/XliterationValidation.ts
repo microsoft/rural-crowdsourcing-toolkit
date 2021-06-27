@@ -5,10 +5,10 @@
 
 import { BaseChainInterface } from '../BaseChainInterface';
 
-export const baseXliterationValidationChain: BaseChainInterface<'MV_XLITERATION', 'MV_XLITERATION_VERIFICATION'> = {
+export const baseXliterationValidationChain: BaseChainInterface<'XLITERATION_DATA', 'XLITERATION_DATA'> = {
   name: 'XLITERATION_VALIDATION',
-  fromScenario: 'MV_XLITERATION',
-  toScenario: 'MV_XLITERATION_VERIFICATION',
+  fromScenario: 'XLITERATION_DATA',
+  toScenario: 'XLITERATION_DATA',
   blocking: 'EITHER',
   delay: 'EITHER',
   grouping: 'EITHER',
