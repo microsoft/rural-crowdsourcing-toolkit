@@ -29,8 +29,8 @@
 .number-col {
   display: inline-block;
   width: 30%;
-  border-right: 2px solid rgba(200, 200, 206, 0.15);
-  color: rgba(27, 27, 27, 0.8);
+  border-right: 2px solid rgba(235, 237, 236, 0.4);
+  color: #717787;
 }
 
 .number-col:last-of-type {

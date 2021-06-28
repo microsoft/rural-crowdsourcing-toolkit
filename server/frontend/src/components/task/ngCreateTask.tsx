@@ -431,9 +431,9 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
         <nav id='breadcrumbs-nav'>
           <div className='nav-wrapper' id='nav-wrapper'>
             <div className='col s12'>
-              <a href='#!' className='breadcrumb'>
+              <Link to='/task' className='breadcrumb'>
                 Tasks
-              </a>
+              </Link>
               <p className='breadcrumb'>Create Task</p>
             </div>
           </div>

@@ -7,7 +7,7 @@
 
 // React stuff
 import React, { ChangeEventHandler } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -270,9 +270,11 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
     const microtasks = graph_data.length;
     // @ts-ignore
-    const completed_assignments = graph_data.reduce((prev, current) => prev + current.completed, 0);
+    const completed_assignments = graph_data.reduce((prev, current) => prev + current.extras.completed, 0);
     // @ts-ignore
     const cost = graph_data.reduce((prev, current) => prev + current.cost, 0);
+    // @ts-ignore
+    const data = graph_data.map(m => ({ ...m.extras, cost: m.cost, id: m.id }));
 
     const jsonInputFile = scenario.task_input_file.json;
     const tarInputfile = scenario.task_input_file.tgz;
@@ -287,9 +289,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
         <nav id='breadcrumbs-nav'>
           <div className='nav-wrapper' id='nav-wrapper'>
             <div className='col s12'>
-              <a href='#!' className='breadcrumb'>
+              <Link to='/task' className='breadcrumb'>
                 Tasks
-              </a>
+              </Link>
               <p className='breadcrumb'>{task.name}</p>
             </div>
           </div>
@@ -320,15 +322,16 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
           {graph_data.length !== 0 ? (
             <ResponsiveContainer width='90%' height={400}>
-              <LineChart data={graph_data} margin={{ top: 50, right: 30, left: 20, bottom: 5 }}>
+              <LineChart data={data} margin={{ top: 50, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray='3 3' />
                 <XAxis dataKey='id' tick={false} label='MICROTASK ID' />
                 <YAxis />
                 <Tooltip />
                 <Legend verticalAlign='top' />
+                <Line type='monotone' dataKey='total' stroke='#f8bbd0' dot={false} />
                 <Line type='monotone' dataKey='completed' stroke='#8884d8' dot={false} />
                 <Line type='monotone' dataKey='verified' stroke='#82ca9d' dot={false} />
-                <Line type='monotone' dataKey='earned' stroke='#ffb74d' dot={false} />
+                <Line type='monotone' dataKey='cost' stroke='#80deea' dot={false} />
               </LineChart>
             </ResponsiveContainer>
           ) : null}
