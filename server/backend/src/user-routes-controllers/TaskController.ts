@@ -154,7 +154,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
   const localFolder = envGetString('LOCAL_FOLDER');
   const folderPath = `${process.cwd()}/${localFolder}/task-input/${uniqueName}`;
   const jsonFilePath = json.required ? `${folderPath}/${uniqueName}.json` : undefined;
-  const tgzFilePath = json.required ? `${folderPath}/${uniqueName}.tgz` : undefined;
+  const tgzFilePath = tgz.required ? `${folderPath}/${uniqueName}.tgz` : undefined;
 
   try {
     await fsp.mkdir(folderPath);
