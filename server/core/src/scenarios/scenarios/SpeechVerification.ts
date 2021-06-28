@@ -10,8 +10,6 @@ import { LanguageCode, languageParameter } from '../../languages/Index';
 // Speech verification task input parameters
 type SpeechVerificationTaskInputParameters = {
   language: LanguageCode;
-  instruction: string;
-  creditsPerVerification: number;
 };
 
 // Speech verification microtask input format
@@ -39,22 +37,6 @@ export type BaseSpeechVerificationScenario = BaseScenarioInterface<
 // Speech verification task inputs
 const task_input: BaseSpeechVerificationScenario['task_input'] = [
   languageParameter('language', 'Language', 'Language of the recordings and transcript'),
-
-  {
-    id: 'instruction',
-    type: 'string',
-    label: 'Verification Instruction',
-    description: 'Verification instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'creditsPerVerification',
-    type: 'float',
-    label: 'Credits for Each Verification',
-    description: 'Number of credits to be given to the user for each correct verification',
-    required: true,
-  },
 ];
 
 // Task input file format for speech verification

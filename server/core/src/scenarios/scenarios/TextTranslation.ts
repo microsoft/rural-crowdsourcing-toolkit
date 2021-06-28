@@ -11,8 +11,6 @@ import { LanguageCode, languageParameter } from '../../languages/Index';
 type TextTranslationTaskInputParameters = {
   sourceLanguage: LanguageCode;
   targetLanguage: LanguageCode;
-  instruction: string;
-  creditsPerTranslation: number;
   mode: string;
 };
 
@@ -40,14 +38,6 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
   languageParameter('targetLanguage', 'Target Language', 'Language to which sentences must be ranslated'),
 
   {
-    id: 'instruction',
-    type: 'string',
-    label: 'Translation Instruction',
-    description: 'Translation instruction to be shown to the user in the client app',
-    required: true,
-  },
-
-  {
     id: 'mode',
     type: 'enum',
     label: 'AI support (none | bow | dd1 | dd2)',
@@ -59,14 +49,6 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
       ['dd1', 'Dropdown suggestions (one word at a time)'],
       ['dd2', 'Dropdown suggestions (two words at a time)'],
     ],
-    required: true,
-  },
-
-  {
-    id: 'creditsPerTranslation',
-    type: 'float',
-    label: 'Credits for Each Translation',
-    description: 'Number of credits to be given to the user for each correctly translated sentence',
     required: true,
   },
 ];

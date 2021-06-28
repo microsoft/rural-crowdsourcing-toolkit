@@ -54,6 +54,12 @@ export const scenarioMap: {
   XLITERATION_DATA: baseXliterationDataScenario,
 };
 
+// Core scenario parameters
+type CoreScenarioParamsType = {
+  instruction: string;
+  creditsPerMicrotask: number;
+};
+
 // Utility types to extract task, microtask, assignment record types
 export type TaskRecordType<
   SN extends ScenarioName = ScenarioName,
@@ -66,7 +72,7 @@ export type TaskRecordType<
   infer _OutputDataType,
   infer _OutputFilesType
 >
-  ? TaskRecord<TaskParamsType & PolicyParamsType<PN>>
+  ? TaskRecord<CoreScenarioParamsType & TaskParamsType & PolicyParamsType<PN>>
   : never;
 
 export type TaskType<SN extends ScenarioName = ScenarioName> = Partial<TaskRecordType<SN>>;

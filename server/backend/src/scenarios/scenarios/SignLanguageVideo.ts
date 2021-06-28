@@ -34,7 +34,7 @@ async function processInputFile(
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,
-      credits: task.params.creditsPerRecording,
+      credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
     };
     return mt;

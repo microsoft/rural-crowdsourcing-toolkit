@@ -55,14 +55,6 @@ const task_input: BaseXliterationDataScenario['task_input'] = [
   languageParameter('language', 'Language', 'Language of the source words'),
 
   {
-    id: 'instruction',
-    type: 'string',
-    label: 'Transliteration Instruction',
-    description: 'Transliteration instruction to be displayed to the user in the client app',
-    required: true,
-  },
-
-  {
     id: 'allowValidation',
     type: 'boolean',
     label: 'Allow Validation',
