@@ -12,6 +12,7 @@ import { BaseSpeechVerificationScenario, baseSpeechVerificationScenario } from '
 import { BaseTextTranslationScenario, baseTextTranslationScenario } from './scenarios/TextTranslation';
 import { BaseSignLanguageVideoScenario, baseSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 import { baseXliterationDataScenario, BaseXliterationDataScenario } from './scenarios/XliterationData';
+import { ParameterArray } from '@karya/parameter-specs';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -59,6 +60,25 @@ type CoreScenarioParamsType = {
   instruction: string;
   creditsPerMicrotask: number;
 };
+
+export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
+  {
+    id: 'instruction',
+    type: 'string',
+    label: 'Microtask Instruction',
+    description:
+      'Instruction to be given to the user on the client application for them to accurately complete each microtask of this task',
+    required: true,
+  },
+
+  {
+    id: 'creditsPerMicrotask',
+    type: 'float',
+    label: 'Credits per Microtask',
+    description: 'Number of credits to be given to a user for successfully completing each microtask of this task',
+    required: true,
+  },
+];
 
 // Utility types to extract task, microtask, assignment record types
 export type TaskRecordType<

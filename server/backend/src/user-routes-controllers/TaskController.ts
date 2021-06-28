@@ -5,7 +5,15 @@
 
 import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType, policyMap } from '@karya/core';
+import {
+  Task,
+  scenarioMap,
+  getBlobName,
+  BlobParameters,
+  TaskRecordType,
+  policyMap,
+  coreScenarioParameters,
+} from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
 import { BasicModel, MicrotaskModel, TaskOpModel, getBlobSASURL } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
@@ -36,7 +44,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
     const scenario = scenarioMap[task.scenario_name!];
     const policy = policyMap[task.policy!];
 
-    const schema = joiSchema(scenario.task_input.concat(policy.params));
+    const schema = joiSchema(scenario.task_input.concat(policy.params).concat(coreScenarioParameters));
     const { value: params, error: paramsError } = schema.validate(task.params);
 
     if (paramsError) {
