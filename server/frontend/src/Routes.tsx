@@ -9,9 +9,7 @@ import { AdminRoute, WorkProviderRoute } from './components/auth/ProtectedRoutes
 
 /** Auth components */
 import LoginRegister from './components/auth/LoginRegister';
-import SignIn from './components/auth/SignIn';
 import SignOut from './components/auth/SignOut';
-import SignUp from './components/auth/SignUp';
 import Unauthorized from './components/auth/Unauthorized';
 
 /** Dashboard components */
@@ -19,9 +17,7 @@ import AdminDashboard from './components/dashboard/AdminDashboard';
 import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard';
 
 /** task components */
-import CreateTask from './components/task/CreateTask';
 import ngCreateTask from './components/task/ngCreateTask';
-import TaskDetail from './components/task/TaskDetail';
 import ngTaskDetail from './components/task/ngTaskDetail';
 import TaskList from './components/task/TaskList';
 
@@ -38,8 +34,6 @@ import TaskAssignmentList from './components/task_assignment/TaskAssignmentList'
 const Routes = (
   <Switch>
     {/** Auth routes */}
-    <Route exact path='/signup' component={SignUp} />
-    <Route exact path='/signin' component={SignIn} />
     <Route exact path='/signout' component={SignOut} />
     <Route exact path='/unauthorized' component={Unauthorized} />
     <Route exact path='/login' component={LoginRegister} />
@@ -52,8 +46,6 @@ const Routes = (
     <WorkProviderRoute exact path='/task/create' component={ngCreateTask} />
     <WorkProviderRoute exact path='/task' component={TaskList} />
     <WorkProviderRoute exact path='/task/:id' component={ngTaskDetail} />
-    <WorkProviderRoute exact path='/tasks/create' component={ngCreateTask} />
-    <WorkProviderRoute exact path='/tasks/:id' component={ngTaskDetail} />
 
     {/** Work Provider routes */}
     <AdminRoute exact path='/work_provider' component={WorkProviderList} />

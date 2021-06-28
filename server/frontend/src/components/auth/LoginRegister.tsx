@@ -19,7 +19,7 @@ import { RootState } from '../../store/Index';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Import templates */
-import { Submit, TextInput } from '../templates/FormInputs';
+import { TextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
@@ -98,13 +98,13 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
   };
 
   /** Form ...this.state, field on change handler */
-  handleFormChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  handleFormChange: ChangeEventHandler<HTMLInputElement> = e => {
     const updatedWP: ServerUser = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ wp: updatedWP });
   };
 
   /** Form submission */
-  handleFormSubmit: FormEventHandler = (e) => {
+  handleFormSubmit: FormEventHandler = e => {
     e.preventDefault();
     this.props.signUpServerUser(this.state.wp, this.state.id_token);
   };
@@ -153,7 +153,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
     const { auth } = this.props;
     const locationState = this.props.location.state;
 
-    const { from } = locationState || { from: { pathname: '/wp-dashboard' } };
+    const { from } = locationState || { from: { pathname: '/task' } };
 
     /** If logged in, redirect to original location or the dashboard */
     if (auth.cwp !== null && auth.status === 'SUCCESS') {
@@ -227,7 +227,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
 
                   {this.state.showProfileDetails && (
                     <div className='row'>
-                      <div className='profile-details col s8 offset-s1'>
+                      <div className='profile-details col s10 offset-s1 l8 offset-l1'>
                         <input
                           type='text'
                           id='full_name'
@@ -249,8 +249,12 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
                     </div>
                   )}
 
-                  <div id='register-btn'>
-                    <Submit submitString='Register!' submitColor='red' disabled={!this.state.showProfileDetails} />
+                  <div id='register-btn-div'>
+                    <div className='input-field'>
+                      <button className='btn' id='register-btn' disabled={!this.state.showProfileDetails}>
+                        Register <i className='material-icons right'>send</i>
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>

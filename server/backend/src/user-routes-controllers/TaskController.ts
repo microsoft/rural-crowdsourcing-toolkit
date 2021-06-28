@@ -7,7 +7,7 @@ import { UserRouteMiddleware, UserRouteState } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { Task, scenarioMap, getBlobName, BlobParameters, TaskRecordType, policyMap } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
-import { BasicModel, MicrotaskModel, TaskOpModel } from '@karya/common';
+import { BasicModel, MicrotaskModel, TaskOpModel, getBlobSASURL } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
@@ -233,9 +233,16 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
     const records = await BasicModel.getRecords('task_op', { task_id: task.id }, [
       ['op_type', ['PROCESS_INPUT', 'GENERATE_OUTPUT']],
     ]);
+    // @ts-ignore
+    const files = await BasicModel.getRecords('karya_file', {}, [['id', records.map((r) => r.file_id)]]);
+    for (let i = 0; i < records.length; i++) {
+      // @ts-ignore
+      records[i].extras = files[i] ? { url: getBlobSASURL(files[i].url, 'r') } : null;
+      records[i].created_at = records[i].created_at.toLocaleString();
+    }
     HttpResponse.OK(ctx, records);
   } catch (e) {
-    // TODO: Conver this to an internal server error
+    // TODO: Convert this to an internal server error
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };
@@ -249,7 +256,7 @@ export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
     const records = await MicrotaskModel.microtasksWithAssignmentSummary(ctx.state.task.id);
     HttpResponse.OK(ctx, records);
   } catch (e) {
-    // TODO: Conver this to an internal server error
+    // TODO: Convert this to an internal server error
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };

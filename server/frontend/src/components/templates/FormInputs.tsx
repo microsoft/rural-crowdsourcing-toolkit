@@ -87,27 +87,3 @@ export const SubmitOrCancel = (props: SubmitOrCancelProps) => {
     </div>
   );
 };
-
-/**
- * Submit button
- */
-
-type SubmitProps = {
-  submitString: string;
-  submitColor?: string;
-  disabled?: boolean;
-};
-
-export const Submit = (props: SubmitProps) => {
-  const { submitString } = props;
-  const submitColor = props.submitColor ? props.submitColor : '';
-  const disabled = props.disabled ? props.disabled : false;
-
-  return (
-    <div className='input-field'>
-      <button className={`btn ${submitColor}`} disabled={disabled}>
-        {submitString} <i className='material-icons right'>send</i>
-      </button>
-    </div>
-  );
-};

@@ -19,6 +19,7 @@
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
+    "recharts": "^2.0.9",
     "redux": "^4.0.5",
     "tar-stream": "^2.1.4"
   },
