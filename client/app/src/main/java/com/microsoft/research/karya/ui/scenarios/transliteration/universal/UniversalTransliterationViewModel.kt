@@ -3,23 +3,22 @@ package com.microsoft.research.karya.ui.scenarios.transliteration.universal
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus.NEW
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus.UNKNOWN
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordOrigin.HUMAN
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordOrigin.MACHINE
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
+import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordOrigin.HUMAN
+import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordOrigin.MACHINE
+import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus.NEW
+import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus.UNKNOWN
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 @HiltViewModel
@@ -31,7 +30,13 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager
+) {
 
   enum class WordOrigin {
     HUMAN, MACHINE
@@ -50,17 +55,20 @@ constructor(
   val wordTvText = _wordTvText.asStateFlow()
   var allowValidation = false
 
-  private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> = MutableLiveData(mutableMapOf())
+  private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
+    MutableLiveData(mutableMapOf())
   val outputVariants: LiveData<MutableMap<String, WordDetail>> = _outputVariants
 
-  private val _inputVariants: MutableLiveData<MutableMap<String, WordDetail>> = MutableLiveData(mutableMapOf())
+  private val _inputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
+    MutableLiveData(mutableMapOf())
   val inputVariants: LiveData<MutableMap<String, WordDetail>> = _inputVariants
 
   var limit by Delegates.notNull<Int>()
 
   override fun setupMicrotask() {
 //    allowValidation = task.params.asJsonObject.get("allowValidation").asBoolean
-    _wordTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
+    _wordTvText.value =
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
 //    val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
 //    val temp = mutableMapOf<String, WordDetail>()
@@ -83,13 +91,17 @@ constructor(
     // TODO: Move to Gson
     // Code to add dummy api response[Word_Detail]. TODO: Remove once we take data from the API
     val temp = mutableMapOf<String, WordDetail>()
-    val strs = arrayOf("Thisfwefwfweffsd","fdsfnjksdnvbhsldsiss", "afdgfnk;sdlbh;sdubs", "fkjgfhlsdbvlhbsdbvlsl",
+    val strs = arrayOf(
+      "Thisfwefwfweffsd", "fdsfnjksdnvbhsldsiss", "afdgfnk;sdlbh;sdubs", "fkjgfhlsdbvlhbsdbvlsl",
       "ofdfafbbjsdhlsvh sf", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-      "bkjasdfnhdngdkfshjgbla", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla"
-      , "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla"
-      , "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",)
+      "bkjasdfnhdngdkfshjgbla", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+    )
     val origin = arrayOf(HUMAN, MACHINE)
-    for (i in 1..1000) { temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN)) }
+    for (i in 1..1000) {
+      temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN))
+    }
     _outputVariants.value = temp
   }
 
@@ -140,11 +152,10 @@ constructor(
   }
 
   fun addWord(word: String) {
-    if (word.isNotEmpty() && !_outputVariants.value!!.containsKey(word) && !_inputVariants.value!!.containsKey(word)) {
-      val temp = copyMutableList(_inputVariants.value!!)
-      temp[word] = WordDetail(HUMAN, NEW)
-      _inputVariants.value = temp
-    }
+
+    val temp = copyMutableList(_inputVariants.value!!)
+    temp[word] = WordDetail(HUMAN, NEW)
+    _inputVariants.value = temp
   }
 
   fun removeWord(word: String) {

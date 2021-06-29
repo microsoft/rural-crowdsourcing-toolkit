@@ -73,13 +73,18 @@ class UniversalTransliterationMainFragment :
   }
 
   private fun addWord() {
+
+    errorTv.gone() // Remove any existing errors
+
     val word = textTransliteration.text.toString()
+    val outputVariants = viewModel.outputVariants.value!!
+    val inputVariants = viewModel.inputVariants.value!!
+
     if (word.contains(" ")) {
       showError("Only 1 word allowed")
       return
     }
 
-    val outputVariants = viewModel.outputVariants.value!!
     if (outputVariants.values.count { wordDetail ->
         wordDetail.verificationStatus == WordVerificationStatus.NEW
       } == viewModel.limit) {
@@ -96,7 +101,15 @@ class UniversalTransliterationMainFragment :
       return
     }
 
-    errorTv.gone()
+    if (word.isEmpty()) {
+      showError("Please enter a word")
+      return
+    }
+
+    if(outputVariants.containsKey(word) || inputVariants.containsKey(word)) {
+      showError("The word is already present")
+      return
+    }
     viewModel.addWord(word)
   }
 
