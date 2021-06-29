@@ -145,7 +145,6 @@ class UniversalTransliterationMainFragment :
 
     viewModel.outputVariants.observe(viewLifecycleOwner) { variants ->
 
-      userVariantLayout.removeAllViews()
       verifyFlowLayout.removeAllViews()
 
       for (word in variants.keys.reversed()) {
@@ -155,11 +154,9 @@ class UniversalTransliterationMainFragment :
         when (variants[word]!!.verificationStatus) {
           WordVerificationStatus.VALID -> setValidUI(view)
           WordVerificationStatus.INVALID -> setInvaidUI(view)
-          WordVerificationStatus.NEW -> setNewUI(view)
           WordVerificationStatus.UNKNOWN -> setUnknownUI(view)
         }
 
-        view.removeImageView.setOnClickListener { viewModel.removeWord(word) }
         view.setOnClickListener {
           when (variants[word]!!.verificationStatus) {
             WordVerificationStatus.VALID -> viewModel.modifyStatus(
@@ -174,12 +171,22 @@ class UniversalTransliterationMainFragment :
 
         }
 
-        if (variants[word]!!.verificationStatus == WordVerificationStatus.NEW) {
-          userVariantLayout.addView(view)
-        } else {
-          verifyFlowLayout.addView(view)
-        }
+        verifyFlowLayout.addView(view)
 
+      }
+    }
+
+    viewModel.inputVariants.observe(viewLifecycleOwner) { variants ->
+      userVariantLayout.removeAllViews()
+      for (word in variants.keys) {
+        val view = layoutInflater.inflate(R.layout.item_float_word, null)
+        view.word.text = word
+
+        setNewUI(view)
+
+        view.removeImageView.setOnClickListener { viewModel.removeWord(word) }
+
+        userVariantLayout.addView(view)
       }
       // Clear the edittext
       textTransliteration.setText("")
@@ -188,17 +195,32 @@ class UniversalTransliterationMainFragment :
   }
 
   private fun setValidUI(view: View) {
-    view.float_word_card.background.setTint(ContextCompat.getColor(requireContext(), R.color.light_green))
+    view.float_word_card.background.setTint(
+      ContextCompat.getColor(
+        requireContext(),
+        R.color.light_green
+      )
+    )
     view.removeImageView.gone()
   }
 
   private fun setInvaidUI(view: View) {
-    view.float_word_card.background.setTint(ContextCompat.getColor(requireContext(), R.color.light_red))
+    view.float_word_card.background.setTint(
+      ContextCompat.getColor(
+        requireContext(),
+        R.color.light_red
+      )
+    )
     view.removeImageView.gone()
   }
 
   private fun setNewUI(view: View) {
-    view.float_word_card.background.setTint(ContextCompat.getColor(requireContext(), R.color.light_yellow))
+    view.float_word_card.background.setTint(
+      ContextCompat.getColor(
+        requireContext(),
+        R.color.light_yellow
+      )
+    )
     view.removeImageView.visible()
   }
 

@@ -27,8 +27,8 @@
         style="@style/TextTvStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_10sdp"
         android:textSize="@dimen/_24ssp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/nextBtn"
@@ -41,35 +41,35 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/ic_next_enabled"
-        app:layout_constraintBottom_toBottomOf="@id/wordTv"
-        app:layout_constraintTop_toTopOf="@id/wordTv"
-        app:layout_constraintRight_toRightOf="parent"
         android:contentDescription="@string/back"
-        android:soundEffectsEnabled="false" />
+        android:soundEffectsEnabled="false"
+        app:layout_constraintBottom_toBottomOf="@id/wordTv"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/wordTv" />
 
 
     <EditText
         android:id="@+id/textTransliteration"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:digits="@string/alphanumericString"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_10sdp"
         android:background="@drawable/border_black"
         android:completionThreshold="1"
+        android:digits="@string/alphanumericString"
         android:dropDownHeight="wrap_content"
-        android:textSize="@dimen/_16ssp"
-        android:textColor="#000000"
         android:hint="@string/transliteration_hint"
+        android:inputType="number"
         android:maxLines="1"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
-        app:layout_constraintTop_toBottomOf="@id/wordTv"
-        app:layout_constraintRight_toLeftOf="@id/addBtn"
+        android:textColor="#000000"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintLeft_toLeftOf="@id/wordTv"
+        app:layout_constraintRight_toLeftOf="@id/addBtn"
+        app:layout_constraintTop_toBottomOf="@id/wordTv"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -77,34 +77,54 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
-        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
-        app:layout_constraintTop_toBottomOf="@id/textTransliteration"
-        app:layout_constraintRight_toRightOf="parent"
         android:textColor="@color/colorRed"
         android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textTransliteration"
         tools:text="THIS IS AN ERROR MESSAGE" />
 
-    <com.nex3z.flowlayout.FlowLayout
-        android:id="@+id/userVariantLayout"
-        android:layout_width="0dp"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/userVariantScrollView"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintHeight_max="@dimen/_350sdp"
         android:layout_marginVertical="@dimen/_8sdp"
-        app:flChildSpacing="@dimen/_8sdp"
-        app:flRowSpacing="@dimen/_8sdp"
         app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
-        app:layout_constraintTop_toBottomOf="@id/errorTv"
-        app:layout_constraintRight_toRightOf="@id/addBtn" />
+        app:layout_constraintRight_toRightOf="@id/addBtn"
+        app:layout_constraintTop_toBottomOf="@id/errorTv">
 
-    <com.nex3z.flowlayout.FlowLayout
-        android:id="@+id/verifyFlowLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        <com.nex3z.flowlayout.FlowLayout
+            android:id="@+id/userVariantLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:flChildSpacing="@dimen/_8sdp"
+            app:flRowSpacing="@dimen/_8sdp"
+            />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="@dimen/_0sdp"
         android:layout_marginVertical="@dimen/_8sdp"
-        app:flChildSpacing="@dimen/_8sdp"
-        app:flRowSpacing="@dimen/_8sdp"
-        app:layout_constraintLeft_toLeftOf="@id/userVariantLayout"
-        app:layout_constraintTop_toBottomOf="@id/userVariantLayout"
-        app:layout_constraintRight_toRightOf="@id/userVariantLayout" />
+        android:paddingBottom="@dimen/_8sdp"
+        app:layout_constraintLeft_toLeftOf="@id/userVariantScrollView"
+        app:layout_constraintRight_toRightOf="@id/userVariantScrollView"
+        app:layout_constraintTop_toBottomOf="@id/userVariantScrollView"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.nex3z.flowlayout.FlowLayout
+            android:id="@+id/verifyFlowLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:flChildSpacing="@dimen/_8sdp"
+            app:flRowSpacing="@dimen/_8sdp"
+            />
+
+    </androidx.core.widget.NestedScrollView>
 
 
     <ImageButton
@@ -114,11 +134,11 @@
         android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/ic_add_button"
         android:contentDescription="@string/next"
-        app:layout_constraintTop_toTopOf="@id/textTransliteration"
-
         app:layout_constraintBottom_toBottomOf="@id/textTransliteration"
+
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/textTransliteration" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
