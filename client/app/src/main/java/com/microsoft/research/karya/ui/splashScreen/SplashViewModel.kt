@@ -66,6 +66,8 @@ constructor(
   }
 
   private suspend fun handleMultipleUsers() {
-    _splashDestination.emit(Destination.UserSelection)
+    // TODO: We do not support multiple user use-case for now
+    // _splashDestination.emit(Destination.UserSelection)
+    handleSingleUser()
   }
 }

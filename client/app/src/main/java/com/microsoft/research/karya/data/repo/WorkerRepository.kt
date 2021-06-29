@@ -15,6 +15,9 @@ import kotlinx.coroutines.withContext
 
 class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
 
+  private var isCacheInvalid: Boolean = true
+  private val workerCache: MutableMap<String, WorkerRecord> = mutableMapOf()
+
   fun getOTP(
     accessCode: String,
     phoneNumber: String,
@@ -164,18 +167,40 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
 
   suspend fun getAllWorkers() =
     withContext(Dispatchers.IO) {
-      return@withContext workerDao.getAll()
+      updateWorkerCacheIfRequired()
+      return@withContext workerCache.values.toList()
     }
 
   suspend fun getWorkerById(id: String) =
     withContext(Dispatchers.IO) {
-      return@withContext workerDao.getById(id)
+      updateWorkerCacheIfRequired()
+      workerCache.forEach { (_, worker) ->
+        if (worker.id == id) {
+          return@withContext worker
+        }
+      }
+      return@withContext null
     }
 
   suspend fun getWorkerByAccessCode(accessCode: String) =
     withContext(Dispatchers.IO) {
-      return@withContext workerDao.getByAccessCode(accessCode)
+      updateWorkerCacheIfRequired()
+      return@withContext workerCache[accessCode]
     }
 
-  suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) { workerDao.upsert(worker) }
+  suspend fun upsertWorker(worker: WorkerRecord) =
+    withContext(Dispatchers.IO) {
+      isCacheInvalid = true
+      workerDao.upsert(worker)
+    }
+
+  private suspend fun updateWorkerCacheIfRequired() {
+    withContext(Dispatchers.IO) {
+      if (isCacheInvalid) {
+        val workers = workerDao.getAll()
+        workers.forEach { worker -> workerCache[worker.accessCode] = worker }
+      }
+      isCacheInvalid = false
+    }
+  }
 }
