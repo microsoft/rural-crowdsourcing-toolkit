@@ -410,7 +410,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           ) : (
             <div className='row'>
               <div className='input-field'>
-                <button className='btn' id='submit-task-btn'>
+                <button className='btn waves-effect waves-light' id='submit-task-btn'>
                   Submit Task
                 </button>
                 <Link to='/task'>
