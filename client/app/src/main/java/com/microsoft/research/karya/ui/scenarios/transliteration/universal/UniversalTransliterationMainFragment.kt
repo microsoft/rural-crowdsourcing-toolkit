@@ -171,6 +171,10 @@ class UniversalTransliterationMainFragment :
         }
 
         view.setOnClickListener {
+
+          // If validation is not allowed return
+          if (!viewModel.allowValidation) return@setOnClickListener
+
           when (variants[word]!!.verificationStatus) {
             WordVerificationStatus.VALID -> viewModel.modifyStatus(
               word,
@@ -191,7 +195,7 @@ class UniversalTransliterationMainFragment :
 
     viewModel.inputVariants.observe(viewLifecycleOwner) { variants ->
       userVariantLayout.removeAllViews()
-      for (word in variants.keys) {
+      for (word in variants.keys.reversed()) {
         val view = layoutInflater.inflate(R.layout.item_float_word, null)
         view.word.text = word
 
