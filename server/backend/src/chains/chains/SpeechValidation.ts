@@ -23,7 +23,7 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
         },
         input_file_id: assignment.output_file_id,
         deadline: toTask.deadline,
-        credits: toTask.params.creditsPerVerification,
+        credits: toTask.params.creditsPerMicrotask,
         status: 'INCOMPLETE',
       };
       return chainedMicrotask;
@@ -54,7 +54,7 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
         score = 1;
       }
 
-      const credits = score * fromTask.params.creditsPerRecording;
+      const credits = score * fromTask.params.creditsPerMicrotask;
       assignment.credits = credits;
       assignment.report = report;
       return assignment;

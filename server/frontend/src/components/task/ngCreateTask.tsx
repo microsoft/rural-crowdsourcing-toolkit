@@ -17,7 +17,7 @@ import { RootState } from '../../store/Index';
 // Store types and actions
 import { Task } from '@karya/core';
 import { policyMap, policyList, PolicyName } from '@karya/core';
-import { BaseScenarioInterface, scenarioMap, ScenarioName } from '@karya/core';
+import { BaseScenarioInterface, scenarioMap, ScenarioName, coreScenarioParameters } from '@karya/core';
 
 // HTML Helpers
 import { ColTextInput } from '../templates/FormInputs';
@@ -114,7 +114,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   }
 
   // Handle change in scenario
-  handleScenarioChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleScenarioChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const scenario_name = e.currentTarget.value as ScenarioName;
     const scenario = scenarioMap[scenario_name];
     this.setState({ scenario });
@@ -143,18 +143,18 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   };
 
   // Handle input change
-  handleInputChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = e => {
+  handleInputChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = (e) => {
     const task: Task = { ...this.state.task, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ task });
   };
 
   // Handle tag input change
-  handleTagsChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleTagsChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     this.setState({ tags_input: e.currentTarget.value });
   };
 
   // Handle key down event during tag input
-  handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
+  handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (['Enter', 'Tab', ','].includes(e.key)) {
       e.preventDefault();
       var tag = this.state.tags_input.trim();
@@ -170,30 +170,30 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   // Handle tag deletion
   handleTagDelete = (tag_deleted: string) => {
     this.setState({
-      itags: this.state.itags.filter(tag => tag !== tag_deleted),
+      itags: this.state.itags.filter((tag) => tag !== tag_deleted),
     });
   };
 
   // Handle param input change
-  handleParamInputChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleParamInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ params });
   };
 
   // Handle boolean change
-  handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.checked };
     this.setState({ params });
   };
 
   // Handle policy change
-  handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = e => {
+  handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
     this.setState({ policy, params: {} });
   };
 
   // Handle form submission
-  handleSubmit: FormEventHandler = e => {
+  handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     const task: Task = { ...this.state.task };
     task.scenario_name = this.state.scenario?.name;
@@ -213,7 +213,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     const { scenario } = this.state;
     const scenarioCards = (
       <div className='scenarios'>
-        {scenarios.map(s => (
+        {scenarios.map((s) => (
           <label className='col s11 m5 l4'>
             <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
             <div className='scenario-card'>
@@ -285,7 +285,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                     onKeyDown={this.handleKeyDown}
                   />
                   <label htmlFor='tags_input'>Enter tags</label>
-                  {this.state.itags.map(tag => (
+                  {this.state.itags.map((tag) => (
                     <div key={tag} className='chip'>
                       {tag}
                       <i className='material-icons' onClick={() => this.handleTagDelete(tag)}>
@@ -319,7 +319,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                   <option value={0} disabled={true}>
                     Select a Policy
                   </option>
-                  {policies.map(p => (
+                  {policies.map((p) => (
                     <option value={p.name} key={p.name}>
                       {p.full_name}
                     </option>
@@ -332,16 +332,29 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             {policyParamsSection}
           </div>
 
-          {/** Task parameter */}
+          {/** Core parameters */}
           <div className='section'>
-            <h2 className='form-heading'>Task Parameters</h2>
+            <h2 className='form-heading'>Core Microtask Parameters</h2>
             <ParameterSection
-              params={params}
+              params={coreScenarioParameters}
               data={this.state.params}
               onChange={this.handleParamInputChange}
               onBooleanChange={this.handleParamBooleanChange}
             />
           </div>
+
+          {/** Task parameter */}
+          {params.length > 0 ? (
+            <div className='section'>
+              <h2 className='form-heading'>Task Specific Parameters</h2>
+              <ParameterSection
+                params={params}
+                data={this.state.params}
+                onChange={this.handleParamInputChange}
+                onBooleanChange={this.handleParamBooleanChange}
+              />
+            </div>
+          ) : null}
 
           {/** Assignment parameters */}
           {[assignment_granularity, group_assignment_order, microtask_assignment_order].includes('EITHER') ? (

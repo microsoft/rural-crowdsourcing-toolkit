@@ -42,7 +42,7 @@ async function processInputFile(
           files: { recording },
         },
         deadline: task.deadline,
-        credits: task.params.creditsPerVerification,
+        credits: task.params.creditsPerMicrotask,
         status: 'INCOMPLETE',
       };
 

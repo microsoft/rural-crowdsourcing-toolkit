@@ -10,8 +10,6 @@ import { LanguageCode, languageParameter } from '../../languages/Index';
 // Speech data task input parameters
 type SpeechDataTaskInputParameters = {
   language: LanguageCode;
-  instruction: string;
-  creditsPerRecording: number;
 };
 
 // Speech data input format
@@ -37,22 +35,6 @@ export type BaseSpeechDataScenario = BaseScenarioInterface<
  */
 const task_input: BaseSpeechDataScenario['task_input'] = [
   languageParameter('language', 'Language', 'Language in which the recordings are collected'),
-
-  {
-    id: 'instruction',
-    type: 'string',
-    label: 'Recording Instruction',
-    description: 'Recording instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'creditsPerRecording',
-    type: 'float',
-    label: 'Credits for Each Recording',
-    description: 'Number of credits to be given to the user for each correctly recorded sentence',
-    required: true,
-  },
 ];
 
 // Task input file format for speech data task
