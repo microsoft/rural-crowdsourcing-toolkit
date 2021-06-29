@@ -85,7 +85,7 @@ class UniversalTransliterationMainFragment :
       return
     }
 
-    if (outputVariants.values.count { wordDetail ->
+    if (inputVariants.values.count { wordDetail ->
         wordDetail.verificationStatus == WordVerificationStatus.NEW
       } == viewModel.limit) {
       showError("Only upto ${viewModel.limit} words are allowed.")
@@ -119,11 +119,11 @@ class UniversalTransliterationMainFragment :
   }
 
   private fun onNextClick() {
-    if (viewModel.outputVariants.value!!.size == 0) {
+    if (!viewModel.allowValidation && viewModel.inputVariants.value!!.size == 0) {
       showError("Please enter atleast one word")
       return
     } else if (viewModel.allowValidation) {
-      var atleastOneValidNew = false
+      var atleastOneValidNew = viewModel.inputVariants.value!!.isNotEmpty()
       var noUnknowns = true
       for ((word, wordDetail) in viewModel.outputVariants.value!!) {
         when (wordDetail.verificationStatus) {
@@ -131,7 +131,7 @@ class UniversalTransliterationMainFragment :
             noUnknowns = false
             break
           }
-          WordVerificationStatus.NEW, WordVerificationStatus.VALID -> {
+          WordVerificationStatus.VALID -> {
             atleastOneValidNew = true
           }
         }
@@ -160,11 +160,11 @@ class UniversalTransliterationMainFragment :
 
       verifyFlowLayout.removeAllViews()
 
-      for (word in variants.keys.reversed()) {
+      for ((word, wordDetail) in variants) {
         val view = layoutInflater.inflate(R.layout.item_float_word, null)
         view.word.text = word
 
-        when (variants[word]!!.verificationStatus) {
+        when (wordDetail.verificationStatus) {
           WordVerificationStatus.VALID -> setValidUI(view)
           WordVerificationStatus.INVALID -> setInvaidUI(view)
           WordVerificationStatus.UNKNOWN -> setUnknownUI(view)
@@ -175,7 +175,7 @@ class UniversalTransliterationMainFragment :
           // If validation is not allowed return
           if (!viewModel.allowValidation) return@setOnClickListener
 
-          when (variants[word]!!.verificationStatus) {
+          when (wordDetail.verificationStatus) {
             WordVerificationStatus.VALID -> viewModel.modifyStatus(
               word,
               WordVerificationStatus.INVALID

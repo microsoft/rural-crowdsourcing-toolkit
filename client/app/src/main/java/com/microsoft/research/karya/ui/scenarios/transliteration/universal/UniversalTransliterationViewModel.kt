@@ -66,42 +66,46 @@ constructor(
   var limit by Delegates.notNull<Int>()
 
   override fun setupMicrotask() {
-//    allowValidation = task.params.asJsonObject.get("allowValidation").asBoolean
+    allowValidation = try {
+      task.params.asJsonObject.get("allowValidation").asBoolean
+    } catch (e: Exception) {
+      false
+    }
     _wordTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
-//    val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
-//    val temp = mutableMapOf<String, WordDetail>()
+    val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
+    val temp = mutableMapOf<String, WordDetail>()
 
-//    for (word in variantsJsonObject.keySet()) {
-//      val detail = variantsJsonObject.getAsJsonObject(word)
-//      val wordDetail = WordDetail(
-//        WordOrigin.valueOf(
-//          detail.get("origin").asString
-//        ),
-//        WordVerificationStatus.valueOf(
-//          detail.get("status").asString
-//        )
-//      )
-//      temp[word] = wordDetail
-//    }
+    for (word in variantsJsonObject.keySet()) {
+      val detail = variantsJsonObject.getAsJsonObject(word)
+      val wordDetail = WordDetail(
+        WordOrigin.valueOf(
+          detail.get("origin").asString
+        ),
+        WordVerificationStatus.valueOf(
+          detail.get("status").asString
+        )
+      )
+      temp[word] = wordDetail
+    }
 
     // TODO: Add Code to parse other data paramaters
 
     // TODO: Move to Gson
     // Code to add dummy api response[Word_Detail]. TODO: Remove once we take data from the API
-    val temp = mutableMapOf<String, WordDetail>()
-    val strs = arrayOf(
-      "Thisfwefwfweffsd", "fdsfnjksdnvbhsldsiss", "afdgfnk;sdlbh;sdubs", "fkjgfhlsdbvlhbsdbvlsl",
-      "ofdfafbbjsdhlsvh sf", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-      "bkjasdfnhdngdkfshjgbla", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-    )
-    val origin = arrayOf(HUMAN, MACHINE)
-    for (i in 1..1000) {
-      temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN))
-    }
+//    val temp = mutableMapOf<String, WordDetail>()
+//    val strs = arrayOf(
+//      "Thisfwefwfweffsd", "fdsfnjksdnvbhsldsiss", "afdgfnk;sdlbh;sdubs", "fkjgfhlsdbvlhbsdbvlsl",
+//      "ofdfafbbjsdhlsvh sf", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+//      "bkjasdfnhdngdkfshjgbla", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+//      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+//      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
+//    )
+//    val origin = arrayOf(HUMAN, MACHINE)
+//    for (i in 1..1000) {
+//      temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN))
+//    }
     _outputVariants.value = temp
   }
 
@@ -126,7 +130,10 @@ constructor(
     for ((word, wordDetail) in _inputVariants.value!!) {
       val wordObject = JsonObject()
       wordObject.addProperty("origin", wordDetail.origin.name)
-      wordObject.addProperty("status", UNKNOWN.name)
+      if (allowValidation)
+        wordObject.addProperty("status", WordVerificationStatus.VALID.name)
+      else
+        wordObject.addProperty("status", UNKNOWN.name)
       variants.add(word, wordObject)
     }
 
@@ -152,7 +159,6 @@ constructor(
   }
 
   fun addWord(word: String) {
-
     val temp = copyMutableList(_inputVariants.value!!)
     temp[word] = WordDetail(HUMAN, NEW)
     _inputVariants.value = temp
