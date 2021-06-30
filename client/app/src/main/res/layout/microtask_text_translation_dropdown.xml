@@ -55,7 +55,7 @@
         android:paddingHorizontal="20dp"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
-        app:base_url="http://localhost:4040/api/simple/translate_new?"
+        app:base_url="http://localhost:8000/"
         app:langspec="en-hi"
         app:layout_constraintTop_toBottomOf="@id/sourceSentenceDropDown"
         app:n_suggestions="5"
