@@ -3,25 +3,21 @@
 
 package com.microsoft.research.karya.ui.scenarios.textToTextTranslation
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.WindowManager
-import android.widget.*
-import com.microsoft.inmt_lite.INMTLiteDropDown
+import android.widget.EditText
+import android.widget.LinearLayout
 import com.google.gson.JsonObject
+import com.microsoft.inmt_lite.INMTLiteDropDown
 import com.microsoft.inmtbow.INMTLiteBagOfWords
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.MicrotaskRenderer
-import kotlinx.android.synthetic.main.microtask_speech_verification.*
-import kotlinx.android.synthetic.main.microtask_text_translation_dropdown.*
-import kotlinx.android.synthetic.main.microtask_text_translation_dropdown.nextBtnDropdown
 import kotlinx.android.synthetic.main.microtask_text_translation_bagofwords.*
-import kotlinx.android.synthetic.main.microtask_text_translation_bagofwords.nextBtnBOW
+import kotlinx.android.synthetic.main.microtask_text_translation_dropdown.*
 import kotlinx.android.synthetic.main.microtask_text_translation_none.*
-import kotlinx.android.synthetic.main.microtask_text_translation_none.nextBtnNone
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,7 +28,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
     finishOnGroupBoundary = false
 ) {
     var support: String = "none"
-    var onlineMode = false
+    var onlineMode = true
     var nWords = 2
     var bagOfWords = ""
     var bagOfWordsCount = 0
@@ -40,6 +36,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
     var targetLanguage = "Hindi"
     var langspec = "en-hi"
     var microTaskStartTime: Long = 0
+    var prevSentence = ""
     private lateinit var editText: EditText
 
     /**
@@ -64,8 +61,14 @@ class TextToTextTranslationMain : MicrotaskRenderer(
 
 
     override fun setupActivity() {
+        val message = JsonObject()
+        message.addProperty("type", "i")
+        message.addProperty("input", "Activity started")
+        log(message)
         val instruction = task.params.asJsonObject.get("instruction").asString
         support = task.params.asJsonObject.get("mode").asString
+        microTaskStartTime = System.nanoTime()
+
         //support is bow\dd1\dd2\none\gt
         when (support) {
             "bow" -> {
@@ -77,6 +80,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                 val textBagOfWords = findViewById<INMTLiteBagOfWords>(R.id.textTranslationBOW)
                 textTranslationBOW.setLogging(::setLog)
                 editText = getEditText()
+                bagOfWordsCount = 0
                 val editTextParams = getEditTextParams()
                 editText!!.layoutParams = editTextParams
                 textBagOfWords.setupINMTBagOfWords(editText, editTextParams)
@@ -88,8 +92,11 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                 /** Setup view */
                 setContentView(R.layout.microtask_text_translation_dropdown)
                 instructionTvdd.text = instruction
+                dropDownCount = 0
                 /** Set on click listeners for buttons */
                 textTranslationDropdown.setLogging(::setLog)
+                textTranslationDropdown.setText("")
+                textTranslationDropdown.setupINMTDropDown()
                 nextBtnDropdown.setOnClickListener { handleNextClick() }
                 handleTextChange()
                 setButtonStates(ButtonState.DISABLED)
@@ -121,18 +128,25 @@ class TextToTextTranslationMain : MicrotaskRenderer(
      * navigating to next or previous tasks
      */
     override fun setupMicrotask() {
-        microTaskStartTime = System.nanoTime()
         var srcSentence: String =
             currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").asString
+
+        val message = JsonObject()
+        message.addProperty("type", "i")
+        message.addProperty("input", "MicroTask enabled $support")
+        log(message)
 
         when (support) {
             "bow" -> {
                 log(srcSentence)
                 sourceSentenceBOW.text = srcSentence
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
                 bagOfWords = currentMicroTask.input.asJsonObject.getAsJsonObject("data").asJsonObject.get("bow").asString
-
                 val textBagOfWords = findViewById<INMTLiteBagOfWords>(R.id.textTranslationBOW)
+<<<<<<< Updated upstream
 
 
                 handleTextChange()
@@ -143,6 +157,18 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                         onlineMode,
                         langspec
                     )
+=======
+                if(prevSentence != srcSentence) {
+                    prevSentence = srcSentence
+                    val bagOfWordsArray: Array<String> = bagOfWords.split(" ").toTypedArray()
+                    GlobalScope.launch(Dispatchers.Main) {
+                        textBagOfWords.setupTranslationTask(
+                            srcSentence,
+                            bagOfWordsArray,
+                            false
+                        )
+                    }
+>>>>>>> Stashed changes
                 }
             }
 
@@ -151,6 +177,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                 val textToTextTranslation =
                     findViewById<INMTLiteDropDown>(R.id.textTranslationDropdown)
                 sourceSentenceDropDown.text = srcSentence
+<<<<<<< Updated upstream
                 textTranslationDropdown.setText("")
                 if (support == "dd2")
                     nWords = 2
@@ -161,10 +188,25 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                     langspec,
                     nWords
                 )
+=======
+
+                if (support == "dd2")
+                    nWords = 2
+                if(prevSentence != srcSentence) {
+                    prevSentence = srcSentence
+                    textToTextTranslation.setupTranslationTask(
+                        srcSentence,
+                        sourceLanguage,
+                        targetLanguage,
+                        langspec,
+                        nWords,
+                        onlineMode
+                    )
+                }
+>>>>>>> Stashed changes
             }
             else -> {
                 sourceSentenceNone.text = srcSentence
-                textTranslationNone.setText("")
             }
 
 
@@ -174,6 +216,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
 
     private fun setLog(message: String) {
         log(message)
+        Log.i("message", message)
     }
 
     /**
@@ -190,33 +233,47 @@ class TextToTextTranslationMain : MicrotaskRenderer(
         /*Time taken to complete the microtask*/
         var microTaskTimeTaken = (System.nanoTime() - microTaskStartTime) / 1000000
         log("MicroTask completion time in ms:$microTaskTimeTaken")
+        Log.i("msg","MicroTask completion time in ms:$microTaskTimeTaken")
+
 
         when (support) {
             "bow" -> {
-                log("Total clicks in bow:$bagOfWordsCount")
+                log("Total keystrokes in bow:$bagOfWordsCount")
                 outputData.addProperty("sentence", editText.getText().toString())
                 val textBagOfWords = findViewById<INMTLiteBagOfWords>(R.id.textTranslationBOW)
+                editText.setText("")
+                bagOfWordsCount = 0
                 setButtonStates(ButtonState.DISABLED)
+<<<<<<< Updated upstream
                 bagOfWordsCount = 0
                 textBagOfWords.clearINMTBOW()
             }
             "dd1", "dd2" -> {
+=======
+                log("Button Clicks:" + textBagOfWords.returnButtonClicks())
+            }
+            "dd1", "dd2" -> {
+                log("Total keystrokes in dd:$dropDownCount")
+                Log.i("message", "Total clicks in dd:$dropDownCount")
+>>>>>>> Stashed changes
                 outputData.addProperty(
                     "sentence",
                     textTranslationDropdown.getText().toString()
                 )
                 val textDropDown = findViewById<INMTLiteDropDown>(R.id.textTranslationDropdown)
-                textDropDown.clearINMTDropDown()
                 textTranslationDropdown.setText("")
+                textDropDown.updateLogs()
+                dropDownCount = 0
                 setButtonStates(ButtonState.DISABLED)
             }
             else -> {
                 outputData.addProperty("sentence", textTranslationNone.getText().toString())
+                textTranslationNone.setText("")
                 setButtonStates(ButtonState.DISABLED)
             }
         }
 
-
+        microTaskStartTime = System.nanoTime()
         ioScope.launch {
             completeAndSaveCurrentMicrotask()
             moveToNextMicrotask()
@@ -278,6 +335,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
 
 
     private fun getEditText(): EditText {
+        /*Set the parameters for edittext, used for BOW*/
         editText = EditText(this)
         editText!!.hint = "Type your translation here"
         editText!!.maxLines = 4
@@ -299,9 +357,12 @@ class TextToTextTranslationMain : MicrotaskRenderer(
     }
 
     private fun handleTextChange() {
+        /*Log the number of characters changed
+        * Sets the next button state as active after a character has been typed*/
         when (support) {
             "bow" -> {
                 editText.addTextChangedListener(object : TextWatcher {
+                    var previousText:String = ""
                     override fun beforeTextChanged(
                         charSequence: CharSequence,
                         i: Int,
@@ -311,11 +372,20 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                     }
 
                     override fun onTextChanged(
-                        charSequence: CharSequence,
+                        newText: CharSequence,
                         i1: Int,
                         i2: Int,
                         i3: Int
                     ) {
+                        if(newText.length > previousText.length){
+                            log("Text added: " + (newText.length - previousText.length))
+                            Log.i("textchange","Text added: " + (newText.length - previousText.length))
+                        }
+                        else{
+                            log("Text removed: " + (previousText.length - newText.length))
+                            Log.i("textchange","Text removed: " + (previousText.length - newText.length))
+                        }
+                        previousText = newText.toString()
                     }
 
                     override fun afterTextChanged(s: Editable) {
@@ -331,6 +401,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
             }
             "dd1", "dd2" -> {
                 textTranslationDropdown.addTextChangedListener(object : TextWatcher {
+                    var previousText:String = ""
                     override fun beforeTextChanged(
                         charSequence: CharSequence,
                         i: Int,
@@ -340,11 +411,20 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                     }
 
                     override fun onTextChanged(
-                        charSequence: CharSequence,
+                        newText: CharSequence,
                         i1: Int,
                         i2: Int,
                         i3: Int
                     ) {
+                        if(newText.length > previousText.length){
+                            log("Text added: " + (newText.length - previousText.length))
+                            Log.i("textchange","Text added: " + (newText.length - previousText.length))
+                        }
+                        else{
+                            log("Text removed: " + (previousText.length - newText.length))
+                            Log.i("textchange","Text removed: " + (previousText.length - newText.length))
+                        }
+                        previousText = newText.toString()
                     }
 
                     override fun afterTextChanged(s: Editable) {
@@ -358,6 +438,7 @@ class TextToTextTranslationMain : MicrotaskRenderer(
             }
             else -> {
                 textTranslationNone.addTextChangedListener(object : TextWatcher {
+                    var previousText:String = ""
                     override fun beforeTextChanged(
                         charSequence: CharSequence,
                         i: Int,
@@ -367,11 +448,18 @@ class TextToTextTranslationMain : MicrotaskRenderer(
                     }
 
                     override fun onTextChanged(
-                        charSequence: CharSequence,
+                        newText: CharSequence,
                         i1: Int,
                         i2: Int,
                         i3: Int
                     ) {
+                        if(newText.length > previousText.length){
+                            log("Text added: " + (newText.length - previousText.length))
+                        }
+                        else{
+                            log("Text removed: " + (previousText.length - newText.length))
+                        }
+                        previousText = newText.toString()
                     }
 
                     override fun afterTextChanged(s: Editable) {
