@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:animateLayoutChanges="true">
 
-    <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.KaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_56sdp"
@@ -73,7 +73,7 @@
             android:tag="KARYA_ASSISTANT"
             android:visibility="visible"
             app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
-    </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
+    </com.microsoft.research.karya.ui.widgets.KaryaToolbar>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
