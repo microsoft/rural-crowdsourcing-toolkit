@@ -5,20 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.microsoft.research.karya.ui.views.KaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.KaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:showBackButton="true"
+        app:startIcon="@drawable/access_code_title_icon" />
 
     <TextView
         android:id="@+id/consentFormTv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_0sdp"
+        android:layout_marginTop="@dimen/_32sdp"
         android:background="@color/colorWhite"
         android:padding="@dimen/_15sdp"
         android:scrollbars="vertical"

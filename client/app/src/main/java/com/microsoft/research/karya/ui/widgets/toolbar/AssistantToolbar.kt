@@ -24,7 +24,7 @@ import com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap
 import com.microsoft.research.karya.R
 import kotlin.properties.Delegates
 
-class NGKaryaToolbar : Toolbar {
+class AssistantToolbar : Toolbar {
   private var cutoutMargin by Delegates.notNull<Float>()
   private var cutoutRoundedCornerRadius by Delegates.notNull<Float>()
   private var cutoutVerticalOffset by Delegates.notNull<Float>()
@@ -46,13 +46,13 @@ class NGKaryaToolbar : Toolbar {
   }
 
   private fun setAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-    val a = context.obtainStyledAttributes(attrs, R.styleable.NGKaryaToolbar, defStyleAttr, DEF_STYLE_RES)
-    cutoutMargin = a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_cutoutMargin, 0).toFloat()
+    val a = context.obtainStyledAttributes(attrs, R.styleable.AssistantToolbar, defStyleAttr, DEF_STYLE_RES)
+    cutoutMargin = a.getDimensionPixelOffset(R.styleable.AssistantToolbar_cutoutMargin, 0).toFloat()
     cutoutRoundedCornerRadius =
-      a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_cutoutRoundedCornerRadius, 0).toFloat()
-    cutoutVerticalOffset = a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_cutoutVerticalOffset, 0).toFloat()
-    val elevation = a.getDimensionPixelOffset(R.styleable.NGKaryaToolbar_elevation, 0).toFloat()
-    val backgroundTint: ColorStateList? = getColorStateList(context, a, R.styleable.NGKaryaToolbar_backgroundTint)
+      a.getDimensionPixelOffset(R.styleable.AssistantToolbar_cutoutRoundedCornerRadius, 0).toFloat()
+    cutoutVerticalOffset = a.getDimensionPixelOffset(R.styleable.AssistantToolbar_cutoutVerticalOffset, 0).toFloat()
+    val elevation = a.getDimensionPixelOffset(R.styleable.AssistantToolbar_elevation, 0).toFloat()
+    val backgroundTint: ColorStateList? = getColorStateList(context, a, R.styleable.AssistantToolbar_backgroundTint)
 
     setBackground(cutoutMargin, cutoutRoundedCornerRadius, cutoutVerticalOffset, elevation)
     backgroundTint?.let { setBackgroundTint(it) }

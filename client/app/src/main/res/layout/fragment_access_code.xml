@@ -6,75 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.onboarding.accesscode.AccessCodeActivity">
 
-    <com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar
+    <com.microsoft.research.karya.ui.widgets.KaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_56sdp"
-        app:backgroundTint="@color/colorWhite"
-        app:cutoutMargin="@dimen/_8sdp"
-        app:cutoutRoundedCornerRadius="@dimen/_32sdp"
-        app:elevation="@dimen/_8sdp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        app:startIcon="@drawable/access_code_title_icon"
+        app:showBackButton="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/back_icon"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
-                android:layout_gravity="start"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_back_arrow" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/logo"
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
-                android:layout_gravity="start"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/back_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/access_code_title_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="@dimen/_88sdp"
-                android:maxLines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp"
-                android:textStyle="bold"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/back_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="A very long string to measure the maximument size" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/fab"
-            android:layout_width="@dimen/_56sdp"
-            android:layout_height="@dimen/_56sdp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:background="@color/dk_blue"
-            android:elevation="@dimen/_4sdp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_assistant"
-            android:tag="KARYA_ASSISTANT"
-            android:visibility="visible"
-            app:shapeAppearance="@style/ShapeAppearanceOverlay.CircleShape" />
-    </com.microsoft.research.karya.ui.widgets.toolbar.NGKaryaToolbar>
-
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
@@ -85,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appTb"
         app:srcCompat="@drawable/ic_lock" />
-
 
     <TextView
         android:id="@+id/creationCodePromptTv"
