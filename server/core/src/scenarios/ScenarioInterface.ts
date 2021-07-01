@@ -4,7 +4,7 @@
 // Interface specification of a scenario. All scenarios must implement this
 // interface.
 
-import { ScenarioName } from './Index';
+import { ScenarioName, TaskRecordType } from './Index';
 import { ParameterArray } from '@karya/parameter-specs';
 import Joi from 'joi';
 
@@ -112,4 +112,7 @@ export interface BaseScenarioInterface<
 
   // microtask response type
   response_type: MicrotaskResponseType;
+
+  // language string to be displayed in frontend
+  languageString(task: TaskRecordType<SN>): string;
 }

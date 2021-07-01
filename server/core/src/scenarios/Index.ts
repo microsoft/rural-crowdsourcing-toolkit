@@ -80,6 +80,13 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
   },
 ];
 
+/**
+ * Return the language string for a task record to be displayed in the web app
+ */
+export function languageString(task: TaskRecordType) {
+  return scenarioMap[task.scenario_name].languageString(task);
+}
+
 // Utility types to extract task, microtask, assignment record types
 export type TaskRecordType<
   SN extends ScenarioName = ScenarioName,

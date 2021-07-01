@@ -5,7 +5,7 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { LanguageCode, languageParameter } from '../../languages/Index';
+import { LanguageCode, languageMap, languageParameter } from '../../languages/Index';
 
 // Text translation task input parameters
 type TextTranslationTaskInputParameters = {
@@ -78,4 +78,10 @@ export const baseTextTranslationScenario: BaseTextTranslationScenario = {
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_OBJECTIVE',
+
+  languageString(task) {
+    const source = languageMap[task.params.sourceLanguage].primary_name;
+    const target = languageMap[task.params.targetLanguage].primary_name;
+    return `${source} -> ${target}`;
+  },
 };

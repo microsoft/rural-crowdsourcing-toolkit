@@ -4,7 +4,7 @@
 // Implementation of the transliteration corpus
 
 import Joi from 'joi';
-import { LanguageCode, languageParameter } from '../../languages/Index';
+import { LanguageCode, languageMap, languageParameter } from '../../languages/Index';
 import { BaseScenarioInterface } from '../ScenarioInterface';
 
 // Transliteration task input parameters
@@ -107,4 +107,8 @@ export const baseXliterationDataScenario: BaseXliterationDataScenario = {
   microtask_assignment_order: 'EITHER',
 
   response_type: 'MULTIPLE_OBJECTIVE',
+
+  languageString(task) {
+    return languageMap[task.params.language].primary_name;
+  },
 };
