@@ -35,6 +35,11 @@ export async function executeForwardLink(
   // Get to task
   const toTask = (await BasicModel.getSingle('task', { id: link.to_task })) as TaskRecordType;
 
+  // if worker groups have to be forced
+  if (link.force_wgroup) {
+    assignments = assignments.filter((mta) => mta.wgroup === toTask.wgroup);
+  }
+
   // Get all microtasks
   const microtasks = await BBPromise.mapSeries(assignments, async (assignment) => {
     return BasicModel.getSingle('microtask', { id: assignment.microtask_id }) as Promise<MicrotaskRecordType>;

@@ -9,7 +9,13 @@ import { Box, BoxRecord, LanguageCode, languageCodes, Worker, WorkerRecord } fro
 import { getCreationCode } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 
-export async function generateWorkerCodes(box: BoxRecord, numCodes: number, language: LanguageCode, tags: string[]) {
+export async function generateWorkerCodes(
+  box: BoxRecord,
+  numCodes: number,
+  language: LanguageCode,
+  tags: string[],
+  wgroup: string | null = null
+) {
   // Repeat for num_cc times
   const newWorkers: WorkerRecord[] = [];
   while (newWorkers.length < numCodes) {
@@ -32,6 +38,7 @@ export async function generateWorkerCodes(box: BoxRecord, numCodes: number, lang
       box_id: box.id,
       language,
       tags: { tags },
+      wgroup,
     };
 
     try {
@@ -50,7 +57,7 @@ export async function generateWorkerCodes(box: BoxRecord, numCodes: number, lang
 
 // Print script usage and exit
 function printUsage() {
-  console.log(`USAGE: ${process.argv[0]} ${process.argv[1]} <box-config> <num-codes> <language-code> <tags>`);
+  console.log(`USAGE: ${process.argv[0]} ${process.argv[1]} <box-config> <num-codes> <language-code> <tags> <wgroup>`);
   process.exit(0);
 }
 
@@ -62,6 +69,7 @@ function printUsage() {
   const numCodesString = process.argv[3];
   const languageCode = process.argv[4] as LanguageCode;
   const tagString = process.argv[5];
+  const wgroup = process.argv[6] ?? null;
 
   // Check box config file
   const configData = await fsp.readFile(boxConfigFile);
@@ -86,7 +94,7 @@ function printUsage() {
   }
 
   const tags = tagString ? tagString.split(',') : [];
-  await generateWorkerCodes(box, numCodes, languageCode, tags);
+  await generateWorkerCodes(box, numCodes, languageCode, tags, wgroup);
 })()
   .catch((err) => {
     console.log(err);
