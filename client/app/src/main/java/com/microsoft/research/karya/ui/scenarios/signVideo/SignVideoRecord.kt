@@ -12,6 +12,7 @@ import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.visible
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.VideoResult
+import com.otaliastudios.cameraview.controls.Audio
 import com.otaliastudios.cameraview.controls.Facing
 import com.otaliastudios.cameraview.controls.Mode
 import kotlinx.android.synthetic.main.fragment_sign_video_record.*
@@ -29,6 +30,7 @@ class SignVideoRecord : AppCompatActivity() {
 
     cameraView.setLifecycleOwner(this)
     cameraView.facing = Facing.FRONT
+    cameraView.audio = Audio.OFF;
     cameraView.mode = Mode.VIDEO
     setupCamera()
 
@@ -55,10 +57,18 @@ class SignVideoRecord : AppCompatActivity() {
 //    }.start()
 
 
-    recordButton.setOnClickListener { handleRecordClick() }
+    stopRecordButton.setOnClickListener { handleStopRecordClick() }
+  }
+
+  private fun onStartRecording() {
+    cameraView.takeVideo(File(video_file_path))
+    stopRecordButton.visible()
   }
 
   private fun setupCamera() {
+
+    faceBoundsOverlay.setOnStartRecording(::onStartRecording)
+
     val faceDetector = FaceDetector(faceBoundsOverlay)
     cameraView.addFrameProcessor {
       faceDetector.process(
@@ -73,9 +83,7 @@ class SignVideoRecord : AppCompatActivity() {
     }
   }
 
-  private fun handleRecordClick() {
-    // TODO: Implement the case of start recording once we move to automatic start
-    // We have to only stop recording for now since the recording would start automatically when activity is launched
+  private fun handleStopRecordClick() {
     cameraView.stopVideo()
   }
 

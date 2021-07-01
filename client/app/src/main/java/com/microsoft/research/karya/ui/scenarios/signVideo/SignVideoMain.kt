@@ -104,7 +104,7 @@ open class SignVideoMain(
 
   /** This activity requires audio recording permissions */
   override fun requiredPermissions(): Array<String> {
-    return arrayOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.CAMERA)
+    return arrayOf(android.Manifest.permission.CAMERA)
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
@@ -204,8 +204,9 @@ open class SignVideoMain(
 
     val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     sentenceTv.text = sentence
-
     Log.i("VIDEO_SENTENCE", sentence)
+//    val sentence = "Hello"
+//    sentenceTv.text = sentence
 
     if (activityState == ActivityState.INIT) {
       setActivityState(ActivityState.COMPLETED_SETUP)
