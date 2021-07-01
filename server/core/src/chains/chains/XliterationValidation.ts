@@ -7,6 +7,7 @@ import { BaseChainInterface } from '../BaseChainInterface';
 
 export const baseXliterationValidationChain: BaseChainInterface<'XLITERATION_DATA', 'XLITERATION_DATA'> = {
   name: 'XLITERATION_VALIDATION',
+  full_name: 'Transliteration Validation',
   fromScenario: 'XLITERATION_DATA',
   toScenario: 'XLITERATION_DATA',
   blocking: 'EITHER',
