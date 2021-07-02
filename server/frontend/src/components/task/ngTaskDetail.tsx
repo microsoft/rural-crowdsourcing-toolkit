@@ -14,7 +14,16 @@ import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
-import { scenarioMap, ScenarioName, baseChainMap, ChainName, languageMap, LanguageCode, TaskLink } from '@karya/core';
+// Store types and actions
+import {
+  scenarioMap,
+  ScenarioName,
+  baseChainMap,
+  ChainName,
+  languageString,
+  TaskRecordType,
+  TaskLink,
+} from '@karya/core';
 
 // Utils
 import { taskStatus } from './TaskUtils';
@@ -29,6 +38,7 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 // Recharts library
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+// CSS
 import '../../css/task/ngTaskDetail.css';
 
 /** Props */
@@ -61,6 +71,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
   const task_id = ownProps.match.params.id;
   return {
+    // For getting all the tasks including the current one
     getTask: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -71,6 +82,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       dispatch(action);
     },
 
+    // For submitting input files
     submitInputFiles: (files: { [id: string]: File }) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -83,6 +95,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       dispatch(action);
     },
 
+    // For getting both input and output files
     getFiles: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -93,6 +106,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       dispatch(action);
     },
 
+    // For generating new output files
     generateOutput: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -104,6 +118,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       dispatch(action);
     },
 
+    // For displaying data in graph and table
     getMicrotasksSummary: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -114,6 +129,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       dispatch(action);
     },
 
+    // To create new task link
     createTaskLink: (tl: TaskLink) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -125,6 +141,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       dispatch(action);
     },
 
+    // To get all task links
     getTaskLinks: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
@@ -144,6 +161,7 @@ const connector = compose(withAuth, reduxConnector);
 // Task detail props
 type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector>;
 
+// component state
 type TaskDetailState = {
   files: { [id: string]: File };
   show_form: boolean;
@@ -151,17 +169,20 @@ type TaskDetailState = {
 };
 
 class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
+  // Initial state
   state = {
     files: {},
     show_form: false,
     taskLink: { chain: undefined, to_task: undefined, blocking: false },
   };
 
+  // Submit input files and close the form on successful submission only
   submitInputFiles = () => {
     this.props.submitInputFiles(this.state.files);
     this.setState({ show_form: false });
   };
 
+  // Get all the data to display. Also initialize materialize fields
   componentDidMount() {
     this.props.getFiles();
     this.props.getMicrotasksSummary();
@@ -192,11 +213,13 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     this.setState({ taskLink });
   };
 
+  // Handle boolean input change
   handleBooleanChange: ChangeEventHandler<HTMLInputElement> = e => {
     const taskLink: TaskLink = { ...this.state.taskLink, [e.currentTarget.id]: e.currentTarget.checked };
     this.setState({ taskLink });
   };
 
+  // Handle task link submission
   handleLinkSubmit: FormEventHandler = e => {
     e.preventDefault();
     const taskLink: TaskLink = { ...this.state.taskLink };
@@ -206,12 +229,14 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   };
 
   render() {
+    // Getting all the data from props
     const { task } = this.props;
     const { file_records } = this.props;
     const { graph_data } = this.props;
     const { tasks } = this.props;
     const { task_links } = this.props;
 
+    // Task link form values
     const chain = this.state.taskLink.chain || 0;
     const to_task = this.state.taskLink.to_task || 0;
     const blocking = this.state.taskLink.blocking;
@@ -234,11 +259,13 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
       );
     }
 
+    // Input file table and output file table
     let inputFileTable = null;
     let outputFileTable = null;
     let files_submitted = false;
     let i = 0,
       j = 0;
+    // Show input file table if there are submitted files already
     if (file_records.length !== 0) {
       inputFileTable = (
         <table id='input-table'>
@@ -252,6 +279,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </tr>
           </thead>
           <tbody>
+            {/** Show only input task op data */}
             {file_records.map(r =>
               r.op_type === 'PROCESS_INPUT' ? (
                 <tr>
@@ -279,6 +307,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
       );
 
       files_submitted = true;
+      // Show the output table if there are file records left after the input ones
       if (i !== file_records.length) {
         outputFileTable = (
           <table id='output-table'>
@@ -292,6 +321,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               </tr>
             </thead>
             <tbody>
+              {/** Show only output task op data */}
               {file_records.map(r =>
                 r.op_type === 'GENERATE_OUTPUT' ? (
                   <tr>
@@ -320,39 +350,46 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
       }
     }
 
+    // Task link table and creation form
     let task_link_section = null;
     let k = 0;
     let isDisabled = true;
+    // Get all chains that can originate from this task given its scenario
     let chains = Object.values(baseChainMap).filter(chain => chain.fromScenario === task.scenario_name);
     if (chains.length !== 0) {
       task_link_section = (
-        <form onSubmit={this.handleLinkSubmit}>
-          <div className='section' id='task_link_section'>
-            <div className='row'>
-              <h2>Chains Added</h2>
-              {task_links.length !== 0 ? (
-                <table id='task-link-table'>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>To Task</th>
-                      <th>Chain</th>
-                      <th>Blocking</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {task_links.map(l => (
-                      <tr>
-                        <td>{++k}</td>
-                        <td>{tasks.find(t => t.id === l.to_task)?.name}</td>
-                        <td>{baseChainMap[l.chain].full_name}</td>
-                        <td>{l.blocking ? 'Yes' : 'No'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : null}
+        <div className='section' id='task_link_section'>
+          <div className='row'>
+            <h2>Chains Added</h2>
+          </div>
+          {/** Show task link table if task links exist */}
+          {task_links.length !== 0 ? (
+            <table id='task-link-table'>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>To Task</th>
+                  <th>Chain</th>
+                  <th>Blocking</th>
+                </tr>
+              </thead>
+              <tbody>
+                {task_links.map(l => (
+                  <tr>
+                    <td>{++k}</td>
+                    {/** Get task name from id */}
+                    <td>{tasks.find(t => t.id === l.to_task)?.name}</td>
+                    <td>{baseChainMap[l.chain].full_name}</td>
+                    <td>{l.blocking ? 'Yes' : 'No'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : null}
 
+          {/** Task link form */}
+          <form onSubmit={this.handleLinkSubmit}>
+            <div className='row'>
               <div className='col s10 m8 l6'>
                 <select id='chain' value={chain} onChange={this.handleSelectInputChange}>
                   <option value={0} disabled={true} selected={true}>
@@ -366,7 +403,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 </select>
               </div>
             </div>
-
+            {/** When chain is selected show the rest of the form */}
             {this.state.taskLink.chain !== undefined ? (
               <>
                 {(isDisabled = false)}
@@ -376,6 +413,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                       <option value={0} disabled={true} selected={true}>
                         Select a task
                       </option>
+                      {/** Show all tasks that belong to the required scenario as options */}
                       {tasks
                         .filter(
                           // @ts-ignore
@@ -402,18 +440,18 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <button className='btn-flat' id='add-link-btn' disabled={isDisabled}>
               <i className='material-icons left'>add</i>Add chain
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       );
     }
 
     const errorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
+    // Get basic task details
     const scenario = scenarioMap[task.scenario_name as ScenarioName];
-
     const scenario_name = scenario ? scenario.full_name : '<Loading scenarios>';
-    const language = languageMap[task.params.language as LanguageCode].primary_name;
+    const language = languageString(task as TaskRecordType);
 
     const microtasks = graph_data.length;
     // @ts-ignore
@@ -433,6 +471,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <div className='row'>{errorElement}</div>
           </div>
         ) : null}
+        {/** Breadcrumbs */}
         <nav id='breadcrumbs-nav'>
           <div className='nav-wrapper' id='nav-wrapper'>
             <div className='col s12'>
@@ -457,6 +496,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </div>
           </div>
 
+          {/** Microtask summary data table */}
           <div className='row'>
             <div className='number-col'>
               <h2>Microtasks</h2>
@@ -472,6 +512,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </div>
           </div>
 
+          {/** Recharts graph showing total, completed, verified assignments, and cost by microtask id */}
           {graph_data.length !== 0 && completed_assignments !== 0 ? (
             <ResponsiveContainer width='90%' height={400}>
               <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
@@ -488,6 +529,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </ResponsiveContainer>
           ) : null}
 
+          {/** Basic task info section */}
           <div className='section'>
             <div className='row'>
               <table id='task-details'>
@@ -529,6 +571,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
           {task_link_section}
 
+          {/** Display input and output file section if task requires input files */}
           {jsonInputFile.required || tarInputfile.required ? (
             <>
               <div className='section' id='io-files'>
@@ -554,6 +597,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 </button>
               </div>
 
+              {/** Floating form for submission of input files */}
               <div
                 className='card'
                 id='submit-form'

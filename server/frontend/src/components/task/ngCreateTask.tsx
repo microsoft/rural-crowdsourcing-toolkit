@@ -27,6 +27,7 @@ import { ParameterSection } from '../templates/ParameterRenderer';
 // Hoc
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
+// CSS
 import '../../css/task/ngCreateTask.css';
 
 // Create router props
@@ -75,6 +76,7 @@ type CreateTaskState = {
 };
 
 class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
+  // Initial state
   state: CreateTaskState = {
     task: {
       name: '',
@@ -87,6 +89,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     tags_input_isActive: false,
   };
 
+  // Ref to enable auto-scrolling to the form on scenario selection
   formRef = React.createRef<HTMLDivElement>();
 
   // reset task data
@@ -133,7 +136,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     const policy = undefined;
     this.setState({ policy });
 
-    // Scroll to task creation form
+    // Scroll to task creation form automatically
     setTimeout(() => {
       if (this.formRef.current) {
         window.scrollTo({
@@ -321,6 +324,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             </div>
           </div>
 
+          {/** Policy and policy params */}
           <div className='section'>
             <div className='row'>
               <h2 className='form-heading'>Policy Parameters</h2>
@@ -337,7 +341,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 </select>
               </div>
             </div>
-
             {/** Policy parameter section */}
             {policyParamsSection}
           </div>
@@ -451,6 +454,8 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     return (
       <div className='white z-depth-1 lpad20' id='main'>
         {createErrorElement}
+
+        {/** Breadcrumbs */}
         <nav id='breadcrumbs-nav'>
           <div className='nav-wrapper' id='nav-wrapper'>
             <div className='col s12'>
@@ -461,6 +466,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             </div>
           </div>
         </nav>
+
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
             <h1 id='page-title'>Create Task</h1>
