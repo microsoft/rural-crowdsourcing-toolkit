@@ -345,7 +345,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                       <tr>
                         <td>{++k}</td>
                         <td>{tasks.find(t => t.id === l.to_task)?.name}</td>
-                        <td>{l.chain}</td>
+                        <td>{baseChainMap[l.chain].full_name}</td>
                         <td>{l.blocking ? 'Yes' : 'No'}</td>
                       </tr>
                     ))}
@@ -360,7 +360,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                   </option>
                   {chains.map(c => (
                     <option value={c.name} key={c.name}>
-                      {c.name}
+                      {c.full_name}
                     </option>
                   ))}
                 </select>
