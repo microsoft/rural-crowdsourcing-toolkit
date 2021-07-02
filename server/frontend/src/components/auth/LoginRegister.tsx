@@ -251,7 +251,11 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
 
                   <div id='register-btn-div'>
                     <div className='input-field'>
-                      <button className='btn' id='register-btn' disabled={!this.state.showProfileDetails}>
+                      <button
+                        className='btn waves-effect waves-light'
+                        id='register-btn'
+                        disabled={!this.state.showProfileDetails}
+                      >
                         Register <i className='material-icons right'>send</i>
                       </button>
                     </div>

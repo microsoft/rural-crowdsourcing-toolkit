@@ -19,7 +19,7 @@ import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard'
 /** task components */
 import ngCreateTask from './components/task/ngCreateTask';
 import ngTaskDetail from './components/task/ngTaskDetail';
-import TaskList from './components/task/TaskList';
+import ngTaskList from './components/task/ngTaskList';
 
 /** work_provider components */
 import WorkProviderList from './components/work_provider/WorkProviderList';
@@ -37,6 +37,7 @@ const Routes = (
     <Route exact path='/signout' component={SignOut} />
     <Route exact path='/unauthorized' component={Unauthorized} />
     <Route exact path='/login' component={LoginRegister} />
+    <Route exact path='/' component={LoginRegister} />
 
     {/**  Dashboard routes */}
     <AdminRoute path='/admin-dashboard' component={AdminDashboard} />
@@ -44,7 +45,7 @@ const Routes = (
 
     {/** Task routes */}
     <WorkProviderRoute exact path='/task/create' component={ngCreateTask} />
-    <WorkProviderRoute exact path='/task' component={TaskList} />
+    <WorkProviderRoute exact path='/task' component={ngTaskList} />
     <WorkProviderRoute exact path='/task/:id' component={ngTaskDetail} />
 
     {/** Work Provider routes */}
