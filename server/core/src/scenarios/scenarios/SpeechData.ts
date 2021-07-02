@@ -5,7 +5,7 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { LanguageCode, languageParameter } from '../../languages/Index';
+import { LanguageCode, languageMap, languageParameter } from '../../languages/Index';
 
 // Speech data task input parameters
 type SpeechDataTaskInputParameters = {
@@ -67,4 +67,8 @@ export const baseSpeechDataScenario: BaseSpeechDataScenario = {
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_SUBJECTIVE',
+
+  languageString(task) {
+    return languageMap[task.params.language].primary_name;
+  },
 };

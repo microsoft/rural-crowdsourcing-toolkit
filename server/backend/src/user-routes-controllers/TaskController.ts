@@ -21,6 +21,7 @@ import { promises as fsp } from 'fs';
 import * as tar from 'tar';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
+import { csvToJson } from '../scenarios/Common';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -160,10 +161,26 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     await fsp.mkdir(folderPath);
 
     // Copy required files to destination
-    for (const req of required) {
-      const file = files[req];
+    if (tgz.required) {
+      const file = files['tgz'];
       // @ts-ignore Already checked that file is not an instance of array
-      await fsp.copyFile(file.path, `${folderPath}/${uniqueName}.${req}`);
+      await fsp.copyFile(file.path, `${folderPath}/${uniqueName}.tgz`);
+    }
+
+    // Copy required files to destination
+    if (json.required) {
+      const file = files['json'];
+      if (!(file instanceof Array)) {
+        const path = file.path;
+        const name = file.name;
+        if (name.endsWith('json')) {
+          await fsp.copyFile(path, `${folderPath}/${uniqueName}.json`);
+        } else if (name.endsWith('csv')) {
+          const csvData = await fsp.readFile(path);
+          const jsonData = csvToJson(csvData.toString());
+          await fsp.writeFile(`${folderPath}/${uniqueName}.json`, jsonData);
+        }
+      }
     }
 
     // Tar input blob parameter

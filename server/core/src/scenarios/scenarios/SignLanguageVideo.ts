@@ -54,4 +54,8 @@ export const baseSignLanguageVideoScenario: BaseSignLanguageVideoScenario = {
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_SUBJECTIVE',
+
+  languageString(task) {
+    return 'Sign Language';
+  },
 };

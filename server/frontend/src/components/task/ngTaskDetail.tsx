@@ -48,7 +48,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const graph_data = state.all.microtask_assignment.data;
   return {
     request,
-    task: data.find(t => t.id === task_id),
+    task: data.find((t) => t.id === task_id),
     file_records,
     graph_data,
   };
@@ -145,7 +145,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   }
 
   // Handle file change
-  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.currentTarget.files) {
       const file = e.currentTarget.files[0];
       const files = { ...this.state.files, [e.currentTarget.id]: file };
@@ -194,14 +194,14 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </tr>
           </thead>
           <tbody>
-            {file_records.map(r =>
+            {file_records.map((r) =>
               r.op_type === 'PROCESS_INPUT' ? (
                 <tr>
                   <td>{++i}</td>
                   <td>File{i}</td>
                   <td>{r.status}</td>
                   <td>{r.created_at}</td>
-                  {r.file_id ? (
+                  {r.file_id && r.extras ? (
                     <td>
                       {
                         // @ts-ignore
@@ -233,7 +233,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               </tr>
             </thead>
             <tbody>
-              {file_records.map(r =>
+              {file_records.map((r) =>
                 r.op_type === 'GENERATE_OUTPUT' ? (
                   <tr>
                     <td>{++j}</td>
@@ -274,7 +274,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     // @ts-ignore
     const cost = graph_data.reduce((prev, current) => prev + current.cost, 0);
     // @ts-ignore
-    const data = graph_data.map(m => ({ ...m.extras, cost: m.cost, id: m.id }));
+    const data = graph_data.map((m) => ({ ...m.extras, cost: m.cost, id: m.id }));
 
     const jsonInputFile = scenario.task_input_file.json;
     const tarInputfile = scenario.task_input_file.tgz;

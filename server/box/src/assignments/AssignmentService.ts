@@ -128,6 +128,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         task_id: task.id,
         microtask_id: microtask.id,
         worker_id: worker.id,
+        wgroup: worker.wgroup,
         max_credits: microtask.credits,
         status: 'ASSIGNED',
       });
@@ -187,7 +188,11 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
  * @param worker Worker record
  */
 function assignable(task: TaskRecord, worker: WorkerRecord): boolean {
-  const workerTags = worker.tags.tags;
-  const taskTags = task.itags.itags;
+  let workerTags = worker.tags.tags;
+  if (worker.wgroup) workerTags.push(worker.wgroup);
+
+  let taskTags = task.itags.itags;
+  if (task.wgroup) taskTags.push(task.wgroup);
+
   return taskTags.every((tag) => workerTags.includes(tag));
 }

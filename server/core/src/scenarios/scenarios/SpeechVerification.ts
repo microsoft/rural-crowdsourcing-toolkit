@@ -5,7 +5,7 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { LanguageCode, languageParameter } from '../../languages/Index';
+import { LanguageCode, languageMap, languageParameter } from '../../languages/Index';
 
 // Speech verification task input parameters
 type SpeechVerificationTaskInputParameters = {
@@ -71,4 +71,8 @@ export const baseSpeechVerificationScenario: BaseSpeechVerificationScenario = {
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_SUBJECTIVE',
+
+  languageString(task) {
+    return languageMap[task.params.language].primary_name;
+  },
 };
