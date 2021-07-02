@@ -20,11 +20,11 @@
 
 .breadcrumb {
   color: #b4bdc6;
-  font-size: 13px;
+  font-size: 0.88em;
   letter-spacing: 2px;
   text-transform: uppercase;
   transition: all 0.5s ease;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .breadcrumb:before {
@@ -87,10 +87,10 @@
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
     text-align: center;
+    transition: all 0.2s ease-out;
   }
 
   .scenario-card:hover {
-    transition: all 0.2s ease-out;
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px,
       rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 12px 12px;
     top: -2px;
@@ -123,10 +123,10 @@
     overflow: hidden;
     border: 1px solid #f2f8f9;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    transition: all 0.2s ease-out;
   }
 
   .scenario-card:hover {
-    transition: all 0.2s ease-out;
     box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px,
       rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 12px 12px;
     top: -2px;
@@ -163,22 +163,15 @@ form {
   color: #717787;
 }
 
-#name,
-#display_name,
-#tags,
-#description,
-#policy_id,
-#assignment_granularity,
-#group_assignment_order,
-#microtask_assignment_order {
+#description-div {
+  margin-top: 5.5em;
+}
+
+#description {
   font-family: 'Titillium Web', sans-serif;
   color: #717787;
   letter-spacing: 0.08em;
   margin-bottom: 0.5%;
-}
-
-#description-div {
-  margin-top: 5.5em;
 }
 
 #task-form input {
@@ -198,6 +191,8 @@ form {
 }
 
 #tags {
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5%;
   margin-top: 2%;
   border-bottom: none;
 }
@@ -220,6 +215,10 @@ form {
 }
 
 #tags #tags_input:focus + label {
+  transform: translateY(-14px) scale(0.8);
+}
+
+#tags label .active_input {
   transform: translateY(-14px) scale(0.8);
 }
 
@@ -251,12 +250,12 @@ form {
 
 #submit-task-btn {
   background-color: #4fc3f7;
+  transition: all 0.3s ease-in;
 }
 
 #submit-task-btn:hover {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  transition: all 0.3s ease-in;
   background-color: #29b6f6;
 }
 
@@ -265,10 +264,10 @@ form {
   color: #717787;
   padding-left: 3%;
   padding-right: 3%;
+  transition: all 0.3s ease-in;
 }
 
 #cancel-btn:hover {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  transition: all 0.3s ease-in;
 }

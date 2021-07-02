@@ -14,6 +14,7 @@ import * as ServerUserController from '../user-routes-controllers/ServerUserCont
 import * as BoxController from '../user-routes-controllers/BoxController';
 import * as TaskController from '../user-routes-controllers/TaskController';
 import * as TaskAssignmentController from '../user-routes-controllers/TaskAssignmentController';
+import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
 
 // Default state for all routes
 export type DefaultUserRouteState = {
@@ -155,5 +156,24 @@ userRouter.post(
 
 // Get all task assignments
 userRouter.get('/task_assignments', Middlewares.needIdToken, Middlewares.onlyAdmin, TaskAssignmentController.get);
+
+//Create task link
+userRouter.post<TaskController.TaskRouteState, {}>(
+  '/task/:id/task_links',
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  BodyParser(),
+  // @ts-ignore
+  TaskLinkController.create
+);
+
+// Get all task links
+userRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/:id/task_links',
+  // @ts-ignore
+ Middlewares.needIdToken,
+ TaskController.checkTask,
+ TaskLinkController.get
+ );
 
 export { userRouter };

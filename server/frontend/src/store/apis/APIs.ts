@@ -138,6 +138,19 @@ export type BackendRequestInitAction =
       store: 'microtask_assignment';
       label: 'GET_ALL';
       task_id: string;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'task_link';
+      label: 'CREATE';
+      request: DBT.TaskLink;
+      task_id: string;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'task_link';
+      label: 'GET_ALL';
+      task_id: string;
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -238,6 +251,18 @@ export type BackendRequestSuccessAction =
       store: 'microtask_assignment';
       label: 'GET_ALL';
       response: any;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task_link';
+      label: 'CREATE';
+      response: DBT.TaskLinkRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task_link';
+      label: 'GET_ALL';
+      response: DBT.TaskLinkRecord[];
     };
 
 export type BackendRequestFailureAction = {
@@ -409,6 +434,25 @@ export async function backendRequest(
         store,
         label,
         response: await GET(`/task/${action.task_id}/microtask_summary`),
+      } as BackendRequestSuccessAction;
+    }
+    // Get all task links
+    if (action.store === 'task_link' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET(`/task/${action.task_id}/task_links`),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Create new task assignment
+    if (action.store === 'task_link' && action.label === 'CREATE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST(`/task/${action.task_id}/task_links`, action.request),
       } as BackendRequestSuccessAction;
     }
 

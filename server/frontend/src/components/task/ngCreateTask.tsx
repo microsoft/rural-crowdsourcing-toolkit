@@ -71,6 +71,7 @@ type CreateTaskState = {
   scenario?: BaseScenarioInterface<any, object, any, object, any, object>;
   policy?: PolicyName;
   tags_input: string;
+  tags_input_isActive: boolean;
 };
 
 class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
@@ -83,6 +84,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     itags: [],
     params: {},
     tags_input: '',
+    tags_input_isActive: false,
   };
 
   formRef = React.createRef<HTMLDivElement>();
@@ -151,17 +153,23 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   // Handle tag input change
   handleTagsChange: ChangeEventHandler<HTMLInputElement> = e => {
     this.setState({ tags_input: e.currentTarget.value });
+    if (e.currentTarget.value !== '') {
+      this.setState({ tags_input_isActive: true });
+    } else {
+      this.setState({ tags_input_isActive: false });
+    }
   };
 
   // Handle key down event during tag input
   handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
-    if (['Enter', 'Tab', ','].includes(e.key)) {
+    if (['Enter', ','].includes(e.key)) {
       e.preventDefault();
       var tag = this.state.tags_input.trim();
       if (tag) {
         this.setState({
           itags: [...this.state.itags, tag],
           tags_input: '',
+          tags_input_isActive: false,
         });
       }
     }
@@ -284,7 +292,9 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                     onChange={this.handleTagsChange}
                     onKeyDown={this.handleKeyDown}
                   />
-                  <label htmlFor='tags_input'>Enter tags</label>
+                  <label className={this.state.tags_input_isActive ? 'active_input' : ''} htmlFor='tags_input'>
+                    Enter tags
+                  </label>
                   {this.state.itags.map(tag => (
                     <div key={tag} className='chip'>
                       {tag}
@@ -410,7 +420,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           ) : (
             <div className='row'>
               <div className='input-field'>
-                <button className='btn' id='submit-task-btn'>
+                <button className='btn waves-effect waves-light' id='submit-task-btn'>
                   Submit Task
                 </button>
                 <Link to='/task'>
