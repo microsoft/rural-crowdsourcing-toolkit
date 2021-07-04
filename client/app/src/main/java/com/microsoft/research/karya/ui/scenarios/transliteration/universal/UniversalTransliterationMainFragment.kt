@@ -70,6 +70,8 @@ class UniversalTransliterationMainFragment :
     textTransliteration.onSubmit { addWord() }
 
     nextBtn.setOnClickListener { onNextClick() }
+
+    Validator.init()
   }
 
   private fun addWord() {
@@ -92,7 +94,7 @@ class UniversalTransliterationMainFragment :
       return
     }
 
-    if (!Validator.isValid(word) && word != prevInvalidWord) {
+    if (!Validator.isValid(viewModel.sourceLanguage, viewModel.sourceWord, word) && word != prevInvalidWord) {
       prevInvalidWord = word
       showError(
         "This transliteration doesn't seem right. Please check it again. " +
@@ -106,7 +108,7 @@ class UniversalTransliterationMainFragment :
       return
     }
 
-    if(outputVariants.containsKey(word) || inputVariants.containsKey(word)) {
+    if (outputVariants.containsKey(word) || inputVariants.containsKey(word)) {
       showError("The word is already present")
       return
     }

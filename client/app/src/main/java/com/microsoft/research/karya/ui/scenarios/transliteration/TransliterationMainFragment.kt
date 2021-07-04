@@ -72,12 +72,12 @@ class TransliterationMainFragment : BaseMTRendererFragment(R.layout.transliterat
       return
     }
 
-    if (!Validator.isValid(word) && word != prevInvalidWord) {
+    /* if (!Validator.isValid(word) && word != prevInvalidWord) {
       prevInvalidWord = word
       showError("This transliteration doesn't seem right. Please check it again. " +
         "Press add again if you think its correct")
       return
-    }
+    } */
 
     errorTv.gone()
     viewModel.addWord(word)

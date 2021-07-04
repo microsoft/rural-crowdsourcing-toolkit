@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.model.karya.ng.LanguageType
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
@@ -54,6 +55,8 @@ constructor(
   private val _wordTvText: MutableStateFlow<String> = MutableStateFlow("")
   val wordTvText = _wordTvText.asStateFlow()
   var allowValidation = false
+  var sourceLanguage: LanguageType = LanguageType.HI
+  var sourceWord: String = ""
 
   private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
     MutableLiveData(mutableMapOf())
@@ -71,8 +74,9 @@ constructor(
     } catch (e: Exception) {
       false
     }
-    _wordTvText.value =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
+    sourceLanguage = LanguageType.valueOf(task.params.asJsonObject.get("language").asString);
+    sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
+    _wordTvText.value = sourceWord
     limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
     val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
     val temp = mutableMapOf<String, WordDetail>()
