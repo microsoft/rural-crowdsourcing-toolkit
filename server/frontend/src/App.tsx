@@ -13,11 +13,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Fragment>
-          <main>
-            <div id='main-container' className='container'>
-              <div className='row'>{Routes}</div>
-            </div>
-          </main>
+          <div className='row'>{Routes}</div>
         </Fragment>
       </BrowserRouter>
     );

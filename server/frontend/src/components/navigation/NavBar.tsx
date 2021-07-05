@@ -31,29 +31,22 @@ class NavBar extends React.Component<NavBarProps> {
 
     const initials = auth.cwp === null ? '' : (auth.cwp.full_name as string)[0];
     return (
-      <nav className='navbar white'>
+      <nav className='navbar white' id='top-nav'>
         <div className='nav-wrapper'>
           <div id='nav-container' className='container'>
             {auth.status !== 'IN_FLIGHT' ? (
               <ul id='nav-mobile' className='right'>
                 {auth.cwp === null ? (
-                  <Fragment>
-                    <li>
-                      <NavLink to='/signup'>Sign Up</NavLink>
-                    </li>{' '}
-                    <li>
-                      <NavLink to='/signin'>Sign In</NavLink>
-                    </li>
-                  </Fragment>
+                  <li>
+                    <NavLink to='/login'>Login</NavLink>
+                  </li>
                 ) : (
                   <Fragment>
                     <li>
                       <NavLink to='/signout'>Sign Out</NavLink>
                     </li>
                     <li>
-                      <NavLink to='/dashboard'>
-                        <button className='btn-floating teal'>{initials}</button>
-                      </NavLink>
+                      <button className='btn-floating'>{initials}</button>
                     </li>
                   </Fragment>
                 )}

@@ -4,12 +4,33 @@
 **/
 
 ul#nav-mobile li > a {
-  color: #000;
+  color: #6e768d;
+}
+
+#nav-container {
+  box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.45em;
+  letter-spacing: 0.03em;
+  color: #6e768d !important;
+}
+
+.btn-floating {
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  background-color: #a4d4ff;
+  box-shadow: none;
+}
+
+.btn-floating:hover,
+.btn-floating:focus {
+  background-color: #a4d4ff;
 }
 
 @media only screen and (min-width: 992px) {
-  div#nav-container {
-    position: relative;
-    left: 150px;
+  #top-nav {
+    margin-bottom: 3%;
+    width: 100%;
   }
 }

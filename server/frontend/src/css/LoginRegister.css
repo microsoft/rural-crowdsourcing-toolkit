@@ -23,7 +23,7 @@
 }
 
 #login-text {
-  padding-bottom: 36%;
+  padding-bottom: 10%;
 }
 
 #login-section {
@@ -68,7 +68,7 @@
   box-shadow: rgba(6, 24, 44, 0.1) 0px 0px 0px 1px, rgba(6, 24, 44, 0.25) 0px 4px 6px -1px,
     rgba(255, 255, 255, 0.06) 0px 1px 0px inset !important;
   font-weight: 300;
-  margin-left: 7%;
+  margin-left: 10%;
 }
 
 #or {
@@ -76,44 +76,20 @@
   font-size: 13px;
 }
 
-@media only screen and (max-width: 600px) {
-  .or-separator {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 4%;
-  }
-
-  .or-separator:before,
-  .or-separator:after {
-    content: '';
-    border-top: 2px solid #ebedec;
-    flex: 1px;
-  }
+.or-separator {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 4%;
 }
 
-@media only screen and (min-width: 600px) {
-  .wrapper {
-    margin-right: 4%;
-    margin-top: 4%;
-    height: 22em;
-    display: flex;
-    justify-content: center;
-  }
-
-  .or-separator {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .vertical-line {
-    border-left: 2px solid #ebedec;
-    flex-grow: 1;
-    width: 1px;
-  }
+.or-separator:before,
+.or-separator:after {
+  content: '';
+  border-top: 2px solid #ebedec;
+  flex: 1px;
 }
 
 #enter-code-txt {

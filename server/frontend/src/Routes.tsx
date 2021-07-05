@@ -12,6 +12,9 @@ import LoginRegister from './components/auth/LoginRegister';
 import SignOut from './components/auth/SignOut';
 import Unauthorized from './components/auth/Unauthorized';
 
+/** Nav component */
+import NavBar from './components/navigation/NavBar';
+
 /** Dashboard components */
 import AdminDashboard from './components/dashboard/AdminDashboard';
 import WorkProviderDashboard from './components/dashboard/WorkProviderDashboard';
@@ -39,13 +42,18 @@ const Routes = (
     <Route exact path='/login' component={LoginRegister} />
     <Route exact path='/' component={LoginRegister} />
 
+<>
+    <NavBar />
+    <main>
+    <div id='main-container' className='container'>
+
     {/**  Dashboard routes */}
     <AdminRoute path='/admin-dashboard' component={AdminDashboard} />
     <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
 
     {/** Task routes */}
-    <WorkProviderRoute exact path='/task/create' component={ngCreateTask} />
     <WorkProviderRoute exact path='/task' component={ngTaskList} />
+    <WorkProviderRoute exact path='/task/create' component={ngCreateTask} />
     <WorkProviderRoute exact path='/task/:id' component={ngTaskDetail} />
 
     {/** Work Provider routes */}
@@ -57,6 +65,10 @@ const Routes = (
     {/** Task assignment routes */}
     <AdminRoute exact path='/task-assignments' component={TaskAssignmentList} />
     <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
+
+    </div>
+    </main>
+    </>
   </Switch>
 );
 

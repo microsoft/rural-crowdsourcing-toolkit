@@ -168,103 +168,107 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
       auth.status === 'IN_FLIGHT' ? (
         <ProgressBar width='s12 m8' />
       ) : (
-        <div className='col s10 offset-s1 card' id='main-card'>
-          <div className='card-content'>
-            <div className='row'>
-              {/** Display any error message */}
-              {errorMessageElement}
+        <main>
+          <div id='main-container' className='container'>
+            <div className='col s10 offset-s1 m8 offset-m2 card' id='main-card'>
+              <div className='card-content'>
+                <div className='row'>
+                  {/** Display any error message */}
+                  {errorMessageElement}
 
-              <div className='col s12 m4 section' id='login-section'>
-                <span className='card-title' id='login-text'>
-                  Existing Users
-                </span>
+                  <div className='col s12 section' id='login-section'>
+                    <span className='card-title' id='login-text'>
+                      Existing Users
+                    </span>
 
-                <div id='login-btn'>
-                  <GoogleLogin
-                    clientId={config.googleOAuthClientID}
-                    buttonText='Log in with Google'
-                    onSuccess={this.onGoogleLoginSuccess}
-                    onFailure={this.onGoogleLoginFailure}
-                    cookiePolicy={'single_host_origin'}
-                  />
-                </div>
-              </div>
-
-              <div className='col s12 m1 wrapper'>
-                <div className='or-separator'>
-                  <div className='vertical-line'></div>
-                  <p id='or'>OR</p>
-                  <div className='vertical-line'></div>
-                </div>
-              </div>
-
-              <div className='col s12 m6 section' id='signup-section'>
-                <span className='card-title'>New User?</span>
-
-                <form onSubmit={this.handleFormSubmit} id='signup-form'>
-                  <p className='col s12' id='enter-code-txt'>
-                    Please enter the access code you should have received from the admin below:
-                  </p>
-
-                  <TextInput
-                    id='access_code'
-                    label='16-Character Access Code'
-                    value={wp.access_code}
-                    onChange={this.handleFormChange}
-                    required={true}
-                    width='s10 offset-s1'
-                  />
-
-                  <div id='choose-btn'>
-                    <GoogleLogin
-                      clientId={config.googleOAuthClientID}
-                      buttonText='Choose a Google account'
-                      onSuccess={this.onGoogleSignUpSuccess}
-                      onFailure={this.onGoogleLoginFailure}
-                      cookiePolicy={'single_host_origin'}
-                    />
+                    <div id='login-btn'>
+                      <GoogleLogin
+                        clientId={config.googleOAuthClientID}
+                        buttonText='Log in with Google'
+                        onSuccess={this.onGoogleLoginSuccess}
+                        onFailure={this.onGoogleLoginFailure}
+                        cookiePolicy={'single_host_origin'}
+                      />
+                    </div>
                   </div>
 
-                  {this.state.showProfileDetails && (
-                    <div className='row'>
-                      <div className='profile-details col s10 offset-s1 l8 offset-l1'>
-                        <input
-                          type='text'
-                          id='full_name'
-                          value={wp.full_name ?? ''}
-                          onChange={this.handleFormChange}
-                          required={true}
-                          disabled={true}
-                        />
+                  <div className='col s12 wrapper'>
+                    <div className='or-separator'>
+                      <div className='vertical-line'></div>
+                      <p id='or'>OR</p>
+                      <div className='vertical-line'></div>
+                    </div>
+                  </div>
 
-                        <input
-                          type='text'
-                          id='email'
-                          value={wp.email ?? ''}
-                          onChange={this.handleFormChange}
-                          required={true}
-                          disabled={true}
+                  <div className='col s12 section' id='signup-section'>
+                    <span className='card-title'>New User?</span>
+
+                    <form onSubmit={this.handleFormSubmit} id='signup-form'>
+                      <p className='col s12 m8 offset-m1' id='enter-code-txt'>
+                        Please enter the access code you should have received from the admin below:
+                      </p>
+
+                      <TextInput
+                        id='access_code'
+                        label='16-Character Access Code'
+                        value={wp.access_code}
+                        onChange={this.handleFormChange}
+                        required={true}
+                        width='s10 offset-s1 m8 offset-m1'
+                      />
+
+                      <div id='choose-btn'>
+                        <GoogleLogin
+                          clientId={config.googleOAuthClientID}
+                          buttonText='Choose a Google account'
+                          onSuccess={this.onGoogleSignUpSuccess}
+                          onFailure={this.onGoogleLoginFailure}
+                          cookiePolicy={'single_host_origin'}
                         />
                       </div>
-                    </div>
-                  )}
 
-                  <div id='register-btn-div'>
-                    <div className='input-field'>
-                      <button
-                        className='btn waves-effect waves-light'
-                        id='register-btn'
-                        disabled={!this.state.showProfileDetails}
-                      >
-                        Register <i className='material-icons right'>send</i>
-                      </button>
-                    </div>
+                      {this.state.showProfileDetails && (
+                        <div className='row'>
+                          <div className='profile-details col s10 offset-s1 l8 offset-l1'>
+                            <input
+                              type='text'
+                              id='full_name'
+                              value={wp.full_name ?? ''}
+                              onChange={this.handleFormChange}
+                              required={true}
+                              disabled={true}
+                            />
+
+                            <input
+                              type='text'
+                              id='email'
+                              value={wp.email ?? ''}
+                              onChange={this.handleFormChange}
+                              required={true}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div id='register-btn-div'>
+                        <div className='input-field'>
+                          <button
+                            className='btn waves-effect waves-light'
+                            id='register-btn'
+                            disabled={!this.state.showProfileDetails}
+                          >
+                            Register <i className='material-icons right'>send</i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       );
 
     return Form;
