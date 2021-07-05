@@ -119,7 +119,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   }
 
   // Handle change in scenario
-  handleScenarioChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleScenarioChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const scenario_name = e.currentTarget.value as ScenarioName;
     const scenario = scenarioMap[scenario_name];
     this.setState({ scenario });
@@ -148,13 +148,13 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   };
 
   // Handle input change
-  handleInputChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = e => {
+  handleInputChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> = (e) => {
     const task: Task = { ...this.state.task, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ task });
   };
 
   // Handle tag input change
-  handleTagsChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleTagsChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     this.setState({ tags_input: e.currentTarget.value });
     if (e.currentTarget.value !== '') {
       this.setState({ tags_input_isActive: true });
@@ -164,7 +164,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   };
 
   // Handle key down event during tag input
-  handleKeyDown: KeyboardEventHandler<HTMLInputElement> = e => {
+  handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (['Enter', ','].includes(e.key)) {
       e.preventDefault();
       var tag = this.state.tags_input.trim();
@@ -181,36 +181,38 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   // Handle tag deletion
   handleTagDelete = (tag_deleted: string) => {
     this.setState({
-      itags: this.state.itags.filter(tag => tag !== tag_deleted),
+      itags: this.state.itags.filter((tag) => tag !== tag_deleted),
     });
   };
 
   // Handle param input change
-  handleParamInputChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleParamInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ params });
   };
 
   // Handle boolean change
-  handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.checked };
     this.setState({ params });
   };
 
   // Handle policy change
-  handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = e => {
+  handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
     this.setState({ policy, params: {} });
   };
 
   // Handle form submission
-  handleSubmit: FormEventHandler = e => {
+  handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     const task: Task = { ...this.state.task };
     task.scenario_name = this.state.scenario?.name;
     task.params = this.state.params;
     task.itags = { itags: this.state.itags };
     task.policy = this.state.policy;
+    const batch_size = task.assignment_batch_size;
+    task.assignment_batch_size = batch_size ? Number.parseInt(batch_size.toString(), 10) : null;
     this.props.createTask(task);
   };
 
@@ -224,8 +226,8 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     const { scenario } = this.state;
     const scenarioCards = (
       <div className='scenarios'>
-        {scenarios.map(s => (
-          <label className='col s11 m5 l4'>
+        {scenarios.map((s) => (
+          <label className='col s11 m5 l4' key={s.name}>
             <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
             <div className='scenario-card'>
               <span className='scenario-name'>{s.full_name}</span>
@@ -298,7 +300,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                   <label className={this.state.tags_input_isActive ? 'active_input' : ''} htmlFor='tags_input'>
                     Enter tags
                   </label>
-                  {this.state.itags.map(tag => (
+                  {this.state.itags.map((tag) => (
                     <div key={tag} className='chip'>
                       {tag}
                       <i className='material-icons' onClick={() => this.handleTagDelete(tag)}>
@@ -333,7 +335,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                   <option value={0} disabled={true}>
                     Select a Policy
                   </option>
-                  {policies.map(p => (
+                  {policies.map((p) => (
                     <option value={p.name} key={p.name}>
                       {p.full_name}
                     </option>
@@ -354,6 +356,16 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
               onChange={this.handleParamInputChange}
               onBooleanChange={this.handleParamBooleanChange}
             />
+            <div className='row'>
+              <ColTextInput
+                id='assignment_batch_size'
+                label={`Assignment Batch Size`}
+                width='s10 m8 l5'
+                value={task.assignment_batch_size?.toString() ?? ''}
+                onChange={this.handleInputChange}
+                required={true}
+              />
+            </div>
           </div>
 
           {/** Task parameter */}
