@@ -94,11 +94,13 @@ class UniversalTransliterationMainFragment :
       return
     }
 
-    if (!Validator.isValid(viewModel.sourceLanguage, viewModel.sourceWord, word) && word != prevInvalidWord) {
+    if (viewModel.mlFeedback
+      && !Validator.isValid(viewModel.sourceLanguage, viewModel.sourceWord, word)
+      && word != prevInvalidWord) {
       prevInvalidWord = word
       showError(
-        "This transliteration doesn't seem right. Please check it again. " +
-          "Press add again if you think its correct"
+        "This transliteration doesn't seem right. Please check it and " +
+          "press add again if you think its correct"
       )
       return
     }

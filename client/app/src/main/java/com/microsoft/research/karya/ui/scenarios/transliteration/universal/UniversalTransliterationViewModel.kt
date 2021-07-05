@@ -57,6 +57,7 @@ constructor(
   var allowValidation = false
   var sourceLanguage: LanguageType = LanguageType.HI
   var sourceWord: String = ""
+  var mlFeedback: Boolean = false
 
   private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
     MutableLiveData(mutableMapOf())
@@ -74,6 +75,12 @@ constructor(
     } catch (e: Exception) {
       false
     }
+    mlFeedback = try {
+      task.params.asJsonObject.get("mlFeedback").asBoolean
+    } catch (e: Exception) {
+      false
+    }
+
     sourceLanguage = LanguageType.valueOf(task.params.asJsonObject.get("language").asString);
     sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     _wordTvText.value = sourceWord
