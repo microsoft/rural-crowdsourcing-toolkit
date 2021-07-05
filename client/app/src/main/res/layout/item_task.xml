@@ -43,6 +43,7 @@
                 style="@style/Widget.textMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:gravity="start"
                 android:textSize="@dimen/_12ssp"
                 tools:text="Scenario Name" />

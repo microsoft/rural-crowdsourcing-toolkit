@@ -88,8 +88,18 @@ constructor(
     sourceLanguage = LanguageType.valueOf(task.params.asJsonObject.get("language").asString);
     sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     _wordTvText.value = sourceWord
-    limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
-    val variantsJsonObject = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
+
+    limit = try {
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
+    } catch(e: Exception) {
+      10
+    }
+
+    val variantsJsonObject = try {
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
+    } catch (e: Exception) {
+      JsonObject()
+    }
     val temp = mutableMapOf<String, WordDetail>()
 
     for (word in variantsJsonObject.keySet()) {

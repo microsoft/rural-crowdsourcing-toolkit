@@ -10,7 +10,7 @@
         layout="@layout/microtask_header_2" />
 
     <TextView
-        android:id="@+id/instructionTvnone"
+        android:id="@+id/instructionTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -32,7 +32,7 @@
         android:textSize="@dimen/_24ssp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/nextBtn"
-        app:layout_constraintTop_toBottomOf="@id/instructionTvnone"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
         tools:text="HOWDY" />
 
     <ImageButton
@@ -78,9 +78,10 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
         android:textColor="@color/colorRed"
+        android:textSize="@dimen/_12ssp"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="@id/addBtn"
         app:layout_constraintTop_toBottomOf="@id/textTransliteration"
         tools:text="THIS IS AN ERROR MESSAGE" />
 
