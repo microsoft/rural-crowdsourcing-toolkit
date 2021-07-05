@@ -10,7 +10,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 // Store types and actions
-import { TaskRecord } from '@karya/core';
+import { languageString, TaskRecordType } from '@karya/core';
 import { taskStatus } from './TaskUtils';
 import { scenarioMap, ScenarioName } from '@karya/core';
 // HoCs
@@ -30,7 +30,7 @@ type TaskListProps = DataProps<typeof dataConnector>;
 class TaskList extends React.Component<TaskListProps> {
   // Render component
   render() {
-    const tasks = this.props.task.data;
+    const tasks = this.props.task.data as TaskRecordType[];
 
     // Create error message element if necessary
     const getErrorElement =
@@ -39,7 +39,7 @@ class TaskList extends React.Component<TaskListProps> {
       ) : null;
 
     // scenario tag function
-    const scenarioTag = (task: TaskRecord) => {
+    const scenarioTag = (task: TaskRecordType) => {
       const scenario = scenarioMap[task.scenario_name as ScenarioName];
       return scenario === undefined ? 'loading' : scenario.full_name;
     };
@@ -53,10 +53,11 @@ class TaskList extends React.Component<TaskListProps> {
       </Link>
     );
 
-    const header = (task: TaskRecord) => {
+    const header = (task: TaskRecordType) => {
       return (
         <>
           <h2 className='task-name'>{task.name}</h2>
+          <span className='badge scenario'>{languageString(task)}</span>
           <span className='badge scenario'>{scenarioTag(task)}</span>
           <span className='badge status'>{taskStatus(task)}</span>
           <Link to={`/task/${task.id}`} className='details-link'>
@@ -78,7 +79,7 @@ class TaskList extends React.Component<TaskListProps> {
             <>
               <h1 id='page-title'>Tasks{createTaskButton}</h1>
               <Collapsible accordion={false}>
-                {tasks.map(t => (
+                {tasks.map((t) => (
                   <CollapsibleItem
                     expanded={false}
                     header={header(t)}
