@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
-import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordVerificationStatus
+import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationViewModel.WordVerificationStatus
 import com.microsoft.research.karya.ui.scenarios.transliteration.validator.Validator
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
@@ -25,10 +25,10 @@ import kotlinx.android.synthetic.main.item_float_word.view.*
 import kotlinx.android.synthetic.main.transliteration_main_fragment.*
 
 @AndroidEntryPoint
-class UniversalTransliterationMainFragment :
+class TransliterationMainFragment :
   BaseMTRendererFragment(R.layout.transliteration_main_fragment) {
-  override val viewModel: UniversalTransliterationViewModel by viewModels()
-  val args: UniversalTransliterationMainFragmentArgs by navArgs()
+  override val viewModel: TransliterationViewModel by viewModels()
+  val args: TransliterationMainFragmentArgs by navArgs()
 
   private var prevInvalidWord: String = ""
 
@@ -43,7 +43,7 @@ class UniversalTransliterationMainFragment :
   ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewmodel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, 0, 0)
     return view
   }
 

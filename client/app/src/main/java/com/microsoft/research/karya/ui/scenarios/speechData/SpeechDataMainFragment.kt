@@ -36,7 +36,7 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main)
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewmodel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, 0, 0)
     return view
   }
 

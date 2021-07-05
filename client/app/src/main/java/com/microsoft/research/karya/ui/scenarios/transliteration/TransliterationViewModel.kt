@@ -11,9 +11,9 @@ import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
-import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordOrigin.HUMAN
-import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordVerificationStatus.NEW
-import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordVerificationStatus.UNKNOWN
+import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationViewModel.WordOrigin.HUMAN
+import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationViewModel.WordVerificationStatus.NEW
+import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationViewModel.WordVerificationStatus.UNKNOWN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +22,7 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 @HiltViewModel
-class UniversalTransliterationViewModel
+class TransliterationViewModel
 @Inject
 constructor(
   assignmentRepository: AssignmentRepository,
@@ -68,7 +68,8 @@ constructor(
 
   var limit by Delegates.notNull<Int>()
 
-  override fun setupMicrotask() {
+  override fun setupViewModel(taskId: String, incompleteMta: Int, completedMta: Int) {
+    super.setupViewModel(taskId, incompleteMta, completedMta)
     // TODO: Move to Gson
     allowValidation = try {
       task.params.asJsonObject.get("allowValidation").asBoolean
@@ -80,7 +81,10 @@ constructor(
     } catch (e: Exception) {
       false
     }
+  }
 
+  override fun setupMicrotask() {
+    // TODO: Move to Gson
     sourceLanguage = LanguageType.valueOf(task.params.asJsonObject.get("language").asString);
     sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     _wordTvText.value = sourceWord

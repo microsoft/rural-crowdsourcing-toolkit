@@ -164,7 +164,7 @@
     </fragment>
     <fragment
         android:id="@+id/universalTransliterationMainFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationMainFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
         android:label="UniversalTransliterationMainFragment" >
         <argument
             android:name="taskId"

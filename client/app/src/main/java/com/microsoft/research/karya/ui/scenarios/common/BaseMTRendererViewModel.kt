@@ -69,7 +69,7 @@ constructor(
     viewModelScope.launch { _navigateBack.emit(true) }
   }
 
-  fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
+  open fun setupViewModel(taskId: String, incompleteMta: Int, completedMta: Int) {
     this.taskId = taskId
     this.incompleteAssignments = incompleteMta
     this.completedAssignments = completedMta
