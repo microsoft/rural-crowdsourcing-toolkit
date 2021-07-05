@@ -10,8 +10,8 @@ import { BaseScenarioInterface } from '../ScenarioInterface';
 // Transliteration task input parameters
 type XliterationTaskInputParameters = {
   language: LanguageCode;
-  instruction: string;
   allowValidation: boolean;
+  mlFeedback: boolean;
   creditsPerVariant: number;
   creditsPerValidation: number;
 };
@@ -59,6 +59,14 @@ const task_input: BaseXliterationDataScenario['task_input'] = [
     type: 'boolean',
     label: 'Allow Validation',
     description: 'Should the user be allowed to validate prior variants',
+    required: false,
+  },
+
+  {
+    id: 'mlFeedback',
+    type: 'boolean',
+    label: 'In-app ML feedback',
+    description: 'Provide in-app ML feedback to user when model things a variant is incorrect',
     required: false,
   },
 
