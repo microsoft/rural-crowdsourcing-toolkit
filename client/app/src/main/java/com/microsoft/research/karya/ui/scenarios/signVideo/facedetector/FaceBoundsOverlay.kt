@@ -29,8 +29,8 @@ class FaceBoundsOverlay @JvmOverloads constructor(ctx: Context, attrs: Attribute
   private var isRecording = false
   private lateinit var onStartRecording: () -> Unit
 
-  private val TOO_FAR_RATIO = 10 // This is the ratio of entire view to face box
-  private val TOO_NEAR_RATIO = 5
+  private val TOO_FAR_RATIO = 20 // This is the ratio of entire view to face box
+  private val TOO_NEAR_RATIO = 10
   private val TOO_ONE_SIDED = 3
 
   private val COUNT_GAP = 10

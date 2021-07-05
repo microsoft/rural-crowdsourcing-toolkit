@@ -202,11 +202,12 @@ open class SignVideoMain(
     /** Get the scratch and output file paths */
     outputRecordingFilePath = getAssignmentOutputFilePath(outputRecordingFileParams)
 
-    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
-    sentenceTv.text = sentence
-    Log.i("VIDEO_SENTENCE", sentence)
-//    val sentence = "Hello"
+//    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
 //    sentenceTv.text = sentence
+//    Log.i("VIDEO_SENTENCE", sentence)
+
+    val sentence = "tea"
+    sentenceTv.text = sentence
 
     if (activityState == ActivityState.INIT) {
       setActivityState(ActivityState.COMPLETED_SETUP)
