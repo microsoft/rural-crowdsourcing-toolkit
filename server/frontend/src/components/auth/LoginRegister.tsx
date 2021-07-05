@@ -19,7 +19,6 @@ import { RootState } from '../../store/Index';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Import templates */
-import { TextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
@@ -204,18 +203,22 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
                     <span className='card-title'>New User?</span>
 
                     <form onSubmit={this.handleFormSubmit} id='signup-form'>
-                      <p className='col s12 m8 offset-m1' id='enter-code-txt'>
+                      <p className='col s12' id='enter-code-txt'>
                         Please enter the access code you should have received from the admin below:
                       </p>
 
-                      <TextInput
-                        id='access_code'
-                        label='16-Character Access Code'
-                        value={wp.access_code}
-                        onChange={this.handleFormChange}
-                        required={true}
-                        width='s10 offset-s1 m8 offset-m1'
-                      />
+                      <div className='row' id='access-code-div'>
+                        <div className='col s10 m8 input-field'>
+                          <input
+                            type='text'
+                            id='access_code'
+                            value={wp.access_code}
+                            onChange={this.handleFormChange}
+                            required={true}
+                          />
+                          <label htmlFor='access_code'>16-Character Access Code</label>
+                        </div>
+                      </div>
 
                       <div id='choose-btn'>
                         <GoogleLogin
@@ -229,7 +232,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
 
                       {this.state.showProfileDetails && (
                         <div className='row'>
-                          <div className='profile-details col s10 offset-s1 l8 offset-l1'>
+                          <div className='profile-details col s10 l8'>
                             <input
                               type='text'
                               id='full_name'

@@ -41,12 +41,12 @@ const Routes = (
     <Route exact path='/unauthorized' component={Unauthorized} />
     <Route exact path='/login' component={LoginRegister} />
     <Route exact path='/' component={LoginRegister} />
-
-<>
+    
+    <>
     <NavBar />
     <main>
     <div id='main-container' className='container'>
-
+    <Switch>
     {/**  Dashboard routes */}
     <AdminRoute path='/admin-dashboard' component={AdminDashboard} />
     <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
@@ -65,7 +65,7 @@ const Routes = (
     {/** Task assignment routes */}
     <AdminRoute exact path='/task-assignments' component={TaskAssignmentList} />
     <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
-
+    </Switch>
     </div>
     </main>
     </>

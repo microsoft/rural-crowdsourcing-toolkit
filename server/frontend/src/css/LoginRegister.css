@@ -23,11 +23,11 @@
 }
 
 #login-text {
-  padding-bottom: 10%;
+  padding-bottom: 7%;
 }
 
 #login-section {
-  padding: 2.5rem 0;
+  padding: 2rem 0;
   margin-right: 1%;
 }
 
@@ -43,8 +43,8 @@
 }
 
 #register-btn-div {
-  margin-top: 12%;
-  text-align: center;
+  margin-top: 10%;
+  margin-left: 12%;
 }
 
 #register-btn {
@@ -93,9 +93,10 @@
 }
 
 #enter-code-txt {
-  margin-top: 3%;
-  margin-bottom: 1.8%;
-  font-size: 0.85em;
+  margin-top: 5%;
+  margin-bottom: 3%;
+  margin-left: 4%;
+  font-size: 0.9em;
 }
 
 #signup-form {
@@ -107,8 +108,13 @@
   font-family: 'Titillium Web', sans-serif;
   color: #717787;
   letter-spacing: 0.08em;
-  margin-bottom: 0.5%;
+  margin-bottom: 5%;
   height: 2.4rem;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#access-code-div {
+  margin-left: 5%;
 }
 
 .input-field > label {
@@ -119,6 +125,7 @@
 
 .profile-details {
   margin-top: 6%;
+  margin-left: 12% !important;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
