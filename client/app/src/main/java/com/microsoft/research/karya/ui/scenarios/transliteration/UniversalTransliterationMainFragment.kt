@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.scenarios.transliteration.universal
+package com.microsoft.research.karya.ui.scenarios.transliteration
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus
+import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordVerificationStatus
 import com.microsoft.research.karya.ui.scenarios.transliteration.validator.Validator
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe

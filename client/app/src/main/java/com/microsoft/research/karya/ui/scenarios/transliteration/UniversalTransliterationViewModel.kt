@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.ui.scenarios.transliteration.universal
+package com.microsoft.research.karya.ui.scenarios.transliteration
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,10 +11,9 @@ import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordOrigin.HUMAN
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordOrigin.MACHINE
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus.NEW
-import com.microsoft.research.karya.ui.scenarios.transliteration.universal.UniversalTransliterationViewModel.WordVerificationStatus.UNKNOWN
+import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordOrigin.HUMAN
+import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordVerificationStatus.NEW
+import com.microsoft.research.karya.ui.scenarios.transliteration.UniversalTransliterationViewModel.WordVerificationStatus.UNKNOWN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -70,6 +69,7 @@ constructor(
   var limit by Delegates.notNull<Int>()
 
   override fun setupMicrotask() {
+    // TODO: Move to Gson
     allowValidation = try {
       task.params.asJsonObject.get("allowValidation").asBoolean
     } catch (e: Exception) {
@@ -102,21 +102,6 @@ constructor(
     }
 
     // TODO: Add Code to parse other data paramaters
-
-    // TODO: Move to Gson
-    // Code to add dummy api response[Word_Detail]. TODO: Remove once we take data from the API
-//    val temp = mutableMapOf<String, WordDetail>()
-//    val strs = arrayOf(
-//      "Thisfwefwfweffsd", "fdsfnjksdnvbhsldsiss", "afdgfnk;sdlbh;sdubs", "fkjgfhlsdbvlhbsdbvlsl",
-//      "ofdfafbbjsdhlsvh sf", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-//      "bkjasdfnhdngdkfshjgbla", "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-//      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-//      "afdnasbfajb;asbfllb", "bdfnjksadbf;kasflla",
-//    )
-//    val origin = arrayOf(HUMAN, MACHINE)
-//    for (i in 1..1000) {
-//      temp.put(strs.random(), WordDetail(origin.random(), UNKNOWN))
-//    }
     _outputVariants.value = temp
   }
 
@@ -147,15 +132,6 @@ constructor(
         wordObject.addProperty("status", UNKNOWN.name)
       variants.add(word, wordObject)
     }
-
-//    for ((word, wordDetail) in _outputVariants.value!!) {
-//      val wordObject = JsonObject()
-//      wordObject.addProperty("origin", wordDetail.origin.name)
-//      if (wordDetail.verificationStatus != NEW){
-//        wordObject.addProperty("status", wordDetail.verificationStatus.name)
-//      }
-//      variants.add(word, wordObject)
-//    }
 
     outputData.add("variants", variants)
 
