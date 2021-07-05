@@ -106,12 +106,14 @@
   padding-left: 5%;
 }
 
-#io-files,
+#i-files,
+#o-files,
 #task_link_section {
   margin-left: 4%;
 }
 
-#io-files h2,
+#i-files h2,
+#o-files h2,
 #task_link_section h2 {
   margin-left: 5%;
   font-family: 'Montserrat', sans-serif;
@@ -121,10 +123,6 @@
   margin-bottom: 4%;
   margin-top: 4%;
   color: #717787;
-}
-
-#task_link_section .col {
-  margin-left: 5%;
 }
 
 #task_link_section input {
@@ -158,26 +156,16 @@
   font-size: 1.1em;
   letter-spacing: 0.08em;
   background-color: #fff;
-  margin-left: 4%;
-  margin-top: 4%;
-  transition: all 0.3 ease-out;
-}
-
-#submit-new-btn,
-#generate-btn {
   margin-left: 6%;
   margin-bottom: 4%;
+  margin-top: 4%;
+  transition: all 0.3 ease-out;
 }
 
 #add-link-btn:hover,
 #submit-new-btn:hover,
 #generate-btn:hover {
   color: #1ccfbd;
-}
-
-#task-link-table {
-  margin-left: 1%;
-  margin-bottom: 5%;
 }
 
 #input-table,
@@ -210,27 +198,79 @@
   color: rgba(0, 0, 0, 0.35);
 }
 
-#submit-form {
+#submit-form,
+#link-form {
   position: fixed;
-  bottom: 5%;
+  bottom: 10%;
   right: 30%;
   width: 40%;
   height: 80%;
-  padding: 7%;
   z-index: 1;
+  max-width: 540px;
+  max-height: 530px;
+  background-color: #fff;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  border-radius: 5px;
 }
 
-#btns-row button {
+#submit-form {
+  padding-top: 5%;
+  padding-left: 5%;
+  padding-right: 4%;
+  line-height: 1.3em;
+}
+
+#submit-form .btn-small {
+  background-color: #4fc3f7;
+  box-shadow: none;
+}
+
+#submit-form p i {
+  font-size: 0.95em;
+}
+
+#submit-form input {
+  font-family: 'Titillium Web', sans-serif;
+  color: #717787;
+  letter-spacing: 0.08em;
+  height: 1.5em;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#link-form {
+  padding-top: 7%;
+  padding-left: 7%;
+}
+
+#btn-row1 button,
+#btn-row2 button {
   font-family: 'Titillium Web', sans-serif;
   font-weight: 600;
   letter-spacing: 0.07em;
-  margin-top: 15%;
-  margin-right: 10%;
+  margin-left: 10%;
   box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
   border-radius: 5px;
 }
 
-#btns-row button:hover {
+#btn-row1 button:hover,
+#btn-row2 button:hover {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+#btn-row1 {
+  margin-top: 15%;
+}
+
+#btn-row2 {
+  margin-top: 2%;
+}
+
+#add-chain-btn,
+#upload-btn {
+  background-color: #4fc3f7;
+}
+
+.cancel-btn {
+  color: #717787;
 }

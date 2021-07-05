@@ -164,7 +164,8 @@ type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnect
 // component state
 type TaskDetailState = {
   files: { [id: string]: File };
-  show_form: boolean;
+  show_input_form: boolean;
+  show_link_form: boolean;
   taskLink: TaskLink;
 };
 
@@ -172,14 +173,15 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   // Initial state
   state = {
     files: {},
-    show_form: false,
+    show_input_form: false,
+    show_link_form: false,
     taskLink: { chain: undefined, to_task: undefined, blocking: false },
   };
 
   // Submit input files and close the form on successful submission only
   submitInputFiles = () => {
     this.props.submitInputFiles(this.state.files);
-    this.setState({ show_form: false });
+    this.setState({ show_input_form: false });
   };
 
   // Get all the data to display. Also initialize materialize fields
@@ -226,6 +228,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     taskLink.from_task = this.props.task?.id;
     taskLink.grouping = 'EITHER';
     this.props.createTaskLink(taskLink);
+    this.setState({ show_link_form: false });
   };
 
   render() {
@@ -353,7 +356,6 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     // Task link table and creation form
     let task_link_section = null;
     let k = 0;
-    let isDisabled = true;
     // Get all chains that can originate from this task given its scenario
     let chains = Object.values(baseChainMap).filter(chain => chain.fromScenario === task.scenario_name);
     if (chains.length !== 0) {
@@ -388,9 +390,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           ) : null}
 
           {/** Task link form */}
-          <form onSubmit={this.handleLinkSubmit}>
+          <div id='link-form' style={{ display: this.state.show_link_form === true ? 'block' : 'none' }}>
             <div className='row'>
-              <div className='col s10 m8 l6'>
+              <div className='col s10'>
                 <select id='chain' value={chain} onChange={this.handleSelectInputChange}>
                   <option value={0} disabled={true} selected={true}>
                     Select a chain
@@ -406,10 +408,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             {/** When chain is selected show the rest of the form */}
             {this.state.taskLink.chain !== undefined ? (
               <>
-                {(isDisabled = false)}
                 <div className='row'>
-                  <div className='col s10 m8 l6'>
-                    <select id='to_task' value={to_task} required={true} onChange={this.handleSelectInputChange}>
+                  <div className='col s10'>
+                    <select id='to_task' value={to_task} onChange={this.handleSelectInputChange}>
                       <option value={0} disabled={true} selected={true}>
                         Select a task
                       </option>
@@ -428,7 +429,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                   </div>
                 </div>
                 <div className='row'>
-                  <div className='col s10 m8 l6' id='checkbox-col'>
+                  <div className='col s10' id='checkbox-col'>
                     <label htmlFor='blocking'>
                       <input type='checkbox' id='blocking' checked={blocking} onChange={this.handleBooleanChange} />
                       <span>Blocking</span>
@@ -437,10 +438,22 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 </div>
               </>
             ) : null}
-            <button className='btn-flat' id='add-link-btn' disabled={isDisabled}>
-              <i className='material-icons left'>add</i>Add chain
-            </button>
-          </form>
+            <div className='row' id='btn-row1'>
+              <button className='btn' id='add-chain-btn' onClick={this.handleLinkSubmit}>
+                Add chain
+              </button>
+              <button
+                className='btn grey lighten-2 cancel-btn'
+                onClick={() => this.setState({ show_link_form: false })}
+              >
+                Cancel
+                <i className='material-icons right'>close</i>
+              </button>
+            </div>
+          </div>
+          <button className='btn-flat' id='add-link-btn' onClick={() => this.setState({ show_link_form: true })}>
+            <i className='material-icons left'>add</i>Add chain
+          </button>
         </div>
       );
     }
@@ -574,14 +587,20 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           {/** Display input and output file section if task requires input files */}
           {jsonInputFile.required || tarInputfile.required ? (
             <>
-              <div className='section' id='io-files'>
+              <div className='section' id='i-files'>
                 <div className='row'>
                   <h2>Input Files Submitted</h2>
                 </div>
                 {inputFileTable}
-                <button className='btn-flat' id='submit-new-btn' onClick={() => this.setState({ show_form: true })}>
+                <button
+                  className='btn-flat'
+                  id='submit-new-btn'
+                  onClick={() => this.setState({ show_input_form: true })}
+                >
                   <i className='material-icons left'>add</i>Submit New
                 </button>
+              </div>
+              <div className='section' id='o-files'>
                 <div className='row'>
                   <h2>Output Files Generated</h2>
                 </div>
@@ -598,16 +617,12 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               </div>
 
               {/** Floating form for submission of input files */}
-              <div
-                className='card'
-                id='submit-form'
-                style={{ display: this.state.show_form === true ? 'block' : 'none' }}
-              >
+              <div id='submit-form' style={{ display: this.state.show_input_form === true ? 'block' : 'none' }}>
+                <p>Kindly upload the following files.</p>
                 {jsonInputFile.required ? (
                   <div className='row'>
-                    <p>Kindly upload a JSON file.</p>
                     <p>
-                      <i>Description of file</i>
+                      <i>{jsonInputFile.description}</i>
                     </p>
                     <div className='col s12 file-field input-field'>
                       <div className='btn btn-small'>
@@ -616,13 +631,16 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                       </div>
                       <div className='file-path-wrapper'>
                         <label htmlFor='json-name'>Task JSON File</label>
-                        <input id='json-name' type='text' className='file-path validate' />
+                        <input id='json-name' type='text' disabled={true} className='file-path validate' />
                       </div>
                     </div>
                   </div>
                 ) : null}
                 {tarInputfile.required ? (
                   <div className='row'>
+                    <p>
+                      <i>{tarInputfile.description}</i>
+                    </p>
                     <div className='col s12 file-field input-field'>
                       <div className='btn btn-small'>
                         <i className='material-icons'>attach_file</i>
@@ -630,19 +648,19 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                       </div>
                       <div className='file-path-wrapper'>
                         <label htmlFor='tgz-name'>Task TGZ File</label>
-                        <input id='tgz-name' type='text' className='file-path validate' />
+                        <input id='tgz-name' type='text' disabled={true} className='file-path validate' />
                       </div>
                     </div>
                   </div>
                 ) : null}
-                <div className='row' id='btns-row'>
-                  <button className='btn red lighten-1' onClick={this.submitInputFiles}>
+                <div className='row' id='btn-row2'>
+                  <button className='btn' id='upload-btn' onClick={this.submitInputFiles}>
                     Upload
                     <i className='material-icons right'>upload</i>
                   </button>
                   <button
-                    className='btn grey lighten-2 black-text lmar20'
-                    onClick={() => this.setState({ show_form: false })}
+                    className='btn grey lighten-2 cancel-btn'
+                    onClick={() => this.setState({ show_input_form: false })}
                   >
                     Cancel
                     <i className='material-icons right'>close</i>

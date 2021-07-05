@@ -113,6 +113,7 @@
   color: #2bbbad;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.88em;
+  transition: all 0.1s ease;
 }
 
 .details-link:hover {
