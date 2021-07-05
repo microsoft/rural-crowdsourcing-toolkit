@@ -54,6 +54,9 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
     [['last_updated_at', previousOpTime, currentOpTime]]
   )) as MicrotaskRecordType[];
 
+  // If no verified assignments or completed microtasks, return
+  if (assignments.length == 0 && microtasks.length == 0) return;
+
   // Get the task output folder
   const localFolder = envGetString('LOCAL_FOLDER');
   const taskOutputBlobParameters: BlobParameters = {
@@ -80,6 +83,9 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
   const scenarioObj = backendScenarioMap[task.scenario_name];
   // @ts-ignore <weird type error for assignments>
   const files = await scenarioObj.generateOutput(task, assignments, microtasks, task_folder, currentOpTime);
+
+  // If no files, return
+  if (files.length == 0) return;
 
   // Tar all the files in the task output
   const outputTgzPath = `${task_folder}/${taskOutputName}`;
