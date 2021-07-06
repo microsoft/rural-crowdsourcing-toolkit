@@ -288,7 +288,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             {/** Show only input task op data */}
             {file_records.map((r) =>
               r.op_type === 'PROCESS_INPUT' ? (
-                <tr>
+                <tr key={r.id}>
                   <td>{++i}</td>
                   <td>File{i}</td>
                   <td>{r.status}</td>
@@ -380,7 +380,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               </thead>
               <tbody>
                 {task_links.map((l) => (
-                  <tr>
+                  <tr key={l.id}>
                     <td>{++k}</td>
                     {/** Get task name from id */}
                     <td>{tasks.find((t) => t.id === l.to_task)?.name}</td>
@@ -397,7 +397,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <div className='row'>
               <div className='col s10'>
                 <select id='chain' value={chain} onChange={this.handleSelectInputChange}>
-                  <option value={0} disabled={true} selected={true}>
+                  <option value={0} disabled={true}>
                     Select a chain
                   </option>
                   {chains.map((c) => (
