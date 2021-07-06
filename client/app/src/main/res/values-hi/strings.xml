@@ -47,6 +47,10 @@
     <string name="s_tasks_completed">कार्य पूरे हुए</string>
     <string name="s_tasks_submitted">कार्य सबमिट किए गए हैं</string>
     <string name="s_tasks_verified">कार्यों का सत्यापन किया जाता है</string>
+    <string name="d_tasks_available">%d/%d कार्य उपलब्ध हैं</string>
+    <string name="d_tasks_completed">%d/%d कार्य पूरे हुए</string>
+    <string name="d_tasks_submitted">%d/%d कार्य सबमिट किए गए हैं</string>
+    <string name="d_tasks_verified">%d/%d कार्यों का सत्यापन किया जाता है</string>
     <string name="s_update_app_language">ऐप की भाषा बदलें</string>
     <string name="s_update_skills">अद्यतन भाषा कौशल</string>
     <string name="s_speech_scenario_name">भाषण-डेटा संग्रह</string>

@@ -8,74 +8,122 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/task_card"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_80sdp"
-        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_height="@dimen/_160sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_16sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/task_image"
-                android:layout_width="@dimen/_60sdp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/_60sdp"
-                android:layout_gravity="center_vertical"
+                android:background="#fc6481">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/task_image"
+                    android:layout_width="@dimen/_45sdp"
+                    android:layout_height="@dimen/_45sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@drawable/ic_task_speech_data"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CircleShape" />
+
+                <TextView
+                    android:id="@+id/task_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18ssp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/task_subtitle"
+                    app:layout_constraintStart_toEndOf="@id/task_image"
+                    app:layout_constraintTop_toTopOf="@id/task_image"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintEnd_toStartOf="@id/task_arrow_next"
+                    tools:text="Speech Data" />
+
+                <TextView
+                    android:id="@+id/task_subtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:textColor="@color/transparentWhite"
+                    android:textSize="@dimen/_14ssp"
+                    android:text="@string/d_sentences_available"
+                    app:layout_constraintBottom_toBottomOf="@id/task_image"
+                    app:layout_constraintStart_toEndOf="@id/task_image"
+                    app:layout_constraintTop_toBottomOf="@id/task_title"
+                    app:layout_constraintEnd_toStartOf="@id/task_arrow_next"
+                    tools:text="10 sentences available" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/task_arrow_next"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_forward" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tasks_available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
-                android:background="#cccccc"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CircleShape" />
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/d_tasks_available"
+                android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/task_name"
+                android:id="@+id/tasks_completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:textColor="#4a4b4d"
-                android:textSize="@dimen/_18ssp"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/_4sdp"
-                app:layout_constraintBottom_toTopOf="@id/task_status"
-                app:layout_constraintStart_toEndOf="@id/task_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Speech Data" />
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/d_tasks_completed"
+                android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/task_status"
+                android:id="@+id/tasks_submitted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:textSize="@dimen/_14ssp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/task_image"
-                app:layout_constraintTop_toBottomOf="@id/task_name"
-                tools:text="10 sentences available" />
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/d_tasks_submitted"
+                android:textColor="@color/black" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tasks_verified"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/d_tasks_verified"
+                android:textColor="@color/black" />
 
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.cardview.widget.CardView>
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:layout_width="@dimen/_36sdp"
-        android:layout_height="@dimen/_36sdp"
-        android:background="#00b466"
-        android:elevation="@dimen/_4sdp"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="@id/task_card"
-        app:layout_constraintEnd_toEndOf="@id/task_card"
-        app:layout_constraintStart_toEndOf="@id/task_card"
-        app:layout_constraintTop_toTopOf="@id/task_card"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CircleShape"
-        app:srcCompat="@drawable/ic_arrow_forward" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
