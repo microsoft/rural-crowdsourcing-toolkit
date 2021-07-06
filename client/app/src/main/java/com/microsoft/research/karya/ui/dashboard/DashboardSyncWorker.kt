@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.dashboard
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -59,8 +60,11 @@ class DashboardSyncWorker(
 //      _dashboardUiState.value = DashboardUiState.Loading
 
     submitCompletedAssignments()
+    setProgressAsync(Data.Builder().putInt("progress", 25).build())
     fetchNewAssignments()
+    setProgressAsync(Data.Builder().putInt("progress", 50).build())
     fetchVerifiedAssignments()
+    setProgressAsync(Data.Builder().putInt("progress", 75).build())
     cleanupKaryaFiles()
 
     // TODO: Include the UI update hack here ?

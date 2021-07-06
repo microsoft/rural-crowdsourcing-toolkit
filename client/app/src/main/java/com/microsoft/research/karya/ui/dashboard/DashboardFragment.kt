@@ -55,8 +55,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
-    observeUi()
     setupWorkRequests()
+    observeUi()
   }
 
   override fun onResume() {
@@ -101,7 +101,27 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   private fun syncWithServer() {
+    setupWorkRequests()
     WorkManager.getInstance(requireContext()).enqueue(syncWorkRequest)
+
+    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
+      .observe(viewLifecycleOwner, Observer { workInfo ->
+        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+          lifecycleScope.launch {
+            binding.syncProgressBar.progress = 100
+            viewModel.refreshList()
+          }
+        }
+        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
+          binding.syncProgressBar.progress = 0
+          viewModel.setLoading()
+        }
+        if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
+          // Check if the current work's state is "successfully finished"
+          val progress: Int = workInfo.progress.getInt("progress", 0)
+          binding.syncProgressBar.progress = progress
+        }
+      })
   }
 
   private fun observeUi() {
@@ -113,23 +133,15 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       }
     }
 
-    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
-      .observe(viewLifecycleOwner, Observer { workInfo ->
-        // Check if the current work's state is "successfully finished"
-        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-          lifecycleScope.launch {
-            viewModel.refreshList()
-          }
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
-          viewModel.setLoading()
-        }
-      })
-
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
-    hideLoading()
+    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
+      .observe(viewLifecycleOwner, Observer { workInfo ->
+        if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED) {
+          hideLoading() // Only hide loading if no work is in queue
+        }
+      })
     binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
