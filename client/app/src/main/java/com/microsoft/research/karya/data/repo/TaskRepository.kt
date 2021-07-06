@@ -2,6 +2,7 @@ package com.microsoft.research.karya.data.repo
 
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
+import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -14,4 +15,8 @@ constructor(
   private val microTaskAssignmentDao: MicroTaskAssignmentDao,
 ) {
   suspend fun getTaskInfo(): List<TaskInfo> = withContext(Dispatchers.IO) { microTaskAssignmentDao.getTaskInfo() }
+
+  suspend fun getById(taskId: String): TaskRecord {
+    return taskDao.getById(taskId)
+  }
 }

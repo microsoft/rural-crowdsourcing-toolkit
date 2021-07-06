@@ -103,7 +103,7 @@ dependencies {
     implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
     implementation(Dependencies.AndroidX.Navigation.uiKtx)
 
-    kapt(Dependencies.AndroidX.Room.roomCompiler)
+  kapt(Dependencies.AndroidX.Room.roomCompiler)
 
     implementation(Dependencies.Google.gson)
     implementation(Dependencies.Google.material)

@@ -46,8 +46,10 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
     ],
   views = [TaskInfo::class],
   version = 1,
-  exportSchema = false
-)
+  //  autoMigrations = [
+  //    AutoMigration (from = 1, to = 2)
+  //  ]
+  )
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun microTaskDao(): MicroTaskDao

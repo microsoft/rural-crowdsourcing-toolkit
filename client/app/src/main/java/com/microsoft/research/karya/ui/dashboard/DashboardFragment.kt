@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.dashboard
 
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
@@ -15,17 +14,17 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain
-import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationMain
-import com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMain
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
+import com.microsoft.research.karya.utils.extensions.disable
+import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -85,6 +84,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
     hideLoading()
+    syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
@@ -99,10 +99,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showErrorUi(throwable: Throwable) {
     hideLoading()
+    syncCv.enable()
   }
 
   private fun showLoadingUi() {
     showLoading()
+    syncCv.disable()
   }
 
   private fun showLoading() = binding.syncProgressBar.visible()
@@ -123,20 +125,16 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   fun onDashboardItemClick(task: TaskInfo) {
-    val nextIntent =
-      when (task.scenarioName) {
-        // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
-        // Use [ScenarioType] enum once we migrate to it.
-        "SPEECH_DATA" -> Intent(requireContext(), SpeechDataMain::class.java)
-        "SPEECH_VERIFICATION" -> Intent(requireContext(), SpeechVerificationMain::class.java)
-        "TEXT_TRANSLATION" -> Intent(requireContext(), TextToTextTranslationMain::class.java)
-        else -> {
-          throw Exception("Unimplemented scenario")
-        }
+    //    val nextIntent =
+    when (task.scenarioName) {
+      // TODO: MAKE THIS GENERAL ONCE API RESPONSE UPDATES
+      // Use [ScenarioType] enum once we migrate to it.
+      "SPEECH_DATA" -> {
+        //          Intent(requireContext(), StorySpeechMain::class.java)
+        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+        findNavController().navigate(action)
       }
-
-    nextIntent.putExtra("taskID", task.taskID)
-    startActivity(nextIntent)
+    }
   }
 
   private fun fetchTasksOnFirstRun() {
