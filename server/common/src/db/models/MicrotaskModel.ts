@@ -103,9 +103,9 @@ export async function microtasksWithAssignmentSummary(task_id: string): Promise<
   const response = await knex.raw(`
   SELECT
     mt.*,
-    (mta.assigned + mta.completed + mta.verified) as assigned,
-    (mta.completed + mta.verified) as completed,
-    (mta.verified) as verified,
+    COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
+    COALESCE((mta.completed + mta.verified)::int, 0) as completed,
+    COALESCE((mta.verified)::int, 0) as verified,
     (mta.cost) as cost
   FROM
     microtask as mt
@@ -129,8 +129,8 @@ export async function microtasksWithAssignmentSummary(task_id: string): Promise<
   `);
 
   return response.rows.map((row: any) => {
-    const { total, completed, verified, ...rest } = row;
-    const extras = { total, completed, verified };
+    const { assigned, completed, verified, cost, ...rest } = row;
+    const extras = { assigned, completed, verified, cost };
     return { ...rest, extras };
   });
 }

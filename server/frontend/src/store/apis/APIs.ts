@@ -135,7 +135,7 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
-      store: 'microtask_assignment';
+      store: 'microtask';
       label: 'GET_ALL';
       task_id: string;
     }
@@ -428,7 +428,7 @@ export async function backendRequest(
     }
 
     // Get all microtask info for a particular task
-    if (action.store === 'microtask_assignment' && action.label === 'GET_ALL') {
+    if (action.store === 'microtask' && action.label === 'GET_ALL') {
       return {
         type: 'BR_SUCCESS',
         store,

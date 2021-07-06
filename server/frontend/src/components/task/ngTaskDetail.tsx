@@ -23,6 +23,7 @@ import {
   languageString,
   TaskRecordType,
   TaskLink,
+  MicrotaskRecordType,
 } from '@karya/core';
 
 // Utils
@@ -55,12 +56,12 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const task_id = ownProps.match.params.id;
   const { data, ...request } = state.all.task;
   const file_records = state.all.task_op.data;
-  const graph_data = state.all.microtask_assignment.data;
+  const graph_data = state.all.microtask.data;
   const task_links = state.all.task_link.data;
   return {
     request,
     tasks: data,
-    task: data.find(t => t.id === task_id),
+    task: data.find((t) => t.id === task_id),
     file_records,
     graph_data,
     task_links,
@@ -122,7 +123,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
     getMicrotasksSummary: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
-        store: 'microtask_assignment',
+        store: 'microtask',
         label: 'GET_ALL',
         task_id,
       };
@@ -201,7 +202,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   }
 
   // Handle file change
-  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleParamFileChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.currentTarget.files) {
       const file = e.currentTarget.files[0];
       const files = { ...this.state.files, [e.currentTarget.id]: file };
@@ -210,19 +211,19 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   };
 
   // Handle select input change
-  handleSelectInputChange: ChangeEventHandler<HTMLSelectElement> = e => {
+  handleSelectInputChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const taskLink: TaskLink = { ...this.state.taskLink, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ taskLink });
   };
 
   // Handle boolean input change
-  handleBooleanChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const taskLink: TaskLink = { ...this.state.taskLink, [e.currentTarget.id]: e.currentTarget.checked };
     this.setState({ taskLink });
   };
 
   // Handle task link submission
-  handleLinkSubmit: FormEventHandler = e => {
+  handleLinkSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     const taskLink: TaskLink = { ...this.state.taskLink };
     taskLink.from_task = this.props.task?.id;
@@ -235,9 +236,11 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     // Getting all the data from props
     const { task } = this.props;
     const { file_records } = this.props;
-    const { graph_data } = this.props;
     const { tasks } = this.props;
     const { task_links } = this.props;
+
+    type Extras = { assigned: number; completed: number; verified: number; cost: number };
+    const graph_data = this.props.graph_data as (MicrotaskRecordType & { extras: Extras })[];
 
     // Task link form values
     const chain = this.state.taskLink.chain || 0;
@@ -283,7 +286,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           </thead>
           <tbody>
             {/** Show only input task op data */}
-            {file_records.map(r =>
+            {file_records.map((r) =>
               r.op_type === 'PROCESS_INPUT' ? (
                 <tr>
                   <td>{++i}</td>
@@ -325,7 +328,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </thead>
             <tbody>
               {/** Show only output task op data */}
-              {file_records.map(r =>
+              {file_records.map((r) =>
                 r.op_type === 'GENERATE_OUTPUT' ? (
                   <tr>
                     <td>{++j}</td>
@@ -357,7 +360,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     let task_link_section = null;
     let k = 0;
     // Get all chains that can originate from this task given its scenario
-    let chains = Object.values(baseChainMap).filter(chain => chain.fromScenario === task.scenario_name);
+    let chains = Object.values(baseChainMap).filter((chain) => chain.fromScenario === task.scenario_name);
     if (chains.length !== 0) {
       task_link_section = (
         <div className='section' id='task_link_section'>
@@ -376,11 +379,11 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 </tr>
               </thead>
               <tbody>
-                {task_links.map(l => (
+                {task_links.map((l) => (
                   <tr>
                     <td>{++k}</td>
                     {/** Get task name from id */}
-                    <td>{tasks.find(t => t.id === l.to_task)?.name}</td>
+                    <td>{tasks.find((t) => t.id === l.to_task)?.name}</td>
                     <td>{baseChainMap[l.chain].full_name}</td>
                     <td>{l.blocking ? 'Yes' : 'No'}</td>
                   </tr>
@@ -397,7 +400,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                   <option value={0} disabled={true} selected={true}>
                     Select a chain
                   </option>
-                  {chains.map(c => (
+                  {chains.map((c) => (
                     <option value={c.name} key={c.name}>
                       {c.full_name}
                     </option>
@@ -418,9 +421,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                       {tasks
                         .filter(
                           // @ts-ignore
-                          t => t.scenario_name === baseChainMap[this.state.taskLink.chain as ChainName].toScenario,
+                          (t) => t.scenario_name === baseChainMap[this.state.taskLink.chain as ChainName].toScenario,
                         )
-                        .map(o => (
+                        .map((o) => (
                           <option value={o.id} key={o.id}>
                             {o.name}
                           </option>
@@ -467,12 +470,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const language = languageString(task as TaskRecordType);
 
     const microtasks = graph_data.length;
-    // @ts-ignore
     const completed_assignments = graph_data.reduce((prev, current) => prev + current.extras.completed, 0);
-    // @ts-ignore
-    const cost = graph_data.reduce((prev, current) => prev + current.cost, 0);
-    // @ts-ignore
-    const data = graph_data.map(m => ({ ...m.extras, cost: m.cost, id: m.id }));
+    const cost = graph_data.reduce((prev, current) => prev + current.extras.cost, 0);
+    const data = graph_data.map((m) => ({ ...m.extras, id: m.id }));
 
     const jsonInputFile = scenario.task_input_file.json;
     const tarInputfile = scenario.task_input_file.tgz;
@@ -534,10 +534,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 <YAxis />
                 <Tooltip />
                 <Legend verticalAlign='top' />
-                <Line type='monotone' dataKey='total' stroke='#8884d8' dot={false} />
+                <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
                 <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
                 <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
-                <Line type='monotone' dataKey='cost' stroke='#ea80fc' dot={false} />
+                {/* <Line type='monotone' dataKey='cost' stroke='#ea80fc' dot={false} /> */}
               </LineChart>
             </ResponsiveContainer>
           ) : null}
