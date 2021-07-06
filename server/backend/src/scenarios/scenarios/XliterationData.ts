@@ -51,13 +51,16 @@ export const backendXliterationDataScenario: IBackendScenarioInterface<BaseXlite
       // variants
       const inputVariants = mt.input.data.variants;
       const outputVariants = assignment.output!.data.variants;
+      // @ts-ignore
+      const reportVariants = (assignment.report?.variants as typeof inputVariants) ?? {};
 
       // JSON data
       const jsonData = {
+        language: task.params.language,
         word_id: assignment.microtask_id,
         word: mt.input.data.word,
         worker_id: assignment.worker_id,
-        variants: { ...inputVariants, ...outputVariants },
+        variants: { ...inputVariants, ...outputVariants, ...reportVariants },
         max_credits: assignment.max_credits,
         credits: assignment.credits,
       };
