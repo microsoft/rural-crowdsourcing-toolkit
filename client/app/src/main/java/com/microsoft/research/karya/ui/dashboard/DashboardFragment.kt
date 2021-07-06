@@ -51,6 +51,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun setupViews() {
     with(binding) {
       // TODO: Convert this to one string instead of joining multiple strings
+      /*
       val syncText =
         "${getString(R.string.s_get_new_tasks)} - " +
           "${getString(R.string.s_submit_completed_tasks)} - " +
@@ -58,13 +59,14 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           getString(R.string.s_update_earning)
 
       syncPromptTv.text = syncText
+      */
 
       tasksRv.apply {
         adapter = TaskListAdapter(emptyList(), ::onDashboardItemClick)
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener { viewModel.syncWithServer() }
+      tvCheckUpdates.setOnClickListener { viewModel.syncWithServer() }
 
       appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
       loadProfilePic()
@@ -103,9 +105,9 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     showLoading()
   }
 
-  private fun showLoading() = binding.syncProgressBar.visible()
+  private fun showLoading() {}
 
-  private fun hideLoading() = binding.syncProgressBar.gone()
+  private fun hideLoading() {}
 
   private fun loadProfilePic() {
     //    binding.appTb.showProfilePicture()
