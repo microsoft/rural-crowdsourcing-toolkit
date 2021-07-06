@@ -56,7 +56,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
     observeUi()
-    fetchTasksOnFirstRun()
+    setupWorkRequests()
   }
 
   override fun onResume() {
@@ -64,8 +64,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     viewModel.getAllTasks() // TODO: Remove onResume and get taskId from scenario viewmodel (similar to onActivity Result)
   }
 
-  private fun setupViews() {
-
+  private fun setupWorkRequests() {
     // TODO: SHIFT IT FROM HERE
     val constraints = Constraints.Builder()
       .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -74,6 +73,9 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>()
       .setConstraints(constraints)
       .build()
+  }
+
+  private fun setupViews() {
 
     with(binding) {
       // TODO: Convert this to one string instead of joining multiple strings
