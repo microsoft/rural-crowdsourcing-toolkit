@@ -21,10 +21,27 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.Butto
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.visible
+import kotlinx.android.synthetic.main.ng_speech_data_main.*
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import kotlinx.android.synthetic.main.speech_data_main.*
+import kotlinx.android.synthetic.main.speech_data_main.backBtn
+import kotlinx.android.synthetic.main.speech_data_main.backPointerIv
+import kotlinx.android.synthetic.main.speech_data_main.nextBtn
+import kotlinx.android.synthetic.main.speech_data_main.nextPointerIv
+import kotlinx.android.synthetic.main.speech_data_main.playBtn
+import kotlinx.android.synthetic.main.speech_data_main.playBtnCv
+import kotlinx.android.synthetic.main.speech_data_main.playPointerIv
+import kotlinx.android.synthetic.main.speech_data_main.playbackProgressPb
+import kotlinx.android.synthetic.main.speech_data_main.recordBtn
+import kotlinx.android.synthetic.main.speech_data_main.recordBtnCv
+import kotlinx.android.synthetic.main.speech_data_main.recordCentiSecondsTv
+import kotlinx.android.synthetic.main.speech_data_main.recordPointerIv
+import kotlinx.android.synthetic.main.speech_data_main.recordPromptTv
+import kotlinx.android.synthetic.main.speech_data_main.recordSecondsTv
+import kotlinx.android.synthetic.main.speech_data_main.sentencePointerIv
+import kotlinx.android.synthetic.main.speech_data_main.sentenceTv
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -988,6 +1005,17 @@ open class SpeechDataMain(
     }
   }
 
+  /** Reset recording length */
+  private fun resetPlayingLength(duration: Int? = null) {
+    uiScope.launch {
+      val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
+      val centiSeconds = (milliseconds / 10) % 100
+      val seconds = milliseconds / 1000
+      playSecondsTv.text = "%d".format(seconds)
+      playCentiSecondsTv.text = "%02d".format(centiSeconds)
+    }
+  }
+
   /** Initialize [mediaPlayer] */
   private fun initializePlayer() {
     mediaPlayer = MediaPlayer()
@@ -1007,6 +1035,7 @@ open class SpeechDataMain(
     val runnable = Runnable {
       while (state == activityState) {
         val currentPosition = mediaPlayer?.currentPosition
+        resetPlayingLength(mediaPlayer?.currentPosition)
         playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
         Thread.sleep(100)
       }
