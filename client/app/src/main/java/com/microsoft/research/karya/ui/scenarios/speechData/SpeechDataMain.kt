@@ -1006,9 +1006,9 @@ open class SpeechDataMain(
   }
 
   /** Reset recording length */
-  private fun resetPlayingLength(duration: Int? = null) {
+  private fun resetPlayingLength(duration: Int = null) {
     uiScope.launch {
-      val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
+      val milliseconds = duration
       val centiSeconds = (milliseconds / 10) % 100
       val seconds = milliseconds / 1000
       playSecondsTv.text = "%d".format(seconds)
@@ -1035,7 +1035,7 @@ open class SpeechDataMain(
     val runnable = Runnable {
       while (state == activityState) {
         val currentPosition = mediaPlayer?.currentPosition
-        resetPlayingLength(mediaPlayer?.currentPosition)
+        resetPlayingLength(mediaPlayer?.currentPosition!!)
         playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
         Thread.sleep(100)
       }
