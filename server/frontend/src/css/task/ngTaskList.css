@@ -84,7 +84,13 @@
 }
 
 .scenario {
-  margin-left: 20px;
+  margin-left: 3% !important;
+  width: 25%;
+}
+
+.language {
+  margin-left: 6% !important;
+  width: 15%;
 }
 
 .arrow-2 {

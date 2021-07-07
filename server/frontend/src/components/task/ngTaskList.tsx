@@ -57,7 +57,7 @@ class TaskList extends React.Component<TaskListProps> {
       return (
         <>
           <h2 className='task-name'>{task.name}</h2>
-          <span className='badge scenario'>{languageString(task)}</span>
+          <span className='badge language'>{languageString(task)}</span>
           <span className='badge scenario'>{scenarioTag(task)}</span>
           <span className='badge status'>{taskStatus(task)}</span>
           <Link to={`/task/${task.id}`} className='details-link'>
@@ -79,7 +79,7 @@ class TaskList extends React.Component<TaskListProps> {
             <>
               <h1 id='page-title'>Tasks{createTaskButton}</h1>
               <Collapsible accordion={false}>
-                {tasks.map((t) => (
+                {tasks.map(t => (
                   <CollapsibleItem
                     expanded={false}
                     header={header(t)}
