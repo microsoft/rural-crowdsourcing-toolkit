@@ -102,7 +102,9 @@ export type TaskRecordType<
   ? TaskRecord<CoreScenarioParamsType & TaskParamsType & PolicyParamsType<PN>>
   : never;
 
-export type TaskType<SN extends ScenarioName = ScenarioName> = Partial<TaskRecordType<SN>>;
+export type TaskType<SN extends ScenarioName = ScenarioName, PN extends PolicyName = PolicyName> = Partial<
+  TaskRecordType<SN, PN>
+>;
 
 export type MicrotaskRecordType<
   SN extends ScenarioName = ScenarioName
