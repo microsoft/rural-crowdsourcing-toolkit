@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
 
         // TODO: Remove JCenter
         @Suppress("JcenterRepositoryObsolete")
@@ -31,6 +32,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven(url = "https://jitpack.io")
 
         // TODO: Remove JCenter

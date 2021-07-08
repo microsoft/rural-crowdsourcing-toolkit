@@ -188,7 +188,6 @@ constructor(
     _playBtnState.value = p
     _nextBtnState.value = n
   }
-
   override fun setupMicrotask() {
 
     /** Get the scratch and output file paths */
