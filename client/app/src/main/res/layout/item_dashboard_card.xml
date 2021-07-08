@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:layout_marginEnd="@dimen/_4sdp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="@dimen/_18ssp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/task_subtitle"
@@ -94,7 +94,7 @@
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/d_tasks_available"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/tasks_completed"
@@ -103,7 +103,7 @@
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/d_tasks_completed"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/tasks_submitted"
@@ -112,7 +112,7 @@
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/d_tasks_submitted"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/tasks_verified"
@@ -121,7 +121,7 @@
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/d_tasks_verified"
-                android:textColor="@color/black" />
+                android:textColor="@color/colorBlack" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
