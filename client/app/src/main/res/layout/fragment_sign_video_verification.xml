@@ -35,9 +35,9 @@
 
     <com.potyvideo.library.AndExoPlayerView
         android:id="@+id/videoPlayer"
-        app:andexo_show_controller="false"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:andexo_full_screen="true"
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintBottom_toTopOf="@id/scoreLl"
         app:layout_constraintTop_toBottomOf="@id/sentenceTv"

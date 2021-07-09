@@ -134,11 +134,19 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         findNavController().navigate(action)
       }
       "XLITERATION_DATA" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSIgnVideoVerificationFragment(task.taskID)
+        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
         findNavController().navigate(action)
       }
       "MV_XLITERATION_VERIFICATION" -> {
         val action = DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
+        findNavController().navigate(action)
+      }
+      "<SIGN_LANGUAGE_TASK_NAME>" -> {
+        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
+        findNavController().navigate(action)
+      }
+      "<SIGN_VERIFICATION_TASK_NAME>" -> {
+        val action = DashboardFragmentDirections.actionDashboardActivityToSIgnVideoVerificationFragment(task.taskID)
         findNavController().navigate(action)
       }
 
