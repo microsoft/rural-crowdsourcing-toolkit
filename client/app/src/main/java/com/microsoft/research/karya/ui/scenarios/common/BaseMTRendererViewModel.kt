@@ -132,13 +132,11 @@ constructor(
   }
 
   /** Add a file to the assignment with the given output */
-  protected fun addOutputFile(params: Pair<String, String>) {
+  protected fun addOutputFile(key: String, params: Pair<String, String>) {
     val assignmentId = microtaskAssignmentIDs[currentAssignmentIndex]
     val fileName = assignmentOutputContainer.getAssignmentFileName(assignmentId, params)
-    // Add file if it is not already present
-    if (!outputFiles.contains(Gson().toJsonTree(fileName))) {
-      outputFiles.add(fileName)
-    }
+
+    outputFiles.addProperty(key, fileName)
 
     // log the output file addition
     val logObj = JsonObject()
