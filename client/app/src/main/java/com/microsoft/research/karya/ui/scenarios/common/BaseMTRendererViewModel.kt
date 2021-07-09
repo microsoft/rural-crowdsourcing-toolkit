@@ -59,7 +59,7 @@ constructor(
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
   protected var outputData: JsonObject = JsonObject()
-  protected var outputFiles: JsonArray = JsonArray()
+  protected var outputFiles: JsonObject = JsonObject()
   protected var logs: JsonArray = JsonArray()
 
   private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
@@ -253,9 +253,9 @@ constructor(
 
         outputFiles =
           if (currentAssignment.output.asJsonObject.has("files")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("files")
+            currentAssignment.output.asJsonObject.getAsJsonObject("files")
           } else {
-            JsonArray()
+            JsonObject()
           }
       }
 
