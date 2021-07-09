@@ -112,18 +112,15 @@ constructor(
   override fun setupMicrotask() {
 
     // TODO: Pick up from server
-    val sentence = "tea is flsdkhjfjklsdhf kljsdh fjklsdhfjkasdhjkf cvsdjkfh ksdh kfh sdkjfjkl dsg fi"
-//    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
-//    val recordingFileName =
-//      currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
-//    val recordFilePath = microtaskInputContainer.getMicrotaskInputFilePath(
-//      microtaskAssignmentIDs[currentAssignmentIndex],
-//      recordingFileName
-//    )
-//    _recordingFile.value = recordFilePath
-    _recordingFile.value = "https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4"
+    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    val recordingFileName =
+      currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
+    val recordFilePath = microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id,
+      recordingFileName
+    )
+    _recordingFile.value = recordFilePath
+//    _recordingFile.value = "https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4"
     _videoPlayerVisibility.value = true
     _sentenceTvText.value = sentence
-
   }
 }

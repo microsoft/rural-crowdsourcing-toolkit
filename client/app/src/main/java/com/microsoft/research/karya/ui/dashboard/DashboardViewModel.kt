@@ -146,7 +146,8 @@ constructor(
 
     val microtaskAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
-        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
+        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonObject.size() == 0 || it.output_file_id !=
+          null
       }
     assignmentRepository
       .submitAssignments(worker.idToken, microtaskAssignments)
@@ -162,14 +163,16 @@ constructor(
       updates.filter {
         // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if
         // the file was already uploaded
-        it.output_file_id == null && !it.output.isJsonNull && it.output.asJsonObject.get("files").asJsonArray.size() > 0
+        it.output_file_id == null && !it.output.isJsonNull && (it.output.asJsonObject.get("files").asJsonObject.size()
+        > 0)
       }
 
     for (assignment in filteredAssignments) {
       val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
       val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
       val outputDir = microtaskOutputContainer.getDirectory()
-      val fileNames = assignment.output.asJsonObject.get("files").asJsonArray.map { it.asString }
+      val outputFiles = assignment.output.asJsonObject.get("files").asJsonObject
+      val fileNames = outputFiles.keySet().map { it -> outputFiles.get(it).asString }
       val outputFilePaths = fileNames.map { "$outputDir/${it}" }
       createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
       uploadTarBall(assignment, assignmentTarBallPath, tarBallName)

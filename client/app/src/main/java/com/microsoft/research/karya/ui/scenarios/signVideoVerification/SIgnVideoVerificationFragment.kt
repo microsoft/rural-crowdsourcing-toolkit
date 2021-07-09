@@ -65,7 +65,7 @@ class SIgnVideoVerificationFragment :
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
     ) { filePath ->
-      videoPlayer.setSource(filePath)
+       if (filePath.isNotEmpty()) videoPlayer.setSource(filePath)
     }
 
     viewModel.sentenceTvText.observe(

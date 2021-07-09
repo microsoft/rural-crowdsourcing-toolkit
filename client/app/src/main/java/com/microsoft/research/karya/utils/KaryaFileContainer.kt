@@ -47,13 +47,14 @@ class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input"
   /** Get Microtask input directory */
   // TODO [Viewmodel_Refactor]: Ask the structure of input files directory
   fun getMicrotaskInputDirectory(microtaskId: String): String {
-    return FileUtils.createDirectory("${cname}/$microtaskId")
+    val directory = getDirectory(microtaskId)
+    return FileUtils.createDirectory(directory)
   }
 
   /** Get microtask input file path */
   fun getMicrotaskInputFilePath(microtaskId: String, fileName: String): String {
-    val microtaskInputDirectory = getMicrotaskInputDirectory(microtaskId)
-    return "$microtaskInputDirectory/$fileName"
+    val directory = getDirectory(microtaskId)
+    return "$directory/$fileName"
   }
 
 }

@@ -145,7 +145,7 @@ constructor(
       /** COMPLETED: release the media player */
       ActivityState.COMPLETED -> {
         showVideoPlayer()
-        addOutputFile(outputRecordingFileParams)
+        addOutputFile("recording", outputRecordingFileParams)
         viewModelScope.launch {
           completeAndSaveCurrentMicrotask()
           setButtonStates(ENABLED, ENABLED, ENABLED)
@@ -257,13 +257,13 @@ constructor(
         outputRecordingFileParams
       )
 
-//    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
-//    sentenceTv.text = sentence
+    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    _sentenceTvText.value = sentence
 //    Log.i("VIDEO_SENTENCE", sentence)
 
     // TODO: Pick up from server
-    val sentence = "tea"
-    _sentenceTvText.value = sentence
+//    val sentence = "tea"
+//    _sentenceTvText.value = sentence
 
     if (activityState == ActivityState.INIT) {
       setActivityState(ActivityState.COMPLETED_SETUP)

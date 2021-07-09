@@ -141,11 +141,11 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         val action = DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
         findNavController().navigate(action)
       }
-      "<SIGN_LANGUAGE_TASK_NAME>" -> {
+      "SIGN_LANGUAGE_VIDEO" -> {
         val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
         findNavController().navigate(action)
       }
-      "<SIGN_VERIFICATION_TASK_NAME>" -> {
+      "SGN_LANG_VIDEO_VERIFICATION" -> {
         val action = DashboardFragmentDirections.actionDashboardActivityToSIgnVideoVerificationFragment(task.taskID)
         findNavController().navigate(action)
       }
