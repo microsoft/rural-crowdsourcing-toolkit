@@ -49,6 +49,13 @@ class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input"
   fun getMicrotaskInputDirectory(microtaskId: String): String {
     return FileUtils.createDirectory("${cname}/$microtaskId")
   }
+
+  /** Get microtask input file path */
+  fun getMicrotaskInputFilePath(microtaskId: String, fileName: String): String {
+    val microtaskInputDirectory = getMicrotaskInputDirectory(microtaskId)
+    return "$microtaskInputDirectory/$fileName"
+  }
+
 }
 
 class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("microtask-assignment-output", fileDirPath) {
