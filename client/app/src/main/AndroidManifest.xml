@@ -43,6 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.scenarios.signVideo.SignVideoRecord"/>
 
         <uses-library
             android:name="org.apache.http.legacy"

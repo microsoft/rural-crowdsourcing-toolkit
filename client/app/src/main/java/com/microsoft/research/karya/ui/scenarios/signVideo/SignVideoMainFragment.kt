@@ -2,7 +2,9 @@ package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -63,12 +65,11 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
     viewModel.recordBtnState.observe(viewLifecycleOwner.lifecycle,
       viewLifecycleScope) { state ->
       recordBtn.isClickable = state != DISABLED
-      recordBtn.setBackgroundResource(
+      recordBtn.alpha =
         when (state) {
-          DISABLED -> R.drawable.ic_mic_disabled
-          ENABLED -> R.drawable.ic_mic_enabled
+          DISABLED -> 0.5F
+          ENABLED -> 1F
         }
-      )
     }
 
     viewModel.nextBtnState.observe(
@@ -122,6 +123,13 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
   private fun hideVideoPlayer() {
     videoPlayer.invisible()
     videoPlayerPlaceHolder.visible()
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
+    // TODO: Remove this once we have viewModel Factory
+    viewModel.setupViewModel(args.taskId, 0, 0)
+    return view
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -77,7 +77,7 @@ constructor(
   private val _videoPlayerVisibility: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val videoPlayerVisibility = _videoPlayerVisibility.asStateFlow()
 
-  private val _launchRecordVideo: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
+  private val _launchRecordVideo: MutableSharedFlow<Boolean> = MutableSharedFlow(0)
   val launchRecordVideo = _launchRecordVideo.asSharedFlow()
 
   init {
