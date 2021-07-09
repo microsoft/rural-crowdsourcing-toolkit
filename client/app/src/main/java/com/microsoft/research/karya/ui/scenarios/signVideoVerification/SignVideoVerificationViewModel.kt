@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.scenarios.signVideoVerification
 import android.media.AudioFormat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SignVideoVerificationViewModel
@@ -33,10 +35,10 @@ constructor(
   var remarks: String = ""
 
   /** UI State **/
-  private val _backBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
+  private val _backBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(ENABLED)
   val backBtnState = _backBtnState.asStateFlow()
 
-  private val _nextBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
+  private val _nextBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(ENABLED)
   val nextBtnState = _nextBtnState.asStateFlow()
 
   private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
@@ -62,18 +64,9 @@ constructor(
 
 
   /** Shortcut to set and flush all four button states (in sequence) */
-  private fun setButtonStates(b: ButtonState, r: ButtonState, n: ButtonState) {
+  private fun setButtonStates(b: ButtonState, n: ButtonState) {
     _backBtnState.value = b
     _nextBtnState.value = n
-  }
-
-
-  private fun showVideoPlayer() {
-    _videoPlayerVisibility.value = true
-  }
-
-  private fun hideVideoPlayer() {
-    _videoPlayerVisibility.value = false
   }
 
   /** Handle next button click */
@@ -87,7 +80,12 @@ constructor(
     outputData.addProperty("score", score)
     outputData.addProperty("remarks", remarks)
 
-    moveToNextMicrotask()
+    _videoPlayerVisibility.value = false
+
+    viewModelScope.launch {
+      completeAndSaveCurrentMicrotask()
+      moveToNextMicrotask()
+    }
   }
 
   /** Handle back button click */
@@ -114,7 +112,7 @@ constructor(
   override fun setupMicrotask() {
 
     // TODO: Pick up from server
-    val sentence = "tea"
+    val sentence = "tea is flsdkhjfjklsdhf kljsdh fjklsdhfjkasdhjkf cvsdjkfh ksdh kfh sdkjfjkl dsg fi"
 //    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
 //    val recordingFileName =
 //      currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString

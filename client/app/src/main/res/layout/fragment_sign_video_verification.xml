@@ -76,7 +76,8 @@
             android:id="@+id/scoreSlider"
             android:layout_width="0dp"
             android:layout_height="@dimen/_28sdp"
-            android:layout_weight="8" />
+            android:layout_weight="8"
+            android:max="10"/>
 
         <TextView
             android:id="@+id/scoreTextView"
@@ -102,6 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="2"
+        android:maxLines="2"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:hint="Optional Feedback..."
         app:layout_constraintBottom_toTopOf="@id/backBtnCl"

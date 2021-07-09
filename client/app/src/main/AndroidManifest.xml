@@ -35,8 +35,7 @@
         <activity
             android:name=".ui.onboarding.accesscode.AccessCodeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.MainActivity"
-            android:windowSoftInputMode="adjustNothing">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

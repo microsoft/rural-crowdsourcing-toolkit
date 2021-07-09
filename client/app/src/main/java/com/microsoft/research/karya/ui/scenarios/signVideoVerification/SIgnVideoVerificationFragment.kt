@@ -100,7 +100,10 @@ class SIgnVideoVerificationFragment :
 
     setupObservers()
     /** Set OnBackPressed callback */
-    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.onBackPressed() }
+    requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+      freeResources()
+      viewModel.onBackPressed()
+    }
 
     /** Forced replace */
     val noForcedReplay =
@@ -138,6 +141,10 @@ class SIgnVideoVerificationFragment :
       }
     })
 
+  }
+
+  private fun freeResources() {
+    videoPlayer.releasePlayer()
   }
 }
 
