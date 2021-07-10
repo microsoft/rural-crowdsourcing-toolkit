@@ -13,6 +13,7 @@ import { backendTextTranslationScenario } from './scenarios/TextTranslation';
 import { backendSpeechVerificationScenario } from './scenarios/SpeechVerification';
 import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
 import { backendXliterationDataScenario } from './scenarios/XliterationData';
+import { backendSignLanguageVideoVerificationScenario } from './scenarios/SignLanguageVideoVerification';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -22,5 +23,6 @@ export const backendScenarioMap: {
   TEXT_TRANSLATION: backendTextTranslationScenario,
   SPEECH_VERIFICATION: backendSpeechVerificationScenario,
   SIGN_LANGUAGE_VIDEO: backendSignLanguageVideoScenario,
+  SGN_LANG_VIDEO_VERIFICATION: backendSignLanguageVideoVerificationScenario,
   XLITERATION_DATA: backendXliterationDataScenario,
 };
