@@ -32,8 +32,6 @@ class SignVideoRecord : AppCompatActivity() {
     cameraView.facing = Facing.FRONT
     cameraView.audio = Audio.OFF;
     cameraView.mode = Mode.VIDEO
-    setupCamera()
-
     cameraView.addCameraListener(object : CameraListener() {
       override fun onVideoTaken(video: VideoResult) {
         super.onVideoTaken(video)
@@ -41,22 +39,7 @@ class SignVideoRecord : AppCompatActivity() {
         finish()
       }
     })
-
-    // Countdown Timer
-//    object : CountDownTimer(3000, 1000) {
-//      override fun onFinish() {
-//        cameraView.takeVideo(File(video_file_path))
-//        timerTextView.invisible()
-//        recordButton.visible()
-//      }
-//
-//      override fun onTick(millisUntilFinished: Long) {
-//        timerTextView.text = (millisUntilFinished / 1000 + 1).toString()
-//      }
-//
-//    }.start()
-
-
+    setupCamera()
     stopRecordButton.setOnClickListener { handleStopRecordClick() }
   }
 

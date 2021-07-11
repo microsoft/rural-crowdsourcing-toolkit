@@ -130,7 +130,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       // TODO: CONVERT TO TODO
       // Use [ScenarioType] enum once we migrate to it.
       "SPEECH_DATA" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
         findNavController().navigate(action)
       }
       "XLITERATION_DATA" -> {

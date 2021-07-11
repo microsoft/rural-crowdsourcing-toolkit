@@ -133,8 +133,8 @@ class FaceBoundsOverlay @JvmOverloads constructor(ctx: Context, attrs: Attribute
       if (countGood >= 4 * COUNT_GAP) {
         mode = "RECORDING"
         if (!isRecording) {
-          isRecording = true
           onStartRecording()
+          isRecording = true
         }
       }
     }
