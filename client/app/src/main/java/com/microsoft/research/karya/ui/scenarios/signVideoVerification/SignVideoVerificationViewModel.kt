@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.signVideoVerification
 
-import android.media.AudioFormat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
@@ -28,7 +27,6 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-  private val datastore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
 
   var score: Int = 0

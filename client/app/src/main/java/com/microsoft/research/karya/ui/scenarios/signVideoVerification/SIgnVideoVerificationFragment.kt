@@ -72,7 +72,7 @@ class SIgnVideoVerificationFragment :
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
     ) { text ->
-      sentenceTv.text = text
+      if (text.isNotEmpty()) sentenceTv.text = text
     }
 
 

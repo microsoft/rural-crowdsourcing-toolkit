@@ -63,9 +63,15 @@ constructor(
     MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
+  private val _syncInProgress: MutableStateFlow<Boolean> =
+    MutableStateFlow(false)
+  val syncInProgress = _syncInProgress.asStateFlow()
+
+
   fun syncWithServer() {
     viewModelScope.launch {
       _dashboardUiState.value = DashboardUiState.Loading
+      _syncInProgress.value = true
       // Refresh loggedIn Worker
       val worker = authManager.fetchLoggedInWorker()
 
@@ -81,6 +87,8 @@ constructor(
         tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
       }
       taskInfoList = tempList.sortedWith(taskInfoComparator)
+
+      _syncInProgress.value = false
 
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))

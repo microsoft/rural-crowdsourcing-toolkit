@@ -80,20 +80,31 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
+
+    // TODO: This is a hack and please shift this to UI state
+    viewModel.syncInProgress.observe(lifecycle, lifecycleScope) { syncInProgress ->
+      if (syncInProgress) {
+        binding.tasksRv.isClickable = false
+      } else {
+        binding.tasksRv.isClickable = true
+        hideLoading()
+        syncCv.enable()
+      }
+    }
+
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
-    hideLoading()
-    syncCv.enable()
+    if (viewModel.syncInProgress.value) return
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-      if (totalCreditsEarned > 0.0f) {
-        binding.rupeesEarnedCl.visible()
-        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
-      } else {
-        binding.rupeesEarnedCl.gone()
-      }
+//      if (totalCreditsEarned > 0.0f) {
+//        binding.rupeesEarnedCl.visible()
+//        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+//      } else {
+//        binding.rupeesEarnedCl.gone()
+//      }
     }
   }
 
@@ -130,7 +141,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       // TODO: CONVERT TO TODO
       // Use [ScenarioType] enum once we migrate to it.
       "SPEECH_DATA" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
+        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
         findNavController().navigate(action)
       }
       "XLITERATION_DATA" -> {

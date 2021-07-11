@@ -245,6 +245,7 @@ constructor(
         }
       }
     }
+    navigateBack()
   }
 
 

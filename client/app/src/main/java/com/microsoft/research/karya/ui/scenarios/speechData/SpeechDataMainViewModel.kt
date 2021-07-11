@@ -1009,7 +1009,7 @@ constructor(
     CoroutineScope(Dispatchers.IO)
       .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
       .join()
-    addOutputFile(outputRecordingFileParams)
+    addOutputFile("", outputRecordingFileParams)
   }
 
   /** Helper method to convert number of [samples] to time in milliseconds */
