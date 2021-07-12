@@ -7,7 +7,7 @@
 
 // React stuff
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
-import { RouteComponentProps, Link } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -484,17 +484,6 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <div className='row'>{errorElement}</div>
           </div>
         ) : null}
-        {/** Breadcrumbs */}
-        <nav id='breadcrumbs-nav'>
-          <div className='nav-wrapper' id='nav-wrapper'>
-            <div className='col s12'>
-              <Link to='/task' className='breadcrumb'>
-                Tasks
-              </Link>
-              <p className='breadcrumb'>{task.name}</p>
-            </div>
-          </div>
-        </nav>
 
         <div id='all-content'>
           <div className='row'>

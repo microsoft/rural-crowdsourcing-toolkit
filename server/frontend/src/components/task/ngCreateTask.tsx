@@ -467,18 +467,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
       <div className='white z-depth-1 lpad20' id='main'>
         {createErrorElement}
 
-        {/** Breadcrumbs */}
-        <nav id='breadcrumbs-nav'>
-          <div className='nav-wrapper' id='nav-wrapper'>
-            <div className='col s12'>
-              <Link to='/task' className='breadcrumb'>
-                Tasks
-              </Link>
-              <p className='breadcrumb'>Create Task</p>
-            </div>
-          </div>
-        </nav>
-
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
             <h1 id='page-title'>Create Task</h1>
