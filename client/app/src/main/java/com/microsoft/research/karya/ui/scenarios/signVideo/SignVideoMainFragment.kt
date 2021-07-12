@@ -31,7 +31,7 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
       if (result.resultCode == AppCompatActivity.RESULT_OK) {
-        videoPlayer.setSource(viewModel.outputRecordingFilePath)
+        viewModel.setVideoSource(viewModel.outputRecordingFilePath)
 
         viewModel.onVideoReceived()
 
@@ -51,6 +51,12 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
   }
 
   private fun setupObservers() {
+
+    viewModel.videoSource.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { source ->
+      if (source.isNotEmpty()) {
+        videoPlayer.setSource(source)
+      }
+    }
 
     viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
       backBtn.isClickable = state != DISABLED

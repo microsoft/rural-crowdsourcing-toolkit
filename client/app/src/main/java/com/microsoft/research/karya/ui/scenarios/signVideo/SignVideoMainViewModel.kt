@@ -1,11 +1,8 @@
 package com.microsoft.research.karya.ui.scenarios.signVideo
 
-import android.app.Activity
-import android.content.Intent
 import android.media.AudioFormat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -15,26 +12,19 @@ import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.ENABLED
-import com.microsoft.research.karya.utils.PreferenceKeys
-import com.microsoft.research.karya.utils.RawToAACEncoder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.fragment_sign_video_init.*
-import java.io.DataOutputStream
-import java.io.FileOutputStream
-import java.io.RandomAccessFile
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -51,7 +41,13 @@ constructor(
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
   private val datastore: DataStore<Preferences>
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager
+) {
 
   /** Final recording file */
   private val outputRecordingFileParams = Pair("", "mp4")
@@ -79,6 +75,9 @@ constructor(
 
   private val _launchRecordVideo: MutableSharedFlow<Boolean> = MutableSharedFlow(0)
   val launchRecordVideo = _launchRecordVideo.asSharedFlow()
+
+  private val _videoSource: MutableStateFlow<String> = MutableStateFlow("")
+  val videoSource = _videoSource.asStateFlow()
 
   init {
     setActivityState(ActivityState.INIT)
@@ -249,7 +248,6 @@ constructor(
   }
 
 
-
   override fun setupMicrotask() {
     /** Get the scratch and output file paths */
     outputRecordingFilePath =
@@ -258,18 +256,23 @@ constructor(
         outputRecordingFileParams
       )
 
-    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    val sentence =
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     _sentenceTvText.value = sentence
-//    Log.i("VIDEO_SENTENCE", sentence)
 
-    // TODO: Pick up from server
-//    val sentence = "tea"
-//    _sentenceTvText.value = sentence
-
-    if (activityState == ActivityState.INIT) {
-      setActivityState(ActivityState.COMPLETED_SETUP)
-      startCooldownTimer()
+    if (currentAssignment.status == MicrotaskAssignmentStatus.COMPLETED) {
+      setVideoSource(outputRecordingFilePath)
+      setActivityState(ActivityState.COMPLETED)
+    } else {
+      if (activityState == ActivityState.INIT) {
+        setActivityState(ActivityState.COMPLETED_SETUP)
+        startCooldownTimer()
+      }
     }
+  }
+
+  fun setVideoSource(source: String) {
+    _videoSource.value = source
   }
 
   private fun startCooldownTimer() {
