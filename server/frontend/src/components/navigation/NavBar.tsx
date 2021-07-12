@@ -4,7 +4,7 @@
 /** Navigation bar. Contains all auth related stuff */
 
 /** React stuff */
-import React, { Fragment } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 /** Redux stuff */
@@ -31,30 +31,67 @@ class NavBar extends React.Component<NavBarProps> {
 
     const initials = auth.cwp === null ? '' : (auth.cwp.full_name as string)[0];
     return (
-      <nav className='navbar white' id='top-nav'>
-        <div className='nav-wrapper'>
-          <div id='nav-container' className='container'>
-            {auth.status !== 'IN_FLIGHT' ? (
-              <ul id='nav-mobile' className='right'>
-                {auth.cwp === null ? (
-                  <li>
-                    <NavLink to='/login'>Login</NavLink>
-                  </li>
-                ) : (
-                  <Fragment>
+      <>
+        {auth.status !== 'IN_FLIGHT' ? (
+          <nav className='navbar white' id='top-nav'>
+            {auth.cwp === null ? (
+              <div className='nav-wrapper'>
+                <div id='nav-container' className='container'>
+                  <ul className='right'>
                     <li>
-                      <NavLink to='/signout'>Sign Out</NavLink>
+                      <NavLink to='/login'>Login</NavLink>
                     </li>
-                    <li>
-                      <button className='btn-floating'>{initials}</button>
-                    </li>
-                  </Fragment>
-                )}
-              </ul>
-            ) : null}
-          </div>
-        </div>
-      </nav>
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className='nav-wrapper'>
+                  <div id='nav-container' className='container'>
+                    <ul className='right'>
+                      <li>
+                        <NavLink to='/signout'>Sign Out</NavLink>
+                      </li>
+                      <li>
+                        <button className='btn-floating'>{initials}</button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {auth.cwp.role === 'ADMIN' ? (
+                  <div className='nav-wrapper' id='tab-bar'>
+                    <div className='container'>
+                      <ul id='tabs'>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/task'>
+                            Tasks
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/task-assignments/create'>
+                            Task Assignment
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/box'>
+                            Box Creation
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/work_provider'>
+                            Work Providers
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                ) : null}
+              </>
+            )}
+          </nav>
+        ) : null}
+      </>
     );
   }
 }
