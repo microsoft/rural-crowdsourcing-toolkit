@@ -79,7 +79,7 @@ class TaskList extends React.Component<TaskListProps> {
             <>
               <h1 id='page-title'>Tasks{createTaskButton}</h1>
               <Collapsible accordion={false}>
-                {tasks.map(t => (
+                {tasks.map((t) => (
                   <CollapsibleItem
                     expanded={false}
                     header={header(t)}
