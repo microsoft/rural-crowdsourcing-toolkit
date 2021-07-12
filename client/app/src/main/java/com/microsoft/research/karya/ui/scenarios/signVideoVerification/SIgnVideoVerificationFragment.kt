@@ -116,9 +116,11 @@ class SIgnVideoVerificationFragment :
     /** Set on click listeners */
     nextBtn.setOnClickListener {
       viewModel.remarks = feedbackEt.text.toString()
+      viewModel.handleNextClick()
       feedbackEt.text.clear()
       scoreSlider.progress = 0
-      viewModel.handleNextClick()
+      scoreTextView.text = "0"
+      viewModel.score = 0
     }
     backBtn.setOnClickListener { viewModel.handleBackClick() }
 
