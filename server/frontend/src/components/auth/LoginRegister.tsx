@@ -29,9 +29,10 @@ import { ServerUser } from '@karya/core';
 
 /** Google login element */
 import GoogleLogin from 'react-google-login';
-import config from '../../config/Index';
 
 import '../../css/LoginRegister.css';
+
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 /** Define Router match params props */
 /** Define own props */
@@ -97,13 +98,13 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
   };
 
   /** Form ...this.state, field on change handler */
-  handleFormChange: ChangeEventHandler<HTMLInputElement> = e => {
+  handleFormChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const updatedWP: ServerUser = { ...this.state.wp, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ wp: updatedWP });
   };
 
   /** Form submission */
-  handleFormSubmit: FormEventHandler = e => {
+  handleFormSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     this.props.signUpServerUser(this.state.wp, this.state.id_token);
   };
@@ -182,7 +183,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
 
                     <div id='login-btn'>
                       <GoogleLogin
-                        clientId={config.googleOAuthClientID}
+                        clientId={googleClientId}
                         buttonText='Log in with Google'
                         onSuccess={this.onGoogleLoginSuccess}
                         onFailure={this.onGoogleLoginFailure}
@@ -222,7 +223,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
 
                       <div id='choose-btn'>
                         <GoogleLogin
-                          clientId={config.googleOAuthClientID}
+                          clientId={googleClientId}
                           buttonText='Choose a Google account'
                           onSuccess={this.onGoogleSignUpSuccess}
                           onFailure={this.onGoogleLoginFailure}
