@@ -87,6 +87,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         binding.tasksRv.isClickable = false
       } else {
         binding.tasksRv.isClickable = true
+
         hideLoading()
         syncCv.enable()
       }
@@ -95,7 +96,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
-    if (viewModel.syncInProgress.value) return
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
