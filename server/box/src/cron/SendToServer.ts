@@ -52,7 +52,11 @@ export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: Axios
 
     // Upload file
     try {
-      await axiosLocal.put<KaryaFileRecord>('/karya_file', form, { headers: form.getHeaders() });
+      await axiosLocal.put<KaryaFileRecord>('/karya_file', form, {
+        headers: form.getHeaders(),
+        maxBodyLength: 100000000,
+        maxContentLength: 100000000,
+      });
       await BasicModel.updateSingle('karya_file', { id: file.id }, { in_server: true });
     } catch (e) {
       failedUpload.push(file.id);

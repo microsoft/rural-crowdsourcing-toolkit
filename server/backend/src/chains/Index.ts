@@ -9,6 +9,7 @@ import { Promise as BBPromise } from 'bluebird';
 import { handleNewlyCompletedAssignments } from '../task-ops/policies/Index';
 
 import { BackendChainInterface, ChainedMicrotaskRecordType, ChainedMicrotaskType } from './BackendChainInterface';
+import { signLanguageVideoValidation } from './chains/SignLanguageVideoValidation';
 import { speechValidationChain } from './chains/SpeechValidation';
 import { xliterationValidationChain } from './chains/XliterationValidation';
 
@@ -16,6 +17,7 @@ import { xliterationValidationChain } from './chains/XliterationValidation';
 export const backendChainMap: { [key in ChainName]: BackendChainInterface<any, any> } = {
   SPEECH_VALIDATION: speechValidationChain,
   XLITERATION_VALIDATION: xliterationValidationChain,
+  SIGN_VIDEO_VALIDATION: signLanguageVideoValidation,
 };
 
 /**

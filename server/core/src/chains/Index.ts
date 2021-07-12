@@ -9,15 +9,17 @@
 
 import { ScenarioName } from '../scenarios/Index';
 import { BaseChainInterface } from './BaseChainInterface';
+import { baseSignLanguageVideoValidation } from './chains/SignLanguageVideoValidation';
 import { baseSpeechValidationChain } from './chains/SpeechValidation';
 import { baseXliterationValidationChain } from './chains/XliterationValidation';
 
 export * from './BaseChainInterface';
 export * from './chains/SpeechValidation';
+export * from './chains/SignLanguageVideoValidation';
 export * from './chains/XliterationValidation';
 
 // List of chains
-export const chainNames = ['SPEECH_VALIDATION', 'XLITERATION_VALIDATION'] as const;
+export const chainNames = ['SPEECH_VALIDATION', 'XLITERATION_VALIDATION', 'SIGN_VIDEO_VALIDATION'] as const;
 export type ChainName = typeof chainNames[number];
 
 /**
@@ -37,4 +39,5 @@ export type ChainStatus = typeof chainStatuses[number];
 export const baseChainMap: { [key in ChainName]: BaseChainInterface<ScenarioName, ScenarioName> } = {
   SPEECH_VALIDATION: baseSpeechValidationChain,
   XLITERATION_VALIDATION: baseXliterationValidationChain,
+  SIGN_VIDEO_VALIDATION: baseSignLanguageVideoValidation,
 };
