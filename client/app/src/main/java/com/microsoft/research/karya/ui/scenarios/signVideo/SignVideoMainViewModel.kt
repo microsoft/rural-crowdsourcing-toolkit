@@ -1,8 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.signVideo
 
-import android.media.AudioFormat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -15,8 +12,6 @@ import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.ENABLED
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.android.synthetic.main.fragment_sign_video_init.*
-import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,11 +20,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-
-/** Audio recording parameters */
-private const val SAMPLE_RATE = 44100
-private const val AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO
-private const val AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT
 
 @HiltViewModel
 class SignVideoMainViewModel
@@ -40,13 +30,13 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-  private val datastore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
   microTaskRepository,
   fileDirPath,
-  authManager
+  authManager,
+  true
 ) {
 
   /** Final recording file */

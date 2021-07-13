@@ -34,8 +34,9 @@ constructor(
   var assignmentRepository: AssignmentRepository,
   var taskRepository: TaskRepository,
   var microTaskRepository: MicroTaskRepository,
-  @FilesDir var fileDirPath: String,
+  var fileDirPath: String,
   var authManager: AuthManager,
+  val includeCompleted: Boolean = false
 ) : ViewModel() {
 
   private lateinit var taskId: String
@@ -80,7 +81,7 @@ constructor(
       microtaskAssignmentIDs =
         assignmentRepository.getUnsubmittedIDsForTask(
           task.id,
-          false
+          includeCompleted
         ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel
       // factory)
 
