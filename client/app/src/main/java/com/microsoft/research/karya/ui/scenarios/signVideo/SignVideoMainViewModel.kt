@@ -12,6 +12,8 @@ import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.ENABLED
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +40,8 @@ constructor(
   authManager,
   true
 ) {
+
+  lateinit var delayJob: Job
 
   /** Final recording file */
   private val outputRecordingFileParams = Pair("", "mp4")
@@ -134,11 +138,17 @@ constructor(
       /** COMPLETED: release the media player */
       ActivityState.COMPLETED -> {
         showVideoPlayer()
-        addOutputFile("recording", outputRecordingFileParams)
-        viewModelScope.launch {
-          completeAndSaveCurrentMicrotask()
+        if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
+          addOutputFile("recording", outputRecordingFileParams)
+          viewModelScope.launch {
+            completeAndSaveCurrentMicrotask()
+            setButtonStates(ENABLED, ENABLED, ENABLED)
+          }
+        } else {
           setButtonStates(ENABLED, ENABLED, ENABLED)
+          delayJob.cancel()
         }
+
       }
 
       ActivityState.COOLDOWN_COMPLETE -> {
@@ -230,7 +240,6 @@ constructor(
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         runBlocking {
           completeAndSaveCurrentMicrotask()
-          navigateBack()
         }
       }
     }
@@ -267,7 +276,7 @@ constructor(
 
   private fun startCooldownTimer() {
 
-    viewModelScope.launch {
+    delayJob = viewModelScope.launch {
       delay(BUTTON_COOLDOWN_TIME)
       setActivityState(ActivityState.COOLDOWN_COMPLETE)
     }

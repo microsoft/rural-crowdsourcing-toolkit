@@ -28,6 +28,10 @@ class SignVideoVerificationFragment :
 
   private fun setupObservers() {
 
+    viewModel.oldRemarks.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { remarks ->
+      feedbackEt.setText(remarks)
+    }
+
     viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
       backBtn.isClickable = state != DISABLED
       backBtn.setBackgroundResource(
@@ -109,7 +113,7 @@ class SignVideoVerificationFragment :
     /** Set on click listeners */
     nextBtn.setOnClickListener {
       // If not selected a grade, return
-      if (viewModel.score == 0) {
+      if (viewModel.score == 0) { // TODO: Change this to enum
         Toast.makeText(requireContext(), "Please grade the student", Toast.LENGTH_LONG).show()
         return@setOnClickListener
       }
@@ -128,9 +132,9 @@ class SignVideoVerificationFragment :
         R.id.markGoodBtn ->
           viewModel.score = 3 // TODO: Change this to enum
         R.id.markAverageBtn ->
-          viewModel.score = 2
+          viewModel.score = 2 // TODO: Change this to enum
         R.id.markPoorBtn ->
-          viewModel.score = 1
+          viewModel.score = 1 // TODO: Change this to enum
       }
     }
 

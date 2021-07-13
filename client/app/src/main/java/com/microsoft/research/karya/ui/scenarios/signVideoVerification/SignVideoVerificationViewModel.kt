@@ -44,6 +44,12 @@ constructor(
   private val _nextBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(ENABLED)
   val nextBtnState = _nextBtnState.asStateFlow()
 
+  private val _oldRemarks: MutableStateFlow<String> = MutableStateFlow("")
+  val oldRemarks = _oldRemarks.asStateFlow()
+
+  private val _oldScore: MutableStateFlow<Int> = MutableStateFlow(0)
+  val oldScore = _oldScore.asStateFlow()
+
   private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
   val sentenceTvText = _sentenceTvText.asStateFlow()
 
@@ -127,21 +133,10 @@ constructor(
     val recordFilePath = microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id,
       recordingFileName
     )
+
     _recordingFile.value = recordFilePath
-//    _recordingFile.value = "https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4"
     _videoPlayerVisibility.value = true
     _sentenceTvText.value = sentence
   }
 
-  fun markGoodGrade() {
-    score = 3
-  }
-
-  fun markAverageGrade() {
-    score = 2
-  }
-
-  fun markPoorGrade() {
-    score = 1
-  }
 }
