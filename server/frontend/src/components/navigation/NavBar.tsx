@@ -69,7 +69,7 @@ class NavBar extends React.Component<NavBarProps> {
                           </NavLink>
                         </li>
                         <li>
-                          <NavLink activeClassName='active-tab' to='/task-assignments/create'>
+                          <NavLink activeClassName='active-tab' to='/task-assignments'>
                             Task Assignment
                           </NavLink>
                         </li>
