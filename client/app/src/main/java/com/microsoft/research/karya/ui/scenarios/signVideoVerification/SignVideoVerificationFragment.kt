@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
+import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
@@ -20,10 +21,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_sign_video_verification.*
 
 @AndroidEntryPoint
-class SIgnVideoVerificationFragment :
+class SignVideoVerificationFragment :
   BaseMTRendererFragment(R.layout.fragment_sign_video_verification) {
   override val viewModel: SignVideoVerificationViewModel by viewModels()
-  val args: SIgnVideoVerificationFragmentArgs by navArgs()
+  val args: SignVideoVerificationFragmentArgs by navArgs()
 
   private fun setupObservers() {
 
@@ -105,46 +106,39 @@ class SIgnVideoVerificationFragment :
       viewModel.onBackPressed()
     }
 
-    /** Forced replace */
-    val noForcedReplay =
-      try {
-        viewModel.task.params.asJsonObject.get("noForcedReplay").asBoolean
-      } catch (e: Exception) {
-        false
-      }
-
     /** Set on click listeners */
     nextBtn.setOnClickListener {
-      viewModel.remarks = feedbackEt.text.toString()
+      // If not selected a grade, return
+      if (viewModel.score == 0) {
+        Toast.makeText(requireContext(), "Please grade the student", Toast.LENGTH_LONG).show()
+        return@setOnClickListener
+      }
+      resetUI()
       viewModel.handleNextClick()
-      feedbackEt.text.clear()
-      scoreSlider.progress = 0
-      scoreTextView.text = "0"
-      viewModel.score = 0
     }
+
+    feedbackEt.addTextChangedListener { editText ->
+      viewModel.remarks = editText.toString()
+    }
+
     backBtn.setOnClickListener { viewModel.handleBackClick() }
 
-    scoreSlider.setOnSeekBarChangeListener(object :
-      SeekBar.OnSeekBarChangeListener {
-      override fun onProgressChanged(
-        seek: SeekBar,
-        progress: Int, fromUser: Boolean
-      ) {
-        // write custom code for progress is changed
+    marksRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+      when (checkedId) {
+        R.id.markGoodBtn ->
+          viewModel.score = 3 // TODO: Change this to enum
+        R.id.markAverageBtn ->
+          viewModel.score = 2
+        R.id.markPoorBtn ->
+          viewModel.score = 1
       }
+    }
 
-      override fun onStartTrackingTouch(seek: SeekBar) {
-        // write custom code for progress is started
-      }
+  }
 
-      override fun onStopTrackingTouch(seek: SeekBar) {
-        // write custom code for progress is stopped
-        val score = seek.progress
-        scoreTextView.text = score.toString()
-        viewModel.score = score
-      }
-    })
-
+  private fun resetUI() {
+    feedbackEt.text.clear()
+    marksRadioGroup.clearCheck()
   }
 
   private fun freeResources() {

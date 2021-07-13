@@ -36,7 +36,7 @@
         android:layout_height="0dp"
         app:andexo_full_screen="true"
         app:layout_constraintHeight_percent="0.4"
-        app:layout_constraintBottom_toTopOf="@id/scoreLl"
+        app:layout_constraintBottom_toTopOf="@id/marksRadioGroup"
         app:layout_constraintTop_toBottomOf="@id/sentenceTv"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginHorizontal="@dimen/_8sdp"
@@ -51,49 +51,95 @@
         android:background="#000"
         android:textColor="#FFF"
         app:layout_constraintHeight_percent="0.4"
-        app:layout_constraintBottom_toTopOf="@id/scoreLl"
+        app:layout_constraintBottom_toTopOf="@id/marksRadioGroup"
         app:layout_constraintTop_toBottomOf="@id/sentenceTv"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_28sdp"
         />
 
-    <LinearLayout
-        android:id="@+id/scoreLl"
+    <RadioGroup
+        android:id="@+id/marksRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10"
-        android:gravity="center"
         android:layout_marginBottom="@dimen/_10sdp"
-        app:layout_constraintTop_toBottomOf="@id/videoPlayer"
-        app:layout_constraintBottom_toTopOf="@id/feedbackEt">
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/feedbackEt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/videoPlayer">
 
-        <SeekBar
-            android:id="@+id/scoreSlider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_28sdp"
-            android:layout_weight="8"
-            android:max="10"/>
+        <RadioButton
+            android:id="@+id/markPoorBtn"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="match_parent"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="Poor"
+            android:textColor="@color/radio_flat_text_selector" />
 
-        <TextView
-            android:id="@+id/scoreTextView"
-            android:gravity="right"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="0"
-            android:textSize="@dimen/_16ssp" />
-        <TextView
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="/10"
-            android:textSize="@dimen/_16ssp" />
+        <RadioButton
+            android:id="@+id/markAverageBtn"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="Average"
+            android:textColor="@color/radio_flat_text_selector" />
 
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/markGoodBtn"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="match_parent"
+            android:background="@drawable/radio_flat_selector"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:text="Good"
+            android:textColor="@color/radio_flat_text_selector" />
+    </RadioGroup>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/scoreLl"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginBottom="@dimen/_10sdp"-->
+<!--        android:gravity="center"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/videoPlayer"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/feedbackEt">-->
+<!--        <TextView-->
+<!--            android:id="@+id/poorButton"-->
+<!--            android:paddingVertical="@dimen/_8sdp"-->
+<!--            android:paddingHorizontal="@dimen/_24sdp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/black_rounded_border"-->
+<!--            android:text="Poor" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/averageButton"-->
+<!--            android:paddingVertical="@dimen/_8sdp"-->
+<!--            android:paddingHorizontal="@dimen/_24sdp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="@dimen/_18sdp"-->
+<!--            android:background="@drawable/black_rounded_border"-->
+<!--            android:text="Average" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/goodButton"-->
+<!--            android:paddingVertical="@dimen/_8sdp"-->
+<!--            android:paddingHorizontal="@dimen/_24sdp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:background="@drawable/black_rounded_border"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Good" />-->
+
+<!--    </LinearLayout>-->
 
     <EditText
         android:id="@+id/feedbackEt"

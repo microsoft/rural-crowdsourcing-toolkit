@@ -27,7 +27,12 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager) {
 
   var score: Int = 0
   var remarks: String = ""
@@ -84,6 +89,12 @@ constructor(
       completeAndSaveCurrentMicrotask()
       moveToNextMicrotask()
     }
+    resetStates()
+  }
+
+  private fun resetStates() {
+    score = 0
+    remarks = ""
   }
 
   /** Handle back button click */
@@ -120,5 +131,17 @@ constructor(
 //    _recordingFile.value = "https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4"
     _videoPlayerVisibility.value = true
     _sentenceTvText.value = sentence
+  }
+
+  fun markGoodGrade() {
+    score = 3
+  }
+
+  fun markAverageGrade() {
+    score = 2
+  }
+
+  fun markPoorGrade() {
+    score = 1
   }
 }

@@ -141,8 +141,8 @@
             <argument android:name="taskId" />
         </action>
         <action
-            android:id="@+id/action_dashboardActivity_to_SIgnVideoVerificationFragment"
-            app:destination="@id/SIgnVideoVerificationFragment" >
+            android:id="@+id/action_dashboardActivity_to_SignVideoVerificationFragment"
+            app:destination="@id/SignVideoVerificationFragment" >
             <argument android:name="taskId" />
         </action>
     </fragment>
@@ -195,14 +195,14 @@
             app:destination="@id/dashboardActivity" />
     </fragment>
     <fragment
-        android:id="@+id/SIgnVideoVerificationFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.signVideoVerification.SIgnVideoVerificationFragment"
-        android:label="SIgnVideoVerificationFragment" >
+        android:id="@+id/SignVideoVerificationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.signVideoVerification.SignVideoVerificationFragment"
+        android:label="SignVideoVerificationFragment" >
         <argument
             android:name="taskId"
             app:argType="string" />
         <action
-            android:id="@+id/action_SIgnVideoVerificationFragment_to_dashboardActivity"
+            android:id="@+id/action_SignVideoVerificationFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

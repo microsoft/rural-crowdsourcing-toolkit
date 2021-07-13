@@ -157,7 +157,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         findNavController().navigate(action)
       }
       "SGN_LANG_VIDEO_VERIFICATION" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSIgnVideoVerificationFragment(task.taskID)
+        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoVerificationFragment(task.taskID)
         findNavController().navigate(action)
       }
 
