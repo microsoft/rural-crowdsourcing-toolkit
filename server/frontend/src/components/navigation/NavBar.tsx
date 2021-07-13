@@ -75,7 +75,7 @@ class NavBar extends React.Component<NavBarProps> {
                         </li>
                         <li>
                           <NavLink activeClassName='active-tab' to='/box'>
-                            Box Creation
+                            Box
                           </NavLink>
                         </li>
                         <li>
