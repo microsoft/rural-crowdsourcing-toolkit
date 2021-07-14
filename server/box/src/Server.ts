@@ -8,8 +8,7 @@ import cors from '@koa/cors';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import Koa from 'koa';
-import { setupDbConnection } from '@karya/common';
-import { httpRequestLogger } from './controllers/Middlewares';
+import { catchAll, httpRequestLogger, setupDbConnection } from '@karya/common';
 import router, { authenticateRequest } from './routes/Routes';
 import { containerNames } from '@karya/core';
 import logger from './utils/Logger';
@@ -19,19 +18,9 @@ import { envGetNumber, envGetString } from '@karya/misc-utils';
 const app = new Koa();
 
 // app middleware
-app.use(async (ctx, next) => {
-  try {
-    await next();
-    console.log(ctx.method, ctx.path, ctx.status);
-    if (ctx.status >= 300) {
-      console.log(ctx.body);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-});
 app.use(cors());
 app.use(httpRequestLogger);
+app.use(catchAll);
 app.use(authenticateRequest);
 app.use(router.allowedMethods());
 app.use(router.routes());
