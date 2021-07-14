@@ -1,7 +1,6 @@
 package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonElement
-import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
@@ -9,7 +8,6 @@ import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoE
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
-import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.utils.AppConstants
 import javax.inject.Inject
@@ -71,12 +69,12 @@ constructor(
     }
   }
 
-  fun submitAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
+  fun submitCompletedAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
     if (idToken.isEmpty()) {
       error("Either Access Code or ID Token is required")
     }
 
-    val response = assignmentAPI.submitAssignments(idToken, updates)
+    val response = assignmentAPI.submitCompletedAssignments(idToken, updates)
     val successAssignmentIDS = response.body()
 
     if (!response.isSuccessful) {
@@ -89,6 +87,26 @@ constructor(
       error("Request failed, response body was null")
     }
   }
+
+  fun submitSkippedAssignments(idToken: String, ids: List<String>) = flow {
+    if (idToken.isEmpty()) {
+      error("Either Access Code or ID Token is required")
+    }
+
+    val response = assignmentAPI.submitSkippedAssignments(idToken, ids)
+    val successAssignmentIDS = response.body()
+
+    if (!response.isSuccessful) {
+      error("Failed to upload file")
+    }
+
+    if (successAssignmentIDS != null) {
+      emit(successAssignmentIDS)
+    } else {
+      error("Request failed, response body was null")
+    }
+  }
+
 
   fun submitAssignmentOutputFile(
     idToken: String,
@@ -165,6 +183,10 @@ constructor(
 
   suspend fun getIncompleteAssignments(): List<MicroTaskAssignmentRecord> {
     return assignmentDaoExtra.getIncompleteAssignments()
+  }
+
+  suspend fun getLocalSkippedAssignments(): List<MicroTaskAssignmentRecord> {
+    return assignmentDaoExtra.getLocalSkippedAssignments()
   }
 
   suspend fun getNewAssignmentsFromTime(worker_id: String): String {

@@ -152,13 +152,25 @@ constructor(
     val worker = authManager.fetchLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
-    val microtaskAssignments =
+    // Get completed assignments from the database
+    val completedAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
         it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonObject.size() == 0 || it.output_file_id !=
           null
       }
+    // Submit the completed assignments
     assignmentRepository
-      .submitAssignments(worker.idToken, microtaskAssignments)
+      .submitCompletedAssignments(worker.idToken, completedAssignments)
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
+
+    // Get skipped assignments from the database
+    val skippedAssignmentIds = assignmentRepository.getLocalSkippedAssignments().map {
+      record -> record.id
+    }
+    // Submit the skipped assignments
+    assignmentRepository
+      .submitSkippedAssignments(worker.idToken, skippedAssignmentIds)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }

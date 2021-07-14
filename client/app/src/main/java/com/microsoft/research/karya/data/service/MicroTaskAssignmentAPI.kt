@@ -11,9 +11,15 @@ import retrofit2.http.*
 interface MicroTaskAssignmentAPI {
 
   @PUT("/assignments")
-  suspend fun submitAssignments(
+  suspend fun submitCompletedAssignments(
     @Header("karya-id-token") idTokenHeader: String,
     @Body updates: List<MicroTaskAssignmentRecord>,
+  ): Response<List<String>>
+
+  @PUT("/skipped_assignments")
+  suspend fun submitSkippedAssignments(
+    @Header("karya-id-token") idToken: String,
+    @Body ids: List<String>
   ): Response<List<String>>
 
   @GET("/assignments")
