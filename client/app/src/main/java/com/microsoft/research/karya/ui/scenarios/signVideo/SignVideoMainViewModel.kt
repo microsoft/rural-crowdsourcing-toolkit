@@ -13,7 +13,6 @@ import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewMode
 import com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainViewModel.ButtonState.ENABLED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -125,7 +124,11 @@ constructor(
        * INIT: release audio recorder and media player. May not be necessary? Microtask setup will
        * transition to next state
        */
+      // Cancel the delay job if exists
       ActivityState.INIT -> {
+        if (::delayJob.isInitialized) {
+          delayJob.cancel()
+        }
         hideVideoPlayer()
         setButtonStates(DISABLED, DISABLED, DISABLED)
       }
@@ -146,7 +149,6 @@ constructor(
           }
         } else {
           setButtonStates(ENABLED, ENABLED, ENABLED)
-          delayJob.cancel()
         }
 
       }

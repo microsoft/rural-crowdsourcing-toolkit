@@ -214,6 +214,7 @@
     <string name="s_update_earning">Update earnings</string>
     <string name="s_tasks_available">tasks available</string>
     <string name="s_tasks_completed">tasks completed</string>
+    <string name="s_tasks_skipped">tasks skipped</string>
     <string name="s_tasks_submitted">tasks submitted</string>
     <string name="s_tasks_verified">tasks verified</string>
     <string name="s_update_app_language">Change the App Language</string>

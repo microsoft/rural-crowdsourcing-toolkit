@@ -125,6 +125,36 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/skippedCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/numSkippedTv"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="#FFFF00"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6" />
+
+            <TextView
+                android:id="@+id/numSkippedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="#FFFF00"
+                android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_skipped"
+                app:layout_constraintBaseline_toBaselineOf="@id/numSkippedTv"
+                app:layout_constraintStart_toEndOf="@id/numSkippedTv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/submittedCl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

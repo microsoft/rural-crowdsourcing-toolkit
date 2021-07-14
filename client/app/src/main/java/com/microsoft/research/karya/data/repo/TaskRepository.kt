@@ -25,8 +25,9 @@ constructor(
     val completed = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.COMPLETED)
     val submitted = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.SUBMITTED)
     val verified = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.VERIFIED)
+    val skipped = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.SKIPPED)
 
-    return TaskStatus(available, completed, submitted, verified)
+    return TaskStatus(available, completed, submitted, verified, skipped)
   }
 
 }
