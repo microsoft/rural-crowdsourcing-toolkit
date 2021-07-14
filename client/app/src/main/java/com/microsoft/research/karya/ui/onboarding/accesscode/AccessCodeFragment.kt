@@ -1,7 +1,12 @@
 package com.microsoft.research.karya.ui.onboarding.accesscode
 
+import android.media.AudioManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -25,6 +30,8 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     setupViews()
     observeUi()
     observeEffects()
+
+    binding.volumeDialog.isVisible = isVolumeLowerThan(MIN_VOLUME)
   }
 
   private fun setupViews() {
@@ -140,5 +147,18 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
   private fun updateActivityLanguage(language: String) {
     (requireActivity() as MainActivity).setActivityLocale(language)
+  }
+
+  private fun isVolumeLowerThan(threshold: Float): Boolean {
+    Log.d("KaryaDialog", "isVolumeLower")
+    val audioManager = requireContext().getSystemService<AudioManager>() ?: return false
+    val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
+    val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+    Log.d("KaryaDialog", "currentVolume: $currentVolume")
+    return (currentVolume / maxVolume < threshold)
+  }
+
+  companion object {
+    const val MIN_VOLUME = 0.3f
   }
 }

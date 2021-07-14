@@ -45,7 +45,7 @@
     <EditText
         android:id="@+id/phoneNumberEt"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_60sdp"
+        android:layout_height="@dimen/_50sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/blue_rounded_border"
