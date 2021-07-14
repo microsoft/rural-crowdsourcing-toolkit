@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
@@ -149,10 +150,13 @@ constructor(
   suspend fun markComplete(
     id: String,
     output: JsonElement,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
     date: String,
   ) {
-    assignmentDaoExtra.markComplete(id, output, status, date)
+    assignmentDaoExtra.markComplete(id, output, date)
+  }
+
+  suspend fun markSkip(id: String, date: String) {
+    assignmentDaoExtra.markSkip(id, date)
   }
 
   suspend fun markMicrotaskAssignmentsSubmitted(assignmentIds: List<String>) {
@@ -177,4 +181,5 @@ constructor(
   suspend fun getUnsubmittedIDsForTask(task_id: String, includeCompleted: Boolean): List<String> {
     return assignmentDaoExtra.getUnsubmittedIDsForTask(task_id, includeCompleted)
   }
+
 }

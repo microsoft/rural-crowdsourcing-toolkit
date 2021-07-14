@@ -13,7 +13,6 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentSt
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
-import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
@@ -152,14 +151,8 @@ constructor(
    */
   protected suspend fun completeAndSaveCurrentMicrotask() {
 
-    val output = JsonObject()
-    output.add("data", outputData)
-    output.add("files", outputFiles)
-    output.add("logs", logs)
-
-    val directory = File(getRelativePath("microtask-assignment-scratch"))
-    val files = directory.listFiles()
-    files?.forEach { if (it.exists()) it.delete() }
+    val output = buildOutputJsonObject()
+    deleteAssignmentScratchFiles()
 
     /** Delete all scratch files */
     withContext(Dispatchers.IO) {
@@ -169,12 +162,30 @@ constructor(
         date = DateUtils.getCurrentDate()
       )
     }
+  }
 
-    /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
-      completedMicrotasks++
-      //      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
+  protected suspend fun skipAndSaveCurrentMicrotask() {
+    /** Delete all scratch files */
+    withContext(Dispatchers.IO) {
+      assignmentRepository.markSkip(
+        microtaskAssignmentIDs[currentAssignmentIndex],
+        date = DateUtils.getCurrentDate()
+      )
     }
+  }
+
+  private fun deleteAssignmentScratchFiles() {
+    val directory = File(getRelativePath("microtask-assignment-scratch"))
+    val files = directory.listFiles()
+    files?.forEach { if (it.exists()) it.delete() }
+  }
+
+  private fun buildOutputJsonObject(): JsonObject {
+    val output = JsonObject()
+    output.add("data", outputData)
+    output.add("files", outputFiles)
+    output.add("logs", logs)
+    return output
   }
 
   /** Is there a next microtask (for navigation) */

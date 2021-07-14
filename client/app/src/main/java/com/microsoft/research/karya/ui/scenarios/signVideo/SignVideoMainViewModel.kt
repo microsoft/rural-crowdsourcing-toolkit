@@ -58,7 +58,7 @@ constructor(
   private val _backBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
   val backBtnState = _backBtnState.asStateFlow()
 
-  private val _nextBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
+  private val _nextBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(ENABLED)
   val nextBtnState = _nextBtnState.asStateFlow()
 
   private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
@@ -152,7 +152,7 @@ constructor(
       }
 
       ActivityState.COOLDOWN_COMPLETE -> {
-        setButtonStates(ENABLED, ENABLED, DISABLED)
+        setButtonStates(ENABLED, ENABLED, ENABLED)
       }
 
       /**
@@ -291,6 +291,33 @@ constructor(
     if (activityState == ActivityState.COOLDOWN_COMPLETE) {
       setActivityState(ActivityState.FIRST_PLAYBACK)
     }
+  }
+
+  suspend fun skipTask() {
+    // log the state transition
+    val message = JsonObject()
+    message.addProperty("type", "o")
+    message.addProperty("button", "SKIPPED")
+    log(message)
+
+    skipAndSaveCurrentMicrotask()
+    moveToNextMicrotask()
+    setActivityState(ActivityState.INIT)
+  }
+
+  fun moveToNextTask() {
+    // log the state transition
+    val message = JsonObject()
+    message.addProperty("type", "o")
+    message.addProperty("button", "LATER")
+    log(message)
+
+    moveToNextTask()
+    setActivityState(ActivityState.INIT)
+  }
+
+  fun isAssignmentComplete(): Boolean {
+    return (activityState == ActivityState.COMPLETED)
   }
 
 

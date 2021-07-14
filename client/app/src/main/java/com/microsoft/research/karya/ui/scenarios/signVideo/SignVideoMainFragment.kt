@@ -2,11 +2,13 @@ package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.FileUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -21,6 +23,7 @@ import com.microsoft.research.karya.utils.extensions.visible
 import com.potyvideo.library.globalInterfaces.AndExoPlayerListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_sign_video_init.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_video_init) {
@@ -68,8 +71,10 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
       )
     }
 
-    viewModel.recordBtnState.observe(viewLifecycleOwner.lifecycle,
-      viewLifecycleScope) { state ->
+    viewModel.recordBtnState.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { state ->
       recordBtn.isClickable = state != DISABLED
       recordBtn.alpha =
         when (state) {
@@ -80,7 +85,8 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
 
     viewModel.nextBtnState.observe(
       viewLifecycleOwner.lifecycle,
-      viewLifecycleScope) { state ->
+      viewLifecycleScope
+    ) { state ->
       nextBtn.isClickable = state != DISABLED
       nextBtn.setBackgroundResource(
         when (state) {
@@ -131,7 +137,11 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
     videoPlayerPlaceHolder.visible()
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
     viewModel.setupViewModel(args.taskId, 0, 0)
@@ -151,18 +161,47 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
         ?: "TEST INSTRUCTION (HARDCODED)"
     recordPromptTv.text = recordInstruction
 
-    /** Forced replace */
-    val noForcedReplay =
-      try {
-        viewModel.task.params.asJsonObject.get("noForcedReplay").asBoolean
-      } catch (e: Exception) {
-        false
-      }
-
     /** Set on click listeners */
-    recordBtn.setOnClickListener { viewModel.handleRecordClick() }
-    nextBtn.setOnClickListener { viewModel.handleNextClick() }
+    recordBtn.setOnClickListener {
+      viewModel.handleRecordClick()
+    }
+    nextBtn.setOnClickListener {
+      // If the user has not recorded anything,
+      // build alertbox to
+      // ask them if they want to skip or do this later
+      if (!viewModel.isAssignmentComplete()) {
+        buildAlertBox()
+      } else {
+        viewModel.handleNextClick()
+      }
+    }
     backBtn.setOnClickListener { viewModel.handleBackClick() }
+  }
+
+  private fun buildAlertBox() {
+    val builder = AlertDialog.Builder(requireContext())
+    //set title for alert dialog
+    builder.setTitle(R.string.dialogTitle)
+    //set message for alert dialog
+    builder.setMessage(R.string.dialogMessage)
+    builder.setIcon(android.R.drawable.ic_dialog_alert)
+    // Do this later option
+    builder.setPositiveButton("Do this later") { dialog, _ ->
+      viewModel.moveToNextTask()
+      dialog.cancel()
+    }
+    // Skip Option
+    builder.setNegativeButton("SKIP") { dialog, _ ->
+      viewLifecycleScope.launch {
+        viewModel.skipTask()
+        dialog.cancel()
+      }
+    }
+    // Create the AlertDialog
+    val alertDialog: AlertDialog = builder.create()
+    // Set other dialog properties
+    alertDialog.setCancelable(true)
+    alertDialog.show()
   }
 }
 
