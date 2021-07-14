@@ -165,17 +165,12 @@ constructor(
       .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
 
     // Get skipped assignments from the database
-    val skippedAssignmentIds = assignmentRepository.getLocalSkippedAssignments().map {
-      record -> record.id
-    }
-    val p = skippedAssignmentIds
+    val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
     // Submit the skipped assignments
     assignmentRepository
-      .submitSkippedAssignments(worker.idToken, skippedAssignmentIds)
-      .catch {
-        _dashboardUiState.value = DashboardUiState.Error(it)
-        Log.d("SKIPPED_ERROR", it.toString())
-      }
+      .submitSkippedAssignments(worker.idToken, skippedAssignments)
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }
 
   /** Upload the Files of completed Assignments */

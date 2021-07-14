@@ -88,21 +88,24 @@ constructor(
     }
   }
 
-  fun submitSkippedAssignments(idToken: String, ids: List<String>) = flow {
+  fun submitSkippedAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
     if (idToken.isEmpty()) {
       error("Either Access Code or ID Token is required")
     }
 
-    val response = assignmentAPI.submitSkippedAssignments(idToken, ids)
+    val response = assignmentAPI.submitSkippedAssignments(idToken, updates)
+    val successAssignmentIDS = response.body()
 
     if (!response.isSuccessful) {
       error("Failed to upload file")
     }
 
-    markMicrotaskAssignmentsSubmitted(ids)
-    emit(response)
+    if (successAssignmentIDS != null) {
+      emit(successAssignmentIDS)
+    } else {
+      error("Request failed, response body was null")
+    }
   }
-
 
   fun submitAssignmentOutputFile(
     idToken: String,
