@@ -1,0 +1,251 @@
+<resources>
+    <string name="s_project_name">Karya</string>
+    <string name="s_no_internet_or_server_down">We are not able to reach our server. Please ensure you have internet turned on.</string>
+    <string name="s_click_to_retry">Click this button to retry</string>
+    <string name="s_unknown_error">Unknown error occurred. Please close the application and open again. If error persists, contact your project coordinator</string>
+    <string name="s_salutation">Hi</string>
+    <string name="s_show_app_in_language">Show the app in English</string>
+    <string name="s_prompt_for_language_select">To show app in English, press here</string>
+    <string name="s_fetching_values_for_language">Getting all necessary data to display the app in English</string>
+    <string name="s_consent_form_title">Consent Form</string>
+    <string name="s_access_code_title">Enter Access Code</string>
+    <string name="s_otp_title">Enter OTP</string>
+    <string name="s_phone_number_title">Enter Phone Number</string>
+    <string name="s_age_title">Select Age Group</string>
+    <string name="s_gender_title">Select Gender</string>
+    <string name="s_profile_pic_title">Select Profile Picture</string>
+    <string name="s_dashboard_title">Dashboard</string>
+    <string name="s_consent_form_agree">I agree</string>
+    <string name="s_consent_form_disagree">No. I do not want to participate</string>
+    <string name="s_consent_form_text">
+        <![CDATA[
+        <h5>Karya Participation Consent Form</h5>
+<p>
+  Thank you for your participation on the Karya platform. This document
+  describes the goals of the platform and the various steps involved in your
+  participation. You have no obligation to participate. You may end your
+  participation at any time.
+</p>
+<h5>Purpose of the Platform</h5>
+<p>
+  The goal of the platform is to offer paid digital work to various users.
+  Through the Karya smartphone app, you can get access to simple tasks that can
+  be completed on your smartphone. You will get paid for all the correctly
+  completed tasks. The type of task assigned to you will depend on the specific
+  study you are participating in. For instance, a task may require you to record
+  yourself speaking out a sentence. Regardless, the Karya app will provide you
+  clear instructions on how to complete each task in your regional language. The
+  app will also inform you how much you will be paid if you complete the task
+  correctly. You can withdraw from participation at any time, and you will be
+  paid for the tasks you have completed till that point.
+</p>
+<h5>Procedure</h5>
+<ol>
+  <li>
+    To begin, you will be introduced to the Project Coordinator for your
+    location. This person will be your point of contact for help related to the
+    project.
+  </li>
+  <li>
+    Your project coordinator will provide you with instructions and if
+    necessary, help you to download and install the “Karya” mobile application
+    on your smartphone.
+  </li>
+  <li>
+    Your project coordinator will give you a “16-digit Access Code”. You need to
+    enter the code during the registration process. Each access code can be used
+    only once. Therefore, do not share the access code with anyone else.
+  </li>
+  <li>
+    The registration process may require you to sign-in with your phone number.
+    This information will be used to identify you on the platform when you close
+    the application and open it again.
+  </li>
+  <li>
+    In addition, we will also collect some demographic information about you,
+    e.g., your age range, gender, education level, etc.
+  </li>
+  <li>
+    The app will also ask you to choose a profile picture. This picture will
+    only be used for display in the application and will not be stored in our
+    platform.
+  </li>
+  <li>
+    To receive tasks on our platform, the app must “sync” with our server. This
+    operation will submit all the tasks you have completed on our platform to
+    the server and receive any new tasks. After registration, the app will
+    automatically sync with our server. You can trigger subsequent syncs by
+    clicking on the sync button in the app.
+  </li>
+  <li>
+    In the main app screen (dashboard), you will be presented with a list of
+    different type of tasks assigned to you, along with information on each type
+    of task: number of tasks assigned, number of tasks completed, number of
+    tasks submitted, etc. For each type of task, the app will provide detailed
+    instructions on how you must complete the task, and how much you will be
+    paid if you complete the task correctly. Please pay attention to these
+    instructions before proceeding with the tasks.
+  </li>
+  <li>
+    At the end of your participation, we request you to delete the application
+    from your phone. Should you want, your project coordinator will aid you in
+    installing, configuring, and deleting the application.
+  </li>
+  <li>
+    After the end of the study, we may request a short interview with you to
+    gather your feedback and understand your experience of using our platform.
+  </li>
+</ol>
+<h5>Risks and Benefits</h5>
+<ol>
+  <li>
+    This platform only offers supplemental work. As a result, we have a limited
+    number of tasks available. Do not let your participation in our platform
+    interfere with your current work. Your participation will only require upto
+    one to two hours of your time every day.
+  </li>
+  <li>
+    We recommend doing the provided work in a patient manner. This will allow
+    you to submit more accurate responses and will also make sure you don’t
+    spend too much time on the smartphone. Spending too much time on a
+    smartphone could be bad for your eyes and may affect your social life. We
+    recommend not working for more than 2 hours a day.
+  </li>
+  <li>
+    If we lend you a smartphone to participate (as part of a research study), we
+    trust you to use the provided smartphone responsibly. If you have not used a
+    smartphone before, it can be overwhelming. We are happy to help you in any
+    and every way possible. You can contact us via your project coordinator.
+  </li>
+</ol>
+<h5>Personal Information</h5>
+<p>
+  Any personal information we collect during the study will only be used to
+  identify you during the duration of the study. We will delete all personal
+  information as soon as the study is over. We will not share your personal
+  information with anyone. However, we may use pictures from the study in
+  presentations or posters without identifying specific individuals. We will
+  request your permission before taking pictures and obtain your permission to
+  use those pictures in our presentations or posters. Not providing consent for
+  taking pictures will not disqualify you from participating in the study. For
+  additional information or concerns about how Microsoft handles your personal
+  information, please see the Microsoft Privacy Statement,
+  https://go.microsoft.com/fwlink/?LinkId=521839
+</p>
+<h5>Payment for Participation</h5>
+<p>
+  You will be paid for all correctly completed tasks on the platform. The app or
+  your porject coordinator will also provide you feedback on how well you are
+  performing on the platform so that you can improve your responses for future
+  tasks. We will work with you and your project coordinator to identify the best
+  mode of payment. We will collect and store your payment information for the
+  duration of the study. We will pay you periodically for all your tasks that
+  have undergone quality verification. We will delete all payment information as
+  soon as your participation is completed. Please contact your project
+  coordinator if you have any queries regarding payments.
+</p>
+<h5>Dataset Collected from the Study</h5>
+<p>
+  We will use the dataset collected as part of your responses to different tasks
+  for further research and will aim to release them publicly for research
+  purposes. Most datasets will contain only text or audio data that is not
+  associated with personally identifiable information. In situations where a
+  dataset does contain personally identifiable information (e.g., video), we
+  will obtain explicit consent from you before providing such a task. If you
+  have any questions regarding how the dataset will be used, please feel free to
+  ask us through your project coordinator or using the phone number provided
+  below.
+</p>
+<h5>Contact Information</h5>
+<p>
+  Should you have any questions concerning the project, you can contact Vivek
+  Seshadri by phone at 0000000000. Should you have any questions about your
+  rights as a research subject, please report your concern via email to
+  Microsoft Research Ethics Program Feedback: MSRStudyfeedback@microsoft.com. In
+  case you do not have access to email, you can contact your project
+  coordinator, and have her relay your concerns.
+</p>
+<h5>Consent</h5>
+<p>
+  By clicking “I agree” below, you confirm that the goals and the procedure for
+  participation on the platform was explained to you, you had a chance to ask
+  questions before beginning your participation, and all your questions were
+  answered satisfactorily. By clicking “I agree” below, you voluntarily consent
+  to participate, and you do not give up any legal rights you have as a study
+  participant. On behalf of Karya Inc, we thank you for your contribution and
+  look forward to your participation. Do you understand and consent to these
+  terms?
+</p>
+ ]]>
+    </string>
+    <string name="s_consent_form_summary">Summary of the consent form</string>
+    <string name="s_access_code_prompt">You should have received a 8-digit access code from your
+        teacher. Please enter that access code below.</string>
+    <string name="s_invalid_creation_code">You have entered an invalid creation code.</string>
+    <string name="s_creation_code_already_used">The creation code you have entered is already
+        used. Please contact your teacher.</string>
+    <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
+    <string name="s_sending_otp">Sending OTP to your phone</string>
+    <string name="s_unable_to_send_otp">We were unable to send OTP to your number. Please try again later.</string>
+    <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>
+    <string name="s_invalid_otp">You have entered an invalid OTP</string>
+    <string name="s_resend_otp">Resend OTP</string>
+    <string name="s_profile_picture_prompt">Please click your profile picture. You can skip this step if you do not want a profile picture</string>
+    <string name="s_gender_prompt">Please choose your gender</string>
+    <string name="s_male">Male</string>
+    <string name="s_female">Female</string>
+    <string name="s_age_prompt">Please enter your year of birth</string>
+    <string name="s_years">years</string>
+    <string name="s_registering_worker">Registering worker with the server</string>
+    <string name="s_phone_number_already_used">Your phone number is already registered. Please try with another phone number.</string>
+    <!-- TODO: update tick and cross with more suitable words -->
+    <string name="s_skill_question_description">We have three questions about your skills in English. For each question, please click tick for yes, and cross for no.</string>
+    <string name="s_read_skill_question">Can you read in English?</string>
+    <string name="s_speak_skill_question">Can you speak in English?</string>
+    <string name="s_type_skill_question">Can you type in English?</string>
+    <string name="s_registering_skill">Registering new skill for worker</string>
+    <string name="s_failed_to_register_skill">Failed to register new skill for worker</string>
+    <string name="s_other_language_selection">If you know any other language, please select that language below</string>
+    <string name="s_uploading_files">Uploading files to the box</string>
+    <string name="s_send_updates">Sending updates to the box</string>
+    <string name="s_receive_updates">Receiving updates from the box</string>
+    <string name="s_downloading_files">Downloading files from the box</string>
+    <string name="s_get_new_tasks"> Get new homework</string>
+    <string name="s_submit_completed_tasks">Submit completed homework</string>
+    <string name="s_update_verified_tasks">Update graded homework</string>
+    <string name="s_update_earning"></string>
+    <string name="s_tasks_available">sentences not attempted</string>
+    <string name="s_tasks_completed">sentences completed</string>
+    <string name="s_tasks_skipped">sentences skipped</string>
+    <string name="s_tasks_submitted">sentences submitted</string>
+    <string name="s_tasks_verified">sentences graded</string>
+    <string name="s_update_app_language">Change the App Language</string>
+    <string name="s_update_skills">Update Language Skills</string>
+    <string name="s_sync_prompt_message">You have completed sentences that can be submitted to the
+        server. Do you want to submit the sentences now?</string>
+    <string name="s_yes">Yes</string>
+    <string name="s_no">No</string>
+    <string name="s_speech_scenario_name">Speech-data Collection</string>
+    <string name="s_speech_scenario_description">This task consists of a set of sentences. The worker is expected to record themselves reading out each sentence, one sentence at a time</string>
+    <string name="s_story_scenario_name">Group Speech-data Collection</string>
+    <string name="s_story_scenario_description">This task consists of a set of stories. The worker is expected to record themselves reading out each story, one sentence at a time</string>
+    <string name="s_recording_scenario_name">Verification of Speech Data Recordings</string>
+    <string name="s_recording_scenario_description">This task consists of a set of recordings. The worker is expected to verify the given recording and text.</string>
+    <string name="s_record_sentence">You have to record yourself speaking out this sentence</string>
+    <string name="s_record_action">To start recording, press this button. It will turn red indicating that the recording has started.</string>
+    <string name="s_stop_action">Once you are done recording, press this button again to stop the recording</string>
+    <string name="s_listen_action"> The app will play back the recorded audio. Listen to it carefully to ensure it is correct and that there is no other background voice.</string>
+    <string name="s_rerecord_action">If your recording is not correct, you can record again using the record button.</string>
+    <string name="s_next_action">If you are happy with the recording, you can press this button to go to the next sentence.</string>
+    <string name="s_previous_action"> You can press this button to go to the previous sentence.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="transliteration_hint">Start Typing…</string>
+    <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
+    <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
+
+    <string name="video_record_button">I Understand and start recording</string>
+    <string name="record_preview_message">The preview of the recording would appear here</string>
+    <string name="dialogTitle">Skip or do it later?</string>
+    <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
+</resources>
