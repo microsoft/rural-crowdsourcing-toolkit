@@ -20,7 +20,7 @@ interface MicroTaskAssignmentAPI {
   suspend fun submitSkippedAssignments(
     @Header("karya-id-token") idToken: String,
     @Body ids: List<String>
-  ): Response<List<String>>
+  ): Response<ResponseBody>
 
   @GET("/assignments")
   suspend fun getNewAssignments(

@@ -94,17 +94,13 @@ constructor(
     }
 
     val response = assignmentAPI.submitSkippedAssignments(idToken, ids)
-    val successAssignmentIDS = response.body()
 
     if (!response.isSuccessful) {
       error("Failed to upload file")
     }
 
-    if (successAssignmentIDS != null) {
-      emit(successAssignmentIDS)
-    } else {
-      error("Request failed, response body was null")
-    }
+    markMicrotaskAssignmentsSubmitted(ids)
+    emit(response)
   }
 
 

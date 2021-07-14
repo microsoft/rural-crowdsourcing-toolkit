@@ -31,7 +31,7 @@ interface MicrotaskAssignmentDaoExtra {
 
   /** Get list of skipped microtask assignments */
   suspend fun getLocalSkippedAssignments(): List<MicroTaskAssignmentRecord> {
-    return getAssignmentsByStatus(MicrotaskAssignmentStatus.COMPLETED)
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.SKIPPED)
   }
 
   @Query(

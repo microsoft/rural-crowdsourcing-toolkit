@@ -314,7 +314,7 @@ constructor(
     message.addProperty("button", "LATER")
     log(message)
 
-    moveToNextTask()
+    moveToNextMicrotask()
     setActivityState(ActivityState.INIT)
   }
 
