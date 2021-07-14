@@ -32,36 +32,31 @@ export const get: KaryaMiddleware = async (ctx) => {
     return;
   }
 
-  try {
-    if (assignment_type == 'verified') {
-      const records = await BasicModel.getRecords(
-        'microtask_assignment',
-        { worker_id: worker.id, status: 'VERIFIED' },
-        [],
-        [['verified_at', from, null]],
-        'verified_at'
-      );
-      HttpResponse.OK(ctx, records);
-    } else {
-      // TODO: Adjust max credits
-      await assignMicrotasksForWorker(worker, 1000);
-      const assignments = await BasicModel.getRecords(
-        'microtask_assignment',
-        { worker_id: worker.id, status: 'ASSIGNED' },
-        [],
-        [['created_at', from, null]],
-        'created_at'
-      );
-      const mtIds = assignments.map((mta) => mta.microtask_id);
-      const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
-      // This can be optimized to just be distinct task_ids
-      const taskIds = microtasks.map((t) => t.task_id);
-      const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
-      HttpResponse.OK(ctx, { tasks, microtasks, assignments });
-    }
-  } catch (e) {
-    // TODO: Fix this error message
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
+  if (assignment_type == 'verified') {
+    const records = await BasicModel.getRecords(
+      'microtask_assignment',
+      { worker_id: worker.id, status: 'VERIFIED' },
+      [],
+      [['verified_at', from, null]],
+      'verified_at'
+    );
+    HttpResponse.OK(ctx, records);
+  } else {
+    // TODO: Adjust max credits
+    await assignMicrotasksForWorker(worker, 1000);
+    const assignments = await BasicModel.getRecords(
+      'microtask_assignment',
+      { worker_id: worker.id, status: 'ASSIGNED' },
+      [],
+      [['created_at', from, null]],
+      'created_at'
+    );
+    const mtIds = assignments.map((mta) => mta.microtask_id);
+    const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
+    // This can be optimized to just be distinct task_ids
+    const taskIds = microtasks.map((t) => t.task_id);
+    const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
+    HttpResponse.OK(ctx, { tasks, microtasks, assignments });
   }
 };
 
