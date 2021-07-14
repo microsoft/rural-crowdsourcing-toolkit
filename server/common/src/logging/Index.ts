@@ -6,29 +6,32 @@
 import { v4 as uuidv4 } from 'uuid';
 import Application from 'koa';
 
-import { newLogger } from '@karya/logger';
+import { newLogger, LoggerConfig } from '@karya/logger';
 import { envGetString } from '@karya/misc-utils';
 import { InternalError } from '@karya/http-response';
 import { Logger } from '@karya/logger/node_modules/winston';
+export { Logger } from '@karya/logger/node_modules/winston';
 
 // Get the logger configuration
 const logFolder = envGetString('LOG_FOLDER');
 const logFolderPath = `${process.cwd()}/${logFolder}`;
 const datePattern = envGetString('LOG_ARCHIVE_PATTERN');
 
-// Http request logger
-const requestLogger = newLogger({
-  name: 'httpRequests',
-  folder: logFolderPath,
-  datePattern,
-});
+/**
+ * Create a new Karya logger
+ * @param config Logger config
+ */
+export const karyaLogger = (config: LoggerConfig): Logger => {
+  return newLogger({
+    folder: logFolderPath,
+    datePattern,
+    ...config,
+  });
+};
 
-// Http error logger
-const requestErrorLogger = newLogger({
-  name: 'httpErrors',
-  folder: logFolderPath,
-  datePattern,
-});
+// Http request loggers
+const requestLogger = karyaLogger({ name: 'httpRequests' });
+const requestErrorLogger = karyaLogger({ name: 'httpErrors' });
 
 /**
  * Log an HTTP request.
@@ -89,10 +92,8 @@ export const catchAll: Application.Middleware = async (ctx, next) => {
 /**
  * Main logger to be used by the server
  */
-export const logger: Logger = newLogger({
+export const mainLogger: Logger = karyaLogger({
   name: 'main',
-  folder: logFolderPath,
-  datePattern,
   logToConsole: true,
   consoleLogLevel: 'info',
 });

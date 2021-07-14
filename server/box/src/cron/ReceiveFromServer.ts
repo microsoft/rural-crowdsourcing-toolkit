@@ -17,7 +17,7 @@ import {
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import axios, { AxiosInstance } from 'axios';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
 

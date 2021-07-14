@@ -8,10 +8,9 @@ import cors from '@koa/cors';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import Koa from 'koa';
-import { catchAll, httpRequestLogger, setupDbConnection } from '@karya/common';
+import { catchAll, httpRequestLogger, setupDbConnection, mainLogger as logger } from '@karya/common';
 import router, { authenticateRequest } from './routes/Routes';
 import { containerNames } from '@karya/core';
-import logger from './utils/Logger';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 
 // creates an instance of Koa app

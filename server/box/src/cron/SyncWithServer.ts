@@ -5,7 +5,7 @@
 
 import { BoxRecord } from '@karya/core';
 import { axios } from './HttpUtils';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import {
   sendCompletedAssignments,

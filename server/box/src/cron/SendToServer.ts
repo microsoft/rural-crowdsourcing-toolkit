@@ -10,7 +10,7 @@ import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import { AxiosInstance } from 'axios';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 
 /**
  * Upload all karya files to the server

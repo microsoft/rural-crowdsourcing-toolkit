@@ -8,10 +8,9 @@ import { loadSecrets } from './secrets/Index';
 import cors from '@koa/cors';
 import Koa from 'koa';
 import Router from 'koa-router';
-import logger from './utils/Logger';
 import { userRouter } from './routes/UserRoutes';
 import { boxRouter } from './routes/BoxRoutes';
-import { catchAll, httpRequestLogger, setupDbConnection } from '@karya/common';
+import { catchAll, httpRequestLogger, setupDbConnection, mainLogger as logger } from '@karya/common';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 
