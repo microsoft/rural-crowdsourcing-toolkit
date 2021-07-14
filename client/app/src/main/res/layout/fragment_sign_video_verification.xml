@@ -22,12 +22,11 @@
         app:autoSizeStepGranularity="@dimen/_2ssp"
         app:autoSizeTextType="uniform"
         app:fontFamily="sans-serif"
-        android:textSize="@dimen/_18sdp"
         tools:text="This is a sentence and nothing special is going on here"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/videoPlayerPlaceHolder"/>
+        app:layout_constraintBottom_toTopOf="@id/videoPlayer"/>
 
 
     <com.potyvideo.library.AndExoPlayerView
@@ -37,10 +36,9 @@
         app:andexo_full_screen="true"
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintBottom_toTopOf="@id/marksRadioGroup"
-        app:layout_constraintTop_toBottomOf="@id/sentenceTv"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_28sdp"
+        android:layout_marginBottom="@dimen/_25sdp"
         />
     <TextView
         android:id="@+id/videoPlayerPlaceHolder"
@@ -52,22 +50,19 @@
         android:textColor="#FFF"
         app:layout_constraintHeight_percent="0.4"
         app:layout_constraintBottom_toTopOf="@id/marksRadioGroup"
-        app:layout_constraintTop_toBottomOf="@id/sentenceTv"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_28sdp"
+        android:layout_marginBottom="@dimen/_25sdp"
         />
 
     <RadioGroup
         android:id="@+id/marksRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/feedbackEt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/videoPlayer">
+        app:layout_constraintBottom_toTopOf="@id/nextBtnCl">
 
         <RadioButton
             android:id="@+id/markPoorBtn"
@@ -143,13 +138,15 @@
 
     <EditText
         android:id="@+id/feedbackEt"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minLines="2"
         android:maxLines="2"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:hint="Optional Feedback..."
-        app:layout_constraintBottom_toTopOf="@id/backBtnCl"
+        app:layout_constraintBottom_toBottomOf="@id/nextBtnCl"
+        app:layout_constraintRight_toLeftOf="@id/nextBtnCl"
+        app:layout_constraintLeft_toLeftOf="parent"
         />
 
 
@@ -165,29 +162,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintWidth_percent="0.25">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/backBtnCv"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:translationZ="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_25sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.7">
-
-            <ImageView
-                android:id="@+id/backBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_back_enabled"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
-
-        </androidx.cardview.widget.CardView>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -197,6 +171,8 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingVertical="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="@+id/feedbackEt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintWidth_percent="0.25">

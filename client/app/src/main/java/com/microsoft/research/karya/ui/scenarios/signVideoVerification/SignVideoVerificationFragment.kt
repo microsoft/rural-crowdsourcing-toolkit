@@ -32,16 +32,6 @@ class SignVideoVerificationFragment :
       feedbackEt.setText(remarks)
     }
 
-    viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
-      backBtn.isClickable = state != DISABLED
-      backBtn.setBackgroundResource(
-        when (state) {
-          DISABLED -> R.drawable.ic_back_disabled
-          ENABLED -> R.drawable.ic_back_enabled
-        }
-      )
-    }
-
     viewModel.nextBtnState.observe(
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
@@ -124,8 +114,6 @@ class SignVideoVerificationFragment :
     feedbackEt.addTextChangedListener { editText ->
       viewModel.remarks = editText.toString()
     }
-
-    backBtn.setOnClickListener { viewModel.handleBackClick() }
 
     marksRadioGroup.setOnCheckedChangeListener { _, checkedId ->
       when (checkedId) {
