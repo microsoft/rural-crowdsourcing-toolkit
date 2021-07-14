@@ -64,6 +64,10 @@
         <attr name="textColor" format="color|reference" />
         <attr name="textSize" format="dimension" />
         <attr name="backgroundColor" format="color|reference" />
+        <attr name="crossPosition" format="enum">
+            <enum name="top_right" value="0" />
+            <enum name="center_right" value="1" />
+        </attr>
         <attr name="icon" />
     </declare-styleable>
 </resources>

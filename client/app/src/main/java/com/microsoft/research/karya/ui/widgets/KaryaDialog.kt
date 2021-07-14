@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.ItemKaryaDialogBinding
@@ -17,6 +19,7 @@ import com.microsoft.research.karya.utils.extensions.visible
 class KaryaDialog : FrameLayout {
 
   private lateinit var binding: ItemKaryaDialogBinding
+  private var crossPosition: CrossPosition = CrossPosition.TOP_RIGHT
 
   constructor(context: Context) : this(context, null)
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -39,12 +42,14 @@ class KaryaDialog : FrameLayout {
     val textSize = a.getDimension(R.styleable.KaryaDialog_textSize, 14f)
     val backgroundColor = a.getColor(R.styleable.KaryaDialog_backgroundColor, defaultBackgroundColor)
     val icon = a.getDrawable(R.styleable.KaryaDialog_icon)
+    val crossPosition = a.getInt(R.styleable.KaryaDialog_crossPosition, 0)
 
     text?.let { setText(it) }
     icon?.let { setIcon(it) }
     setTextColor(textColor)
     setTextSize(textSize)
     setBackgroundColor(backgroundColor)
+    setCrossPosition(crossPosition)
 
     a.recycle()
   }
@@ -78,6 +83,62 @@ class KaryaDialog : FrameLayout {
     binding.icon.apply {
       visible()
       binding.icon.setImageDrawable(drawable)
+    }
+  }
+
+  fun setCrossPosition(position: CrossPosition) {
+    setCrossPosition(position.value)
+  }
+
+  private fun setCrossPosition(position: Int) {
+    val oldCrossPosition = crossPosition
+    crossPosition = CrossPosition.findEnumByPosition(position)
+
+    if (crossPosition == oldCrossPosition) return
+
+    val constraintLayout = binding.root
+    val constraintSet = ConstraintSet()
+
+    val updatedConstraintSet =
+      when (crossPosition) {
+        CrossPosition.TOP_RIGHT -> setCrossTopRight(constraintSet, constraintLayout)
+        CrossPosition.CENTER_RIGHT -> setCrossCenterRight(constraintSet, constraintLayout)
+      }
+
+    constraintLayout.setConstraintSet(constraintSet)
+  }
+
+  private fun setCrossTopRight(constraintSet: ConstraintSet, constraintLayout: ConstraintLayout): ConstraintSet {
+    constraintSet.clone(constraintLayout)
+
+    constraintSet.connect(R.id.cross, ConstraintSet.START, R.id.card, ConstraintSet.END)
+    constraintSet.connect(R.id.cross, ConstraintSet.END, R.id.card, ConstraintSet.END)
+    constraintSet.connect(R.id.cross, ConstraintSet.TOP, R.id.card, ConstraintSet.TOP)
+    constraintSet.connect(R.id.cross, ConstraintSet.BOTTOM, R.id.card, ConstraintSet.TOP)
+
+    return constraintSet
+  }
+
+  private fun setCrossCenterRight(constraintSet: ConstraintSet, constraintLayout: ConstraintLayout): ConstraintSet {
+    constraintSet.clone(constraintLayout)
+
+    constraintSet.connect(R.id.cross, ConstraintSet.START, R.id.card, ConstraintSet.END)
+    constraintSet.connect(R.id.cross, ConstraintSet.END, R.id.card, ConstraintSet.END)
+    constraintSet.connect(R.id.cross, ConstraintSet.TOP, R.id.card, ConstraintSet.TOP)
+    constraintSet.connect(R.id.cross, ConstraintSet.BOTTOM, R.id.card, ConstraintSet.BOTTOM)
+
+    return constraintSet
+  }
+
+  enum class CrossPosition(val value: Int) {
+    TOP_RIGHT(0),
+    CENTER_RIGHT(1),
+    ;
+
+    companion object {
+      fun findEnumByPosition(positionInt: Int): CrossPosition {
+        return values().first { crossPosition -> crossPosition.value == positionInt }
+      }
     }
   }
 }

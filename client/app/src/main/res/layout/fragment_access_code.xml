@@ -100,12 +100,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_80sdp"
         app:backgroundColor="#f2d0d0"
+        app:crossPosition="center_right"
         app:icon="@drawable/ic_speaker"
-        app:textSize="@dimen/_6ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
         app:text="Increase Volume"
-        app:textColor="@color/colorBlack" />
+        app:textColor="@color/colorBlack"
+        app:textSize="@dimen/_6ssp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
