@@ -397,7 +397,10 @@ open class SpeechDataMain(
         if (previousActivityState == ActivityState.RECORDED || previousActivityState == ActivityState.ACTIVITY_STOPPED
         ) {
           initializePlayer()
-          mediaPlayer!!.setOnCompletionListener { setActivityState(ActivityState.COMPLETED) }
+          mediaPlayer!!.setOnCompletionListener {
+            resetPlayingLength()
+            setActivityState(ActivityState.COMPLETED)
+          }
           playFile(scratchRecordingFilePath)
         } else if (previousActivityState == ActivityState.FIRST_PLAYBACK_PAUSED) {
           mediaPlayer!!.start()
@@ -588,7 +591,7 @@ open class SpeechDataMain(
         AssistantAudio.RECORD_ACTION,
         uiCue = {
           recordPointerIv.visible()
-          recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+          recordBtn.setBackgroundResource(R.drawable.ic_mic)
         },
         onCompletionListener = {
           uiScope.launch {
@@ -599,7 +602,7 @@ open class SpeechDataMain(
         }
       )
       delay(1500)
-      recordBtn.setBackgroundResource(R.drawable.ic_mic_active)
+      recordBtn.setBackgroundResource(R.drawable.ic_pause)
     }
   }
 
@@ -618,7 +621,7 @@ open class SpeechDataMain(
         }
       )
       delay(500)
-      recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+      recordBtn.setBackgroundResource(R.drawable.ic_mic)
     }
   }
 
@@ -628,11 +631,11 @@ open class SpeechDataMain(
       AssistantAudio.LISTEN_ACTION,
       uiCue = {
         playPointerIv.visible()
-        playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
+        playBtn.setBackgroundResource(R.drawable.ic_pause)
       },
       onCompletionListener = {
         uiScope.launch {
-          playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
+          playBtn.setBackgroundResource(R.drawable.ic_play)
           playPointerIv.invisible()
           delay(500)
           playRerecordAction()
@@ -647,11 +650,11 @@ open class SpeechDataMain(
       AssistantAudio.RERECORD_ACTION,
       uiCue = {
         recordPointerIv.visible()
-        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+        recordBtn.setBackgroundResource(R.drawable.ic_mic)
       },
       onCompletionListener = {
         uiScope.launch {
-          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+          recordBtn.setBackgroundResource(R.drawable.ic_mic)
           recordPointerIv.invisible()
           delay(500)
           playNextAction()
@@ -666,11 +669,11 @@ open class SpeechDataMain(
       AssistantAudio.NEXT_ACTION,
       uiCue = {
         nextPointerIv.visible()
-        nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
+        nextBtn.setBackgroundResource(R.drawable.ic_next)
       },
       onCompletionListener = {
         uiScope.launch {
-          nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
+          nextBtn.setBackgroundResource(R.drawable.ic_next)
           nextPointerIv.invisible()
           delay(500)
           playPreviousAction()
@@ -685,11 +688,11 @@ open class SpeechDataMain(
       AssistantAudio.PREVIOUS_ACTION,
       uiCue = {
         backPointerIv.visible()
-        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
+        backBtn.setBackgroundResource(R.drawable.ic_prev)
       },
       onCompletionListener = {
         uiScope.launch {
-          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+          backBtn.setBackgroundResource(R.drawable.ic_prev)
           backPointerIv.invisible()
           delay(500)
           moveToPrerecording()
@@ -983,10 +986,10 @@ open class SpeechDataMain(
     }
   }
 
-  /** Reset recording length */
-  private fun resetPlayingLength(duration: Int) {
+  /** Reset playing length */
+  private fun resetPlayingLength(duration: Int? = null) {
     uiScope.launch {
-      val milliseconds = duration
+      val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
       val centiSeconds = (milliseconds / 10) % 100
       val seconds = milliseconds / 1000
       playSecondsTv.text = "%d".format(seconds)

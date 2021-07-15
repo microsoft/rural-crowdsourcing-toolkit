@@ -14,8 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:showBackButton="false"
-        app:startIcon="@drawable/ic_assistant" />
+        app:showBackButton="false" />
 
     <TextView
         android:id="@+id/recordPromptTv"
@@ -57,7 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_40sdp"
-        android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="10"
         app:layout_constraintBottom_toTopOf="@id/recordLengthLL">
@@ -68,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/_8sdp"
+            android:layout_marginHorizontal="@dimen/_8sdp"
             android:background="@drawable/ic_play"
             android:contentDescription="@string/back"
             android:soundEffectsEnabled="false" />
@@ -78,7 +76,7 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="9"
             android:max="100"
             android:progressBackgroundTint="@color/colorLightPurple"
             android:progressTint="@color/purple_500"
@@ -351,6 +349,7 @@
         android:background="@drawable/ic_pointer"
         android:rotation="180"
         android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/recordLengthLL"
         app:layout_constraintBottom_toTopOf="@id/recordBtnCl"
         app:layout_constraintLeft_toLeftOf="@id/recordBtnCl"
         app:layout_constraintRight_toRightOf="@id/recordBtnCl" />
@@ -362,9 +361,8 @@
         android:background="@drawable/ic_pointer"
         android:rotation="180"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/playBtn"
-        app:layout_constraintLeft_toLeftOf="@id/playBtn"
-        app:layout_constraintRight_toRightOf="@id/playBtn" />
+        app:layout_constraintBottom_toTopOf="@id/playBackLl"
+        app:layout_constraintLeft_toLeftOf="@id/playBackLl" />
 
     <ImageView
         android:id="@+id/nextPointerIv"
