@@ -21,10 +21,10 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.Butto
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.visible
+import kotlinx.android.synthetic.main.ng_speech_data_main.*
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
-import kotlinx.android.synthetic.main.speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -143,7 +143,7 @@ open class SpeechDataMain(
   /** Activity setup function. Set view. */
   final override fun setupActivity() {
     /** setup view */
-    setContentView(R.layout.speech_data_main)
+    setContentView(R.layout.ng_speech_data_main)
 
     /** record instruction */
     recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
@@ -169,11 +169,6 @@ open class SpeechDataMain(
       _: Int,
       _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
-    }
-
-    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
-      ->
-      playBtnCv.radius = (right - left).toFloat() / 2
     }
 
     /** Set on click listeners */
@@ -402,7 +397,10 @@ open class SpeechDataMain(
         if (previousActivityState == ActivityState.RECORDED || previousActivityState == ActivityState.ACTIVITY_STOPPED
         ) {
           initializePlayer()
-          mediaPlayer!!.setOnCompletionListener { setActivityState(ActivityState.COMPLETED) }
+          mediaPlayer!!.setOnCompletionListener {
+            resetPlayingLength()
+            setActivityState(ActivityState.COMPLETED)
+          }
           playFile(scratchRecordingFilePath)
         } else if (previousActivityState == ActivityState.FIRST_PLAYBACK_PAUSED) {
           mediaPlayer!!.start()
@@ -593,7 +591,7 @@ open class SpeechDataMain(
         AssistantAudio.RECORD_ACTION,
         uiCue = {
           recordPointerIv.visible()
-          recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+          recordBtn.setBackgroundResource(R.drawable.ic_mic)
         },
         onCompletionListener = {
           uiScope.launch {
@@ -604,7 +602,7 @@ open class SpeechDataMain(
         }
       )
       delay(1500)
-      recordBtn.setBackgroundResource(R.drawable.ic_mic_active)
+      recordBtn.setBackgroundResource(R.drawable.ic_pause)
     }
   }
 
@@ -623,7 +621,7 @@ open class SpeechDataMain(
         }
       )
       delay(500)
-      recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+      recordBtn.setBackgroundResource(R.drawable.ic_mic)
     }
   }
 
@@ -633,11 +631,11 @@ open class SpeechDataMain(
       AssistantAudio.LISTEN_ACTION,
       uiCue = {
         playPointerIv.visible()
-        playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
+        playBtn.setBackgroundResource(R.drawable.ic_pause)
       },
       onCompletionListener = {
         uiScope.launch {
-          playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
+          playBtn.setBackgroundResource(R.drawable.ic_play)
           playPointerIv.invisible()
           delay(500)
           playRerecordAction()
@@ -652,11 +650,11 @@ open class SpeechDataMain(
       AssistantAudio.RERECORD_ACTION,
       uiCue = {
         recordPointerIv.visible()
-        recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+        recordBtn.setBackgroundResource(R.drawable.ic_mic)
       },
       onCompletionListener = {
         uiScope.launch {
-          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+          recordBtn.setBackgroundResource(R.drawable.ic_mic)
           recordPointerIv.invisible()
           delay(500)
           playNextAction()
@@ -671,11 +669,11 @@ open class SpeechDataMain(
       AssistantAudio.NEXT_ACTION,
       uiCue = {
         nextPointerIv.visible()
-        nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
+        nextBtn.setBackgroundResource(R.drawable.ic_next)
       },
       onCompletionListener = {
         uiScope.launch {
-          nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
+          nextBtn.setBackgroundResource(R.drawable.ic_next)
           nextPointerIv.invisible()
           delay(500)
           playPreviousAction()
@@ -690,11 +688,11 @@ open class SpeechDataMain(
       AssistantAudio.PREVIOUS_ACTION,
       uiCue = {
         backPointerIv.visible()
-        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
+        backBtn.setBackgroundResource(R.drawable.ic_prev)
       },
       onCompletionListener = {
         uiScope.launch {
-          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+          backBtn.setBackgroundResource(R.drawable.ic_prev)
           backPointerIv.invisible()
           delay(500)
           moveToPrerecording()
@@ -988,6 +986,17 @@ open class SpeechDataMain(
     }
   }
 
+  /** Reset playing length */
+  private fun resetPlayingLength(duration: Int? = null) {
+    uiScope.launch {
+      val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
+      val centiSeconds = (milliseconds / 10) % 100
+      val seconds = milliseconds / 1000
+      playSecondsTv.text = "%d".format(seconds)
+      playCentiSecondsTv.text = "%02d".format(centiSeconds)
+    }
+  }
+
   /** Initialize [mediaPlayer] */
   private fun initializePlayer() {
     mediaPlayer = MediaPlayer()
@@ -1007,6 +1016,7 @@ open class SpeechDataMain(
     val runnable = Runnable {
       while (state == activityState) {
         val currentPosition = mediaPlayer?.currentPosition
+        resetPlayingLength(mediaPlayer?.currentPosition!!)
         playbackProgressPb.progress = currentPosition ?: playbackProgressPb.progress
         Thread.sleep(100)
       }
@@ -1196,33 +1206,33 @@ open class SpeechDataMain(
     // Set the background
     recordBtn.setBackgroundResource(
       when (recordBtnState) {
-        DISABLED -> R.drawable.ic_mic_disabled
-        ENABLED -> R.drawable.ic_mic_enabled
-        ACTIVE -> R.drawable.ic_mic_active
+        DISABLED -> R.drawable.ic_mic
+        ENABLED -> R.drawable.ic_mic
+        ACTIVE -> R.drawable.ic_pause
       }
     )
 
     playBtn.setBackgroundResource(
       when (playBtnState) {
-        DISABLED -> R.drawable.ic_speaker_disabled
-        ENABLED -> R.drawable.ic_speaker_enabled
-        ACTIVE -> R.drawable.ic_speaker_active
+        DISABLED -> R.drawable.ic_play
+        ENABLED -> R.drawable.ic_play
+        ACTIVE -> R.drawable.ic_pause
       }
     )
 
     nextBtn.setBackgroundResource(
       when (nextBtnState) {
-        DISABLED -> R.drawable.ic_next_disabled
-        ENABLED -> R.drawable.ic_next_enabled
-        ACTIVE -> R.drawable.ic_next_enabled
+        DISABLED -> R.drawable.ic_next
+        ENABLED -> R.drawable.ic_next
+        ACTIVE -> R.drawable.ic_next
       }
     )
 
     backBtn.setBackgroundResource(
       when (backBtnState) {
-        DISABLED -> R.drawable.ic_back_disabled
-        ENABLED -> R.drawable.ic_back_enabled
-        ACTIVE -> R.drawable.ic_back_enabled
+        DISABLED -> R.drawable.ic_prev
+        ENABLED -> R.drawable.ic_prev
+        ACTIVE -> R.drawable.ic_prev
       }
     )
   }
