@@ -25,23 +25,6 @@ import kotlinx.android.synthetic.main.ng_speech_data_main.*
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
-import kotlinx.android.synthetic.main.speech_data_main.*
-import kotlinx.android.synthetic.main.speech_data_main.backBtn
-import kotlinx.android.synthetic.main.speech_data_main.backPointerIv
-import kotlinx.android.synthetic.main.speech_data_main.nextBtn
-import kotlinx.android.synthetic.main.speech_data_main.nextPointerIv
-import kotlinx.android.synthetic.main.speech_data_main.playBtn
-import kotlinx.android.synthetic.main.speech_data_main.playBtnCv
-import kotlinx.android.synthetic.main.speech_data_main.playPointerIv
-import kotlinx.android.synthetic.main.speech_data_main.playbackProgressPb
-import kotlinx.android.synthetic.main.speech_data_main.recordBtn
-import kotlinx.android.synthetic.main.speech_data_main.recordBtnCv
-import kotlinx.android.synthetic.main.speech_data_main.recordCentiSecondsTv
-import kotlinx.android.synthetic.main.speech_data_main.recordPointerIv
-import kotlinx.android.synthetic.main.speech_data_main.recordPromptTv
-import kotlinx.android.synthetic.main.speech_data_main.recordSecondsTv
-import kotlinx.android.synthetic.main.speech_data_main.sentencePointerIv
-import kotlinx.android.synthetic.main.speech_data_main.sentenceTv
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -160,7 +143,7 @@ open class SpeechDataMain(
   /** Activity setup function. Set view. */
   final override fun setupActivity() {
     /** setup view */
-    setContentView(R.layout.speech_data_main)
+    setContentView(R.layout.ng_speech_data_main)
 
     /** record instruction */
     recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
@@ -186,11 +169,6 @@ open class SpeechDataMain(
       _: Int,
       _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
-    }
-
-    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
-      ->
-      playBtnCv.radius = (right - left).toFloat() / 2
     }
 
     /** Set on click listeners */
@@ -1225,33 +1203,33 @@ open class SpeechDataMain(
     // Set the background
     recordBtn.setBackgroundResource(
       when (recordBtnState) {
-        DISABLED -> R.drawable.ic_mic_disabled
-        ENABLED -> R.drawable.ic_mic_enabled
-        ACTIVE -> R.drawable.ic_mic_active
+        DISABLED -> R.drawable.ic_mic
+        ENABLED -> R.drawable.ic_mic
+        ACTIVE -> R.drawable.ic_pause
       }
     )
 
     playBtn.setBackgroundResource(
       when (playBtnState) {
-        DISABLED -> R.drawable.ic_speaker_disabled
-        ENABLED -> R.drawable.ic_speaker_enabled
-        ACTIVE -> R.drawable.ic_speaker_active
+        DISABLED -> R.drawable.ic_play
+        ENABLED -> R.drawable.ic_play
+        ACTIVE -> R.drawable.ic_pause
       }
     )
 
     nextBtn.setBackgroundResource(
       when (nextBtnState) {
-        DISABLED -> R.drawable.ic_next_disabled
-        ENABLED -> R.drawable.ic_next_enabled
-        ACTIVE -> R.drawable.ic_next_enabled
+        DISABLED -> R.drawable.ic_next
+        ENABLED -> R.drawable.ic_next
+        ACTIVE -> R.drawable.ic_next
       }
     )
 
     backBtn.setBackgroundResource(
       when (backBtnState) {
-        DISABLED -> R.drawable.ic_back_disabled
-        ENABLED -> R.drawable.ic_back_enabled
-        ACTIVE -> R.drawable.ic_back_enabled
+        DISABLED -> R.drawable.ic_prev
+        ENABLED -> R.drawable.ic_prev
+        ACTIVE -> R.drawable.ic_prev
       }
     )
   }
