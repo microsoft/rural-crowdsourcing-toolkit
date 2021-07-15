@@ -96,17 +96,33 @@ export const submit: KaryaMiddleware = async (ctx) => {
 };
 
 /**
- * Submit skipped assognments to the server
+ * Submitted completed or skipped assignments to the server
+ * @param ctx Karya request context
  */
 export const submitSkipped: KaryaMiddleware = async (ctx) => {
-  const assignmentIds: string[] = ctx.request.body;
+  const worker = ctx.state.entity;
+  const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
 
-  // Need to validate ID array
+  // TODO: Need to validate incoming request
 
-  const submitted_to_box_at = new Date().toISOString();
-  await BBPromise.mapSeries(assignmentIds, async (id) => {
-    await BasicModel.updateSingle('microtask_assignment', { id }, { status: 'SKIPPED', submitted_to_box_at });
-  });
+  try {
+    const ids: string[] = [];
+    const submitted_to_box_at = new Date().toISOString();
+    await BBPromise.mapSeries(assignments, async (assignment) => {
+      if (assignment.worker_id != worker.id) {
+        // TODO: Internally log this error. User does not have access to assignment
+      } else if (assignment.status != 'SKIPPED') {
+        // TODO: Internally log this error. Can only submit completed
+        // assignments through this route
+      } else {
+        const { id, ...updates } = assignment;
+        await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
+        ids.push(id);
+      }
+    });
 
-  HttpResponse.OK(ctx, {});
+    HttpResponse.OK(ctx, ids);
+  } catch (e) {
+    HttpResponse.Forbidden(ctx, 'Cannot access assignments');
+  }
 };
