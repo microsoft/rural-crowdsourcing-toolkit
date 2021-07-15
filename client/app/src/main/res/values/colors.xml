@@ -20,4 +20,5 @@
     <color name="light_red">#FFAAAA</color>
     <color name="light_orange">#FFDDAA</color>
     <color name="light_green">#99EE99</color>
+    <color name="colorGreenDarker">#29c07f</color>
 </resources>

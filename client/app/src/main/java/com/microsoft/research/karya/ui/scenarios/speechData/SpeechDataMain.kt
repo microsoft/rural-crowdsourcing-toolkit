@@ -9,7 +9,6 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
 import android.media.MediaRecorder
-import android.view.View
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
@@ -21,10 +20,10 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.Butto
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.visible
-import kotlinx.android.synthetic.main.ng_speech_data_main.*
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
+import kotlinx.android.synthetic.main.ng_speech_data_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -158,18 +157,18 @@ open class SpeechDataMain(
       }
 
     /** Set card corner radius */
-    recordBtnCv.addOnLayoutChangeListener {
-      _: View,
-      left: Int,
-      _: Int,
-      right: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int ->
-      recordBtnCv.radius = (right - left).toFloat() / 2
-    }
+    //    recordBtnCv.addOnLayoutChangeListener {
+    //      _: View,
+    //      left: Int,
+    //      _: Int,
+    //      right: Int,
+    //      _: Int,
+    //      _: Int,
+    //      _: Int,
+    //      _: Int,
+    //      _: Int ->
+    //      recordBtnCv.radius = (right - left).toFloat() / 2
+    //    }
 
     /** Set on click listeners */
     recordBtn.setOnClickListener { handleRecordClick() }
@@ -591,7 +590,8 @@ open class SpeechDataMain(
         AssistantAudio.RECORD_ACTION,
         uiCue = {
           recordPointerIv.visible()
-          recordBtn.setBackgroundResource(R.drawable.ic_mic)
+          recordBtn.setImageResource(R.drawable.ic_mic)
+          recordBtn.setBackgroundResource(R.color.purple_500)
         },
         onCompletionListener = {
           uiScope.launch {
@@ -602,7 +602,8 @@ open class SpeechDataMain(
         }
       )
       delay(1500)
-      recordBtn.setBackgroundResource(R.drawable.ic_pause)
+      recordBtn.setImageResource(R.drawable.ic_stop)
+      recordBtn.setBackgroundResource(R.color.white)
     }
   }
 
@@ -621,7 +622,8 @@ open class SpeechDataMain(
         }
       )
       delay(500)
-      recordBtn.setBackgroundResource(R.drawable.ic_mic)
+      recordBtn.setImageResource(R.drawable.ic_mic)
+      recordBtn.setBackgroundResource(R.color.purple_500)
     }
   }
 
@@ -631,11 +633,11 @@ open class SpeechDataMain(
       AssistantAudio.LISTEN_ACTION,
       uiCue = {
         playPointerIv.visible()
-        playBtn.setBackgroundResource(R.drawable.ic_pause)
+        playBtn.setImageResource(R.drawable.ic_pause)
       },
       onCompletionListener = {
         uiScope.launch {
-          playBtn.setBackgroundResource(R.drawable.ic_play)
+          playBtn.setImageResource(R.drawable.ic_play)
           playPointerIv.invisible()
           delay(500)
           playRerecordAction()
@@ -650,11 +652,13 @@ open class SpeechDataMain(
       AssistantAudio.RERECORD_ACTION,
       uiCue = {
         recordPointerIv.visible()
-        recordBtn.setBackgroundResource(R.drawable.ic_mic)
+        recordBtn.setImageResource(R.drawable.ic_mic)
+        recordBtn.setBackgroundResource(R.color.purple_500)
       },
       onCompletionListener = {
         uiScope.launch {
-          recordBtn.setBackgroundResource(R.drawable.ic_mic)
+          recordBtn.setImageResource(R.drawable.ic_mic)
+          recordBtn.setBackgroundResource(R.color.purple_500)
           recordPointerIv.invisible()
           delay(500)
           playNextAction()
@@ -669,11 +673,11 @@ open class SpeechDataMain(
       AssistantAudio.NEXT_ACTION,
       uiCue = {
         nextPointerIv.visible()
-        nextBtn.setBackgroundResource(R.drawable.ic_next)
+        nextBtn.setImageResource(R.drawable.ic_next)
       },
       onCompletionListener = {
         uiScope.launch {
-          nextBtn.setBackgroundResource(R.drawable.ic_next)
+          nextBtn.setImageResource(R.drawable.ic_next)
           nextPointerIv.invisible()
           delay(500)
           playPreviousAction()
@@ -688,11 +692,11 @@ open class SpeechDataMain(
       AssistantAudio.PREVIOUS_ACTION,
       uiCue = {
         backPointerIv.visible()
-        backBtn.setBackgroundResource(R.drawable.ic_prev)
+        backBtn.setImageResource(R.drawable.ic_prev)
       },
       onCompletionListener = {
         uiScope.launch {
-          backBtn.setBackgroundResource(R.drawable.ic_prev)
+          backBtn.setImageResource(R.drawable.ic_prev)
           backPointerIv.invisible()
           delay(500)
           moveToPrerecording()
@@ -1204,15 +1208,22 @@ open class SpeechDataMain(
     nextBtn.isClickable = nextBtnState != DISABLED
 
     // Set the background
-    recordBtn.setBackgroundResource(
+    recordBtn.setImageResource(
       when (recordBtnState) {
         DISABLED -> R.drawable.ic_mic
         ENABLED -> R.drawable.ic_mic
-        ACTIVE -> R.drawable.ic_pause
+        ACTIVE -> R.drawable.ic_stop
+      }
+    )
+    recordBtn.setBackgroundResource(
+      when (recordBtnState) {
+        DISABLED -> R.color.purple_500
+        ENABLED -> R.color.purple_500
+        ACTIVE -> R.color.colorWhite
       }
     )
 
-    playBtn.setBackgroundResource(
+    playBtn.setImageResource(
       when (playBtnState) {
         DISABLED -> R.drawable.ic_play
         ENABLED -> R.drawable.ic_play
@@ -1220,7 +1231,7 @@ open class SpeechDataMain(
       }
     )
 
-    nextBtn.setBackgroundResource(
+    nextBtn.setImageResource(
       when (nextBtnState) {
         DISABLED -> R.drawable.ic_next
         ENABLED -> R.drawable.ic_next
@@ -1228,7 +1239,7 @@ open class SpeechDataMain(
       }
     )
 
-    backBtn.setBackgroundResource(
+    backBtn.setImageResource(
       when (backBtnState) {
         DISABLED -> R.drawable.ic_prev
         ENABLED -> R.drawable.ic_prev

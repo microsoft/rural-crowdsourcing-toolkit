@@ -36,7 +36,6 @@
         android:layout_marginVertical="@dimen/_40sdp"
         android:gravity="center"
         android:paddingHorizontal="@dimen/_20sdp"
-        android:textAlignment="textStart"
         android:textColor="#000000"
         app:autoSizeMaxTextSize="@dimen/_30ssp"
         app:autoSizeMinTextSize="@dimen/_12ssp"
@@ -57,17 +56,21 @@
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_40sdp"
         android:orientation="horizontal"
+        android:padding="@dimen/_16sdp"
+        android:background="@drawable/border_dark"
         android:weightSum="10"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL">
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <ImageView
             android:id="@+id/playBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_8sdp"
-            android:background="@drawable/ic_play"
+            android:src="@drawable/ic_play"
             android:contentDescription="@string/back"
             android:soundEffectsEnabled="false" />
 
@@ -84,11 +87,11 @@
 
         <LinearLayout
             android:id="@+id/playLengthLL"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginLeft="@dimen/_8sdp"
             android:orientation="horizontal">
 
             <TextView
@@ -129,7 +132,7 @@
         android:layout_marginBottom="@dimen/_20sdp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/recordBtnCl">
+        app:layout_constraintBottom_toTopOf="@id/recordBtn">
 
         <TextView
             android:id="@+id/recordSecondsTv"
@@ -167,157 +170,95 @@
     </LinearLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backBtnCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="@id/recordBtnCl"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/recordBtnCl"
-        app:layout_constraintWidth_percent="0.25">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/backBtnCv"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:backgroundTint="@color/teal_200"
-            android:foregroundGravity="center"
-            android:translationZ="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_25sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.7">
-
-            <ImageView
-                android:id="@+id/backBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_prev"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/recordBtnCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/backBtnCl"
-        app:layout_constraintRight_toLeftOf="@id/nextBtnCl"
-        app:layout_constraintWidth_percent="0.25">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/recordBtnCv"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:backgroundTint="@color/purple_500"
-            android:translationZ="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_100sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.8">
-
-            <ImageView
-                android:id="@+id/recordBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_mic"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-    <!--        android:id="@+id/playBtn"-->
+    <!--        android:id="@+id/backBtnCl"-->
     <!--        android:layout_width="0dp"-->
     <!--        android:layout_height="wrap_content"-->
     <!--        android:clipToPadding="false"-->
     <!--        android:paddingVertical="@dimen/_10sdp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintLeft_toRightOf="@id/recordBtnCl"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/recordBtnCl"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/recordBtnCl"-->
     <!--        app:layout_constraintWidth_percent="0.25">-->
 
     <!--        <androidx.cardview.widget.CardView-->
-    <!--            android:id="@+id/playBtnCv"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="0dp"-->
+    <!--            android:id="@+id/backBtnCv"-->
+    <!--            android:layout_width="@dimen/_30sdp"-->
+    <!--            android:layout_height="@dimen/_30sdp"-->
+    <!--            android:backgroundTint="@color/teal_200"-->
+    <!--            android:foregroundGravity="center"-->
     <!--            android:translationZ="@dimen/_10sdp"-->
     <!--            app:cardCornerRadius="@dimen/_25sdp"-->
     <!--            app:layout_constraintBottom_toBottomOf="parent"-->
     <!--            app:layout_constraintDimensionRatio="1:1"-->
     <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintHorizontal_bias="0.5"-->
     <!--            app:layout_constraintStart_toStartOf="parent"-->
     <!--            app:layout_constraintTop_toTopOf="parent"-->
-    <!--            app:layout_constraintWidth_percent="0.8">-->
+    <!--            app:layout_constraintWidth_percent="0.7">-->
 
     <!--            <ImageView-->
-    <!--                android:id="@+id/playBtn"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="match_parent"-->
-    <!--                android:background="@drawable/ic_speaker_enabled"-->
+    <!--                android:id="@+id/backBtnold"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="center"-->
+    <!--                android:background="@drawable/ic_prev"-->
     <!--                android:contentDescription="@string/back"-->
     <!--                android:soundEffectsEnabled="false" />-->
 
     <!--        </androidx.cardview.widget.CardView>-->
-
     <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/nextBtnCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="@id/recordBtnCl"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/recordBtnCl"
-        app:layout_constraintWidth_percent="0.25">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/backBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_gravity="center"
+        android:background="@color/colorGreenDarker"
+        android:contentDescription="@string/back"
+        android:elevation="@dimen/_4sdp"
+        android:scaleType="center"
+        android:soundEffectsEnabled="false"
+        app:layout_constraintBottom_toBottomOf="@id/recordBtn"
+        app:layout_constraintEnd_toStartOf="@id/recordBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recordBtn"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CircleShape"
+        app:srcCompat="@drawable/ic_prev" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/nextBtnCv"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:backgroundTint="@color/teal_200"
-            android:translationZ="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_25sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.7">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/recordBtn"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_gravity="center"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:layout_marginStart="@dimen/_32sdp"
+        android:layout_marginEnd="@dimen/_32sdp"
+        android:background="@color/purple_500"
+        android:contentDescription="@string/back"
+        android:elevation="@dimen/_4sdp"
+        android:scaleType="centerInside"
+        android:soundEffectsEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/backBtn"
+        app:layout_constraintRight_toLeftOf="@id/nextBtn"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CircleShape"
+        app:srcCompat="@drawable/ic_mic" />
 
-            <ImageView
-                android:id="@+id/nextBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_next"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/nextBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@color/colorGreenDarker"
+        android:contentDescription="@string/back"
+        android:elevation="@dimen/_4sdp"
+        android:scaleType="centerInside"
+        android:soundEffectsEnabled="false"
+        app:layout_constraintBottom_toBottomOf="@id/recordBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/recordBtn"
+        app:layout_constraintTop_toTopOf="@id/recordBtn"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CircleShape"
+        app:srcCompat="@drawable/ic_next" />
 
     <ImageView
         android:id="@+id/sentencePointerIv"
@@ -338,9 +279,9 @@
         android:background="@drawable/ic_pointer"
         android:rotation="180"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/backBtnCl"
-        app:layout_constraintLeft_toLeftOf="@id/backBtnCl"
-        app:layout_constraintRight_toRightOf="@id/backBtnCl" />
+        app:layout_constraintBottom_toTopOf="@id/backBtn"
+        app:layout_constraintLeft_toLeftOf="@id/backBtn"
+        app:layout_constraintRight_toRightOf="@id/backBtn" />
 
     <ImageView
         android:id="@+id/recordPointerIv"
@@ -349,10 +290,10 @@
         android:background="@drawable/ic_pointer"
         android:rotation="180"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/recordLengthLL"
-        app:layout_constraintBottom_toTopOf="@id/recordBtnCl"
-        app:layout_constraintLeft_toLeftOf="@id/recordBtnCl"
-        app:layout_constraintRight_toRightOf="@id/recordBtnCl" />
+        app:layout_constraintBottom_toTopOf="@id/recordBtn"
+        app:layout_constraintLeft_toLeftOf="@id/recordBtn"
+        app:layout_constraintRight_toRightOf="@id/recordBtn"
+        app:layout_constraintTop_toBottomOf="@id/recordLengthLL" />
 
     <ImageView
         android:id="@+id/playPointerIv"
@@ -371,8 +312,8 @@
         android:background="@drawable/ic_pointer"
         android:rotation="180"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/nextBtnCl"
-        app:layout_constraintLeft_toLeftOf="@id/nextBtnCl"
-        app:layout_constraintRight_toRightOf="@id/nextBtnCl" />
+        app:layout_constraintBottom_toTopOf="@id/nextBtn"
+        app:layout_constraintLeft_toLeftOf="@id/nextBtn"
+        app:layout_constraintRight_toRightOf="@id/nextBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
