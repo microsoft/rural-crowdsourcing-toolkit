@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:animateLayoutChanges="true">
 
     <com.microsoft.research.karya.ui.widgets.KaryaToolbar
         android:id="@+id/appTb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:startIcon="@drawable/access_code_title_icon"
-        app:showBackButton="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:showBackButton="true"
+        app:startIcon="@drawable/access_code_title_icon" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
@@ -63,9 +63,9 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_16sdp"
         app:layout_constraintBottom_toBottomOf="@id/otpEt"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/otpEt"
-        app:layout_constraintTop_toTopOf="@id/otpEt"
-        app:layout_constraintHorizontal_bias="1.0">
+        app:layout_constraintTop_toTopOf="@id/otpEt">
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/otpNextIv"
@@ -85,40 +85,26 @@
         android:id="@+id/resendOTPBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_16sdp"
-        android:textColor="@color/resend_otp_button_text_color_selector"
+        android:layout_marginTop="@dimen/_64sdp"
         android:background="@android:color/transparent"
         android:text="@string/s_resend_otp"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/resend_otp_button_text_color_selector"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <ImageView
-        android:id="@+id/otpStatusIv"
-        android:layout_width="@dimen/_35sdp"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:contentDescription="@string/status_check"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/resendOTPBtn"
-        app:layout_constraintTop_toBottomOf="@id/resendOTPBtn"
-        app:srcCompat="@drawable/ic_check_grey" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/otpEt" />
 
     <TextView
         android:id="@+id/invalidOTPTv"
         style="@style/multilineError"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_15sdp"
+        android:gravity="center_vertical"
         android:text="@string/s_invalid_otp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:minHeight="@dimen/_35sdp"
-        android:gravity="center_vertical"
-        app:layout_constraintStart_toEndOf="@id/otpStatusIv"
-        app:layout_constraintTop_toTopOf="@id/otpStatusIv"/>
+        app:layout_constraintStart_toStartOf="@id/otpEt"
+        app:layout_constraintTop_toBottomOf="@id/otpEt"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

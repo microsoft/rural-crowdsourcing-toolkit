@@ -162,18 +162,10 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     with(binding) {
       invalidOTPTv.text = message
       invalidOTPTv.visible()
-      otpStatusIv.apply {
-        visible()
-        setImageResource(0)
-        setImageResource(R.drawable.ic_quit_select)
-      }
     }
   }
 
   private fun hideError() {
-    with(binding) {
-      invalidOTPTv.gone()
-      otpStatusIv.gone()
-    }
+    with(binding) { invalidOTPTv.gone() }
   }
 }
