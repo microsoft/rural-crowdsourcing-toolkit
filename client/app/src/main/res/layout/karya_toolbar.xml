@@ -57,15 +57,16 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/endIcon"
-            android:layout_width="@dimen/_32sdp"
-            android:layout_height="@dimen/_32sdp"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/_8sdp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/ic_cross_on" />
+            tools:visibility="visible"
+            tools:srcCompat="@drawable/ic_cross" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

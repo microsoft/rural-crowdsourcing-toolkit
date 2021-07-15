@@ -9,6 +9,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
 import android.media.MediaRecorder
+import androidx.core.content.ContextCompat
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
@@ -20,6 +21,7 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMain.Butto
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.visible
+import kotlinx.android.synthetic.main.karya_toolbar.*
 import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
@@ -143,6 +145,12 @@ open class SpeechDataMain(
   final override fun setupActivity() {
     /** setup view */
     setContentView(R.layout.ng_speech_data_main)
+    microtaskTb.apply {
+        setTitle("Task")
+        ContextCompat.getDrawable(context, R.drawable.ic_cross)?.let { setEndIcon(it) }
+        // Use `onBackPressed` logic
+        setEndIconClickListener { onBackPressed() }
+    }
 
     /** record instruction */
     recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)

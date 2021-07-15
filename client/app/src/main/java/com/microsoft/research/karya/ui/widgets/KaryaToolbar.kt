@@ -98,7 +98,7 @@ class KaryaToolbar : FrameLayout {
   }
 
   fun setEndIcon(endIcon: Drawable) {
-    binding.startIcon.apply {
+    binding.endIcon.apply {
       setImageDrawable(endIcon)
       visible()
     }
