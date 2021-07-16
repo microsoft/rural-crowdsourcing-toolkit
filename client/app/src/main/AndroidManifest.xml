@@ -37,13 +37,14 @@
             android:name=".ui.onboarding.accesscode.AccessCodeActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.MainActivity"
-            android:windowSoftInputMode="adjustNothing">
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.scenarios.signVideo.SignVideoRecord"/>
 
         <uses-library
             android:name="org.apache.http.legacy"

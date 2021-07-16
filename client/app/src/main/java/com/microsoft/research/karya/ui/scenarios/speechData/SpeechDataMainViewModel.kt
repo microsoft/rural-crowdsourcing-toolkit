@@ -188,7 +188,6 @@ constructor(
     _playBtnState.value = p
     _nextBtnState.value = n
   }
-
   override fun setupMicrotask() {
 
     /** Get the scratch and output file paths */
@@ -1010,7 +1009,7 @@ constructor(
     CoroutineScope(Dispatchers.IO)
       .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
       .join()
-    addOutputFile(outputRecordingFileParams)
+    addOutputFile("", outputRecordingFileParams)
   }
 
   /** Helper method to convert number of [samples] to time in milliseconds */

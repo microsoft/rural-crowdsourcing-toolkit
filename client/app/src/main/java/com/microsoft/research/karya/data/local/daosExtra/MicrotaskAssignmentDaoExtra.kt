@@ -6,6 +6,7 @@ package com.microsoft.research.karya.data.local.daosExtra
 import androidx.room.Dao
 import androidx.room.Query
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 
@@ -26,6 +27,11 @@ interface MicrotaskAssignmentDaoExtra {
   /** Get list of completed microtask assignments */
   suspend fun getCompletedAssignments(): List<MicroTaskAssignmentRecord> {
     return getAssignmentsByStatus(MicrotaskAssignmentStatus.COMPLETED)
+  }
+
+  /** Get list of skipped microtask assignments */
+  suspend fun getLocalSkippedAssignments(): List<MicroTaskAssignmentRecord> {
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.SKIPPED)
   }
 
   @Query(
@@ -74,8 +80,23 @@ interface MicrotaskAssignmentDaoExtra {
   suspend fun markComplete(
     id: String,
     output: JsonElement,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
     date: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
+  )
+
+  /**
+   * Query to mark the microtask assignment with the given [id] as complete with the given [output].
+   */
+  @Query(
+    "UPDATE microtask_assignment SET " +
+      "status=:status, output=:output, last_updated_at=:date, completed_at=:date " +
+      "WHERE id=:id"
+  )
+  suspend fun markSkip(
+    id: String,
+    date: String,
+    output: JsonElement = JsonNull.INSTANCE,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.SKIPPED,
   )
 
   /** Query to mark an assignment as submitted */

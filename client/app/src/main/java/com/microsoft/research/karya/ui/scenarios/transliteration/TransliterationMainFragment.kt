@@ -56,14 +56,14 @@ class TransliterationMainFragment :
       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
     textTransliteration.filters = arrayOf(
       InputFilter { source, start, end, dest, dstart, dend ->
-        return@InputFilter source.replace(Regex("[^a-zA-Z ]*"), "")
+        return@InputFilter source.replace(Regex("[^a-z]*"), "")
       }
     )
 
     /** record instruction */
     val recordInstruction =
       viewModel.task.params.asJsonObject.get("instruction").asString ?: ""
-    wordTv.text = recordInstruction
+    instructionTv.text = recordInstruction
 
     addBtn.setOnClickListener { addWord() }
 
@@ -87,6 +87,16 @@ class TransliterationMainFragment :
       return
     }
 
+    if (word.isEmpty()) {
+      showError("Please enter a word")
+      return
+    }
+
+    if (outputVariants.containsKey(word) || inputVariants.containsKey(word)) {
+      showError("The word is already present")
+      return
+    }
+
     if (inputVariants.values.count { wordDetail ->
         wordDetail.verificationStatus == WordVerificationStatus.NEW
       } == viewModel.limit) {
@@ -105,15 +115,6 @@ class TransliterationMainFragment :
       return
     }
 
-    if (word.isEmpty()) {
-      showError("Please enter a word")
-      return
-    }
-
-    if (outputVariants.containsKey(word) || inputVariants.containsKey(word)) {
-      showError("The word is already present")
-      return
-    }
     viewModel.addWord(word)
   }
 

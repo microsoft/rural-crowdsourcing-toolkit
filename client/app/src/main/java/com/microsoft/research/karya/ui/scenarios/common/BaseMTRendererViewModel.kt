@@ -13,7 +13,6 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentSt
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
-import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
@@ -34,8 +33,9 @@ constructor(
   var assignmentRepository: AssignmentRepository,
   var taskRepository: TaskRepository,
   var microTaskRepository: MicroTaskRepository,
-  @FilesDir var fileDirPath: String,
+  var fileDirPath: String,
   var authManager: AuthManager,
+  val includeCompleted: Boolean = false
 ) : ViewModel() {
 
   private lateinit var taskId: String
@@ -59,7 +59,7 @@ constructor(
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
   protected var outputData: JsonObject = JsonObject()
-  protected var outputFiles: JsonArray = JsonArray()
+  protected var outputFiles: JsonObject = JsonObject()
   protected var logs: JsonArray = JsonArray()
 
   private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
@@ -80,7 +80,7 @@ constructor(
       microtaskAssignmentIDs =
         assignmentRepository.getUnsubmittedIDsForTask(
           task.id,
-          false
+          includeCompleted
         ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel
       // factory)
 
@@ -132,13 +132,11 @@ constructor(
   }
 
   /** Add a file to the assignment with the given output */
-  protected fun addOutputFile(params: Pair<String, String>) {
+  protected fun addOutputFile(key: String, params: Pair<String, String>) {
     val assignmentId = microtaskAssignmentIDs[currentAssignmentIndex]
     val fileName = assignmentOutputContainer.getAssignmentFileName(assignmentId, params)
-    // Add file if it is not already present
-    if (!outputFiles.contains(Gson().toJsonTree(fileName))) {
-      outputFiles.add(fileName)
-    }
+
+    outputFiles.addProperty(key, fileName)
 
     // log the output file addition
     val logObj = JsonObject()
@@ -153,14 +151,8 @@ constructor(
    */
   protected suspend fun completeAndSaveCurrentMicrotask() {
 
-    val output = JsonObject()
-    output.add("data", outputData)
-    output.add("files", outputFiles)
-    output.add("logs", logs)
-
-    val directory = File(getRelativePath("microtask-assignment-scratch"))
-    val files = directory.listFiles()
-    files?.forEach { if (it.exists()) it.delete() }
+    val output = buildOutputJsonObject()
+    deleteAssignmentScratchFiles()
 
     /** Delete all scratch files */
     withContext(Dispatchers.IO) {
@@ -170,12 +162,30 @@ constructor(
         date = DateUtils.getCurrentDate()
       )
     }
+  }
 
-    /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
-      completedMicrotasks++
-      //      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
+  protected suspend fun skipAndSaveCurrentMicrotask() {
+    /** Delete all scratch files */
+    withContext(Dispatchers.IO) {
+      assignmentRepository.markSkip(
+        microtaskAssignmentIDs[currentAssignmentIndex],
+        date = DateUtils.getCurrentDate()
+      )
     }
+  }
+
+  private fun deleteAssignmentScratchFiles() {
+    val directory = File(getRelativePath("microtask-assignment-scratch"))
+    val files = directory.listFiles()
+    files?.forEach { if (it.exists()) it.delete() }
+  }
+
+  private fun buildOutputJsonObject(): JsonObject {
+    val output = JsonObject()
+    output.add("data", outputData)
+    output.add("files", outputFiles)
+    output.add("logs", logs)
+    return output
   }
 
   /** Is there a next microtask (for navigation) */
@@ -253,9 +263,9 @@ constructor(
 
         outputFiles =
           if (currentAssignment.output.asJsonObject.has("files")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("files")
+            currentAssignment.output.asJsonObject.getAsJsonObject("files")
           } else {
-            JsonArray()
+            JsonObject()
           }
       }
 

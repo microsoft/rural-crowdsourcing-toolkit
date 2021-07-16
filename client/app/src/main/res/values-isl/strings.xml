@@ -179,9 +179,11 @@
  ]]>
     </string>
     <string name="s_consent_form_summary">Summary of the consent form</string>
-    <string name="s_access_code_prompt">You should have received a 8-digit access code from the project coordinator. Please enter that access code below.</string>
+    <string name="s_access_code_prompt">You should have received a 8-digit access code from your
+        teacher. Please enter that access code below.</string>
     <string name="s_invalid_creation_code">You have entered an invalid creation code.</string>
-    <string name="s_creation_code_already_used">The creation code you have entered is already used. Please contact your project coordinator.</string>
+    <string name="s_creation_code_already_used">The creation code you have entered is already
+        used. Please contact your teacher.</string>
     <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
     <string name="s_sending_otp">Sending OTP to your phone</string>
     <string name="s_unable_to_send_otp">We were unable to send OTP to your number. Please try again later.</string>
@@ -189,7 +191,7 @@
     <string name="s_invalid_otp">You have entered an invalid OTP</string>
     <string name="s_resend_otp">Resend OTP</string>
     <string name="s_profile_picture_prompt">Please click your profile picture. You can skip this step if you do not want a profile picture</string>
-    <string name="s_gender_prompt">Please choose your gender. If you do not wish to state your gender, you can skip this step</string>
+    <string name="s_gender_prompt">Please choose your gender</string>
     <string name="s_male">Male</string>
     <string name="s_female">Female</string>
     <string name="s_age_prompt">Please enter your year of birth</string>
@@ -208,18 +210,19 @@
     <string name="s_send_updates">Sending updates to the box</string>
     <string name="s_receive_updates">Receiving updates from the box</string>
     <string name="s_downloading_files">Downloading files from the box</string>
-    <string name="s_get_new_tasks"> Get new tasks</string>
-    <string name="s_submit_completed_tasks">Submit completed tasks</string>
-    <string name="s_update_verified_tasks">Update verified tasks</string>
-    <string name="s_update_earning">Update earnings</string>
-    <string name="s_tasks_available">tasks available</string>
-    <string name="s_tasks_completed">tasks completed</string>
-    <string name="s_tasks_skipped">tasks skipped</string>
-    <string name="s_tasks_submitted">tasks submitted</string>
-    <string name="s_tasks_verified">tasks verified</string>
+    <string name="s_get_new_tasks"> Get new homework</string>
+    <string name="s_submit_completed_tasks">Submit completed homework</string>
+    <string name="s_update_verified_tasks">Update graded homework</string>
+    <string name="s_update_earning"></string>
+    <string name="s_tasks_available">sentences not attempted</string>
+    <string name="s_tasks_completed">sentences completed</string>
+    <string name="s_tasks_skipped">sentences skipped</string>
+    <string name="s_tasks_submitted">sentences submitted</string>
+    <string name="s_tasks_verified">sentences graded</string>
     <string name="s_update_app_language">Change the App Language</string>
     <string name="s_update_skills">Update Language Skills</string>
-    <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
+    <string name="s_sync_prompt_message">You have completed sentences that can be submitted to the
+        server. Do you want to submit the sentences now?</string>
     <string name="s_yes">Yes</string>
     <string name="s_no">No</string>
     <string name="s_speech_scenario_name">Speech-data Collection</string>
@@ -243,6 +246,6 @@
 
     <string name="video_record_button">I Understand and start recording</string>
     <string name="record_preview_message">The preview of the recording would appear here</string>
-    <string name="dialogTitle">Skip or do it later?</string>
-    <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
+    <string name="dialogTitle">Skip sentence or record it later?</string>
+    <string name="dialogMessage">Do you want to skip this sentence or record it later? Skipped sentences cannot be attempted again.</string>
 </resources>

@@ -24,4 +24,5 @@ enum class LanguageType {
   TE,
   TA,
   UR,
+  ISL
 }

@@ -40,10 +40,10 @@
         android:hint="@string/creation_code_hint"
         android:importantForAutofill="no"
         android:inputType="number"
-        android:maxLength="19"
-        android:paddingHorizontal="@dimen/_10sdp"
+        android:maxLength="9"
+        android:paddingHorizontal="@dimen/_30sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:textSize="@dimen/_18ssp"
+        android:textSize="@dimen/_24ssp"
         app:layout_constraintEnd_toStartOf="@id/loadingContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv" />

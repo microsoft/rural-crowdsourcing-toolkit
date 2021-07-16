@@ -83,7 +83,7 @@ object FileUtils {
     }
 
     val fis = FileInputStream(tarBallPath)
-    val bufferedStream = BufferedInputStream(fis)
+    val bufferedStream = BufferedInputStream(fis, 16384)
     val gzipInputStream = GZIPInputStream(bufferedStream)
     val tarStream = TarInputStream(gzipInputStream)
 
@@ -149,7 +149,6 @@ object FileUtils {
   fun createDirectory(dirPath: String): String {
 
     val dir = File(dirPath)
-
     if (dir.exists()) return dirPath
     if (!dir.exists() && dir.mkdirs()) return dirPath
     throw FileNotFoundException()

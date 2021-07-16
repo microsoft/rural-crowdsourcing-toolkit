@@ -5,4 +5,5 @@ data class TaskStatus(
   val completedMicrotasks: Int,
   val submittedMicrotasks: Int,
   val verifiedMicrotasks: Int,
+  val skippedMicrotasks: Int,
 )

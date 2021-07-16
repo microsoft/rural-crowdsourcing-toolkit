@@ -63,9 +63,15 @@ constructor(
     MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
+  private val _syncInProgress: MutableStateFlow<Boolean> =
+    MutableStateFlow(false)
+  val syncInProgress = _syncInProgress.asStateFlow()
+
+
   fun syncWithServer() {
     viewModelScope.launch {
       _dashboardUiState.value = DashboardUiState.Loading
+      _syncInProgress.value = true
       // Refresh loggedIn Worker
       val worker = authManager.fetchLoggedInWorker()
 
@@ -81,6 +87,8 @@ constructor(
         tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
       }
       taskInfoList = tempList.sortedWith(taskInfoComparator)
+
+      _syncInProgress.value = false
 
       val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
       _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
@@ -144,12 +152,23 @@ constructor(
     val worker = authManager.fetchLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
-    val microtaskAssignments =
+    // Get completed assignments from the database
+    val completedAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
-        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
+        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonObject.size() == 0 || it.output_file_id !=
+          null
       }
+    // Submit the completed assignments
     assignmentRepository
-      .submitAssignments(worker.idToken, microtaskAssignments)
+      .submitCompletedAssignments(worker.idToken, completedAssignments)
+      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
+
+    // Get skipped assignments from the database
+    val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
+    // Submit the skipped assignments
+    assignmentRepository
+      .submitSkippedAssignments(worker.idToken, skippedAssignments)
       .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }
@@ -162,14 +181,16 @@ constructor(
       updates.filter {
         // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if
         // the file was already uploaded
-        it.output_file_id == null && !it.output.isJsonNull && it.output.asJsonObject.get("files").asJsonArray.size() > 0
+        it.output_file_id == null && !it.output.isJsonNull && (it.output.asJsonObject.get("files").asJsonObject.size()
+        > 0)
       }
 
     for (assignment in filteredAssignments) {
       val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
       val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
       val outputDir = microtaskOutputContainer.getDirectory()
-      val fileNames = assignment.output.asJsonObject.get("files").asJsonArray.map { it.asString }
+      val outputFiles = assignment.output.asJsonObject.get("files").asJsonObject
+      val fileNames = outputFiles.keySet().map { it -> outputFiles.get(it).asString }
       val outputFilePaths = fileNames.map { "$outputDir/${it}" }
       createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
       uploadTarBall(assignment, assignmentTarBallPath, tarBallName)

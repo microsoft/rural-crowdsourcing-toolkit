@@ -8,7 +8,6 @@ import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoE
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
-import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.utils.AppConstants
 import javax.inject.Inject
@@ -70,12 +69,31 @@ constructor(
     }
   }
 
-  fun submitAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
+  fun submitCompletedAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
     if (idToken.isEmpty()) {
       error("Either Access Code or ID Token is required")
     }
 
-    val response = assignmentAPI.submitAssignments(idToken, updates)
+    val response = assignmentAPI.submitCompletedAssignments(idToken, updates)
+    val successAssignmentIDS = response.body()
+
+    if (!response.isSuccessful) {
+      error("Failed to upload file")
+    }
+
+    if (successAssignmentIDS != null) {
+      emit(successAssignmentIDS)
+    } else {
+      error("Request failed, response body was null")
+    }
+  }
+
+  fun submitSkippedAssignments(idToken: String, updates: List<MicroTaskAssignmentRecord>) = flow {
+    if (idToken.isEmpty()) {
+      error("Either Access Code or ID Token is required")
+    }
+
+    val response = assignmentAPI.submitSkippedAssignments(idToken, updates)
     val successAssignmentIDS = response.body()
 
     if (!response.isSuccessful) {
@@ -149,10 +167,13 @@ constructor(
   suspend fun markComplete(
     id: String,
     output: JsonElement,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
     date: String,
   ) {
-    assignmentDaoExtra.markComplete(id, output, status, date)
+    assignmentDaoExtra.markComplete(id, output, date)
+  }
+
+  suspend fun markSkip(id: String, date: String) {
+    assignmentDaoExtra.markSkip(id, date)
   }
 
   suspend fun markMicrotaskAssignmentsSubmitted(assignmentIds: List<String>) {
@@ -161,6 +182,10 @@ constructor(
 
   suspend fun getIncompleteAssignments(): List<MicroTaskAssignmentRecord> {
     return assignmentDaoExtra.getIncompleteAssignments()
+  }
+
+  suspend fun getLocalSkippedAssignments(): List<MicroTaskAssignmentRecord> {
+    return assignmentDaoExtra.getLocalSkippedAssignments()
   }
 
   suspend fun getNewAssignmentsFromTime(worker_id: String): String {
@@ -177,4 +202,5 @@ constructor(
   suspend fun getUnsubmittedIDsForTask(task_id: String, includeCompleted: Boolean): List<String> {
     return assignmentDaoExtra.getUnsubmittedIDsForTask(task_id, includeCompleted)
   }
+
 }
