@@ -19,6 +19,7 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -108,12 +109,22 @@ class DashboardSyncWorker(
     val worker = authManager.fetchLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
-    val microtaskAssignments =
+    // Get completed assignments from the database
+    val completedAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
-        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonArray.size() == 0 || it.output_file_id != null
+        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonObject.size() == 0 || it.output_file_id !=
+          null
       }
+    // Submit the completed assignments
+    assignmentRepository
+      .submitCompletedAssignments(worker.idToken, completedAssignments)
+      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
+
+    // Get skipped assignments from the database
+    val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
+    // Submit the skipped assignments
     assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
-      .submitAssignments(worker.idToken, microtaskAssignments)
+      .submitSkippedAssignments(worker.idToken, skippedAssignments)
       .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }
 
