@@ -7,7 +7,7 @@
 
 // React stuff
 import React, { ChangeEventHandler, FormEventHandler } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -59,6 +59,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const graph_data = state.all.microtask.data;
   const task_links = state.all.task_link.data;
   return {
+    auth: state.all.auth,
     request,
     tasks: data,
     task: data.find((t) => t.id === task_id),
@@ -233,6 +234,8 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   };
 
   render() {
+    const { auth } = this.props;
+
     // Getting all the data from props
     const { task } = this.props;
     const { file_records } = this.props;
@@ -483,6 +486,20 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           <div className='section'>
             <div className='row'>{errorElement}</div>
           </div>
+        ) : null}
+
+        {/** Breadcrumbs for navigation shown only if person is work provider */}
+        {auth.cwp !== null && auth.cwp.role === 'WORK_PROVIDER' ? (
+          <nav id='breadcrumbs-nav'>
+            <div className='nav-wrapper' id='nav-wrapper'>
+              <div className='col s12'>
+                <Link to='/task' className='breadcrumb'>
+                  Tasks
+                </Link>
+                <p className='breadcrumb'>Create Task</p>
+              </div>
+            </div>
+          </nav>
         ) : null}
 
         <div id='all-content'>

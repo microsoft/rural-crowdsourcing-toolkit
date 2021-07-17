@@ -39,6 +39,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     task: data,
     request,
+    auth: state.all.auth,
   };
 };
 
@@ -217,6 +218,8 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   };
 
   render() {
+    const { auth } = this.props;
+
     // Generate error with task creation
     const createErrorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
@@ -466,6 +469,20 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     return (
       <div className='white z-depth-1 lpad20' id='main'>
         {createErrorElement}
+
+        {/** Breadcrumbs for navigation shown only if person is work provider */}
+        {auth.cwp !== null && auth.cwp.role === 'WORK_PROVIDER' ? (
+          <nav id='breadcrumbs-nav'>
+            <div className='nav-wrapper' id='nav-wrapper'>
+              <div className='col s12'>
+                <Link to='/task' className='breadcrumb'>
+                  Tasks
+                </Link>
+                <p className='breadcrumb'>Create Task</p>
+              </div>
+            </div>
+          </nav>
+        ) : null}
 
         <form onSubmit={this.handleSubmit}>
           <div className='section'>

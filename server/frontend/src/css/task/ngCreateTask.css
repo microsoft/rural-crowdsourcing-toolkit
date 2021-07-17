@@ -8,6 +8,39 @@
   box-shadow: none;
 }
 
+#breadcrumbs-nav {
+  position: relative;
+  left: 0%;
+  width: 98%;
+  background-color: #fff;
+  box-shadow: rgba(27, 31, 35, 0.07) 0px 1px 0px, rgba(255, 255, 255, 0.28) 0px 1px 0px inset;
+  height: 3.3rem;
+  border-top-right-radius: 0.3em;
+}
+
+.breadcrumb {
+  color: #b4bdc6;
+  font-size: 0.88em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+  font-weight: 600;
+}
+
+.breadcrumb:before {
+  font-size: 16px;
+  color: #b4bdc6;
+}
+
+.breadcrumb:hover {
+  color: #1ccfbd;
+}
+
+.breadcrumb:last-child {
+  color: #1ccfbd;
+  display: inline;
+}
+
 #page-title {
   padding-left: 4%;
   padding-bottom: 2%;
