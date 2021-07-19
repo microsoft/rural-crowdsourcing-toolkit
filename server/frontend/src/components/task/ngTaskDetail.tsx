@@ -32,12 +32,14 @@ import { taskStatus } from './TaskUtils';
 // HoCs
 import { AuthProps, withAuth } from '../hoc/WithAuth';
 
-// HTML helpers
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 // Recharts library
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+// For CSV file download
+import { CSVLink } from 'react-csv';
 
 // CSS
 import '../../css/task/ngTaskDetail.css';
@@ -477,6 +479,13 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const cost = graph_data.reduce((prev, current) => prev + current.extras.cost, 0);
     const data = graph_data.map((m) => ({ ...m.extras, id: m.id }));
 
+    const headers = [
+      { label: 'ID', key: 'id' },
+      { label: 'Assigned', key: 'assigned' },
+      { label: 'Completed', key: 'completed' },
+      { label: 'Verified', key: 'verified' },
+    ];
+
     const jsonInputFile = scenario.task_input_file.json;
     const tarInputfile = scenario.task_input_file.tgz;
 
@@ -533,19 +542,25 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
           {/** Recharts graph showing total, completed, verified assignments, and cost by microtask id */}
           {graph_data.length !== 0 && completed_assignments !== 0 ? (
-            <ResponsiveContainer width='90%' height={400}>
-              <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray='3 3' />
-                <XAxis dataKey='id' tick={false} label='Microtask ID' />
-                <YAxis />
-                <Tooltip />
-                <Legend verticalAlign='top' />
-                <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
-                <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
-                <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
-                {/* <Line type='monotone' dataKey='cost' stroke='#ea80fc' dot={false} /> */}
-              </LineChart>
-            </ResponsiveContainer>
+            <>
+              <ResponsiveContainer width='90%' height={400}>
+                <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray='3 3' />
+                  <XAxis dataKey='id' tick={false} label='Microtask ID' />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend verticalAlign='top' />
+                  <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
+                  <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
+                  <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
+                  {/* <Line type='monotone' dataKey='cost' stroke='#ea80fc' dot={false} /> */}
+                </LineChart>
+              </ResponsiveContainer>
+
+              <CSVLink data={data} headers={headers} filename={'graph-data.csv'} className='btn' id='download-data-btn'>
+                <i className='material-icons left'>download</i>Download data
+              </CSVLink>
+            </>
           ) : null}
 
           {/** Basic task info section */}

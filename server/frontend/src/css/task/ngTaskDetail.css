@@ -71,7 +71,7 @@
 
 .recharts-wrapper {
   font-family: 'Montserrat', sans-serif;
-  font-size: 100%;
+  font-size: 97%;
 }
 
 .recharts-wrapper text {
@@ -81,6 +81,20 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 3%;
+}
+
+#download-data-btn {
+  margin-left: 12%;
+  margin-bottom: 4%;
+  margin-top: 3%;
+  font-family: 'Titillium Web', sans-serif;
+  letter-spacing: 0.07em;
+  color: #fff;
+  background-color: #a4d4ff;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  font-weight: 600;
+  border-radius: 7px;
+  transition: all 0.3s ease-in;
 }
 
 #task-details {
