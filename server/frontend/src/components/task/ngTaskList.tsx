@@ -9,28 +9,66 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+// Redux stuff
+import { connect, ConnectedProps } from 'react-redux';
+import { compose } from 'redux';
+import { RootState } from '../../store/Index';
+
 // Store types and actions
 import { languageString, TaskRecordType } from '@karya/core';
 import { taskStatus } from './TaskUtils';
 import { scenarioMap, ScenarioName } from '@karya/core';
+
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
 
-import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
+import { BackendRequestInitAction } from '../../store/apis/APIs';
 
+import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
 import { Collapsible, CollapsibleItem } from 'react-materialize';
 
 import '../../css/task/ngTaskList.css';
 
 // Data connector
 const dataConnector = withData('task');
-type TaskListProps = DataProps<typeof dataConnector>;
+
+// Map state to props
+const mapStateToProps = (state: RootState) => {
+  const tasks_summary = state.all.microtask_assignment.data;
+  return { tasks_summary };
+};
+
+// Map dispatch to props
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    // For getting summary of tasks
+    getTasksSummary: () => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'microtask_assignment',
+        label: 'GET_ALL',
+      };
+      dispatch(action);
+    },
+  };
+};
+
+// Create the connector
+const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
+const connector = compose(dataConnector, reduxConnector);
+
+type TaskListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
 // Task list component
 class TaskList extends React.Component<TaskListProps> {
+  componentDidMount() {
+    this.props.getTasksSummary();
+  }
+
   // Render component
   render() {
     const tasks = this.props.task.data as TaskRecordType[];
+    const tasks_summary = this.props.tasks_summary;
 
     // Create error message element if necessary
     const getErrorElement =
@@ -68,6 +106,48 @@ class TaskList extends React.Component<TaskListProps> {
       );
     };
 
+    const task_data = (task: TaskRecordType) => tasks_summary.find((t) => t.task_id === task.id);
+
+    const body = (task: TaskRecordType) => {
+      return (
+        <div className='row'>
+          <div className='body-col'>
+            <p>
+              Completed Assignments:
+              <span>
+                {task_data(task) !== undefined
+                  ? // @ts-ignore
+                    task_data(task).extras.completed
+                  : 0}
+              </span>
+            </p>
+          </div>
+          <div className='body-col'>
+            <p>
+              Verified Assignments:
+              <span>
+                {task_data(task) !== undefined
+                  ? // @ts-ignore
+                    task_data(task).extras.verified
+                  : 0}
+              </span>
+            </p>
+          </div>
+          <div className='body-col'>
+            <p>
+              Total Cost:
+              <span>
+                {task_data(task) !== undefined
+                  ? // @ts-ignore
+                    task_data(task).extras.cost
+                  : 0}
+              </span>
+            </p>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <div className='row' id='main-row'>
         <div className='col s12'>
@@ -86,7 +166,7 @@ class TaskList extends React.Component<TaskListProps> {
                     icon={<i className='material-icons'>done_all</i>}
                     node='div'
                   >
-                    {}
+                    {body(t)}
                   </CollapsibleItem>
                 ))}
               </Collapsible>
@@ -98,4 +178,4 @@ class TaskList extends React.Component<TaskListProps> {
   }
 }
 
-export default dataConnector(TaskList);
+export default connector(TaskList);

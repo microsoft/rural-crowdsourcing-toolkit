@@ -13,3 +13,4 @@ export * as BasicModel from './models/BasicModel';
 export * as MicrotaskModel from './models/MicrotaskModel';
 export * as MicrotaskGroupModel from './models/MicrotaskGroupModel';
 export * as TaskOpModel from './models/TaskOpModel';
+export * as TaskModel from './models/TaskModel';

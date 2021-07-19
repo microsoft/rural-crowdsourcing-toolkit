@@ -45,7 +45,8 @@
 }
 
 .collapsible-body {
-  border-bottom: 2px solid rgba(235, 237, 236, 0.48);
+  border-bottom: 1px solid rgba(180, 189, 198, 0.4);
+  padding-bottom: 0.5em;
 }
 
 .collapsible i {
@@ -124,4 +125,35 @@
 
 .details-link:hover {
   transform: scale(1.08);
+}
+
+.body-col {
+  display: inline-block;
+  width: 33%;
+  color: #717787;
+  border-right: 2px solid rgba(235, 237, 236, 0.8);
+}
+
+.body-col:last-of-type {
+  border-right: none;
+}
+
+.body-col:first-of-type {
+  margin-left: 1%;
+}
+
+.body-col p {
+  font-size: 0.83em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
+
+.body-col span {
+  font-size: 1.1em !important;
+  font-weight: 500;
+  margin-left: 3%;
 }

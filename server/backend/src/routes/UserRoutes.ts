@@ -171,9 +171,16 @@ userRouter.post<TaskController.TaskRouteState, {}>(
 userRouter.get<TaskController.TaskRouteState, {}>(
   '/task/:id/task_links',
   // @ts-ignore
- Middlewares.needIdToken,
- TaskController.checkTask,
- TaskLinkController.get
- );
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  TaskLinkController.get
+);
+
+userRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/summary',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.getTasksSummary
+);
 
 export { userRouter };

@@ -15,7 +15,7 @@ import {
   coreScenarioParameters,
 } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
-import { BasicModel, MicrotaskModel, TaskOpModel, getBlobSASURL } from '@karya/common';
+import { BasicModel, MicrotaskModel, TaskModel, TaskOpModel, getBlobSASURL } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
@@ -279,6 +279,19 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
 export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
   try {
     const records = await MicrotaskModel.microtasksWithAssignmentSummary(ctx.state.task.id);
+    HttpResponse.OK(ctx, records);
+  } catch (e) {
+    // TODO: Convert this to an internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error');
+  }
+};
+
+/**
+ * Get summary info for all tasks
+ */
+export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
+  try {
+    const records = await TaskModel.tasksSummary();
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error
