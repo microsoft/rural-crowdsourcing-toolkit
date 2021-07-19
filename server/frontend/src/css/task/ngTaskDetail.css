@@ -215,23 +215,21 @@
 #submit-form,
 #link-form {
   position: fixed;
-  bottom: 10%;
-  right: 30%;
-  width: 40%;
-  height: 80%;
+  bottom: 8%;
+  right: 32.5%;
+  width: 35%;
+  height: 70%;
   z-index: 1;
-  max-width: 540px;
-  max-height: 530px;
   background-color: #fff;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
   border-radius: 5px;
 }
 
 #submit-form {
-  padding-top: 5%;
-  padding-left: 5%;
+  padding-top: 3%;
+  padding-left: 4%;
   padding-right: 4%;
-  line-height: 1.3em;
+  line-height: 1.2em;
 }
 
 #submit-form .btn-small {
@@ -253,7 +251,7 @@
 
 #link-form {
   padding-top: 7%;
-  padding-left: 7%;
+  padding-left: 4%;
 }
 
 #btn-row1 button,
