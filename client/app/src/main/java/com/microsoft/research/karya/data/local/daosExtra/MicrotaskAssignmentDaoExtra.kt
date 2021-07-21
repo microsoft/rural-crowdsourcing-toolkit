@@ -70,6 +70,13 @@ interface MicrotaskAssignmentDaoExtra {
   }
 
   /**
+   * Get list of verified assignment IDs for a task
+   */
+  suspend fun getLocalVerifiedAssignments(taskId: String): List<String> {
+    return getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.VERIFIED))
+  }
+
+  /**
    * Query to mark the microtask assignment with the given [id] as complete with the given [output].
    */
   @Query(

@@ -203,4 +203,9 @@ constructor(
     return assignmentDaoExtra.getUnsubmittedIDsForTask(task_id, includeCompleted)
   }
 
+  suspend fun getLocalVerifiedAssignments(task_id: String): List<String> {
+    return assignmentDaoExtra.getLocalVerifiedAssignments(task_id)
+  }
+
+
 }
