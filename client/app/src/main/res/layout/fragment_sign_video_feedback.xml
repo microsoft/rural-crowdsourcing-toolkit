@@ -64,6 +64,8 @@
         android:textSize="@dimen/_16ssp"
         android:scrollbars="vertical"
         android:background="@drawable/black_rounded_border"
+        android:padding="@dimen/_10sdp"
+        android:textColor="@color/black"
         android:maxLines="4"
         android:minLines="4"/>
 
