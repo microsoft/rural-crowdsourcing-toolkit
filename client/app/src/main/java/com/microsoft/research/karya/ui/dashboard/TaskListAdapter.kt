@@ -81,7 +81,7 @@ class TaskListAdapter(
         }
 
         taskLl.apply {
-          val clickableAndEnabled = task.taskStatus.assignedMicrotasks > 0
+          val clickableAndEnabled = task.taskStatus.assignedMicrotasks > 0 || task.taskStatus.verifiedMicrotasks > 0
           isClickable = clickableAndEnabled
           isEnabled = clickableAndEnabled
 

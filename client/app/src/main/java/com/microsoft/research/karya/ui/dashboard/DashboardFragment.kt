@@ -34,7 +34,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
 
-  @Inject lateinit var authManager: AuthManager
+  @Inject
+  lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -137,30 +138,39 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   fun onDashboardItemClick(task: TaskInfo) {
     //    val nextIntent =
-    when (task.scenarioName) {
-      // TODO: CONVERT TO TODO
-      // Use [ScenarioType] enum once we migrate to it.
-      "SPEECH_DATA" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
-        findNavController().navigate(action)
+    if (task.taskStatus.assignedMicrotasks > 0) {
+      when (task.scenarioName) {
+        // TODO: CONVERT TO TODO
+        // Use [ScenarioType] enum once we migrate to it.
+        "SPEECH_DATA" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+          findNavController().navigate(action)
+        }
+        "XLITERATION_DATA" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
+          findNavController().navigate(action)
+        }
+        "MV_XLITERATION_VERIFICATION" -> {
+          val action =
+            DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
+          findNavController().navigate(action)
+        }
+        "SIGN_LANGUAGE_VIDEO" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
+          findNavController().navigate(action)
+        }
+        "SGN_LANG_VIDEO_VERIFICATION" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoVerificationFragment(task.taskID)
+          findNavController().navigate(action)
+        }
       }
-      "XLITERATION_DATA" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
-        findNavController().navigate(action)
+    } else {
+      when (task.scenarioName) {
+        "SIGN_LANGUAGE_VIDEO" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoFeedbackFragment(task.taskID)
+          findNavController().navigate(action)
+        }
       }
-      "MV_XLITERATION_VERIFICATION" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
-        findNavController().navigate(action)
-      }
-      "SIGN_LANGUAGE_VIDEO" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
-        findNavController().navigate(action)
-      }
-      "SGN_LANG_VIDEO_VERIFICATION" -> {
-        val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoVerificationFragment(task.taskID)
-        findNavController().navigate(action)
-      }
-
     }
   }
 
