@@ -107,8 +107,8 @@ class SignVideoVerificationFragment :
         Toast.makeText(requireContext(), "Please grade the student", Toast.LENGTH_LONG).show()
         return@setOnClickListener
       }
-      resetUI()
       viewModel.handleNextClick()
+      resetUI()
     }
 
     feedbackEt.addTextChangedListener { editText ->
