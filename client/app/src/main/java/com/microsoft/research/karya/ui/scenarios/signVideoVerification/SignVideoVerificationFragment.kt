@@ -13,6 +13,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.signVideoVerification.SignVideoVerificationViewModel.ButtonState.DISABLED
 import com.microsoft.research.karya.ui.scenarios.signVideoVerification.SignVideoVerificationViewModel.ButtonState.ENABLED
+import com.microsoft.research.karya.utils.extensions.hideKeyboard
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
@@ -131,6 +132,7 @@ class SignVideoVerificationFragment :
   private fun resetUI() {
     feedbackEt.text.clear()
     marksRadioGroup.clearCheck()
+    hideKeyboard()
   }
 
   private fun freeResources() {
