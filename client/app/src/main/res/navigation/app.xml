@@ -145,6 +145,11 @@
             app:destination="@id/SignVideoVerificationFragment" >
             <argument android:name="taskId" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_SignVideoFeedbackFragment"
+            app:destination="@id/SignVideoFeedbackFragment" >
+            <argument android:name="taskId" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
@@ -203,6 +208,17 @@
             app:argType="string" />
         <action
             android:id="@+id/action_SignVideoVerificationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/SignVideoFeedbackFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.signVideoFeedback.SignVideoFeedbackFragment"
+        android:label="SignVideoFeedbackFragment" >
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_SignVideoFeedbackFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>
