@@ -23,6 +23,7 @@ data class MicroTaskAssignmentRecord(
   var output_file_id: String?,
   var credits: Float?,
   var verified_at: String?,
+  var report: JsonElement,
   var created_at: String,
   var last_updated_at: String,
 )
