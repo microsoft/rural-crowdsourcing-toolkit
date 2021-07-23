@@ -51,15 +51,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun setupViews() {
     with(binding) {
-      // TODO: Convert this to one string instead of joining multiple strings
-      val syncText =
-        "${getString(R.string.s_get_new_tasks)} - " +
-          "${getString(R.string.s_submit_completed_tasks)} - " +
-          "${getString(R.string.s_update_verified_tasks)} - " +
-          getString(R.string.s_update_earning)
-
-      syncPromptTv.text = syncText
-
       tasksRv.apply {
         adapter = TaskListAdapter(emptyList(), ::onDashboardItemClick)
         layoutManager = LinearLayoutManager(context)
