@@ -210,6 +210,7 @@
     <string name="s_send_updates">Sending updates to the box</string>
     <string name="s_receive_updates">Receiving updates from the box</string>
     <string name="s_downloading_files">Downloading files from the box</string>
+    <string name="s_sync_tasks">Submit Homework / Get New Homework</string>
     <string name="s_get_new_tasks"> Get new homework</string>
     <string name="s_submit_completed_tasks">Submit completed homework</string>
     <string name="s_update_verified_tasks">Update graded homework</string>
