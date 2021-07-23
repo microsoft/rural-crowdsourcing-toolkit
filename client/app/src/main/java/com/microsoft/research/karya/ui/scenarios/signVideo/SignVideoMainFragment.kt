@@ -165,19 +165,11 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.fragment_sign_vide
     recordBtn.setOnClickListener {
       viewModel.handleRecordClick()
     }
-    nextBtn.setOnClickListener {
-      // If the user has not recorded anything,
-      // build alertbox to
-      // ask them if they want to skip or do this later
-      if (!viewModel.isAssignmentComplete()) {
-        buildAlertBox()
-      } else {
-        viewModel.handleNextClick()
-      }
-    }
+    nextBtn.setOnClickListener { viewModel.handleNextClick() }
     backBtn.setOnClickListener { viewModel.handleBackClick() }
   }
 
+  /** TODO: Removing skip functionality for now */
   private fun buildAlertBox() {
     val builder = AlertDialog.Builder(requireContext())
     //set title for alert dialog
