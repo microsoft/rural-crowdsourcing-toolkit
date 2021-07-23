@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.dashboard
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -339,7 +338,6 @@ constructor(
 
       // input folder
       val microtaskInputDirectory = microtaskInputContainer.getDirectory(id)
-      Log.d("MICRTSK_INPUT_DIRECTORY", microtaskInputDirectory)
       val microtaskDirectory = File(microtaskInputDirectory)
       for (file in microtaskDirectory.listFiles()!!) {
         file.delete()
