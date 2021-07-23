@@ -15,6 +15,7 @@ import * as BoxController from '../user-routes-controllers/BoxController';
 import * as TaskController from '../user-routes-controllers/TaskController';
 import * as TaskAssignmentController from '../user-routes-controllers/TaskAssignmentController';
 import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
+import * as WorkerController from '../user-routes-controllers/WorkerController';
 
 // Default state for all routes
 export type DefaultUserRouteState = {
@@ -181,6 +182,13 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   // @ts-ignore
   Middlewares.needIdToken,
   TaskController.getTasksSummary
+);
+
+userRouter.get<WorkerController.WorkerRouteState, {}>(
+  '/worker/summary',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  WorkerController.getWorkersSummary
 );
 
 export { userRouter };

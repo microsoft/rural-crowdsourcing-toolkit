@@ -27,6 +27,9 @@ import ngTaskList from './components/task/ngTaskList';
 /** work_provider components */
 import WorkProviderList from './components/work_provider/WorkProviderList';
 
+/** worker components */
+import WorkerOverview from './components/worker/WorkerOverview';
+
 /** box components */
 import BoxList from './components/box/BoxList';
 
@@ -59,6 +62,9 @@ const Routes = (
     {/** Work Provider routes */}
     <AdminRoute exact path='/work_provider' component={WorkProviderList} />
 
+    {/** Worker routes */}
+    <AdminRoute exact path='/worker' component={WorkerOverview} />
+    
     {/** Box routes */}
     <AdminRoute exact path='/box' component={BoxList} />
 

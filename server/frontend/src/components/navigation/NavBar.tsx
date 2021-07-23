@@ -83,6 +83,11 @@ class NavBar extends React.Component<NavBarProps> {
                             Work Providers
                           </NavLink>
                         </li>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/worker'>
+                            Workers
+                          </NavLink>
+                        </li>
                       </ul>
                     </div>
                   </div>

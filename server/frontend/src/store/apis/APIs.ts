@@ -156,6 +156,11 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_assignment';
       label: 'GET_ALL';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'worker';
+      label: 'GET_ALL';
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -274,6 +279,12 @@ export type BackendRequestSuccessAction =
       store: 'microtask_assignment';
       label: 'GET_ALL';
       response: DBT.MicrotaskAssignmentRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'worker';
+      label: 'GET_ALL';
+      response: DBT.WorkerRecord[];
     };
 
 export type BackendRequestFailureAction = {
@@ -475,6 +486,16 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/task/summary'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get summary info for all workers
+    if (action.store === 'worker' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/worker/summary'),
       } as BackendRequestSuccessAction;
     }
 
