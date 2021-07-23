@@ -15,9 +15,8 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { languageString, TaskRecordType } from '@karya/core';
+import { languageString, TaskRecordType, scenarioMap, ScenarioName } from '@karya/core';
 import { taskStatus } from './TaskUtils';
-import { scenarioMap, ScenarioName } from '@karya/core';
 
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
@@ -59,15 +58,58 @@ const connector = compose(dataConnector, reduxConnector);
 
 type TaskListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
+// component state
+type TaskListState = {
+  tags_filter: Array<string>;
+  scenario_filter?: ScenarioName;
+};
+
 // Task list component
-class TaskList extends React.Component<TaskListProps> {
+class TaskList extends React.Component<TaskListProps, TaskListState> {
+  // Initial state
+  state: TaskListState = {
+    tags_filter: [],
+  };
+
   componentDidMount() {
     this.props.getTasksSummary();
+    M.AutoInit();
   }
+
+  componentDidUpdate() {
+    M.AutoInit();
+  }
+
+  // Handle tags change
+  handleTagsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const tags_filter = Array.from(e.currentTarget.selectedOptions, (o) => o.value);
+    this.setState({ tags_filter });
+  };
+
+  // Handle scenario change
+  handleScenarioChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const scenario_filter = e.currentTarget.value as ScenarioName;
+    this.setState({ scenario_filter });
+  };
 
   // Render component
   render() {
-    const tasks = this.props.task.data as TaskRecordType[];
+    var tasks = this.props.task.data as TaskRecordType[];
+    const tags_filter = this.state.tags_filter;
+    const scenarios = Object.values(scenarioMap);
+    const scenario_filter = this.state.scenario_filter;
+    // Filtering tasks by tags
+    tasks = tasks.filter((t) => tags_filter.every((val) => t.itags.itags.includes(val)));
+    // Getting the tasks' tags as a single flat array with no duplicates
+    const tags_array = tasks.map((task) => task.itags.itags);
+    const arr: string[] = [];
+    const tags_duplicates = arr.concat(...tags_array);
+    const tags = Array.from(new Set([...tags_duplicates]));
+    // Filtering tasks by scenario
+    if (scenario_filter !== undefined) {
+      tasks = tasks.filter((t) => t.scenario_name === scenario_filter);
+    }
+    // Getting summary info of tasks from props
     const tasks_summary = this.props.tasks_summary;
 
     // Create error message element if necessary
@@ -158,6 +200,32 @@ class TaskList extends React.Component<TaskListProps> {
           ) : (
             <>
               <h1 id='page-title'>Tasks{createTaskButton}</h1>
+              <div className='row' id='filter_row'>
+                <div className='col s10 m8 l5'>
+                  <select multiple={true} id='tags_filter' value={tags_filter} onChange={this.handleTagsChange}>
+                    <option value='' disabled={true}>
+                      Filter tasks by tags
+                    </option>
+                    {tags.map((t) => (
+                      <option value={t} key={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className='col s10 m8 l5'>
+                  <select id='scenario_filter' value={scenario_filter} onChange={this.handleScenarioChange}>
+                    <option value='' disabled={true}>
+                      Filter tasks by scenario
+                    </option>
+                    {scenarios.map((s) => (
+                      <option value={s.name} key={s.name}>
+                        {s.full_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
               <Collapsible accordion={false}>
                 {tasks.map((t) => (
                   <CollapsibleItem

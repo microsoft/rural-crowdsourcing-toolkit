@@ -35,6 +35,24 @@
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
+#filter_row div {
+  margin-left: 4%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+#filter_row input {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.1em;
+  color: #717787;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#filter_row .select-wrapper .caret {
+  fill: #b4bdc6;
+}
+
 .collapsible {
   box-shadow: none;
   border: none;
@@ -131,7 +149,7 @@
   display: inline-block;
   width: 33%;
   color: #717787;
-  border-right: 2px solid rgba(235, 237, 236, 0.8);
+  border-right: 2px solid rgba(235, 237, 236, 0.7);
 }
 
 .body-col:last-of-type {
@@ -148,8 +166,8 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: center;
-  margin-bottom: 2%;
-  margin-top: 2%;
+  margin-bottom: 3%;
+  margin-top: 3%;
 }
 
 .body-col span {
