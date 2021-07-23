@@ -49,6 +49,7 @@
                 app:autoSizeStepGranularity="@dimen/_2ssp"
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
+                android:textColor="@color/dk_blue"
                 android:text="@string/s_sync_tasks"/>
 
             <ProgressBar
