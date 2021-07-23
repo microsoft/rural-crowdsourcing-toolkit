@@ -134,7 +134,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                 </div>
                 <div className='col s10 m8 l4'>
                   <select id='box_id_filter' value={box_id_filter} onChange={this.handleBoxIdChange}>
-                    <option value='' disabled={true}>
+                    <option value='' disabled={true} selected={true}>
                       Filter workers by box ID
                     </option>
                     {boxIds.map((i) => (

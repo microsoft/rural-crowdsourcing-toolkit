@@ -203,7 +203,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
               <div className='row' id='filter_row'>
                 <div className='col s10 m8 l5'>
                   <select multiple={true} id='tags_filter' value={tags_filter} onChange={this.handleTagsChange}>
-                    <option value='' disabled={true}>
+                    <option value='' disabled={true} selected={true}>
                       Filter tasks by tags
                     </option>
                     {tags.map((t) => (
@@ -215,7 +215,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
                 </div>
                 <div className='col s10 m8 l5'>
                   <select id='scenario_filter' value={scenario_filter} onChange={this.handleScenarioChange}>
-                    <option value='' disabled={true}>
+                    <option value='' disabled={true} selected={true}>
                       Filter tasks by scenario
                     </option>
                     {scenarios.map((s) => (
