@@ -182,7 +182,7 @@ constructor(
         // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if
         // the file was already uploaded
         it.output_file_id == null && !it.output.isJsonNull && (it.output.asJsonObject.get("files").asJsonObject.size()
-        > 0)
+          > 0)
       }
 
     for (assignment in filteredAssignments) {
@@ -308,8 +308,22 @@ constructor(
 
     // Delete all files for these assignments
     for (assignment in uploadedAssignments) {
+      // TODO: The following code ignores assignment output files at the time of deletion. Only deletes tar ball
+      // and scratch files. Must do this based on some assignment parameter instead of always.
+      val assignmentOutputFiles = try {
+        val outputFilesDict = assignment.output.asJsonObject.getAsJsonObject("files")
+        val outputFiles = arrayListOf<String>()
+        outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
+        outputFiles
+      } catch (e: Exception) {
+        arrayListOf<String>()
+      }
       val assignmentFiles =
-        files.filter { it.name.startsWith("${assignment.id}-") || it.name.startsWith("${assignment.id}.") }
+        files.filter {
+          !(assignmentOutputFiles.contains(it.name)) && (it.name.startsWith("${assignment.id}-") || it.name.startsWith(
+            "${assignment.id}."
+          ))
+        }
       assignmentFiles.forEach { if (it.exists()) it.delete() }
     }
 

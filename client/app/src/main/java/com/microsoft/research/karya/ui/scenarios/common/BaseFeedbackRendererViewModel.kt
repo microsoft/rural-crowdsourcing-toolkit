@@ -92,6 +92,7 @@ constructor(
 
   /** Move to next microtask and setup. Returns false if there is no next microtask. Else true. */
   protected fun moveToNextMicrotask() {
+    viewModelScope.launch { deleteOutputFiles() }
     if (hasNextMicrotask()) {
       currentAssignmentIndex++
       getAndSetupMicrotask()
@@ -105,11 +106,28 @@ constructor(
    * true
    */
   protected fun moveToPreviousMicrotask() {
+    viewModelScope.launch { deleteOutputFiles() }
     if (hasPreviousMicrotask()) {
       currentAssignmentIndex--
       getAndSetupMicrotask()
     } else {
       navigateBack()
+    }
+  }
+
+  private fun deleteOutputFiles() {
+    val directory = assignmentOutputContainer.getDirectory()
+    val assignmentOutputFiles = try {
+      val outputFilesDict = currentAssignment.output.asJsonObject.getAsJsonObject("files")
+      val outputFiles = arrayListOf<String>()
+      outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
+      outputFiles
+    } catch (e: Exception) {
+      arrayListOf<String>()
+    }
+    assignmentOutputFiles.forEach {
+      val filePath = "$directory/$it"
+      if (File(filePath).exists()) File(filePath).delete()
     }
   }
 
