@@ -15,167 +15,25 @@
     <string name="s_gender_title">Select Gender</string>
     <string name="s_profile_pic_title">Select Profile Picture</string>
     <string name="s_dashboard_title">Dashboard</string>
-    <string name="s_consent_form_agree">I agree</string>
-    <string name="s_consent_form_disagree">No. I do not want to participate</string>
+    <string name="s_consent_form_agree">Yes</string>
+    <string name="s_consent_form_disagree">No. I have not</string>
     <string name="s_consent_form_text">
         <![CDATA[
-        <h5>Karya Participation Consent Form</h5>
-<p>
-  Thank you for your participation on the Karya platform. This document
-  describes the goals of the platform and the various steps involved in your
-  participation. You have no obligation to participate. You may end your
-  participation at any time.
-</p>
-<h5>Purpose of the Platform</h5>
-<p>
-  The goal of the platform is to offer paid digital work to various users.
-  Through the Karya smartphone app, you can get access to simple tasks that can
-  be completed on your smartphone. You will get paid for all the correctly
-  completed tasks. The type of task assigned to you will depend on the specific
-  study you are participating in. For instance, a task may require you to record
-  yourself speaking out a sentence. Regardless, the Karya app will provide you
-  clear instructions on how to complete each task in your regional language. The
-  app will also inform you how much you will be paid if you complete the task
-  correctly. You can withdraw from participation at any time, and you will be
-  paid for the tasks you have completed till that point.
-</p>
-<h5>Procedure</h5>
-<ol>
-  <li>
-    To begin, you will be introduced to the Project Coordinator for your
-    location. This person will be your point of contact for help related to the
-    project.
-  </li>
-  <li>
-    Your project coordinator will provide you with instructions and if
-    necessary, help you to download and install the “Karya” mobile application
-    on your smartphone.
-  </li>
-  <li>
-    Your project coordinator will give you a “16-digit Access Code”. You need to
-    enter the code during the registration process. Each access code can be used
-    only once. Therefore, do not share the access code with anyone else.
-  </li>
-  <li>
-    The registration process may require you to sign-in with your phone number.
-    This information will be used to identify you on the platform when you close
-    the application and open it again.
-  </li>
-  <li>
-    In addition, we will also collect some demographic information about you,
-    e.g., your age range, gender, education level, etc.
-  </li>
-  <li>
-    The app will also ask you to choose a profile picture. This picture will
-    only be used for display in the application and will not be stored in our
-    platform.
-  </li>
-  <li>
-    To receive tasks on our platform, the app must “sync” with our server. This
-    operation will submit all the tasks you have completed on our platform to
-    the server and receive any new tasks. After registration, the app will
-    automatically sync with our server. You can trigger subsequent syncs by
-    clicking on the sync button in the app.
-  </li>
-  <li>
-    In the main app screen (dashboard), you will be presented with a list of
-    different type of tasks assigned to you, along with information on each type
-    of task: number of tasks assigned, number of tasks completed, number of
-    tasks submitted, etc. For each type of task, the app will provide detailed
-    instructions on how you must complete the task, and how much you will be
-    paid if you complete the task correctly. Please pay attention to these
-    instructions before proceeding with the tasks.
-  </li>
-  <li>
-    At the end of your participation, we request you to delete the application
-    from your phone. Should you want, your project coordinator will aid you in
-    installing, configuring, and deleting the application.
-  </li>
-  <li>
-    After the end of the study, we may request a short interview with you to
-    gather your feedback and understand your experience of using our platform.
-  </li>
-</ol>
-<h5>Risks and Benefits</h5>
-<ol>
-  <li>
-    This platform only offers supplemental work. As a result, we have a limited
-    number of tasks available. Do not let your participation in our platform
-    interfere with your current work. Your participation will only require upto
-    one to two hours of your time every day.
-  </li>
-  <li>
-    We recommend doing the provided work in a patient manner. This will allow
-    you to submit more accurate responses and will also make sure you don’t
-    spend too much time on the smartphone. Spending too much time on a
-    smartphone could be bad for your eyes and may affect your social life. We
-    recommend not working for more than 2 hours a day.
-  </li>
-  <li>
-    If we lend you a smartphone to participate (as part of a research study), we
-    trust you to use the provided smartphone responsibly. If you have not used a
-    smartphone before, it can be overwhelming. We are happy to help you in any
-    and every way possible. You can contact us via your project coordinator.
-  </li>
-</ol>
-<h5>Personal Information</h5>
-<p>
-  Any personal information we collect during the study will only be used to
-  identify you during the duration of the study. We will delete all personal
-  information as soon as the study is over. We will not share your personal
-  information with anyone. However, we may use pictures from the study in
-  presentations or posters without identifying specific individuals. We will
-  request your permission before taking pictures and obtain your permission to
-  use those pictures in our presentations or posters. Not providing consent for
-  taking pictures will not disqualify you from participating in the study. For
-  additional information or concerns about how Microsoft handles your personal
-  information, please see the Microsoft Privacy Statement,
-  https://go.microsoft.com/fwlink/?LinkId=521839
-</p>
-<h5>Payment for Participation</h5>
-<p>
-  You will be paid for all correctly completed tasks on the platform. The app or
-  your porject coordinator will also provide you feedback on how well you are
-  performing on the platform so that you can improve your responses for future
-  tasks. We will work with you and your project coordinator to identify the best
-  mode of payment. We will collect and store your payment information for the
-  duration of the study. We will pay you periodically for all your tasks that
-  have undergone quality verification. We will delete all payment information as
-  soon as your participation is completed. Please contact your project
-  coordinator if you have any queries regarding payments.
-</p>
-<h5>Dataset Collected from the Study</h5>
-<p>
-  We will use the dataset collected as part of your responses to different tasks
-  for further research and will aim to release them publicly for research
-  purposes. Most datasets will contain only text or audio data that is not
-  associated with personally identifiable information. In situations where a
-  dataset does contain personally identifiable information (e.g., video), we
-  will obtain explicit consent from you before providing such a task. If you
-  have any questions regarding how the dataset will be used, please feel free to
-  ask us through your project coordinator or using the phone number provided
-  below.
-</p>
-<h5>Contact Information</h5>
-<p>
-  Should you have any questions concerning the project, you can contact Vivek
-  Seshadri by phone at 0000000000. Should you have any questions about your
-  rights as a research subject, please report your concern via email to
-  Microsoft Research Ethics Program Feedback: MSRStudyfeedback@microsoft.com. In
-  case you do not have access to email, you can contact your project
-  coordinator, and have her relay your concerns.
-</p>
-<h5>Consent</h5>
-<p>
-  By clicking “I agree” below, you confirm that the goals and the procedure for
-  participation on the platform was explained to you, you had a chance to ask
-  questions before beginning your participation, and all your questions were
-  answered satisfactorily. By clicking “I agree” below, you voluntarily consent
-  to participate, and you do not give up any legal rights you have as a study
-  participant. On behalf of Karya Inc, we thank you for your contribution and
-  look forward to your participation. Do you understand and consent to these
-  terms?
-</p>
+        <h3>Karya Participation Consent Form</h3>
+        <br/>
+        <big>
+        <p>Thank you for using the Karya platform for completing your classroom homework. As part
+        of the homework, you will be submitting video recordings of yourself signing different
+        sentences. You should have received a consent form for the same from the course
+        coordinators. Please confirm that you have read and agreed to that consent form.</p>
+        <br/>
+
+        <p>If you have not received the consent form, you can access it at the following link:
+        <a href="https://forms.gle/iifktU7MyrUY7bYHA">Course Consent Form</a></p>
+        <br/>
+
+        <p>Have you agreed to the consent form shared by your course coordinator</p>
+        </big>
  ]]>
     </string>
     <string name="s_consent_form_summary">Summary of the consent form</string>
