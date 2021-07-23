@@ -45,7 +45,7 @@ app.use(router.routes());
   .then(() => {
     // Start the local web server
     const port = envGetNumber('SERVER_PORT');
-    app.listen(port);
+    app.listen(port, '0.0.0.0');
     logger.info(`Server running on port ${port}`);
   })
   .catch((e) => {

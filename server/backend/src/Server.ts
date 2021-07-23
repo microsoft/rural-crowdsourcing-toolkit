@@ -71,7 +71,7 @@ app.use(mainRouter.routes());
   .then((res) => {
     // Start the local web server
     const port = envGetNumber('SERVER_PORT');
-    const server = app.listen(port);
+    const server = app.listen(port, '0.0.0.0');
     server.setTimeout(0);
     logger.info(`Server running on port ${port}`);
   })
