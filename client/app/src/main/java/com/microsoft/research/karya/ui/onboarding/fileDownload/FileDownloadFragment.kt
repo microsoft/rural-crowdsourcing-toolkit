@@ -40,7 +40,7 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
         when (result) {
           is Result.Success<*> -> navigateToRegistration()
           is Result.Error -> {
-            Toast.makeText(requireContext(), "Could not download resources", Toast.LENGTH_LONG).show()
+            // Toast.makeText(requireContext(), "Could not download resources", Toast.LENGTH_LONG).show()
             navigateToRegistration()
           }
           Result.Loading -> {}
