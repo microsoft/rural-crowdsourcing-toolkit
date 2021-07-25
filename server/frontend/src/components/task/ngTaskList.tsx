@@ -61,7 +61,7 @@ type TaskListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof red
 // component state
 type TaskListState = {
   tags_filter: Array<string>;
-  scenario_filter?: ScenarioName;
+  scenario_filter?: ScenarioName | 'all';
 };
 
 // Task list component
@@ -88,27 +88,31 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
 
   // Handle scenario change
   handleScenarioChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const scenario_filter = e.currentTarget.value as ScenarioName;
+    const scenario_filter = e.currentTarget.value as ScenarioName | 'all';
     this.setState({ scenario_filter });
   };
 
   // Render component
   render() {
     var tasks = this.props.task.data as TaskRecordType[];
-    const tags_filter = this.state.tags_filter;
     const scenarios = Object.values(scenarioMap);
+    const tags_filter = this.state.tags_filter;
     const scenario_filter = this.state.scenario_filter;
+
     // Filtering tasks by tags
     tasks = tasks.filter((t) => tags_filter.every((val) => t.itags.itags.includes(val)));
+
     // Getting the tasks' tags as a single flat array with no duplicates
     const tags_array = tasks.map((task) => task.itags.itags);
     const arr: string[] = [];
     const tags_duplicates = arr.concat(...tags_array);
     const tags = Array.from(new Set([...tags_duplicates]));
+
     // Filtering tasks by scenario
-    if (scenario_filter !== undefined) {
+    if (scenario_filter !== undefined && scenario_filter !== 'all') {
       tasks = tasks.filter((t) => t.scenario_name === scenario_filter);
     }
+
     // Getting summary info of tasks from props
     const tasks_summary = this.props.tasks_summary;
 
@@ -218,6 +222,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
                     <option value='' disabled={true} selected={true}>
                       Filter tasks by scenario
                     </option>
+                    <option value='all'>All scenarios</option>
                     {scenarios.map((s) => (
                       <option value={s.name} key={s.name}>
                         {s.full_name}
