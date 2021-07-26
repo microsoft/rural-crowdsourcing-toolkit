@@ -78,8 +78,8 @@ router.post<KaryaFileController.KaryaFileSubmitRouteState, {}>(
 );
 
 // Assignment routes
-router.put('/assignments', needIdToken, BodyParser({ jsonLimit: '10mb' }), AssignmentController.submit);
-router.put('/skipped_assignments', needIdToken, BodyParser({ jsonLimit: '1mb' }), AssignmentController.submitSkipped);
+router.put('/assignments', needIdToken, BodyParser({ jsonLimit: '20mb' }), AssignmentController.submit);
+router.put('/skipped_assignments', needIdToken, BodyParser({ jsonLimit: '20mb' }), AssignmentController.submitSkipped);
 router.get('/assignments', needIdToken, AssignmentController.get);
 
 export default router;
