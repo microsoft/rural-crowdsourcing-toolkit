@@ -239,6 +239,9 @@ export const submitFile: KaryaFileSubmitMiddleware = async (ctx, next) => {
     const destination = `${process.cwd()}/${folder}/${container_name}/${name}`;
     await fs.promises.copyFile(ctx.state.filePath, destination);
 
+    // Delete the temporary file
+    await fs.promises.unlink(ctx.state.filePath);
+
     // Include box_id
     ctx.state.karya_file.box_id = ctx.state.entity.box_id;
 

@@ -164,7 +164,9 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     if (tgz.required) {
       const file = files['tgz'];
       // @ts-ignore Already checked that file is not an instance of array
-      await fsp.copyFile(file.path, `${folderPath}/${uniqueName}.tgz`);
+      const filePath: string = file.path;
+      await fsp.copyFile(filePath, `${folderPath}/${uniqueName}.tgz`);
+      await fsp.unlink(filePath);
     }
 
     // Copy required files to destination
@@ -180,6 +182,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
           const jsonData = csvToJson(csvData.toString());
           await fsp.writeFile(`${folderPath}/${uniqueName}.json`, jsonData);
         }
+        await fsp.unlink(path);
       }
     }
 
