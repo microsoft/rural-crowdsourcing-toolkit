@@ -16,7 +16,7 @@ import {
   MicrotaskRecord,
   KaryaFile,
 } from '@karya/core';
-import { BasicModel } from '@karya/common';
+import { BasicModel, mainLogger } from '@karya/common';
 import fs from 'fs';
 
 export type KaryaFileGetRouteState = KaryaRouteState<{
@@ -206,11 +206,12 @@ export const submitOutputFile: KaryaFileSubmitMiddleware = async (ctx, next) => 
   // Check if a karya file has already been uploaded
   try {
     const record = await BasicModel.getSingle('karya_file', { container_name: 'microtask-assignment-output', name });
+    mainLogger.warn(`File already uploaded for assignment: ${name}, ${record.id}`);
     HttpResponse.OK(ctx, record);
 
     // Remove the downloaded file
     try {
-      await fs.promises.unlink(ctx.state.filePath);
+      fs.promises.unlink(ctx.state.filePath);
     } catch (e) {
       // Ignore if file does not exist
     }
