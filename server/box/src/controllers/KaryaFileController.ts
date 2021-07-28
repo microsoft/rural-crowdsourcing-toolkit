@@ -207,6 +207,14 @@ export const submitOutputFile: KaryaFileSubmitMiddleware = async (ctx, next) => 
   try {
     const record = await BasicModel.getSingle('karya_file', { container_name: 'microtask-assignment-output', name });
     HttpResponse.OK(ctx, record);
+
+    // Remove the downloaded file
+    try {
+      await fs.promises.unlink(ctx.state.filePath);
+    } catch (e) {
+      // Ignore if file does not exist
+    }
+
     return;
   } catch (e) {
     // No record uploaded already. Proceed further
