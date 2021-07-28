@@ -201,10 +201,21 @@ export const submitOutputFile: KaryaFileSubmitMiddleware = async (ctx, next) => 
     ext: 'tgz',
   };
 
+  const name = getBlobName(blobParams);
+
+  // Check if a karya file has already been uploaded
+  try {
+    const record = await BasicModel.getSingle('karya_file', { container_name: 'microtask-assignment-output', name });
+    HttpResponse.OK(ctx, record);
+    return;
+  } catch (e) {
+    // No record uploaded already. Proceed further
+  }
+
   ctx.state.karya_file = {
     ...ctx.state.karya_file,
     container_name: 'microtask-assignment-output',
-    name: getBlobName(blobParams),
+    name,
     creator: 'WORKER',
     creator_id: ctx.state.entity.id,
     in_box: true,
