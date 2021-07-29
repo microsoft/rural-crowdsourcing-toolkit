@@ -10,7 +10,7 @@ import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import { AxiosInstance } from 'axios';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 
 /**
  * Upload all karya files to the server
@@ -187,12 +187,11 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
     const batch_size = 1000;
     // For each task send all newly created assignments in batches
     await BBPromise.mapSeries(tasks, async (task) => {
-      const assignments = await knex<MicrotaskAssignmentRecord>('microtask_assignment').where({
-        box_id: box.id,
-        task_id: task.id,
-        status: 'COMPLETED',
-        submitted_to_server_at: null,
-      });
+      const assignments = await BasicModel.getRecords(
+        'microtask_assignment',
+        { box_id: box.id, task_id: task.id, submitted_to_server_at: null },
+        [['status', ['COMPLETED', 'SKIPPED', 'EXPIRED']]]
+      );
 
       let batch_id = 0;
       let batch: MicrotaskAssignmentRecord[];
@@ -209,7 +208,7 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
       } while (batch.length >= batch_size);
 
       // Send request to invoke the completion handler
-      if (assignments.length > 0) {
+      if (assignments.some((mta) => mta.status === 'COMPLETED')) {
         await axiosLocal.post<{}>(`/task/${task.id}/links`, {});
       }
     });

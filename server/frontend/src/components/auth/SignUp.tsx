@@ -19,10 +19,11 @@ import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Google login element */
 import GoogleLogin from 'react-google-login';
-import config from '../../config/Index';
 
 /** Types needed for database tables */
 import { ServerUser } from '@karya/core';
+
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 /** Router props (for history) */
 type RouterProps = RouteComponentProps<{}>;
@@ -157,7 +158,7 @@ class SignUp extends Component<SignUpProps, SignUpState> {
                 </p>
                 <div className='section'>
                   <GoogleLogin
-                    clientId={config.googleOAuthClientID}
+                    clientId={googleClientId}
                     buttonText='Sign up with Google'
                     onSuccess={this.onGoogleLoginSuccess}
                     onFailure={this.onGoogleLoginFailure}

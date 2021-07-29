@@ -37,7 +37,8 @@ export async function executeForwardTaskLinks(achObject: ForwardTaskLinkHandlerO
     'microtask_assignment',
     { task_id: task.id, status: 'COMPLETED' },
     [],
-    [['submitted_to_server_at', lastOpTime, currentOpTime]]
+    [['submitted_to_server_at', lastOpTime, currentOpTime]],
+    'id'
   )) as AssignmentRecordType[];
 
   // Get all active task links for the task

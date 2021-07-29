@@ -8,10 +8,9 @@ import { loadSecrets } from './secrets/Index';
 import cors from '@koa/cors';
 import Koa from 'koa';
 import Router from 'koa-router';
-import logger from './utils/Logger';
 import { userRouter } from './routes/UserRoutes';
 import { boxRouter } from './routes/BoxRoutes';
-import { setupDbConnection } from '@karya/common';
+import { catchAll, httpRequestLogger, setupDbConnection, mainLogger as logger } from '@karya/common';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 
@@ -19,18 +18,9 @@ import { envGetNumber, envGetString } from '@karya/misc-utils';
 const app = new Koa();
 
 // App middlewares
-app.use(async (ctx, next) => {
-  try {
-    await next();
-    console.log(ctx.method, ctx.path, ctx.status);
-    if (ctx.status >= 300) {
-      console.log(ctx.body);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-});
 app.use(cors({ origin: envGetString('CORS_ORIGIN', ''), credentials: true }));
+app.use(httpRequestLogger);
+app.use(catchAll);
 
 // Create the main router
 const mainRouter = new Router();
@@ -81,7 +71,7 @@ app.use(mainRouter.routes());
   .then((res) => {
     // Start the local web server
     const port = envGetNumber('SERVER_PORT');
-    const server = app.listen(port);
+    const server = app.listen(port, '0.0.0.0');
     server.setTimeout(0);
     logger.info(`Server running on port ${port}`);
   })

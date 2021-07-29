@@ -31,25 +31,20 @@ export const getTaskAssignments: BoxRouteMiddleware = async (ctx) => {
   }
 
   // Get all relevant task assignment and task records
-  try {
-    const currentTime = new Date().toISOString();
-    const task_assignments = await BasicModel.getRecords(
-      'task_assignment',
-      { box_id: ctx.state.entity.id },
-      [],
-      [['last_updated_at', from, null]]
-    );
-    task_assignments.forEach((ta) => {
-      ta.received_from_server_at = currentTime;
-    });
+  const currentTime = new Date().toISOString();
+  const task_assignments = await BasicModel.getRecords(
+    'task_assignment',
+    { box_id: ctx.state.entity.id },
+    [],
+    [['last_updated_at', from, null]]
+  );
+  task_assignments.forEach((ta) => {
+    ta.received_from_server_at = currentTime;
+  });
 
-    const task_ids = task_assignments.map((ta) => ta.task_id);
-    const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]], []);
-    HttpResponse.OK(ctx, { task_assignments, tasks });
-  } catch (e) {
-    // TODO: convert this to internal server error
-    HttpResponse.BadRequest(ctx, 'Something went wrong');
-  }
+  const task_ids = task_assignments.map((ta) => ta.task_id);
+  const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]], []);
+  HttpResponse.OK(ctx, { task_assignments, tasks });
 };
 
 /**
@@ -65,48 +60,43 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
 
   const task = ctx.state.task;
 
-  try {
-    let microtasks: MicrotaskRecord[];
-    let groups: MicrotaskGroupRecord[] = [];
+  let microtasks: MicrotaskRecord[];
+  let groups: MicrotaskGroupRecord[] = [];
 
-    // Get all groups+microtasks or microtasks
-    if (task.assignment_granularity == 'GROUP') {
-      groups = await BasicModel.getRecords(
-        'microtask_group',
-        { task_id: ctx.state.task.id },
-        [],
-        [['last_updated_at', from, null]],
-        'last_updated_at',
-        limit
-      );
-      const group_ids = groups.map((g) => g.id);
-      microtasks = await BasicModel.getRecords('microtask', {}, [['group_id', group_ids]]);
-    } else {
-      microtasks = await BasicModel.getRecords(
-        'microtask',
-        { task_id: ctx.state.task.id },
-        [],
-        [['last_updated_at', from, null]],
-        'last_updated_at',
-        limit
-      );
-    }
-
-    // Get any input files for these microtasks
-    const karya_file_ids = microtasks.map((mt) => mt.input_file_id).filter((id): id is string => id != null);
-    const karya_files = await BasicModel.getRecords('karya_file', {}, [['id', karya_file_ids]]);
-
-    // Get SAS tokens for the karya files
-    karya_files.forEach((kf) => {
-      // Microtask input files should have been uploaded to the blob store
-      kf.url = getBlobSASURL(kf.url!, 'r');
-    });
-
-    HttpResponse.OK(ctx, { groups, microtasks, karya_files });
-  } catch (e) {
-    // TODO: Internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error. Could not fetch microtasks');
+  // Get all groups+microtasks or microtasks
+  if (task.assignment_granularity == 'GROUP') {
+    groups = await BasicModel.getRecords(
+      'microtask_group',
+      { task_id: ctx.state.task.id },
+      [],
+      [['last_updated_at', from, null]],
+      'last_updated_at',
+      limit
+    );
+    const group_ids = groups.map((g) => g.id);
+    microtasks = await BasicModel.getRecords('microtask', {}, [['group_id', group_ids]]);
+  } else {
+    microtasks = await BasicModel.getRecords(
+      'microtask',
+      { task_id: ctx.state.task.id },
+      [],
+      [['last_updated_at', from, null]],
+      'last_updated_at',
+      limit
+    );
   }
+
+  // Get any input files for these microtasks
+  const karya_file_ids = microtasks.map((mt) => mt.input_file_id).filter((id): id is string => id != null);
+  const karya_files = await BasicModel.getRecords('karya_file', {}, [['id', karya_file_ids]]);
+
+  // Get SAS tokens for the karya files
+  karya_files.forEach((kf) => {
+    // Microtask input files should have been uploaded to the blob store
+    kf.url = getBlobSASURL(kf.url!, 'r');
+  });
+
+  HttpResponse.OK(ctx, { groups, microtasks, karya_files });
 };
 
 /**
@@ -119,16 +109,11 @@ export const submitNewAssignments: TaskRouteMiddleware = async (ctx) => {
   const sent_to_server_at = new Date().toISOString();
 
   // Upsert all new assignments
-  try {
-    const response = await BBPromise.mapSeries(assignments, async (assignment) => {
-      await BasicModel.upsertRecord('microtask_assignment', { ...assignment, sent_to_server_at });
-      return { id: assignment.id, sent_to_server_at };
-    });
-    HttpResponse.OK(ctx, response);
-  } catch (e) {
-    // Conver this to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while inserting assignments');
-  }
+  const response = await BBPromise.mapSeries(assignments, async (assignment) => {
+    await BasicModel.upsertRecord('microtask_assignment', { ...assignment, sent_to_server_at });
+    return { id: assignment.id, sent_to_server_at };
+  });
+  HttpResponse.OK(ctx, response);
 };
 
 /**
@@ -141,17 +126,12 @@ export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
   const submitted_to_server_at = new Date().toISOString();
 
   // Upsert all new assignments
-  try {
-    const response = await BBPromise.mapSeries(assignments, async (assignment) => {
-      await BasicModel.upsertRecord('microtask_assignment', { ...assignment, submitted_to_server_at });
-      return { id: assignment.id, submitted_to_server_at };
-    });
+  const response = await BBPromise.mapSeries(assignments, async (assignment) => {
+    await BasicModel.upsertRecord('microtask_assignment', { ...assignment, submitted_to_server_at });
+    return { id: assignment.id, submitted_to_server_at };
+  });
 
-    HttpResponse.OK(ctx, response);
-  } catch (e) {
-    // Conver this to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while inserting assignments');
-  }
+  HttpResponse.OK(ctx, response);
 };
 
 /**
@@ -160,18 +140,14 @@ export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
 export const executeTaskLinks: TaskRouteMiddleware = async (ctx) => {
   const task = ctx.state.task;
 
-  try {
-    const taskOp = await BasicModel.insertRecord('task_op', {
-      task_id: task.id,
-      op_type: 'EXECUTE_FORWARD_TASK_LINK',
-      status: 'CREATED',
-    });
+  const taskOp = await BasicModel.insertRecord('task_op', {
+    task_id: task.id,
+    op_type: 'EXECUTE_FORWARD_TASK_LINK',
+    status: 'CREATED',
+  });
 
-    await forwardTaskLinkQ.add({ task, taskOp });
-    HttpResponse.OK(ctx, {});
-  } catch (e) {
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while creating task op');
-  }
+  await forwardTaskLinkQ.add({ task, taskOp });
+  HttpResponse.OK(ctx, {});
 };
 
 /**
@@ -187,20 +163,15 @@ export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
 
   const task = ctx.state.task;
 
-  try {
-    const verified = await BasicModel.getRecords(
-      'microtask_assignment',
-      { task_id: task.id, status: 'VERIFIED' },
-      [],
-      [['verified_at', from, null]],
-      'verified_at',
-      limit
-    );
-    HttpResponse.OK(ctx, verified);
-  } catch (e) {
-    // Conver this to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while fetching verified assignments');
-  }
+  const verified = await BasicModel.getRecords(
+    'microtask_assignment',
+    { task_id: task.id, status: 'VERIFIED' },
+    [],
+    [['verified_at', from, null]],
+    'verified_at',
+    limit
+  );
+  HttpResponse.OK(ctx, verified);
 };
 
 /**

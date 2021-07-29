@@ -31,24 +31,14 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
   task_assignment.params = value;
 
-  try {
-    const record = await BasicModel.insertRecord('task_assignment', task_assignment);
-    HttpResponse.OK(ctx, record);
-  } catch (e) {
-    // TODO: Convert this to an internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
-  }
+  const record = await BasicModel.insertRecord('task_assignment', task_assignment);
+  HttpResponse.OK(ctx, record);
 };
 
 /**
  * Get all task assignments.
  */
 export const get: UserRouteMiddleware = async (ctx) => {
-  try {
-    const records = await BasicModel.getRecords('task_assignment', {});
-    HttpResponse.OK(ctx, records);
-  } catch (e) {
-    // TODO: Conver this to an internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
-  }
+  const records = await BasicModel.getRecords('task_assignment', {});
+  HttpResponse.OK(ctx, records);
 };

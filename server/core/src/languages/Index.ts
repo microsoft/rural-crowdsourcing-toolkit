@@ -29,6 +29,7 @@ export const languageCodes = [
   'TE',
   'TA',
   'UR',
+  'ISL',
 ] as const;
 export type LanguageCode = typeof languageCodes[number];
 
@@ -208,6 +209,13 @@ export const languageMap: { [key in LanguageCode]: LanguageInterface } = {
   UR: {
     name: 'Urdu',
     primary_name: 'اُردُو',
+    basic_support: false,
+    assistant_support: false,
+  },
+
+  ISL: {
+    name: 'Sign Language',
+    primary_name: 'Sign Language',
     basic_support: false,
     assistant_support: false,
   },

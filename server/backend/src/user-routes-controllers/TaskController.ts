@@ -164,7 +164,9 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     if (tgz.required) {
       const file = files['tgz'];
       // @ts-ignore Already checked that file is not an instance of array
-      await fsp.copyFile(file.path, `${folderPath}/${uniqueName}.tgz`);
+      const filePath: string = file.path;
+      await fsp.copyFile(filePath, `${folderPath}/${uniqueName}.tgz`);
+      await fsp.unlink(filePath);
     }
 
     // Copy required files to destination
@@ -180,6 +182,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
           const jsonData = csvToJson(csvData.toString());
           await fsp.writeFile(`${folderPath}/${uniqueName}.json`, jsonData);
         }
+        await fsp.unlink(path);
       }
     }
 
@@ -253,23 +256,18 @@ export const generateOutput: TaskRouteMiddleware = async (ctx) => {
  * Get input and output files of a task
  */
 export const getFiles: TaskRouteMiddleware = async (ctx) => {
-  try {
-    const task = ctx.state.task as TaskRecordType;
-    const records = await BasicModel.getRecords('task_op', { task_id: task.id }, [
-      ['op_type', ['PROCESS_INPUT', 'GENERATE_OUTPUT']],
-    ]);
+  const task = ctx.state.task as TaskRecordType;
+  const records = await BasicModel.getRecords('task_op', { task_id: task.id }, [
+    ['op_type', ['PROCESS_INPUT', 'GENERATE_OUTPUT']],
+  ]);
+  // @ts-ignore
+  const files = await BasicModel.getRecords('karya_file', {}, [['id', records.map((r) => r.file_id)]]);
+  for (let i = 0; i < records.length; i++) {
     // @ts-ignore
-    const files = await BasicModel.getRecords('karya_file', {}, [['id', records.map((r) => r.file_id)]]);
-    for (let i = 0; i < records.length; i++) {
-      // @ts-ignore
-      records[i].extras = files[i] ? { url: getBlobSASURL(files[i].url, 'r') } : null;
-      records[i].created_at = records[i].created_at.toLocaleString();
-    }
-    HttpResponse.OK(ctx, records);
-  } catch (e) {
-    // TODO: Convert this to an internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error');
+    records[i].extras = files[i] ? { url: getBlobSASURL(files[i].url, 'r') } : null;
+    records[i].created_at = records[i].created_at.toLocaleString();
   }
+  HttpResponse.OK(ctx, records);
 };
 
 /**
@@ -277,13 +275,8 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
  * microtask assignments to the extras object.
  */
 export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
-  try {
-    const records = await MicrotaskModel.microtasksWithAssignmentSummary(ctx.state.task.id);
-    HttpResponse.OK(ctx, records);
-  } catch (e) {
-    // TODO: Convert this to an internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error');
-  }
+  const records = await MicrotaskModel.microtasksWithAssignmentSummary(ctx.state.task.id);
+  HttpResponse.OK(ctx, records);
 };
 
 /**

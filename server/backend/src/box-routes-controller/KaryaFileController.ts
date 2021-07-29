@@ -37,19 +37,12 @@ export const upload: BoxRouteMiddleware = async (ctx, next) => {
   }
 
   // Upload file
-  try {
-    const blobURL = await uploadBlobFromFileWithName(fileRecord.container_name, fileRecord.name, file.path);
+  const blobURL = await uploadBlobFromFileWithName(fileRecord.container_name, fileRecord.name, file.path);
 
-    fileRecord.url = blobURL;
-    fileRecord.in_server = true;
-    await BasicModel.upsertRecord('karya_file', fileRecord);
-    HttpResponse.OK(ctx, {});
-  } catch (e) {
-    // Convert this to internal server error
-    console.log(e);
-    HttpResponse.BadRequest(ctx, 'Something went wrong while uploading');
-    return;
-  }
+  fileRecord.url = blobURL;
+  fileRecord.in_server = true;
+  await BasicModel.upsertRecord('karya_file', fileRecord);
+  HttpResponse.OK(ctx, {});
 };
 
 /**
@@ -75,14 +68,9 @@ export const get: BoxRouteMiddleware = async (ctx, next) => {
   }
 
   // Generate SAS token
-  try {
-    const sasURL = getBlobSASURL(url, 'r', 120);
-    karyaFile.url = sasURL;
-    HttpResponse.OK(ctx, karyaFile);
-  } catch (e) {
-    HttpResponse.BadRequest(ctx, 'Unable to generate SAS token');
-    return;
-  }
+  const sasURL = getBlobSASURL(url, 'r', 120);
+  karyaFile.url = sasURL;
+  HttpResponse.OK(ctx, karyaFile);
 };
 
 /**

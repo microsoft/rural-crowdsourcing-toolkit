@@ -180,6 +180,7 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
     if (id_token) {
       if (id_token instanceof Array) {
         HttpResponse.Unauthorized(ctx, 'Invalid id token');
+        return;
       } else {
         // verify the id token
         try {
@@ -187,11 +188,13 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
           // the dependency injected code
           ctx.state.entity = await verifyKaryaIdToken(entityType, id_token);
           ctx.state.auth_mechanism = 'karya-id-token';
-          await next();
-          return;
         } catch (e) {
           HttpResponse.Unauthorized(ctx, 'Invalid id token');
+          return;
         }
+
+        await next();
+        return;
       }
     }
 
