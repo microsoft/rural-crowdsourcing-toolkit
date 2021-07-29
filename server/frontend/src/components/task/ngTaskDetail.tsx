@@ -302,7 +302,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                     <td>
                       {
                         // @ts-ignore
-                        <a href={r.extras.url}>
+                        <a href={r.extras.url} download>
                           <span className='material-icons left'>file_download</span>
                         </a>
                       }

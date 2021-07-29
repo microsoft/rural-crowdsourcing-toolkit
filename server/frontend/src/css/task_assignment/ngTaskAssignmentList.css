@@ -1,0 +1,30 @@
+#create-assignment-btn {
+  margin-left: 46%;
+  margin-bottom: 1%;
+  font-family: 'Titillium Web', sans-serif;
+  letter-spacing: 0.07em;
+  color: #fff;
+  background-color: #4fc3f7;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  font-weight: 600;
+  border-radius: 7px;
+  transition: all 0.3s ease-in;
+}
+
+#task-assignment-table .tablelist-container {
+  box-shadow: none;
+}
+
+#task-assignment-table table {
+  box-shadow: none;
+  border-collapse: separate;
+}
+
+#task-assignment-table td {
+  text-align: center;
+  color: #717787;
+  background-color: #fff;
+  border-bottom: 1px dashed rgba(180, 189, 198, 0.8);
+  padding-top: 1.6%;
+  padding-bottom: 1.6%;
+}

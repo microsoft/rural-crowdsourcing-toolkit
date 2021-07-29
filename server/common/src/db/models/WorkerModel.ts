@@ -6,9 +6,7 @@ import { knex } from '../Client';
 export async function workersSummary(): Promise<any[]> {
   const response = await knex.raw(`
     SELECT
-      id,
-      tags,
-      box_id,
+      w.*,
       COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
       COALESCE((mta.completed + mta.verified)::int, 0) as completed,
       COALESCE((mta.verified)::int, 0) as verified,

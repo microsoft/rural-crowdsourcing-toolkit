@@ -20,8 +20,8 @@ export async function tasksSummary(): Promise<any[]> {
     `);
 
   return response.rows.map((row: any) => {
-    const { completed, cost, ...rest } = row;
-    const extras = { completed, cost };
+    const { assigned, completed, verified, cost, ...rest } = row;
+    const extras = { assigned, completed, verified, cost };
     return { ...rest, extras };
   });
 }
