@@ -62,7 +62,7 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
   const taskOutputBlobParameters: BlobParameters = {
     cname: 'task-output',
     task_id: task.id,
-    timestamp: currentOpTime,
+    timestamp: currentOpTime.replace(':', '.'),
     ext: 'tgz',
   };
   const taskOutputName = getBlobName(taskOutputBlobParameters);

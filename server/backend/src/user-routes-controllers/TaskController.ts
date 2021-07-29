@@ -190,7 +190,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     const inputBlobParams: BlobParameters = {
       cname: 'task-input',
       task_id: task.id,
-      timestamp,
+      timestamp: timestamp.replace(':', '.'),
       ext: 'tgz',
     };
     const inputBlobName = getBlobName(inputBlobParams);
