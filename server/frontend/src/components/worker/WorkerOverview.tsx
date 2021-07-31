@@ -112,6 +112,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     if (box_id_filter !== undefined && box_id_filter !== 'all') {
       workers = workers.filter((w) => w.box_id === box_id_filter);
     }
+    const filteredWorkers = workers.map((w) => {
+      const { extras, id, access_code, phone_number } = w;
+      return { id: `I${id}`, access_code: `A${access_code}`, phone_number: `P${phone_number}`, ...extras };
+    });
 
     // Data to be fed into graph
     const data = workers.map((w) => ({ ...w.extras, id: w.id }));
@@ -173,7 +177,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                 </LineChart>
               </ResponsiveContainer>
 
-              <CSVLink data={data} filename={'worker-data.csv'} className='btn' id='download-data-btn'>
+              <CSVLink data={filteredWorkers} filename={'worker-data.csv'} className='btn' id='download-data-btn'>
                 <i className='material-icons left'>download</i>Download data
               </CSVLink>
             </>
