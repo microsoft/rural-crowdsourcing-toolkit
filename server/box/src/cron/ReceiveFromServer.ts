@@ -21,6 +21,10 @@ import { cronLogger } from './Cron';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
 
+// Local folder
+const localFolder = envGetString('LOCAL_FOLDER');
+const localFolderPath = `${process.cwd()}/${localFolder}`;
+
 /**
  * Get all workers whose tags have been updated
  */
@@ -156,6 +160,19 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
         });
         await BBPromise.mapSeries(microtasks, async (microtask) => {
           await BasicModel.upsertRecord('microtask', microtask);
+          try {
+            if (microtask.status == 'COMPLETED' && microtask.input_file_id) {
+              const fileRecord = await BasicModel.getSingle('karya_file', { id: microtask.input_file_id });
+              const assignments = await BasicModel.getRecords('microtask_assignment', {
+                output_file_id: fileRecord.id,
+              });
+              if (assignments.length == 0) {
+                await fs.promises.unlink(`${localFolderPath}/${fileRecord.container_name}/${fileRecord.name}`);
+              }
+            }
+          } catch (e) {
+            // Exception while cleaning up input file
+          }
         });
         await BBPromise.mapSeries(karya_files, async (karya_file) => {
           await BasicModel.upsertRecord('karya_file', karya_file);
@@ -207,10 +224,6 @@ export async function getNewSASTokens(axiosLocal: AxiosInstance) {
  */
 export async function downloadPendingKaryaFiles() {
   try {
-    // Local folder
-    const localFolder = envGetString('LOCAL_FOLDER');
-    const localFolderPath = `${process.cwd()}/${localFolder}`;
-
     const pendingFiles = await BasicModel.getRecords('karya_file', { in_server: true, in_box: false });
 
     if (pendingFiles.length > 0) {
@@ -294,6 +307,16 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
       try {
         await BBPromise.mapSeries(verifiedAssignments, async (assignment) => {
           await BasicModel.upsertRecord('microtask_assignment', assignment);
+          if (assignment.output_file_id) {
+            try {
+              const fileRecord = await BasicModel.getSingle('karya_file', { id: assignment.output_file_id });
+              if (fileRecord.in_server) {
+                await fs.promises.unlink(`${localFolderPath}/${fileRecord.container_name}/${fileRecord.name}`);
+              }
+            } catch (e) {
+              // Exception while deleting a file. Ignore?
+            }
+          }
         });
       } catch (e) {
         cronLogger.error('Failed to update local assignments');
