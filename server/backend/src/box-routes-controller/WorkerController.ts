@@ -51,11 +51,11 @@ export const updateWorkers: BoxRouteMiddleware = async (ctx) => {
 
   await BBPromise.mapSeries(workers, async (worker) => {
     try {
-      const { year_of_birth, gender, full_name, language } = worker;
+      const { phone_number, reg_mechanism, year_of_birth, gender, full_name, language } = worker;
       await BasicModel.updateSingle(
         'worker',
         { id: worker.id },
-        { year_of_birth, gender, full_name, language, sent_to_server_at }
+        { phone_number, reg_mechanism, year_of_birth, gender, full_name, language, sent_to_server_at }
       );
       response.push({ id: worker.id, sent_to_server_at });
     } catch (e) {
