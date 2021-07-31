@@ -12,6 +12,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -29,13 +30,24 @@ class RetrofitModule {
   @Reusable
   @BaseUrl
   fun provideBaseUrl(): String {
-    return "https://karyaboxtest.westcentralus.cloudapp.azure.com"
+    return "https://karyatestbotbox.eastus.cloudapp.azure.com"
   }
 
   @Provides
   @Reusable
-  fun provideOkHttp(): OkHttpClient {
+  fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+    return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+  }
+
+  @Provides
+  @Reusable
+  fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
     return OkHttpClient.Builder()
+      .apply {
+        if (BuildConfig.DEBUG) {
+          addNetworkInterceptor(httpLoggingInterceptor)
+        }
+      }
       .build()
   }
 
