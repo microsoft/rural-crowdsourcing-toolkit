@@ -252,7 +252,42 @@ constructor(
           val tempList = mutableListOf<TaskInfo>()
           taskList.forEach { taskRecord ->
             val taskStatus = fetchTaskStatus(taskRecord.id)
-            tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus))
+            if (taskRecord.scenario_name.equals("SIGN_LANGUAGE_VIDEO")) {
+              if (taskStatus.assignedMicrotasks > 0) {
+                tempList.add(
+                  TaskInfo(
+                    taskRecord.id,
+                    taskRecord.display_name,
+                    taskRecord.scenario_name,
+                    TaskStatus(
+                      taskStatus.assignedMicrotasks,
+                      taskStatus.completedMicrotasks,
+                      taskStatus.submittedMicrotasks,
+                      0,
+                      taskStatus.skippedMicrotasks
+                    )
+                  )
+                )
+              }
+              if (taskStatus.verifiedMicrotasks > 0) {
+                tempList.add(
+                  TaskInfo(
+                    taskRecord.id,
+                    taskRecord.display_name,
+                    taskRecord.scenario_name,
+                    TaskStatus(
+                      0,
+                      0,
+                      0,
+                      taskStatus.verifiedMicrotasks,
+                      0,
+                    )
+                  )
+                )
+              }
+            } else {
+              tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus))
+            }
           }
           taskInfoList = tempList
 
