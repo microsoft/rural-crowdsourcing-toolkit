@@ -65,6 +65,19 @@ export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolea
 }
 
 /**
+ * Check if a worker has any incomplete microtasks
+ * @param worker_id ID of the worker
+ */
+export async function hasIncompleteMicrotasksForTask(worker_id: string, task_id: string): Promise<boolean> {
+  const incompleteMicrotasks = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('worker_id', worker_id)
+    .where('task_id', task_id)
+    .whereIn('status', ['ASSIGNED'])
+    .select();
+  return incompleteMicrotasks.length > 0;
+}
+
+/**
  * Mark a microtask as completed. This update will not be
  * @param microtask Microtask to be marked complete
  */

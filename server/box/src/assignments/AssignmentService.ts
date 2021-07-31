@@ -21,13 +21,13 @@ import { localPolicyMap } from './policies/Index';
  */
 export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
   // Check if the worker has incomplete assignments. If so, return
-  const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
-  if (hasCurrentAssignments) {
-    return;
-  }
+  // const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
+  // if (hasCurrentAssignments) {
+  //   return;
+  // }
 
   let availableCredits = maxCredits;
-  let tasksAssigned = false;
+  // let tasksAssigned = false;
 
   // get all available tasks i.e. all of which are in assigned state
   const taskAssignments = await BasicModel.getRecords('task_assignment', {
@@ -37,7 +37,8 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
   // iterate over all tasks to see which all can user perform
   await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
-    if (tasksAssigned) return;
+    // if (tasksAssigned) return;
+    if (MicrotaskModel.hasIncompleteMicrotasksForTask(worker.id, taskAssignment.task_id)) return;
 
     // Get task for the assignment
     const task = await BasicModel.getSingle('task', { id: taskAssignment.task_id });
@@ -108,9 +109,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       throw new Error('Invalid assignment granularity for task');
     }
 
-    if (chosenMicrotasks.length > 0) {
-      tasksAssigned = true;
-    }
+    // if (chosenMicrotasks.length > 0) {
+    //   tasksAssigned = true;
+    // }
 
     // Assign all microtask groups and microtasks to the user
     await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
