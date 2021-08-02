@@ -231,7 +231,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
                   </select>
                 </div>
               </div>
-              <Collapsible accordion={false}>
+              <Collapsible accordion={false} className='no-autoinit'>
                 {tasks.map((t) => (
                   <CollapsibleItem
                     expanded={false}
