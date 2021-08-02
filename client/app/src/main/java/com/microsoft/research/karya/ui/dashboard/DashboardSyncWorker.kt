@@ -26,6 +26,13 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
+private const val MAX_UPLOAD_PROGRESS = 25
+private const val MAX_SEND_DB_UPDATES_PROGRESS = 40
+private const val MAX_RECEIVE_DB_UPDATES_PROGRESS = 55
+private const val MAX_DOWNLOAD_PROGRESS = 80
+private const val MAX_FETCH_VERIFIED_PROGRESS = 90
+private const val MAX_CLEANUP_PROGRESS = 100
+
 class DashboardSyncWorker(
   appContext: Context,
   workerParams: WorkerParameters,
@@ -58,29 +65,18 @@ class DashboardSyncWorker(
   }
 
   suspend fun syncWithServer() {
-//      _dashboardUiState.value = DashboardUiState.Loading
-
-    submitCompletedAssignments()
-    setProgressAsync(Data.Builder().putInt("progress", 25).build())
-    fetchNewAssignments()
-    setProgressAsync(Data.Builder().putInt("progress", 50).build())
-    fetchVerifiedAssignments()
-    setProgressAsync(Data.Builder().putInt("progress", 75).build())
-    cleanupKaryaFiles()
-
-    // TODO: Include the UI update hack here ?
-
-//      _dashboardUiState.value = DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
-  }
-
-  private suspend fun submitCompletedAssignments() {
     uploadOutputFiles()
+    setProgressAsync(Data.Builder().putInt("progress", MAX_UPLOAD_PROGRESS).build())
     sendDbUpdates()
-  }
-
-  private suspend fun fetchNewAssignments() {
+    setProgressAsync(Data.Builder().putInt("progress", MAX_SEND_DB_UPDATES_PROGRESS).build())
     receiveDbUpdates()
+    setProgressAsync(Data.Builder().putInt("progress", MAX_RECEIVE_DB_UPDATES_PROGRESS).build())
     downloadInputFiles()
+    setProgressAsync(Data.Builder().putInt("progress", MAX_DOWNLOAD_PROGRESS).build())
+    fetchVerifiedAssignments()
+    setProgressAsync(Data.Builder().putInt("progress", MAX_FETCH_VERIFIED_PROGRESS).build())
+    cleanupKaryaFiles()
+    setProgressAsync(Data.Builder().putInt("progress", MAX_CLEANUP_PROGRESS).build())
   }
 
   /** Upload the Files of completed Assignments */
@@ -94,6 +90,7 @@ class DashboardSyncWorker(
         it.output_file_id == null && !it.output.isJsonNull && it.output.asJsonObject.get("files").asJsonObject.size() > 0
       }
 
+    var count = 0
     for (assignment in filteredAssignments) {
       val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
       val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
@@ -103,6 +100,9 @@ class DashboardSyncWorker(
       val outputFilePaths = fileNames.map { "$outputDir/${it}" }
       FileUtils.createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
       uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
+      count += 1
+      val localProgress = (count * MAX_UPLOAD_PROGRESS) / filteredAssignments.size
+      setProgressAsync(Data.Builder().putInt("progress", localProgress).build())
     }
   }
 
@@ -162,6 +162,7 @@ class DashboardSyncWorker(
         )
 
     // Download each file
+    var count = 0
     for (assignment in filteredAssignments) {
       assignmentRepository
         .getInputFile(worker.idToken, assignment.id) // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
@@ -172,6 +173,9 @@ class DashboardSyncWorker(
             microtaskInputContainer.getBlobPath(assignment.microtask_id)
           )
         }
+      count += 1
+      val localProgress = (count * 25) / filteredAssignments.size + MAX_RECEIVE_DB_UPDATES_PROGRESS
+      setProgressAsync(Data.Builder().putInt("progress", localProgress).build())
     }
   }
 
@@ -201,8 +205,20 @@ class DashboardSyncWorker(
 
     // Delete all files for these assignments
     for (assignment in uploadedAssignments) {
+      val assignmentOutputFiles = try {
+        val outputFilesDict = assignment.output.asJsonObject.getAsJsonObject("files")
+        val outputFiles = arrayListOf<String>()
+        outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
+        outputFiles
+      } catch (e: Exception) {
+        arrayListOf<String>()
+      }
       val assignmentFiles =
-        files.filter { it.name.startsWith("${assignment.id}-") || it.name.startsWith("${assignment.id}.") }
+        files.filter {
+          !(assignmentOutputFiles.contains(it.name)) && (it.name.startsWith("${assignment.id}-") || it.name.startsWith(
+            "${assignment.id}."
+          ))
+        }
       assignmentFiles.forEach { if (it.exists()) it.delete() }
     }
 

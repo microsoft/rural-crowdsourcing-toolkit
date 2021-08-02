@@ -273,7 +273,7 @@ constructor(
                 tempList.add(
                   TaskInfo(
                     taskRecord.id,
-                    taskRecord.display_name,
+                    "${taskRecord.display_name} (Grades)",
                     taskRecord.scenario_name,
                     TaskStatus(
                       0,
