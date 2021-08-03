@@ -135,6 +135,7 @@ dependencies {
   implementation("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
   implementation("com.google.android.gms:play-services-mlkit-face-detection:16.2.0")
   implementation("com.google.mlkit:face-detection:16.1.2")
+  implementation("com.github.AbedElazizShe:LightCompressor:0.9.4")
 
   debugImplementation(Dependencies.ThirdParty.debugDB)
 

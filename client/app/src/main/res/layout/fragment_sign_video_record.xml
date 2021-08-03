@@ -42,4 +42,17 @@
         android:layout_marginBottom="20dp"
         />
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/compressionProgress"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="invisible"
+        android:layout_marginBottom="20dp"
+        android:max="100"
+        />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
