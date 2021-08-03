@@ -42,13 +42,7 @@ class RetrofitModule {
   @Provides
   @Reusable
   fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-    return OkHttpClient.Builder()
-      .apply {
-        if (BuildConfig.DEBUG) {
-          addNetworkInterceptor(httpLoggingInterceptor)
-        }
-      }
-      .build()
+    return OkHttpClient.Builder().build()
   }
 
   @Provides
@@ -58,7 +52,7 @@ class RetrofitModule {
     converterFactory: GsonConverterFactory,
     okHttpClient: OkHttpClient
   ): Retrofit {
-    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl).addConverterFactory(converterFactory).build()
+    return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(converterFactory).build()
   }
 
   @Provides

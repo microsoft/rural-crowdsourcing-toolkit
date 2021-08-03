@@ -37,6 +37,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
+
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
@@ -68,9 +70,32 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
+
     viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
       binding.syncProgressBar.progress = i
     }
+
+    WorkManager.getInstance(requireContext()).getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
+      .observe(viewLifecycleOwner, { workInfos ->
+        if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
+        val workInfo = workInfos[0] // Picking the first workInfo
+        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+          lifecycleScope.launch {
+            viewModel.setProgress(100)
+            viewModel.refreshList()
+          }
+        }
+        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
+          viewModel.setProgress(0)
+          viewModel.setLoading()
+        }
+        if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
+          // Check if the current work's state is "successfully finished"
+          val progress: Int = workInfo.progress.getInt("progress", 0)
+          viewModel.setProgress(progress)
+          viewModel.setLoading()
+        }
+      })
 
   }
 
@@ -108,26 +133,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun syncWithServer() {
     setupWorkRequests()
-    WorkManager.getInstance(requireContext()).enqueueUniqueWork("syncWork", ExistingWorkPolicy.KEEP, syncWorkRequest)
-
-    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
-      .observe(viewLifecycleOwner, Observer { workInfo ->
-        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-          lifecycleScope.launch {
-            viewModel.setProgress(100)
-            viewModel.refreshList()
-          }
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
-          viewModel.setProgress(0)
-          viewModel.setLoading()
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
-          // Check if the current work's state is "successfully finished"
-          val progress: Int = workInfo.progress.getInt("progress", 0)
-          viewModel.setProgress(progress)
-        }
-      })
+    WorkManager.getInstance(requireContext()).enqueueUniqueWork(UNIQUE_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, syncWorkRequest)
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
