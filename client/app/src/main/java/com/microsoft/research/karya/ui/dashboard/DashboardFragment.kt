@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -107,7 +108,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun syncWithServer() {
     setupWorkRequests()
-    WorkManager.getInstance(requireContext()).enqueue(syncWorkRequest)
+    WorkManager.getInstance(requireContext()).enqueueUniqueWork("syncWork", ExistingWorkPolicy.KEEP, syncWorkRequest)
 
     WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
       .observe(viewLifecycleOwner, Observer { workInfo ->
