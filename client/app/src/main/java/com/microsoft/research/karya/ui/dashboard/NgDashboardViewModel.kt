@@ -61,6 +61,10 @@ constructor(
     MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
+  private val _progress: MutableStateFlow<Int> =
+    MutableStateFlow(0)
+  val progress = _progress.asStateFlow()
+
   suspend fun refreshList() {
     val worker = authManager.fetchLoggedInWorker()
     val tempList = mutableListOf<TaskInfo>()
@@ -133,6 +137,10 @@ constructor(
 
   private suspend fun fetchTaskStatus(taskId: String): TaskStatus {
     return taskRepository.getTaskStatus(taskId)
+  }
+
+  fun setProgress(i: Int) {
+    _progress.value = i
   }
 
 }

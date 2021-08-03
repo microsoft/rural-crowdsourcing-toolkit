@@ -59,6 +59,20 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     observeUi()
   }
 
+  private fun observeUi() {
+    viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
+      when (dashboardUiState) {
+        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
+        is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable)
+        DashboardUiState.Loading -> showLoadingUi()
+      }
+    }
+    viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
+      binding.syncProgressBar.progress = i
+    }
+
+  }
+
   override fun onResume() {
     super.onResume()
     viewModel.getAllTasks() // TODO: Remove onResume and get taskId from scenario viewmodel (similar to onActivity Result)
@@ -99,31 +113,20 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       .observe(viewLifecycleOwner, Observer { workInfo ->
         if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
           lifecycleScope.launch {
-            binding.syncProgressBar.progress = 100
+            viewModel.setProgress(100)
             viewModel.refreshList()
           }
         }
         if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
-          binding.syncProgressBar.progress = 0
+          viewModel.setProgress(0)
           viewModel.setLoading()
         }
         if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
           // Check if the current work's state is "successfully finished"
           val progress: Int = workInfo.progress.getInt("progress", 0)
-          binding.syncProgressBar.progress = progress
+          viewModel.setProgress(progress)
         }
       })
-  }
-
-  private fun observeUi() {
-    viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
-      when (dashboardUiState) {
-        is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
-        is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable)
-        DashboardUiState.Loading -> showLoadingUi()
-      }
-    }
-
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
