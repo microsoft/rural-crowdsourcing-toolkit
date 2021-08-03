@@ -206,6 +206,13 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           findNavController().navigate(action)
         }
       }
+    } else if (task.taskStatus.completedMicrotasks > 0) {
+      when (task.scenarioName) {
+        "SIGN_LANGUAGE_VIDEO" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
+          findNavController().navigate(action)
+        }
+      }
     } else {
       when (task.scenarioName) {
         "SIGN_LANGUAGE_VIDEO" -> {
