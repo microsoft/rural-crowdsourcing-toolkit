@@ -137,12 +137,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-      if (totalCreditsEarned > 0.0f) {
+      /* if (totalCreditsEarned > 0.0f) {
         binding.rupeesEarnedCl.visible()
         binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
       } else {
         binding.rupeesEarnedCl.gone()
-      }
+      } */
     }
   }
 
