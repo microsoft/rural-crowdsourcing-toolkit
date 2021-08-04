@@ -34,7 +34,7 @@ import WorkerOverview from './components/worker/WorkerOverview';
 import BoxList from './components/box/BoxList';
 
 /** task assignment components */
-import CreateTaskAssignment from './components/task_assignment/CreateTaskAssignment';
+import ngCreateTaskAssignment from './components/task_assignment/ngCreateTaskAssignment';
 import ngTaskAssignmentList from './components/task_assignment/ngTaskAssignmentList';
 
 const Routes = (
@@ -70,7 +70,7 @@ const Routes = (
 
     {/** Task assignment routes */}
     <AdminRoute exact path='/task-assignments' component={ngTaskAssignmentList} />
-    <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
+    <AdminRoute exact path='/task-assignments/create' component={ngCreateTaskAssignment} />
     </Switch>
     </div>
     </main>

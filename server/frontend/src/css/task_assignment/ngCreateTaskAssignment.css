@@ -1,0 +1,55 @@
+#task-assignment-form {
+  margin-left: 4%;
+  margin-top: 5%;
+}
+
+#task-assignment-form input {
+  font-family: 'Titillium Web', sans-serif;
+  color: #717787;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5%;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#task-assignment-form .select-wrapper {
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+#task-assignment-form .select-wrapper .caret {
+  fill: #b4bdc6;
+}
+
+#task-assignment-form button {
+  font-family: 'Titillium Web', sans-serif;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  border-radius: 5px;
+  margin-left: 6%;
+  margin-top: 5%;
+}
+
+#submit-assignment-btn {
+  background-color: #4fc3f7;
+  transition: all 0.3s ease-in;
+}
+
+#submit-assignment-btn:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  background-color: #29b6f6;
+}
+
+#cancel-btn {
+  background-color: #eceff1;
+  color: #717787;
+  padding-left: 3%;
+  padding-right: 3%;
+  transition: all 0.3s ease-in;
+}
+
+#cancel-btn:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
