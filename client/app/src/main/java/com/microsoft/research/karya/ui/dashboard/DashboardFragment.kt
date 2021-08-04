@@ -186,7 +186,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   fun onDashboardItemClick(task: TaskInfo) {
     //    val nextIntent =
-    if (task.taskStatus.assignedMicrotasks > 0) {
+    if (!task.isGradeCard && task.taskStatus.assignedMicrotasks > 0) {
       when (task.scenarioName) {
         // TODO: CONVERT TO TODO
         // Use [ScenarioType] enum once we migrate to it.
@@ -212,14 +212,14 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           findNavController().navigate(action)
         }
       }
-    } else if (task.taskStatus.completedMicrotasks > 0) {
+    } else if (!task.isGradeCard && task.taskStatus.completedMicrotasks > 0) {
       when (task.scenarioName) {
         "SIGN_LANGUAGE_VIDEO" -> {
           val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
           findNavController().navigate(action)
         }
       }
-    } else {
+    } else if (task.isGradeCard) {
       when (task.scenarioName) {
         "SIGN_LANGUAGE_VIDEO" -> {
           val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoFeedbackFragment(task.taskID)

@@ -83,7 +83,7 @@ constructor(
       val tempList = mutableListOf<TaskInfo>()
       taskInfoList.forEach { taskInfo ->
         val taskStatus = fetchTaskStatus(taskInfo.taskID)
-        tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus))
+        tempList.add(TaskInfo(taskInfo.taskID, taskInfo.taskName, taskInfo.scenarioName, taskStatus, taskInfo.isGradeCard))
       }
       taskInfoList = tempList.sortedWith(taskInfoComparator)
 
@@ -265,7 +265,8 @@ constructor(
                       taskStatus.submittedMicrotasks,
                       0,
                       taskStatus.skippedMicrotasks
-                    )
+                    ),
+                    false
                   )
                 )
               }
@@ -281,12 +282,13 @@ constructor(
                       0,
                       taskStatus.verifiedMicrotasks,
                       0,
-                    )
+                    ),
+                    true
                   )
                 )
               }
             } else {
-              tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus))
+              tempList.add(TaskInfo(taskRecord.id, taskRecord.display_name, taskRecord.scenario_name, taskStatus, false))
             }
           }
           taskInfoList = tempList

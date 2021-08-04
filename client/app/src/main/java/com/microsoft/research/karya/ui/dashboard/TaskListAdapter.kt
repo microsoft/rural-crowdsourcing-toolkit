@@ -70,18 +70,37 @@ class TaskListAdapter(
     private fun setViews(binding: ItemTaskBinding, task: TaskInfo) {
       with(binding) {
         task.apply {
-          completedTasksPb.max = taskStatus.assignedMicrotasks + taskStatus.completedMicrotasks + taskStatus.skippedMicrotasks
-          completedTasksPb.progress = taskStatus.completedMicrotasks + taskStatus.skippedMicrotasks
+          val microtasksTotal =
+            taskStatus.assignedMicrotasks +
+              taskStatus.completedMicrotasks +
+              taskStatus.skippedMicrotasks +
+              taskStatus.submittedMicrotasks +
+              taskStatus.verifiedMicrotasks
+          val microtasksProgress = microtasksTotal - taskStatus.assignedMicrotasks
+          completedTasksPb.max = microtasksTotal
+          completedTasksPb.progress = microtasksProgress
 
-          incompleteCl.apply { if (taskStatus.assignedMicrotasks > 0) visible() else gone() }
-          completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
-          skippedCl.apply { if (taskStatus.skippedMicrotasks > 0) visible() else gone() }
-          submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
-          verifiedCl.apply { if (taskStatus.verifiedMicrotasks > 0) visible() else gone() }
+          if (task.isGradeCard) {
+            completedTasksPb.gone()
+            incompleteCl.gone()
+            completedCl.gone()
+            skippedCl.gone()
+            submittedCl.gone()
+            verifiedCl.visible()
+          } else {
+            completedTasksPb.visible()
+            incompleteCl.apply { if (taskStatus.assignedMicrotasks > 0) visible() else gone() }
+            completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
+            skippedCl.apply { if (taskStatus.skippedMicrotasks > 0) visible() else gone() }
+            submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
+            verifiedCl.gone()
+          }
         }
 
         taskLl.apply {
-          val clickableAndEnabled = task.taskStatus.assignedMicrotasks > 0 || task.taskStatus.verifiedMicrotasks > 0 || task.taskStatus.completedMicrotasks > 0
+          val status = task.taskStatus
+          val clickableAndEnabled =
+            (!task.isGradeCard && (status.assignedMicrotasks + status.completedMicrotasks) > 0) || (task.isGradeCard && status.verifiedMicrotasks > 0)
           isClickable = clickableAndEnabled
           isEnabled = clickableAndEnabled
 

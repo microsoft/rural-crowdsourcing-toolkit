@@ -9,4 +9,5 @@ data class TaskInfo(
   val taskName: String,
   val scenarioName: String,
   val taskStatus: TaskStatus,
+  val isGradeCard: Boolean,
 )
