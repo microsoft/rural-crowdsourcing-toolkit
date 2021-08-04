@@ -195,34 +195,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           findNavController().navigate(action)
         }
         "XLITERATION_DATA" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
-          findNavController().navigate(action)
-        }
-        "MV_XLITERATION_VERIFICATION" -> {
-          val action =
-            DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
-          findNavController().navigate(action)
-        }
-        "SIGN_LANGUAGE_VIDEO" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
-          findNavController().navigate(action)
-        }
-        "SGN_LANG_VIDEO_VERIFICATION" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoVerificationFragment(task.taskID)
-          findNavController().navigate(action)
-        }
-      }
-    } else if (!task.isGradeCard && task.taskStatus.completedMicrotasks > 0) {
-      when (task.scenarioName) {
-        "SIGN_LANGUAGE_VIDEO" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoMainFragment(task.taskID)
-          findNavController().navigate(action)
-        }
-      }
-    } else if (task.isGradeCard) {
-      when (task.scenarioName) {
-        "SIGN_LANGUAGE_VIDEO" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoFeedbackFragment(task.taskID)
+          val action = DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
           findNavController().navigate(action)
         }
       }

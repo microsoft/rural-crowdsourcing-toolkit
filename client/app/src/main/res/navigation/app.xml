@@ -135,21 +135,6 @@
             app:destination="@id/universalTransliterationMainFragment" >
             <argument android:name="taskId" />
         </action>
-        <action
-            android:id="@+id/action_dashboardActivity_to_signVideoMainFragment"
-            app:destination="@id/signVideoMainFragment" >
-            <argument android:name="taskId" />
-        </action>
-        <action
-            android:id="@+id/action_dashboardActivity_to_SignVideoVerificationFragment"
-            app:destination="@id/SignVideoVerificationFragment" >
-            <argument android:name="taskId" />
-        </action>
-        <action
-            android:id="@+id/action_dashboardActivity_to_SignVideoFeedbackFragment"
-            app:destination="@id/SignVideoFeedbackFragment" >
-            <argument android:name="taskId" />
-        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
@@ -186,39 +171,6 @@
             app:argType="string" />
         <action
             android:id="@+id/action_universalTransliterationMainFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/signVideoMainFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.signVideo.SignVideoMainFragment"
-        android:label="SignVideoMainFragment" >
-        <argument
-            android:name="taskId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_signVideoMainFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/SignVideoVerificationFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.signVideoVerification.SignVideoVerificationFragment"
-        android:label="SignVideoVerificationFragment" >
-        <argument
-            android:name="taskId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_SignVideoVerificationFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/SignVideoFeedbackFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.signVideoFeedback.SignVideoFeedbackFragment"
-        android:label="SignVideoFeedbackFragment" >
-        <argument
-            android:name="taskId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_SignVideoFeedbackFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>
