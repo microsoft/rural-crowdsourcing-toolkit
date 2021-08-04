@@ -87,15 +87,16 @@ constructor(
       if (microtaskAssignmentIDs.isEmpty()) {
         navigateBack()
       }
+
       // Move to the first incomplete (assigned) microtask or the last microtask
-      do {
+      while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1) {
         val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
         val microtaskAssignment = assignmentRepository.getAssignmentById(microtaskAssignmentID)
         if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
           break
         }
         currentAssignmentIndex++
-      } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
+      }
     }
   }
 
