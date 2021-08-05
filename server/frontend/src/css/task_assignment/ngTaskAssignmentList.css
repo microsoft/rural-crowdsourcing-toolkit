@@ -18,13 +18,42 @@
 #task-assignment-table table {
   box-shadow: none;
   border-collapse: separate;
+  margin-left: 3%;
+  width: 94%;
+}
+
+#task-assignment-table th {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #717787;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+  padding-top: 1.6%;
+  padding-bottom: 1.6%;
 }
 
 #task-assignment-table td {
   text-align: center;
   color: #717787;
-  background-color: #fff;
-  border-bottom: 1px dashed rgba(180, 189, 198, 0.8);
-  padding-top: 1.6%;
-  padding-bottom: 1.6%;
+  border-bottom: 1px dashed rgba(180, 189, 198, 0.5);
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+#task-assignment-table td:nth-child(3),
+td:nth-child(4) {
+  font-size: 0.85em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#task-assignment-table td:nth-child(4) span {
+  display: inline-block;
+  width: 45%;
+  padding: 0.8%;
+  background-color: #f0f8ff;
+  border-radius: 7px;
 }

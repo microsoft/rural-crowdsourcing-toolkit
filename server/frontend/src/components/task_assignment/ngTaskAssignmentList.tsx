@@ -43,9 +43,9 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
     const taskAssignmentStatus = (ta: TaskAssignmentRecord) => {
       switch (ta.status) {
         case 'ASSIGNED':
-          return 'Assigned';
+          return <span>Assigned</span>;
         case 'COMPLETED':
-          return 'Completed';
+          return <span>Completed</span>;
       }
     };
 

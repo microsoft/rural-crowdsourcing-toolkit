@@ -46,12 +46,12 @@ const TableList = <Record extends object>(props: TableListProps<Record>) => {
 
   /** Generate the table  */
   return (
-    <div className='tablelist-container z-depth-1'>
-      <table className='highlight compact white z-depth-1 tablelist'>
-        <thead className='grey darken-3 white-text'>
+    <div className='tablelist-container'>
+      <table className='highlight compact tablelist'>
+        <thead>
           <tr>
             {columns.map((col, colid) => (
-              <td key={colid}>{col.header}</td>
+              <th key={colid}>{col.header}</th>
             ))}
           </tr>
         </thead>
