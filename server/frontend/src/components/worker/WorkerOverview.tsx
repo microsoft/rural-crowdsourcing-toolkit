@@ -114,7 +114,12 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     }
 
     // Data to be fed into graph
-    const data = workers.map((w) => ({ ...w.extras, id: w.id }));
+    const data = workers.map((w) => ({
+      id: w.id,
+      access_code: w.access_code,
+      phone_number: w.phone_number,
+      ...w.extras,
+    }));
 
     // Create error message element if necessary
     const getErrorElement =
