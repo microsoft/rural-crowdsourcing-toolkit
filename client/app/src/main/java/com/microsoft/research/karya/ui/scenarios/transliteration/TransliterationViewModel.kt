@@ -57,6 +57,7 @@ constructor(
   var sourceLanguage: LanguageType = LanguageType.HI
   var sourceWord: String = ""
   var mlFeedback: Boolean = false
+  var variantLimitTask: Int = 0
 
   private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
     MutableLiveData(mutableMapOf())
@@ -81,6 +82,11 @@ constructor(
     } catch (e: Exception) {
       false
     }
+    variantLimitTask = try {
+      task.params.asJsonObject.get("limit").asInt
+    } catch (e: Exception) {
+      2
+    }
   }
 
   override fun setupMicrotask() {
@@ -91,8 +97,8 @@ constructor(
 
     limit = try {
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
-    } catch(e: Exception) {
-      10
+    } catch (e: Exception) {
+      variantLimitTask
     }
 
     val variantsJsonObject = try {
