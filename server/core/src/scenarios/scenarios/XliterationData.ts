@@ -23,7 +23,7 @@ type XliterationStatus = 'NEW' | 'VALID' | 'INVALID' | 'UNKNOWN';
 
 type XliterationMicrotaskInput = {
   word: string;
-  limit: number;
+  limit?: number;
   variants: {
     [id: string]: {
       source: XliterationProvider;
