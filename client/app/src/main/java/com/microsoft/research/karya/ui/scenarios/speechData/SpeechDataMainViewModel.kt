@@ -462,7 +462,7 @@ constructor(
         }
       }
       ActivityState.ACTIVITY_STOPPED -> {
-        throw Exception("Android back button cannot not be clicked in '$activityState' state")
+      //  throw Exception("Android back button cannot not be clicked in '$activityState' state")
       }
     }
   }
