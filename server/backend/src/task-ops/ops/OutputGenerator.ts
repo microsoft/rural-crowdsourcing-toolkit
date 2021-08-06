@@ -94,4 +94,11 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
 
   // Update the task op file record
   await BasicModel.updateSingle('task_op', { id: taskOp.id }, { file_id: fileRecord.id });
+
+  // Clean up all files
+  try {
+    await fsp.rmdir(task_folder, { recursive: true });
+  } catch (e) {
+    // Ignore any exceptions here
+  }
 }
