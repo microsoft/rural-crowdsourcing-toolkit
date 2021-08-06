@@ -420,7 +420,7 @@ constructor(
             val centiSeconds = (duration / 10) % 100
             val seconds = duration / 1000
             _playbackSecondsTvText.value = "%d".format(seconds)
-            _playbackSecondsTvText.value = "%02d".format(centiSeconds)
+            _playbackCentiSecondsTvText.value = "%02d".format(centiSeconds)
         }
     }
 
