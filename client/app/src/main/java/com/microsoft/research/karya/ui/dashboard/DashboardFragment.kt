@@ -201,6 +201,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoVerificationFragment(task.taskID)
           findNavController().navigate(action)
         }
+        "SPEECH_VERIFICATION" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToSpeechVerificationFragment(task.taskID)
+          findNavController().navigate(action)
+        }
       }
     } else {
       when (task.scenarioName) {
