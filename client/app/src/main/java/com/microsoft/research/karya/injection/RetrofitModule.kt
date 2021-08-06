@@ -30,7 +30,7 @@ class RetrofitModule {
   @Reusable
   @BaseUrl
   fun provideBaseUrl(): String {
-    return "https://ai4bkaryabox002.eastus.cloudapp.azure.com"
+    return "https://ai4bkaryabox003.eastus.cloudapp.azure.com"
   }
 
   @Provides
