@@ -62,7 +62,8 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
       })) as MicrotaskRecordType<'SPEECH_DATA'>;
 
       // Get the recording name
-      const recordingFile = assignment.output!.files!.recording;
+      const assFiles = assignment.output!.files!;
+      const recordingFile = assFiles.recording || Object.values(assFiles)[0];
 
       // JSON data
       const jsonData = {
