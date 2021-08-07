@@ -190,6 +190,20 @@ form {
   fill: #b4bdc6;
 }
 
+#task-form span {
+  color: #717787;
+  letter-spacing: 0.08em;
+  line-height: 20px;
+}
+
+#task-form .checkbox-row {
+  margin-bottom: 5.5%;
+}
+
+#task-form .filled-in:not(:checked) + span:after {
+  border: 2px solid #717787;
+}
+
 #tags {
   letter-spacing: 0.08em;
   margin-bottom: 0.5%;

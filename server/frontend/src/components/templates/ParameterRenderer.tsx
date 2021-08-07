@@ -17,7 +17,7 @@ type ParameterSectionProps = {
 export const ParameterSection = (props: ParameterSectionProps) => {
   return (
     <div>
-      {props.params.map(param => {
+      {props.params.map((param) => {
         switch (param.type) {
           case 'string':
           case 'int':
@@ -35,10 +35,10 @@ export const ParameterSection = (props: ParameterSectionProps) => {
             );
           case 'boolean':
             return (
-              <div className='row' key={param.id}>
+              <div className='row checkbox-row' key={param.id}>
                 <div className='col s10 m8 l5 input-field'>
                   <label>
-                    <input type='checkbox' id={param.id} onChange={props.onBooleanChange} />
+                    <input type='checkbox' className='filled-in' id={param.id} onChange={props.onBooleanChange} />
                     <span>{param.label}</span>
                   </label>
                 </div>
