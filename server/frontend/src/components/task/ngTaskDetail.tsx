@@ -439,7 +439,13 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 <div className='row'>
                   <div className='col s10' id='checkbox-col'>
                     <label htmlFor='blocking'>
-                      <input type='checkbox' id='blocking' checked={blocking} onChange={this.handleBooleanChange} />
+                      <input
+                        type='checkbox'
+                        className='filled-in'
+                        id='blocking'
+                        checked={blocking}
+                        onChange={this.handleBooleanChange}
+                      />
                       <span>Blocking</span>
                     </label>
                   </div>

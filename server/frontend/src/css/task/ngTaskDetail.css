@@ -254,6 +254,16 @@
   padding-left: 4%;
 }
 
+#link-form span {
+  color: #717787;
+  letter-spacing: 0.08em;
+  line-height: 20px;
+}
+
+#link-form .filled-in:not(:checked) + span:after {
+  border: 2px solid #717787;
+}
+
 #btn-row1 button,
 #btn-row2 button {
   font-family: 'Titillium Web', sans-serif;
