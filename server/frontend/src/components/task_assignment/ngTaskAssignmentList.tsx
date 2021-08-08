@@ -67,7 +67,7 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
     );
 
     return (
-      <div className='row' id='main-row'>
+      <div className='row main-row'>
         <div className='col s12'>
           {this.props.task_assignment.status === 'IN_FLIGHT' ? (
             <ProgressBar />
@@ -75,8 +75,8 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
             { getErrorElement }
           ) : (
             <>
-              <h1 id='page-title'>Task Assignments{createTaskAssignmentButton}</h1>
-              <div id='task-assignment-table'>
+              <h1 className='page-title'>Task Assignments{createTaskAssignmentButton}</h1>
+              <div className='basic-table' id='task-assignment-table'>
                 <TableList<TaskAssignmentRecord>
                   columns={tableColumns}
                   rows={task_assignments}

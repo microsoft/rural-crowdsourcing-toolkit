@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
-
 #main-card {
   background-color: #fff;
   border-radius: 5px;
@@ -35,7 +32,8 @@
   text-align: center;
 }
 
-#login-btn button {
+#login-btn button,
+#choose-btn button {
   font-family: 'Montserrat', sans-serif !important;
   font-size: 0.97em !important;
   box-shadow: rgba(6, 24, 44, 0.1) 0px 0px 0px 1px, rgba(6, 24, 44, 0.25) 0px 4px 6px -1px,
@@ -48,26 +46,14 @@
 }
 
 #register-btn {
-  font-family: 'Titillium Web', sans-serif;
   background-color: #ef5350;
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  border-radius: 5px;
 }
 
 #register-btn:hover {
   background-color: #f44336;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 #choose-btn button {
-  font-family: 'Montserrat', sans-serif !important;
-  font-size: 0.97em !important;
-  box-shadow: rgba(6, 24, 44, 0.1) 0px 0px 0px 1px, rgba(6, 24, 44, 0.25) 0px 4px 6px -1px,
-    rgba(255, 255, 255, 0.06) 0px 1px 0px inset !important;
-  font-weight: 300;
   margin-left: 10%;
 }
 
@@ -100,7 +86,6 @@
 }
 
 #signup-form {
-  background-color: transparent;
   padding: 0px;
 }
 
@@ -117,34 +102,31 @@
   margin-left: 5%;
 }
 
-.input-field > label {
-  color: #b4bdc6;
-  font-size: 0.97em;
-  letter-spacing: 0.04em;
-}
-
 .profile-details {
   margin-top: 6%;
   margin-left: 12% !important;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  border-radius: 3px;
 }
 
 #email {
-  margin-bottom: 0px;
-  padding-bottom: 1.4%;
+  margin-bottom: 0.2%;
+  padding-bottom: 1.2%;
   color: #717787;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.82em;
+  font-size: 0.83em;
+  letter-spacing: 0.03em;
   border-bottom: none;
   height: 1.2rem;
 }
 
 #full_name {
-  margin-bottom: 0px;
+  margin-bottom: 0.4%;
   padding-top: 1.2%;
   color: #717787;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.95em;
+  letter-spacing: 0.01em;
   border-bottom: none;
   height: 1.2rem;
   font-weight: 500;
@@ -155,8 +137,9 @@
     font-size: 1.4em !important;
   }
 
-  #login-btn button {
-    font-size: 0.8em !important;
+  #login-btn button,
+  #choose-btn button {
+    font-size: 0.9em !important;
   }
 
   #or {
@@ -165,19 +148,15 @@
   }
 
   #enter-code-txt {
-    font-size: 0.8em;
+    font-size: 0.82em;
     font-weight: 400;
   }
 
   #signup-form .input-field > label {
-    font-size: 0.754em;
+    font-size: 0.82em;
   }
 
   #access_code {
     font-size: 0.97em;
-  }
-
-  #choose-btn button {
-    font-size: 0.8em !important;
   }
 }

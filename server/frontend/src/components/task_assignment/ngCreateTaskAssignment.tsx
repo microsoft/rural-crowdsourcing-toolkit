@@ -218,11 +218,11 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     }
 
     return (
-      <div className='white z-depth-1 lpad20' id='main'>
+      <div className='white lpad20 main'>
         {errorElements.map((err) => err)}
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
-            <h1 id='page-title'>Create Assignment</h1>
+            <h1 className='page-title'>Create Assignment</h1>
             <div id='task-assignment-form'>
               <div className='row'>
                 <div className='col s10 m8 l6'>
@@ -246,26 +246,24 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                 <div className='col s10 m8 l6'>{policyDropDown}</div>
               </div>
 
-            {/** Policy parameter section */}
-            {policyParamsSection}
+              {/** Policy parameter section */}
+              {policyParamsSection}
 
-            {/** Submit cancel buttons */}
-            {this.props.request.status === 'IN_FLIGHT' ? (
-              <ProgressBar />
-            ) : (
-              <div className='row'>
-                <div className='input-field'>
-                  <button className='btn waves-effect waves-light' id='submit-assignment-btn'>
-                    Submit Assignment
-                  </button>
-                  <Link to='/task-assignments'>
-                    <button className='btn' id='cancel-btn'>
-                      Cancel
+              {/** Submit cancel buttons */}
+              {this.props.request.status === 'IN_FLIGHT' ? (
+                <ProgressBar />
+              ) : (
+                <div className='row'>
+                  <div className='input-field'>
+                    <button className='btn waves-effect waves-light' id='submit-assignment-btn'>
+                      Submit Assignment
                     </button>
-                  </Link>
+                    <Link to='/task-assignments'>
+                      <button className='btn cancel-btn'>Cancel</button>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             </div>
           </div>
         </form>

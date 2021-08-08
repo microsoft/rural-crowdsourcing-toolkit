@@ -255,7 +255,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     // If request in flight, show progress bar
     if (this.props.request.status === 'IN_FLIGHT') {
       return (
-        <div className='row white z-depth-1'>
+        <div className='row white'>
           <ProgressBar />
         </div>
       );
@@ -264,7 +264,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     // If the operation has failed, return failure bar
     if (task === undefined) {
       return (
-        <div className='row white z-depth-1'>
+        <div className='row white'>
           <ErrorMessage message={['Unable to fetch requested task']} />
         </div>
       );
@@ -456,10 +456,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               <button className='btn' id='add-chain-btn' onClick={this.handleLinkSubmit}>
                 Add chain
               </button>
-              <button
-                className='btn grey lighten-2 cancel-btn'
-                onClick={() => this.setState({ show_link_form: false })}
-              >
+              <button className='btn cancel-btn' onClick={() => this.setState({ show_link_form: false })}>
                 Cancel
                 <i className='material-icons right'>close</i>
               </button>
@@ -496,7 +493,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const tarInputfile = scenario.task_input_file.tgz;
 
     return (
-      <div className='white z-depth-1 lpad20' id='main'>
+      <div className='white lpad20 main'>
         {errorElement !== null ? (
           <div className='section'>
             <div className='row'>{errorElement}</div>
@@ -517,186 +514,177 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           </nav>
         ) : null}
 
-        <div id='all-content'>
-          <div className='row'>
-            <div className='col s12'>
-              <h1 id='task-title'>{`${task.name}`}</h1>
-              <h2 className='subtitle'>
-                Scenario: <span>{scenario_name},</span>
-              </h2>
-              <h2 className='subtitle'>
-                Language: <span>{language}</span>
-              </h2>
-            </div>
+        <div className='row'>
+          <div className='col s12'>
+            <h1 id='task-title'>{`${task.name}`}</h1>
+            <h2 className='subtitle'>
+              Scenario: <span>{scenario_name},</span>
+            </h2>
+            <h2 className='subtitle'>
+              Language: <span>{language}</span>
+            </h2>
           </div>
-
-          {/** Microtask summary data table */}
-          <div className='row'>
-            <div className='number-col'>
-              <h2>Microtasks</h2>
-              <p>{microtasks}</p>
-            </div>
-            <div className='number-col'>
-              <h2>Completed Assignments</h2>
-              <p>{completed_assignments}</p>
-            </div>
-            <div className='number-col'>
-              <h2>Total Cost</h2>
-              <p>{cost}</p>
-            </div>
-          </div>
-
-          {/** Recharts graph showing total, completed, verified assignments, and cost by microtask id */}
-          {graph_data.length !== 0 && completed_assignments !== 0 ? (
-            <>
-              <ResponsiveContainer width='90%' height={400}>
-                <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray='3 3' />
-                  <XAxis dataKey='id' tick={false} label='Microtask ID' />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend verticalAlign='top' />
-                  <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
-                  <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
-                  <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
-                  {/* <Line type='monotone' dataKey='cost' stroke='#ea80fc' dot={false} /> */}
-                </LineChart>
-              </ResponsiveContainer>
-
-              <CSVLink data={data} headers={headers} filename={'graph-data.csv'} className='btn' id='download-data-btn'>
-                <i className='material-icons left'>download</i>Download data
-              </CSVLink>
-            </>
-          ) : null}
-
-          {/** Basic task info section */}
-          <div className='section'>
-            <div className='row'>
-              <table id='task-details'>
-                <tr>
-                  <td>Description</td>
-                  <td>{task.description}</td>
-                </tr>
-                <tr>
-                  <td>Display Name</td>
-                  <td>{task.display_name}</td>
-                </tr>
-                <tr>
-                  <td>Task Status</td>
-                  <td>{taskStatus(task)}</td>
-                </tr>
-                <tr>
-                  <td>Assignment Parameters</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Assignment Granularity</td>
-                  <td>{task.assignment_granularity}</td>
-                </tr>
-                {task.assignment_granularity === 'GROUP' ? (
-                  <>
-                    <tr>
-                      <td>Group Assignment Order</td>
-                      <td>{task.group_assignment_order}</td>
-                    </tr>
-                  </>
-                ) : null}
-                <tr>
-                  <td>Microtask Assignment Order</td>
-                  <td>{task.microtask_assignment_order}</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-
-          {task_link_section}
-
-          {/** Display input and output file section if task requires input files */}
-          {jsonInputFile.required || tarInputfile.required ? (
-            <>
-              <div className='section' id='i-files'>
-                <div className='row'>
-                  <h2>Input Files Submitted</h2>
-                </div>
-                {inputFileTable}
-                <button
-                  className='btn-flat'
-                  id='submit-new-btn'
-                  onClick={() => this.setState({ show_input_form: true })}
-                >
-                  <i className='material-icons left'>add</i>Submit New
-                </button>
-              </div>
-              <div className='section' id='o-files'>
-                <div className='row'>
-                  <h2>Output Files Generated</h2>
-                </div>
-                {outputFileTable}
-                <button
-                  className='btn-flat'
-                  id='generate-btn'
-                  onClick={this.props.generateOutput}
-                  disabled={!files_submitted}
-                >
-                  <i className='material-icons left'>add</i>
-                  Generate New
-                </button>
-              </div>
-
-              {/** Floating form for submission of input files */}
-              <div id='submit-form' style={{ display: this.state.show_input_form === true ? 'block' : 'none' }}>
-                <p>Kindly upload the following files.</p>
-                {jsonInputFile.required ? (
-                  <div className='row'>
-                    <p>
-                      <i>{jsonInputFile.description}</i>
-                    </p>
-                    <div className='col s12 file-field input-field'>
-                      <div className='btn btn-small'>
-                        <i className='material-icons'>attach_file</i>
-                        <input type='file' id='json' onChange={this.handleParamFileChange} />
-                      </div>
-                      <div className='file-path-wrapper'>
-                        <label htmlFor='json-name'>Task JSON File</label>
-                        <input id='json-name' type='text' disabled={true} className='file-path validate' />
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-                {tarInputfile.required ? (
-                  <div className='row'>
-                    <p>
-                      <i>{tarInputfile.description}</i>
-                    </p>
-                    <div className='col s12 file-field input-field'>
-                      <div className='btn btn-small'>
-                        <i className='material-icons'>attach_file</i>
-                        <input type='file' id='tgz' onChange={this.handleParamFileChange} />
-                      </div>
-                      <div className='file-path-wrapper'>
-                        <label htmlFor='tgz-name'>Task TGZ File</label>
-                        <input id='tgz-name' type='text' disabled={true} className='file-path validate' />
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-                <div className='row' id='btn-row2'>
-                  <button className='btn' id='upload-btn' onClick={this.submitInputFiles}>
-                    Upload
-                    <i className='material-icons right'>upload</i>
-                  </button>
-                  <button
-                    className='btn grey lighten-2 cancel-btn'
-                    onClick={() => this.setState({ show_input_form: false })}
-                  >
-                    Cancel
-                    <i className='material-icons right'>close</i>
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : null}
         </div>
+
+        {/** Microtask summary data table */}
+        <div className='row'>
+          <div className='number-col'>
+            <h2>Microtasks</h2>
+            <p>{microtasks}</p>
+          </div>
+          <div className='number-col'>
+            <h2>Completed Assignments</h2>
+            <p>{completed_assignments}</p>
+          </div>
+          <div className='number-col'>
+            <h2>Total Cost</h2>
+            <p>{cost}</p>
+          </div>
+        </div>
+
+        {/** Recharts graph showing total, completed, verified assignments, and cost by microtask id */}
+        {graph_data.length !== 0 && completed_assignments !== 0 ? (
+          <>
+            <ResponsiveContainer width='90%' height={400}>
+              <LineChart data={data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='id' tick={false} label='Microtask ID' />
+                <YAxis />
+                <Tooltip />
+                <Legend verticalAlign='top' />
+                <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
+                <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
+                <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
+                {/* <Line type='monotone' dataKey='cost' stroke='#ea80fc' dot={false} /> */}
+              </LineChart>
+            </ResponsiveContainer>
+
+            <CSVLink data={data} headers={headers} filename={'graph-data.csv'} className='btn' id='download-data-btn'>
+              <i className='material-icons left'>download</i>Download data
+            </CSVLink>
+          </>
+        ) : null}
+
+        {/** Basic task info section */}
+        <div className='section'>
+          <div className='row'>
+            <table id='task-details'>
+              <tr>
+                <td>Description</td>
+                <td>{task.description}</td>
+              </tr>
+              <tr>
+                <td>Display Name</td>
+                <td>{task.display_name}</td>
+              </tr>
+              <tr>
+                <td>Task Status</td>
+                <td>{taskStatus(task)}</td>
+              </tr>
+              <tr>
+                <td>Assignment Parameters</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Assignment Granularity</td>
+                <td>{task.assignment_granularity}</td>
+              </tr>
+              {task.assignment_granularity === 'GROUP' ? (
+                <>
+                  <tr>
+                    <td>Group Assignment Order</td>
+                    <td>{task.group_assignment_order}</td>
+                  </tr>
+                </>
+              ) : null}
+              <tr>
+                <td>Microtask Assignment Order</td>
+                <td>{task.microtask_assignment_order}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        {task_link_section}
+
+        {/** Display input and output file section if task requires input files */}
+        {jsonInputFile.required || tarInputfile.required ? (
+          <>
+            <div className='section' id='i-files'>
+              <div className='row'>
+                <h2>Input Files Submitted</h2>
+              </div>
+              {inputFileTable}
+              <button className='btn-flat' id='submit-new-btn' onClick={() => this.setState({ show_input_form: true })}>
+                <i className='material-icons left'>add</i>Submit New
+              </button>
+            </div>
+            <div className='section' id='o-files'>
+              <div className='row'>
+                <h2>Output Files Generated</h2>
+              </div>
+              {outputFileTable}
+              <button
+                className='btn-flat'
+                id='generate-btn'
+                onClick={this.props.generateOutput}
+                disabled={!files_submitted}
+              >
+                <i className='material-icons left'>add</i>
+                Generate New
+              </button>
+            </div>
+
+            {/** Floating form for submission of input files */}
+            <div id='submit-form' style={{ display: this.state.show_input_form === true ? 'block' : 'none' }}>
+              <p>Kindly upload the following files.</p>
+              {jsonInputFile.required ? (
+                <div className='row'>
+                  <p>
+                    <i>{jsonInputFile.description}</i>
+                  </p>
+                  <div className='col s12 file-field input-field'>
+                    <div className='btn btn-small'>
+                      <i className='material-icons'>attach_file</i>
+                      <input type='file' id='json' onChange={this.handleParamFileChange} />
+                    </div>
+                    <div className='file-path-wrapper'>
+                      <label htmlFor='json-name'>Task JSON File</label>
+                      <input id='json-name' type='text' disabled={true} className='file-path validate' />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              {tarInputfile.required ? (
+                <div className='row'>
+                  <p>
+                    <i>{tarInputfile.description}</i>
+                  </p>
+                  <div className='col s12 file-field input-field'>
+                    <div className='btn btn-small'>
+                      <i className='material-icons'>attach_file</i>
+                      <input type='file' id='tgz' onChange={this.handleParamFileChange} />
+                    </div>
+                    <div className='file-path-wrapper'>
+                      <label htmlFor='tgz-name'>Task TGZ File</label>
+                      <input id='tgz-name' type='text' disabled={true} className='file-path validate' />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <div className='row' id='btn-row2'>
+                <button className='btn' id='upload-btn' onClick={this.submitInputFiles}>
+                  Upload
+                  <i className='material-icons right'>upload</i>
+                </button>
+                <button className='btn cancel-btn' onClick={() => this.setState({ show_input_form: false })}>
+                  Cancel
+                  <i className='material-icons right'>close</i>
+                </button>
+              </div>
+            </div>
+          </>
+        ) : null}
       </div>
     );
   }

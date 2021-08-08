@@ -1,13 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
-
-#main {
-  font-family: 'Titillium Web', sans-serif;
-  border-radius: 5px;
-  border: none;
-  box-shadow: none;
-}
-
 #breadcrumbs-nav {
   position: relative;
   left: 0%;
@@ -39,19 +29,6 @@
 .breadcrumb:last-child {
   color: #1ccfbd;
   display: inline;
-}
-
-#page-title {
-  padding-left: 4%;
-  padding-bottom: 2%;
-  margin-bottom: 3%;
-  margin-top: 1%;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.45em;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  color: #6e768d;
-  border-bottom: 2px solid #ebedec;
 }
 
 #select-txt {
@@ -147,10 +124,6 @@
   }
 }
 
-form {
-  border-radius: 0.3em;
-}
-
 #task-form {
   margin-left: 4%;
 }
@@ -174,34 +147,14 @@ form {
   margin-bottom: 0.5%;
 }
 
-#task-form input {
-  font-family: 'Titillium Web', sans-serif;
-  color: #717787;
-  letter-spacing: 0.08em;
+#task-form input,
+#task-form textarea {
   margin-bottom: 0.5%;
   border-bottom: 1px solid #b4bdc6;
 }
 
-#task-form textarea {
-  border-bottom: 1px solid #b4bdc6;
-}
-
-#task-form .select-wrapper .caret {
-  fill: #b4bdc6;
-}
-
-#task-form span {
-  color: #717787;
-  letter-spacing: 0.08em;
-  line-height: 20px;
-}
-
 #task-form .checkbox-row {
   margin-bottom: 5.5%;
-}
-
-#task-form .filled-in:not(:checked) + span:after {
-  border: 2px solid #717787;
 }
 
 #tags {
@@ -253,35 +206,14 @@ form {
 }
 
 #task-form button {
-  font-family: 'Titillium Web', sans-serif;
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  border-radius: 5px;
   margin-left: 12%;
   margin-top: 3%;
 }
 
 #submit-task-btn {
   background-color: #4fc3f7;
-  transition: all 0.3s ease-in;
 }
 
 #submit-task-btn:hover {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
   background-color: #29b6f6;
-}
-
-#cancel-btn {
-  background-color: #eceff1;
-  color: #717787;
-  padding-left: 3%;
-  padding-right: 3%;
-  transition: all 0.3s ease-in;
-}
-
-#cancel-btn:hover {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }

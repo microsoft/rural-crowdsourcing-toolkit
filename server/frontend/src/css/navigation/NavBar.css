@@ -45,6 +45,7 @@ ul li > a {
 .btn-floating:hover,
 .btn-floating:focus {
   background-color: #a4d4ff;
+  box-shadow: none;
 }
 
 #tab-bar {

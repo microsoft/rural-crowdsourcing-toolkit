@@ -455,9 +455,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                   Submit Task
                 </button>
                 <Link to='/task'>
-                  <button className='btn' id='cancel-btn'>
-                    Cancel
-                  </button>
+                  <button className='btn cancel-btn'>Cancel</button>
                 </Link>
               </div>
             </div>
@@ -467,7 +465,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     }
 
     return (
-      <div className='white z-depth-1 lpad20' id='main'>
+      <div className='white lpad20 main'>
         {createErrorElement}
 
         {/** Breadcrumbs for navigation shown only if person is work provider */}
@@ -486,7 +484,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
-            <h1 id='page-title'>Create Task</h1>
+            <h1 className='page-title'>Create Task</h1>
             <h2 className='col s10' id='select-txt'>
               Select a Scenario
             </h2>

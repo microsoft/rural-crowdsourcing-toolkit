@@ -3,9 +3,8 @@
  * Licensed under the MIT license.
 **/
 
-.abel {
-  font-family: 'Abel';
-}
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
 
 /* Tables */
 td,
@@ -42,8 +41,8 @@ td.label {
 
 /* Forms */
 form {
-  background: white;
   padding: 20px;
+  border-radius: 0.3em;
 }
 
 .w600 {
@@ -116,4 +115,143 @@ form {
 
 .light-border {
   border: 1px solid #eee;
+}
+
+/* Common across many components */
+.main,
+.main-row {
+  font-family: 'Titillium Web', sans-serif;
+  border-radius: 5px;
+}
+
+.main-row {
+  background-color: #fff;
+  padding: 2%;
+}
+
+.page-title {
+  padding-left: 3%;
+  padding-bottom: 2%;
+  margin-top: 2%;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.6em;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #6e768d;
+  border-bottom: 2px solid #ebedec;
+}
+
+input {
+  font-family: 'Titillium Web', sans-serif;
+  color: #717787;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+.input-field > label {
+  color: #b4bdc6;
+  font-size: 0.97em;
+  letter-spacing: 0.04em;
+}
+
+.select-wrapper .caret {
+  fill: #b4bdc6;
+}
+
+.filled-in:not(:checked) + span:after,
+.with-gap + span:before {
+  border: 2px solid #717787 !important;
+}
+
+[type='checkbox'].filled-in:checked + span:not(.lever):after {
+  background-color: #2bbbad;
+  border: 2px solid #2bbbad;
+}
+
+[type='radio'].with-gap:checked + span:after {
+  background-color: #2bbbad;
+}
+
+.filled-in + span,
+.with-gap + span {
+  color: #717787;
+  letter-spacing: 0.08em;
+}
+
+[type='checkbox'].filled-in + span {
+  line-height: 20px;
+}
+
+.btn {
+  font-family: 'Titillium Web', sans-serif;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  border-radius: 5px;
+  transition: all 0.3s ease-in;
+}
+
+.btn:hover {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.btn-flat,
+.btn-flat:focus {
+  color: #26a69a;
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 600;
+  font-size: 1.1em;
+  letter-spacing: 0.08em;
+  background-color: #fff;
+  transition: all 0.3 ease-out;
+}
+
+.btn-flat:hover {
+  color: #1ccfbd;
+}
+
+.cancel-btn {
+  background-color: #eceff1;
+  color: #717787;
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.cancel-btn:hover {
+  background-color: #eceff1;
+}
+
+.recharts-wrapper {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 97%;
+}
+
+.recharts-wrapper text {
+  font-family: 'Titillium Web', sans-serif;
+  fill: #717787;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 3%;
+}
+
+.basic-table table {
+  border-collapse: separate;
+}
+
+.basic-table th {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #717787;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1.5px 0px;
+}
+
+.basic-table td {
+  text-align: center;
+  color: #717787;
+  border-bottom: 1px dashed rgba(180, 189, 198, 0.8);
 }

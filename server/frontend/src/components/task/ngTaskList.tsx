@@ -195,7 +195,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
     };
 
     return (
-      <div className='row' id='main-row'>
+      <div className='row main-row'>
         <div className='col s12'>
           {this.props.task.status === 'IN_FLIGHT' ? (
             <ProgressBar />
@@ -203,7 +203,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
             { getErrorElement }
           ) : (
             <>
-              <h1 id='page-title'>Tasks{createTaskButton}</h1>
+              <h1 className='page-title'>Tasks{createTaskButton}</h1>
               <div className='row' id='filter_row'>
                 <div className='col s10 m8 l5'>
                   <select multiple={true} id='tags_filter' value={tags_filter} onChange={this.handleTagsChange}>
