@@ -29,9 +29,9 @@ export type TaskInputProcessorObject = {
  */
 export async function processInputFile(
   task: TaskRecordType,
-  jsonFilePath?: string,
-  tgzFilePath?: string,
-  taskFolder?: string
+  jsonFilePath: string | undefined,
+  tgzFilePath: string | undefined,
+  taskFolder: string
 ) {
   // Extract the scenario corresponding to the task
   const scenario_name = task.scenario_name;
@@ -103,4 +103,12 @@ export async function processInputFile(
       }
     });
   });
+
+  // Clean up the input files
+  try {
+    await fsp.rmdir(taskFolder, { recursive: true });
+  } catch (e) {
+    // Something went wrong while cleaning up
+    // Ignore
+  }
 }
