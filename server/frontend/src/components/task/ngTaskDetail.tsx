@@ -508,7 +508,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 <Link to='/task' className='breadcrumb'>
                   Tasks
                 </Link>
-                <p className='breadcrumb'>Create Task</p>
+                <p className='breadcrumb'>{task.name}</p>
               </div>
             </div>
           </nav>
