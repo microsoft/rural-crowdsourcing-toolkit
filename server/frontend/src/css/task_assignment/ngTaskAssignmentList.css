@@ -1,9 +1,12 @@
-#create-assignment-btn {
+#create-assignment-link {
   margin-left: 46%;
-  margin-bottom: 1%;
+}
+
+#create-assignment-link button {
   color: #fff;
   background-color: #4fc3f7;
   border-radius: 7px;
+  margin-bottom: 1%;
 }
 
 #task-assignment-table table {

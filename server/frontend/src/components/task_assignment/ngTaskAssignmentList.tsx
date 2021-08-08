@@ -59,8 +59,8 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
 
     // create task assignment button
     const createTaskAssignmentButton = (
-      <Link to='/task-assignments/create'>
-        <button id='create-assignment-btn' className='btn waves-effect waves-light'>
+      <Link to='/task-assignments/create' id='create-assignment-link'>
+        <button className='btn waves-effect waves-light'>
           Create Assignment <i className='material-icons left'>add</i>
         </button>
       </Link>

@@ -1,9 +1,12 @@
-#create-task-btn {
+#create-task-link {
   margin-left: 70%;
-  margin-bottom: 1%;
+}
+
+#create-task-link button {
   color: #fff;
   background-color: #4fc3f7;
   border-radius: 7px;
+  margin-bottom: 1%;
 }
 
 #filter_row div {

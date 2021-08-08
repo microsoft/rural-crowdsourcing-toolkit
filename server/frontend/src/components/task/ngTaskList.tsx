@@ -130,8 +130,8 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
 
     // create task button
     const createTaskButton = (
-      <Link to='/task/create'>
-        <button id='create-task-btn' className='btn waves-effect waves-light'>
+      <Link to='/task/create' id='create-task-link'>
+        <button className='btn waves-effect waves-light'>
           Create Task <i className='material-icons left'>add</i>
         </button>
       </Link>
