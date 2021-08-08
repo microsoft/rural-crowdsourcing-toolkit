@@ -13,11 +13,12 @@ import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
-// Store types and actions
-
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
+
+// HoCs
+import { DataProps, withData } from '../hoc/WithData';
 
 // Recharts library
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -25,7 +26,11 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Responsi
 // For CSV file download
 import { CSVLink } from 'react-csv';
 
+// CSS
 import '../../css/worker/WorkerOverview.css';
+
+// Data connector
+const dataConnector = withData('task');
 
 // Map state to props
 const mapStateToProps = (state: RootState) => {
@@ -51,14 +56,16 @@ const mapDispatchToProps = (dispatch: any) => {
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const connector = compose(reduxConnector);
+const connector = compose(dataConnector, reduxConnector);
 
-type WorkerOverviewProps = ConnectedProps<typeof reduxConnector>;
+type WorkerOverviewProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
 // component state
 type WorkerOverviewState = {
   tags_filter: Array<string>;
   box_id_filter?: string;
+  sort_by?: string;
+  graph_display: { assigned: boolean; completed: boolean; verified: boolean; earned: boolean };
 };
 
 // Task list component
@@ -66,6 +73,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   // Initial state
   state: WorkerOverviewState = {
     tags_filter: [],
+    graph_display: { assigned: true, completed: true, verified: true, earned: false },
   };
 
   componentDidMount() {
@@ -89,11 +97,25 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     this.setState({ box_id_filter });
   };
 
+  // Handle change in sorting parameter
+  handleSortByChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const sort_by = e.currentTarget.value;
+    this.setState({ sort_by });
+  };
+
+  // Handle boolean input change
+  handleBooleanChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const graph_display = { ...this.state.graph_display, [e.currentTarget.id]: e.currentTarget.checked };
+    this.setState({ graph_display });
+  };
+
   // Render component
   render() {
     var workers = this.props.workers_data;
     const tags_filter = this.state.tags_filter;
     const box_id_filter = this.state.box_id_filter;
+    const sort_by = this.state.sort_by;
+    const graph_display = this.state.graph_display;
 
     // Filtering workers by tags
     workers = workers.filter((w) => tags_filter.every((val) => w.tags.tags.includes(val)));
@@ -114,12 +136,21 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     }
 
     // Data to be fed into graph
-    const data = workers.map((w) => ({
+    var data = workers.map((w) => ({
       id: w.id,
       access_code: w.access_code,
       phone_number: w.phone_number,
       ...w.extras,
     }));
+
+    // Sorting the data
+    if (sort_by !== undefined) {
+      sort_by === 'completed'
+        ? // @ts-ignore
+          (data = data.sort((prev, next) => prev.completed - next.completed))
+        : // @ts-ignore
+          (data = data.sort((prev, next) => prev.verified - next.verified));
+    }
 
     // Create error message element if necessary
     const getErrorElement =
@@ -128,7 +159,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
       ) : null;
 
     return (
-      <div className='row' id='main-row'>
+      <div className='row main-row'>
         <div className='col s12'>
           {this.props.status === 'IN_FLIGHT' ? (
             <ProgressBar />
@@ -136,7 +167,9 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
             { getErrorElement }
           ) : (
             <>
-              <h1 id='workers-title'>Workers</h1>
+              <h1 className='page-title' id='workers-title'>
+                Workers
+              </h1>
               <div className='row' id='filter_row'>
                 <div className='col s10 m8 l5'>
                   <select multiple={true} id='tags_filter' value={tags_filter} onChange={this.handleTagsChange}>
@@ -164,6 +197,72 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   </select>
                 </div>
               </div>
+              <div className='row' id='sort_row'>
+                <p>Sort by: </p>
+                <label key='completed'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='sort_by'
+                    value='completed'
+                    onChange={this.handleSortByChange}
+                  />
+                  <span>Completed</span>
+                </label>
+                <label key='verified'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='sort_by'
+                    value='verified'
+                    onChange={this.handleSortByChange}
+                  />
+                  <span>Verified</span>
+                </label>
+              </div>
+              <div className='row' id='display_row'>
+                <p>Display: </p>
+                <label htmlFor='assigned'>
+                  <input
+                    type='checkbox'
+                    className='filled-in'
+                    id='assigned'
+                    checked={graph_display.assigned}
+                    onChange={this.handleBooleanChange}
+                  />
+                  <span>Assigned</span>
+                </label>
+                <label htmlFor='completed'>
+                  <input
+                    type='checkbox'
+                    className='filled-in'
+                    id='completed'
+                    checked={graph_display.completed}
+                    onChange={this.handleBooleanChange}
+                  />
+                  <span>Completed</span>
+                </label>
+                <label htmlFor='verified'>
+                  <input
+                    type='checkbox'
+                    className='filled-in'
+                    id='verified'
+                    checked={graph_display.verified}
+                    onChange={this.handleBooleanChange}
+                  />
+                  <span>Verified</span>
+                </label>
+                <label htmlFor='earned'>
+                  <input
+                    type='checkbox'
+                    className='filled-in'
+                    id='earned'
+                    checked={graph_display.earned}
+                    onChange={this.handleBooleanChange}
+                  />
+                  <span>Earned</span>
+                </label>
+              </div>
               <ResponsiveContainer width='90%' height={400}>
                 <LineChart data={data} margin={{ top: 30, right: 10, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray='3 3' />
@@ -171,10 +270,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   <YAxis />
                   <Tooltip />
                   <Legend verticalAlign='top' />
-                  <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
-                  <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
-                  <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
-                  <Line type='monotone' dataKey='earned' stroke='#ea80fc' dot={false} />
+                  {graph_display.assigned && <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />}
+                  {graph_display.completed && <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />}
+                  {graph_display.verified && <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />}
+                  {graph_display.earned && <Line type='monotone' dataKey='earned' stroke='#ea80fc' dot={false} />}
                 </LineChart>
               </ResponsiveContainer>
 
