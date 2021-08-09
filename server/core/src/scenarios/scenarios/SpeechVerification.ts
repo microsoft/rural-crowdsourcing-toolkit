@@ -44,7 +44,9 @@ const task_input_file: BaseSpeechVerificationScenario['task_input_file'] = {
   json: {
     required: true,
     description: `JSON file containing an array of objects. Each object must have a sentence field that contains the sentence prompt and a recording field that contains the name of the recording file`,
-    schema: Joi.array().items(Joi.object({ sentence: Joi.string().required(), recording: Joi.string().required() })),
+    schema: Joi.array().items(
+      Joi.object({ sentence: Joi.string().required(), recording: Joi.string().required() }).unknown(true)
+    ),
   },
   tgz: {
     required: true,

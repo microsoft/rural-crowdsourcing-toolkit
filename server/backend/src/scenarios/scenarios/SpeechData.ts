@@ -70,7 +70,7 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
         sentence_id: mt.id,
         sentence: mt.input.data.sentence,
         worker_id: assignment.worker_id,
-        file: recordingFile,
+        recording: recordingFile,
         report: assignment.report,
         max_credits: assignment.max_credits,
         credits: assignment.credits,
