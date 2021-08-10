@@ -8,13 +8,12 @@ import * as HttpResponse from '@karya/http-response';
 import { WorkerRecord } from '@karya/core';
 import { WorkerModel } from '@karya/common';
 
-// Task route state for routes dealing with a specific task
 type WorkerState = { worker: WorkerRecord };
 type WorkerRouteMiddleware = UserRouteMiddleware<WorkerState>;
 export type WorkerRouteState = UserRouteState<WorkerState>;
 
 /**
- * Get summary info for all tasks
+ * Get summary info for all workers
  */
 export const getWorkersSummary: WorkerRouteMiddleware = async (ctx) => {
   try {
