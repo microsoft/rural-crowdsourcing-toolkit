@@ -12,7 +12,6 @@ import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.dashboard.DashboardSyncWorker
 
 class NgWorkerFactory(
-  private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
@@ -31,7 +30,6 @@ class NgWorkerFactory(
         DashboardSyncWorker(
           appContext,
           workerParameters,
-          taskRepository,
           assignmentRepository,
           karyaFileRepository,
           microTaskRepository,

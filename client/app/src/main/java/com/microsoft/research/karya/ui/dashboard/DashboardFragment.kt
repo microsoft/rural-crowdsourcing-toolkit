@@ -1,13 +1,9 @@
 package com.microsoft.research.karya.ui.dashboard
 
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
-import android.os.Message
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,13 +17,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.android.exoplayer2.util.Log
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
-import com.microsoft.research.karya.utils.PreferenceKeys
-import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
@@ -41,6 +34,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
+
+enum class ERROR_TYPE {
+  SYNC_ERROR, TASK_ERROR
+}
+
+enum class ERROR_LVL {
+  WARNING, ERROR
+}
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
@@ -63,7 +64,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
       when (dashboardUiState) {
         is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
-        is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable)
+        is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable, ERROR_TYPE.TASK_ERROR, ERROR_LVL.ERROR)
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
@@ -73,32 +74,36 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     WorkManager.getInstance(requireContext()).getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
-      .observe(viewLifecycleOwner, { workInfos ->
-        if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
-        val workInfo = workInfos[0] // Picking the first workInfo
-        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-          lifecycleScope.launch {
-            viewModel.setProgress(100)
-            viewModel.refreshList()
+        .observe(viewLifecycleOwner, { workInfos ->
+          if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
+          val workInfo = workInfos[0] // Picking the first workInfo
+          if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+            lifecycleScope.launch {
+              val warningMsg = workInfo.outputData.getString("warningMsg")
+              if (warningMsg != null) { // Check if there are any warning messages set by Workmanager
+                showErrorUi(Throwable(warningMsg), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.WARNING)
+              }
+              viewModel.setProgress(100)
+              viewModel.refreshList()
+            }
           }
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
-          viewModel.setProgress(0)
-          viewModel.setLoading()
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
-          // Check if the current work's state is "successfully finished"
-          val progress: Int = workInfo.progress.getInt("progress", 0)
-          viewModel.setProgress(progress)
-          viewModel.setLoading()
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
-          lifecycleScope.launch {
-            showErrorUi(Throwable(workInfo.outputData.getString("errorMsg")))
-            viewModel.refreshList()
+          if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
+            viewModel.setProgress(0)
+            viewModel.setLoading()
           }
-        }
-      })
+          if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
+            // Check if the current work's state is "successfully finished"
+            val progress: Int = workInfo.progress.getInt("progress", 0)
+            viewModel.setProgress(progress)
+            viewModel.setLoading()
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
+            lifecycleScope.launch {
+              showErrorUi(Throwable(workInfo.outputData.getString("errorMsg")), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.ERROR)
+              viewModel.refreshList()
+            }
+          }
+        })
 
   }
 
@@ -110,12 +115,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun setupWorkRequests() {
     // TODO: SHIFT IT FROM HERE
     val constraints = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .build()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
 
     syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>()
-      .setConstraints(constraints)
-      .build()
+        .setConstraints(constraints)
+        .build()
   }
 
   private fun setupViews() {
@@ -136,16 +141,17 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun syncWithServer() {
     setupWorkRequests()
-    WorkManager.getInstance(requireContext()).enqueueUniqueWork(UNIQUE_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, syncWorkRequest)
+    WorkManager.getInstance(requireContext())
+        .enqueueUniqueWork(UNIQUE_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, syncWorkRequest)
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
     WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
-      .observe(viewLifecycleOwner, Observer { workInfo ->
-        if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED) {
-          hideLoading() // Only hide loading if no work is in queue
-        }
-      })
+        .observe(viewLifecycleOwner, Observer { workInfo ->
+          if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED) {
+            hideLoading() // Only hide loading if no work is in queue
+          }
+        })
     binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
@@ -159,15 +165,24 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
   }
 
-  private fun showErrorUi(throwable: Throwable) {
+  private fun showErrorUi(throwable: Throwable, errorType: ERROR_TYPE, errorLvl: ERROR_LVL) {
     hideLoading()
-    showError(throwable.message!!)
+    showError(throwable.message!!, errorType, errorLvl)
     binding.syncCv.enable()
   }
 
-  private fun showError(message: String) {
-    binding.syncErrorMessageTv.text = message
-    binding.syncErrorMessageTv.visible()
+  private fun showError(message: String, errorType: ERROR_TYPE, errorLvl: ERROR_LVL) {
+    if (errorType == ERROR_TYPE.SYNC_ERROR) {
+      with(binding) {
+        syncErrorMessageTv.text = message
+
+        when (errorLvl) {
+          ERROR_LVL.ERROR -> syncErrorMessageTv.setTextColor(Color.RED)
+          ERROR_LVL.WARNING -> syncErrorMessageTv.setTextColor(Color.YELLOW)
+        }
+        syncErrorMessageTv.visible()
+      }
+    }
   }
 
   private fun showLoadingUi() {
@@ -186,7 +201,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
         val profilePicPath =
-          authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
+            authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
         val bitmap = BitmapFactory.decodeFile(profilePicPath)
 
         withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }
@@ -210,7 +225,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         }
         "MV_XLITERATION_VERIFICATION" -> {
           val action =
-            DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
+              DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
           findNavController().navigate(action)
         }
         "SIGN_LANGUAGE_VIDEO" -> {

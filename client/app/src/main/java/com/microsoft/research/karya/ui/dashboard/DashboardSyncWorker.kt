@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
+import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
@@ -13,14 +14,12 @@ import com.microsoft.research.karya.data.remote.request.UploadFileRequest
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
-import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -37,7 +36,6 @@ private const val MAX_CLEANUP_PROGRESS = 100
 class DashboardSyncWorker(
   appContext: Context,
   workerParams: WorkerParameters,
-  private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
@@ -48,13 +46,15 @@ class DashboardSyncWorker(
   private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
   private val microtaskInputContainer = MicrotaskInput(fileDirPath)
 
+  private var warningMsg: String? = null
+
   override suspend fun doWork(): Result {
 
     return try {
 
       syncWithServer()
 
-      Result.success()
+      Result.success(Data.Builder().putString("warningMsg", warningMsg).build())
     } catch (e: Exception) {
       // Send the error message
       Result.failure(Data.Builder().putString("errorMsg", e.message).build())
@@ -89,17 +89,24 @@ class DashboardSyncWorker(
 
     var count = 0
     for (assignment in filteredAssignments) {
-      val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
-      val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
-      val outputDir = microtaskOutputContainer.getDirectory()
-      val outputFiles = assignment.output.asJsonObject.get("files").asJsonObject
-      val fileNames = outputFiles.keySet().map { it -> outputFiles.get(it).asString }
-      val outputFilePaths = fileNames.map { "$outputDir/${it}" }
-      FileUtils.createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
-      uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
-      count += 1
-      val localProgress = (count * MAX_UPLOAD_PROGRESS) / filteredAssignments.size
-      setProgressAsync(Data.Builder().putInt("progress", localProgress).build())
+      try {
+        val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
+        val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
+        val outputDir = microtaskOutputContainer.getDirectory()
+        val outputFiles = assignment.output.asJsonObject.get("files").asJsonObject
+        val fileNames = outputFiles.keySet().map { it -> outputFiles.get(it).asString }
+        val outputFilePaths = fileNames.map { "$outputDir/${it}" }
+        FileUtils.createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
+        uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
+        count += 1
+        val localProgress = (count * MAX_UPLOAD_PROGRESS) / filteredAssignments.size
+        setProgressAsync(Data.Builder().putInt("progress", localProgress).build())
+      } catch (e: Exception) {
+        // The assignments for which output file can not be prepared, mark them assigned.
+        assignmentRepository.markAssigned(assignment.id, DateUtils.getCurrentDate())
+        warningMsg = applicationContext.getString(R.string.FAILED_UPLOAD_RECORD_AGAIN_MSG)
+        Log.e("UPLOAD_OUTPUT_FILE", "Failed to prepare output file for the assignment")
+      }
     }
   }
 
