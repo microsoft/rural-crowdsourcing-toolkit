@@ -15,7 +15,7 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { languageString, TaskRecordType, scenarioMap, ScenarioName } from '@karya/core';
+import { languageString, TaskRecordType, MicrotaskAssignmentRecord, scenarioMap, ScenarioName } from '@karya/core';
 import { taskStatus } from './TaskUtils';
 
 // HoCs
@@ -114,7 +114,8 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
     }
 
     // Getting summary info of tasks from props
-    const tasks_summary = this.props.tasks_summary;
+    type Extras = { assigned: number; completed: number; verified: number; cost: number };
+    const tasks_summary = this.props.tasks_summary as (MicrotaskAssignmentRecord & { extras: Extras })[];
 
     // Create error message element if necessary
     const getErrorElement =
@@ -160,34 +161,19 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
           <div className='body-col'>
             <p>
               Completed Assignments:
-              <span>
-                {task_data(task) !== undefined
-                  ? // @ts-ignore
-                    task_data(task).extras.completed
-                  : 0}
-              </span>
+              <span>{task_data(task) !== undefined ? task_data(task)!.extras.completed : 0}</span>
             </p>
           </div>
           <div className='body-col'>
             <p>
               Verified Assignments:
-              <span>
-                {task_data(task) !== undefined
-                  ? // @ts-ignore
-                    task_data(task).extras.verified
-                  : 0}
-              </span>
+              <span>{task_data(task) !== undefined ? task_data(task)!.extras.verified : 0}</span>
             </p>
           </div>
           <div className='body-col'>
             <p>
               Total Cost:
-              <span>
-                {task_data(task) !== undefined
-                  ? // @ts-ignore
-                    task_data(task).extras.cost
-                  : 0}
-              </span>
+              <span>{task_data(task) !== undefined ? task_data(task)!.extras.cost : 0}</span>
             </p>
           </div>
         </div>
