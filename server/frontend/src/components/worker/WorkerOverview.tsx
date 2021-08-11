@@ -13,6 +13,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
+// Store types and actions
+import { WorkerRecord } from '@karya/core';
+
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
@@ -118,7 +121,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
 
   // Render component
   render() {
-    var workers = this.props.workers_data;
+    type Extras = { assigned: number; completed: number; verified: number; earned: number };
+    var workers = this.props.workers_data as (WorkerRecord & { extras: Extras })[];
     const tags_filter = this.state.tags_filter;
     const box_id_filter = this.state.box_id_filter;
     const sort_by = this.state.sort_by;
@@ -161,10 +165,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     // Sorting the data
     if (sort_by !== undefined) {
       sort_by === 'completed'
-        ? // @ts-ignore
-          (data = data.sort((prev, next) => prev.completed - next.completed))
-        : // @ts-ignore
-          (data = data.sort((prev, next) => prev.verified - next.verified));
+        ? (data = data.sort((prev, next) => prev.completed - next.completed))
+        : (data = data.sort((prev, next) => prev.verified - next.verified));
     }
 
     // Create error message element if necessary
