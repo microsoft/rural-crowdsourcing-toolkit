@@ -15,6 +15,7 @@ import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
+import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
@@ -55,12 +56,8 @@ class DashboardSyncWorker(
 
       Result.success()
     } catch (e: Exception) {
-//      if (runAttemptCount < MAX_NUMBER_OF_RETRY) {
-//        Result.retry()
-//      } else {
-//        Result.failure()
-//      }
-      Result.failure()
+      // Send the error message
+      Result.failure(Data.Builder().putString("errorMsg", e.message).build())
     }
   }
 

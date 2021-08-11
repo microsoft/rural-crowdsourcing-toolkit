@@ -2,7 +2,9 @@ package com.microsoft.research.karya.ui.dashboard
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Message
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -19,6 +21,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.google.android.exoplayer2.util.Log
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
@@ -45,12 +48,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: NgDashboardViewModel by viewModels()
   private lateinit var syncWorkRequest: OneTimeWorkRequest
-  val taskActivityLauncher =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-      val taskId = result.data?.getStringExtra("taskID") ?: return@registerForActivityResult
-
-      viewModel.updateTaskStatus(taskId)
-    }
 
   @Inject
   lateinit var authManager: AuthManager
@@ -94,6 +91,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           val progress: Int = workInfo.progress.getInt("progress", 0)
           viewModel.setProgress(progress)
           viewModel.setLoading()
+        }
+        if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
+          lifecycleScope.launch {
+            showErrorUi(Throwable(workInfo.outputData.getString("errorMsg")))
+            viewModel.refreshList()
+          }
         }
       })
 
@@ -139,7 +142,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
   private fun showSuccessUi(data: DashboardStateSuccess) {
     WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
       .observe(viewLifecycleOwner, Observer { workInfo ->
-        if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED) {
+        if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED) {
           hideLoading() // Only hide loading if no work is in queue
         }
       })
@@ -158,12 +161,19 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun showErrorUi(throwable: Throwable) {
     hideLoading()
+    showError(throwable.message!!)
     binding.syncCv.enable()
+  }
+
+  private fun showError(message: String) {
+    binding.syncErrorMessageTv.text = message
+    binding.syncErrorMessageTv.visible()
   }
 
   private fun showLoadingUi() {
     showLoading()
     binding.syncCv.disable()
+    binding.syncErrorMessageTv.gone()
   }
 
   private fun showLoading() = binding.syncProgressBar.visible()
@@ -225,22 +235,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           val action = DashboardFragmentDirections.actionDashboardActivityToSignVideoFeedbackFragment(task.taskID)
           findNavController().navigate(action)
         }
-      }
-    }
-  }
-
-  private fun fetchTasksOnFirstRun() {
-    val firstFetchKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_FETCH)
-
-    lifecycleScope.launchWhenStarted {
-      this@DashboardFragment.requireContext().dataStore.edit { prefs ->
-        val isFirstFetch = prefs[firstFetchKey] ?: true
-
-        if (isFirstFetch) {
-          syncWithServer()
-        }
-
-        prefs[firstFetchKey] = false
       }
     }
   }
