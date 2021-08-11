@@ -66,6 +66,7 @@ type WorkerOverviewState = {
   box_id_filter?: string;
   sort_by?: string;
   graph_display: { assigned: boolean; completed: boolean; verified: boolean; earned: boolean };
+  show_reg?: string;
 };
 
 // Task list component
@@ -103,6 +104,12 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     this.setState({ sort_by });
   };
 
+  // Handle change in show_reg
+  handleShowRegChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const show_reg = e.currentTarget.value;
+    this.setState({ show_reg });
+  };
+
   // Handle boolean input change
   handleBooleanChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const graph_display = { ...this.state.graph_display, [e.currentTarget.id]: e.currentTarget.checked };
@@ -116,6 +123,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const box_id_filter = this.state.box_id_filter;
     const sort_by = this.state.sort_by;
     const graph_display = this.state.graph_display;
+    const show_reg = this.state.show_reg;
 
     // Filtering workers by tags
     workers = workers.filter((w) => tags_filter.every((val) => w.tags.tags.includes(val)));
@@ -133,6 +141,13 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     // Filtering workers by box id
     if (box_id_filter !== undefined && box_id_filter !== 'all') {
       workers = workers.filter((w) => w.box_id === box_id_filter);
+    }
+
+    // Filtering registered or unregistered workers
+    if (show_reg === 'yes') {
+      workers = workers.filter((w) => w.reg_mechanism !== null);
+    } else if (show_reg === 'no') {
+      workers = workers.filter((w) => w.reg_mechanism === null);
     }
 
     // Data to be fed into graph
@@ -276,6 +291,40 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   {graph_display.earned && <Line type='monotone' dataKey='earned' stroke='#ea80fc' dot={false} />}
                 </LineChart>
               </ResponsiveContainer>
+
+              <div className='row' id='reg_row'>
+                <p>Show </p>
+                <label key='registered'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='show_reg'
+                    value='yes'
+                    onChange={this.handleShowRegChange}
+                  />
+                  <span>Registered</span>
+                </label>
+                <label key='unregistered'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='show_reg'
+                    value='no'
+                    onChange={this.handleShowRegChange}
+                  />
+                  <span>Unregistered</span>
+                </label>
+                <label key='all'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='show_reg'
+                    value='all'
+                    onChange={this.handleShowRegChange}
+                  />
+                  <span>All</span>
+                </label>
+              </div>
 
               <CSVLink data={data} filename={'worker-data.csv'} className='btn' id='download-data-btn'>
                 <i className='material-icons left'>download</i>Download data
