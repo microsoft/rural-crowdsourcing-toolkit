@@ -21,18 +21,11 @@
         android:usesCleartextTraffic="true">
 
 
-        <activity android:name=".ui.registration.RegistrationActivity" /> <!-- Microtask rendering activities -->
-        <activity
-            android:name=".ui.scenarios.speechData.SpeechDataMain"
-            android:screenOrientation="portrait" />
+        <activity android:name=".ui.registration.RegistrationActivity" />
         <activity
             android:name=".ui.scenarios.textToTextTranslation.TextToTextTranslationMain"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".ui.splashScreen.SplashScreenActivity"></activity>
-        <activity
-            android:name=".ui.onboarding.accesscode.AccessCodeActivity"
-            android:screenOrientation="portrait" />
         <activity android:name=".ui.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
             <intent-filter>
@@ -41,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.scenarios.signVideo.SignVideoRecord"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
