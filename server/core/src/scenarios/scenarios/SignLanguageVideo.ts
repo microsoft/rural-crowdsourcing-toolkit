@@ -32,7 +32,7 @@ const task_input_file: BaseSignLanguageVideoScenario['task_input_file'] = {
     JSON file containing an array of objects. Each object must have a sentence field that contains the\
     sentence prompt for the recording.\
     `,
-    schema: Joi.array().items(Joi.object({ sentence: Joi.string() }).unknown(true)),
+    schema: Joi.array().items(Joi.object({ sentence: Joi.string().required() }).unknown(true)),
   },
   tgz: { required: false },
 };
