@@ -76,6 +76,7 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
       const tgzPath = `${task_folder}/${kf.name}`;
       await downloadBlob(kf.url!, tgzPath);
       await tar.x({ C: task_folder, file: tgzPath });
+      await fsp.unlink(tgzPath);
     }
   });
 
