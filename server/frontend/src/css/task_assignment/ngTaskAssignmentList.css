@@ -15,22 +15,44 @@
 }
 
 #task-assignment-table td {
-  padding-top: 2%;
-  padding-bottom: 2%;
+  padding-top: 2.2%;
+  padding-bottom: 2.2%;
+}
+
+#task-assignment-table td:nth-child(1),
+#task-assignment-table td:nth-child(2) {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.96em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  padding-left: 7%;
+}
+
+#task-assignment-table td:nth-child(1) {
+  width: 34%;
 }
 
 #task-assignment-table td:nth-child(3),
-td:nth-child(4) {
+#task-assignment-table td:nth-child(4) {
   font-size: 0.85em;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
+  padding-left: 2%;
+  width: 10%;
+}
+
+#task-assignment-table td:nth-child(4) {
+  width: 25%;
+  padding-left: 8%;
 }
 
 #task-assignment-table td:nth-child(4) span {
   display: inline-block;
-  width: 45%;
-  padding: 0.8%;
+  text-align: center;
+  padding-top: 0.8%;
+  padding-bottom: 0.8%;
+  width: 64%;
   background-color: #f0f8ff;
   border-radius: 7px;
 }

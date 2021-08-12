@@ -22,13 +22,15 @@ import { DataProps, withData } from '../hoc/WithData';
 import '../../css/task_assignment/ngTaskAssignmentList.css';
 
 // Hoc connectors
-const connector = withData('task_assignment');
+const connector = withData('task_assignment', 'task', 'box');
 
 type TaskAssignmentListProps = DataProps<typeof connector>;
 
 class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
   render() {
     const task_assignments = this.props.task_assignment.data;
+    const tasks = this.props.task.data;
+    const boxes = this.props.box.data;
 
     // Create error message if get fails
     const getErrorElement =
@@ -49,10 +51,30 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
       }
     };
 
+    // Task name
+    const taskName = (ta: TaskAssignmentRecord) => {
+      const task = tasks.find((t) => t.id === ta.task_id);
+      if (task !== undefined) {
+        return task.name;
+      } else {
+        return 'Undefined';
+      }
+    };
+
+    // Box name
+    const boxName = (ta: TaskAssignmentRecord) => {
+      const box = boxes.find((b) => b.id === ta.box_id);
+      if (box !== undefined) {
+        return box.name;
+      } else {
+        return 'Undefined';
+      }
+    };
+
     // List of columns to be displayed
     const tableColumns: Array<TableColumnType<TaskAssignmentRecord>> = [
-      { header: 'Task', type: 'field', field: 'task_id' },
-      { header: 'Box', type: 'field', field: 'box_id' },
+      { header: 'Task', type: 'function', function: taskName },
+      { header: 'Box', type: 'function', function: boxName },
       { header: 'Policy', type: 'field', field: 'policy' },
       { header: 'Status', type: 'function', function: taskAssignmentStatus },
     ];

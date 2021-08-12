@@ -251,7 +251,6 @@ input {
 }
 
 .basic-table td {
-  text-align: center;
   color: #717787;
   border-bottom: 1px dashed rgba(180, 189, 198, 0.8);
 }
