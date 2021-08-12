@@ -304,7 +304,6 @@ export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error
-    console.log(e);
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };
