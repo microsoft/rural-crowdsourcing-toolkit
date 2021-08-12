@@ -21,7 +21,6 @@ export const xliterationValidationChain: BackendChainInterface<'XLITERATION_DATA
         input: {
           data: {
             word: microtask.input.data.word,
-            limit: microtask.input.data.limit,
             variants: {
               ...microtask.input.data.variants,
               ...assignment.output!.data.variants,

@@ -62,7 +62,7 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
   const taskOutputBlobParameters: BlobParameters = {
     cname: 'task-output',
     task_id: task.id,
-    timestamp: currentOpTime,
+    timestamp: currentOpTime.replace(/:/g, '.'),
     ext: 'tgz',
   };
   const taskOutputName = getBlobName(taskOutputBlobParameters);
@@ -94,4 +94,11 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
 
   // Update the task op file record
   await BasicModel.updateSingle('task_op', { id: taskOp.id }, { file_id: fileRecord.id });
+
+  // Clean up all files
+  try {
+    await fsp.rmdir(task_folder, { recursive: true });
+  } catch (e) {
+    // Ignore any exceptions here
+  }
 }

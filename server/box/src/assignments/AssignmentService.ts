@@ -10,6 +10,7 @@ import {
   WorkerRecord,
   PolicyName,
   TaskRecord,
+  TaskRecordType,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
@@ -40,7 +41,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     if (tasksAssigned) return;
 
     // Get task for the assignment
-    const task = await BasicModel.getSingle('task', { id: taskAssignment.task_id });
+    const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
 
     // check if the task is assignable to the worker
     if (!assignable(task, worker)) return;
@@ -87,13 +88,23 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         chosenMicrotasks = chosenMicrotasks.concat(microtasks);
       });
     } else if (task.assignment_granularity === 'MICROTASK') {
+      // check if there is a max limit on microtasks
+      const microtaskLimit = task.params.maxMicrotasksPerUser;
+      let assignLimit = 1000;
+      if (microtaskLimit > 0) {
+        const assignedCount = await MicrotaskModel.getAssignedCount(worker.id, task.id);
+        assignLimit = microtaskLimit - assignedCount;
+        if (assignLimit < 0) assignLimit = 0;
+      }
+
       // get all assignable microtasks
       let assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
 
       // reorder according to task spec
       reorder(assignableMicrotasks, task.microtask_assignment_order);
 
-      assignableMicrotasks = assignableMicrotasks.slice(0, batchSize);
+      assignLimit = assignLimit < batchSize ? assignLimit : batchSize;
+      assignableMicrotasks = assignableMicrotasks.slice(0, assignLimit);
 
       // Identify prefix that fits within max credits
       for (const microtask of assignableMicrotasks) {

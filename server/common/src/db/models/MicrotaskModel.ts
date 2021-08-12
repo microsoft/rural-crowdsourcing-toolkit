@@ -40,6 +40,14 @@ export async function getAssignableMicrotasks(
   return microtasks;
 }
 
+export async function getAssignedCount(worker_id: string, task_id: string) {
+  const assignedCount = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('worker_id', worker_id)
+    .where('task_id', task_id)
+    .count();
+  return assignedCount[0].count as number;
+}
+
 /**
  * Get the number of completed assignments for a given microtask
  * @param microtask Microtask record

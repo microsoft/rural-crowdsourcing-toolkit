@@ -12,6 +12,7 @@ type XliterationTaskInputParameters = {
   language: LanguageCode;
   allowValidation: boolean;
   mlFeedback: boolean;
+  limit: number;
   creditsPerVariant: number;
   creditsPerValidation: number;
 };
@@ -22,7 +23,7 @@ type XliterationStatus = 'NEW' | 'VALID' | 'INVALID' | 'UNKNOWN';
 
 type XliterationMicrotaskInput = {
   word: string;
-  limit: number;
+  limit?: number;
   variants: {
     [id: string]: {
       source: XliterationProvider;
@@ -68,6 +69,14 @@ const task_input: BaseXliterationDataScenario['task_input'] = [
     label: 'In-app ML feedback',
     description: 'Provide in-app ML feedback to user when model things a variant is incorrect',
     required: false,
+  },
+
+  {
+    id: 'limit',
+    type: 'int',
+    label: 'Limit on variants',
+    description: 'Limit on the number of variants that can be added',
+    required: true,
   },
 
   {

@@ -22,6 +22,7 @@ import * as tar from 'tar';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
 import { csvToJson } from '../scenarios/Common';
+import { Promise as BBPromise } from 'bluebird';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -190,7 +191,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
     const inputBlobParams: BlobParameters = {
       cname: 'task-input',
       task_id: task.id,
-      timestamp,
+      timestamp: timestamp.replace(/:/g, '.'),
       ext: 'tgz',
     };
     const inputBlobName = getBlobName(inputBlobParams);
@@ -260,12 +261,14 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
   const records = await BasicModel.getRecords('task_op', { task_id: task.id }, [
     ['op_type', ['PROCESS_INPUT', 'GENERATE_OUTPUT']],
   ]);
-  // @ts-ignore
-  const files = await BasicModel.getRecords('karya_file', {}, [['id', records.map((r) => r.file_id)]]);
-  for (let i = 0; i < records.length; i++) {
-    // @ts-ignore
-    records[i].extras = files[i] ? { url: getBlobSASURL(files[i].url, 'r') } : null;
-  }
+
+  await BBPromise.mapSeries(records, async (r) => {
+    if (r.file_id) {
+      const fileRecord = await BasicModel.getSingle('karya_file', { id: r.file_id });
+      const url = fileRecord.url ? getBlobSASURL(fileRecord.url, 'r') : null;
+      r.extras = { url };
+    }
+  });
   HttpResponse.OK(ctx, records);
 };
 

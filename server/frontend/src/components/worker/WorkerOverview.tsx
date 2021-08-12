@@ -181,7 +181,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
           {this.props.status === 'IN_FLIGHT' ? (
             <ProgressBar />
           ) : this.props.status === 'FAILURE' ? (
-            { getErrorElement }
+            <div>{getErrorElement}</div>
           ) : (
             <>
               <h1 className='page-title' id='workers-title'>
