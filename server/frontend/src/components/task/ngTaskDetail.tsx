@@ -22,8 +22,10 @@ import {
   ChainName,
   languageString,
   TaskRecordType,
+  TaskOpRecord,
   TaskLink,
   MicrotaskRecordType,
+  WorkerRecord,
 } from '@karya/core';
 
 // Utils
@@ -60,6 +62,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const file_records = state.all.task_op.data;
   const graph_data = state.all.microtask.data;
   const task_links = state.all.task_link.data;
+  const workers_data = state.all.worker.data;
   return {
     auth: state.all.auth,
     request,
@@ -68,6 +71,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     file_records,
     graph_data,
     task_links,
+    workers_data,
   };
 };
 
@@ -155,6 +159,17 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       };
       dispatch(action);
     },
+
+    // For displaying workers graph
+    getWorkersTaskSummary: () => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'worker',
+        label: 'GET_ALL',
+        task_id,
+      };
+      dispatch(action);
+    },
   };
 };
 
@@ -193,6 +208,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     this.props.getFiles();
     this.props.getMicrotasksSummary();
     this.props.getTaskLinks();
+    this.props.getWorkersTaskSummary();
     if (this.props.task === undefined) {
       this.props.getTask();
     }
@@ -240,12 +256,16 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
     // Getting all the data from props
     const { task } = this.props;
-    const { file_records } = this.props;
+    type fileExtras = { url: string };
+    const file_records = this.props.file_records as (TaskOpRecord & { extras: fileExtras })[];
     const { tasks } = this.props;
     const { task_links } = this.props;
 
     type Extras = { assigned: number; completed: number; verified: number; cost: number };
     const graph_data = this.props.graph_data as (MicrotaskRecordType & { extras: Extras })[];
+
+    type workerExtras = { assigned: number; completed: number; verified: number; earned: number };
+    const workers_data = this.props.workers_data as (WorkerRecord & { extras: workerExtras })[];
 
     // Task link form values
     const chain = this.state.taskLink.chain || 0;
@@ -297,11 +317,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                   <td>{++i}</td>
                   <td>File{i}</td>
                   <td>{r.status}</td>
-                  <td>{r.created_at}</td>
+                  <td>{r.created_at.toLocaleString()}</td>
                   {r.file_id && r.extras ? (
                     <td>
                       {
-                        // @ts-ignore
                         <a href={r.extras.url} download>
                           <span className='material-icons left'>file_download</span>
                         </a>
@@ -339,12 +358,11 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                     <td>{++j}</td>
                     <td>File{j}</td>
                     <td>{r.status}</td>
-                    <td>{r.created_at}</td>
+                    <td>{r.created_at.toLocaleString()}</td>
                     {r.file_id ? (
                       <td>
                         {
-                          // @ts-ignore
-                          <a href={r.extras.url}>
+                          <a href={r.extras.url} download>
                             <span className='material-icons left'>file_download</span>
                           </a>
                         }
@@ -425,8 +443,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                       {/** Show all tasks that belong to the required scenario as options */}
                       {tasks
                         .filter(
-                          // @ts-ignore
-                          (t) => t.scenario_name === baseChainMap[this.state.taskLink.chain as ChainName].toScenario,
+                          (t) => t.scenario_name === baseChainMap[this.state.taskLink.chain! as ChainName].toScenario,
                         )
                         .map((o) => (
                           <option value={o.id} key={o.id}>
@@ -482,12 +499,12 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const cost = graph_data.reduce((prev, current) => prev + current.extras.cost, 0);
     const data = graph_data.map((m) => ({ ...m.extras, id: m.id }));
 
-    const headers = [
-      { label: 'ID', key: 'id' },
-      { label: 'Assigned', key: 'assigned' },
-      { label: 'Completed', key: 'completed' },
-      { label: 'Verified', key: 'verified' },
-    ];
+    const workers_graph_data = workers_data.map((w) => ({
+      id: w.id,
+      access_code: w.access_code,
+      phone_number: w.phone_number,
+      ...w.extras,
+    }));
 
     const jsonInputFile = scenario.task_input_file.json;
     const tarInputfile = scenario.task_input_file.tgz;
@@ -559,7 +576,30 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               </LineChart>
             </ResponsiveContainer>
 
-            <CSVLink data={data} headers={headers} filename={'graph-data.csv'} className='btn' id='download-data-btn'>
+            <CSVLink data={data} filename={'graph-data.csv'} className='btn' id='download-data-btn'>
+              <i className='material-icons left'>download</i>Download data
+            </CSVLink>
+          </>
+        ) : null}
+
+        {/** Recharts graph showing total, completed, verified assignments, and earned amount by worker id */}
+        {workers_graph_data.length !== 0 ? (
+          <>
+            <ResponsiveContainer width='90%' height={400}>
+              <LineChart data={workers_graph_data} margin={{ top: 60, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='id' tick={false} label='Worker ID' />
+                <YAxis />
+                <Tooltip />
+                <Legend verticalAlign='top' />
+                <Line type='monotone' dataKey='assigned' stroke='#8884d8' dot={false} />
+                <Line type='monotone' dataKey='completed' stroke='#82ca9d' dot={false} />
+                <Line type='monotone' dataKey='verified' stroke='#4dd0e1' dot={false} />
+                {/* <Line type='monotone' dataKey='earned' stroke='#ea80fc' dot={false} /> */}
+              </LineChart>
+            </ResponsiveContainer>
+
+            <CSVLink data={workers_graph_data} filename={'workers-data.csv'} className='btn' id='download-data-btn'>
               <i className='material-icons left'>download</i>Download data
             </CSVLink>
           </>

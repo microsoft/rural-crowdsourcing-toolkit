@@ -15,7 +15,7 @@ import {
   coreScenarioParameters,
 } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
-import { BasicModel, MicrotaskModel, TaskModel, TaskOpModel, getBlobSASURL } from '@karya/common';
+import { BasicModel, MicrotaskModel, TaskModel, TaskOpModel, WorkerModel, getBlobSASURL } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
 import { promises as fsp } from 'fs';
 import * as tar from 'tar';
@@ -265,7 +265,6 @@ export const getFiles: TaskRouteMiddleware = async (ctx) => {
   for (let i = 0; i < records.length; i++) {
     // @ts-ignore
     records[i].extras = files[i] ? { url: getBlobSASURL(files[i].url, 'r') } : null;
-    records[i].created_at = records[i].created_at.toLocaleString();
   }
   HttpResponse.OK(ctx, records);
 };
@@ -288,6 +287,21 @@ export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error');
+  }
+};
+
+/**
+ * Get all worker info for a particular task
+ */
+export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
+  try {
+    const task = ctx.state.task as TaskRecordType;
+    const records = await WorkerModel.workersTaskSummary(task.id);
+    HttpResponse.OK(ctx, records);
+  } catch (e) {
+    // TODO: Convert this to an internal server error
+    console.log(e);
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };

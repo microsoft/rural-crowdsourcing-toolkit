@@ -161,6 +161,7 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'worker';
       label: 'GET_ALL';
+      task_id?: string;
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -489,14 +490,23 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    // Get summary info for all workers
+    // Get summary info for workers
     if (action.store === 'worker' && action.label === 'GET_ALL') {
-      return {
-        type: 'BR_SUCCESS',
-        store,
-        label,
-        response: await GET('/worker/summary'),
-      } as BackendRequestSuccessAction;
+      if (action.task_id !== undefined) {
+        return {
+          type: 'BR_SUCCESS',
+          store,
+          label,
+          response: await GET(`/task/${action.task_id}/worker_summary`),
+        } as BackendRequestSuccessAction;
+      } else {
+        return {
+          type: 'BR_SUCCESS',
+          store,
+          label,
+          response: await GET('/worker/summary'),
+        } as BackendRequestSuccessAction;
+      }
     }
 
     ((obj: never) => {

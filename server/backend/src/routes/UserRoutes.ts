@@ -191,4 +191,12 @@ userRouter.get<WorkerController.WorkerRouteState, {}>(
   WorkerController.getWorkersSummary
 );
 
+userRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/:id/worker_summary',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  TaskController.getWorkersTaskSummary
+);
+
 export { userRouter };
