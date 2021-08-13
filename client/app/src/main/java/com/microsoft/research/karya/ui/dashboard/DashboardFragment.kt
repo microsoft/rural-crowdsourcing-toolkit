@@ -105,6 +105,14 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           }
         })
 
+    // Maybe Abstract this out to common Fragment class
+    AuthManager.sessionAlive.observe(viewLifecycleOwner, { sessionAlive ->
+      if (!sessionAlive) {
+        WorkManager.getInstance(requireContext()).cancelAllWork()
+        findNavController().navigate(R.id.action_global_loginFlow)
+      }
+    })
+
   }
 
   override fun onResume() {
@@ -141,6 +149,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun syncWithServer() {
     setupWorkRequests()
+
     WorkManager.getInstance(requireContext())
         .enqueueUniqueWork(UNIQUE_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, syncWorkRequest)
   }

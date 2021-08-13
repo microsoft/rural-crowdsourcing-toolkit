@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.BuildConfig
+import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.remote.interceptors.IdTokenRenewInterceptor
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
@@ -42,7 +43,9 @@ class RetrofitModule {
   @Provides
   @Reusable
   fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-    return OkHttpClient.Builder().build()
+    return OkHttpClient.Builder()
+        .addInterceptor(IdTokenRenewInterceptor())
+        .build()
   }
 
   @Provides
@@ -52,7 +55,7 @@ class RetrofitModule {
     converterFactory: GsonConverterFactory,
     okHttpClient: OkHttpClient
   ): Retrofit {
-    return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(converterFactory).build()
+    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl).addConverterFactory(converterFactory).build()
   }
 
   @Provides

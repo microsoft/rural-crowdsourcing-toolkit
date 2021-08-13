@@ -2,12 +2,14 @@
 
 package com.microsoft.research.karya.ui.onboarding.login.otp
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.Destination
+import com.microsoft.research.karya.utils.PreferenceKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -61,6 +63,7 @@ constructor(
         .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
         .onEach { worker ->
           updateWorker(worker.copy(isConsentProvided = true))
+          authManager.startSession()
           _otpUiState.value = OTPUiState.Success
           handleNavigation(worker)
         }
