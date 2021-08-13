@@ -4,7 +4,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +20,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
+import com.microsoft.research.karya.ui.base.SessionFragment
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.gone
@@ -44,7 +44,7 @@ enum class ERROR_LVL {
 }
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
+class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: NgDashboardViewModel by viewModels()
@@ -105,14 +105,11 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           }
         })
 
-    // Maybe Abstract this out to common Fragment class
-    AuthManager.sessionAlive.observe(viewLifecycleOwner, { sessionAlive ->
-      if (!sessionAlive) {
-        WorkManager.getInstance(requireContext()).cancelAllWork()
-        findNavController().navigate(R.id.action_global_loginFlow)
-      }
-    })
+  }
 
+  override fun onSessionExpired() {
+    WorkManager.getInstance(requireContext()).cancelAllWork()
+    super.onSessionExpired()
   }
 
   override fun onResume() {

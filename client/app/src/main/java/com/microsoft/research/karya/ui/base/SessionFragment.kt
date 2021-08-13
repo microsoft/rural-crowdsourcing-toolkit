@@ -5,25 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.work.WorkManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.ui.assistant.Assistant
-import com.microsoft.research.karya.ui.assistant.AssistantFactory
-import javax.inject.Inject
 
-abstract class BaseFragment : Fragment {
-
+abstract class SessionFragment : BaseFragment {
   constructor() : super()
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
-  @Inject lateinit var assistantFactory: AssistantFactory
-  lateinit var assistant: Assistant
-
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    assistant = assistantFactory.create(viewLifecycleOwner)
+    AuthManager.sessionAlive.observe(viewLifecycleOwner, { sessionAlive ->
+      if (!sessionAlive) {
+        onSessionExpired()
+      }
+    })
     return super.onCreateView(inflater, container, savedInstanceState)
+  }
+
+  protected open fun onSessionExpired() {
+    findNavController().navigate(R.id.action_global_loginFlow)
   }
 }

@@ -23,13 +23,12 @@ class IdTokenRenewInterceptor(): Interceptor {
     val body = getPayload(idToken)
     val current = System.currentTimeMillis() / 1000
     // If it has been 7 days since issuing the token, refresh
-    if (current - body.iat > DAY7_IN_SECONDS) {
-      refreshToken()
-    }
-    AuthManager.expireSession()
+//    if (current - body.iat > DAY7_IN_SECONDS) {
+//      refreshToken()
+//    }
     if (current > body.exp) {
       ioScope.launch {
-
+        AuthManager.expireSession()
       }
     }
     return chain.proceed(requestBuilder.build())

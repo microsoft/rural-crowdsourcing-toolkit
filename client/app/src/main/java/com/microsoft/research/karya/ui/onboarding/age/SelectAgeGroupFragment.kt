@@ -10,6 +10,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentSelectAgeGroupBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
+import com.microsoft.research.karya.ui.base.SessionFragment
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
@@ -17,7 +18,7 @@ import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SelectAgeGroupFragment : BaseFragment(R.layout.fragment_select_age_group) {
+class SelectAgeGroupFragment : SessionFragment(R.layout.fragment_select_age_group) {
 
   private val binding by viewBinding(FragmentSelectAgeGroupBinding::bind)
   private val viewModel by viewModels<SelectAgeViewModel>()
