@@ -47,7 +47,7 @@ const TableList = <Record extends object>(props: TableListProps<Record>) => {
   /** Generate the table  */
   return (
     <div className='tablelist-container'>
-      <table className='highlight compact tablelist'>
+      <table className='compact tablelist'>
         <thead>
           <tr>
             {columns.map((col, colid) => (
