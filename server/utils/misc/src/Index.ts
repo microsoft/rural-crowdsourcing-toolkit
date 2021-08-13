@@ -47,7 +47,7 @@ export function envGetString(key: string, defaultValue?: string): string {
 export function envGetNumber(key: string, defaultValue?: number): number {
   const eV = process.env[key];
   const value = eV ? Number.parseInt(eV) : defaultValue;
-  if (!value) throw new Error(`Undefined environment variable '${key}'`);
+  if (value == undefined) throw new Error(`Undefined environment variable '${key}'`);
   return value;
 }
 
