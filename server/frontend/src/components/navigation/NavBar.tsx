@@ -88,6 +88,11 @@ class NavBar extends React.Component<NavBarProps> {
                             Workers
                           </NavLink>
                         </li>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/lang-assets'>
+                            Language Assets
+                          </NavLink>
+                        </li>
                       </ul>
                     </div>
                   </div>
