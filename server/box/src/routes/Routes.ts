@@ -82,4 +82,7 @@ router.put('/assignments', needIdToken, BodyParser({ jsonLimit: '20mb' }), Assig
 router.put('/skipped_assignments', needIdToken, BodyParser({ jsonLimit: '20mb' }), AssignmentController.submitSkipped);
 router.get('/assignments', needIdToken, AssignmentController.get);
 
+// Token Routes
+router.get('/renew_id_token', needIdToken, generateToken, WorkerController.sendGeneratedIdToken)
+
 export default router;
