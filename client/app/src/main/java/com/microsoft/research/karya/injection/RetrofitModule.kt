@@ -18,6 +18,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,7 +40,8 @@ class RetrofitModule {
   @Provides
   @Reusable
   fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-    return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    return HttpLoggingInterceptor()
+        .setLevel(HttpLoggingInterceptor.Level.BODY)
   }
 
   @Provides
@@ -65,6 +67,8 @@ class RetrofitModule {
     versionInterceptor: VersionInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.MINUTES)
+        .readTimeout(10, TimeUnit.MINUTES)
         .addInterceptor(idTokenRenewInterceptor)
         .addInterceptor(versionInterceptor)
         .build()
