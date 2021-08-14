@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.remote.interceptors.IdTokenRenewInterceptor
+import com.microsoft.research.karya.data.remote.interceptors.VersionInterceptor
 import com.microsoft.research.karya.data.repo.TokenRepository
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
@@ -50,16 +51,22 @@ class RetrofitModule {
     return IdTokenRenewInterceptor(tokenRepository, baseUrl)
   }
 
+  @Provides
+  @Reusable
+  fun provideVersionInterceptor(): VersionInterceptor {
+    return VersionInterceptor()
+  }
+
   @KaryaOkHttpClient
   @Provides
   @Reusable
   fun provideOkHttp(
-    httpLoggingInterceptor: HttpLoggingInterceptor,
-    idTokenRenewInterceptor: IdTokenRenewInterceptor
+    idTokenRenewInterceptor: IdTokenRenewInterceptor,
+    versionInterceptor: VersionInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
         .addInterceptor(idTokenRenewInterceptor)
-        .addInterceptor(httpLoggingInterceptor)
+        .addInterceptor(versionInterceptor)
         .build()
   }
 
