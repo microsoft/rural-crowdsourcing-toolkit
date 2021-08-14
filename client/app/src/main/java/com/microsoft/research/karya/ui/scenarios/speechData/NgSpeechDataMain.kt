@@ -146,7 +146,7 @@ open class NgSpeechDataMain(
     setContentView(R.layout.speech_data_main)
 
     /** record instruction */
-    recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+    recordInstruction = task.params.asJsonObject.get("instruction").asString ?: getString(R.string.speech_recording_instruction)
     recordPromptTv.text = recordInstruction
 
     /** Forced replace */

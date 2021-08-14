@@ -1,20 +1,17 @@
 <resources>
-    <string name="s_project_name">Karya</string>
-    <string name="s_no_internet_or_server_down">We are not able to reach our server. Please ensure you have internet turned on.</string>
-    <string name="s_click_to_retry">Click this button to retry</string>
     <string name="s_unknown_error">Unknown error occurred. Please close the application and open again. If error persists, contact your project coordinator</string>
-    <string name="s_salutation">Hi</string>
-    <string name="s_show_app_in_language">Show the app in English</string>
-    <string name="s_prompt_for_language_select">To show app in English, press here</string>
-    <string name="s_fetching_values_for_language">Getting all necessary data to display the app in English</string>
-    <string name="s_consent_form_title">Consent Form</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
     <string name="s_access_code_title">Enter Access Code</string>
+
     <string name="s_otp_title">Enter OTP</string>
     <string name="s_phone_number_title">Enter Phone Number</string>
     <string name="s_age_title">Select Age Group</string>
     <string name="s_gender_title">Select Gender</string>
     <string name="s_profile_pic_title">Select Profile Picture</string>
     <string name="s_dashboard_title">Dashboard</string>
+
+    <string name="s_consent_form_title">Consent Form</string>
     <string name="s_consent_form_agree">Agree</string>
     <string name="s_consent_form_disagree">No. I do not want to participate</string>
     <string name="s_consent_form_text">
@@ -178,14 +175,10 @@
 </p>
  ]]>
     </string>
-    <string name="s_consent_form_summary">Summary of the consent form</string>
     <string name="s_access_code_prompt">You should have received a 16-digit access code from your
         project coordinator. Please enter that access code below.</string>
     <string name="s_invalid_creation_code">You have entered an invalid creation code.</string>
-    <string name="s_creation_code_already_used">The creation code you have entered is already used. Please contact your project coordinator.</string>
     <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
-    <string name="s_sending_otp">Sending OTP to your phone</string>
-    <string name="s_unable_to_send_otp">We were unable to send OTP to your number. Please try again later.</string>
     <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>
     <string name="s_invalid_otp">You have entered an invalid OTP</string>
     <string name="s_resend_otp">Resend OTP</string>
@@ -194,57 +187,50 @@
     <string name="s_male">Male</string>
     <string name="s_female">Female</string>
     <string name="s_age_prompt">Please enter your year of birth</string>
-    <string name="s_years">years</string>
-    <string name="s_registering_worker">Registering worker with the server</string>
     <string name="s_phone_number_already_used">This access code is already registered.</string>
-    <!-- TODO: update tick and cross with more suitable words -->
-    <string name="s_skill_question_description">We have three questions about your skills in English. For each question, please click tick for yes, and cross for no.</string>
-    <string name="s_read_skill_question">Can you read in English?</string>
-    <string name="s_speak_skill_question">Can you speak in English?</string>
-    <string name="s_type_skill_question">Can you type in English?</string>
-    <string name="s_registering_skill">Registering new skill for worker</string>
-    <string name="s_failed_to_register_skill">Failed to register new skill for worker</string>
-    <string name="s_other_language_selection">If you know any other language, please select that language below</string>
-    <string name="s_uploading_files">Uploading files to the box</string>
-    <string name="s_send_updates">Sending updates to the box</string>
-    <string name="s_receive_updates">Receiving updates from the box</string>
-    <string name="s_downloading_files">Downloading files from the box</string>
     <string name="s_sync_tasks">Submit Tasks / Get New Tasks</string>
-    <string name="s_get_new_tasks"> Get new tasks</string>
-    <string name="s_submit_completed_tasks">Submit completed tasks</string>
-    <string name="s_update_verified_tasks">Update verified tasks</string>
-    <string name="s_update_earning">Update earnings</string>
     <string name="s_tasks_available">Tasks available</string>
     <string name="s_tasks_completed">Tasks completed</string>
     <string name="s_tasks_skipped">Tasks skipped</string>
     <string name="s_tasks_submitted">Tasks submitted</string>
     <string name="s_tasks_verified">Tasks verified</string>
-    <string name="s_update_app_language">Change the App Language</string>
-    <string name="s_update_skills">Update Language Skills</string>
-    <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
-    <string name="s_yes">Yes</string>
-    <string name="s_no">No</string>
-    <string name="s_speech_scenario_name">Speech-data Collection</string>
-    <string name="s_speech_scenario_description">This task consists of a set of sentences. The worker is expected to record themselves reading out each sentence, one sentence at a time</string>
-    <string name="s_story_scenario_name">Group Speech-data Collection</string>
-    <string name="s_story_scenario_description">This task consists of a set of stories. The worker is expected to record themselves reading out each story, one sentence at a time</string>
-    <string name="s_recording_scenario_name">Verification of Speech Data Recordings</string>
-    <string name="s_recording_scenario_description">This task consists of a set of recordings. The worker is expected to verify the given recording and text.</string>
-    <string name="s_record_sentence">You have to record yourself speaking out this sentence</string>
-    <string name="s_record_action">To start recording, press this button. It will turn red indicating that the recording has started.</string>
-    <string name="s_stop_action">Once you are done recording, press this button again to stop the recording</string>
-    <string name="s_listen_action"> The app will play back the recorded audio. Listen to it carefully to ensure it is correct and that there is no other background voice.</string>
-    <string name="s_rerecord_action">If your recording is not correct, you can record again using the record button.</string>
-    <string name="s_next_action">If you are happy with the recording, you can press this button to go to the next sentence.</string>
-    <string name="s_previous_action"> You can press this button to go to the previous sentence.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Transliteration strings -->
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
     <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
 
-    <string name="video_record_button">I Understand and start recording</string>
-    <string name="record_preview_message">The preview of the recording would appear here</string>
-    <string name="dialogTitle">Skip or do it later?</string>
-    <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
+    <!-- Speech verification strings -->
+    <string name="speech_verification_instruction">Verify the recording below</string>
+    <string name="recording_accuracy">Accuracy</string>
+    <string name="accuracy_correct">Correct</string>
+    <string name="accuracy_errors">Errors</string>
+    <string name="accuracy_incorrect">Incorrect</string>
+    <string name="recording_volume">Volume</string>
+    <string name="volume_high">Good</string>
+    <string name="volume_okay">Whisper</string>
+    <string name="volume_low">Inaudible</string>
+    <string name="recording_quality">Quality</string>
+    <string name="quality_good">Good</string>
+    <string name="quality_noisy">Noisy</string>
+    <string name="quality_bad">Bad</string>
+    <string name="rating_undefined">Undefined</string>
+
+    <!-- Text translation strings -->
+    <string name="text_translation_instruction">Translate the sentence below</string>
+
+    <!-- Speech recording strings -->
+    <string name="speech_recording_instruction">Translate the sentence below</string>
+
+    <!-- Image alt texts -->
+    <string name="karya_logo">Project Karya Logo</string>
+    <string name="creation_code_hint">0000-0000-0000-0000</string>
+    <string name="status_check">status</string>
+    <string name="otp_hint"> ------ </string>
+    <string name="phone_number_hint">----------</string>
+    <string name="next">next</string>
+    <string name="back">back</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="rotate_right">rotate</string>
+
 </resources>

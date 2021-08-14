@@ -16,7 +16,7 @@
         android:gravity="center"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:text="@string/speech_verification_instruction_desc"
+        android:text="@string/speech_verification_instruction"
         android:textColor="#BBBBBB"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />

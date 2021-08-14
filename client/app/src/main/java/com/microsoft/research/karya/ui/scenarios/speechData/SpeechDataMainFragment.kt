@@ -50,7 +50,7 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main)
 
     /** record instruction */
     val recordInstruction =
-      viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+      viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.speech_recording_instruction)
     recordPromptTv.text = recordInstruction
 
     /** Set card corner radius */
