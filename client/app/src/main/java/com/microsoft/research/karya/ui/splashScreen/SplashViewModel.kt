@@ -54,6 +54,10 @@ constructor(
     val worker = getLoggedInWorker()
     _splashEffects.emit(SplashEffects.UpdateLanguage(worker.language))
 
+      if (!worker.idToken.isNullOrEmpty()) {
+          AuthManager.startSession()
+      }
+
     val destination =
       when {
         !worker.isConsentProvided -> Destination.AccessCodeFlow

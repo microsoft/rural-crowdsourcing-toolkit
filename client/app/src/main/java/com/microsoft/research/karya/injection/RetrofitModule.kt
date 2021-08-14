@@ -1,12 +1,13 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.remote.interceptors.IdTokenRenewInterceptor
+import com.microsoft.research.karya.data.repo.TokenRepository
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
 import com.microsoft.research.karya.injection.qualifier.BaseUrl
+import com.microsoft.research.karya.injection.qualifier.KaryaOkHttpClient
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -42,9 +43,23 @@ class RetrofitModule {
 
   @Provides
   @Reusable
-  fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+  fun provideIdTokenRenewInterceptor(
+    tokenRepository: TokenRepository,
+    @BaseUrl baseUrl: String
+  ): IdTokenRenewInterceptor {
+    return IdTokenRenewInterceptor(tokenRepository, baseUrl)
+  }
+
+  @KaryaOkHttpClient
+  @Provides
+  @Reusable
+  fun provideOkHttp(
+    httpLoggingInterceptor: HttpLoggingInterceptor,
+    idTokenRenewInterceptor: IdTokenRenewInterceptor
+  ): OkHttpClient {
     return OkHttpClient.Builder()
-        .addInterceptor(IdTokenRenewInterceptor())
+        .addInterceptor(idTokenRenewInterceptor)
+        .addInterceptor(httpLoggingInterceptor)
         .build()
   }
 
@@ -53,7 +68,7 @@ class RetrofitModule {
   fun provideRetrofitInstance(
     @BaseUrl baseUrl: String,
     converterFactory: GsonConverterFactory,
-    okHttpClient: OkHttpClient
+    @KaryaOkHttpClient okHttpClient: OkHttpClient
   ): Retrofit {
     return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl).addConverterFactory(converterFactory).build()
   }

@@ -34,6 +34,10 @@ constructor(
       _sessionAlive.postValue(false)
     }
 
+    fun startSession() {
+      _sessionAlive.value = true
+    }
+
   }
 
   suspend fun fetchLoggedInWorkerIdToken(): String {
@@ -66,11 +70,11 @@ constructor(
   }
 
   suspend fun logoutWorker() =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      applicationContext.dataStore.edit { prefs -> prefs.remove(accessCodeKey) }
-      _sessionAlive.value = false
-    }
+      withContext(defaultDispatcher) {
+        val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+        applicationContext.dataStore.edit { prefs -> prefs.remove(accessCodeKey) }
+        _sessionAlive.value = false
+      }
 
   suspend fun fetchLoggedInWorker(): WorkerRecord {
     if (!this::activeWorker.isInitialized || activeWorker.isEmpty()) {
@@ -81,20 +85,16 @@ constructor(
   }
 
   private suspend fun setLoggedInWorkerAccessCode(accessCode: String) =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      applicationContext.dataStore.edit { prefs -> prefs[accessCodeKey] = accessCode }
-    }
+      withContext(defaultDispatcher) {
+        val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+        applicationContext.dataStore.edit { prefs -> prefs[accessCodeKey] = accessCode }
+      }
 
   private suspend fun getLoggedInWorkerAccessCode(): String =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      val data = applicationContext.dataStore.data.first()
+      withContext(defaultDispatcher) {
+        val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+        val data = applicationContext.dataStore.data.first()
 
-      return@withContext data[accessCodeKey] ?: throw NoWorkerException()
-    }
-
-  fun startSession() {
-    _sessionAlive.value = true
-  }
+        return@withContext data[accessCodeKey] ?: throw NoWorkerException()
+      }
 }

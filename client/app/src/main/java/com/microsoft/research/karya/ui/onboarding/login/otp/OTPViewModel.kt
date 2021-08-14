@@ -44,10 +44,10 @@ constructor(
       checkNotNull(worker.phoneNumber)
 
       workerRepository
-        .resendOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber)
-        .onEach { _otpUiState.value = OTPUiState.Initial }
-        .catch { throwable -> _otpUiState.value = OTPUiState.Error(throwable) }
-        .collect()
+          .resendOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber)
+          .onEach { _otpUiState.value = OTPUiState.Initial }
+          .catch { throwable -> _otpUiState.value = OTPUiState.Error(throwable) }
+          .collect()
     }
   }
 
@@ -60,25 +60,25 @@ constructor(
       checkNotNull(worker.phoneNumber)
 
       workerRepository
-        .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
-        .onEach { worker ->
-          updateWorker(worker.copy(isConsentProvided = true))
-          authManager.startSession()
-          _otpUiState.value = OTPUiState.Success
-          handleNavigation(worker)
-        }
-        .catch { throwable -> _otpUiState.value = OTPUiState.Error(throwable) }
-        .collect()
+          .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
+          .onEach { worker ->
+            updateWorker(worker.copy(isConsentProvided = true))
+            AuthManager.startSession()
+            _otpUiState.value = OTPUiState.Success
+            handleNavigation(worker)
+          }
+          .catch { throwable -> _otpUiState.value = OTPUiState.Error(throwable) }
+          .collect()
     }
   }
 
   private suspend fun handleNavigation(worker: WorkerRecord) {
     val destination =
-      when {
-        worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
-        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
-        else -> Destination.Dashboard
-      }
+        when {
+          worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
+          worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
+          else -> Destination.Dashboard
+        }
 
     _otpEffects.emit(OTPEffects.Navigate(destination))
   }
