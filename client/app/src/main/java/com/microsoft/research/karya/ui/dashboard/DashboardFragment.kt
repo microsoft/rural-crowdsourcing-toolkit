@@ -173,7 +173,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
   private fun showErrorUi(throwable: Throwable, errorType: ERROR_TYPE, errorLvl: ERROR_LVL) {
     hideLoading()
-    showError(throwable.message!!, errorType, errorLvl)
+    showError(throwable.message ?: "Some error Occurred", errorType, errorLvl)
     binding.syncCv.enable()
   }
 
