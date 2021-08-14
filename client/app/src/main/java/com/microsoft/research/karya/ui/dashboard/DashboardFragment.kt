@@ -179,6 +179,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
   private fun showError(message: String, errorType: ERROR_TYPE, errorLvl: ERROR_LVL) {
     if (errorType == ERROR_TYPE.SYNC_ERROR) {
+      WorkManager.getInstance(requireContext()).cancelAllWork()
       with(binding) {
         syncErrorMessageTv.text = message
 
