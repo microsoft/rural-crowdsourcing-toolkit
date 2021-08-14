@@ -10,7 +10,6 @@ import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentOtpBinding
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.ui.base.BaseFragment
-import com.microsoft.research.karya.utils.AppConstants
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.finish
@@ -22,6 +21,8 @@ import com.microsoft.research.karya.utils.extensions.viewLifecycle
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
+
+private const val OTP_LENGTH = 6
 
 @AndroidEntryPoint
 class OTPFragment : BaseFragment(R.layout.fragment_otp) {
@@ -52,7 +53,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     }
 
     binding.otpEt.doAfterTextChanged { otp ->
-      if (otp?.length == AppConstants.OTP_LENGTH) {
+      if (otp?.length == OTP_LENGTH) {
         enableNextButton()
       } else {
         disableNextButton()

@@ -9,12 +9,13 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
-import com.microsoft.research.karya.utils.AppConstants
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
+
+private const val INITIAL_TIME = "1970-01-01T00:00:00Z"
 
 class AssignmentRepository
 @Inject
@@ -189,10 +190,10 @@ constructor(
   }
 
   suspend fun getNewAssignmentsFromTime(worker_id: String): String {
-    return assignmentDao.getNewAssignmentsFromTime(worker_id) ?: AppConstants.INITIAL_TIME
+    return assignmentDao.getNewAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }
   suspend fun getNewVerifiedAssignmentsFromTime(worker_id: String): String {
-    return assignmentDao.getNewVerifiedAssignmentsFromTime(worker_id) ?: AppConstants.INITIAL_TIME
+    return assignmentDao.getNewVerifiedAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }
 
   suspend fun getTotalCreditsEarned(worker_id: String): Float? {

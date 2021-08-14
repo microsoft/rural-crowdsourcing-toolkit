@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-package com.microsoft.research.karya.ui.registration
+package com.microsoft.research.karya.ui.base
 
 import android.graphics.Bitmap
 

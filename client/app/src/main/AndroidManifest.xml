@@ -20,17 +20,10 @@
         android:theme="@style/ThemeGray"
         android:usesCleartextTraffic="true">
 
-
-        <activity android:name=".ui.registration.RegistrationActivity" />
-        <activity
-            android:name=".ui.scenarios.textToTextTranslation.TextToTextTranslationMain"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".ui.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

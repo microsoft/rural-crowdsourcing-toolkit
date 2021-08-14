@@ -2,6 +2,7 @@
 <resources>
     <!-- Light UI colors -->
     <!-- Dark UI colors -->
+    <color name="black">#000000</color>
     <color name="dk_blue">#006ded</color>
     <color name="dk_blue2">#0331A6</color>
     <color name="colorBlack">@android:color/black</color>
