@@ -51,10 +51,10 @@ export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.O
         base = Joi.boolean();
         break;
       case 'int':
-        base = Joi.number().integer().positive();
+        base = Joi.number().integer();
         break;
       case 'float':
-        base = Joi.number().positive();
+        base = Joi.number();
         break;
       case 'enum': {
         const values = param.list.map((l) => l[0]);
