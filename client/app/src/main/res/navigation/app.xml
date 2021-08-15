@@ -158,7 +158,7 @@
         android:id="@+id/speechDataMainFragment2"
         android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"
         android:label="SpeechDataMainFragment"
-        tools:layout="@layout/speech_data_main">
+        tools:layout="@layout/microtask_speech_data">
         <argument
             android:name="taskId"
             app:argType="string" />
