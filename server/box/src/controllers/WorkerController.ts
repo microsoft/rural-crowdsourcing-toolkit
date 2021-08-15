@@ -103,6 +103,6 @@ export const registerWorker: KaryaMiddleware = async (ctx) => {
 /**
  * Send the generated token as HTTP response
  */
-export const sendGeneratedIdToken: KaryaMiddleware = async(ctx) => {
-  HttpResponse.OK(ctx, ctx.state.entity.id_token)
-}
+export const sendGeneratedIdToken: KaryaMiddleware = async (ctx) => {
+  HttpResponse.OK(ctx, { id_token: ctx.state.entity.id_token });
+};
