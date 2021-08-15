@@ -109,7 +109,7 @@
   border-radius: 3px;
 }
 
-#email {
+#main-card #email {
   margin-bottom: 0.2%;
   padding-bottom: 1.2%;
   color: #717787;
@@ -120,7 +120,7 @@
   height: 1.2rem;
 }
 
-#full_name {
+#main-card #full_name {
   margin-bottom: 0.4%;
   padding-top: 1.2%;
   color: #717787;

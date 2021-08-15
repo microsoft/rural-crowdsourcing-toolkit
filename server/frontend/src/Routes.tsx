@@ -25,17 +25,20 @@ import ngTaskDetail from './components/task/ngTaskDetail';
 import ngTaskList from './components/task/ngTaskList';
 
 /** work_provider components */
-import WorkProviderList from './components/work_provider/WorkProviderList';
+import ngWorkProviderList from './components/work_provider/ngWorkProviderList';
 
 /** worker components */
 import WorkerOverview from './components/worker/WorkerOverview';
 
 /** box components */
-import BoxList from './components/box/BoxList';
+import ngBoxList from './components/box/ngBoxList';
 
 /** task assignment components */
 import ngCreateTaskAssignment from './components/task_assignment/ngCreateTaskAssignment';
 import ngTaskAssignmentList from './components/task_assignment/ngTaskAssignmentList';
+
+/** language components */
+import LangAsset from './components/lang/LangAsset';
 
 const Routes = (
   <Switch>
@@ -60,17 +63,21 @@ const Routes = (
     <WorkProviderRoute exact path='/task/:id' component={ngTaskDetail} />
 
     {/** Work Provider routes */}
-    <AdminRoute exact path='/work_provider' component={WorkProviderList} />
+    <AdminRoute exact path='/work_provider' component={ngWorkProviderList} />
 
     {/** Worker routes */}
     <AdminRoute exact path='/worker' component={WorkerOverview} />
     
     {/** Box routes */}
-    <AdminRoute exact path='/box' component={BoxList} />
+    <AdminRoute exact path='/box' component={ngBoxList} />
 
     {/** Task assignment routes */}
     <AdminRoute exact path='/task-assignments' component={ngTaskAssignmentList} />
     <AdminRoute exact path='/task-assignments/create' component={ngCreateTaskAssignment} />
+    
+    {/** Language routes */}
+    <AdminRoute exact path='/lang-assets' component={LangAsset} />
+
     </Switch>
     </div>
     </main>

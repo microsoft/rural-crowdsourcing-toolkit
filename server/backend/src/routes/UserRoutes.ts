@@ -16,6 +16,7 @@ import * as TaskController from '../user-routes-controllers/TaskController';
 import * as TaskAssignmentController from '../user-routes-controllers/TaskAssignmentController';
 import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
 import * as WorkerController from '../user-routes-controllers/WorkerController';
+import * as LanguageController from '../user-routes-controllers/LanguageController';
 
 // Default state for all routes
 export type DefaultUserRouteState = {
@@ -134,6 +135,7 @@ userRouter.post<TaskController.TaskRouteState, {}>(
   TaskController.generateOutput
 );
 
+// Get microtask level summary of a task
 userRouter.get<TaskController.TaskRouteState, {}>(
   '/task/:id/microtask_summary',
   // @ts-ignore
@@ -177,6 +179,7 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskLinkController.get
 );
 
+// Get summary for each and every task
 userRouter.get<TaskController.TaskRouteState, {}>(
   '/task/summary',
   // @ts-ignore
@@ -184,6 +187,7 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getTasksSummary
 );
 
+// Get summary for each and every worker
 userRouter.get<WorkerController.WorkerRouteState, {}>(
   '/worker/summary',
   // @ts-ignore
@@ -191,12 +195,30 @@ userRouter.get<WorkerController.WorkerRouteState, {}>(
   WorkerController.getWorkersSummary
 );
 
+// Get summary of workers for a particular task
 userRouter.get<TaskController.TaskRouteState, {}>(
   '/task/:id/worker_summary',
   // @ts-ignore
   Middlewares.needIdToken,
   TaskController.checkTask,
   TaskController.getWorkersTaskSummary
+);
+
+// Submit language assets
+userRouter.post(
+  '/lang-assets/files',
+  Middlewares.needIdToken,
+  BodyParser({ multipart: true }),
+  // @ts-ignore
+  LanguageController.submitLangAsset
+);
+
+// Get all language asset files
+userRouter.get(
+  '/lang-assets/files',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  LanguageController.getLangAssets
 );
 
 export { userRouter };

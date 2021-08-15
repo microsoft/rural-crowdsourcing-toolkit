@@ -60,8 +60,9 @@ ul li > a {
   flex-direction: row;
   justify-content: space-between;
   text-align: center;
-  min-width: 200px;
-  margin-left: 9%;
+  min-width: 250px;
+  width: 96%;
+  margin-left: 2%;
 }
 
 #tabs a {

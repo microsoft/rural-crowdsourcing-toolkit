@@ -1,0 +1,67 @@
+#lang-title {
+  padding-left: 3%;
+  padding-bottom: 3%;
+  margin-top: 3%;
+}
+
+#submit-lang-form {
+  position: fixed;
+  bottom: 8%;
+  right: 32.5%;
+  width: 35%;
+  height: 70%;
+  z-index: 1;
+  background-color: #fff;
+  border: 1px solid rgba(180, 189, 198, 0.4);
+  border-radius: 5px;
+}
+
+#submit-lang-form {
+  padding-top: 3%;
+  padding-left: 4%;
+  padding-right: 4%;
+  line-height: 1.2em;
+}
+
+#submit-lang-form .btn-small {
+  background-color: #4fc3f7;
+  box-shadow: none;
+}
+
+#submit-lang-form p i {
+  font-size: 0.95em;
+}
+
+#submit-lang-form input {
+  color: #717787;
+  height: 1.5em;
+  border-bottom: 1px dotted #6e768d;
+}
+
+#lang-asset-table table {
+  margin-left: 3%;
+  width: 94%;
+}
+
+#lang-asset-table table td {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.97em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+#submit-lang-btn {
+  margin-top: 0.8%;
+  color: #2bbbad;
+  font-size: 0.95em;
+  margin-left: 2%;
+  transition: all 0.1s ease;
+}
+
+#submit-lang-btn:hover {
+  transform: scale(1.06);
+}
+
+#submit-lang-btn i {
+  font-size: 1.195em;
+}

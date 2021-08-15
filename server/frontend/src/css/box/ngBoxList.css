@@ -1,0 +1,65 @@
+#boxes-title {
+  padding-left: 3%;
+  margin-left: 1%;
+  padding-bottom: 3.5%;
+  margin-top: 3%;
+}
+
+#box-table table {
+  margin-left: 3%;
+  width: 94%;
+}
+
+#box-table td {
+  padding-top: 1.8%;
+  padding-bottom: 1.8%;
+}
+
+#box-table td:nth-child(1),
+#box-table td:nth-child(2) {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.97em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+#box-table td:nth-child(3),
+#box-table td:nth-child(4) {
+  font-size: 0.9em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#box-table td:nth-child(2) {
+  padding-left: 2.5%;
+}
+
+#box-table td:nth-child(4) {
+  padding-left: 3%;
+}
+
+#boxcode-form {
+  padding-left: 0%;
+  padding-top: 0%;
+  padding-bottom: 0%;
+}
+
+#boxcode-form .row {
+  margin-bottom: 0%;
+}
+
+#boxcode-form .col {
+  margin-left: 5%;
+}
+
+#boxcode-form input {
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#gen-boxcode-btn {
+  margin-top: 2.6%;
+  margin-left: 28%;
+  font-size: 0.98em;
+  background-color: #4fc3f7;
+}

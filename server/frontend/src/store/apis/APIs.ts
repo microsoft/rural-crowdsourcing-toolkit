@@ -4,6 +4,7 @@
  */
 
 import * as DBT from '@karya/core';
+import { LanguageCode } from '@karya/core';
 import { AuthHeader } from '../../db/Auth.extra';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
@@ -162,6 +163,17 @@ export type BackendRequestInitAction =
       store: 'worker';
       label: 'GET_ALL';
       task_id?: string;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'karya_file';
+      label: 'CREATE';
+      request: { file: File; code: LanguageCode };
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'karya_file';
+      label: 'GET_ALL';
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -286,6 +298,18 @@ export type BackendRequestSuccessAction =
       store: 'worker';
       label: 'GET_ALL';
       response: DBT.WorkerRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'karya_file';
+      label: 'CREATE';
+      response: DBT.KaryaFileRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'karya_file';
+      label: 'GET_ALL';
+      response: DBT.KaryaFileRecord[];
     };
 
 export type BackendRequestFailureAction = {
@@ -507,6 +531,26 @@ export async function backendRequest(
           response: await GET('/worker/summary'),
         } as BackendRequestSuccessAction;
       }
+    }
+
+    // Submit new language asset file
+    if (action.store === 'karya_file' && action.label === 'CREATE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST('/lang-assets/files', action.request),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get language asset files
+    if (action.store === 'karya_file' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/lang-assets/files'),
+      } as BackendRequestSuccessAction;
     }
 
     ((obj: never) => {
