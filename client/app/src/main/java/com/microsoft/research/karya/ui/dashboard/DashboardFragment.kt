@@ -43,7 +43,7 @@ private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   val binding by viewBinding(FragmentDashboardBinding::bind)
-  val viewModel: NgDashboardViewModel by viewModels()
+  val viewModel: DashboardViewModel by viewModels()
   private lateinit var syncWorkRequest: OneTimeWorkRequest
   val taskActivityLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

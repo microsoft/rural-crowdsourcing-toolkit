@@ -43,7 +43,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 @HiltViewModel
-class NgDashboardViewModel
+class DashboardViewModel
 @Inject
 constructor(
   private val taskRepository: TaskRepository,
