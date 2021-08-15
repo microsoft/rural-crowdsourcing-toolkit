@@ -16,7 +16,6 @@ import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import java.io.File
 import kotlin.properties.Delegates
-import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
