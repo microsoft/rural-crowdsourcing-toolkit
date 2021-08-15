@@ -1,5 +1,4 @@
 <resources>
-    <string name="s_unknown_error">Unknown error occurred. Please close the application and open again. If error persists, contact your project coordinator</string>
     <string name="s_consent_form_title">Consent Form</string>
     <string name="s_access_code_title">Enter Access Code</string>
     <string name="s_otp_title">Enter OTP</string>
@@ -31,7 +30,6 @@
     </string>
     <string name="s_access_code_prompt">You should have received a 8-digit access code from your
         teacher. Please enter that access code below.</string>
-    <string name="s_invalid_creation_code">You have entered an invalid creation code.</string>
     <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
     <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>
     <string name="s_invalid_otp">You have entered an invalid OTP</string>

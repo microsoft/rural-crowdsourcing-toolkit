@@ -1,10 +1,8 @@
 <resources>
-    <string name="s_unknown_error">अज्ञात त्रुटि हुई। कृपया एप्लिकेशन को बंद करें और फिर से खोलें। यदि त्रुटि बनी रहती है, तो अपने प्रोजेक्ट समन्वयक से संपर्क करें</string>
     <string name="s_consent_form_agree">मैं सहमत हूँ</string>
     <string name="s_consent_form_disagree">नहीं। मैं भाग नहीं लेना चाहता</string>
     <string name="s_consent_form_text">प्रोजेक्ट कार्य में भाग लेने के लिए धन्यवाद।</string>
     <string name="s_access_code_prompt">आपको प्रोजेक्ट समन्वयक से 16 अंकों का एक्सेस कोड प्राप्त होना चाहिए। कृपया नीचे उस एक्सेस कोड को दर्ज करें।</string>
-    <string name="s_invalid_creation_code">आपने एक गलत एक्सेस कोड दर्ज किया है।</string>
     <string name="s_phone_number_prompt">कार्य का उपयोग करने के लिए, आपको अपने फ़ोन नंबर का उपयोग करके हमारे आवेदन के साथ पंजीकरण करना होगा। कृपया नीचे अपना फ़ोन नंबर दर्ज करें।</string>
     <string name="s_otp_prompt">हमने आपको एसएमएस के माध्यम से 6 अंकों का ओटीपी भेजा है। कृपया उस ओटीपी को नीचे दर्ज करें</string>
     <string name="s_invalid_otp">आपके द्वारा दर्ज किया गया ओटीपी गलत है</string>
