@@ -118,7 +118,6 @@ dependencies {
   kapt(Dependencies.AndroidX.Hilt.daggerCompiler)
   kapt(Dependencies.AndroidX.Hilt.daggerHiltCompiler)
 
-
   implementation(Dependencies.Kotlin.Coroutines.core)
   implementation(Dependencies.Kotlin.Coroutines.coroutines)
 
@@ -136,4 +135,7 @@ dependencies {
   implementation("com.mcxiaoke.volley:library:1.0.19")
   implementation("com.nex3z:flow-layout:1.3.4-beta01")
 
+  // Scaled dp and sp implemenations
+  implementation("com.intuit.ssp:ssp-android:1.0.6")
+  implementation("com.intuit.sdp:sdp-android:1.0.6")
 }
