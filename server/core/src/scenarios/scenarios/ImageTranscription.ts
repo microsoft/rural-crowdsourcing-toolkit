@@ -29,7 +29,7 @@ export type BaseImageTranscriptionScenario = BaseScenarioInterface<
 // Base image transcription scenario
 export const baseImageTranscriptionScenario: BaseImageTranscriptionScenario = {
   name: 'IMAGE_TRANSCRIPTION',
-  full_name: 'Image Trascription',
+  full_name: 'Image Transcription',
   description: 'This scenario allows users to transcribe images into text',
 
   task_input: [languageParameter('language', 'Language', 'Language of the source images')],
