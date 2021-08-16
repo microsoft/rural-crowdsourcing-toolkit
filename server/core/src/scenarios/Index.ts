@@ -17,6 +17,7 @@ import {
   baseSignLanguageVideoVerificationScenario,
   BaseSignLanguageVideoVerificationScenario,
 } from './scenarios/SignLanguageVideoVerification';
+import { baseImageTranscriptionScenario, BaseImageTranscriptionScenario } from './scenarios/ImageTranscription';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -25,6 +26,7 @@ export * from './scenarios/SpeechVerification';
 export * from './scenarios/SignLanguageVideo';
 export * from './scenarios/SignLanguageVideoVerification';
 export * from './scenarios/XliterationData';
+export * from './scenarios/ImageTranscription';
 
 // List of scenario names
 export const scenarioNames = [
@@ -34,6 +36,7 @@ export const scenarioNames = [
   'SIGN_LANGUAGE_VIDEO',
   'SGN_LANG_VIDEO_VERIFICATION',
   'XLITERATION_DATA',
+  'IMAGE_TRANSCRIPTION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -50,6 +53,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseSignLanguageVideoVerificationScenario
   : SN extends 'XLITERATION_DATA'
   ? BaseXliterationDataScenario
+  : SN extends 'IMAGE_TRANSCRIPTION'
+  ? BaseImageTranscriptionScenario
   : never;
 
 // Scenario name to instance map
@@ -62,6 +67,7 @@ export const scenarioMap: {
   SIGN_LANGUAGE_VIDEO: baseSignLanguageVideoScenario,
   SGN_LANG_VIDEO_VERIFICATION: baseSignLanguageVideoVerificationScenario,
   XLITERATION_DATA: baseXliterationDataScenario,
+  IMAGE_TRANSCRIPTION: baseImageTranscriptionScenario,
 };
 
 // Core scenario parameters
