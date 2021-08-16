@@ -22,7 +22,7 @@ import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.item_float_word.view.*
-import kotlinx.android.synthetic.main.transliteration_main_fragment.*
+import kotlinx.android.synthetic.main.microtask_transliteration.*
 
 @AndroidEntryPoint
 class TransliterationMainFragment :

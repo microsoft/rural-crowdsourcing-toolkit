@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/image_transcription_instruction"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <ImageView
+        android:id="@+id/sourceWordIv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:contentDescription="source word"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv" />
+
+    <ImageButton
+        android:id="@+id/nextBtn"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_8sdp"
+        android:background="@drawable/ic_next_enabled"
+        android:contentDescription="@string/next"
+        android:soundEffectsEnabled="false"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sourceWordIv" />
+
+    <EditText
+        android:id="@+id/transcriptionEv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:background="@drawable/border_black"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:textColor="#000000"
+        android:textSize="@dimen/_16ssp"
+        android:inputType="textCapCharacters"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/nextBtn"
+        app:layout_constraintTop_toBottomOf="@id/sourceWordIv" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

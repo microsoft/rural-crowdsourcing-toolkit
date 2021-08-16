@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
 
     <string name="s_access_code_title">Enter Access Code</string>
@@ -218,6 +219,9 @@
 
     <!-- Speech recording strings -->
     <string name="speech_recording_instruction">Translate the sentence below</string>
+
+    <!-- Image transcription strings -->
+    <string name="image_transcription_instruction">Type what you see in the image below</string>
 
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>

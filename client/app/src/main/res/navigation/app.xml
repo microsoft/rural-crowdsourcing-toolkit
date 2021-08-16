@@ -132,12 +132,17 @@
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_universalTransliterationMainFragment"
-            app:destination="@id/universalTransliterationMainFragment" >
+            app:destination="@id/universalTransliterationMainFragment">
             <argument android:name="taskId" />
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_speechVerificationFragment"
-            app:destination="@id/speechVerificationFragment" >
+            app:destination="@id/speechVerificationFragment">
+            <argument android:name="taskId" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageTranscription"
+            app:destination="@id/imageTranscriptionFragment">
             <argument android:name="taskId" />
         </action>
     </fragment>
@@ -170,7 +175,7 @@
     <fragment
         android:id="@+id/universalTransliterationMainFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
-        android:label="UniversalTransliterationMainFragment" >
+        android:label="UniversalTransliterationMainFragment">
         <argument
             android:name="taskId"
             app:argType="string" />
@@ -181,12 +186,23 @@
     <fragment
         android:id="@+id/speechVerificationFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationFragment"
-        android:label="SpeechVerificationFragment" >
+        android:label="SpeechVerificationFragment">
         <argument
             android:name="taskId"
             app:argType="string" />
         <action
             android:id="@+id/action_speechVerificationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageTranscriptionFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageTranscription.ImageTranscriptionFragment"
+        android:label="imageTrnascriptionFragment">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_imageTranscriptionFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

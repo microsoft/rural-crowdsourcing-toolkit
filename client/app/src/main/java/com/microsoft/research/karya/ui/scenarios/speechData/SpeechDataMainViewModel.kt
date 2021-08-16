@@ -27,7 +27,7 @@ import java.io.DataOutputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import javax.inject.Inject
-import kotlinx.android.synthetic.main.speech_data_main.*
+import kotlinx.android.synthetic.main.microtask_speech_data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

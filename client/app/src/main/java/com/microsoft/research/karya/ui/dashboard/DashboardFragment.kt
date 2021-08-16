@@ -202,6 +202,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
           val action = DashboardFragmentDirections.actionDashboardActivityToSpeechVerificationFragment(task.taskID)
           findNavController().navigate(action)
         }
+        "IMAGE_TRANSCRIPTION" -> {
+          val action = DashboardFragmentDirections.actionDashboardActivityToImageTranscription(task.taskID)
+          findNavController().navigate(action)
+        }
       }
     }
   }
