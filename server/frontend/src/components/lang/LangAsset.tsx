@@ -37,12 +37,14 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // To submit language asset
-    submitLangAsset: (la: { file: File; code: LanguageCode }) => {
+    submitLangAsset: (code: LanguageCode, file: File) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'karya_file',
-        label: 'CREATE',
-        request: la,
+        label: 'CREATE_LANGUAGE_ASSET',
+        code,
+        request: {},
+        files: { file },
       };
       dispatch(action);
     },
@@ -52,7 +54,7 @@ const mapDispatchToProps = (dispatch: any) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'karya_file',
-        label: 'GET_ALL',
+        label: 'GET_LANGUAGE_ASSETS',
       };
       dispatch(action);
     },
@@ -67,14 +69,15 @@ type LangAssetProps = ConnectedProps<typeof reduxConnector>;
 
 // component state
 type LangAssetState = {
-  langAsset?: { file: File; code: LanguageCode };
-  show_form?: boolean;
+  show_form: boolean;
+  code?: LanguageCode;
+  file?: File;
 };
 
 // Task list component
 class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
   // Initial state
-  state: LangAssetState = {};
+  state: LangAssetState = { show_form: false };
 
   componentDidMount() {
     this.props.getLangAssets();
@@ -89,16 +92,16 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
   handleFileChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.currentTarget.files) {
       const file = e.currentTarget.files[0];
-      const langAsset = { file: file, code: e.currentTarget.id as LanguageCode };
-      this.setState({ langAsset });
+      this.setState({ file });
     }
   };
 
   // Submit file
   submitLangAsset = () => {
-    this.state.langAsset !== undefined
-      ? this.props.submitLangAsset(this.state.langAsset)
-      : this.setState({ show_form: true });
+    const { code, file } = this.state;
+    if (!code || !file) return;
+    this.props.submitLangAsset(code, file);
+    this.setState({ show_form: false });
   };
 
   // Render component
@@ -113,8 +116,8 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
     const files = this.props.files as (KaryaFileRecord & { extras: Extras })[];
 
     type langInfo = LanguageInterface & { code: LanguageCode };
-    const langRows: langInfo[] = Object.keys(languageMap).map((c) => {
-      return { ...languageMap[c as LanguageCode], code: c as LanguageCode };
+    const langRows: langInfo[] = Object.entries(languageMap).map(([code, values]) => {
+      return { code: code as LanguageCode, ...values };
     });
 
     // File submitted previously
@@ -122,8 +125,8 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
       const file = files.find((f) => f.name === `${li.code}.tgz`);
       return (
         <>
-          {file !== undefined ? (
-            <a href={file.extras.url} download>
+          {file && file.url ? (
+            <a href={file.url} download>
               <span>{file.name}</span>
             </a>
           ) : (
@@ -137,36 +140,13 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
     const fileUpload = (li: langInfo) => {
       return (
         <>
-          <button className='btn-flat' id='submit-lang-btn' onClick={() => this.setState({ show_form: true })}>
+          <button
+            className='btn-flat'
+            id='submit-lang-btn'
+            onClick={() => this.setState({ show_form: true, code: li.code })}
+          >
             <i className='material-icons left'>add</i>Submit file
           </button>
-          <div id='submit-lang-form' style={{ display: this.state.show_form === true ? 'block' : 'none' }}>
-            <div className='row'>
-              <p>
-                <i></i>
-              </p>
-              <div className='col s12 file-field input-field'>
-                <div className='btn btn-small'>
-                  <i className='material-icons'>attach_file</i>
-                  <input type='file' id={li.code} onChange={this.handleFileChange} />
-                </div>
-                <div className='file-path-wrapper'>
-                  <label htmlFor='tgz-name'>TGZ File</label>
-                  <input id='tgz-name' type='text' disabled={true} className='file-path validate' />
-                </div>
-              </div>
-            </div>
-            <div className='row' id='btn-row2'>
-              <button className='btn' id='upload-btn' onClick={this.submitLangAsset}>
-                Upload
-                <i className='material-icons right'>upload</i>
-              </button>
-              <button className='btn cancel-btn' onClick={() => this.setState({ show_form: false })}>
-                Cancel
-                <i className='material-icons right'>close</i>
-              </button>
-            </div>
-          </div>
         </>
       );
     };
@@ -197,6 +177,36 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
                   rows={langRows}
                   emptyMessage='There are no language assets'
                 />
+              </div>
+              <div id='submit-lang-form' style={{ display: this.state.show_form === true ? 'block' : 'none' }}>
+                <div className='row'>
+                  <p>Upload language asset file for {this.state.code}</p>
+                  <div className='col s12 file-field input-field'>
+                    <div className='btn btn-small'>
+                      <i className='material-icons'>attach_file</i>
+                      <input type='file' id={this.state.code} onChange={this.handleFileChange} />
+                    </div>
+                    <div className='file-path-wrapper'>
+                      <label htmlFor={`${this.state.code}-tgz-name`}>TGZ File</label>
+                      <input
+                        id={`${this.state.code}-tgz-name`}
+                        type='text'
+                        disabled={true}
+                        className='file-path validate'
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className='row' id='btn-row2'>
+                  <button className='btn' id='upload-btn' onClick={this.submitLangAsset}>
+                    Upload
+                    <i className='material-icons right'>upload</i>
+                  </button>
+                  <button className='btn cancel-btn' onClick={() => this.setState({ show_form: false })}>
+                    Cancel
+                    <i className='material-icons right'>close</i>
+                  </button>
+                </div>
               </div>
             </>
           )}

@@ -167,13 +167,15 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'karya_file';
-      label: 'CREATE';
-      request: { file: File; code: LanguageCode };
+      label: 'CREATE_LANGUAGE_ASSET';
+      code: LanguageCode;
+      files: { [id: string]: File };
+      request: {};
     }
   | {
       type: 'BR_INIT';
       store: 'karya_file';
-      label: 'GET_ALL';
+      label: 'GET_LANGUAGE_ASSETS';
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -302,13 +304,13 @@ export type BackendRequestSuccessAction =
   | {
       type: 'BR_SUCCESS';
       store: 'karya_file';
-      label: 'CREATE';
+      label: 'CREATE_LANGUAGE_ASSET';
       response: DBT.KaryaFileRecord;
     }
   | {
       type: 'BR_SUCCESS';
       store: 'karya_file';
-      label: 'GET_ALL';
+      label: 'GET_LANGUAGE_ASSETS';
       response: DBT.KaryaFileRecord[];
     };
 
@@ -534,22 +536,22 @@ export async function backendRequest(
     }
 
     // Submit new language asset file
-    if (action.store === 'karya_file' && action.label === 'CREATE') {
+    if (action.store === 'karya_file' && action.label === 'CREATE_LANGUAGE_ASSET') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await POST('/lang-assets/files', action.request),
+        response: await POST(`/lang-assets/${action.code}`, {}, {}, action.files),
       } as BackendRequestSuccessAction;
     }
 
     // Get language asset files
-    if (action.store === 'karya_file' && action.label === 'GET_ALL') {
+    if (action.store === 'karya_file' && action.label === 'GET_LANGUAGE_ASSETS') {
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET('/lang-assets/files'),
+        response: await GET('/lang-assets'),
       } as BackendRequestSuccessAction;
     }
 

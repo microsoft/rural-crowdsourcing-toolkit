@@ -206,7 +206,7 @@ userRouter.get<TaskController.TaskRouteState, {}>(
 
 // Submit language assets
 userRouter.post(
-  '/lang-assets/files',
+  '/lang-assets/:code',
   Middlewares.needIdToken,
   BodyParser({ multipart: true }),
   // @ts-ignore
@@ -215,7 +215,7 @@ userRouter.post(
 
 // Get all language asset files
 userRouter.get(
-  '/lang-assets/files',
+  '/lang-assets',
   // @ts-ignore
   Middlewares.needIdToken,
   LanguageController.getLangAssets

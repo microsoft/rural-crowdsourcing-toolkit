@@ -136,6 +136,19 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
+  // Submit language asset
+  if (action.store === 'karya_file' && action.label === 'CREATE_LANGUAGE_ASSET') {
+    const oldData = state.karya_file?.data || [];
+    const data = mergeData(oldData, action.response);
+    return { ...state, karya_file: { data, last_fetched_at, status } };
+  }
+
+  // Get language assets
+  if (action.store === 'karya_file' && action.label === 'GET_LANGUAGE_ASSETS') {
+    console.log(action.response);
+    return { ...state, karya_file: { data: action.response, last_fetched_at: new Date(), status } };
+  }
+
   // All action should be covered by now
   ((obj: never) => {
     throw new Error('Should never have come here');

@@ -5,68 +5,57 @@
 
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import { envGetString } from '@karya/misc-utils';
-import { getBlobName, BlobParameters, LanguageCode } from '@karya/core';
+import { getBlobName, BlobParameters, LanguageCode, languageCodes } from '@karya/core';
 import { BasicModel, getBlobSASURL } from '@karya/common';
 import { promises as fsp } from 'fs';
 import { upsertKaryaFile } from '../models/KaryaFileModel';
-import { Promise as BBPromise } from 'bluebird';
 
 /**
  * Submit language asset
  */
 export const submitLangAsset: UserRouteMiddleware = async (ctx) => {
-  const langAsset = ctx.request.body;
+  const languageCode: LanguageCode = ctx.params.code;
+  const { files } = ctx.request;
 
-  if (!langAsset.file) {
+  if (!files) {
     HttpResponse.BadRequest(ctx, 'No file submitted');
     return;
   }
 
-  if (langAsset.file instanceof Array) {
-    HttpResponse.BadRequest(ctx, `Multiple files provided`);
+  const file = files.file;
+  if (!file || file instanceof Array) {
+    HttpResponse.BadRequest(ctx, `Invalid asset file`);
     return;
   }
 
-  // Copy the files to a temp folder
-  const timestamp = new Date().toISOString();
-  const uniqueName = `${langAsset.code}-${timestamp}`;
-  const localFolder = envGetString('LOCAL_FOLDER');
-  const folderPath = `${process.cwd()}/${localFolder}/language-assets/${uniqueName}`;
+  // Check if language code is valid
+  if (!languageCodes.includes(languageCode)) {
+    HttpResponse.BadRequest(ctx, 'Invalid language code');
+    return;
+  }
 
+  const blobParams: BlobParameters = {
+    cname: 'language-assets',
+    language_code: languageCode,
+    ext: 'tgz',
+  };
+  const blobName = getBlobName(blobParams);
+
+  let currentFileId: string | undefined = undefined;
   try {
-    await fsp.mkdir(folderPath);
-
-    // Copy required file to destination
-    const file = langAsset.file;
-    const filePath: string = file.path;
-    await fsp.copyFile(filePath, `${folderPath}/${uniqueName}.tgz`);
-    await fsp.unlink(filePath);
-
-    // Tar input blob parameter
-    const inputBlobParams: BlobParameters = {
-      cname: 'language-assets',
-      language_code: langAsset.code as LanguageCode,
-      ext: 'tgz',
-    };
-    const inputBlobName = getBlobName(inputBlobParams);
-    const inputBlobPath = `${folderPath}/${inputBlobName}`;
-
-    const record = await BasicModel.getSingle('karya_file', { name: `${langAsset.code}.tgz` });
-
-    const karyaFile =
-      record === undefined
-        ? await upsertKaryaFile(inputBlobPath, 'MD5', inputBlobParams)
-        : await upsertKaryaFile(inputBlobPath, 'MD5', inputBlobParams, record.id);
-
-    // Return success response
-    HttpResponse.OK(ctx, karyaFile);
+    const currentRecord = await BasicModel.getSingle('karya_file', {
+      container_name: 'language-assets',
+      name: blobName,
+    });
+    currentFileId = currentRecord.id;
   } catch (e) {
-    // TODO: internal server error
-    console.log(e);
-    HttpResponse.BadRequest(ctx, 'Something went wrong');
-    return;
+    // no existing record
   }
+
+  const karyaFile = await upsertKaryaFile(file.path, 'MD5', blobParams, currentFileId);
+  karyaFile.url = getBlobSASURL(karyaFile.url!, 'r');
+  HttpResponse.OK(ctx, karyaFile);
+  await fsp.unlink(file.path);
 };
 
 /**
@@ -74,11 +63,9 @@ export const submitLangAsset: UserRouteMiddleware = async (ctx) => {
  */
 export const getLangAssets: UserRouteMiddleware = async (ctx) => {
   const records = await BasicModel.getRecords('karya_file', { container_name: 'language-assets' });
-
-  await BBPromise.mapSeries(records, async (r) => {
+  records.forEach((r) => {
     if (r.url) {
-      const url = getBlobSASURL(r.url, 'r');
-      r.extras = { url };
+      r.url = getBlobSASURL(r.url, 'r');
     }
   });
   HttpResponse.OK(ctx, records);
