@@ -21,6 +21,7 @@ import {
   downloadPendingKaryaFiles,
   getUpdatedWorkers,
   getVerifiedAssignments,
+  getLanguageAssets,
 } from './ReceiveFromServer';
 
 /**
@@ -82,6 +83,9 @@ export async function syncBoxWithServer(box: BoxRecord) {
   // Send all created/completed microtask (group) assignments
   await sendNewAssignments(box, axios);
   await sendCompletedAssignments(box, axios);
+
+  // Get language assets
+  await getLanguageAssets(axios);
 
   // Get workers with updated tag information
   await getUpdatedWorkers(axios);

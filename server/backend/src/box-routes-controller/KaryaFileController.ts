@@ -76,4 +76,28 @@ export const get: BoxRouteMiddleware = async (ctx, next) => {
 /**
  * Get all langauge assets
  */
-export const getLanguageAssets: BoxRouteMiddleware = async (ctx, next) => {};
+export const getLanguageAssets: BoxRouteMiddleware = async (ctx, next) => {
+  const from = ctx.request.query.from || new Date(0).toISOString();
+
+  // Check from field
+  if (from instanceof Array) {
+    HttpResponse.BadRequest(ctx, 'Multiple from fields in query');
+    return;
+  }
+
+  const records = await BasicModel.getRecords(
+    'karya_file',
+    { container_name: 'language-assets' },
+    [],
+    [['last_updated_at', from, null]]
+  );
+
+  records.forEach((r) => {
+    if (r.url) r.url = getBlobSASURL(r.url, 'r');
+  });
+
+  HttpResponse.OK(
+    ctx,
+    records.filter((r) => r.url != null)
+  );
+};

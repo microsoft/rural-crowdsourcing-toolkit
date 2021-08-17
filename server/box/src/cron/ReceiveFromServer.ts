@@ -21,6 +21,35 @@ import { cronLogger } from './Cron';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
 
+export async function getLanguageAssets(axiosLocal: AxiosInstance) {
+  cronLogger.info('Fetching language assets');
+
+  // Get latest updated time for language assets
+  const response = await knex<KaryaFileRecord>('karya_file').max('last_updated_at');
+  const latest_update_time = response[0].max || new Date(0).toISOString();
+
+  let languageAssets: KaryaFileRecord[];
+  try {
+    const response = await axiosLocal.get<KaryaFileRecord[]>('/language_assets', {
+      params: { from: latest_update_time },
+    });
+    languageAssets = response.data;
+  } catch (e) {
+    cronLogger.error('Error while fetching language assets');
+    return;
+  }
+
+  // Update language asset information in the box
+  try {
+    await BBPromise.mapSeries(languageAssets, async (asset) => {
+      await BasicModel.upsertRecord('karya_file', asset);
+    });
+  } catch (e) {
+    cronLogger.error('Error while updating language assets');
+    return;
+  }
+}
+
 /**
  * Get all workers whose tags have been updated
  */
