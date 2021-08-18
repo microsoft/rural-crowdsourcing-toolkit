@@ -10,13 +10,15 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 
-abstract class BaseFeedbackRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
+abstract class BaseFeedbackRendererFragment(@LayoutRes contentLayoutId: Int) :
+  BaseFragment(contentLayoutId) {
 
   abstract val viewModel: BaseFeedbackRendererViewModel
 
   companion object {
     /** Code to request necessary permissions */
     private const val REQUEST_PERMISSIONS = 201
+
     // Flag to indicate if app has all permissions
     private var hasAllPermissions: Boolean = true
   }
@@ -33,7 +35,11 @@ abstract class BaseFeedbackRendererFragment(@LayoutRes contentLayoutId: Int) : B
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
       for (permission in permissions) {
-        if (checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(
+            requireContext(),
+            permission
+          ) != PackageManager.PERMISSION_GRANTED
+        ) {
           hasAllPermissions = false
           requestPermissions(permissions, REQUEST_PERMISSIONS)
           break

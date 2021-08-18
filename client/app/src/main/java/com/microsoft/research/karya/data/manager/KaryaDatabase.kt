@@ -24,18 +24,18 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 
 @Database(
   entities =
-    [
-      WorkerRecord::class,
-      KaryaFileRecord::class,
-      TaskRecord::class,
-      MicroTaskRecord::class,
-      MicroTaskAssignmentRecord::class,
-    ],
+  [
+    WorkerRecord::class,
+    KaryaFileRecord::class,
+    TaskRecord::class,
+    MicroTaskRecord::class,
+    MicroTaskAssignmentRecord::class,
+  ],
   version = 1,
   //  autoMigrations = [
   //    AutoMigration (from = 1, to = 2)
   //  ]
-  )
+)
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun microTaskDao(): MicroTaskDao
@@ -53,7 +53,9 @@ abstract class KaryaDatabase : RoomDatabase() {
     fun getInstance(context: Context): KaryaDatabase? {
       if (INSTANCE == null) {
         synchronized(KaryaDatabase::class) {
-          INSTANCE = Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db").build()
+          INSTANCE =
+            Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db")
+              .build()
         }
       }
       return INSTANCE

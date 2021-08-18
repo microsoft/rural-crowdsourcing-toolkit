@@ -24,7 +24,8 @@ constructor(
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
-  private val _selectAgeUiState: MutableStateFlow<SelectAgeUiState> = MutableStateFlow(SelectAgeUiState.Initial)
+  private val _selectAgeUiState: MutableStateFlow<SelectAgeUiState> =
+    MutableStateFlow(SelectAgeUiState.Initial)
   val selectAgeUiState = _selectAgeUiState.asStateFlow()
 
   private val _selectAgeEffects: MutableSharedFlow<SelectAgeEffects> = MutableSharedFlow()

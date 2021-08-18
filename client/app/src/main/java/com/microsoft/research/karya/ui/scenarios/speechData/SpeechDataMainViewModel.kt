@@ -53,7 +53,13 @@ constructor(
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
   private val datastore: DataStore<Preferences>
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager
+) {
 
   // TODO: Pass it in constructor (once we have viewModel factory)
   private val postRecordingTime: Int = 250
@@ -101,12 +107,14 @@ constructor(
   private var mediaPlayer: MediaPlayer? = null
 
   /** Audio recorder config parameters */
-  private val _minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
+  private val _minBufferSize =
+    AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
   private val _recorderBufferSize = _minBufferSize * 4
   private val _recorderBufferBytes = _recorderBufferSize
 
   /** UI State */
-  @JvmField var activityState: ActivityState = ActivityState.INIT
+  @JvmField
+  var activityState: ActivityState = ActivityState.INIT
   var previousActivityState: ActivityState = ActivityState.INIT
 
   private val _recordBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
@@ -188,6 +196,7 @@ constructor(
     _playBtnState.value = p
     _nextBtnState.value = n
   }
+
   override fun setupMicrotask() {
 
     /** Get the scratch and output file paths */
@@ -201,7 +210,8 @@ constructor(
     /** Write wav file */
     scratchRecordingFileInitJob = CoroutineScope(Dispatchers.IO).launch { resetWavFile() }
 
-    _sentenceTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    _sentenceTvText.value =
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
 
     if (firstTimeActivityVisit) {
@@ -247,7 +257,8 @@ constructor(
       ActivityState.OLD_PLAYING,
       ActivityState.OLD_PAUSED,
       ActivityState.NEW_PLAYING,
-      ActivityState.NEW_PAUSED, -> {
+      ActivityState.NEW_PAUSED,
+      -> {
         setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED)
 
         releasePlayer()
@@ -274,7 +285,8 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.SIMPLE_NEXT,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
+      ActivityState.ACTIVITY_STOPPED,
+      -> {
         // throw Exception("Record button should not be clicked in '$activityState' state")
       }
     }
@@ -346,7 +358,8 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.SIMPLE_NEXT,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
+      ActivityState.ACTIVITY_STOPPED,
+      -> {
         // throw Exception("Play button should not be clicked in '$activityState' state")
       }
     }
@@ -382,7 +395,8 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
+      ActivityState.ACTIVITY_STOPPED,
+      -> {
         // throw Exception("Next button should not be clicked in '$activityState' state")
       }
     }
@@ -403,7 +417,8 @@ constructor(
       ActivityState.PRERECORDING,
       ActivityState.COMPLETED_PRERECORDING,
       ActivityState.OLD_PLAYING,
-      ActivityState.OLD_PAUSED, -> {
+      ActivityState.OLD_PAUSED,
+      -> {
         setActivityState(ActivityState.SIMPLE_BACK)
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
@@ -420,7 +435,8 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED, -> {
+      ActivityState.ACTIVITY_STOPPED,
+      -> {
         // throw Exception("Back button should not be clicked in '$activityState' state")
       }
     }
@@ -445,7 +461,8 @@ constructor(
       ActivityState.OLD_PAUSED,
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
-      ActivityState.ASSISTANT_PLAYING, -> {
+      ActivityState.ASSISTANT_PLAYING,
+      -> {
         navigateBack()
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
@@ -462,7 +479,7 @@ constructor(
         }
       }
       ActivityState.ACTIVITY_STOPPED -> {
-      //  throw Exception("Android back button cannot not be clicked in '$activityState' state")
+        //  throw Exception("Android back button cannot not be clicked in '$activityState' state")
       }
     }
   }
@@ -488,7 +505,8 @@ constructor(
           playRecordPrompt()
         }
       }
-      else -> {}
+      else -> {
+      }
     }
   }
 
@@ -632,7 +650,12 @@ constructor(
           initializePlayer()
           mediaPlayer!!.setOnCompletionListener {
             _playbackProgressPbProgress.value = _playbackProgressPbMax.value
-            setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
+            setButtonStates(
+              ButtonState.ENABLED,
+              ButtonState.ENABLED,
+              ButtonState.ENABLED,
+              ButtonState.ENABLED
+            )
             setActivityState(ActivityState.COMPLETED_PRERECORDING)
           }
           playFile(outputRecordingFilePath)
@@ -761,7 +784,8 @@ constructor(
         ActivityState.NEW_PLAYING,
         ActivityState.NEW_PAUSED,
         ActivityState.OLD_PLAYING,
-        ActivityState.OLD_PAUSED, -> {
+        ActivityState.OLD_PAUSED,
+        -> {
           releasePlayer()
         }
 
@@ -782,7 +806,8 @@ constructor(
         ActivityState.ENCODING_NEXT,
         ActivityState.ENCODING_BACK,
         ActivityState.ASSISTANT_PLAYING,
-        ActivityState.ACTIVITY_STOPPED, -> {
+        ActivityState.ACTIVITY_STOPPED,
+        -> {
           // Do nothing
         }
       }
@@ -814,7 +839,13 @@ constructor(
   /** Initialize [audioRecorder] */
   private fun initializeAndStartRecorder() {
     audioRecorder =
-      AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, _recorderBufferSize)
+      AudioRecord(
+        MediaRecorder.AudioSource.MIC,
+        SAMPLE_RATE,
+        AUDIO_CHANNEL,
+        AUDIO_ENCODING,
+        _recorderBufferSize
+      )
     audioRecorder!!.startRecording()
   }
 
@@ -874,7 +905,8 @@ constructor(
         }
 
         totalRecordedBytes = preRecordBufferConsumed[0] + preRecordBufferConsumed[1]
-        totalRecordedBytes = if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
+        totalRecordedBytes =
+          if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
 
         var data = ByteArray(_recorderBufferBytes)
         currentRecordBufferConsumed = 0
@@ -930,7 +962,11 @@ constructor(
 
           // If other buffer is not empty, first write tail from other buffer
           if (otherBufferBytes != 0) {
-            scratchRecordingFile.write(otherBuffer, currentBufferBytes, maxPreRecordBytes - currentBufferBytes)
+            scratchRecordingFile.write(
+              otherBuffer,
+              currentBufferBytes,
+              maxPreRecordBytes - currentBufferBytes
+            )
             totalRecordedBytes = maxPreRecordBytes - currentBufferBytes
           }
 

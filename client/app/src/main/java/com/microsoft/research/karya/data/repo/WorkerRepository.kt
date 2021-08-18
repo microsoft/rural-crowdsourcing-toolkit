@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
+class WorkerRepository @Inject constructor(
+  private val workerAPI: WorkerAPI,
+  private val workerDao: WorkerDao
+) {
 
   fun getOTP(
     accessCode: String,
@@ -177,5 +180,6 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
       return@withContext workerDao.getByAccessCode(accessCode)
     }
 
-  suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) { workerDao.upsert(worker) }
+  suspend fun upsertWorker(worker: WorkerRecord) =
+    withContext(Dispatchers.IO) { workerDao.upsert(worker) }
 }

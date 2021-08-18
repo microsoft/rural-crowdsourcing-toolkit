@@ -20,9 +20,11 @@ import javax.inject.Inject
 @HiltViewModel
 class AccessCodeViewModel
 @Inject
-constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) : ViewModel() {
+constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) :
+  ViewModel() {
 
-  private val _accessCodeUiState: MutableStateFlow<AccessCodeUiState> = MutableStateFlow(AccessCodeUiState.Initial)
+  private val _accessCodeUiState: MutableStateFlow<AccessCodeUiState> =
+    MutableStateFlow(AccessCodeUiState.Initial)
   val accessCodeUiState = _accessCodeUiState.asStateFlow()
 
   private val _accessCodeEffects: MutableSharedFlow<AccessCodeEffects> = MutableSharedFlow()

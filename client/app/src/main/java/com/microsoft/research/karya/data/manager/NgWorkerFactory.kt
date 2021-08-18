@@ -26,7 +26,7 @@ class NgWorkerFactory(
     workerParameters: WorkerParameters
   ): ListenableWorker? {
 
-    return when(workerClassName) {
+    return when (workerClassName) {
       DashboardSyncWorker::class.java.name ->
         DashboardSyncWorker(
           appContext,

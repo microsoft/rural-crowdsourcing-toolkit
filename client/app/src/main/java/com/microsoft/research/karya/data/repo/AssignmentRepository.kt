@@ -163,7 +163,12 @@ constructor(
   }
 
   suspend fun updateOutputFileId(assignmentId: String, fileRecordId: String) =
-    withContext(Dispatchers.IO) { assignmentDaoExtra.updateOutputFileID(assignmentId, fileRecordId) }
+    withContext(Dispatchers.IO) {
+      assignmentDaoExtra.updateOutputFileID(
+        assignmentId,
+        fileRecordId
+      )
+    }
 
   suspend fun markComplete(
     id: String,
@@ -192,6 +197,7 @@ constructor(
   suspend fun getNewAssignmentsFromTime(worker_id: String): String {
     return assignmentDao.getNewAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }
+
   suspend fun getNewVerifiedAssignmentsFromTime(worker_id: String): String {
     return assignmentDao.getNewVerifiedAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }

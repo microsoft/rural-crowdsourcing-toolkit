@@ -118,14 +118,22 @@ class DashboardSyncWorker(
     // Submit the completed assignments
     assignmentRepository
       .submitCompletedAssignments(worker.idToken, completedAssignments)
-      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
+      .collect { assignmentIds ->
+        assignmentRepository.markMicrotaskAssignmentsSubmitted(
+          assignmentIds
+        )
+      }
 
     // Get skipped assignments from the database
     val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
     // Submit the skipped assignments
     assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .submitSkippedAssignments(worker.idToken, skippedAssignments)
-      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
+      .collect { assignmentIds ->
+        assignmentRepository.markMicrotaskAssignmentsSubmitted(
+          assignmentIds
+        )
+      }
   }
 
   private suspend fun receiveDbUpdates() {
@@ -164,7 +172,10 @@ class DashboardSyncWorker(
     var count = 0
     for (assignment in filteredAssignments) {
       assignmentRepository
-        .getInputFile(worker.idToken, assignment.id) // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
+        .getInputFile(
+          worker.idToken,
+          assignment.id
+        ) // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
 //        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
         .collect { response ->
           FileUtils.downloadFileToLocalPath(

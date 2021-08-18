@@ -18,13 +18,14 @@ constructor(
   private val authManager: AuthManager,
 ) : DelegatingWorkerFactory() {
   init {
-    addFactory(NgWorkerFactory(
-      taskRepository,
-      assignmentRepository,
-      karyaFileRepository,
-      microTaskRepository,
-      fileDirPath,
-      authManager
+    addFactory(
+      NgWorkerFactory(
+        taskRepository,
+        assignmentRepository,
+        karyaFileRepository,
+        microTaskRepository,
+        fileDirPath,
+        authManager
       )
     )
     // Add here other factories that you may need in your application

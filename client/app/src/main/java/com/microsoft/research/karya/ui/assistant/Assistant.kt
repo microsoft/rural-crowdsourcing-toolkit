@@ -109,5 +109,6 @@ constructor(
     }
   }
 
-  private fun isAssistantAvailable(): Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)
+  private fun isAssistantAvailable(): Boolean =
+    lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)
 }

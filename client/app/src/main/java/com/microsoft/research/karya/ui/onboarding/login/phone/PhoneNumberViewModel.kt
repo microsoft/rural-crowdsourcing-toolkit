@@ -24,7 +24,8 @@ constructor(
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
-  private val _phoneNumberUiState: MutableStateFlow<PhoneNumberUiState> = MutableStateFlow(PhoneNumberUiState.Initial)
+  private val _phoneNumberUiState: MutableStateFlow<PhoneNumberUiState> =
+    MutableStateFlow(PhoneNumberUiState.Initial)
   val phoneNumberUiState = _phoneNumberUiState.asStateFlow()
 
   private val _phoneNumberEffects: MutableSharedFlow<PhoneNumberEffects> = MutableSharedFlow()

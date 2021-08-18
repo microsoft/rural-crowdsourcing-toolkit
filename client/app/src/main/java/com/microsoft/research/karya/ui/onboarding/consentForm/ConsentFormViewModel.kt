@@ -15,9 +15,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ConsentFormViewModel
 @Inject
-constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) : ViewModel() {
+constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) :
+  ViewModel() {
 
-  private val _consentFormUiState: MutableStateFlow<ConsentFormUiState> = MutableStateFlow(ConsentFormUiState.Initial)
+  private val _consentFormUiState: MutableStateFlow<ConsentFormUiState> =
+    MutableStateFlow(ConsentFormUiState.Initial)
   val consentFormUiState = _consentFormUiState.asStateFlow()
 
   private val _consentFormEffects: MutableSharedFlow<ConsentFormEffects> = MutableSharedFlow()

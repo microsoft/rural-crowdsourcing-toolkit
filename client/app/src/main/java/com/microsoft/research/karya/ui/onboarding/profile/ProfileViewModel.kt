@@ -31,7 +31,8 @@ constructor(
   @FilesDir private val filesDirPath: String,
 ) : ViewModel() {
 
-  private val _profileUiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Initial)
+  private val _profileUiState: MutableStateFlow<ProfileUiState> =
+    MutableStateFlow(ProfileUiState.Initial)
   val profileUiState = _profileUiState.asStateFlow()
 
   private val _profileEffects: MutableSharedFlow<ProfileEffects> = MutableSharedFlow()

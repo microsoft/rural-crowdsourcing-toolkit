@@ -63,7 +63,10 @@ interface MicrotaskAssignmentDaoExtra {
    */
   suspend fun getUnsubmittedIDsForTask(taskId: String, includeCompleted: Boolean): List<String> {
     return if (includeCompleted) {
-      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED))
+      getIDsForTask(
+        taskId,
+        arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED)
+      )
     } else {
       getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED))
     }

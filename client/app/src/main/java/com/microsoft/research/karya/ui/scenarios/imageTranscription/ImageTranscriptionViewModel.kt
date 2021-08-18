@@ -54,7 +54,7 @@ constructor(
     _imageFilePath.value = try {
       val imageFileName = currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("image").asString
       microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id, imageFileName)
-    } catch(e: Exception) {
+    } catch (e: Exception) {
       ""
     }
   }

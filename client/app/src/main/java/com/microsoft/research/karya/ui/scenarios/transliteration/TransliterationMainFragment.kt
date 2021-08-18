@@ -106,7 +106,8 @@ class TransliterationMainFragment :
 
     if (viewModel.mlFeedback
       && !Validator.isValid(viewModel.sourceLanguage, viewModel.sourceWord, word)
-      && word != prevInvalidWord) {
+      && word != prevInvalidWord
+    ) {
       prevInvalidWord = word
       showError(
         "This transliteration doesn't seem right. Please check it and " +

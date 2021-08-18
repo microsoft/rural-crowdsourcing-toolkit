@@ -21,8 +21,10 @@ import javax.inject.Inject
 class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
 
   val viewModel by viewModels<AccessCodeViewModel>()
-  @Inject lateinit var resourceManager: ResourceManager
-  @Inject lateinit var authManager: AuthManager
+  @Inject
+  lateinit var resourceManager: ResourceManager
+  @Inject
+  lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -33,7 +35,8 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
     viewLifecycleScope.launch {
       val worker = authManager.fetchLoggedInWorker()
 
-      val fileDownloadFlow = resourceManager.downloadLanguageResources(worker.accessCode, worker.language)
+      val fileDownloadFlow =
+        resourceManager.downloadLanguageResources(worker.accessCode, worker.language)
 
       fileDownloadFlow.observe(viewLifecycle, viewLifecycleScope) { result ->
         when (result) {
@@ -42,7 +45,8 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
             // Toast.makeText(requireContext(), "Could not download resources", Toast.LENGTH_LONG).show()
             navigateToRegistration()
           }
-          Result.Loading -> {}
+          Result.Loading -> {
+          }
         }
       }
     }

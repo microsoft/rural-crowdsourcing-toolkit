@@ -143,13 +143,17 @@ constructor(
       var inputFileDoesNotExist = false
       if (currentMicroTask.input_file_id != null) {
         val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
-        val microtaskInputDirectory = microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
+        val microtaskInputDirectory =
+          microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
 
         if (!File(microtaskTarBallPath).exists()) {
           inputFileDoesNotExist = true
           // TODO: Create a MutableLiveData to inform the UI about an alertbox
         } else {
-          FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
+          FileUtils.extractGZippedTarBallIntoDirectory(
+            microtaskTarBallPath,
+            microtaskInputDirectory
+          )
         }
       }
 

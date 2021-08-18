@@ -75,7 +75,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       binding.syncProgressBar.progress = i
     }
 
-    WorkManager.getInstance(requireContext()).getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
+    WorkManager.getInstance(requireContext())
+      .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
       .observe(viewLifecycleOwner, { workInfos ->
         if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
         val workInfo = workInfos[0] // Picking the first workInfo
@@ -133,7 +134,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
   private fun syncWithServer() {
     setupWorkRequests()
-    WorkManager.getInstance(requireContext()).enqueueUniqueWork(UNIQUE_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, syncWorkRequest)
+    WorkManager.getInstance(requireContext())
+      .enqueueUniqueWork(UNIQUE_SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, syncWorkRequest)
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
@@ -191,19 +193,25 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         // TODO: CONVERT TO TODO
         // Use [ScenarioType] enum once we migrate to it.
         "SPEECH_DATA" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
+          val action =
+            DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
           findNavController().navigate(action)
         }
         "XLITERATION_DATA" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(task.taskID)
+          val action =
+            DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(
+              task.taskID
+            )
           findNavController().navigate(action)
         }
         "SPEECH_VERIFICATION" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToSpeechVerificationFragment(task.taskID)
+          val action =
+            DashboardFragmentDirections.actionDashboardActivityToSpeechVerificationFragment(task.taskID)
           findNavController().navigate(action)
         }
         "IMAGE_TRANSCRIPTION" -> {
-          val action = DashboardFragmentDirections.actionDashboardActivityToImageTranscription(task.taskID)
+          val action =
+            DashboardFragmentDirections.actionDashboardActivityToImageTranscription(task.taskID)
           findNavController().navigate(action)
         }
       }
