@@ -44,7 +44,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI, karyaFileDao: KaryaFileDao): KaryaFileRepository {
-    return KaryaFileRepository(karyaFileAPI, karyaFileDao)
+  fun provideKaryaFileRepository(karyaFileDao: KaryaFileDao): KaryaFileRepository {
+    return KaryaFileRepository(karyaFileDao)
   }
 }
