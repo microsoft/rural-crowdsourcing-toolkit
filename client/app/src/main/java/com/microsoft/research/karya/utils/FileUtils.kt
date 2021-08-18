@@ -7,6 +7,8 @@ package com.microsoft.research.karya.utils
 import com.microsoft.research.karya.utils.jtar.TarEntry
 import com.microsoft.research.karya.utils.jtar.TarInputStream
 import com.microsoft.research.karya.utils.jtar.TarOutputStream
+import okhttp3.ResponseBody
+import retrofit2.Response
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -17,8 +19,6 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
-import okhttp3.ResponseBody
-import retrofit2.Response
 
 object FileUtils {
 

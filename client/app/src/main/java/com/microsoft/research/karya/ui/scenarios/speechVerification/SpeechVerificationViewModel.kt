@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.speechVerification
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.media.MediaPlayer
 import androidx.annotation.StringRes

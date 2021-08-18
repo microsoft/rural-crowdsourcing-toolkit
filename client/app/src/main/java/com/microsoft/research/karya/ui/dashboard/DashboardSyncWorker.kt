@@ -19,7 +19,6 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

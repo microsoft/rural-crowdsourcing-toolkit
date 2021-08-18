@@ -5,8 +5,8 @@ import com.microsoft.research.karya.data.local.daos.TaskDao
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 class TaskRepository
 @Inject

@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class ConsentFormViewModel

@@ -8,7 +8,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
-import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 
 @Dao
 interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {

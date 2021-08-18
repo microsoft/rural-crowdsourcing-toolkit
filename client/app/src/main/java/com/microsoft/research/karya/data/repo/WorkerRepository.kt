@@ -8,10 +8,10 @@ import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.service.WorkerAPI
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
 

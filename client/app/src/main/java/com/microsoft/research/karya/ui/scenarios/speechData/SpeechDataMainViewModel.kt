@@ -23,10 +23,6 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewMo
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.DataOutputStream
-import java.io.FileOutputStream
-import java.io.RandomAccessFile
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.microtask_speech_data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +33,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.DataOutputStream
+import java.io.FileOutputStream
+import java.io.RandomAccessFile
+import javax.inject.Inject
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100

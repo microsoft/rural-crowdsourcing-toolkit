@@ -7,7 +7,6 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 

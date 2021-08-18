@@ -8,11 +8,11 @@ import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class AuthManager
 @Inject

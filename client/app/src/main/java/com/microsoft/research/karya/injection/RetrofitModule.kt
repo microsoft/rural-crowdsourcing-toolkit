@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI

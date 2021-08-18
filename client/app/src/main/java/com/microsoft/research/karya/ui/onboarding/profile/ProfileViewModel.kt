@@ -12,8 +12,6 @@ import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.utils.extensions.rotateRight
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +19,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel

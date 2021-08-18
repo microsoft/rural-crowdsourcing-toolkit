@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.onboarding.fileDownload
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,8 +14,8 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycle
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {

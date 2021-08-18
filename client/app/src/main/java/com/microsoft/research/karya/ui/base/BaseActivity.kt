@@ -25,11 +25,11 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.KaryaDatabase
 import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
 import com.microsoft.research.karya.utils.ImageUtils
+import kotlinx.android.synthetic.main.app_toolbar.*
+import kotlinx.coroutines.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlinx.android.synthetic.main.app_toolbar.*
-import kotlinx.coroutines.*
 
 abstract class BaseActivity() : AppCompatActivity() {
 

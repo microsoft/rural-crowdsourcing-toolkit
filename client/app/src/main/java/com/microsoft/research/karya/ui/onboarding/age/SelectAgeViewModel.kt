@@ -6,7 +6,6 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SelectAgeViewModel

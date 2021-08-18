@@ -2,7 +2,6 @@ package com.microsoft.research.karya
 
 import android.app.Application
 import androidx.work.Configuration
-import androidx.work.WorkerFactory
 import com.microsoft.research.karya.data.manager.NgDelegatingWorkerFactory
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

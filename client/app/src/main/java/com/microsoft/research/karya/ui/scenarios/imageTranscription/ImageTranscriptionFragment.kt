@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
-import com.microsoft.research.karya.utils.extensions.hideKeyboard
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
