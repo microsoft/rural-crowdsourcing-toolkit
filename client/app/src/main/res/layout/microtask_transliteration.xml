@@ -102,8 +102,7 @@
             android:layout_height="match_parent"
 
             app:flChildSpacing="@dimen/_8sdp"
-            app:flRowSpacing="@dimen/_8sdp"
-            />
+            app:flRowSpacing="@dimen/_8sdp" />
 
     </androidx.core.widget.NestedScrollView>
 
@@ -122,8 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:flChildSpacing="@dimen/_8sdp"
-            app:flRowSpacing="@dimen/_8sdp"
-            />
+            app:flRowSpacing="@dimen/_8sdp" />
 
     </androidx.core.widget.NestedScrollView>
 

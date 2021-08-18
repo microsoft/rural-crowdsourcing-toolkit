@@ -50,7 +50,7 @@
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
                 android:textColor="@color/dk_blue"
-                android:text="@string/s_sync_tasks"/>
+                android:text="@string/s_sync_tasks" />
 
             <ProgressBar
                 android:id="@+id/syncProgressBar"

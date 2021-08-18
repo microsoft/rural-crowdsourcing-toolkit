@@ -39,7 +39,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"/>
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL" />
 
     <LinearLayout
         android:id="@+id/recordLengthLL"
