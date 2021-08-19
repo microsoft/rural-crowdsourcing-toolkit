@@ -25,7 +25,9 @@ export async function getLanguageAssets(axiosLocal: AxiosInstance) {
   cronLogger.info('Fetching language assets');
 
   // Get latest updated time for language assets
-  const response = await knex<KaryaFileRecord>('karya_file').max('last_updated_at');
+  const response = await knex<KaryaFileRecord>('karya_file')
+    .where({ container_name: 'language-assets' })
+    .max('last_updated_at');
   const latest_update_time = response[0].max || new Date(0).toISOString();
 
   let languageAssets: KaryaFileRecord[];
