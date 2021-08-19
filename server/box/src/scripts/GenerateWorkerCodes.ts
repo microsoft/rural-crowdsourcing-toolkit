@@ -148,7 +148,7 @@ export async function generateWorkerCodes(
     }
   });
   if (taskError) return;
-  const workerTags = tags.concat(taskTags);
+  const workerTags = tags.concat(taskTags).filter((v, i, s) => s.indexOf(v) === i);
 
   // Access code info
   const accessCodeInfo: AccessCodeInfo = {
