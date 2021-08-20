@@ -173,9 +173,10 @@ constructor(
   suspend fun markComplete(
     id: String,
     output: JsonElement,
+    logs: JsonElement,
     date: String,
   ) {
-    assignmentDaoExtra.markComplete(id, output, date)
+    assignmentDaoExtra.markComplete(id, output, logs, date)
   }
 
   suspend fun markSkip(id: String, date: String) {

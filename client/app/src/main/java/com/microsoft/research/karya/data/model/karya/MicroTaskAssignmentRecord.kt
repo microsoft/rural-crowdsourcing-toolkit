@@ -21,6 +21,7 @@ data class MicroTaskAssignmentRecord(
   var completed_at: String?,
   var output: JsonElement,
   var output_file_id: String?,
+  var logs: JsonElement,
   var credits: Float?,
   var verified_at: String?,
   var report: JsonElement,

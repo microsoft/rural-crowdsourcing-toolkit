@@ -84,12 +84,13 @@ interface MicrotaskAssignmentDaoExtra {
    */
   @Query(
     "UPDATE microtask_assignment SET " +
-      "status=:status, output=:output, last_updated_at=:date, completed_at=:date " +
+      "status=:status, output=:output, logs=:logs, last_updated_at=:date, completed_at=:date " +
       "WHERE id=:id"
   )
   suspend fun markComplete(
     id: String,
     output: JsonElement,
+    logs: JsonElement,
     date: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
   )

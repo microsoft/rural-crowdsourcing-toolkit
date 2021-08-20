@@ -152,6 +152,9 @@ constructor(
   protected suspend fun completeAndSaveCurrentMicrotask() {
 
     val output = buildOutputJsonObject()
+    val logObj = JsonObject()
+    logObj.add("logs", logs)
+
     deleteAssignmentScratchFiles()
 
     /** Delete all scratch files */
@@ -159,6 +162,7 @@ constructor(
       assignmentRepository.markComplete(
         microtaskAssignmentIDs[currentAssignmentIndex],
         output,
+        logObj,
         date = DateUtils.getCurrentDate()
       )
     }
@@ -184,7 +188,6 @@ constructor(
     val output = JsonObject()
     output.add("data", outputData)
     output.add("files", outputFiles)
-    output.add("logs", logs)
     return output
   }
 
@@ -250,28 +253,26 @@ constructor(
 
       if (inputFileDoesNotExist) return@launch
 
-      if (!currentAssignment.output.isJsonNull) {
-        outputData =
-          if (currentAssignment.output.asJsonObject.has("data")) {
-            currentAssignment.output.asJsonObject.getAsJsonObject("data")
-          } else {
-            JsonObject()
-          }
+      outputData =
+        if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("data")) {
+          currentAssignment.output.asJsonObject.getAsJsonObject("data")
+        } else {
+          JsonObject()
+        }
 
-        logs =
-          if (currentAssignment.output.asJsonObject.has("logs")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("logs")
-          } else {
-            JsonArray()
-          }
+      outputFiles =
+        if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("files")) {
+          currentAssignment.output.asJsonObject.getAsJsonObject("files")
+        } else {
+          JsonObject()
+        }
 
-        outputFiles =
-          if (currentAssignment.output.asJsonObject.has("files")) {
-            currentAssignment.output.asJsonObject.getAsJsonObject("files")
-          } else {
-            JsonObject()
-          }
-      }
+      logs =
+        if (!currentAssignment.logs.isJsonNull && currentAssignment.logs.asJsonObject.has("logs")) {
+          currentAssignment.logs.asJsonObject.getAsJsonArray("logs")
+        } else {
+          JsonArray()
+        }
 
       setupMicrotask()
     }
