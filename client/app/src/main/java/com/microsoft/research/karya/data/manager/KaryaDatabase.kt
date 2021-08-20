@@ -15,12 +15,12 @@ import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
-import com.microsoft.research.karya.data.local.ng.WorkerDao
+import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 
 @Database(
   entities =

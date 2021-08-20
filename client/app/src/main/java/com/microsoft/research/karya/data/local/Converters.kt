@@ -14,7 +14,7 @@ import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.enums.FileCreator
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
-import com.microsoft.research.karya.data.model.karya.ng.AuthType
+import com.microsoft.research.karya.data.model.karya.enums.AuthType
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 
 class Converters {

@@ -1,4 +1,4 @@
-package com.microsoft.research.karya.data.local.enum
+package com.microsoft.research.karya.data.model.karya.enums
 
 enum class AssistantAudio(val fileName: String) {
   AGE_PROMPT("audio_age_prompt.m4a"),

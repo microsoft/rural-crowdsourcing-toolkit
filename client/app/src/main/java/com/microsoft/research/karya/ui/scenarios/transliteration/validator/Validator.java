@@ -1,6 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.transliteration.validator;
 
-import com.microsoft.research.karya.data.model.karya.ng.LanguageType;
+import com.microsoft.research.karya.data.model.karya.enums.LanguageType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

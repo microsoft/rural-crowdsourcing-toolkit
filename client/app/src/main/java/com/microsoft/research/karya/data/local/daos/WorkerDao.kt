@@ -1,11 +1,10 @@
-package com.microsoft.research.karya.data.local.ng
+package com.microsoft.research.karya.data.local.daos
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.google.gson.JsonElement
-import com.microsoft.research.karya.data.local.daos.BasicDao
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 
 @Dao
 interface WorkerDao : BasicDao<WorkerRecord> {

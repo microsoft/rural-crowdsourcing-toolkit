@@ -4,8 +4,8 @@ import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
-import com.microsoft.research.karya.data.local.ng.WorkerDao
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.local.daos.WorkerDao
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.service.WorkerAPI
 import kotlinx.coroutines.Dispatchers

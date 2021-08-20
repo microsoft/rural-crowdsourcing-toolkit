@@ -1,10 +1,11 @@
-package com.microsoft.research.karya.data.model.karya.ng
+package com.microsoft.research.karya.data.model.karya
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
+import com.microsoft.research.karya.data.model.karya.enums.AuthType
 
 @Entity(tableName = "worker")
 data class WorkerRecord(

@@ -19,7 +19,7 @@ constructor(
 ) : DelegatingWorkerFactory() {
   init {
     addFactory(
-      NgWorkerFactory(
+      WorkerFactory(
         taskRepository,
         assignmentRepository,
         karyaFileRepository,
