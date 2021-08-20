@@ -15,6 +15,7 @@ import com.microsoft.research.karya.data.model.karya.enums.FileCreator
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
 import com.microsoft.research.karya.data.model.karya.ng.AuthType
+import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 
 class Converters {
 
@@ -157,5 +158,23 @@ class Converters {
     }
     val gson = Gson()
     return gson.toJson(list)
+  }
+
+  @TypeConverter
+  fun fromStringToScenarioType(value: String?): ScenarioType? {
+    if (value == null) {
+      return null
+    }
+    val listType = object : TypeToken<ScenarioType>() {}.type
+    return Gson().fromJson(value, listType)
+  }
+
+  @TypeConverter
+  fun fromScenarioTypeToString(scenarioType: ScenarioType?): String? {
+    if (scenarioType == null) {
+      return null
+    }
+    val gson = Gson()
+    return gson.toJson(scenarioType)
   }
 }

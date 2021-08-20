@@ -57,7 +57,7 @@ class TaskListAdapter(
       with(binding) {
         task.apply {
           taskNameTv.text = taskName
-          scenarioNameTv.text = scenarioName
+          scenarioNameTv.text = scenarioName.toString()
           numIncompleteTv.text = taskStatus.assignedMicrotasks.toString()
           numCompletedTv.text = taskStatus.completedMicrotasks.toString()
           numSkippedTv.text = taskStatus.skippedMicrotasks.toString()

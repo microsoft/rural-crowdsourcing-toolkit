@@ -22,6 +22,7 @@ import androidx.work.WorkManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
+import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
@@ -192,24 +193,24 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
       when (task.scenarioName) {
         // TODO: CONVERT TO TODO
         // Use [ScenarioType] enum once we migrate to it.
-        "SPEECH_DATA" -> {
+        ScenarioType.SPEECH_DATA -> {
           val action =
             DashboardFragmentDirections.actionDashboardActivityToSpeechDataMainFragment2(task.taskID)
           findNavController().navigate(action)
         }
-        "XLITERATION_DATA" -> {
+        ScenarioType.XLITERATION_DATA -> {
           val action =
             DashboardFragmentDirections.actionDashboardActivityToUniversalTransliterationMainFragment(
               task.taskID
             )
           findNavController().navigate(action)
         }
-        "SPEECH_VERIFICATION" -> {
+        ScenarioType.SPEECH_VERIFICATION -> {
           val action =
             DashboardFragmentDirections.actionDashboardActivityToSpeechVerificationFragment(task.taskID)
           findNavController().navigate(action)
         }
-        "IMAGE_TRANSCRIPTION" -> {
+        ScenarioType.IMAGE_TRANSCRIPTION -> {
           val action =
             DashboardFragmentDirections.actionDashboardActivityToImageTranscription(task.taskID)
           findNavController().navigate(action)
