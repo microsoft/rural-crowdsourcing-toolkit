@@ -2,7 +2,7 @@ package com.microsoft.research.karya.ui.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
@@ -20,7 +20,7 @@ class DashboardViewModel
 constructor(
   private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
 ) : ViewModel() {
 
   private var taskInfoList = listOf<TaskInfo>()
@@ -38,7 +38,7 @@ constructor(
   val progress = _progress.asStateFlow()
 
   suspend fun refreshList() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     val tempList = mutableListOf<TaskInfo>()
     taskInfoList.forEach { taskInfo ->
       val taskStatus = fetchTaskStatus(taskInfo.taskID)
@@ -66,7 +66,7 @@ constructor(
   @Suppress("USELESS_CAST")
   fun getAllTasks() {
     viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
 
       taskRepository
         .getAllTasksFlow()
@@ -130,7 +130,7 @@ constructor(
 
   fun updateTaskStatus(taskId: String) {
     viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
 
       val taskStatus = fetchTaskStatus(taskId)
 

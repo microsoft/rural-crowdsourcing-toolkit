@@ -2,7 +2,7 @@ package com.microsoft.research.karya.ui.onboarding.login.phone
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class PhoneNumberViewModel
 @Inject
 constructor(
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
@@ -29,7 +29,7 @@ constructor(
     viewModelScope.launch {
       _phoneNumberUiState.value = PhoneNumberUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       // Update worker's phone number in the DB.
       // We don't care if it is correct or not, if it's incorrect we can update it later when user
       // requests the otp again.

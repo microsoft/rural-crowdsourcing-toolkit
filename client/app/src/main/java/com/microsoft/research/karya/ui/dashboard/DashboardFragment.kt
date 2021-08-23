@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
@@ -44,7 +44,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   private var dialog: AlertDialog? = null
 
   @Inject
-  lateinit var authManager: AuthManager
+  lateinit var authManager: NgAuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -243,7 +243,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
         val profilePicPath =
-          authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
+          authManager.getLoggedInWorker().profilePicturePath ?: return@withContext
         val bitmap = BitmapFactory.decodeFile(profilePicPath)
 
         withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }

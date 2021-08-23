@@ -4,7 +4,7 @@ package com.microsoft.research.karya.ui.onboarding.login.otp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.Destination
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class OTPViewModel
 @Inject
 constructor(
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
@@ -32,7 +32,7 @@ constructor(
       _otpUiState.value = OTPUiState.Loading
 
       // We updated the worker phone number during first otp call, let's reuse that
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
@@ -48,14 +48,13 @@ constructor(
       _otpUiState.value = OTPUiState.Loading
 
       // We updated the worker phone number during first otp call, let's reuse that
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
         .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
         .onEach { worker ->
-          updateWorker(worker.copy(isConsentProvided = true))
-          AuthManager.startSession()
+          authManager.startSession(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
           handleNavigation(worker)
         }
@@ -73,9 +72,5 @@ constructor(
       }
 
     _otpEffects.emit(OTPEffects.Navigate(destination))
-  }
-
-  private suspend fun updateWorker(worker: WorkerRecord) {
-    workerRepository.upsertWorker(worker)
   }
 }

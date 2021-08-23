@@ -2,7 +2,7 @@ package com.microsoft.research.karya.ui.splashScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.Destination
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SplashViewModel
 @Inject
 constructor(
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
@@ -43,7 +43,7 @@ constructor(
   }
 
   private suspend fun getLoggedInWorker(): WorkerRecord {
-    return authManager.fetchLoggedInWorker()
+    return authManager.getLoggedInWorker()
   }
 
   private suspend fun handleNewUser() {
@@ -53,10 +53,6 @@ constructor(
   private suspend fun handleSingleUser() {
     val worker = getLoggedInWorker()
     _splashEffects.emit(SplashEffects.UpdateLanguage(worker.language))
-
-    if (!worker.idToken.isNullOrEmpty()) {
-      AuthManager.startSession()
-    }
 
     val destination =
       when {

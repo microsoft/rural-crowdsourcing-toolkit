@@ -3,7 +3,7 @@ package com.microsoft.research.karya.ui.assistant
 import android.media.MediaPlayer
 import android.util.Log
 import androidx.lifecycle.*
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import dagger.assisted.Assisted
@@ -18,7 +18,7 @@ class Assistant
 constructor(
   @Assisted lifecycleOwner: LifecycleOwner,
   private val resourceManager: ResourceManager,
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
 ) : LifecycleObserver {
   private lateinit var assistantPlayer: MediaPlayer
   private val lifecycle: Lifecycle = lifecycleOwner.lifecycle
@@ -37,7 +37,7 @@ constructor(
       val workerLanguage =
         withContext(Dispatchers.IO) {
           // TODO: Implement a logged-in worker cache in authManager
-          return@withContext authManager.fetchLoggedInWorker().language
+          return@withContext authManager.getLoggedInWorker().language
         }
 
       val audioFilePath = resourceManager.getAudioFilePath(workerLanguage, assistantAudio.fileName)

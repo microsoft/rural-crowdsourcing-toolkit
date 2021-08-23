@@ -10,7 +10,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
@@ -51,7 +51,7 @@ constructor(
   taskRepository: TaskRepository,
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
-  authManager: AuthManager,
+  authManager: NgAuthManager,
   private val datastore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,

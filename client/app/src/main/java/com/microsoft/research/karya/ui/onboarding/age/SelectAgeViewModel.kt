@@ -2,7 +2,7 @@ package com.microsoft.research.karya.ui.onboarding.age
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class SelectAgeViewModel
 @Inject
 constructor(
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
@@ -29,7 +29,7 @@ constructor(
     viewModelScope.launch {
       _selectAgeUiState.value = SelectAgeUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.idToken)
       checkNotNull(worker.gender)
 

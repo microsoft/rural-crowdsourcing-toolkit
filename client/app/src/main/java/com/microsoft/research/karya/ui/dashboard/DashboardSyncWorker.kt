@@ -7,7 +7,7 @@ import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
@@ -40,7 +40,7 @@ class DashboardSyncWorker(
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
   @FilesDir private val fileDirPath: String,
-  private val authManager: AuthManager,
+  private val authManager: NgAuthManager,
 ) : CoroutineWorker(appContext, workerParams) {
 
   private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
@@ -111,7 +111,7 @@ class DashboardSyncWorker(
   }
 
   private suspend fun sendDbUpdates() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     // Get completed assignments from the database
@@ -142,7 +142,7 @@ class DashboardSyncWorker(
   }
 
   private suspend fun receiveDbUpdates() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val from = assignmentRepository.getNewAssignmentsFromTime(worker.id)
@@ -156,7 +156,7 @@ class DashboardSyncWorker(
 
   private suspend fun downloadInputFiles() {
     // Get the list of assignments for which the input file has to be downloaded
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val filteredAssignments =
@@ -195,7 +195,7 @@ class DashboardSyncWorker(
   }
 
   private suspend fun fetchVerifiedAssignments(from: String = "") {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(worker.id)
@@ -264,7 +264,7 @@ class DashboardSyncWorker(
     assignmentTarBallPath: String,
     tarBallName: String,
   ) {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val requestFile =

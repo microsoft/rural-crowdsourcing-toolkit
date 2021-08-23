@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.NgAuthManager
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
@@ -33,7 +33,7 @@ constructor(
   var taskRepository: TaskRepository,
   var microTaskRepository: MicroTaskRepository,
   var fileDirPath: String,
-  var authManager: AuthManager,
+  var authManager: NgAuthManager,
   val includeCompleted: Boolean = false
 ) : ViewModel() {
 
