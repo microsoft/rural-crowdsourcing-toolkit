@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.dashboard
 
+import android.app.AlertDialog
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
@@ -39,6 +40,8 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   val binding by viewBinding(FragmentDashboardBinding::bind)
   val viewModel: DashboardViewModel by viewModels()
   private lateinit var syncWorkRequest: OneTimeWorkRequest
+
+  private var dialog: AlertDialog? = null
 
   @Inject
   lateinit var authManager: AuthManager
@@ -167,6 +170,40 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         binding.rupeesEarnedCl.gone()
       } */
     }
+
+    // Show a dialog box to sync with server if completed tasks and internet available
+    if (requireContext().isNetworkAvailable()) {
+      for (taskInfo in data.taskInfoData) {
+        if (taskInfo.taskStatus.completedMicrotasks > 0) {
+          showDialogueToSync()
+          return
+        }
+      }
+    }
+  }
+
+  private fun showDialogueToSync() {
+
+    if (dialog != null && dialog!!.isShowing) return
+
+    val builder: AlertDialog.Builder? = activity?.let {
+      AlertDialog.Builder(it)
+    }
+
+    builder?.setMessage(R.string.s_sync_prompt_message)
+
+    // Set buttons
+    builder?.apply {
+      setPositiveButton(R.string.s_yes
+      ) { _, _ ->
+        syncWithServer()
+        dialog!!.dismiss()
+      }
+      setNegativeButton(R.string.s_no, null)
+    }
+
+    dialog = builder?.create()
+    dialog!!.show()
   }
 
   private fun showErrorUi(throwable: Throwable, errorType: ERROR_TYPE, errorLvl: ERROR_LVL) {
