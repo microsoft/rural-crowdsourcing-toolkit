@@ -68,7 +68,7 @@
                 android:id="@+id/syncErrorMessageTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/red"
+                android:textColor="@color/colorRed"
                 tools:text="This is an error message"
                 android:textAlignment="center"
                 android:visibility="gone" />

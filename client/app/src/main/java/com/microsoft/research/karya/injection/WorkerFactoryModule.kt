@@ -1,11 +1,10 @@
 package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.manager.NgDelegatingWorkerFactory
+import com.microsoft.research.karya.data.manager.SyncDelegatingWorkerFactory
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
-import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import dagger.Module
 import dagger.Provides
@@ -25,8 +24,8 @@ class WorkerFactoryModule {
     microTaskRepository: MicroTaskRepository,
     @FilesDir fileDirPath: String,
     authManager: AuthManager,
-  ): NgDelegatingWorkerFactory {
-    val workerFactory = NgDelegatingWorkerFactory(
+  ): SyncDelegatingWorkerFactory {
+    val workerFactory = SyncDelegatingWorkerFactory(
       assignmentRepository,
       karyaFileRepository,
       microTaskRepository,

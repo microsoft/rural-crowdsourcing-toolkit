@@ -7,7 +7,7 @@ import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import javax.inject.Inject
 
-class NgDelegatingWorkerFactory @Inject
+class SyncDelegatingWorkerFactory @Inject
 constructor(
   assignmentRepository: AssignmentRepository,
   karyaFileRepository: KaryaFileRepository,
