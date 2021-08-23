@@ -183,6 +183,10 @@ constructor(
     assignmentDaoExtra.markSkip(id, date)
   }
 
+  suspend fun markAssigned(id: String, date: String) {
+    assignmentDaoExtra.markAssigned(id, date)
+  }
+
   suspend fun markMicrotaskAssignmentsSubmitted(assignmentIds: List<String>) {
     assignmentIds.forEach { assignmentId -> assignmentDaoExtra.markSubmitted(assignmentId) }
   }

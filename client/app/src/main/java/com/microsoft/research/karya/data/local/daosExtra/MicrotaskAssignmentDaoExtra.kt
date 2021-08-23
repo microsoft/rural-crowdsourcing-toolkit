@@ -96,11 +96,11 @@ interface MicrotaskAssignmentDaoExtra {
   )
 
   /**
-   * Query to mark the microtask assignment with the given [id] as complete with the given [output].
+   * Query to mark the microtask assignment with the given [id] as skipped with the given [output].
    */
   @Query(
     "UPDATE microtask_assignment SET " +
-      "status=:status, output=:output, last_updated_at=:date, completed_at=:date " +
+      "status=:status, output=:output, last_updated_at=:date " +
       "WHERE id=:id"
   )
   suspend fun markSkip(
@@ -108,6 +108,21 @@ interface MicrotaskAssignmentDaoExtra {
     date: String,
     output: JsonElement = JsonNull.INSTANCE,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.SKIPPED,
+  )
+
+  /**
+   * Query to mark the microtask assignment with the given [id] as assigned with the given [output].
+   */
+  @Query(
+    "UPDATE microtask_assignment SET " +
+        "status=:status, output=:output, last_updated_at=:date " +
+        "WHERE id=:id"
+  )
+  suspend fun markAssigned(
+    id: String,
+    date: String,
+    output: JsonElement = JsonNull.INSTANCE,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.ASSIGNED,
   )
 
   /** Query to mark an assignment as submitted */

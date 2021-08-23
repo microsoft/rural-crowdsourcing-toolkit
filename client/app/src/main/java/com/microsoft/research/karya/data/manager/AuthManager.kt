@@ -3,6 +3,8 @@ package com.microsoft.research.karya.data.manager
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.microsoft.research.karya.data.exceptions.NoWorkerException
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
@@ -22,6 +24,21 @@ constructor(
   private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
   private lateinit var activeWorker: String
+
+  companion object {
+    private val _sessionAlive = MutableLiveData<Boolean>(false)
+    val sessionAlive: LiveData<Boolean>
+      get() = _sessionAlive
+
+    fun expireSession() {
+      _sessionAlive.postValue(false)
+    }
+
+    fun startSession() {
+      _sessionAlive.value = true
+    }
+
+  }
 
   suspend fun fetchLoggedInWorkerIdToken(): String {
     val worker = fetchLoggedInWorker()
@@ -49,15 +66,15 @@ constructor(
   suspend fun updateLoggedInWorker(accessCode: String) {
     check(accessCode.isNotEmpty()) { "accessCode cannot be null" }
     activeWorker = accessCode
-
     setLoggedInWorkerAccessCode(accessCode)
   }
 
   suspend fun logoutWorker() =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      applicationContext.dataStore.edit { prefs -> prefs.remove(accessCodeKey) }
-    }
+      withContext(defaultDispatcher) {
+        val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+        applicationContext.dataStore.edit { prefs -> prefs.remove(accessCodeKey) }
+        _sessionAlive.value = false
+      }
 
   suspend fun fetchLoggedInWorker(): WorkerRecord {
     if (!this::activeWorker.isInitialized || activeWorker.isEmpty()) {
@@ -68,16 +85,16 @@ constructor(
   }
 
   private suspend fun setLoggedInWorkerAccessCode(accessCode: String) =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      applicationContext.dataStore.edit { prefs -> prefs[accessCodeKey] = accessCode }
-    }
+      withContext(defaultDispatcher) {
+        val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+        applicationContext.dataStore.edit { prefs -> prefs[accessCodeKey] = accessCode }
+      }
 
   private suspend fun getLoggedInWorkerAccessCode(): String =
-    withContext(defaultDispatcher) {
-      val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
-      val data = applicationContext.dataStore.data.first()
+      withContext(defaultDispatcher) {
+        val accessCodeKey = stringPreferencesKey(PreferenceKeys.WORKER_ACCESS_CODE)
+        val data = applicationContext.dataStore.data.first()
 
-      return@withContext data[accessCodeKey] ?: throw NoWorkerException()
-    }
+        return@withContext data[accessCodeKey] ?: throw NoWorkerException()
+      }
 }

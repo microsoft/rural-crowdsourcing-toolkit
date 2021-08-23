@@ -20,7 +20,6 @@ class WorkerFactoryModule {
   @Provides
   @Singleton
   fun providesNgWorkerFactory(
-    taskRepository: TaskRepository,
     assignmentRepository: AssignmentRepository,
     karyaFileRepository: KaryaFileRepository,
     microTaskRepository: MicroTaskRepository,
@@ -28,7 +27,6 @@ class WorkerFactoryModule {
     authManager: AuthManager,
   ): NgDelegatingWorkerFactory {
     val workerFactory = NgDelegatingWorkerFactory(
-      taskRepository,
       assignmentRepository,
       karyaFileRepository,
       microTaskRepository,

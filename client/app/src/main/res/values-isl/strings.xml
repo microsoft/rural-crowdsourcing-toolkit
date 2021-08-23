@@ -50,4 +50,10 @@
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
     <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
+
+    <string name="video_record_button">I Understand and start recording</string>
+    <string name="record_preview_message">The preview of the recording would appear here</string>
+    <string name="dialogTitle">Skip sentence or record it later?</string>
+    <string name="dialogMessage">Do you want to skip this sentence or record it later? Skipped sentences cannot be attempted again.</string>
+    <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
 </resources>

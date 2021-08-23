@@ -234,4 +234,9 @@
     <string name="profile_picture">profile picture</string>
     <string name="rotate_right">rotate</string>
 
+    <string name="video_record_button">I Understand and start recording</string>
+    <string name="record_preview_message">The preview of the recording would appear here</string>
+    <string name="dialogTitle">Skip or do it later?</string>
+    <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
+    <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
 </resources>
