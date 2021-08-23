@@ -225,7 +225,7 @@
 
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
-    <string name="creation_code_hint">0000-0000-0000-0000</string>
+    <string name="creation_code_hint">0000-0000</string>
     <string name="status_check">status</string>
     <string name="otp_hint"> ------ </string>
     <string name="phone_number_hint">----------</string>
@@ -239,4 +239,7 @@
     <string name="dialogTitle">Skip or do it later?</string>
     <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
     <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
+    <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
+    <string name="s_yes">Yes</string>
+    <string name="s_no">No</string>
 </resources>
