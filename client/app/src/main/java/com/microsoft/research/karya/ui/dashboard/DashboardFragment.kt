@@ -43,9 +43,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
   private var dialog: AlertDialog? = null
 
-  @Inject
-  lateinit var authManager: NgAuthManager
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()

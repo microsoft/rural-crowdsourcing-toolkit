@@ -16,4 +16,11 @@ class AuthRepository @Inject constructor(
     withContext(Dispatchers.IO) {
       return@withContext workerDao.getById(id)
     }
+
+  suspend fun renewIdToken(id: String, newIdToken: String) =
+    withContext(Dispatchers.IO) {
+      val worker = workerDao.getById(id)
+      val updatedWorker = worker!!.copy(idToken = newIdToken)
+      workerDao.upsert(updatedWorker)
+    }
 }

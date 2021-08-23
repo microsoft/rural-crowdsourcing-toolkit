@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import com.microsoft.research.karya.data.exceptions.NoWorkerException
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.AuthRepository
-import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
 import kotlinx.coroutines.*
@@ -48,15 +47,14 @@ constructor(
 
   private suspend fun getLoggedInWorkerId(): String {
     if (!this::activeWorkerId.isInitialized || activeWorkerId.isEmpty()) {
-      activeWorkerId = getLoggedInWorkerId()
+      withContext(defaultDispatcher) {
+        val workerIdKey = stringPreferencesKey(PreferenceKeys.WORKER_ID)
+        val data = applicationContext.dataStore.data.first()
+        activeWorkerId = data[workerIdKey] ?: throw NoWorkerException()
+        resetAuthStatus()
+      }
     }
-
-    return withContext(defaultDispatcher) {
-      val workerIdKey = stringPreferencesKey(PreferenceKeys.WORKER_ID)
-      val data = applicationContext.dataStore.data.first()
-      resetAuthStatus()
-      data[workerIdKey] ?: throw NoWorkerException()
-    }
+    return activeWorkerId
   }
 
   private suspend fun resetAuthStatus() {
@@ -99,7 +97,7 @@ constructor(
   }
 
   private fun setAuthStatus(status: AUTH_STATUS) {
-    _currAuthStatus.value = status
+    _currAuthStatus.postValue(status)
   }
 
 }
