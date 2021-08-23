@@ -6,8 +6,8 @@ package com.microsoft.research.karya.data.model.karya
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.JsonElement
-import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
+import com.microsoft.research.karya.data.model.karya.enums.TaskStatus
 
 @Entity(tableName = "task")
 data class TaskRecord(

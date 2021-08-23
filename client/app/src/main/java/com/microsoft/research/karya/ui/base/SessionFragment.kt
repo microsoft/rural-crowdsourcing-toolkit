@@ -13,7 +13,11 @@ abstract class SessionFragment : BaseFragment {
   constructor() : super()
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     AuthManager.sessionAlive.observe(viewLifecycleOwner, { sessionAlive ->
       if (!sessionAlive) {
         onSessionExpired()

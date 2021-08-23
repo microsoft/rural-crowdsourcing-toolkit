@@ -63,7 +63,8 @@ class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input"
 
 }
 
-class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("microtask-assignment-output", fileDirPath) {
+class MicrotaskAssignmentOutput(fileDirPath: String) :
+  KaryaFileContainer("microtask-assignment-output", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val assignmentId = params[0]
     val ext = "tgz"

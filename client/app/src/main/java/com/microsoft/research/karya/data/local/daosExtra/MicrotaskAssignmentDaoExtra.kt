@@ -115,8 +115,8 @@ interface MicrotaskAssignmentDaoExtra {
    */
   @Query(
     "UPDATE microtask_assignment SET " +
-        "status=:status, output=:output, last_updated_at=:date " +
-        "WHERE id=:id"
+      "status=:status, output=:output, last_updated_at=:date " +
+      "WHERE id=:id"
   )
   suspend fun markAssigned(
     id: String,

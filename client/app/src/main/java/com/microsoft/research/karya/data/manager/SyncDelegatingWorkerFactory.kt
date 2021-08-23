@@ -16,12 +16,13 @@ constructor(
   authManager: AuthManager,
 ) : DelegatingWorkerFactory() {
   init {
-    addFactory(WorkerFactory(
-      assignmentRepository,
-      karyaFileRepository,
-      microTaskRepository,
-      fileDirPath,
-      authManager
+    addFactory(
+      WorkerFactory(
+        assignmentRepository,
+        karyaFileRepository,
+        microTaskRepository,
+        fileDirPath,
+        authManager
       )
     )
     // Add here other factories that you may need in your application

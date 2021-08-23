@@ -6,10 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.work.WorkManager
-import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.ui.assistant.Assistant
 import com.microsoft.research.karya.ui.assistant.AssistantFactory
 import javax.inject.Inject

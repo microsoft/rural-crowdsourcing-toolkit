@@ -2,14 +2,10 @@ package com.microsoft.research.karya.ui.assistant
 
 import android.media.MediaPlayer
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.coroutineScope
-import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
+import androidx.lifecycle.*
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers

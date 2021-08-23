@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentSelectAgeGroupBinding
-import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.ui.base.SessionFragment
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe

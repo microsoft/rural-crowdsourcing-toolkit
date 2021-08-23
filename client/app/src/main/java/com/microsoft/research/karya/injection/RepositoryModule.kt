@@ -2,8 +2,8 @@ package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.local.daos.KaryaFileDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
-import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.local.daos.WorkerDao
+import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.LanguageRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository

@@ -9,13 +9,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
 import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

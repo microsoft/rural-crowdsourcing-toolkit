@@ -11,13 +11,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.hideKeyboard
-import com.microsoft.research.karya.utils.extensions.invisible
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val PHONE_NUMBER_LENGTH = 10

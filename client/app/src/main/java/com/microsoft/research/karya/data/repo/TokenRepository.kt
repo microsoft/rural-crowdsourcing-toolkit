@@ -8,10 +8,10 @@ import javax.inject.Inject
 class TokenRepository @Inject constructor(private val workerDao: WorkerDao) {
 
   suspend fun renewIdToken(id: String, newIdToken: String) =
-      withContext(Dispatchers.IO) {
-        val worker = workerDao.getById(id)
-        val updatedWorker = worker!!.copy(idToken = newIdToken)
-        workerDao.upsert(updatedWorker)
-      }
+    withContext(Dispatchers.IO) {
+      val worker = workerDao.getById(id)
+      val updatedWorker = worker!!.copy(idToken = newIdToken)
+      workerDao.upsert(updatedWorker)
+    }
 
 }

@@ -12,9 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.DISABLED
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.*
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope

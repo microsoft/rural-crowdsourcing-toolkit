@@ -41,7 +41,7 @@ class RetrofitModule {
   @Reusable
   fun provideLoggingInterceptor(): HttpLoggingInterceptor {
     return HttpLoggingInterceptor()
-        .setLevel(HttpLoggingInterceptor.Level.BODY)
+      .setLevel(HttpLoggingInterceptor.Level.BODY)
   }
 
   @Provides
@@ -67,11 +67,11 @@ class RetrofitModule {
     versionInterceptor: VersionInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.MINUTES)
-        .readTimeout(10, TimeUnit.MINUTES)
-        .addInterceptor(idTokenRenewInterceptor)
-        .addInterceptor(versionInterceptor)
-        .build()
+      .connectTimeout(10, TimeUnit.MINUTES)
+      .readTimeout(10, TimeUnit.MINUTES)
+      .addInterceptor(idTokenRenewInterceptor)
+      .addInterceptor(versionInterceptor)
+      .build()
   }
 
   @Provides
@@ -81,7 +81,8 @@ class RetrofitModule {
     converterFactory: GsonConverterFactory,
     @KaryaOkHttpClient okHttpClient: OkHttpClient
   ): Retrofit {
-    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl).addConverterFactory(converterFactory).build()
+    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl)
+      .addConverterFactory(converterFactory).build()
   }
 
   @Provides
