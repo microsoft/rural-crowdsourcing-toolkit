@@ -61,7 +61,7 @@ constructor(
     try {
       val worker = getLoggedInWorker()
       if (worker.accessCode.isNotEmpty()) {
-        if (worker.idToken.isNullOrEmpty()) {
+        if (!worker.idToken.isNullOrEmpty()) {
           setAuthStatus(AUTH_STATUS.AUTHENTICATED)
         } else {
           setAuthStatus(AUTH_STATUS.UNAUTHENTICATED)
