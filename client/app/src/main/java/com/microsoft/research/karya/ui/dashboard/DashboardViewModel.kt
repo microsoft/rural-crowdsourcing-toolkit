@@ -2,7 +2,7 @@ package com.microsoft.research.karya.ui.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
@@ -20,7 +20,7 @@ class DashboardViewModel
 constructor(
   private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
-  private val authManager: NgAuthManager,
+  private val authManager: AuthManager,
 ) : ViewModel() {
 
   private var taskInfoList = listOf<TaskInfo>()

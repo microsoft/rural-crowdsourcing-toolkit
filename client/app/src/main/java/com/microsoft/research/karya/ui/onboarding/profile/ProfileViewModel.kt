@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.exceptions.UnknownException
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class ProfileViewModel
 @Inject
 constructor(
-  private val authManager: NgAuthManager,
+  private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
   @FilesDir private val filesDirPath: String,
 ) : ViewModel() {

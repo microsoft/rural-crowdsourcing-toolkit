@@ -7,7 +7,7 @@ import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
@@ -40,7 +40,7 @@ class DashboardSyncWorker(
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
   @FilesDir private val fileDirPath: String,
-  private val authManager: NgAuthManager,
+  private val authManager: AuthManager,
 ) : CoroutineWorker(appContext, workerParams) {
 
   private val microtaskOutputContainer = MicrotaskAssignmentOutput(fileDirPath)

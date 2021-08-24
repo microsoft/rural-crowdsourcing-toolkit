@@ -13,7 +13,7 @@ constructor(
   karyaFileRepository: KaryaFileRepository,
   microTaskRepository: MicroTaskRepository,
   @FilesDir private val fileDirPath: String,
-  authManager: NgAuthManager,
+  authManager: AuthManager,
 ) : DelegatingWorkerFactory() {
   init {
     addFactory(

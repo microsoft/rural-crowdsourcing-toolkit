@@ -15,7 +15,7 @@ class WorkerFactory(
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
   @FilesDir private val fileDirPath: String,
-  private val authManager: NgAuthManager,
+  private val authManager: AuthManager,
 ) : WorkerFactory() {
 
   override fun createWorker(

@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
@@ -26,7 +26,7 @@ constructor(
   taskRepository: TaskRepository,
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
-  authManager: NgAuthManager,
+  authManager: AuthManager,
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,

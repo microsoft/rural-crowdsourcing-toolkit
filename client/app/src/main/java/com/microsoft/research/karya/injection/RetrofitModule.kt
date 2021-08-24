@@ -1,6 +1,6 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.remote.interceptors.IdTokenRenewInterceptor
 import com.microsoft.research.karya.data.remote.interceptors.VersionInterceptor
 import com.microsoft.research.karya.data.repo.AuthRepository
@@ -49,7 +49,7 @@ class RetrofitModule {
   @Reusable
   fun provideIdTokenRenewInterceptor(
     authRepository: AuthRepository,
-    authManager: NgAuthManager,
+    authManager: AuthManager,
     @BaseUrl baseUrl: String
   ): IdTokenRenewInterceptor {
     return IdTokenRenewInterceptor(authRepository, authManager, baseUrl)

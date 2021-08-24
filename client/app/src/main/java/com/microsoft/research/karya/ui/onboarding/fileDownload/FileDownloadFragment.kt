@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeViewModel
 import com.microsoft.research.karya.utils.Result
@@ -26,7 +26,7 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
   lateinit var resourceManager: ResourceManager
 
   @Inject
-  lateinit var authManager: NgAuthManager
+  lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

@@ -2,7 +2,7 @@ package com.microsoft.research.karya.data.remote.interceptors
 
 import android.util.Base64
 import com.google.gson.Gson
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.modelsExtra.IDToken
 import com.microsoft.research.karya.data.repo.AuthRepository
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +18,7 @@ import org.json.JSONObject
 private const val DAY7_IN_SECONDS = 7 * 24 * 60 * 60
 private const val ID_TOKEN_HEADER = "karya-id-token"
 
-class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManager: NgAuthManager, val baseUrl: String) :
+class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManager: AuthManager, val baseUrl: String) :
   Interceptor {
   private val ioScope = CoroutineScope(Dispatchers.IO)
 
@@ -29,12 +29,13 @@ class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManage
     val body = getPayload(idToken)
     val workerId = body.sub
     val current = System.currentTimeMillis() / 1000
-    // If it has been 7 days since issuing the token, refresh
 
+    // If it has been 7 days since issuing the token, refresh
     if (current > body.exp) {
       ioScope.launch {
         authManager.expireSession()
       }
+      // Send the response back since the session is expired
       return Response.Builder()
         .code(600) //Simply put whatever value you want to designate to aborted request.
         .protocol(Protocol.HTTP_2)

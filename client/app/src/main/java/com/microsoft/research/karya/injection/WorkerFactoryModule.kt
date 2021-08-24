@@ -1,6 +1,6 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.SyncDelegatingWorkerFactory
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
@@ -23,7 +23,7 @@ class WorkerFactoryModule {
     karyaFileRepository: KaryaFileRepository,
     microTaskRepository: MicroTaskRepository,
     @FilesDir fileDirPath: String,
-    authManager: NgAuthManager,
+    authManager: AuthManager,
   ): SyncDelegatingWorkerFactory {
     val workerFactory = SyncDelegatingWorkerFactory(
       assignmentRepository,

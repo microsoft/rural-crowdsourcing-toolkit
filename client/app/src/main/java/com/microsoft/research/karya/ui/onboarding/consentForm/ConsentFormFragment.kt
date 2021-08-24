@@ -8,7 +8,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
@@ -27,7 +27,7 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
   lateinit var resourceManager: ResourceManager
 
   @Inject
-  lateinit var authManager: NgAuthManager
+  lateinit var authManager: AuthManager
 
   // TODO: add assistant
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

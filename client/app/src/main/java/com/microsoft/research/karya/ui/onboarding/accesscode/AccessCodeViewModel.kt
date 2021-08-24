@@ -2,7 +2,7 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccessCodeViewModel
 @Inject
-constructor(private val workerRepository: WorkerRepository, private val authManager: NgAuthManager) :
+constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) :
   ViewModel() {
 
   private val _accessCodeUiState: MutableStateFlow<AccessCodeUiState> =

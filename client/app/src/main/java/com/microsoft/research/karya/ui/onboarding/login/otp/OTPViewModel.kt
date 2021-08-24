@@ -4,7 +4,7 @@ package com.microsoft.research.karya.ui.onboarding.login.otp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.Destination
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class OTPViewModel
 @Inject
 constructor(
-  private val authManager: NgAuthManager,
+  private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 

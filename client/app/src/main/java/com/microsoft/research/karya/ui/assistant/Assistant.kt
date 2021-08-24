@@ -3,7 +3,7 @@ package com.microsoft.research.karya.ui.assistant
 import android.media.MediaPlayer
 import android.util.Log
 import androidx.lifecycle.*
-import com.microsoft.research.karya.data.manager.NgAuthManager
+import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import dagger.assisted.Assisted
@@ -18,7 +18,7 @@ class Assistant
 constructor(
   @Assisted lifecycleOwner: LifecycleOwner,
   private val resourceManager: ResourceManager,
-  private val authManager: NgAuthManager,
+  private val authManager: AuthManager,
 ) : LifecycleObserver {
   private lateinit var assistantPlayer: MediaPlayer
   private val lifecycle: Lifecycle = lifecycleOwner.lifecycle
