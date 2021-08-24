@@ -39,7 +39,7 @@
         android:hint="@string/creation_code_hint"
         android:importantForAutofill="no"
         android:inputType="number"
-        android:maxLength="19"
+        android:maxLength="9"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:textSize="@dimen/_17ssp"

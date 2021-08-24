@@ -38,7 +38,7 @@ constructor(
   val progress = _progress.asStateFlow()
 
   suspend fun refreshList() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     val tempList = mutableListOf<TaskInfo>()
     taskInfoList.forEach { taskInfo ->
       val taskStatus = fetchTaskStatus(taskInfo.taskID)
@@ -66,7 +66,7 @@ constructor(
   @Suppress("USELESS_CAST")
   fun getAllTasks() {
     viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
 
       taskRepository
         .getAllTasksFlow()
@@ -130,7 +130,7 @@ constructor(
 
   fun updateTaskStatus(taskId: String) {
     viewModelScope.launch {
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
 
       val taskStatus = fetchTaskStatus(taskId)
 

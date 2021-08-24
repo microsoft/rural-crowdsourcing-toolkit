@@ -29,7 +29,7 @@ constructor(
     viewModelScope.launch {
       _selectAgeUiState.value = SelectAgeUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.idToken)
       checkNotNull(worker.gender)
 

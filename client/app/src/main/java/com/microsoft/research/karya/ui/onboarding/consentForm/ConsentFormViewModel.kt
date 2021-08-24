@@ -29,7 +29,7 @@ constructor(private val workerRepository: WorkerRepository, private val authMana
     viewModelScope.launch {
       _consentFormUiState.value = ConsentFormUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       val dbWorker = worker.copy(isConsentProvided = isConsentProvided)
       workerRepository.upsertWorker(dbWorker)
 

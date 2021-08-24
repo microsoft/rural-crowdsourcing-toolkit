@@ -29,7 +29,7 @@ constructor(private val workerRepository: WorkerRepository, private val authMana
       .onStart { _accessCodeUiState.value = AccessCodeUiState.Loading }
       .onEach { worker ->
         createWorker(accessCode, worker)
-        authManager.updateLoggedInWorker(accessCode)
+        authManager.updateLoggedInWorker(worker.id)
         _accessCodeUiState.value = AccessCodeUiState.Success(worker.language)
         _accessCodeEffects.emit(AccessCodeEffects.Navigate)
       }

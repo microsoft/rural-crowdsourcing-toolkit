@@ -43,11 +43,11 @@ constructor(
       _profileUiState.value = ProfileUiState.Loading
 
       val profileDir = File(filesDirPath, "profile")
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+      val accessCode = authManager.getLoggedInWorkerAccessCode()
       val imageFile = File(profileDir, accessCode)
       val path = if (imageFile.exists()) imageFile.path else null
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
 
       try {
         workerRepository.upsertWorker(worker.copy(profilePicturePath = path, fullName = name))
@@ -67,13 +67,13 @@ constructor(
       val profileDir = File(filesDirPath, "profile")
       profileDir.mkdirs()
 
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+      val accessCode = authManager.getLoggedInWorkerAccessCode()
       val imageFile = File(profileDir, accessCode)
 
       val result = writeBitmap(bitmap, imageFile)
 
       if (result) {
-        val worker = authManager.fetchLoggedInWorker()
+        val worker = authManager.getLoggedInWorker()
         updateWorker(worker.copy(profilePicturePath = imageFile.path))
 
         _profileUiState.value = ProfileUiState.Success(imageFile.path)
@@ -90,7 +90,7 @@ constructor(
       val profileDir = File(filesDirPath, "profile")
       profileDir.mkdirs()
 
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+      val accessCode = authManager.getLoggedInWorkerAccessCode()
       val imageFile = File(profileDir, accessCode)
 
       if (!imageFile.exists()) {
@@ -114,7 +114,7 @@ constructor(
   }
 
   private suspend fun handleNavigation() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
 
     val destination =
       when {
