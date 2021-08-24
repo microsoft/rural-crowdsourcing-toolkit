@@ -9,8 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.Interceptor
-import okhttp3.Response
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.json.JSONObject
 
 /** Day in seconds. To check if token refresh is needed */
@@ -30,10 +31,17 @@ class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManage
     val current = System.currentTimeMillis() / 1000
     // If it has been 7 days since issuing the token, refresh
 
-    if (current > body.exp) {
+    if (true) {
       ioScope.launch {
         authManager.expireSession()
       }
+      return Response.Builder()
+        .code(600) //Simply put whatever value you want to designate to aborted request.
+        .protocol(Protocol.HTTP_2)
+        .body("".toResponseBody("text/html; charset=utf-8".toMediaType()))
+        .message("Cancel Request Interceptor: Id token expired")
+        .request(chain.request())
+        .build()
     }
 
     if (current - body.iat > DAY7_IN_SECONDS) {
