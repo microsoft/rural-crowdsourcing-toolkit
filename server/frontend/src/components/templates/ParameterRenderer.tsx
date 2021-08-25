@@ -6,12 +6,14 @@
 import { ParameterArray } from '@karya/parameter-specs';
 import { ChangeEventHandler } from 'react';
 import { ColTextInput } from './FormInputs';
+import { StringListInput } from './StringList';
 
 type ParameterSectionProps = {
   params: ParameterArray<any>;
-  data: { [id: string]: string | boolean };
+  data: { [id: string]: string | boolean | string[] };
   onChange: ChangeEventHandler;
   onBooleanChange: ChangeEventHandler;
+  onStringListChange: (id: string, data: string[]) => void;
 };
 
 export const ParameterSection = (props: ParameterSectionProps) => {
@@ -62,6 +64,16 @@ export const ParameterSection = (props: ParameterSectionProps) => {
                   </select>
                 </div>
               </div>
+            );
+          case 'list':
+            return (
+              <StringListInput
+                key={param.id}
+                id={param.id}
+                label={param.label}
+                data={props.data[param.id] as string[]}
+                onListChange={props.onStringListChange}
+              />
             );
           default:
             ((obj: never) => {

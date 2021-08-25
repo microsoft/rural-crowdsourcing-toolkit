@@ -66,7 +66,7 @@ type CreateTaskAssignmentProps = RouterProps & ConnectedProps<typeof reduxConnec
 
 // Component state
 type CreateTaskAssignmentState = {
-  params: { [id: string]: string | boolean };
+  params: { [id: string]: string | boolean | string[] };
   task?: TaskRecord;
   box?: BoxRecord;
   policy?: PolicyName;
@@ -125,6 +125,12 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   // Handle boolean change
   handleParamBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const params = { ...this.state.params, [e.currentTarget.id]: e.currentTarget.checked };
+    this.setState({ params });
+  };
+
+  // Handle list parameter change
+  handleParamListChange = (id: string, newData: string[]) => {
+    const params = { ...this.state.params, [id]: newData };
     this.setState({ params });
   };
 
@@ -213,6 +219,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
           data={this.state.params}
           onChange={this.handleParamChange}
           onBooleanChange={this.handleParamBooleanChange}
+          onStringListChange={this.handleParamListChange}
         />
       );
     }

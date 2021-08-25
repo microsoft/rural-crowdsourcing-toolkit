@@ -68,7 +68,7 @@ type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
 // component state
 type CreateTaskState = {
   task: Task;
-  params: { [id: string]: string | boolean };
+  params: { [id: string]: string | boolean | string[] };
   itags: Array<string>;
   scenario?: BaseScenarioInterface<any, object, any, object, any, object>;
   policy?: PolicyName;
@@ -198,6 +198,12 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     this.setState({ params });
   };
 
+  // Handle list parameter change
+  handleParamListChange = (id: string, newData: string[]) => {
+    const params = { ...this.state.params, [id]: newData };
+    this.setState({ params });
+  };
+
   // Handle policy change
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
@@ -261,6 +267,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             data={this.state.params}
             onChange={this.handleParamInputChange}
             onBooleanChange={this.handleParamBooleanChange}
+            onStringListChange={this.handleParamListChange}
           />
         );
       }
@@ -358,6 +365,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
               data={this.state.params}
               onChange={this.handleParamInputChange}
               onBooleanChange={this.handleParamBooleanChange}
+              onStringListChange={this.handleParamListChange}
             />
             <div className='row'>
               <ColTextInput
@@ -380,6 +388,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 data={this.state.params}
                 onChange={this.handleParamInputChange}
                 onBooleanChange={this.handleParamBooleanChange}
+                onStringListChange={this.handleParamListChange}
               />
             </div>
           ) : null}

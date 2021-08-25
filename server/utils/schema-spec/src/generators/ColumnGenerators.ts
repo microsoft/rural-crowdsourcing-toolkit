@@ -36,7 +36,7 @@ export function typescriptType<T extends string, S extends string, O extends str
     case 'stringarray':
       return `{ ${name}: string[] }`;
     case 'kv':
-      return '{ [id: string]: string | number | boolean}';
+      return '{ [id: string]: string | number | boolean | string[] }';
     case 'stringdict':
       return '{ [id: string]: string }';
     case 'object': {

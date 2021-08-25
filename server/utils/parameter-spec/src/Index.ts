@@ -10,7 +10,8 @@ type ParameterType =
   | { type: 'int' }
   | { type: 'float' }
   | { type: 'boolean' }
-  | { type: 'enum'; list: [string, string][] };
+  | { type: 'enum'; list: [string, string][] }
+  | { type: 'list' };
 
 /**
  * Parameter specification
@@ -42,7 +43,7 @@ export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.O
   const schemaMap: Joi.SchemaMap<ParamsType> = {};
   params.forEach((param) => {
     const { id, label, description, required } = param;
-    let base: Joi.StringSchema | Joi.BooleanSchema | Joi.NumberSchema;
+    let base: Joi.StringSchema | Joi.BooleanSchema | Joi.NumberSchema | Joi.ArraySchema;
     switch (param.type) {
       case 'string':
         base = Joi.string();
@@ -61,6 +62,9 @@ export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.O
         base = Joi.string().valid(...values);
         break;
       }
+      case 'list':
+        base = Joi.array().items(Joi.string());
+        break;
     }
     base = base.label(label).description(description);
     schemaMap[id] = required ? base.required() : base;
