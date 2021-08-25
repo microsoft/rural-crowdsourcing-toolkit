@@ -15,6 +15,7 @@ import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo'
 import { backendXliterationDataScenario } from './scenarios/XliterationData';
 import { backendSignLanguageVideoVerificationScenario } from './scenarios/SignLanguageVideoVerification';
 import { backendImageTranscriptionScenario } from './scenarios/ImageTranscription';
+import { backendImageLabellingScenario } from './scenarios/ImageLabelling';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -27,4 +28,5 @@ export const backendScenarioMap: {
   SGN_LANG_VIDEO_VERIFICATION: backendSignLanguageVideoVerificationScenario,
   XLITERATION_DATA: backendXliterationDataScenario,
   IMAGE_TRANSCRIPTION: backendImageTranscriptionScenario,
+  IMAGE_LABELLING: backendImageLabellingScenario,
 };
