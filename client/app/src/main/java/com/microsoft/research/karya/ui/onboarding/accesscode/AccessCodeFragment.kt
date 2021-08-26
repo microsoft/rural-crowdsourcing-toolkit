@@ -19,9 +19,6 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private val binding by viewBinding(FragmentAccessCodeBinding::bind)
   private val viewModel by viewModels<AccessCodeViewModel>()
 
-  private val creationCodeLength = 8
-  private val creationCodeEtMax = creationCodeLength + (creationCodeLength - 1) / 4
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
