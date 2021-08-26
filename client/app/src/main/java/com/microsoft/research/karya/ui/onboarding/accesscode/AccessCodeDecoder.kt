@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.content.Context
+import com.microsoft.research.karya.data.exceptions.accesscode.InvalidAccessCodeException
 import org.json.JSONObject
 import kotlin.properties.Delegates
 
@@ -41,7 +42,7 @@ class AccessCodeDecoder() {
       url = getURL(context, accesscodeLong, version, boxType, environment, embeddingMechanism)
 
       if (accesscode.length != accesscodeLength)
-        throw Exception("Validation Failed: Wrong access code length")
+        throw InvalidAccessCodeException("Validation Failed: Wrong access code length")
 
       return url
 
@@ -59,7 +60,7 @@ class AccessCodeDecoder() {
             val index = (accesscodeLong and 4032).shr(6).toInt()
             // Check if index is available in mappings array
             if (index > mapArray.length())
-              throw Exception("Index exceeded the length of direct mapping array")
+              throw InvalidAccessCodeException("Index out of range: Index exceeded the length of direct mapping array")
             mapArray.getString(index)
           } else {
             val templatesArray = JSONmapping.getJSONArray("templates")
@@ -68,12 +69,12 @@ class AccessCodeDecoder() {
             val templateString = templatesArray.getString(index)
             // Check if index is available in templates array
             if (index > templatesArray.length())
-              throw Exception("Index exceeded the length of template mapping array")
+              throw InvalidAccessCodeException("Index out of range: Index exceeded the length of template mapping array")
             templateString.replace("#".toRegex(), id.toString())
           }
         }
         VERSION_0 -> DEFAULT_URL
-        else -> throw Exception("BAD ACCESS CODE")
+        else -> throw InvalidAccessCodeException("Cannot identify the version of access code")
       }
     }
 
