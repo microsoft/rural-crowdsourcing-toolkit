@@ -63,8 +63,8 @@ class AccessCodeDecoder() {
             mapArray.getString(index)
           } else {
             val templatesArray = JSONmapping.getJSONArray("templates")
-            val index = (accesscodeLong and 448).shr(6).toInt()
-            val id = (accesscodeLong and 32256).shr(9).toInt()
+            val id = (accesscodeLong and 4032).shr(6).toInt()
+            val index = (accesscodeLong and 28672).shr(9).toInt()
             val templateString = templatesArray.getString(index)
             // Check if index is available in templates array
             if (index > templatesArray.length())
