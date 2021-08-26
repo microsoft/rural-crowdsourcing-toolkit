@@ -56,15 +56,15 @@ class AccessCodeDecoder() {
           val JSONmapping = getAccesscodeJSONmapping(context)
           return if (embeddingMechanism == DIRECT_MAP) {
             val mapArray = JSONmapping.getJSONArray("directs")
-            val index = (accesscodeLong and 4032).toInt()
+            val index = (accesscodeLong and 4032).shr(6).toInt()
             // Check if index is available in mappings array
             if (index > mapArray.length())
               throw Exception("Index exceeded the length of direct mapping array")
             mapArray.getString(index)
           } else {
             val templatesArray = JSONmapping.getJSONArray("templates")
-            val index = (accesscodeLong and 448).toInt()
-            val id = (accesscodeLong and 32256).toInt()
+            val index = (accesscodeLong and 448).shr(6).toInt()
+            val id = (accesscodeLong and 32256).shr(9).toInt()
             val templateString = templatesArray.getString(index)
             // Check if index is available in templates array
             if (index > templatesArray.length())
@@ -85,7 +85,7 @@ class AccessCodeDecoder() {
 
     private fun getEmbeddingMechanism(accesscodeLong: Long, version: Long): Int? {
       if (version == VERSION_1) {
-        return (accesscodeLong and 32).toInt()
+        return (accesscodeLong and 32).shr(5).toInt()
       }
 
       return null
@@ -93,7 +93,7 @@ class AccessCodeDecoder() {
 
     private fun getEnvironment(accesscodeLong: Long, version: Long): Int? {
       if (version == VERSION_1) {
-        return (accesscodeLong and 16).toInt()
+        return (accesscodeLong and 16).shr(4).toInt()
       }
 
       return null
@@ -101,15 +101,15 @@ class AccessCodeDecoder() {
 
     private fun getBoxType(accesscodeLong: Long, version: Long): Int? {
       if (version == VERSION_1) {
-        return (accesscodeLong and 8).toInt()
+        return (accesscodeLong and 8).shr(3).toInt()
       }
       return null
     }
 
     private fun getAccessCodeLength(accesscodeLong: Long, version: Long): Int {
       return when(version) {
-        VERSION_0 -> (accesscodeLong and 60).toInt()
-        VERSION_1 -> if ((accesscodeLong and 4) == 0L) 8 else 16
+        VERSION_0 -> (accesscodeLong and 60).shr(2).toInt() + 1
+        VERSION_1 -> if ((accesscodeLong and 4).shr(2) == 0L) 8 else 16
         else -> throw Exception("Bad Access Code")
       }
     }
