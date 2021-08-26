@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
@@ -11,6 +12,7 @@ import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
@@ -39,7 +41,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
               setSelection(position)
             }
 
-            if (creationCodeEt.length() == creationCodeEtMax) {
+            if (creationCodeEt.length() > 0) {
               enableButton()
             } else {
               disableButton()
@@ -50,7 +52,12 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
       submitAccessCodeBtn.setOnClickListener {
         val accessCode = binding.creationCodeEt.text.toString().replace("-", "")
-        viewModel.checkAccessCode(accessCode)
+        val decodedURL = AccessCodeDecoder.decodeURL(requireContext(), accessCode)
+        // Set the decoded URL for the app to be used
+        lifecycleScope.launch {
+          viewModel.setURL(decodedURL)
+          viewModel.checkAccessCode(accessCode)
+        }
       }
 
       requestSoftKeyFocus(creationCodeEt)
