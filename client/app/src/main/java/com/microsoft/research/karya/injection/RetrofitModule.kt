@@ -1,6 +1,9 @@
 package com.microsoft.research.karya.injection
 
+import android.content.Context
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.manager.BaseUrlManager
+import com.microsoft.research.karya.data.remote.interceptors.HostSelectionInterceptor
 import com.microsoft.research.karya.data.remote.interceptors.IdTokenRenewInterceptor
 import com.microsoft.research.karya.data.remote.interceptors.VersionInterceptor
 import com.microsoft.research.karya.data.repo.AuthRepository
@@ -14,12 +17,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -36,6 +41,12 @@ class RetrofitModule {
   @BaseUrl
   fun provideBaseUrl(): String {
     return "https://karyaboxtest.eastus.cloudapp.azure.com"
+  }
+
+  @Provides
+  @Singleton
+  fun provideBaseUrlManager(@ApplicationContext context: Context): BaseUrlManager {
+    return BaseUrlManager(context)
   }
 
   @Provides
@@ -57,6 +68,12 @@ class RetrofitModule {
 
   @Provides
   @Reusable
+  fun provideHostSelectionInterceptor(baseUrlManager: BaseUrlManager): HostSelectionInterceptor {
+    return HostSelectionInterceptor(baseUrlManager)
+  }
+
+  @Provides
+  @Reusable
   fun provideVersionInterceptor(): VersionInterceptor {
     return VersionInterceptor()
   }
@@ -66,13 +83,15 @@ class RetrofitModule {
   @Reusable
   fun provideOkHttp(
     idTokenRenewInterceptor: IdTokenRenewInterceptor,
-    versionInterceptor: VersionInterceptor
+    versionInterceptor: VersionInterceptor,
+    hostSelectionInterceptor: HostSelectionInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
       .connectTimeout(10, TimeUnit.MINUTES)
       .readTimeout(10, TimeUnit.MINUTES)
       .addInterceptor(idTokenRenewInterceptor)
       .addInterceptor(versionInterceptor)
+      .addInterceptor(hostSelectionInterceptor)
       .build()
   }
 
