@@ -32,7 +32,7 @@ constructor(
       _otpUiState.value = OTPUiState.Loading
 
       // We updated the worker phone number during first otp call, let's reuse that
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
@@ -48,14 +48,13 @@ constructor(
       _otpUiState.value = OTPUiState.Loading
 
       // We updated the worker phone number during first otp call, let's reuse that
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
         .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
         .onEach { worker ->
-          updateWorker(worker.copy(isConsentProvided = true))
-          AuthManager.startSession()
+          authManager.startSession(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
           handleNavigation(worker)
         }
@@ -73,9 +72,5 @@ constructor(
       }
 
     _otpEffects.emit(OTPEffects.Navigate(destination))
-  }
-
-  private suspend fun updateWorker(worker: WorkerRecord) {
-    workerRepository.upsertWorker(worker)
   }
 }

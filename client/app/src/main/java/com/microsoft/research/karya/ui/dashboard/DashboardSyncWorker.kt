@@ -111,7 +111,7 @@ class DashboardSyncWorker(
   }
 
   private suspend fun sendDbUpdates() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     // Get completed assignments from the database
@@ -142,7 +142,7 @@ class DashboardSyncWorker(
   }
 
   private suspend fun receiveDbUpdates() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val from = assignmentRepository.getNewAssignmentsFromTime(worker.id)
@@ -156,7 +156,7 @@ class DashboardSyncWorker(
 
   private suspend fun downloadInputFiles() {
     // Get the list of assignments for which the input file has to be downloaded
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val filteredAssignments =
@@ -195,7 +195,7 @@ class DashboardSyncWorker(
   }
 
   private suspend fun fetchVerifiedAssignments(from: String = "") {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val from = assignmentRepository.getNewVerifiedAssignmentsFromTime(worker.id)
@@ -264,7 +264,7 @@ class DashboardSyncWorker(
     assignmentTarBallPath: String,
     tarBallName: String,
   ) {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val requestFile =

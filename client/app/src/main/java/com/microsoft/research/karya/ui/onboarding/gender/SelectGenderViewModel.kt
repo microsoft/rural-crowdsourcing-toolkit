@@ -33,7 +33,7 @@ constructor(
     viewModelScope.launch {
       _selectGenderUiState.value = SelectGenderUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       val newWorker = worker.copy(gender = selectedGender.gender)
 
       checkNotNull(worker.idToken)

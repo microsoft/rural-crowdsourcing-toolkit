@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
@@ -22,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 
@@ -42,9 +40,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   private lateinit var syncWorkRequest: OneTimeWorkRequest
 
   private var dialog: AlertDialog? = null
-
-  @Inject
-  lateinit var authManager: AuthManager
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -243,7 +238,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
         val profilePicPath =
-          authManager.fetchLoggedInWorker().profilePicturePath ?: return@withContext
+          authManager.getLoggedInWorker().profilePicturePath ?: return@withContext
         val bitmap = BitmapFactory.decodeFile(profilePicPath)
 
         withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }

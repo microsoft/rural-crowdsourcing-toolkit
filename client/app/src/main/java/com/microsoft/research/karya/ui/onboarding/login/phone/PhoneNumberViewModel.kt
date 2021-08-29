@@ -29,7 +29,7 @@ constructor(
     viewModelScope.launch {
       _phoneNumberUiState.value = PhoneNumberUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       // Update worker's phone number in the DB.
       // We don't care if it is correct or not, if it's incorrect we can update it later when user
       // requests the otp again.

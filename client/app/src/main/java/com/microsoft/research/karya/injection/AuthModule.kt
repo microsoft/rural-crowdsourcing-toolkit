@@ -2,7 +2,7 @@ package com.microsoft.research.karya.injection
 
 import android.content.Context
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.repo.WorkerRepository
+import com.microsoft.research.karya.data.repo.AuthRepository
 import com.microsoft.research.karya.injection.qualifier.IoDispatcher
 import dagger.Module
 import dagger.Provides
@@ -30,8 +30,8 @@ class AuthModule {
   fun providesAuthManager(
     @ApplicationContext context: Context,
     @IoDispatcher dispatcher: CoroutineDispatcher,
-    workerRepository: WorkerRepository,
+    authRepository: AuthRepository,
   ): AuthManager {
-    return AuthManager(context, workerRepository, dispatcher)
+    return AuthManager(context, authRepository, dispatcher)
   }
 }

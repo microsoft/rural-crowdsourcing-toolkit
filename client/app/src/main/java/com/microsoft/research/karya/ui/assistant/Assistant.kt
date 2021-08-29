@@ -37,7 +37,7 @@ constructor(
       val workerLanguage =
         withContext(Dispatchers.IO) {
           // TODO: Implement a logged-in worker cache in authManager
-          return@withContext authManager.fetchLoggedInWorker().language
+          return@withContext authManager.getLoggedInWorker().language
         }
 
       val audioFilePath = resourceManager.getAudioFilePath(workerLanguage, assistantAudio.fileName)
