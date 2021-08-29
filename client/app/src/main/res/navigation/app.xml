@@ -145,6 +145,11 @@
             app:destination="@id/imageTranscriptionFragment">
             <argument android:name="taskId" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageLabelling"
+            app:destination="@id/imageLabellingFragment">
+            <argument android:name="taskId" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
@@ -206,6 +211,17 @@
             app:argType="string" />
         <action
             android:id="@+id/action_imageTranscriptionFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageLabellingFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.ImageLabellingFragment"
+        android:label="imageLabellingFragment">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>
