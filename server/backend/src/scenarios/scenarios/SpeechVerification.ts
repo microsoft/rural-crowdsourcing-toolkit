@@ -97,11 +97,22 @@ export const backendSpeechVerificationScenario: IBackendScenarioInterface<BaseSp
     const data = assignments
       .map((mta) => mta.output!.data)
       .reduce((value, current) => {
-        return {
-          accuracy: current.accuracy + value.accuracy,
-          quality: current.quality + value.quality,
-          volume: current.volume + value.volume,
-        };
+        if (!current.auto && !value.auto) {
+          return {
+            auto: false,
+            accuracy: current.accuracy + value.accuracy,
+            quality: current.quality + value.quality,
+            volume: current.volume + value.volume,
+          };
+        } else if (current.auto && value.auto) {
+          return {
+            auto: true,
+            fraction: value.fraction,
+            score: current.score + value.score,
+          };
+        } else {
+          return value;
+        }
       });
     return { data };
   },

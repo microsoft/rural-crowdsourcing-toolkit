@@ -17,11 +17,18 @@ type SpeechVerificationMicrotaskInput = { sentence: string };
 type SpeechVerificationMicrotaskInputFiles = { recording: string };
 
 // Speech verificaion microtask output format
-type SpeechVerificationMicrotaskOutput = {
-  accuracy: number;
-  quality: number;
-  volume: number;
-};
+type SpeechVerificationMicrotaskOutput =
+  | {
+      auto: false | undefined;
+      accuracy: number;
+      quality: number;
+      volume: number;
+    }
+  | {
+      auto: true;
+      score: number;
+      fraction: number;
+    };
 type SpeechVerificationMicrotaskOutputFiles = {};
 
 // Base speech verification scenario type

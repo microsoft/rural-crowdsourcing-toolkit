@@ -39,22 +39,27 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
     const verificationUpdates = microtasks.map((microtask, i) => {
       const assignment = assignments[i];
       const report = microtask.output!.data;
-      const { accuracy, volume, quality } = report;
-      let score = 0;
-      const sum = accuracy + quality + volume;
-      if (accuracy == 0 || quality == 0 || volume == 0) {
-        score = 0;
-      } else if (sum == 3) {
-        score = 0.25;
-      } else if (sum == 4) {
-        score = 0.5;
-      } else if (sum == 5) {
-        score = 0.75;
-      } else if (sum == 6) {
-        score = 1;
+      let fraction = 0;
+
+      if (report.auto) {
+        fraction = report.fraction;
+      } else {
+        const { accuracy, volume, quality } = report;
+        const sum = accuracy + quality + volume;
+        if (accuracy == 0 || quality == 0 || volume == 0) {
+          fraction = 0;
+        } else if (sum == 3) {
+          fraction = 0.25;
+        } else if (sum == 4) {
+          fraction = 0.5;
+        } else if (sum == 5) {
+          fraction = 0.75;
+        } else if (sum == 6) {
+          fraction = 1;
+        }
       }
 
-      const credits = score * fromTask.params.creditsPerMicrotask;
+      const credits = fraction * fromTask.params.creditsPerMicrotask;
       assignment.credits = credits;
       assignment.report = report;
       return assignment;
