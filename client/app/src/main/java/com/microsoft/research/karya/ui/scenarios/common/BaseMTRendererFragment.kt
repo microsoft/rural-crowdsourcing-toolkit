@@ -3,10 +3,12 @@ package com.microsoft.research.karya.ui.scenarios.common
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 
@@ -79,6 +81,13 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
       if (pop) {
         findNavController().popBackStack()
       }
+    }
+
+    viewModel.inputFileDoesNotExist.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { notExist ->
+      if (notExist) {
+        Toast.makeText(requireContext(), getString(R.string.input_file_does_not_exist), Toast.LENGTH_LONG).show()
+      }
+
     }
   }
 }

@@ -245,4 +245,5 @@
     <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
     <string name="s_yes">Yes</string>
     <string name="s_no">No</string>
+    <string name="input_file_does_not_exist">Input file does not exist for next assignment</string>
 </resources>

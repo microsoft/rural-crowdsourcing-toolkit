@@ -20,6 +20,7 @@ import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -64,6 +65,8 @@ constructor(
   private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
   val navigateBack = _navigateBack.asSharedFlow()
 
+  private val _inputFileDoesNotExist: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val inputFileDoesNotExist = _inputFileDoesNotExist.asSharedFlow()
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
@@ -234,15 +237,14 @@ constructor(
       currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
 
       /** If microtask has input files, extract them */
-      var inputFileDoesNotExist = false
+      _inputFileDoesNotExist.value = false
       if (currentMicroTask.input_file_id != null) {
         val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
         val microtaskInputDirectory =
           microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
 
         if (!File(microtaskTarBallPath).exists()) {
-          inputFileDoesNotExist = true
-          // TODO: Create a MutableLiveData to inform the UI about an alertbox
+          _inputFileDoesNotExist.value = true
         } else {
           FileUtils.extractGZippedTarBallIntoDirectory(
             microtaskTarBallPath,
@@ -251,7 +253,7 @@ constructor(
         }
       }
 
-      if (inputFileDoesNotExist) return@launch
+      if (_inputFileDoesNotExist.value) return@launch
 
       outputData =
         if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("data")) {
