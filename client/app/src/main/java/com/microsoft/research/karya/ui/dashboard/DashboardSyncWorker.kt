@@ -15,6 +15,12 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
+import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_CLEANUP_PROGRESS
+import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_DOWNLOAD_PROGRESS
+import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_FETCH_VERIFIED_PROGRESS
+import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_RECEIVE_DB_UPDATES_PROGRESS
+import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_SEND_DB_UPDATES_PROGRESS
+import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_UPLOAD_PROGRESS
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
@@ -25,13 +31,14 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-
-private const val MAX_UPLOAD_PROGRESS = 25
-private const val MAX_SEND_DB_UPDATES_PROGRESS = 40
-private const val MAX_RECEIVE_DB_UPDATES_PROGRESS = 55
-private const val MAX_DOWNLOAD_PROGRESS = 80
-private const val MAX_FETCH_VERIFIED_PROGRESS = 90
-private const val MAX_CLEANUP_PROGRESS = 100
+object PROGRESS_STATUS {
+  const val MAX_UPLOAD_PROGRESS = 25
+  const val MAX_SEND_DB_UPDATES_PROGRESS = 40
+  const val MAX_RECEIVE_DB_UPDATES_PROGRESS = 55
+  const val MAX_DOWNLOAD_PROGRESS = 80
+  const val MAX_FETCH_VERIFIED_PROGRESS = 90
+  const val MAX_CLEANUP_PROGRESS = 100
+}
 
 class DashboardSyncWorker(
   appContext: Context,
