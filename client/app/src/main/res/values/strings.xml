@@ -223,6 +223,9 @@
     <!-- Image transcription strings -->
     <string name="image_transcription_instruction">Type what you see in the image below</string>
 
+    <!-- Image labelling string -->
+    <string name="image_labelling_instruction">Label the images below</string>
+
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
     <string name="creation_code_hint">0000-0000</string>

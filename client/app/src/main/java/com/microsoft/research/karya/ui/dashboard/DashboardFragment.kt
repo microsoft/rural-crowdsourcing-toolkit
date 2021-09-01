@@ -261,6 +261,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId)
           ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId)
           ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId)
+          ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId)
           else -> null
         }
       }
