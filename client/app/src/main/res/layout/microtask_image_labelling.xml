@@ -22,13 +22,14 @@
         android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
-    <ImageView
+    <com.jsibbold.zoomage.ZoomageView
         android:id="@+id/sourceImageIv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_10sdp"
         android:contentDescription="source image"
+        app:zoomage_restrictBounds="true"
         app:layout_constraintBottom_toTopOf="@id/labelsLayout"
         app:layout_constraintTop_toBottomOf="@id/instructionTv" />
 
