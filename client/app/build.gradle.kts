@@ -143,4 +143,7 @@ dependencies {
   // Scaled dp and sp implemenations
   implementation("com.intuit.ssp:ssp-android:1.0.6")
   implementation("com.intuit.sdp:sdp-android:1.0.6")
+
+  // Zoomable image
+  implementation("com.jsibbold:zoomage:1.3.1")
 }
