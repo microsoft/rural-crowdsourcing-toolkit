@@ -27,4 +27,8 @@ class MainActivity : AppCompatActivity() {
     config.setLayoutDirection(locale)
     resources.updateConfiguration(config, resources.displayMetrics)
   }
+
+  override fun onResume() {
+    super.onResume()
+  }
 }
