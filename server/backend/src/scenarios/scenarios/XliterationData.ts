@@ -54,12 +54,24 @@ export const backendXliterationDataScenario: IBackendScenarioInterface<BaseXlite
       // @ts-ignore
       const reportVariants = (assignment.report?.variants as typeof inputVariants) ?? {};
 
+      Object.entries(reportVariants).forEach(([variant, info]) => {
+        if (variant in inputVariants) {
+          inputVariants[variant].status = info.status;
+        }
+        if (variant in outputVariants) {
+          outputVariants[variant].status = info.status;
+        }
+      });
+
       // JSON data
       const jsonData = {
         language: task.params.language,
         word_id: assignment.microtask_id,
         word: mt.input.data.word,
         worker_id: assignment.worker_id,
+        input: inputVariants,
+        output: outputVariants,
+        report: reportVariants,
         variants: { ...inputVariants, ...outputVariants, ...reportVariants },
         max_credits: assignment.max_credits,
         credits: assignment.credits,
