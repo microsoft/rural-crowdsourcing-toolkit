@@ -165,6 +165,7 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
         await BBPromise.mapSeries(updates, async ({ id, sent_to_server_at }) => {
           await BasicModel.updateSingle('microtask_assignment', { id }, { sent_to_server_at });
         });
+        batch_id = batch_id + 1;
       } while (batch.length >= batch_size);
     });
   } catch (e) {
@@ -205,6 +206,7 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
         await BBPromise.mapSeries(updates, async ({ id, submitted_to_server_at }) => {
           await BasicModel.updateSingle('microtask_assignment', { id }, { submitted_to_server_at });
         });
+        batch_id = batch_id + 1;
       } while (batch.length >= batch_size);
 
       // Send request to invoke the completion handler

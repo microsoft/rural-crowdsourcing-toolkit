@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-/// <reference path="./types/alltypes.d.ts" />
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
