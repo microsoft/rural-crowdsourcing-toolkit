@@ -591,9 +591,8 @@ public class Validator {
     }
 
     eng_word = eng_word.replaceAll("[aeiouhy'’]", "");
-    // eng_word = eng_word.replaceAll("(?i)(.)\\1+", "$1");
 
-    ArrayList<String> indic_word_new = new ArrayList<>();
+    ArrayList<String> indic_word_new = new ArrayList();
     indic_word_new.add(0, "");
 
     for (int i = 0; i < indic_word.length(); i++) {
@@ -676,15 +675,19 @@ public class Validator {
         }
       }
     }
-    for (int i = 0; i < indic_word_new.size(); i++) {
-      indic_word_new.set(i, indic_word_new.get(i).replaceAll("(?i)(.)\\1+", "$1"));
-    }
+    int count = 0;
+    List<String> checks = new ArrayList<String>();
     List<String> prev = new ArrayList<>();
     String[] arr = eng_word.split("");
     boolean first = true;
     try {
       for (int i = 0; i < arr.length; i++) {
-        if (arr[i].equals(" ") || arr[i].equals("")) {
+        if (count%10 == 0){
+          for(int k = 0; k < indic_word_new.size(); k++){
+              String s = indic_word_new.get(k).substring(0, Math.min(indic_word_new.get(k).length(), count));
+              checks.add(s);
+            }prev.retainAll(checks);
+        }if (arr[i].equals(" ") || arr[i].equals("")) {
           continue;
         } else if (first) {
           prev = eng_indic_map.get(arr[i]);
@@ -698,9 +701,13 @@ public class Validator {
           }
           prev = temp_list;
         }
+        count += 1;
       }
     } catch (Exception e) {
       return false;
+    }
+    for (int i = 0; i < indic_word_new.size(); i++) {
+      indic_word_new.set(i, indic_word_new.get(i).replaceAll("(?i)(.)\\1+", "$1"));
     }
     if (indic_word_new.get(0).equals("") && prev == null) {
       return true;
