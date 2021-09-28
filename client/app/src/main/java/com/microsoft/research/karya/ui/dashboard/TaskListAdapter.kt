@@ -93,7 +93,7 @@ class TaskListAdapter(
             completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
             skippedCl.apply { if (taskStatus.skippedMicrotasks > 0) visible() else gone() }
             submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
-            verifiedCl.gone()
+            verifiedCl.apply { if (taskStatus.verifiedMicrotasks > 0) visible() else gone() }
           }
         }
 
