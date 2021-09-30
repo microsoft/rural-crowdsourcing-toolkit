@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/float_word_card"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="@dimen/_16sdp"
+    app:cardCornerRadius="@dimen/_5sdp"
     app:cardElevation="@dimen/_0sdp"
-    android:backgroundTint="@color/light_green">
+    android:backgroundTint="@color/colorLightGrey2">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,26 +17,26 @@
         android:paddingVertical="4dp">
 
         <TextView
-            android:id="@+id/word"
-            android:layout_weight="3"
-            android:layout_width="wrap_content"
+            android:id="@+id/textCollectionSentenceTv"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/_16ssp"
+            android:layout_marginHorizontal="@dimen/_4sdp"
             android:textColor="@color/black"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/_16ssp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/removeImageView"
-            tools:text="HELLO" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="I am a little big sentence entered by user" />
 
         <ImageView
             android:id="@+id/removeImageView"
             android:layout_marginLeft="@dimen/_4sdp"
             android:layout_width="@dimen/_16sdp"
             android:layout_height="@dimen/_16sdp"
-            app:layout_constraintTop_toTopOf="@id/word"
-            app:layout_constraintBottom_toBottomOf="@id/word"
-            app:layout_constraintLeft_toRightOf="@id/word"
+            app:layout_constraintTop_toTopOf="@id/textCollectionSentenceTv"
+            app:layout_constraintBottom_toBottomOf="@id/textCollectionSentenceTv"
+            app:layout_constraintRight_toRightOf="parent"
             android:src="@drawable/ic_cross_on" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
