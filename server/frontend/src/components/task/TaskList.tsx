@@ -141,6 +141,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
     const header = (task: TaskRecordType) => {
       return (
         <>
+          <span>{task.id}</span>
           <h2 className='task-name'>{task.name}</h2>
           <span className='badge language'>{languageString(task)}</span>
           <span className='badge scenario'>{scenarioTag(task)}</span>
