@@ -22,7 +22,7 @@ import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from './Auth.extra';
 
 /** Types needed for database tables */
 import { ServerUser } from '@karya/core';

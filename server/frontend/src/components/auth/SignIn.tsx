@@ -20,7 +20,7 @@ import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from './Auth.extra';
 
 /** Google login element */
 import GoogleLogin from 'react-google-login';

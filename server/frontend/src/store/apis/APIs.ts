@@ -5,7 +5,7 @@
 
 import * as DBT from '@karya/core';
 import { LanguageCode } from '@karya/core';
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from '../../components/auth/Auth.extra';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_user'

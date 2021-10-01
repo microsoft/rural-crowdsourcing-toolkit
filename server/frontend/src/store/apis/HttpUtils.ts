@@ -6,7 +6,7 @@
  */
 
 import axios, { AxiosError } from 'axios';
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from '../../components/auth/Auth.extra';
 import { ErrorBody } from './HttpResponseTypes';
 
 /** Set axios base server URL prefix from config */

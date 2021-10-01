@@ -15,7 +15,7 @@ import { ColTextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
-import { AuthProviderName } from '../../db/Auth.extra';
+import { AuthProviderName } from '../auth/Auth.extra';
 import { ServerUser, ServerUserRecord } from '@karya/core';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs';
