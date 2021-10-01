@@ -31,7 +31,7 @@ import WorkProviderList from './components/work_provider/WorkProviderList';
 import WorkerOverview from './components/worker/WorkerOverview';
 
 /** box components */
-import ngBoxList from './components/box/ngBoxList';
+import ngBoxList from './components/box/BoxList';
 
 /** task assignment components */
 import CreateTaskAssignment from './components/task_assignment/CreateTaskAssignment';
