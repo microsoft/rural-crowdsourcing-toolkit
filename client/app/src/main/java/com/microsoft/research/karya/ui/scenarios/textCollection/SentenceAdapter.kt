@@ -17,21 +17,15 @@ class SentenceAdapter(private val dataSet: MutableList<Pair<String, TextCollecti
    * (custom ViewHolder).
    */
   class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val textCollectionSentenceTv: TextView
-    val removeImageView: ImageView
-
-    init {
-      // Define click listener for the ViewHolder's View.
-      textCollectionSentenceTv = view.findViewById(R.id.textCollectionSentenceTv)
-      removeImageView = view.findViewById(R.id.removeImageView)
-    }
+    val textCollectionSentenceTv: TextView = view.findViewById(R.id.textCollectionSentenceTv)
+    val removeImageView: ImageView = view.findViewById(R.id.removeImageView)
   }
 
   // Create new views (invoked by the layout manager)
   override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
     // Create a new view, which defines the UI of the list item
     val view = LayoutInflater.from(viewGroup.context)
-      .inflate(R.layout.item_float_word, viewGroup, false)
+      .inflate(R.layout.item_text_collection_annotate, viewGroup, false)
 
     return ViewHolder(view)
   }

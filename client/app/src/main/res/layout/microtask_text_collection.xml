@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@id/textCollectionEt"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:itemCount="2"
-        tools:listitem="@layout/item_float_word" />
+        tools:listitem="@layout/item_text_collection_annotate" />
 
     <ImageButton
         android:id="@+id/addBtn"

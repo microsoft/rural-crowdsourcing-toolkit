@@ -33,7 +33,10 @@ constructor(private val workerRepository: WorkerRepository, private val authMana
         _accessCodeUiState.value = AccessCodeUiState.Success(worker.language)
         _accessCodeEffects.emit(AccessCodeEffects.Navigate)
       }
-      .catch { exception -> _accessCodeUiState.value = AccessCodeUiState.Error(exception) }
+      .catch {
+          exception ->
+        _accessCodeUiState.value = AccessCodeUiState.Error(exception)
+      }
       .launchIn(viewModelScope)
   }
 

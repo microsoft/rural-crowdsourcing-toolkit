@@ -266,7 +266,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           else -> null
         }
       }
-      if (action != null) findNavController().navigate(action)
+      if (action != null) findNavController().navigate(DashboardFragmentDirections.actionDashboardActivityToTextCollectionFragment(taskId))
     }
   }
 }

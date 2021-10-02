@@ -12,7 +12,9 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,22 +45,23 @@ constructor(
   val wordTvText = _wordTvText.asStateFlow()
   var sourceWord: String = ""
 
-  private val _outputVariants: MutableLiveData<MutableList<Pair<String, SentenceVerificationStatus>>> =
-    MutableLiveData()
-  val outputVariants: LiveData<MutableList<Pair<String, SentenceVerificationStatus>>> = _outputVariants
+  val _outputVariants: MutableList<Pair<String, SentenceVerificationStatus>> = mutableListOf()
 
-  private val _inputVariants: MutableLiveData<MutableList<Pair<String, SentenceVerificationStatus>>> =
-    MutableLiveData()
-  val inputVariants: LiveData<MutableList<Pair<String, SentenceVerificationStatus>>> = _inputVariants
+  val _inputVariants: MutableList<Pair<String, SentenceVerificationStatus>> = mutableListOf()
+
+  private val _refreshUserInputList: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
+  val refreshUserInputList = _refreshUserInputList.asSharedFlow()
 
   var limit by Delegates.notNull<Int>()
 
   override fun setupMicrotask() {
     // TODO: Move to Gson
-    sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("prompt").asString
+    sourceWord = "HELLO"
+//    sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("prompt").asString
     _wordTvText.value = sourceWord
 
-    limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
+    limit = 3
+//    limit = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
   }
 
   /** Handle next button click */
@@ -72,7 +75,7 @@ constructor(
 
     val variants = JsonObject()
 
-    for ((sentence, sentenceStatus) in _outputVariants.value!!) {
+    for ((sentence, sentenceStatus) in _outputVariants) {
       val wordObject = JsonObject()
       wordObject.addProperty("status", sentenceStatus.name)
       variants.add(sentence, wordObject)
@@ -81,8 +84,8 @@ constructor(
     outputData.add("sentences", variants)
 
     // Clear up the transliterations list
-    _inputVariants.value!!.clear()
-    _outputVariants.value!!.clear()
+    _inputVariants.clear()
+    _outputVariants.clear()
 
     viewModelScope.launch {
       completeAndSaveCurrentMicrotask()
@@ -91,19 +94,18 @@ constructor(
   }
 
   fun addWord(word: String) {
-    val temp = copyMutableList(_inputVariants.value!!)
-    temp.add(Pair(word, SentenceVerificationStatus.NEW))
-    _inputVariants.value = temp
+    _inputVariants.add(Pair(word, SentenceVerificationStatus.NEW))
+    _refreshUserInputList.tryEmit(true)
   }
 
   fun removeWord(word: String) {
-    val temp = copyMutableList(_inputVariants.value!!)
-    for (item in temp) {
+    val list = _inputVariants
+    for (item in list) {
       if (item.first == word) {
-        temp.remove(item)
+        list.remove(item)
       }
     }
-    _inputVariants.value = temp
+    _refreshUserInputList.tryEmit(true)
   }
 
 

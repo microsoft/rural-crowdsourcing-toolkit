@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.transliteration.validator.Validator
@@ -68,8 +70,9 @@ class TextCollectionFragment : BaseMTRendererFragment(R.layout.microtask_text_co
       viewModel.task.params.asJsonObject.get("instruction").asString ?: ""
     instructionTv.text = recordInstruction
 
-    adapter = SentenceAdapter(viewModel.inputVariants.value!!)
+    adapter = SentenceAdapter(viewModel._inputVariants, viewModel)
     sentenceRecyclerView.adapter = adapter
+    sentenceRecyclerView.layoutManager = LinearLayoutManager(context)
 
     addBtn.setOnClickListener { addWord() }
 
@@ -85,21 +88,21 @@ class TextCollectionFragment : BaseMTRendererFragment(R.layout.microtask_text_co
     errorTv.gone() // Remove any existing errors
 
     val word = textCollectionEt.text.toString()
-    val outputVariants = viewModel.outputVariants.value!!
-    val inputVariants = viewModel.inputVariants.value!!
+    val _outputVariants = viewModel._outputVariants
+    val _inputVariants = viewModel._inputVariants
 
     if (word.isEmpty()) {
       showError("Please enter a sentence")
       return
     }
 
-    for (item in outputVariants) {
+    for (item in _outputVariants) {
       if (item.first == word) {
         showError("The sentence is already present")
       }
     }
 
-    if (inputVariants.count() { pair ->
+    if (_inputVariants.count() { pair ->
         pair.second == TextCollectionViewModel.SentenceVerificationStatus.NEW
       } == viewModel.limit) {
       showError("Only upto ${viewModel.limit} sentences are allowed.")
@@ -107,6 +110,7 @@ class TextCollectionFragment : BaseMTRendererFragment(R.layout.microtask_text_co
     }
 
     viewModel.addWord(word)
+    textCollectionEt.setText("")
   }
 
   private fun showError(error: String) {
@@ -115,7 +119,7 @@ class TextCollectionFragment : BaseMTRendererFragment(R.layout.microtask_text_co
   }
 
   private fun onNextClick() {
-    if (viewModel.inputVariants.value!!.size == 0) {
+    if (viewModel._inputVariants.size == 0) {
       showError("Please enter atleast one sentence")
       return
     }
@@ -130,8 +134,8 @@ class TextCollectionFragment : BaseMTRendererFragment(R.layout.microtask_text_co
       viewLifecycleScope
     ) { text -> wordTv.text = text }
 
-    viewModel.outputVariants.observe(viewLifecycleOwner) {
-        sentences -> adapter.notifyDataSetChanged()
+    viewModel.refreshUserInputList.observe(lifecycle, viewLifecycleScope) {
+        refresh -> if (refresh) adapter.notifyDataSetChanged()
     }
 
   }
