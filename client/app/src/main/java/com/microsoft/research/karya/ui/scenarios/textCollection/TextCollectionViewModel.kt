@@ -98,13 +98,8 @@ constructor(
     _refreshUserInputList.tryEmit(true)
   }
 
-  fun removeWord(word: String) {
-    val list = _inputVariants
-    for (item in list) {
-      if (item.first == word) {
-        list.remove(item)
-      }
-    }
+  fun removeWordAt(index: Int) {
+    _inputVariants.removeAt(index)
     _refreshUserInputList.tryEmit(true)
   }
 
