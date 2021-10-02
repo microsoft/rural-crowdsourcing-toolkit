@@ -58,13 +58,6 @@ class TextCollectionFragment : BaseMTRendererFragment(R.layout.microtask_text_co
     textCollectionEt.inputType =
       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
 
-    // Only allow alphabets
-    textCollectionEt.filters = arrayOf(
-      InputFilter { source, start, end, dest, dstart, dend ->
-        return@InputFilter source.replace(Regex("[^a-z]*"), "")
-      }
-    )
-
     /** record instruction */
     val recordInstruction =
       viewModel.task.params.asJsonObject.get("instruction").asString ?: ""

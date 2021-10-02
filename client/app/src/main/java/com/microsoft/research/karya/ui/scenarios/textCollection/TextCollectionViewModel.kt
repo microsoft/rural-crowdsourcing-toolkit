@@ -94,22 +94,14 @@ constructor(
   }
 
   fun addWord(word: String) {
-    _inputVariants.add(Pair(word, SentenceVerificationStatus.NEW))
+    // Add at beginning of the list
+    _inputVariants.add(0, Pair(word, SentenceVerificationStatus.NEW))
     _refreshUserInputList.tryEmit(true)
   }
 
   fun removeWordAt(index: Int) {
     _inputVariants.removeAt(index)
     _refreshUserInputList.tryEmit(true)
-  }
-
-
-  private fun copyMutableList(
-    list: MutableList<Pair<String, SentenceVerificationStatus>>)
-  : MutableList<Pair<String, SentenceVerificationStatus>> {
-    val temp =  mutableListOf<Pair<String, SentenceVerificationStatus>>()
-    for (input in list) { temp.add(input) }
-    return temp
   }
 
 }
