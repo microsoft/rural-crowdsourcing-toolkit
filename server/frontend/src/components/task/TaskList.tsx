@@ -27,6 +27,7 @@ import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
 import { Collapsible, CollapsibleItem } from 'react-materialize';
 
 import '../../css/task/ngTaskList.css';
+import { UpdateTaskFilterAction } from '../../store/UIReducer';
 
 // Data connector
 const dataConnector = withData('task');
@@ -34,7 +35,8 @@ const dataConnector = withData('task');
 // Map state to props
 const mapStateToProps = (state: RootState) => {
   const tasks_summary = state.all.microtask_assignment.data;
-  return { tasks_summary };
+  const task_filter = state.ui.task_filter;
+  return { tasks_summary, task_filter };
 };
 
 // Map dispatch to props
@@ -49,6 +51,15 @@ const mapDispatchToProps = (dispatch: any) => {
       };
       dispatch(action);
     },
+
+    // Update task filter
+    updateTaskFilter: (filter: UpdateTaskFilterAction['filter']) => {
+      const action: UpdateTaskFilterAction = {
+        type: 'UPDATE_TASK_FILTER',
+        filter,
+      };
+      dispatch(action);
+    },
   };
 };
 
@@ -58,20 +69,10 @@ const connector = compose(dataConnector, reduxConnector);
 
 type TaskListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
-// component state
-type TaskListState = {
-  tags_filter: Array<string>;
-  scenario_filter?: ScenarioName | 'all';
-  show_completed: boolean;
-};
-
 // Task list component
-class TaskList extends React.Component<TaskListProps, TaskListState> {
+class TaskList extends React.Component<TaskListProps, {}> {
   // Initial state
-  state: TaskListState = {
-    tags_filter: [],
-    show_completed: false,
-  };
+  state = {};
 
   componentDidMount() {
     this.props.getTasksSummary();
@@ -86,28 +87,34 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
   handleTagsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const tags_filter = Array.from(e.currentTarget.selectedOptions, (o) => o.value);
     this.setState({ tags_filter });
+    const task_filter = { ...this.props.task_filter, tags_filter };
+    this.props.updateTaskFilter(task_filter);
   };
 
   // Handle scenario change
   handleScenarioChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const scenario_filter = e.currentTarget.value as ScenarioName | 'all';
     this.setState({ scenario_filter });
+    const task_filter = { ...this.props.task_filter, scenario_filter };
+    this.props.updateTaskFilter(task_filter);
   };
 
   toggleShowCompleted = () => {
-    const show_completed = !this.state.show_completed;
+    const show_completed = !this.props.task_filter.show_completed;
     this.setState({ show_completed });
+    const task_filter = { ...this.props.task_filter, show_completed };
+    this.props.updateTaskFilter(task_filter);
   };
 
   // Render component
   render() {
     let tasks = this.props.task.data as TaskRecordType[];
     const scenarios = Object.values(scenarioMap);
-    const tags_filter = this.state.tags_filter;
-    const scenario_filter = this.state.scenario_filter;
+    const tags_filter = this.props.task_filter.tags_filter;
+    const scenario_filter = this.props.task_filter.scenario_filter;
 
     // Filter by completed
-    if (!this.state.show_completed) {
+    if (!this.props.task_filter.show_completed) {
       tasks = tasks.filter((t) => t.status !== 'COMPLETED');
     }
 
@@ -235,7 +242,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
                       type='checkbox'
                       id='show_completed'
                       onChange={this.toggleShowCompleted}
-                      checked={this.state.show_completed}
+                      checked={this.props.task_filter.show_completed}
                     />
                     <span>Show Completed</span>
                   </label>
@@ -244,6 +251,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
               <Collapsible accordion={false} className='no-autoinit'>
                 {tasks.map((t) => (
                   <CollapsibleItem
+                    key={t.id}
                     expanded={false}
                     header={header(t)}
                     icon={<i className='material-icons'>done_all</i>}
