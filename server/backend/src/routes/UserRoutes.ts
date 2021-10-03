@@ -144,6 +144,14 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getMicrotasksSummary
 );
 
+userRouter.put<TaskController.TaskRouteState, {}>(
+  '/task/:id/mark_complete',
+  // @ts-ignores
+  Middlewares.needIdToken,
+  TaskController.checkTask,
+  TaskController.markComplete
+);
+
 /**
  * Task assignment routes. Create/update task assignments
  */

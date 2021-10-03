@@ -170,6 +170,18 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
       };
       dispatch(action);
     },
+
+    // mark task as completed
+    markComplete: () => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'task',
+        label: 'MARK_COMPLETE',
+        task_id,
+        request: {},
+      };
+      dispatch(action);
+    },
   };
 };
 
@@ -542,6 +554,16 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </h2>
           </div>
         </div>
+
+        {task.status !== 'COMPLETED' ? (
+          <div className='row'>
+            <div className='col offset-s1'>
+              <button className='btn waves-effect waves-light' onClick={this.props.markComplete}>
+                Mark Complete
+              </button>
+            </div>
+          </div>
+        ) : null}
 
         {/** Microtask summary data table */}
         <div className='row'>

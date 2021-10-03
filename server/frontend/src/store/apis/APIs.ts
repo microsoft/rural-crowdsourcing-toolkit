@@ -102,6 +102,13 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
+      store: 'task';
+      label: 'MARK_COMPLETE';
+      task_id: string;
+      request: {};
+    }
+  | {
+      type: 'BR_INIT';
       store: 'task_op';
       label: 'SUBMIT_INPUT_FILE';
       task_id: string;
@@ -240,6 +247,12 @@ export type BackendRequestSuccessAction =
       store: 'task';
       label: 'GET_ALL';
       response: DBT.TaskRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task';
+      label: 'MARK_COMPLETE';
+      response: DBT.TaskRecord;
     }
   | {
       type: 'BR_SUCCESS';
@@ -423,6 +436,16 @@ export async function backendRequest(
         store,
         label,
         response: await POST('/tasks', action.request),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Mark a task as completed
+    if (action.store === 'task' && action.label === 'MARK_COMPLETE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await PUT(`/task/${action.task_id}/mark_complete`, {}),
       } as BackendRequestSuccessAction;
     }
 

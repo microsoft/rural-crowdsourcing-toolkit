@@ -307,3 +307,12 @@ export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };
+
+/**
+ * Mark task as completed
+ */
+export const markComplete: TaskRouteMiddleware = async (ctx) => {
+  const task = ctx.state.task as TaskRecordType;
+  const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, { status: 'COMPLETED' });
+  HttpResponse.OK(ctx, updatedRecord);
+};
