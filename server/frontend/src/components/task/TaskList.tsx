@@ -62,6 +62,7 @@ type TaskListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof red
 type TaskListState = {
   tags_filter: Array<string>;
   scenario_filter?: ScenarioName | 'all';
+  show_completed: boolean;
 };
 
 // Task list component
@@ -69,6 +70,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
   // Initial state
   state: TaskListState = {
     tags_filter: [],
+    show_completed: false,
   };
 
   componentDidMount() {
@@ -92,12 +94,22 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
     this.setState({ scenario_filter });
   };
 
+  toggleShowCompleted = () => {
+    const show_completed = !this.state.show_completed;
+    this.setState({ show_completed });
+  };
+
   // Render component
   render() {
-    var tasks = this.props.task.data as TaskRecordType[];
+    let tasks = this.props.task.data as TaskRecordType[];
     const scenarios = Object.values(scenarioMap);
     const tags_filter = this.state.tags_filter;
     const scenario_filter = this.state.scenario_filter;
+
+    // Filter by completed
+    if (!this.state.show_completed) {
+      tasks = tasks.filter((t) => t.status !== 'COMPLETED');
+    }
 
     // Filtering tasks by tags
     tasks = tasks.filter((t) => tags_filter.every((val) => t.itags.itags.includes(val)));
@@ -191,8 +203,8 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
           ) : (
             <>
               <h1 className='page-title'>Tasks{createTaskButton}</h1>
-              <div className='row' id='filter_row'>
-                <div className='col s10 m8 l5'>
+              <div className='row valign-wrapper' id='filter_row'>
+                <div className='col s10 m4 l3'>
                   <select multiple={true} id='tags_filter' value={tags_filter} onChange={this.handleTagsChange}>
                     <option value='' disabled={true} selected={true}>
                       Filter tasks by tags
@@ -204,7 +216,7 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
                     ))}
                   </select>
                 </div>
-                <div className='col s10 m8 l5'>
+                <div className='col s10 m4 l3'>
                   <select id='scenario_filter' value={scenario_filter} onChange={this.handleScenarioChange}>
                     <option value='' disabled={true} selected={true}>
                       Filter tasks by scenario
@@ -216,6 +228,17 @@ class TaskList extends React.Component<TaskListProps, TaskListState> {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div className='col s10 m4 l3'>
+                  <label>
+                    <input
+                      type='checkbox'
+                      id='show_completed'
+                      onChange={this.toggleShowCompleted}
+                      checked={this.state.show_completed}
+                    />
+                    <span>Show Completed</span>
+                  </label>
                 </div>
               </div>
               <Collapsible accordion={false} className='no-autoinit'>
