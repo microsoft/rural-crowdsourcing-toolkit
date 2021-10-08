@@ -682,7 +682,7 @@ public class Validator {
     boolean first = true;
     try {
       for (int i = 0; i < arr.length; i++) {
-        if (count%10 == 0){
+        if (count%5 == 0){
           for(int k = 0; k < indic_word_new.size(); k++){
               String s = indic_word_new.get(k).substring(0, Math.min(indic_word_new.get(k).length(), count));
               checks.add(s);
