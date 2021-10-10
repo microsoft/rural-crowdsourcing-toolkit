@@ -30,16 +30,15 @@
 
     <EditText
         android:id="@+id/creationCodeEt"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_200sdp"
         android:layout_height="@dimen/_50sdp"
         android:layout_margin="@dimen/_16sdp"
         android:background="@drawable/blue_rounded_border"
         android:digits="0123456789"
         android:fontFamily="monospace"
-        android:hint="@string/creation_code_hint"
         android:importantForAutofill="no"
         android:inputType="number"
-        android:maxLength="9"
+        android:maxLength="19"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:textSize="@dimen/_17ssp"

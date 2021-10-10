@@ -8,4 +8,5 @@ object PreferenceKeys {
   const val WORKER_ACCESS_CODE = "worker_access_code"
   const val WORKER_ID = "worker_id"
   const val SPEECH_DATA_ACTIVITY_VISITED = "speech_data_activity_visited"
+  const val BASE_URL = "base_url"
 }
