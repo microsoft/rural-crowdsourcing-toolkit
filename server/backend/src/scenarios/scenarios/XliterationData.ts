@@ -49,8 +49,8 @@ export const backendXliterationDataScenario: IBackendScenarioInterface<BaseXlite
       })) as MicrotaskRecordType<'XLITERATION_DATA'>;
 
       // variants
-      const inputVariants = mt.input.data.variants;
-      const outputVariants = assignment.output!.data.variants;
+      const inputVariants = mt.input.data.variants ?? {};
+      const outputVariants = assignment.output!.data.variants ?? {};
       // @ts-ignore
       const reportVariants = (assignment.report?.variants as typeof inputVariants) ?? {};
 
@@ -63,12 +63,16 @@ export const backendXliterationDataScenario: IBackendScenarioInterface<BaseXlite
         }
       });
 
+      // Get worker
+      const worker = await BasicModel.getSingle('worker', { id: assignment.worker_id });
+
       // JSON data
       const jsonData = {
         language: task.params.language,
         word_id: assignment.microtask_id,
         word: mt.input.data.word,
         worker_id: assignment.worker_id,
+        access_code: worker.access_code,
         input: inputVariants,
         output: outputVariants,
         report: reportVariants,
