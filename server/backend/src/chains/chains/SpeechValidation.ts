@@ -15,11 +15,22 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
   async handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks) {
     const chainedMicrotasks = assignments.map((assignment, i) => {
       const microtask = microtasks[i];
+
+      // Temporary fix for output files that may be sent as array
+      const output_files = assignment.output!.files!;
+      let recording: string;
+
+      if (output_files instanceof Array) {
+        recording = output_files[0];
+      } else {
+        recording = output_files.recording;
+      }
+
       const chainedMicrotask: MicrotaskType<'SPEECH_VERIFICATION'> = {
         task_id: toTask.id,
         input: {
           data: { sentence: microtask.input.data.sentence },
-          files: { recording: assignment.output!.files!.recording },
+          files: { recording },
         },
         input_file_id: assignment.output_file_id,
         deadline: toTask.deadline,
