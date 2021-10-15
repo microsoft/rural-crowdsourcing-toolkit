@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.research.karya.ui.views
 
 import android.content.Context
@@ -5,7 +8,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import androidx.appcompat.widget.Toolbar
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.AppToolbar2Binding
+import com.microsoft.research.karya.databinding.NgAppToolbarBinding
 import com.microsoft.research.karya.utils.extensions.visible
 
 class KaryaToolbar : Toolbar {
@@ -18,15 +21,15 @@ class KaryaToolbar : Toolbar {
     defStyleAttr
   )
 
-  private lateinit var binding: AppToolbar2Binding
+  private lateinit var binding: NgAppToolbarBinding
 
   init {
     initView(context)
   }
 
   private fun initView(context: Context) {
-    val view = inflate(context, R.layout.app_toolbar_2, this)
-    binding = AppToolbar2Binding.bind(view)
+    val view = inflate(context, R.layout.ng_app_toolbar, this)
+    binding = NgAppToolbarBinding.bind(view)
   }
 
   fun setTitle(title: String) {
