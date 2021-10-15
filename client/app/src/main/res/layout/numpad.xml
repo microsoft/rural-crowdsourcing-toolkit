@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_200sdp"
+    android:orientation="vertical"
+    android:weightSum="4"
+    tools:ignore="HardcodedText,ContentDescription">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/key1"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="1" />
+
+        <TextView
+            android:id="@+id/key2"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="2" />
+
+        <TextView
+            android:id="@+id/key3"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="3" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/key4"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="4" />
+
+        <TextView
+            android:id="@+id/key5"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="5" />
+
+        <TextView
+            android:id="@+id/key6"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="6" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/key7"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="7" />
+
+        <TextView
+            android:id="@+id/key8"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="8" />
+
+        <TextView
+            android:id="@+id/key9"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="9" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageView
+            android:id="@+id/keyDelete"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/ng_ic_backspace"
+            android:text="-" />
+
+        <TextView
+            android:id="@+id/key0"
+            style="@style/numericKey"
+            android:background="@drawable/ng_numeric_key_background"
+            android:text="0" />
+
+        <ImageView
+            android:id="@+id/keyDone"
+            style="@style/numericKey"
+            android:layout_margin="@dimen/_3sdp"
+            android:background="@drawable/ng_ic_next"
+            android:backgroundTint="@color/primary"
+            android:backgroundTintMode="add"
+            android:text="" />
+
+    </LinearLayout>
+
+</LinearLayout>
