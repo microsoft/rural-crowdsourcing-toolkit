@@ -44,9 +44,10 @@ constructor(
 
   private fun createWorker(accessCode: String, workerRecord: WorkerRecord) {
     val dbWorker = workerRecord.copy(accessCode = accessCode)
-
     viewModelScope.launch { workerRepository.upsertWorker(dbWorker) }
   }
 
-  suspend fun setURL(decodedURL: String) { baseUrlManager.updateBaseUrl(decodedURL) }
+  suspend fun setURL(decodedURL: String) {
+    baseUrlManager.updateBaseUrl(decodedURL)
+  }
 }
