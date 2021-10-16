@@ -43,7 +43,7 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
   }
 
   private fun setupViews() {
-    val consentFormText = getString(R.string.s_consent_form_text)
+    val consentFormText = getString(R.string.consent_form_text)
 
     val spannedText =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
