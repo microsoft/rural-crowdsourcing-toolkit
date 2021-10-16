@@ -26,4 +26,23 @@
         <item name="android:clickable">true</item>
     </style>
 
+    <!-- Multiline Text Box -->
+    <style name="multilineText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">@dimen/_14ssp</item>
+        <item name="android:lineSpacingExtra">@dimen/_4ssp</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
+    <!-- Error Text -->
+    <style name="errorText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/_12ssp</item>
+        <item name="android:lineSpacingExtra">@dimen/_2ssp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+
 </resources>

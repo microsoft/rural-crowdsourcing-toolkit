@@ -43,7 +43,7 @@
         <item name="android:autoSizeTextType" tools:targetApi="o">uniform</item>
     </style>
 
-    <style name="multilineText" parent="Widget.AppCompat.TextView">
+    <style name="oldMultilineText" parent="Widget.AppCompat.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:typeface">sans</item>
         <item name="android:textColor">?attr/titleTextColor</item>
