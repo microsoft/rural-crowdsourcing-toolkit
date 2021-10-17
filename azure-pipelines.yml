@@ -23,3 +23,7 @@ steps:
     scanType: 'Register'
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
+
+- task: CredScan@3
+  inputs:
+    outputFormat: 'csv'
