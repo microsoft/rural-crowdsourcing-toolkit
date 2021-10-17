@@ -29,7 +29,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "preinstall": "npm-force-resolutions",
+    "postinstall": "npm-force-resolutions"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -55,6 +57,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.6",
     "@types/tar-stream": "^2.1.0",
+    "npm-force-resolutions": "^0.0.10",
     "typescript": "^4.2.4"
   },
   "prettier": {
@@ -62,5 +65,11 @@
     "jsxSingleQuote": true,
     "trailingComma": "all",
     "printWidth": 120
+  },
+  "resolutions": {
+    "set-value": "^4.0.1",
+    "immer": "^9.0.6",
+    "glob-parent": "^5.1.2",
+    "ssri": "^8.0.1"
   }
 }
