@@ -7,7 +7,7 @@ trigger:
 - server-dev
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-2019
 
 steps:
 - script: echo Hello, world!
