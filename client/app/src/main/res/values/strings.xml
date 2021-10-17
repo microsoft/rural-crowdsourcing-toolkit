@@ -1,5 +1,6 @@
 <resources>
     <!-- Consent Form Page -->
+    <string name="consent_form_title">Consent Form</string>
     <string name="consent_form_agree">Agree</string>
     <string name="consent_form_disagree">I do not want to participate</string>
     <string name="consent_form_text">
@@ -170,12 +171,18 @@
     <string name="unable_to_generate_otp">We could not generate an OTP for this phone number. Please check the number or try again later.</string>
     <string name="access_code_already_used">The access code is already registered to a different phone number. Please contact the coordinator for a new access code.</string>
 
+    <!-- OTP -->
+    <string name="otp_title">Enter OTP</string>
+    <string name="otp_prompt">We have sent a 6-digit OTP via SMS to 0000000000. Please enter the OTP below.</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="change_phone_number">Change Phone Number</string>
+    <string name="invalid_otp">You have entered an invalid OTP.</string>
+
     <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
 
     <string name="s_access_code_title">Enter Access Code</string>
 
-    <string name="s_otp_title">Enter OTP</string>
     <string name="s_age_title">Select Age Group</string>
     <string name="s_gender_title">Select Gender</string>
     <string name="s_profile_pic_title">Select Profile Picture</string>
@@ -185,9 +192,6 @@
     <string name="s_access_code_prompt">You should have received a 16-digit access code from your
         project coordinator. Please enter that access code below.</string>
     <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
-    <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>
-    <string name="s_invalid_otp">You have entered an invalid OTP</string>
-    <string name="s_resend_otp">Resend OTP</string>
     <string name="s_profile_picture_prompt">Please click your profile picture. You can skip this step if you do not want a profile picture</string>
     <string name="s_gender_prompt">Please choose your gender. If you do not wish to state your gender, you can skip this step</string>
     <string name="s_male">Male</string>

@@ -94,7 +94,6 @@
         android:layout_marginTop="@dimen/_24sdp"
         android:layout_marginEnd="@dimen/_15sdp"
         android:layout_marginRight="@dimen/_15sdp"
-        android:text="@string/s_invalid_otp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

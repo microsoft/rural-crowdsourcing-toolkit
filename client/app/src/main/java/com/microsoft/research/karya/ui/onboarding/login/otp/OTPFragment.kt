@@ -34,8 +34,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun setupView() {
-    // registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
-    binding.appTb.setTitle(getString(R.string.s_otp_title))
+    binding.appTb.setTitle(getString(R.string.otp_title))
     binding.appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT) }
 
     binding.resendOTPBtn.setOnClickListener {
@@ -51,9 +50,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
       }
     }
 
-    binding.otpNextIv.setOnClickListener { viewModel.verifyOTP(binding.otpEt.text.toString()) }
-
-    requestSoftKeyFocus(binding.otpEt)
+    binding.numPad.setOnDoneListener { viewModel.verifyOTP(binding.otpEt.text.toString()) }
   }
 
   private fun observeUi() {
@@ -129,25 +126,16 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun enableNextButton() {
-    binding.otpNextIv.apply {
-      setImageResource(0)
-      setImageResource(R.drawable.ic_next_enabled)
-      isClickable = true
-    }
+    binding.numPad.enableDoneButton()
   }
 
   private fun disableNextButton() {
-    binding.otpNextIv.apply {
-      setImageResource(0)
-      setImageResource(R.drawable.ic_next_disabled)
-      isClickable = false
-    }
+    binding.numPad.disableDoneButton()
   }
 
   private fun showLoading() {
     with(binding) {
       loadingPb.visible()
-      otpNextIv.gone()
       otpEt.disable()
     }
   }
@@ -155,7 +143,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   private fun hideLoading() {
     with(binding) {
       loadingPb.gone()
-      otpNextIv.visible()
       otpEt.enable()
     }
   }
@@ -164,18 +151,12 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     with(binding) {
       invalidOTPTv.text = message
       invalidOTPTv.visible()
-      otpStatusIv.apply {
-        visible()
-        setImageResource(0)
-        setImageResource(R.drawable.ic_quit_select)
-      }
     }
   }
 
   private fun hideError() {
     with(binding) {
       invalidOTPTv.gone()
-      otpStatusIv.gone()
     }
   }
 }
