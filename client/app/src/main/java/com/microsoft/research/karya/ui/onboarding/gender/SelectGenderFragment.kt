@@ -5,19 +5,14 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.local.enum.AssistantAudio
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentSelectGenderBinding
-import com.microsoft.research.karya.ui.base.BaseFragment
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.ui.base.SessionFragment
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SelectGenderFragment : BaseFragment(R.layout.fragment_select_gender) {
+class SelectGenderFragment : SessionFragment(R.layout.fragment_select_gender) {
 
   private val binding by viewBinding(FragmentSelectGenderBinding::bind)
   private val viewModel by viewModels<SelectGenderViewModel>()

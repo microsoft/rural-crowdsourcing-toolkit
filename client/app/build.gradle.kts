@@ -18,7 +18,7 @@ android {
     minSdkVersion(21)
     targetSdkVersion(30)
     multiDexEnabled = true
-    versionCode = 24
+    versionCode = 25
     versionName = "1"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
@@ -26,7 +26,12 @@ android {
   buildTypes {
     named("release") {
       isMinifyEnabled = false
-      setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
+      setProguardFiles(
+        listOf(
+          getDefaultProguardFile("proguard-android-optimize.txt"),
+          "proguard-rules.pro"
+        )
+      )
     }
   }
   compileOptions {
@@ -118,7 +123,6 @@ dependencies {
   kapt(Dependencies.AndroidX.Hilt.daggerCompiler)
   kapt(Dependencies.AndroidX.Hilt.daggerHiltCompiler)
 
-
   implementation(Dependencies.Kotlin.Coroutines.core)
   implementation(Dependencies.Kotlin.Coroutines.coroutines)
 
@@ -133,9 +137,13 @@ dependencies {
 
   debugImplementation(Dependencies.ThirdParty.debugDB)
 
-  implementation(project(":app-dropdown"))
-  implementation(project(":app-bow"))
   implementation("com.mcxiaoke.volley:library:1.0.19")
   implementation("com.nex3z:flow-layout:1.3.4-beta01")
 
+  // Scaled dp and sp implemenations
+  implementation("com.intuit.ssp:ssp-android:1.0.6")
+  implementation("com.intuit.sdp:sdp-android:1.0.6")
+
+  // Zoomable image
+  implementation("com.jsibbold:zoomage:1.3.1")
 }

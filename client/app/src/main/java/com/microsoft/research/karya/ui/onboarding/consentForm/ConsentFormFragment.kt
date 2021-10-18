@@ -8,17 +8,12 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.local.enum.AssistantAudio
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.databinding.FragmentConsentFormBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
-import com.microsoft.research.karya.utils.extensions.disable
-import com.microsoft.research.karya.utils.extensions.enable
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -28,8 +23,11 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
   private val binding by viewBinding(FragmentConsentFormBinding::bind)
   private val viewModel by viewModels<ConsentFormViewModel>()
 
-  @Inject lateinit var resourceManager: ResourceManager
-  @Inject lateinit var authManager: AuthManager
+  @Inject
+  lateinit var resourceManager: ResourceManager
+
+  @Inject
+  lateinit var authManager: AuthManager
 
   // TODO: add assistant
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

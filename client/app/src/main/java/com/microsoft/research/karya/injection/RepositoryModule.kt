@@ -2,13 +2,9 @@ package com.microsoft.research.karya.injection
 
 import com.microsoft.research.karya.data.local.daos.KaryaFileDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
+import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
-import com.microsoft.research.karya.data.local.ng.WorkerDao
-import com.microsoft.research.karya.data.repo.KaryaFileRepository
-import com.microsoft.research.karya.data.repo.LanguageRepository
-import com.microsoft.research.karya.data.repo.MicroTaskRepository
-import com.microsoft.research.karya.data.repo.WorkerRepository
-import com.microsoft.research.karya.data.service.KaryaFileAPI
+import com.microsoft.research.karya.data.repo.*
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
 import dagger.Module
@@ -44,7 +40,13 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideKaryaFileRepository(karyaFileAPI: KaryaFileAPI, karyaFileDao: KaryaFileDao): KaryaFileRepository {
-    return KaryaFileRepository(karyaFileAPI, karyaFileDao)
+  fun provideKaryaFileRepository(karyaFileDao: KaryaFileDao): KaryaFileRepository {
+    return KaryaFileRepository(karyaFileDao)
+  }
+
+  @Provides
+  @Singleton
+  fun provideAuthRepository(workerDao: WorkerDao): AuthRepository {
+    return AuthRepository(workerDao)
   }
 }

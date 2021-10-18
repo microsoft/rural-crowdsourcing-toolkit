@@ -102,6 +102,6 @@
         android:minHeight="@dimen/_35sdp"
         android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@id/otpStatusIv"
-        app:layout_constraintTop_toTopOf="@id/otpStatusIv"/>
+        app:layout_constraintTop_toTopOf="@id/otpStatusIv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

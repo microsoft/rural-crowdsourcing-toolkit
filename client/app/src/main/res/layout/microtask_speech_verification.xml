@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/microtaskTb"
-        layout="@layout/microtask_header_2" />
+        layout="@layout/microtask_header" />
 
     <TextView
         android:id="@+id/instructionTv"
@@ -16,7 +16,7 @@
         android:gravity="center"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:text="@string/speech_verification_instruction_desc"
+        android:text="@string/speech_verification_instruction"
         android:textColor="#BBBBBB"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
@@ -39,7 +39,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"/>
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL" />
 
     <LinearLayout
         android:id="@+id/recordLengthLL"

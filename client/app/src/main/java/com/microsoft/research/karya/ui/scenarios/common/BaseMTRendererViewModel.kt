@@ -13,29 +13,29 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentSt
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
-import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import java.io.File
-import kotlin.properties.Delegates
-import kotlinx.android.synthetic.main.microtask_header.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
+import kotlin.properties.Delegates
 
 abstract class BaseMTRendererViewModel
 constructor(
   var assignmentRepository: AssignmentRepository,
   var taskRepository: TaskRepository,
   var microTaskRepository: MicroTaskRepository,
-  @FilesDir var fileDirPath: String,
+  var fileDirPath: String,
   var authManager: AuthManager,
+  val includeCompleted: Boolean = false
 ) : ViewModel() {
 
   private lateinit var taskId: String
@@ -59,17 +59,19 @@ constructor(
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
   protected var outputData: JsonObject = JsonObject()
-  protected var outputFiles: JsonArray = JsonArray()
+  protected var outputFiles: JsonObject = JsonObject()
   protected var logs: JsonArray = JsonArray()
 
   private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
   val navigateBack = _navigateBack.asSharedFlow()
 
+  private val _inputFileDoesNotExist: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val inputFileDoesNotExist = _inputFileDoesNotExist.asSharedFlow()
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
 
-  fun setupViewmodel(taskId: String, incompleteMta: Int, completedMta: Int) {
+  open fun setupViewModel(taskId: String, incompleteMta: Int, completedMta: Int) {
     this.taskId = taskId
     this.incompleteAssignments = incompleteMta
     this.completedAssignments = completedMta
@@ -80,22 +82,23 @@ constructor(
       microtaskAssignmentIDs =
         assignmentRepository.getUnsubmittedIDsForTask(
           task.id,
-          false
+          includeCompleted
         ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel
       // factory)
 
       if (microtaskAssignmentIDs.isEmpty()) {
         navigateBack()
       }
+
       // Move to the first incomplete (assigned) microtask or the last microtask
-      do {
+      while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1) {
         val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
         val microtaskAssignment = assignmentRepository.getAssignmentById(microtaskAssignmentID)
         if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
           break
         }
         currentAssignmentIndex++
-      } while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1)
+      }
     }
   }
 
@@ -132,13 +135,11 @@ constructor(
   }
 
   /** Add a file to the assignment with the given output */
-  protected fun addOutputFile(params: Pair<String, String>) {
+  protected fun addOutputFile(key: String, params: Pair<String, String>) {
     val assignmentId = microtaskAssignmentIDs[currentAssignmentIndex]
     val fileName = assignmentOutputContainer.getAssignmentFileName(assignmentId, params)
-    // Add file if it is not already present
-    if (!outputFiles.contains(Gson().toJsonTree(fileName))) {
-      outputFiles.add(fileName)
-    }
+
+    outputFiles.addProperty(key, fileName)
 
     // log the output file addition
     val logObj = JsonObject()
@@ -153,29 +154,44 @@ constructor(
    */
   protected suspend fun completeAndSaveCurrentMicrotask() {
 
-    val output = JsonObject()
-    output.add("data", outputData)
-    output.add("files", outputFiles)
-    output.add("logs", logs)
+    val output = buildOutputJsonObject()
+    val logObj = JsonObject()
+    logObj.add("logs", logs)
 
-    val directory = File(getRelativePath("microtask-assignment-scratch"))
-    val files = directory.listFiles()
-    files?.forEach { if (it.exists()) it.delete() }
+    deleteAssignmentScratchFiles()
 
     /** Delete all scratch files */
     withContext(Dispatchers.IO) {
       assignmentRepository.markComplete(
         microtaskAssignmentIDs[currentAssignmentIndex],
         output,
+        logObj,
         date = DateUtils.getCurrentDate()
       )
     }
+  }
 
-    /** Update progress bar */
-    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
-      completedMicrotasks++
-      //      uiScope.launch { microtaskProgressPb?.progress = completedMicrotasks }
+  protected suspend fun skipAndSaveCurrentMicrotask() {
+    /** Delete all scratch files */
+    withContext(Dispatchers.IO) {
+      assignmentRepository.markSkip(
+        microtaskAssignmentIDs[currentAssignmentIndex],
+        date = DateUtils.getCurrentDate()
+      )
     }
+  }
+
+  private fun deleteAssignmentScratchFiles() {
+    val directory = File(getRelativePath("microtask-assignment-scratch"))
+    val files = directory.listFiles()
+    files?.forEach { if (it.exists()) it.delete() }
+  }
+
+  private fun buildOutputJsonObject(): JsonObject {
+    val output = JsonObject()
+    output.add("data", outputData)
+    output.add("files", outputFiles)
+    return output
   }
 
   /** Is there a next microtask (for navigation) */
@@ -221,43 +237,44 @@ constructor(
       currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
 
       /** If microtask has input files, extract them */
-      var inputFileDoesNotExist = false
+      _inputFileDoesNotExist.value = false
       if (currentMicroTask.input_file_id != null) {
         val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
-        val microtaskInputDirectory = microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
+        val microtaskInputDirectory =
+          microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
 
         if (!File(microtaskTarBallPath).exists()) {
-          inputFileDoesNotExist = true
-          // TODO: Create a MutableLiveData to inform the UI about an alertbox
+          _inputFileDoesNotExist.value = true
         } else {
-          FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
+          FileUtils.extractGZippedTarBallIntoDirectory(
+            microtaskTarBallPath,
+            microtaskInputDirectory
+          )
         }
       }
 
-      if (inputFileDoesNotExist) return@launch
+      if (_inputFileDoesNotExist.value) return@launch
 
-      if (!currentAssignment.output.isJsonNull) {
-        outputData =
-          if (currentAssignment.output.asJsonObject.has("data")) {
-            currentAssignment.output.asJsonObject.getAsJsonObject("data")
-          } else {
-            JsonObject()
-          }
+      outputData =
+        if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("data")) {
+          currentAssignment.output.asJsonObject.getAsJsonObject("data")
+        } else {
+          JsonObject()
+        }
 
-        logs =
-          if (currentAssignment.output.asJsonObject.has("logs")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("logs")
-          } else {
-            JsonArray()
-          }
+      outputFiles =
+        if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("files")) {
+          currentAssignment.output.asJsonObject.getAsJsonObject("files")
+        } else {
+          JsonObject()
+        }
 
-        outputFiles =
-          if (currentAssignment.output.asJsonObject.has("files")) {
-            currentAssignment.output.asJsonObject.getAsJsonArray("files")
-          } else {
-            JsonArray()
-          }
-      }
+      logs =
+        if (!currentAssignment.logs.isJsonNull && currentAssignment.logs.asJsonObject.has("logs")) {
+          currentAssignment.logs.asJsonObject.getAsJsonArray("logs")
+        } else {
+          JsonArray()
+        }
 
       setupMicrotask()
     }

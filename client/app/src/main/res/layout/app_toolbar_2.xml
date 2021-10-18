@@ -44,7 +44,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/karya_logo"
             android:clickable="true"
-            android:contentDescription="@string/yes"
+            android:contentDescription="@string/karya_logo"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -1,11 +1,15 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.BuildConfig
+import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.remote.interceptors.IdTokenRenewInterceptor
+import com.microsoft.research.karya.data.remote.interceptors.VersionInterceptor
+import com.microsoft.research.karya.data.repo.AuthRepository
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
 import com.microsoft.research.karya.injection.qualifier.BaseUrl
+import com.microsoft.research.karya.injection.qualifier.KaryaOkHttpClient
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -15,6 +19,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -30,24 +35,44 @@ class RetrofitModule {
   @Reusable
   @BaseUrl
   fun provideBaseUrl(): String {
-    return "http://192.168.0.105:4040"
+    return "https://karyaboxtest.eastus.cloudapp.azure.com"
   }
 
   @Provides
   @Reusable
   fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-    return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    return HttpLoggingInterceptor()
+      .setLevel(HttpLoggingInterceptor.Level.BODY)
   }
 
   @Provides
   @Reusable
-  fun provideOkHttp(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+  fun provideIdTokenRenewInterceptor(
+    authRepository: AuthRepository,
+    authManager: AuthManager,
+    @BaseUrl baseUrl: String
+  ): IdTokenRenewInterceptor {
+    return IdTokenRenewInterceptor(authRepository, authManager, baseUrl)
+  }
+
+  @Provides
+  @Reusable
+  fun provideVersionInterceptor(): VersionInterceptor {
+    return VersionInterceptor()
+  }
+
+  @KaryaOkHttpClient
+  @Provides
+  @Reusable
+  fun provideOkHttp(
+    idTokenRenewInterceptor: IdTokenRenewInterceptor,
+    versionInterceptor: VersionInterceptor
+  ): OkHttpClient {
     return OkHttpClient.Builder()
-      .apply {
-        if (BuildConfig.DEBUG) {
-          addNetworkInterceptor(httpLoggingInterceptor)
-        }
-      }
+      .connectTimeout(10, TimeUnit.MINUTES)
+      .readTimeout(10, TimeUnit.MINUTES)
+      .addInterceptor(idTokenRenewInterceptor)
+      .addInterceptor(versionInterceptor)
       .build()
   }
 
@@ -56,9 +81,10 @@ class RetrofitModule {
   fun provideRetrofitInstance(
     @BaseUrl baseUrl: String,
     converterFactory: GsonConverterFactory,
-    okHttpClient: OkHttpClient
+    @KaryaOkHttpClient okHttpClient: OkHttpClient
   ): Retrofit {
-    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl).addConverterFactory(converterFactory).build()
+    return Retrofit.Builder().client(okHttpClient).baseUrl(baseUrl)
+      .addConverterFactory(converterFactory).build()
   }
 
   @Provides

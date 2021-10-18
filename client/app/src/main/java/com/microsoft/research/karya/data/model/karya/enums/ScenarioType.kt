@@ -1,0 +1,16 @@
+package com.microsoft.research.karya.data.model.karya.enums
+
+enum class ScenarioType(val value: String) {
+  SPEECH_DATA("SPEECH DATA"),
+  SPEECH_VERIFICATION("SPEECH VERIFICATION"),
+  TEXT_TRANSLATION("TEXT TRANSLATION"),
+  SIGN_LANGUAGE_VIDEO("SIGN LANGUAGE_VIDEO"),
+  SGN_LANG_VIDEO_VERIFICATION("SIGN VIDEO VERIFICATION"),
+  XLITERATION_DATA("TRANSLITERATION DATA"),
+  IMAGE_TRANSCRIPTION("IMAGE TRANSCRIPTION"),
+  IMAGE_LABELLING("IMAGE LABELLING");
+
+  override fun toString(): String {
+    return value
+  }
+}

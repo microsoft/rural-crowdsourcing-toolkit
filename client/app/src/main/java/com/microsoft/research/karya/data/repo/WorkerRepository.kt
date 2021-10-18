@@ -4,16 +4,19 @@ import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
 import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
 import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
 import com.microsoft.research.karya.data.exceptions.UnknownException
-import com.microsoft.research.karya.data.local.ng.WorkerDao
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.local.daos.WorkerDao
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.service.WorkerAPI
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, private val workerDao: WorkerDao) {
+class WorkerRepository @Inject constructor(
+  private val workerAPI: WorkerAPI,
+  private val workerDao: WorkerDao
+) {
 
   fun getOTP(
     accessCode: String,
@@ -177,5 +180,6 @@ class WorkerRepository @Inject constructor(private val workerAPI: WorkerAPI, pri
       return@withContext workerDao.getByAccessCode(accessCode)
     }
 
-  suspend fun upsertWorker(worker: WorkerRecord) = withContext(Dispatchers.IO) { workerDao.upsert(worker) }
+  suspend fun upsertWorker(worker: WorkerRecord) =
+    withContext(Dispatchers.IO) { workerDao.upsert(worker) }
 }

@@ -2,6 +2,7 @@
 <resources>
     <!-- Light UI colors -->
     <!-- Dark UI colors -->
+    <color name="black">#000000</color>
     <color name="dk_blue">#006ded</color>
     <color name="dk_blue2">#0331A6</color>
     <color name="colorBlack">@android:color/black</color>
@@ -14,9 +15,9 @@
     <color name="colorLightGrey2">#d4d4d4</color>
     <color name="colorLightBlue">#7fc2ff</color>
     <color name="colorLightPurple">#d5a8ff</color>
-    <color name="transparentWhite">#B0F6F3F3</color>
     <color name="colorGreenShade2">#54FB70</color>
     <color name="light_red">#FFAAAA</color>
     <color name="light_orange">#FFDDAA</color>
     <color name="light_green">#99EE99</color>
+    <color name="light_yellow">#F0F4C3</color>
 </resources>

@@ -1,12 +1,8 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.data.local.daos.KaryaFileDao
-import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
-import com.microsoft.research.karya.data.local.daos.MicroTaskDao
-import com.microsoft.research.karya.data.local.daos.TaskDao
+import com.microsoft.research.karya.data.local.daos.*
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
-import com.microsoft.research.karya.data.local.ng.WorkerDao
 import com.microsoft.research.karya.data.manager.KaryaDatabase
 import dagger.Module
 import dagger.Provides

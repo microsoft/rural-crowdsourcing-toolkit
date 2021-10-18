@@ -6,15 +6,9 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SelectAgeViewModel
@@ -24,7 +18,8 @@ constructor(
   private val workerRepository: WorkerRepository,
 ) : ViewModel() {
 
-  private val _selectAgeUiState: MutableStateFlow<SelectAgeUiState> = MutableStateFlow(SelectAgeUiState.Initial)
+  private val _selectAgeUiState: MutableStateFlow<SelectAgeUiState> =
+    MutableStateFlow(SelectAgeUiState.Initial)
   val selectAgeUiState = _selectAgeUiState.asStateFlow()
 
   private val _selectAgeEffects: MutableSharedFlow<SelectAgeEffects> = MutableSharedFlow()
@@ -34,7 +29,7 @@ constructor(
     viewModelScope.launch {
       _selectAgeUiState.value = SelectAgeUiState.Loading
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.idToken)
       checkNotNull(worker.gender)
 

@@ -10,22 +10,20 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.data.local.enum.AssistantAudio
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ACTIVE
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.DISABLED
-import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.ENABLED
+import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.*
 import com.microsoft.research.karya.utils.extensions.invisible
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.speech_data_main.*
+import kotlinx.android.synthetic.main.microtask_speech_data.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main) {
+class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_data) {
   override val viewModel: SpeechDataMainViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
 
@@ -33,10 +31,14 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main)
     return arrayOf(android.Manifest.permission.RECORD_AUDIO)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewmodel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, 0, 0)
     return view
   }
 
@@ -50,20 +52,20 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main)
 
     /** record instruction */
     val recordInstruction =
-      viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.record_sentence_desc)
+      viewModel.task.params.asJsonObject.get("instruction").asString
+        ?: getString(R.string.speech_recording_instruction)
     recordPromptTv.text = recordInstruction
 
     /** Set card corner radius */
-    recordBtnCv.addOnLayoutChangeListener {
-      _: View,
-      left: Int,
-      _: Int,
-      right: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int,
-      _: Int ->
+    recordBtnCv.addOnLayoutChangeListener { _: View,
+                                            left: Int,
+                                            _: Int,
+                                            right: Int,
+                                            _: Int,
+                                            _: Int,
+                                            _: Int,
+                                            _: Int,
+                                            _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
     }
 
@@ -128,23 +130,38 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.speech_data_main)
       sentenceTv.text = text
     }
 
-    viewModel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
+    viewModel.recordSecondsTvText.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { text ->
       recordSecondsTv.text = text
     }
 
-    viewModel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
+    viewModel.recordCentiSecondsTvText.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { text ->
       recordCentiSecondsTv.text = text
     }
 
-    viewModel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { progress ->
+    viewModel.playbackProgressPb.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { progress ->
       playbackProgressPb.progress = progress
     }
 
-    viewModel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { max ->
+    viewModel.playbackProgressPbMax.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { max ->
       playbackProgressPb.max = max
     }
 
-    viewModel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { play ->
+    viewModel.playRecordPromptTrigger.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { play ->
       if (play) {
         playRecordPrompt()
       }

@@ -2,20 +2,16 @@ package com.microsoft.research.karya.ui.assistant
 
 import android.media.MediaPlayer
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.coroutineScope
-import com.microsoft.research.karya.data.local.enum.AssistantAudio
+import androidx.lifecycle.*
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class Assistant
 @AssistedInject
@@ -41,7 +37,7 @@ constructor(
       val workerLanguage =
         withContext(Dispatchers.IO) {
           // TODO: Implement a logged-in worker cache in authManager
-          return@withContext authManager.fetchLoggedInWorker().language
+          return@withContext authManager.getLoggedInWorker().language
         }
 
       val audioFilePath = resourceManager.getAudioFilePath(workerLanguage, assistantAudio.fileName)
@@ -109,5 +105,6 @@ constructor(
     }
   }
 
-  private fun isAssistantAvailable(): Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)
+  private fun isAssistantAvailable(): Boolean =
+    lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)
 }

@@ -10,10 +10,10 @@
 
     <com.microsoft.research.karya.ui.views.KaryaToolbar
         android:id="@+id/appTb"
-        android:paddingBottom="@dimen/_8sdp"
-        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,36 +40,17 @@
             android:paddingHorizontal="@dimen/_15sdp"
             android:paddingVertical="@dimen/_10sdp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/syncPromptTv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/syncButton"
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="TODO"
-                    android:src="@drawable/ic_sync_server"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/syncPromptTv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:textSize="@dimen/_10ssp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/syncButton"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Get new tasks - Submit completed tasks - Get verified tasks - Updated earned money" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="@dimen/_20sdp"
+                app:autoSizeMaxTextSize="@dimen/_30ssp"
+                app:autoSizeMinTextSize="@dimen/_12ssp"
+                app:autoSizeStepGranularity="@dimen/_2ssp"
+                app:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:textColor="@color/dk_blue"
+                android:text="@string/s_sync_tasks" />
 
             <ProgressBar
                 android:id="@+id/syncProgressBar"
@@ -78,11 +59,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
-                android:indeterminate="true"
-                android:progress="60"
+                android:progress="0"
                 android:progressBackgroundTint="@color/colorLightGrey2"
                 android:progressTint="#6C6"
                 android:scaleY="2"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/syncErrorMessageTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorRed"
+                tools:text="This is an error message"
+                android:textAlignment="center"
                 android:visibility="gone" />
 
         </LinearLayout>

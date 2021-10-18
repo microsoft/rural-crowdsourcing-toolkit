@@ -15,10 +15,15 @@ abstract class BaseFragment : Fragment {
   constructor() : super()
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
-  @Inject lateinit var assistantFactory: AssistantFactory
+  @Inject
+  lateinit var assistantFactory: AssistantFactory
   lateinit var assistant: Assistant
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     assistant = assistantFactory.create(viewLifecycleOwner)
     return super.onCreateView(inflater, container, savedInstanceState)
   }

@@ -131,13 +131,23 @@
             <argument android:name="taskId" />
         </action>
         <action
-            android:id="@+id/action_dashboardActivity_to_transliterationMainFragment"
-            app:destination="@id/transliterationMainFragment">
+            android:id="@+id/action_dashboardActivity_to_universalTransliterationMainFragment"
+            app:destination="@id/universalTransliterationMainFragment">
             <argument android:name="taskId" />
         </action>
         <action
-            android:id="@+id/action_dashboardActivity_to_transliterationVerificationFragment"
-            app:destination="@id/transliterationVerificationFragment">
+            android:id="@+id/action_dashboardActivity_to_speechVerificationFragment"
+            app:destination="@id/speechVerificationFragment">
+            <argument android:name="taskId" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageTranscription"
+            app:destination="@id/imageTranscriptionFragment">
+            <argument android:name="taskId" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageLabelling"
+            app:destination="@id/imageLabellingFragment">
             <argument android:name="taskId" />
         </action>
     </fragment>
@@ -152,13 +162,16 @@
         app:popUpTo="@id/app_nav_graph"
         app:popUpToInclusive="true" />
     <action
+        android:id="@+id/action_global_loginFlow"
+        app:destination="@id/loginFlow" />
+    <action
         android:id="@+id/action_global_tempDataFlow"
         app:destination="@id/tempDataFlow" />
     <fragment
         android:id="@+id/speechDataMainFragment2"
         android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"
         android:label="SpeechDataMainFragment"
-        tools:layout="@layout/speech_data_main">
+        tools:layout="@layout/microtask_speech_data">
         <argument
             android:name="taskId"
             app:argType="string" />
@@ -168,26 +181,47 @@
             app:popUpTo="@id/dashboardActivity" />
     </fragment>
     <fragment
-        android:id="@+id/transliterationMainFragment"
+        android:id="@+id/universalTransliterationMainFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
-        android:label="TransliterationMainFragment"
-        tools:layout="@layout/transliteration_main_fragment">
+        android:label="UniversalTransliterationMainFragment">
         <argument
             android:name="taskId"
             app:argType="string" />
         <action
-            android:id="@+id/action_transliterationMainFragment_to_dashboardActivity"
+            android:id="@+id/action_universalTransliterationMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
     <fragment
-        android:id="@+id/transliterationVerificationFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.transliterationVerification.TransliterationVerificationFragment"
-        android:label="TransliterationVerificationFragment" >
+        android:id="@+id/speechVerificationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationFragment"
+        android:label="SpeechVerificationFragment">
         <argument
             android:name="taskId"
             app:argType="string" />
         <action
-            android:id="@+id/action_transliterationVerificationFragment_to_dashboardActivity"
+            android:id="@+id/action_speechVerificationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageTranscriptionFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageTranscription.ImageTranscriptionFragment"
+        android:label="imageTrnascriptionFragment">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_imageTranscriptionFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageLabellingFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.ImageLabellingFragment"
+        android:label="imageLabellingFragment">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

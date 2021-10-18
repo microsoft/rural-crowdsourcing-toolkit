@@ -3,20 +3,24 @@ package com.microsoft.research.karya.ui.scenarios.common
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 
-abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
+abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
+  BaseFragment(contentLayoutId) {
 
   abstract val viewModel: BaseMTRendererViewModel
 
   companion object {
     /** Code to request necessary permissions */
     private const val REQUEST_PERMISSIONS = 201
+
     // Flag to indicate if app has all permissions
     private var hasAllPermissions: Boolean = true
   }
@@ -33,7 +37,11 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
       for (permission in permissions) {
-        if (checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(
+            requireContext(),
+            permission
+          ) != PackageManager.PERMISSION_GRANTED
+        ) {
           hasAllPermissions = false
           requestPermissions(permissions, REQUEST_PERMISSIONS)
           break
@@ -73,6 +81,13 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFra
       if (pop) {
         findNavController().popBackStack()
       }
+    }
+
+    viewModel.inputFileDoesNotExist.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { notExist ->
+      if (notExist) {
+        Toast.makeText(requireContext(), getString(R.string.input_file_does_not_exist), Toast.LENGTH_LONG).show()
+      }
+
     }
   }
 }

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.onboarding.accesscode.AccessCodeActivity">
+    android:layout_height="match_parent">
 
     <com.microsoft.research.karya.ui.views.KaryaToolbar
         android:id="@+id/appTb"
@@ -40,10 +39,10 @@
         android:hint="@string/creation_code_hint"
         android:importantForAutofill="no"
         android:inputType="number"
-        android:maxLength="19"
+        android:maxLength="9"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:textSize="@dimen/_18ssp"
+        android:textSize="@dimen/_17ssp"
         app:layout_constraintEnd_toStartOf="@id/loadingContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv" />

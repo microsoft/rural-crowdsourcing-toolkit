@@ -7,18 +7,13 @@ package com.microsoft.research.karya.utils
 import com.microsoft.research.karya.utils.jtar.TarEntry
 import com.microsoft.research.karya.utils.jtar.TarInputStream
 import com.microsoft.research.karya.utils.jtar.TarOutputStream
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
+import okhttp3.ResponseBody
+import retrofit2.Response
+import java.io.*
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
-import okhttp3.ResponseBody
-import retrofit2.Response
 
 object FileUtils {
 
@@ -83,7 +78,7 @@ object FileUtils {
     }
 
     val fis = FileInputStream(tarBallPath)
-    val bufferedStream = BufferedInputStream(fis)
+    val bufferedStream = BufferedInputStream(fis, 16384)
     val gzipInputStream = GZIPInputStream(bufferedStream)
     val tarStream = TarInputStream(gzipInputStream)
 
@@ -149,7 +144,6 @@ object FileUtils {
   fun createDirectory(dirPath: String): String {
 
     val dir = File(dirPath)
-
     if (dir.exists()) return dirPath
     if (!dir.exists() && dir.mkdirs()) return dirPath
     throw FileNotFoundException()

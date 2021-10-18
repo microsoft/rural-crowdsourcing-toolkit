@@ -6,6 +6,7 @@ package com.microsoft.research.karya.data.local.daosExtra
 import androidx.room.Dao
 import androidx.room.Query
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 
@@ -26,6 +27,11 @@ interface MicrotaskAssignmentDaoExtra {
   /** Get list of completed microtask assignments */
   suspend fun getCompletedAssignments(): List<MicroTaskAssignmentRecord> {
     return getAssignmentsByStatus(MicrotaskAssignmentStatus.COMPLETED)
+  }
+
+  /** Get list of skipped microtask assignments */
+  suspend fun getLocalSkippedAssignments(): List<MicroTaskAssignmentRecord> {
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.SKIPPED)
   }
 
   @Query(
@@ -57,10 +63,20 @@ interface MicrotaskAssignmentDaoExtra {
    */
   suspend fun getUnsubmittedIDsForTask(taskId: String, includeCompleted: Boolean): List<String> {
     return if (includeCompleted) {
-      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED))
+      getIDsForTask(
+        taskId,
+        arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED)
+      )
     } else {
       getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED))
     }
+  }
+
+  /**
+   * Get list of verified assignment IDs for a task
+   */
+  suspend fun getLocalVerifiedAssignments(taskId: String): List<String> {
+    return getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.VERIFIED))
   }
 
   /**
@@ -68,14 +84,45 @@ interface MicrotaskAssignmentDaoExtra {
    */
   @Query(
     "UPDATE microtask_assignment SET " +
-      "status=:status, output=:output, last_updated_at=:date, completed_at=:date " +
+      "status=:status, output=:output, logs=:logs, last_updated_at=:date, completed_at=:date " +
       "WHERE id=:id"
   )
   suspend fun markComplete(
     id: String,
     output: JsonElement,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
+    logs: JsonElement,
     date: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
+  )
+
+  /**
+   * Query to mark the microtask assignment with the given [id] as skipped with the given [output].
+   */
+  @Query(
+    "UPDATE microtask_assignment SET " +
+      "status=:status, output=:output, last_updated_at=:date " +
+      "WHERE id=:id"
+  )
+  suspend fun markSkip(
+    id: String,
+    date: String,
+    output: JsonElement = JsonNull.INSTANCE,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.SKIPPED,
+  )
+
+  /**
+   * Query to mark the microtask assignment with the given [id] as assigned with the given [output].
+   */
+  @Query(
+    "UPDATE microtask_assignment SET " +
+      "status=:status, output=:output, last_updated_at=:date " +
+      "WHERE id=:id"
+  )
+  suspend fun markAssigned(
+    id: String,
+    date: String,
+    output: JsonElement = JsonNull.INSTANCE,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.ASSIGNED,
   )
 
   /** Query to mark an assignment as submitted */

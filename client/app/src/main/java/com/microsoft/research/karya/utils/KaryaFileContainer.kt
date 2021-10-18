@@ -9,7 +9,11 @@ sealed class KaryaFileContainer(val cname: String, val fileDirPath: String) {
 
   /** Get the local directory path for a container */
   fun getDirectory(path: String = ""): String {
-    var dirPath = "$fileDirPath/$cname/$path"
+    val dirPath = if (path.isEmpty()) {
+      "$fileDirPath/$cname"
+    } else {
+      "$fileDirPath/$cname/$path"
+    }
     val dir = File(dirPath)
 
     var success = true
@@ -47,11 +51,20 @@ class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input"
   /** Get Microtask input directory */
   // TODO [Viewmodel_Refactor]: Ask the structure of input files directory
   fun getMicrotaskInputDirectory(microtaskId: String): String {
-    return FileUtils.createDirectory("${cname}/$microtaskId")
+    val directory = getDirectory(microtaskId)
+    return FileUtils.createDirectory(directory)
   }
+
+  /** Get microtask input file path */
+  fun getMicrotaskInputFilePath(microtaskId: String, fileName: String): String {
+    val directory = getDirectory(microtaskId)
+    return "$directory/$fileName"
+  }
+
 }
 
-class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("microtask-assignment-output", fileDirPath) {
+class MicrotaskAssignmentOutput(fileDirPath: String) :
+  KaryaFileContainer("microtask-assignment-output", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val assignmentId = params[0]
     val ext = "tgz"

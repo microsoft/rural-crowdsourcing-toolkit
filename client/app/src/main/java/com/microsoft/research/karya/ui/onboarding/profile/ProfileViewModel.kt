@@ -6,14 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.exceptions.UnknownException
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.utils.extensions.rotateRight
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +19,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
@@ -31,7 +31,8 @@ constructor(
   @FilesDir private val filesDirPath: String,
 ) : ViewModel() {
 
-  private val _profileUiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState.Initial)
+  private val _profileUiState: MutableStateFlow<ProfileUiState> =
+    MutableStateFlow(ProfileUiState.Initial)
   val profileUiState = _profileUiState.asStateFlow()
 
   private val _profileEffects: MutableSharedFlow<ProfileEffects> = MutableSharedFlow()
@@ -42,11 +43,11 @@ constructor(
       _profileUiState.value = ProfileUiState.Loading
 
       val profileDir = File(filesDirPath, "profile")
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+      val accessCode = authManager.getLoggedInWorkerAccessCode()
       val imageFile = File(profileDir, accessCode)
       val path = if (imageFile.exists()) imageFile.path else null
 
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
 
       try {
         workerRepository.upsertWorker(worker.copy(profilePicturePath = path, fullName = name))
@@ -66,13 +67,13 @@ constructor(
       val profileDir = File(filesDirPath, "profile")
       profileDir.mkdirs()
 
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+      val accessCode = authManager.getLoggedInWorkerAccessCode()
       val imageFile = File(profileDir, accessCode)
 
       val result = writeBitmap(bitmap, imageFile)
 
       if (result) {
-        val worker = authManager.fetchLoggedInWorker()
+        val worker = authManager.getLoggedInWorker()
         updateWorker(worker.copy(profilePicturePath = imageFile.path))
 
         _profileUiState.value = ProfileUiState.Success(imageFile.path)
@@ -89,7 +90,7 @@ constructor(
       val profileDir = File(filesDirPath, "profile")
       profileDir.mkdirs()
 
-      val accessCode = authManager.fetchLoggedInWorkerAccessCode()
+      val accessCode = authManager.getLoggedInWorkerAccessCode()
       val imageFile = File(profileDir, accessCode)
 
       if (!imageFile.exists()) {
@@ -113,7 +114,7 @@ constructor(
   }
 
   private suspend fun handleNavigation() {
-    val worker = authManager.fetchLoggedInWorker()
+    val worker = authManager.getLoggedInWorker()
 
     val destination =
       when {

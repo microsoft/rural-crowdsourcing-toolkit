@@ -9,13 +9,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
 import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
-import com.microsoft.research.karya.utils.extensions.gone
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
-import com.microsoft.research.karya.utils.extensions.viewBinding
-import com.microsoft.research.karya.utils.extensions.viewLifecycle
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
-import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +17,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private val binding by viewBinding(FragmentAccessCodeBinding::bind)
   private val viewModel by viewModels<AccessCodeViewModel>()
 
-  private val creationCodeLength = 16
+  private val creationCodeLength = 8
   private val creationCodeEtMax = creationCodeLength + (creationCodeLength - 1) / 4
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

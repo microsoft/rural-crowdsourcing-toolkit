@@ -42,7 +42,8 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
         Destination.Dashboard -> navigateToDashboard()
         Destination.TempDataFlow -> navigateToTempDataFlow()
         Destination.MandatoryDataFlow -> navigateToMandatoryDataFlow()
-        Destination.Splash -> {}
+        Destination.Splash -> {
+        }
       }
     }
   }

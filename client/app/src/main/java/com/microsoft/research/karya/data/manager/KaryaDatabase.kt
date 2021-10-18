@@ -9,51 +9,28 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.microsoft.research.karya.data.local.Converters
-import com.microsoft.research.karya.data.local.daos.KaryaFileDao
-import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
-import com.microsoft.research.karya.data.local.daos.MicroTaskDao
-import com.microsoft.research.karya.data.local.daos.PolicyDao
-import com.microsoft.research.karya.data.local.daos.ScenarioDao
-import com.microsoft.research.karya.data.local.daos.TaskDao
+import com.microsoft.research.karya.data.local.daos.*
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
-import com.microsoft.research.karya.data.local.ng.WorkerDao
-import com.microsoft.research.karya.data.model.karya.KaryaFileRecord
-import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
-import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
-import com.microsoft.research.karya.data.model.karya.PaymentRequestRecord
-import com.microsoft.research.karya.data.model.karya.PayoutInfoRecord
-import com.microsoft.research.karya.data.model.karya.PayoutMethodRecord
-import com.microsoft.research.karya.data.model.karya.PolicyRecord
-import com.microsoft.research.karya.data.model.karya.ScenarioRecord
-import com.microsoft.research.karya.data.model.karya.TaskRecord
-import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.*
 
 @Database(
   entities =
-    [
-      ScenarioRecord::class,
-      WorkerRecord::class,
-      KaryaFileRecord::class,
-      TaskRecord::class,
-      MicroTaskRecord::class,
-      PolicyRecord::class,
-      MicroTaskAssignmentRecord::class,
-      PayoutMethodRecord::class,
-      PayoutInfoRecord::class,
-      PaymentRequestRecord::class,
-    ],
+  [
+    WorkerRecord::class,
+    KaryaFileRecord::class,
+    TaskRecord::class,
+    MicroTaskRecord::class,
+    MicroTaskAssignmentRecord::class,
+  ],
   version = 1,
   //  autoMigrations = [
   //    AutoMigration (from = 1, to = 2)
   //  ]
-  )
+)
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
   abstract fun microTaskDao(): MicroTaskDao
-  abstract fun policyDao(): PolicyDao
-  abstract fun scenarioDao(): ScenarioDao
   abstract fun taskDao(): TaskDao
   abstract fun workerDao(): WorkerDao
   abstract fun microtaskAssignmentDao(): MicroTaskAssignmentDao
@@ -68,7 +45,9 @@ abstract class KaryaDatabase : RoomDatabase() {
     fun getInstance(context: Context): KaryaDatabase? {
       if (INSTANCE == null) {
         synchronized(KaryaDatabase::class) {
-          INSTANCE = Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db").build()
+          INSTANCE =
+            Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db")
+              .build()
         }
       }
       return INSTANCE

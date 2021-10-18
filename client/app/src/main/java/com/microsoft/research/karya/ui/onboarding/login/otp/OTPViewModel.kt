@@ -5,19 +5,13 @@ package com.microsoft.research.karya.ui.onboarding.login.otp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.model.karya.ng.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class OTPViewModel
@@ -38,7 +32,7 @@ constructor(
       _otpUiState.value = OTPUiState.Loading
 
       // We updated the worker phone number during first otp call, let's reuse that
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
@@ -54,13 +48,13 @@ constructor(
       _otpUiState.value = OTPUiState.Loading
 
       // We updated the worker phone number during first otp call, let's reuse that
-      val worker = authManager.fetchLoggedInWorker()
+      val worker = authManager.getLoggedInWorker()
       checkNotNull(worker.phoneNumber)
 
       workerRepository
         .verifyOTP(accessCode = worker.accessCode, phoneNumber = worker.phoneNumber, otp)
         .onEach { worker ->
-          updateWorker(worker.copy(isConsentProvided = true))
+          authManager.startSession(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
           handleNavigation(worker)
         }
@@ -78,9 +72,5 @@ constructor(
       }
 
     _otpEffects.emit(OTPEffects.Navigate(destination))
-  }
-
-  private suspend fun updateWorker(worker: WorkerRecord) {
-    workerRepository.upsertWorker(worker)
   }
 }
