@@ -29,7 +29,7 @@
     "@karya/http-response": "^2.0.0",
     "@karya/logger": "^2.0.0",
     "@karya/misc-utils": "^2.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bluebird": "^3.7.2",
     "google-auth-library": "^7.0.4",
     "jsonwebtoken": "^8.5.1",
