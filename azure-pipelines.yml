@@ -4,7 +4,7 @@
 # https://aka.ms/yaml
 
 trigger:
-- server-dev
+- release-20211018
 
 pool:
   vmImage: windows-2019
