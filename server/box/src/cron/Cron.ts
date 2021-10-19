@@ -55,6 +55,4 @@ const cronJob = async () => {
 // Schedule the cron job
 cron.schedule(cronInterval, cronJob);
 
-cronJob()
-  .then(() => console.log('Test successful'))
-  .catch((e) => console.log(e));
+cronJob().catch((e) => console.log(e));
