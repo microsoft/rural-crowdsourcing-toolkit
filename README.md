@@ -41,13 +41,12 @@ This platform architecture enables two benefits.
 
 The code is split between two folders: `server`, and `client`.
 
-The `server` folder in turn contains four components: `backend` is the main
-server built on top of nodejs, `frontend` is a react webapp that allows admins
-and work requestors to interact with the main server, and `box` is the box
-server built on top of nodejs. The `db-schema` folder contains the specification
-of the database schema that will be used across all components of the platform.
-This component contains parsers and generators for database initializers, type
-specification files, and API related files.
+The `server` folder implements the following three components: `backend` is the
+main server built on top of nodejs, `frontend` is a react webapp that allows
+admins and work requestors to interact with the main server, and `box` is the
+box server built on top of nodejs. The remaining folders `core`, `common`, and
+`utils` contain various modules that are shared between these three components
+of the server.
 
 The `client` folder contains the Android app that allows workers to interact
 with the platform.
@@ -72,7 +71,8 @@ the following people.
 - Mrinal Das
 - Anurag Shukla
 
-Currently, the code is also being developed by Navana Tech with contributions from the following people.
+Currently, the code is also being developed by Navana Tech with contributions
+from the following people.
  
 - Aditya Wasan (https://github.com/skrilltrax)
 - Amogh Lele (https://github.com/sphericalkat)
