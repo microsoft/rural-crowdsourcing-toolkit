@@ -70,6 +70,7 @@ export const update: KaryaMiddleware = async (ctx) => {
 
   // Get updates from the request body
   const updates: Worker = ctx.request.body;
+  updates.profile_updated_at = new Date().toISOString();
 
   if (action == 'register') {
     const { year_of_birth, gender } = updates;
