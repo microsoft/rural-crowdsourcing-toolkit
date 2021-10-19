@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 package com.microsoft.research.karya.ui.splashScreen
 
 import android.os.Bundle
@@ -7,11 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.FragmentSplashScreenBinding
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.viewLifecycle
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
-  private val binding by viewBinding(FragmentSplashScreenBinding::bind)
   private val viewModel by viewModels<SplashViewModel>()
   private lateinit var navController: NavController
 
