@@ -91,6 +91,7 @@ dependencies {
   implementation(Dependencies.AndroidX.legacy_support)
   implementation(Dependencies.AndroidX.multidex)
   implementation(Dependencies.AndroidX.work_runtime)
+  implementation(Dependencies.AndroidX.work_multiprocess)
 
   implementation(Dependencies.AndroidX.Lifecycle.common)
   implementation(Dependencies.AndroidX.Lifecycle.extensions)
