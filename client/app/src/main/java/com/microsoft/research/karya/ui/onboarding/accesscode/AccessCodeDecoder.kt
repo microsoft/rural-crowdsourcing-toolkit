@@ -21,7 +21,7 @@ private const val DEFAULT_URL: String = "https://www.DEFAULT_URL.com"
 private const val PHYSICAL_BOX_URL: String = "http://PRIVATE_IP:PORT"
 private const val DEV_URL: String = "http://localhost:8080"
 
-private const val ACCESSCODE_MAPPING_FILENAME = "accesscodeMappings.json"
+private const val ACCESSCODE_MAPPING_FILENAME = "accessCodeMappings.json"
 
 class AccessCodeDecoder() {
   companion object {

@@ -40,8 +40,6 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
         Destination.UserSelection -> navigateToUserSelection()
         Destination.LoginFlow -> navigateToLoginFlow()
         Destination.Dashboard -> navigateToDashboard()
-        Destination.TempDataFlow -> navigateToTempDataFlow()
-        Destination.MandatoryDataFlow -> navigateToMandatoryDataFlow()
         Destination.Splash -> {
         }
       }
@@ -74,13 +72,5 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
 
   private fun navigateToLoginFlow() {
     navController.navigate(R.id.action_splashScreenFragment2_to_loginFlow2)
-  }
-
-  private fun navigateToTempDataFlow() {
-    navController.navigate(R.id.action_splashScreenFragment2_to_tempDataFlow)
-  }
-
-  private fun navigateToMandatoryDataFlow() {
-    navController.navigate(R.id.action_splashScreenFragment2_to_mandatoryDataFlow)
   }
 }

@@ -142,7 +142,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       binding.syncCv.setOnClickListener { syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
-      appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
       loadProfilePic()
     }
   }

@@ -64,13 +64,7 @@ constructor(
   }
 
   private suspend fun handleNavigation(worker: WorkerRecord) {
-    val destination =
-      when {
-        worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
-        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
-        else -> Destination.Dashboard
-      }
-
+    val destination = Destination.Dashboard
     _otpEffects.emit(OTPEffects.Navigate(destination))
   }
 }

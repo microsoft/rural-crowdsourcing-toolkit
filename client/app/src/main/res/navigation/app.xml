@@ -22,16 +22,6 @@
             app:popUpTo="@id/splashScreenFragment2"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_splashScreenFragment2_to_tempDataFlow"
-            app:destination="@id/tempDataFlow"
-            app:popUpTo="@id/splashScreenFragment2"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_splashScreenFragment2_to_mandatoryDataFlow"
-            app:destination="@id/mandatoryDataFlow"
-            app:popUpTo="@id/splashScreenFragment2"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_splashScreenFragment2_to_loginFlow2"
             app:destination="@id/loginFlow"
             app:popUpTo="@id/splashScreenFragment2"
@@ -44,7 +34,7 @@
             android:id="@+id/phoneNumberFragment2"
             android:name="com.microsoft.research.karya.ui.onboarding.login.phone.PhoneNumberFragment"
             android:label="PhoneNumberFragment"
-            tools:layout="@layout/fragment_phone_number">
+            tools:layout="@layout/ng_fragment_phone_number">
             <action
                 android:id="@+id/action_phoneNumberFragment2_to_OTPFragment2"
                 app:destination="@id/OTPFragment2" />
@@ -55,36 +45,8 @@
             android:label="OTPFragment"
             tools:layout="@layout/fragment_otp">
             <action
-                android:id="@+id/action_OTPFragment2_to_tempDataFlow"
-                app:destination="@id/tempDataFlow" />
-        </fragment>
-    </navigation>
-    <navigation
-        android:id="@+id/tempDataFlow"
-        app:startDestination="@id/profileFragment">
-        <fragment
-            android:id="@+id/profileFragment"
-            android:name="com.microsoft.research.karya.ui.onboarding.profile.ProfileFragment"
-            android:label="ProfileFragment">
-            <action
-                android:id="@+id/action_profileFragment_to_mandatoryDataFlow"
-                app:destination="@id/mandatoryDataFlow" />
-        </fragment>
-    </navigation>
-    <navigation
-        android:id="@+id/mandatoryDataFlow"
-        app:startDestination="@id/selectGenderFragment2">
-        <fragment
-            android:id="@+id/selectAgeGroupFragment2"
-            android:name="com.microsoft.research.karya.ui.onboarding.age.SelectAgeGroupFragment"
-            android:label="SelectAgeGroupFragment" />
-        <fragment
-            android:id="@+id/selectGenderFragment2"
-            android:name="com.microsoft.research.karya.ui.onboarding.gender.SelectGenderFragment"
-            android:label="SelectGenderFragment">
-            <action
-                android:id="@+id/action_selectGenderFragment2_to_selectAgeGroupFragment2"
-                app:destination="@id/selectAgeGroupFragment2" />
+                android:id="@+id/action_OTPFragment2_to_DashboardActivity"
+                app:destination="@id/dashboardActivity" />
         </fragment>
     </navigation>
     <navigation
@@ -114,7 +76,7 @@
             android:id="@+id/accessCodeFragment2"
             android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeFragment"
             android:label="AccessCodeFragment"
-            tools:layout="@layout/fragment_access_code">
+            tools:layout="@layout/ng_fragment_access_code">
             <action
                 android:id="@+id/action_accessCodeFragment2_to_fileDownloadFragment2"
                 app:destination="@id/fileDownloadFragment2" />
@@ -164,9 +126,6 @@
     <action
         android:id="@+id/action_global_loginFlow"
         app:destination="@id/loginFlow" />
-    <action
-        android:id="@+id/action_global_tempDataFlow"
-        app:destination="@id/tempDataFlow" />
     <fragment
         android:id="@+id/speechDataMainFragment2"
         android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"

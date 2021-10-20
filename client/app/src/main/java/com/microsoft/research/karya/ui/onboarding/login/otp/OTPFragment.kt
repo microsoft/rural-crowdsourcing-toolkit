@@ -109,7 +109,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
 
   private fun navigate(destination: Destination) {
     when (destination) {
-      Destination.TempDataFlow -> navigateToTempDataFlow()
       Destination.Dashboard -> navigateToDashBoard()
       else -> {
       }
@@ -119,10 +118,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   private fun navigateToDashBoard() {
     findNavController().navigate(R.id.action_global_dashboardActivity4)
     finish()
-  }
-
-  private fun navigateToTempDataFlow() {
-    findNavController().navigate(R.id.action_OTPFragment2_to_tempDataFlow)
   }
 
   private fun enableNextButton() {
