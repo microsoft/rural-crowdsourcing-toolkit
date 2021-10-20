@@ -80,7 +80,7 @@ class AccessCodeFragment : Fragment(R.layout.ng_fragment_access_code) {
   }
 
   private fun navigateToConsentFormFragment() {
-    findNavController().navigate(R.id.action_accessCodeFragment2_to_fileDownloadFragment2)
+    findNavController().navigate(R.id.action_accessCodeFragment_to_fileDownloadFragment)
   }
 
   private fun showSuccessUi(languageCode: String) {

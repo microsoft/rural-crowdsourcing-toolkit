@@ -74,7 +74,7 @@ class PhoneNumberFragment : BaseFragment(R.layout.ng_fragment_phone_number) {
   }
 
   private fun navigateToOTPFragment() {
-    findNavController().navigate(R.id.action_phoneNumberFragment2_to_OTPFragment2)
+    findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
   }
 
   private fun showInitialUi() {

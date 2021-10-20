@@ -125,6 +125,6 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
   }
 
   private fun navigateToLoginFlow() {
-    findNavController().navigate(R.id.action_consentFormFragment2_to_loginFlow)
+    findNavController().navigate(R.id.action_consentFormFragment_to_loginFlow)
   }
 }

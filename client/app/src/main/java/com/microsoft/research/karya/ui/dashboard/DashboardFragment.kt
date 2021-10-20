@@ -256,7 +256,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       val taskId = task.taskID
       val action = with(DashboardFragmentDirections) {
         when (task.scenarioName) {
-          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment2(taskId)
+          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment(taskId)
           ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId)
           ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId)
           ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId)
