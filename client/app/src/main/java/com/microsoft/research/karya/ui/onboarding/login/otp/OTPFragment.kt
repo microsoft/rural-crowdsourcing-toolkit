@@ -117,7 +117,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
 
   private fun navigateToDashBoard() {
     findNavController().navigate(R.id.action_global_dashboardActivity4)
-    finish()
   }
 
   private fun enableNextButton() {
