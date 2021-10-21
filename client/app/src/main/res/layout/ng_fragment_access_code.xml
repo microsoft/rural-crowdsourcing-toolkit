@@ -36,6 +36,7 @@
         android:layout_marginVertical="@dimen/_20sdp"
         android:imeOptions="actionNext"
         android:importantForAutofill="no"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/accessCodeImage" />
