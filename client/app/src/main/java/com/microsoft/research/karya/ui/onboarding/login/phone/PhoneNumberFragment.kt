@@ -26,7 +26,6 @@ class PhoneNumberFragment : BaseFragment(R.layout.ng_fragment_phone_number) {
     setupViews()
     observeUi()
     observeEffects()
-    requestSoftKeyFocus(binding.phoneNumberEt)
   }
 
   override fun onResume() {
