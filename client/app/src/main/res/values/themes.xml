@@ -1,14 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Light Theme -->
-    <style name="ThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ThemeLight" parent="Theme.MaterialComponents.Light.NoActionBar">
 
         <!-- Primary colors -->
         <item name="colorPrimary">@color/c_dark_green</item>
-
-        <!-- Buttons -->
-        <item name="buttonPrimaryColor">@color/c_dark_green</item>
-        <item name="buttonContrastColor">@color/c_white</item>
+        <item name="colorControlActivated">@color/c_dark_green</item>
 
         <!-- Edit text -->
         <item name="editTextBackground">@color/c_white</item>
