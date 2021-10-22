@@ -34,12 +34,19 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun setupView() {
+    viewModel.retrievePhoneNumber()
     binding.appTb.setTitle(getString(R.string.otp_title))
     binding.appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT) }
 
     binding.resendOTPBtn.setOnClickListener {
       binding.resendOTPBtn.gone()
       viewModel.resendOTP()
+    }
+
+    // To change phone number, just go back
+    // TODO: this may not always be true.
+    binding.changePhoneNumberBtn.setOnClickListener {
+      requireActivity().onBackPressed()
     }
 
     binding.otpEt.doAfterTextChanged { otp ->
@@ -63,6 +70,10 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
         OTPUiState.Loading -> showLoadingUi()
       }
     }
+
+    viewModel.phoneNumber.observe(viewLifecycle, viewLifecycleScope) { phoneNumber ->
+      binding.otpPromptTv.text = getString(R.string.otp_prompt).replace("0000000000", phoneNumber)
+    }
   }
 
   private fun observeEffects() {
@@ -83,28 +94,22 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun showLoadingUi() {
-    with(binding) {
-      hideError()
-      showLoading()
-      disableNextButton()
-    }
+    hideError()
+    showLoading()
+    disableNextButton()
   }
 
   private fun showSuccessUi() {
-    with(binding) {
-      hideError()
-      hideLoading()
-      enableNextButton()
-    }
+    hideError()
+    hideLoading()
+    enableNextButton()
   }
 
   private fun showErrorUi(message: String) {
-    with(binding) {
-      showError(message)
-      hideLoading()
-      enableNextButton()
-      requestSoftKeyFocus(binding.otpEt)
-    }
+    showError(message)
+    hideLoading()
+    enableNextButton()
+    requestSoftKeyFocus(binding.otpEt)
   }
 
   private fun navigate(destination: Destination) {
