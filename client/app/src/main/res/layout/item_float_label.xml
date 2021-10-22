@@ -11,7 +11,7 @@
     app:contentPaddingBottom="@dimen/_5sdp"
     app:contentPaddingLeft="@dimen/_10sdp"
     app:contentPaddingRight="@dimen/_10sdp"
-    android:backgroundTint="@color/colorLightGrey">
+    android:backgroundTint="@color/light_grey">
 
         <TextView
             android:id="@+id/label"

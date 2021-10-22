@@ -20,7 +20,7 @@
         android:textColor="#606060"
         android:textSize="@dimen/_20ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb"
-        tools:text="@string/record_sentence_desc" />
+        tools:text="@string/speech_recording_instruction" />
 
     <TextView
         android:id="@+id/sentenceTv"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="0"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/red"
             android:textSize="@dimen/_40ssp"
             app:fontFamily="monospace" />
 
@@ -68,7 +68,7 @@
             android:layout_marginStart="@dimen/_4sdp"
             android:gravity="center"
             android:text="00"
-            android:textColor="@color/light_red"
+            android:textColor="@color/red"
             android:textSize="@dimen/_26ssp"
             app:fontFamily="monospace" />
 
@@ -82,8 +82,8 @@
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_30sdp"
         android:max="100"
-        android:progressBackgroundTint="@color/colorLightGrey2"
-        android:progressTint="@color/colorRed"
+        android:progressBackgroundTint="@color/light_grey"
+        android:progressTint="@color/red"
         android:scaleY="2"
         app:layout_constraintBottom_toTopOf="@id/recordBtnCl" />
 

@@ -77,7 +77,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
-        android:textColor="@color/colorRed"
+        android:textColor="@color/red"
         android:textSize="@dimen/_12ssp"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
