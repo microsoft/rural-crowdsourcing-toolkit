@@ -1,59 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="ThemeGray" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="titleTextColor">@android:color/black</item>
-        <item name="subtitleTextColor">@android:color/black</item>
-        <item name="colorPrimary">@color/colorLightGrey</item>
-        <item name="colorPrimaryDark">@color/colorgrey</item>
-        <item name="colorAccent">@color/colorLightBlue</item>
-        <item name="appLanguageTextColor">@color/colorBlack</item>
-        <item name="skillSelectionBgColor">@color/colorWhite</item>
-        <item name="skillSelectionStrokeColor">@color/colorRed</item>
-        <item name="colorAccentImageRing">@color/colorgrey</item>
-        <item name="colorSkillSelectImageRing">@color/colorGreen</item>
-        <item name="colorSkillIgnoreImageRing">@color/colorRed</item>
-        <item name="colorToolbarDashBoard">@color/colorWhite</item>
-        <item name="colorBottomNavigationTintColor">@color/dk_blue</item>
-        <item name="colorBottomNavigationTextColor">@color/dk_blue</item>
-
-        <item name="remainingTaskProgressBackgroundTintColor">@color/colorLightGrey2</item>
-        <item name="remainingTasksProgressTintColor">@color/colorLightBlue</item>
-
-        <item name="priceEarnedProgressBackgroundTintColor">@color/colorLightGrey2</item>
-        <item name="priceEarnedTasksProgressTintColor">@color/colorLightOrange</item>
-
-        <item name="tasksProgressBackgroundTintColor">@color/colorLightGrey2</item>
-        <item name="tasksProgressTintColor">@color/colorLightPurple</item>
-
-        <item name="storyProgressBackgroundTintColor">@color/colorLightGrey2</item>
-        <item name="storyProgressTintColor">@color/colorGreenShade2</item>
-
-        <item name="tasksindeterminateProgressTintColor">@color/dk_blue2</item>
-        <item name="colorBackgroundLightGrey">@color/colorLightGrey</item>
-        <item name="creationCodeOutlineColor">@color/colorLightBlue</item>
-
-        <item name="card1Color">@color/light_green</item>
-        <item name="card2Color">@color/light_red</item>
-        <item name="card3Color">@color/light_orange</item>
-    </style>
-
-    <style name="Widget.textMedium" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">?attr/appLanguageTextColor</item>
-        <item name="android:typeface">sans</item>
-        <item name="android:autoSizeTextType" tools:targetApi="o">uniform</item>
-    </style>
-
-    <style name="oldMultilineText" parent="Widget.AppCompat.TextView">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:typeface">sans</item>
-        <item name="android:textColor">?attr/titleTextColor</item>
-        <item name="android:textSize">@dimen/_14ssp</item>
-        <item name="android:lineSpacingExtra">@dimen/_8ssp</item>
-        <item name="android:gravity">left|center_vertical</item>
-    </style>
-
-    <style name="multilineError" parent="multilineText">
-        <item name="android:textColor">@color/colorRed</item>
     </style>
 
     <style name="TextTvStyle">
