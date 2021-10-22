@@ -60,8 +60,8 @@
             <action
                 android:id="@+id/action_fileDownloadFragment_to_consentFormFragment"
                 app:destination="@id/consentFormFragment"
-                app:popUpTo="@id/accessCodeFragment"
-                app:popUpToInclusive="false" />
+                app:popUpTo="@id/fileDownloadFragment"
+                app:popUpToInclusive="true" />
         </fragment>
         <fragment
             android:id="@+id/consentFormFragment"
@@ -70,7 +70,10 @@
             tools:layout="@layout/fragment_consent_form">
             <action
                 android:id="@+id/action_consentFormFragment_to_loginFlow"
-                app:destination="@id/loginFlow" />
+                app:destination="@id/loginFlow"
+                app:popUpTo="@id/consentFormFragment"
+                app:popUpToInclusive="true"
+                />
         </fragment>
         <fragment
             android:id="@+id/accessCodeFragment"
@@ -79,7 +82,10 @@
             tools:layout="@layout/ng_fragment_access_code">
             <action
                 android:id="@+id/action_accessCodeFragment_to_fileDownloadFragment"
-                app:destination="@id/fileDownloadFragment" />
+                app:destination="@id/fileDownloadFragment"
+                app:popUpTo="@id/accessCodeFragment"
+                app:popUpToInclusive="true"
+                />
         </fragment>
     </navigation>
     <fragment
