@@ -172,7 +172,7 @@
     <string name="access_code_already_used">The access code is already registered to a different phone number. Please contact the coordinator for a new access code.</string>
 
     <!-- OTP -->
-    <string name="otp_title">Enter OTP</string>
+    <string name="otp_title">OTP</string>
     <string name="otp_prompt">We have sent a 6-digit OTP via SMS to 0000000000. Please enter the OTP below.</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="change_phone_number">Change Phone Number</string>
