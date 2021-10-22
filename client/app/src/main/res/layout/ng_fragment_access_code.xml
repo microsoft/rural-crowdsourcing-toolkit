@@ -30,7 +30,7 @@
 
     <EditText
         android:id="@+id/accessCodeEt"
-        style="@style/numericTextBox"
+        style="@style/EditText.Numeric"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginVertical="@dimen/_20sdp"

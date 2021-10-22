@@ -27,7 +27,7 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:background="@drawable/border_black"
+        android:background="@drawable/microtask_input_text_background"
         android:gravity="center"
         android:paddingHorizontal="@dimen/_20sdp"
         android:textColor="#000000"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="0"
-            android:textColor="@color/red"
+            android:textColor="@color/c_red"
             android:textSize="@dimen/_30ssp"
             app:fontFamily="monospace" />
 
@@ -68,7 +68,7 @@
             android:layout_marginStart="@dimen/_4sdp"
             android:gravity="center"
             android:text="00"
-            android:textColor="@color/red"
+            android:textColor="@color/c_red"
             android:textSize="@dimen/_20ssp"
             app:fontFamily="monospace" />
 
@@ -82,8 +82,8 @@
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:max="100"
-        android:progressBackgroundTint="@color/light_grey"
-        android:progressTint="@color/red"
+        android:progressBackgroundTint="@color/c_light_grey"
+        android:progressTint="@color/c_red"
         android:scaleY="2"
         app:layout_constraintBottom_toTopOf="@id/accuracyCl" />
 

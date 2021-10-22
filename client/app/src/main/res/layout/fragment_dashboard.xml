@@ -49,7 +49,6 @@
                 app:autoSizeStepGranularity="@dimen/_2ssp"
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
-                android:textColor="@color/black"
                 android:text="@string/s_sync_tasks" />
 
             <ProgressBar
@@ -60,16 +59,15 @@
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:progress="0"
-                android:progressBackgroundTint="@color/light_grey"
                 android:progressTint="#6C6"
                 android:scaleY="2"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/syncErrorMessageTv"
+                style="@style/errorText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/red"
                 tools:text="This is an error message"
                 android:textAlignment="center"
                 android:visibility="gone" />

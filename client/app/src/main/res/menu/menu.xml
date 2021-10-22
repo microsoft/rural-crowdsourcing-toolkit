@@ -4,6 +4,6 @@
     <item
         android:id="@+id/privacyPolicy"
         android:title="@string/privacy_policy"
-        app:iconTint="@color/black"
+        app:iconTint="@color/c_black"
         app:showAsAction="never" />
 </menu>

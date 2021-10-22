@@ -17,7 +17,7 @@
         android:layout_margin="@dimen/_0sdp"
         android:padding="@dimen/_0sdp"
         android:visibility="visible"
-        android:progressBackgroundTint="@color/light_grey"
+        android:progressBackgroundTint="@color/c_light_grey"
         android:progressTint="#6C6"
         android:scaleY="1"
         android:translationZ="@dimen/_20sdp"

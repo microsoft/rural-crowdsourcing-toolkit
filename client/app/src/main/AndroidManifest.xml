@@ -17,7 +17,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/ThemeGray"
+        android:theme="@style/ThemeLight"
         android:usesCleartextTraffic="true">
 
         <activity

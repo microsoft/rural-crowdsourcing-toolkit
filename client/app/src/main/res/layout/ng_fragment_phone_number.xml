@@ -35,7 +35,7 @@
 
         <TextView
             android:id="@+id/phoneNumberPromptTv"
-            style="@style/multilineText"
+            style="@style/MultilineText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -46,7 +46,7 @@
 
     <EditText
         android:id="@+id/phoneNumberEt"
-        style="@style/numericTextBox"
+        style="@style/EditText.Numeric"
         android:layout_width="0dp"
         android:layout_marginTop="@dimen/_30sdp"
         android:gravity="center"

@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/wordTv"
-        style="@style/TextTvStyle"
+        style="@style/MicrotaskInputText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:background="@drawable/border_black"
+        android:background="@drawable/microtask_input_text_background"
         android:completionThreshold="1"
         android:digits="@string/alphanumericString"
         android:dropDownHeight="wrap_content"
@@ -74,10 +74,10 @@
 
     <TextView
         android:id="@+id/errorTv"
+        style="@style/errorText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
-        android:textColor="@color/red"
         android:textSize="@dimen/_12ssp"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@id/textTransliteration"

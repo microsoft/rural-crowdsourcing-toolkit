@@ -90,7 +90,7 @@ class ImageLabellingFragment : BaseMTRendererFragment(R.layout.microtask_image_l
       Log.d("debug-label-state", labelState.toString())
       labelMap.forEach { (s, view) ->
         val state = labelState[s] ?: false
-        val color = if (state) R.color.secondary else R.color.light_grey
+        val color = if (state) R.color.c_light_green else R.color.c_light_grey
         view.label_card.background.setTint(ContextCompat.getColor(requireContext(), color))
       }
     }

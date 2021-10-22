@@ -1,21 +1,33 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="ThemeGray" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
+    <!-- Light Theme -->
+    <style name="ThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
 
-    <style name="TextTvStyle">
-        <item name="android:layout_marginStart">@dimen/_15sdp</item>
-        <item name="android:layout_marginEnd">@dimen/_15sdp</item>
-        <item name="android:layout_marginBottom">@dimen/_15sdp</item>
-        <item name="android:background">@drawable/border_black</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingEnd">@dimen/_20sdp</item>
-        <item name="android:paddingStart">@dimen/_20sdp</item>
-        <item name="android:textColor">#000000</item>
-        <item name="autoSizeMaxTextSize">@dimen/_30ssp</item>
-        <item name="autoSizeMinTextSize">@dimen/_12ssp</item>
-        <item name="autoSizeStepGranularity">@dimen/_2ssp</item>
-        <item name="autoSizeTextType">uniform</item>
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/c_dark_green</item>
+
+        <!-- Buttons -->
+        <item name="buttonPrimaryColor">@color/c_dark_green</item>
+        <item name="buttonContrastColor">@color/c_white</item>
+
+        <!-- Edit text -->
+        <item name="editTextBackground">@color/c_white</item>
+        <item name="editTextColor">@color/c_black</item>
+        <item name="editTextBorder">@color/c_black</item>
+
+        <!-- Num pad -->
+        <item name="numPadBackgroundColor">@color/c_dark_grey</item>
+        <item name="numPadTextColor">@color/c_white</item>
+
+        <!-- Text View -->
+        <item name="multiLineTextColor">@color/c_dark_grey</item>
+        <item name="errorTextColor">@color/c_red</item>
+
+        <!-- Microtask input text view -->
+        <item name="microtaskInputTextBackgroundColor">@color/c_white</item>
+        <item name="microtaskInputTextBorderColor">@color/c_black</item>
+        <item name="microtaskInputTextColor">@color/c_black</item>
+
     </style>
 
 </resources>

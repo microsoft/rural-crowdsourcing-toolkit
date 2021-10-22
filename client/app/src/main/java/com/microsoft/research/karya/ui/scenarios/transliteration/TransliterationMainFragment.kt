@@ -221,7 +221,7 @@ class TransliterationMainFragment :
     view.float_word_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
-        R.color.secondary
+        R.color.c_light_green
       )
     )
     view.removeImageView.gone()
@@ -231,7 +231,7 @@ class TransliterationMainFragment :
     view.float_word_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
-        R.color.red
+        R.color.c_red
       )
     )
     view.removeImageView.gone()
@@ -241,7 +241,7 @@ class TransliterationMainFragment :
     view.float_word_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
-        R.color.light_grey
+        R.color.c_light_grey
       )
     )
     view.removeImageView.visible()

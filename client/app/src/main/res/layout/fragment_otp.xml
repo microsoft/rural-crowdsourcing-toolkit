@@ -30,12 +30,12 @@
             android:layout_gravity="center_vertical"
             android:adjustViewBounds="true"
             android:text="OTP"
-            android:textColor="@color/primary"
+            android:textColor="?colorPrimary"
             android:textSize="@dimen/_24ssp" />
 
         <TextView
             android:id="@+id/otpPromptTv"
-            style="@style/multilineText"
+            style="@style/MultilineText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -46,7 +46,7 @@
 
     <EditText
         android:id="@+id/otpEt"
-        style="@style/numericTextBox"
+        style="@style/EditText.Numeric"
         android:layout_width="0dp"
         android:layout_marginTop="@dimen/_10sdp"
         android:gravity="center"

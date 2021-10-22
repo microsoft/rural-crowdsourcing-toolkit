@@ -3,14 +3,10 @@
 
     <!-- Primary button style -->
     <style name="primaryButton" parent="TextAppearance.AppCompat.Widget.Button">
-        <item name="backgroundTint">@color/primary</item>
-        <item name="android:textColor">@color/white</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="secondaryButton" parent="TextAppearance.AppCompat.Widget.Button">
-        <item name="backgroundTint">@color/light_grey</item>
-        <item name="android:textColor">@color/black</item>
+    <style name="secondaryButton" parent="TextAppearance.AppCompat.Widget.Button.Inverse">
         <item name="android:layout_height">wrap_content</item>
     </style>
 

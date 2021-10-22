@@ -114,7 +114,7 @@
             style="@style/numericKey"
             android:layout_margin="@dimen/_3sdp"
             android:background="@drawable/ng_ic_next"
-            android:backgroundTint="@color/primary"
+            android:backgroundTint="?colorPrimary"
             android:backgroundTintMode="add"
             android:text="" />
 

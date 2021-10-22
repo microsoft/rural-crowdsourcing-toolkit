@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#69C884</color>
-    <color name="secondary">#8FD47D</color>
-    <color name="white">#FFFFFF</color>
-    <color name="dark_grey">#606060</color>
-    <color name="light_grey">#D0D0D0</color>
-    <color name="black">#000000</color>
-    <color name="red">#FF3030</color>
+    <color name="c_dark_green">#1c9b40</color>
+    <color name="c_green">#69C884</color>
+    <color name="c_light_green">#8FD47D</color>
+    <color name="c_white">#FFFFFF</color>
+    <color name="c_dark_grey">#606060</color>
+    <color name="c_light_grey">#D0D0D0</color>
+    <color name="c_black">#000000</color>
+    <color name="c_red">#FF3030</color>
 </resources>

@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App-specific theme attributes -->
+    <attr name="buttonPrimaryColor" format="color" />
+    <attr name="buttonContrastColor" format="color" />
+
+    <!-- Edit text -->
+    <attr name="editTextBorder" format="color" />
+
+    <!-- Numeric key pad -->
+    <attr name="numPadBackgroundColor" format="color" />
+    <attr name="numPadTextColor" format="color" />
+
+    <!-- Text views -->
+    <attr name="multiLineTextColor" format="color" />
+
+    <!-- Microtask input text box -->
+    <attr name="microtaskInputTextBackgroundColor" format="color" />
+    <attr name="microtaskInputTextBorderColor" format="color" />
+    <attr name="microtaskInputTextColor" format="color" />
+
+
+    <!-- Other Styleables -->
     <declare-styleable name="OutlineTextView">
         <attr name="outlineSize" format="dimension" />
         <attr name="outlineColor" format="color|reference" />
