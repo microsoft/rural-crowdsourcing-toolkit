@@ -13,8 +13,8 @@
         <item name="editTextBorder">@color/c_black</item>
 
         <!-- Num pad -->
-        <item name="numPadBackgroundColor">@color/c_dark_grey</item>
-        <item name="numPadTextColor">@color/c_white</item>
+        <item name="numPadBackgroundColor">@color/c_white</item>
+        <item name="numPadTextColor">@color/c_black</item>
 
         <!-- Text View -->
         <item name="multiLineTextColor">@color/c_dark_grey</item>

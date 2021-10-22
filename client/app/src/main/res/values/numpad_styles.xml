@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Numeric Key -->
+    <style name="numericKey" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/_40sdp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/_20ssp</item>
+        <item name="cornerRadius">@dimen/_0sdp</item>
+        <item name="android:textColor">?numPadTextColor</item>
+        <item name="android:clickable">true</item>
+        <item name="android:insetTop">@dimen/_0sdp</item>
+        <item name="android:insetBottom">@dimen/_0sdp</item>
+    </style>
+</resources>

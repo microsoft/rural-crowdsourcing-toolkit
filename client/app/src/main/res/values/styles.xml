@@ -16,19 +16,6 @@
         <item name="android:digits">0123456789</item>
     </style>
 
-    <!-- Numeric Key -->
-    <style name="numericKey">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/_24ssp</item>
-        <item name="android:textColor">?numPadTextColor</item>
-        <item name="background">@drawable/ng_numeric_key_background</item>
-        <item name="android:layout_margin">3px</item>
-        <item name="android:clickable">true</item>
-    </style>
-
     <!-- Multiline Text Box -->
     <style name="MultilineText" parent="Widget.AppCompat.TextView">
         <item name="android:layout_height">wrap_content</item>
