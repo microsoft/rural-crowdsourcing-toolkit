@@ -65,7 +65,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
       when (state) {
         is OTPUiState.Success -> showSuccessUi()
         // TODO: Change this to a correct mapping
-        is OTPUiState.Error -> showErrorUi(state.throwable.message!!)
+        is OTPUiState.Error -> showErrorUi(getErrorMessage(state.throwable))
         OTPUiState.Initial -> showInitialUi()
         OTPUiState.Loading -> showLoadingUi()
       }
@@ -109,7 +109,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     showError(message)
     hideLoading()
     enableNextButton()
-    requestSoftKeyFocus(binding.otpEt)
   }
 
   private fun navigate(destination: Destination) {

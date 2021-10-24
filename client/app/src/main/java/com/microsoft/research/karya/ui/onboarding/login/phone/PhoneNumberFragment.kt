@@ -56,7 +56,7 @@ class PhoneNumberFragment : BaseFragment(R.layout.ng_fragment_phone_number) {
   private fun observeUi() {
     viewModel.phoneNumberUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       when (state) {
-        is PhoneNumberUiState.Error -> showErrorUi(state.throwable.message!!)
+        is PhoneNumberUiState.Error -> showErrorUi(getErrorMessage(state.throwable))
         PhoneNumberUiState.Initial -> showInitialUi()
         PhoneNumberUiState.Loading -> showLoadingUi()
         PhoneNumberUiState.Success -> showSuccessUi()

@@ -85,7 +85,7 @@
     <com.microsoft.research.karya.ui.views.numpad.NumPad
         android:id="@+id/numPad"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_200sdp"
+        android:layout_height="wrap_content"
         app:field="@id/phoneNumberEt"
         app:layout_constraintBottom_toBottomOf="parent" />
     

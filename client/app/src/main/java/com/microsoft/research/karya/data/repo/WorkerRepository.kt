@@ -1,9 +1,6 @@
 package com.microsoft.research.karya.data.repo
 
-import com.microsoft.research.karya.data.exceptions.IncorrectAccessCodeException
-import com.microsoft.research.karya.data.exceptions.IncorrectOtpException
-import com.microsoft.research.karya.data.exceptions.PhoneNumberAlreadyUsedException
-import com.microsoft.research.karya.data.exceptions.UnknownException
+import com.microsoft.research.karya.data.exceptions.*
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
@@ -27,10 +24,10 @@ class WorkerRepository @Inject constructor(
 
     if (!response.isSuccessful) {
       throw when (response.code()) {
-        404 -> IncorrectOtpException("Incorrect OTP")
-        403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
-        401 -> IncorrectAccessCodeException("Access Code is incorrect")
-        else -> UnknownException("Something went wrong")
+        401 -> InvalidAccessCodeException()
+        403 -> AccessCodeAlreadyUsedException()
+        503 -> UnableToGenerateOTPException()
+        else -> KaryaException()
       }
     }
 
@@ -52,10 +49,10 @@ class WorkerRepository @Inject constructor(
 
     if (!response.isSuccessful) {
       throw when (response.code()) {
-        404 -> IncorrectOtpException("Incorrect OTP")
-        403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
-        401 -> IncorrectAccessCodeException("Access Code is incorrect")
-        else -> UnknownException("Something went wrong")
+        403 -> AccessCodeAlreadyUsedException()
+        401 -> InvalidAccessCodeException()
+        503 -> UnableToGenerateOTPException()
+        else -> KaryaException()
       }
     }
 
@@ -76,10 +73,9 @@ class WorkerRepository @Inject constructor(
 
     if (!response.isSuccessful) {
       throw when (response.code()) {
-        404 -> IncorrectOtpException("Incorrect OTP")
-        403 -> PhoneNumberAlreadyUsedException("Phone Number is Already in use")
-        401 -> IncorrectAccessCodeException("Access Code is incorrect")
-        else -> UnknownException("Something went wrong")
+        403 -> AccessCodeAlreadyUsedException()
+        401 -> InvalidOTPException()
+        else -> KaryaException()
       }
     }
 
@@ -132,8 +128,8 @@ class WorkerRepository @Inject constructor(
 
     if (!response.isSuccessful) {
       throw when (response.code()) {
-        401 -> IncorrectAccessCodeException("Access Code is incorrect")
-        else -> UnknownException("Something went wrong")
+        401 -> InvalidAccessCodeException()
+        else -> KaryaException()
       }
     }
 
@@ -153,8 +149,8 @@ class WorkerRepository @Inject constructor(
 
     if (!response.isSuccessful) {
       throw when (response.code()) {
-        401 -> IncorrectAccessCodeException("Access Code is incorrect")
-        else -> UnknownException("Something went wrong")
+        401 -> InvalidAccessCodeException()
+        else -> KaryaException()
       }
     }
 

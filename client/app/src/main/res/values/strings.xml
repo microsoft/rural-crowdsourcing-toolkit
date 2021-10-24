@@ -1,4 +1,8 @@
 <resources>
+    <!-- Errors -->
+    <string name="unknown_error">Some unknown error occurred. Please contact your coordinator.</string>
+    <string name="invalid_access_code">The access code you have entered is not valid. Please contact your coordinator.</string>
+
     <!-- Consent Form Page -->
     <string name="consent_form_title">Consent Form</string>
     <string name="consent_form_agree">Agree</string>
