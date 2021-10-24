@@ -3,7 +3,6 @@
 //
 // Custom numeric pad with a done button
 
-
 package com.microsoft.research.karya.ui.views.numpad
 
 import android.content.Context
@@ -88,7 +87,7 @@ class NumPad : FrameLayout {
     if (::onDoneListener.isInitialized) {
       binding.keyDone.setOnClickListener(onDoneListener)
     }
-    binding.keyDone.isClickable = doneButtonState
+    updateDoneButtonState(doneButtonState)
 
     addView(layout)
   }
@@ -99,7 +98,7 @@ class NumPad : FrameLayout {
   fun enableDoneButton() {
     doneButtonState = true
     if (::binding.isInitialized) {
-      binding.keyDone.isClickable = true
+      updateDoneButtonState(true)
     }
   }
 
@@ -109,7 +108,7 @@ class NumPad : FrameLayout {
   fun disableDoneButton() {
     doneButtonState = false
     if (::binding.isInitialized) {
-      binding.keyDone.isClickable = false
+      updateDoneButtonState(false)
     }
   }
 
@@ -121,6 +120,18 @@ class NumPad : FrameLayout {
       binding.keyDone.setOnClickListener(listener)
     } else {
       onDoneListener = listener
+    }
+  }
+
+  /**
+   * Change the done button state. This function assumes that the binding is initialized.
+   */
+  private fun updateDoneButtonState(enabled: Boolean) {
+    binding.keyDone.isClickable = enabled
+    binding.keyDone.isEnabled = enabled
+    when (enabled) {
+      true -> binding.keyDone.setIconTintResource(R.color.c_dark_green)
+      false -> binding.keyDone.setIconTintResource(R.color.c_light_grey)
     }
   }
 }
