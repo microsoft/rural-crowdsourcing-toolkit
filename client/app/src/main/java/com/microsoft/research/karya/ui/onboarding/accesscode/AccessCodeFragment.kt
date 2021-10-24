@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -35,15 +36,19 @@ class AccessCodeFragment : Fragment(R.layout.ng_fragment_access_code) {
               setText(text)
               setSelection(position)
             }
-
-            if (accessCodeEt.length() > 0) {
-              numPad.enableDoneButton()
-            } else {
-              numPad.disableDoneButton()
-            }
           }
         }
       )
+
+      accessCodeEt.doAfterTextChanged {
+        if (accessCodeEt.length() > 0) {
+          numPad.enableDoneButton()
+        } else {
+          numPad.disableDoneButton()
+        }
+
+        hideError()
+      }
 
       numPad.setOnDoneListener { handleSubmit() }
       numPad.disableDoneButton()
@@ -109,29 +114,19 @@ class AccessCodeFragment : Fragment(R.layout.ng_fragment_access_code) {
   }
 
   private fun showError() {
-    with(binding) {
-      accessCodeErrorIv.visible()
-    }
+    binding.accessCodeErrorIv.visible()
   }
 
   private fun hideError() {
-    with(binding) {
-      accessCodeErrorIv.invisible()
-    }
+    binding.accessCodeErrorIv.invisible()
   }
 
   private fun showLoading() {
-    with(binding) {
-      loadingPb.visible()
-      accessCodeEt.isEnabled = false
-    }
+    binding.loadingPb.visible()
   }
 
   private fun hideLoading() {
-    with(binding) {
-      loadingPb.gone()
-      accessCodeEt.isEnabled = true
-    }
+    binding.loadingPb.gone()
   }
 
   private fun disableDoneButton() {
