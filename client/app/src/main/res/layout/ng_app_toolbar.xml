@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appTb"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_56sdp"
+    android:layout_height="@dimen/_48sdp"
     android:background="@color/c_white"
     android:elevation="@dimen/_6sdp"
     android:gravity="center_vertical"
@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/karyaLogo"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:clickable="true"
             android:contentDescription="@string/karya_logo"
@@ -30,8 +30,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePictureIv"
-            android:layout_width="@dimen/_36sdp"
-            android:layout_height="@dimen/_36sdp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:visibility="gone"
             app:civ_border_width="2dp"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:textColor="@color/c_black"
-            android:textSize="@dimen/_18ssp"
+            android:textSize="@dimen/_14ssp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/karyaLogo"
             app:layout_constraintStart_toEndOf="@id/karyaLogo"
@@ -53,19 +53,18 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/assistantCv"
-            android:layout_width="@dimen/_36sdp"
-            android:layout_height="@dimen/_36sdp"
-            android:layout_marginVertical="@dimen/_5sdp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:clickable="true"
             android:focusable="true"
             android:foregroundGravity="center_vertical|center"
             android:padding="@dimen/_5sdp"
             android:translationZ="@dimen/_5sdp"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:cardCornerRadius="@dimen/_18sdp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/languageName"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -75,6 +74,19 @@
                 android:src="@drawable/assistant" />
 
         </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/languageName"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="wrap_content"
+            android:text="@string/language_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:insetLeft="@dimen/_0sdp"
+            android:insetRight="@dimen/_0sdp"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
