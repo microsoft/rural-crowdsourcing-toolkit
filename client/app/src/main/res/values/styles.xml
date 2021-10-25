@@ -5,7 +5,7 @@
         <item name="android:layout_height">@dimen/_50sdp</item>
         <item name="android:paddingLeft">@dimen/_20sdp</item>
         <item name="android:paddingRight">@dimen/_20sdp</item>
-        <item name="android:background">@drawable/ng_edit_text_background</item>
+        <item name="android:background">@drawable/background_edit_text</item>
         <item name="android:textSize">@dimen/_16ssp</item>
     </style>
 
@@ -39,7 +39,7 @@
         <item name="android:layout_marginStart">@dimen/_15sdp</item>
         <item name="android:layout_marginEnd">@dimen/_15sdp</item>
         <item name="android:layout_marginBottom">@dimen/_15sdp</item>
-        <item name="android:background">@drawable/microtask_input_text_background</item>
+        <item name="android:background">@drawable/background_microtask_input_text</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingEnd">@dimen/_20sdp</item>
         <item name="android:paddingStart">@dimen/_20sdp</item>

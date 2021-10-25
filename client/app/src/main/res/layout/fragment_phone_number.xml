@@ -31,7 +31,7 @@
             android:layout_height="@dimen/_50sdp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:src="@drawable/ng_ic_phone" />
+            android:src="@drawable/ic_phone" />
 
         <TextView
             android:id="@+id/phoneNumberPromptTv"

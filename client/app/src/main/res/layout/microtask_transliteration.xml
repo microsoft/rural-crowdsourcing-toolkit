@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:background="@drawable/microtask_input_text_background"
+        android:background="@drawable/background_microtask_input_text"
         android:completionThreshold="1"
         android:digits="@string/alphanumericString"
         android:dropDownHeight="wrap_content"

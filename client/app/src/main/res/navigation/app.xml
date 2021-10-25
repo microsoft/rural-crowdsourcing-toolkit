@@ -34,7 +34,7 @@
             android:id="@+id/phoneNumberFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.login.phone.PhoneNumberFragment"
             android:label="PhoneNumberFragment"
-            tools:layout="@layout/ng_fragment_phone_number">
+            tools:layout="@layout/fragment_phone_number">
             <action
                 android:id="@+id/action_phoneNumberFragment_to_OTPFragment"
                 app:destination="@id/OTPFragment" />
@@ -79,7 +79,7 @@
             android:id="@+id/accessCodeFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeFragment"
             android:label="AccessCodeFragment"
-            tools:layout="@layout/ng_fragment_access_code">
+            tools:layout="@layout/fragment_access_code">
             <action
                 android:id="@+id/action_accessCodeFragment_to_fileDownloadFragment"
                 app:destination="@id/fileDownloadFragment"

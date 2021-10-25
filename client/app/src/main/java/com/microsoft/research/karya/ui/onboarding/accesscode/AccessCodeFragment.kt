@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AccessCodeFragment : Fragment(R.layout.ng_fragment_access_code) {
+class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private val binding by viewBinding(NgFragmentAccessCodeBinding::bind)
   private val viewModel by viewModels<AccessCodeViewModel>()
 

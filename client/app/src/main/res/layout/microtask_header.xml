@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/appTb"
-        layout="@layout/ng_app_toolbar" />
+        layout="@layout/app_toolbar" />
 
     <ProgressBar
         android:id="@+id/microtaskProgressPb"

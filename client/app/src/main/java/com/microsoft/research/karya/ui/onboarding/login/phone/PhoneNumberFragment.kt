@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.onboarding.login.phone
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val PHONE_NUMBER_LENGTH = 10
 
 @AndroidEntryPoint
-class PhoneNumberFragment : BaseFragment(R.layout.ng_fragment_phone_number) {
+class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
 
   private val binding by viewBinding(NgFragmentPhoneNumberBinding::bind)
   private val viewModel by viewModels<PhoneNumberViewModel>()

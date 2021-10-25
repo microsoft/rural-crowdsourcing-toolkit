@@ -28,7 +28,7 @@ class KaryaToolbar : Toolbar {
   }
 
   private fun initView(context: Context) {
-    val view = inflate(context, R.layout.ng_app_toolbar, this)
+    val view = inflate(context, R.layout.app_toolbar, this)
     binding = NgAppToolbarBinding.bind(view)
   }
 

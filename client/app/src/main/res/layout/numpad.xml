@@ -67,7 +67,7 @@
         style="@style/numericKey"
         android:layout_columnWeight="1"
         android:text=""
-        app:icon="@drawable/ng_ic_backspace"
+        app:icon="@drawable/ic_backspace_key"
         app:iconGravity="textStart"
         app:iconTint="?numPadTextColor" />
 
@@ -81,7 +81,7 @@
         android:id="@+id/keyDone"
         style="@style/numericKey"
         android:layout_columnWeight="1"
-        app:icon="@drawable/ng_ic_next"
+        app:icon="@drawable/ic_next_key"
         app:iconGravity="textEnd"
         app:iconTint="?colorPrimary" />
 
