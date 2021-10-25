@@ -38,6 +38,8 @@ class PhoneNumberFragment : BaseFragment(R.layout.ng_fragment_phone_number) {
     with(binding) {
       // Check if phone number can be submitted
       phoneNumberEt.doAfterTextChanged { phoneNumber ->
+        hideError()
+
         if (!phoneNumber.isNullOrEmpty() && phoneNumber.length == PHONE_NUMBER_LENGTH) {
           numPad.enableDoneButton()
         } else {
@@ -77,49 +79,46 @@ class PhoneNumberFragment : BaseFragment(R.layout.ng_fragment_phone_number) {
   }
 
   private fun showInitialUi() {
-    with(binding) {
-      sendOTPErrorTv.invisible()
-      numPad.disableDoneButton()
-      hideLoading()
-    }
+    binding.numPad.disableDoneButton()
+    hideError()
+    hideLoading()
   }
 
   private fun showLoadingUi() {
-    with(binding) {
-      sendOTPErrorTv.invisible()
-      showLoading()
-    }
+    hideError()
+    showLoading()
   }
 
   private fun showSuccessUi() {
-    with(binding) {
-      sendOTPErrorTv.invisible()
-      hideLoading()
-    }
+    hideError()
+    hideLoading()
   }
 
   private fun showErrorUi(message: String) {
-    with(binding) {
-      sendOTPErrorTv.text = message
-      sendOTPErrorTv.visible()
-      hideLoading()
-    }
+    showError(message)
+    hideLoading()
   }
 
   private fun handleNextClick(phoneNumber: String) {
-    hideKeyboard()
     viewModel.sendOTP(phoneNumber)
   }
 
   private fun hideLoading() {
-    with(binding) {
-      loadingPb.gone()
-    }
+    binding.loadingPb.gone()
   }
 
   private fun showLoading() {
-    with(binding) {
-      loadingPb.visible()
+    binding.loadingPb.visible()
+  }
+
+  private fun showError(message: String) {
+    with(binding.sendOTPErrorTv) {
+      text = message
+      visible()
     }
+  }
+
+  private fun hideError() {
+    binding.sendOTPErrorTv.invisible()
   }
 }

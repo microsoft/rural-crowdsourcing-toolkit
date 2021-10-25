@@ -50,6 +50,8 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     }
 
     binding.otpEt.doAfterTextChanged { otp ->
+      hideError()
+
       if (otp?.length == OTP_LENGTH) {
         enableNextButton()
       } else {
@@ -85,12 +87,10 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun showInitialUi() {
-    with(binding) {
-      otpEt.text.clear()
-      hideError()
-      hideLoading()
-      disableNextButton()
-    }
+    binding.otpEt.text.clear()
+    hideError()
+    hideLoading()
+    disableNextButton()
   }
 
   private fun showLoadingUi() {
@@ -153,8 +153,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun hideError() {
-    with(binding) {
-      invalidOTPTv.gone()
-    }
+    binding.invalidOTPTv.gone()
   }
 }
