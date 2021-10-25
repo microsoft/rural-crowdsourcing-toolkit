@@ -8,7 +8,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import androidx.appcompat.widget.Toolbar
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.NgAppToolbarBinding
+import com.microsoft.research.karya.databinding.AppToolbarBinding
 import com.microsoft.research.karya.utils.extensions.visible
 
 class KaryaToolbar : Toolbar {
@@ -21,7 +21,7 @@ class KaryaToolbar : Toolbar {
     defStyleAttr
   )
 
-  private lateinit var binding: NgAppToolbarBinding
+  private lateinit var binding: AppToolbarBinding
 
   init {
     initView(context)
@@ -29,7 +29,7 @@ class KaryaToolbar : Toolbar {
 
   private fun initView(context: Context) {
     val view = inflate(context, R.layout.app_toolbar, this)
-    binding = NgAppToolbarBinding.bind(view)
+    binding = AppToolbarBinding.bind(view)
   }
 
   fun setTitle(title: String) {

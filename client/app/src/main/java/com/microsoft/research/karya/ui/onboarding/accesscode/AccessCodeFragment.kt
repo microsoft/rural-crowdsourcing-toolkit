@@ -2,12 +2,13 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.NgFragmentAccessCodeBinding
+import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
 import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.extensions.*
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
-  private val binding by viewBinding(NgFragmentAccessCodeBinding::bind)
+  private val binding by viewBinding(FragmentAccessCodeBinding::bind)
   private val viewModel by viewModels<AccessCodeViewModel>()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

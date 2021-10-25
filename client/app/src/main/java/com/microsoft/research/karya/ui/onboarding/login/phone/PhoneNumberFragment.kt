@@ -2,12 +2,13 @@ package com.microsoft.research.karya.ui.onboarding.login.phone
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
-import com.microsoft.research.karya.databinding.NgFragmentPhoneNumberBinding
+import com.microsoft.research.karya.databinding.FragmentPhoneNumberBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,7 +18,7 @@ private const val PHONE_NUMBER_LENGTH = 10
 @AndroidEntryPoint
 class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
 
-  private val binding by viewBinding(NgFragmentPhoneNumberBinding::bind)
+  private val binding by viewBinding(FragmentPhoneNumberBinding::bind)
   private val viewModel by viewModels<PhoneNumberViewModel>()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
