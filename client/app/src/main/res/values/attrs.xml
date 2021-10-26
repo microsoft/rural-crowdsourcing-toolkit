@@ -34,6 +34,11 @@
         <attr name="elevation" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="KaryaToolbar">
+        <attr name="hideLanguage" format="boolean" />
+        <attr name="titleText" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="GenderCard">
         <attr name="title" format="string|reference" />
         <attr name="icon" format="reference" />

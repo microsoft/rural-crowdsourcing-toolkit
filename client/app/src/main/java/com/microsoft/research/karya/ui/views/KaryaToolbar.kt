@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.Toolbar
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.AppToolbarBinding
+import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.visible
 
 class KaryaToolbar : Toolbar {
@@ -19,17 +20,41 @@ class KaryaToolbar : Toolbar {
     context,
     attrs,
     defStyleAttr
-  )
+  ) {
+    initAttributes(context, attrs, defStyleAttr)
+  }
 
   private lateinit var binding: AppToolbarBinding
+  private var hideLanguage: Boolean = false
+  private var titleText: String = ""
 
   init {
     initView(context)
   }
 
+  private fun initAttributes(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
+    val attributes =
+      context.theme.obtainStyledAttributes(attrs, R.styleable.KaryaToolbar, defStyleAttr, 0)
+    hideLanguage = attributes.getBoolean(R.styleable.KaryaToolbar_hideLanguage, false)
+    titleText = attributes.getString(R.styleable.KaryaToolbar_titleText) ?: ""
+  }
+
   private fun initView(context: Context) {
     val view = inflate(context, R.layout.app_toolbar, this)
     binding = AppToolbarBinding.bind(view)
+  }
+
+  override fun onFinishInflate() {
+    super.onFinishInflate()
+
+    if (hideLanguage) {
+      binding.languageName.gone()
+      binding.assistantCv.gone()
+    }
+
+    if (titleText.isNotEmpty()) {
+      setTitle(titleText)
+    }
   }
 
   fun setTitle(title: String) {

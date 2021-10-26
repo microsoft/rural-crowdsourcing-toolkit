@@ -35,7 +35,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
 
   private fun setupView() {
     viewModel.retrievePhoneNumber()
-    binding.appTb.setTitle(getString(R.string.otp_title))
     binding.appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT) }
 
     binding.resendOTPBtn.setOnClickListener {

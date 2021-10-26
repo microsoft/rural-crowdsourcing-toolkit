@@ -50,7 +50,6 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
       // Set on done listener for the num pad
       numPad.setOnDoneListener { handleNextClick(phoneNumberEt.text.toString()) }
 
-      appTb.setTitle(getString(R.string.phone_number_title))
       appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.PHONE_NUMBER_PROMPT) }
     }
   }
