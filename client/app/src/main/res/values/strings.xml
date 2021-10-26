@@ -215,6 +215,19 @@
     <string name="quality_bad">Bad</string>
     <string name="rating_undefined">Undefined</string>
 
+    <string name="recording_natural">Natural?</string>
+    <string name="natural_low">Unnatural</string>
+    <string name="natural_high">Natural</string>
+
+    <string name="recording_accent">Accent</string>
+    <string name="accent_native">Native</string>
+    <string name="accent_non_native">Non-Native</string>
+
+    <string name="recording_speed">Speed</string>
+    <string name="speed_good">Good</string>
+    <string name="speed_fast">Fast</string>
+    <string name="speed_slow">Slow</string>
+
     <!-- Text translation strings -->
 
     <!-- Speech recording strings -->

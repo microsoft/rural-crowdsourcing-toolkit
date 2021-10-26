@@ -57,6 +57,16 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       volumeHighBtn.setOnClickListener { handleVolumeChange(R.string.volume_high) }
       volumeLowBtn.setOnClickListener { handleVolumeChange(R.string.volume_low) }
       volumeOkayBtn.setOnClickListener { handleVolumeChange(R.string.volume_okay) }
+
+      speedSlowBtn.setOnClickListener { handleSpeedChange(R.string.speed_slow) }
+      speedFastBtn.setOnClickListener { handleSpeedChange(R.string.speed_fast) }
+      speedGoodBtn.setOnClickListener { handleSpeedChange(R.string.speed_good) }
+
+      naturalLowBtn.setOnClickListener { handleNaturalChange(R.string.natural_low) }
+      naturalHighBtn.setOnClickListener { handleNaturalChange(R.string.natural_high) }
+
+      accentNativeBtn.setOnClickListener { handleAccentChange(R.string.accent_native) }
+      accentNonNativeBtn.setOnClickListener { handleAccentChange(R.string.accent_non_native) }
     }
 
   }
@@ -123,6 +133,28 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       volumeLowBtn.setTextColor(colors.third)
     }
 
+    viewModel.speedGroupBtnColor.observe(
+      viewLifecycleOwner.lifecycle, viewLifecycleScope
+    ) { colors ->
+      speedSlowBtn.setTextColor(colors.first)
+      speedFastBtn.setTextColor(colors.second)
+      speedGoodBtn.setTextColor(colors.third)
+    }
+
+    viewModel.naturalGroupBtnColor.observe(
+      viewLifecycleOwner.lifecycle, viewLifecycleScope
+    ) { colors ->
+      naturalHighBtn.setTextColor(colors.first)
+      naturalLowBtn.setTextColor(colors.second)
+    }
+
+    viewModel.accentGroupBtnColor.observe(
+      viewLifecycleOwner.lifecycle, viewLifecycleScope
+    ) { colors ->
+      accentNativeBtn.setTextColor(colors.first)
+      accentNonNativeBtn.setTextColor(colors.second)
+    }
+
     viewModel.reviewEnabled.observe(
       viewLifecycleOwner.lifecycle, viewLifecycleScope
     ) { enabled ->
@@ -169,6 +201,16 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     volumeHighBtn.isEnabled = true
     volumeOkayBtn.isEnabled = true
     volumeLowBtn.isEnabled = true
+
+    speedSlowBtn.isEnabled = true
+    speedFastBtn.isEnabled = true
+    speedGoodBtn.isEnabled = true
+
+    naturalHighBtn.isEnabled = true
+    naturalLowBtn.isEnabled = true
+
+    accentNativeBtn.isEnabled = true
+    accentNonNativeBtn.isEnabled = true
   }
 
   /** Disable reviewing */
@@ -184,6 +226,16 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     volumeHighBtn.isEnabled = false
     volumeOkayBtn.isEnabled = false
     volumeLowBtn.isEnabled = false
+
+    speedSlowBtn.isEnabled = false
+    speedFastBtn.isEnabled = false
+    speedGoodBtn.isEnabled = false
+
+    naturalHighBtn.isEnabled = false
+    naturalLowBtn.isEnabled = false
+
+    accentNativeBtn.isEnabled = false
+    accentNonNativeBtn.isEnabled = false
   }
 
   /** Flush the button states */
@@ -206,17 +258,17 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
 
     nextBtn.setBackgroundResource(
       when (nextBtnState) {
-        SpeechVerificationViewModel.ButtonState.DISABLED -> R.drawable.ic_next_disabled
-        SpeechVerificationViewModel.ButtonState.ENABLED -> R.drawable.ic_next_enabled
-        SpeechVerificationViewModel.ButtonState.ACTIVE -> R.drawable.ic_next_enabled
+        ButtonState.DISABLED -> R.drawable.ic_next_disabled
+        ButtonState.ENABLED -> R.drawable.ic_next_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_next_enabled
       }
     )
 
     backBtn.setBackgroundResource(
       when (backBtnState) {
-        SpeechVerificationViewModel.ButtonState.DISABLED -> R.drawable.ic_back_disabled
-        SpeechVerificationViewModel.ButtonState.ENABLED -> R.drawable.ic_back_enabled
-        SpeechVerificationViewModel.ButtonState.ACTIVE -> R.drawable.ic_back_enabled
+        ButtonState.DISABLED -> R.drawable.ic_back_disabled
+        ButtonState.ENABLED -> R.drawable.ic_back_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_back_enabled
       }
     )
   }

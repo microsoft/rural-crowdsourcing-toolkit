@@ -19,6 +19,7 @@
         android:text="@string/speech_verification_instruction"
         android:textColor="#BBBBBB"
         android:textSize="@dimen/_14ssp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
     <TextView
@@ -36,20 +37,22 @@
         app:autoSizeStepGranularity="@dimen/_2ssp"
         app:autoSizeTextType="uniform"
         app:fontFamily="sans-serif"
+        app:layout_constraintBottom_toTopOf="@id/playbackProgressPb"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/instructionTv"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL" />
+        app:layout_constraintTop_toBottomOf="@id/instructionTv" />
 
     <LinearLayout
         android:id="@+id/recordLengthLL"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/playbackProgressPb">
+        app:layout_constraintBottom_toBottomOf="@id/playbackProgressPb"
+        app:layout_constraintLeft_toRightOf="@id/playbackProgressPb"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/playbackProgressPb">
 
         <TextView
             android:id="@+id/playbackSecondsTv"
@@ -77,15 +80,17 @@
     <ProgressBar
         android:id="@+id/playbackProgressPb"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:max="100"
         android:progressBackgroundTint="@color/colorLightGrey2"
         android:progressTint="@color/colorRed"
         android:scaleY="2"
-        app:layout_constraintBottom_toTopOf="@id/accuracyCl" />
+        app:layout_constraintBottom_toTopOf="@id/accuracyCl"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/recordLengthLL" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/accuracyCl"
@@ -206,8 +211,7 @@
         android:id="@+id/volumeCl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10sdp"
-        app:layout_constraintBottom_toTopOf="@id/playBtnCl">
+        app:layout_constraintBottom_toTopOf="@id/speedCl">
 
         <TextView
             android:id="@+id/volumeLbl"
@@ -261,6 +265,154 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/speedCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/accentCl">
+
+        <TextView
+            android:id="@+id/speedLbl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/recording_speed"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/speedSlowBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.22" />
+
+        <Button
+            android:id="@+id/speedSlowBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/speed_slow"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/speedLbl"
+            app:layout_constraintRight_toLeftOf="@id/speedFastBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/speedFastBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/speed_fast"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/speedSlowBtn"
+            app:layout_constraintRight_toLeftOf="@id/speedGoodBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/speedGoodBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/speed_good"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/speedFastBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/accentCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/naturalCl">
+
+        <TextView
+            android:id="@+id/accentLbl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/recording_accent"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/accentNonNativeBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.22" />
+
+        <Button
+            android:id="@+id/accentNonNativeBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/accent_non_native"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/accentLbl"
+            app:layout_constraintRight_toLeftOf="@id/accentNativeBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/accentNativeBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/accent_native"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/accentNonNativeBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/naturalCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/playBtnCl">
+
+        <TextView
+            android:id="@+id/naturalLbl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/recording_natural"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/naturalLowBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.22" />
+
+        <Button
+            android:id="@+id/naturalLowBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/natural_low"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/naturalLbl"
+            app:layout_constraintRight_toLeftOf="@id/naturalHighBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+        <Button
+            android:id="@+id/naturalHighBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/natural_high"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/naturalLowBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.23" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backBtnCl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -284,7 +436,7 @@
             app:layout_constraintHorizontal_bias="0.75"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.6">
+            app:layout_constraintWidth_percent="0.4">
 
             <ImageView
                 android:id="@+id/backBtn"
@@ -320,7 +472,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.5">
+            app:layout_constraintWidth_percent="0.4">
 
             <ImageView
                 android:id="@+id/playBtn"
@@ -357,7 +509,7 @@
             app:layout_constraintHorizontal_bias="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.6">
+            app:layout_constraintWidth_percent="0.4">
 
             <ImageView
                 android:id="@+id/nextBtn"

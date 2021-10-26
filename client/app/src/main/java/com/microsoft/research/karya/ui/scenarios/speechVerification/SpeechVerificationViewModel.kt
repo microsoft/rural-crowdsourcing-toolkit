@@ -73,6 +73,17 @@ constructor(
 
   @StringRes
   private var volumeRating = R.string.rating_undefined
+
+  @StringRes
+  private var speedRating = R.string.rating_undefined
+
+  @StringRes
+  private var accentRating = R.string.rating_undefined
+
+  @StringRes
+  private var naturalRating = R.string.rating_undefined
+
+
   private var reviewCompleted = false
 
   private lateinit var playbackProgressThread: Thread
@@ -118,6 +129,25 @@ constructor(
   // Color State Order: Volume High, Volume Okay, Volume Low
   val volumeGroupBtnColor = _volumeGroupBtnColor.asStateFlow()
 
+  private val _speedGroupBtnColor: MutableStateFlow<Triple<Int, Int, Int>> =
+    MutableStateFlow(Triple(Color.BLACK, Color.BLACK, Color.BLACK))
+
+  // Color State Order: speed High, speed Okay, speed Low
+  val speedGroupBtnColor = _speedGroupBtnColor.asStateFlow()
+
+  private val _naturalGroupBtnColor: MutableStateFlow<Pair<Int, Int>> =
+    MutableStateFlow(Pair(Color.BLACK, Color.BLACK))
+
+  // Color State Order: natural High, natural Okay, natural Low
+  val naturalGroupBtnColor = _naturalGroupBtnColor.asStateFlow()
+
+  private val _accentGroupBtnColor: MutableStateFlow<Pair<Int, Int>> =
+    MutableStateFlow(Pair(Color.BLACK, Color.BLACK))
+
+  // Color State Order: accent High, accent Okay, accent Low
+  val accentGroupBtnColor = _accentGroupBtnColor.asStateFlow()
+
+
   private val _reviewEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val reviewEnabled = _reviewEnabled.asStateFlow()
 
@@ -128,6 +158,9 @@ constructor(
     handleAccuracyChange(R.string.rating_undefined)
     handleQualityChange(R.string.rating_undefined)
     handleVolumeChange(R.string.rating_undefined)
+    handleSpeedChange(R.string.rating_undefined)
+    handleAccentChange(R.string.rating_undefined)
+    handleNaturalChange(R.string.rating_undefined)
 
     _reviewEnabled.value = false
     reviewCompleted = false
@@ -296,9 +329,31 @@ constructor(
         else -> 0
       }
 
+    val speed = when (speedRating) {
+      R.string.speed_slow -> 0
+      R.string.speed_fast -> 1
+      R.string.speed_good -> 2
+      else -> 0
+    }
+
+    val accent = when (accentRating) {
+      R.string.accent_non_native -> 0
+      R.string.accent_native -> 1
+      else -> 0
+    }
+
+    val natural = when (naturalRating) {
+      R.string.natural_low -> 0
+      R.string.natural_high -> 1
+      else -> 0
+    }
+
     outputData.addProperty("accuracy", accuracy)
     outputData.addProperty("quality", quality)
     outputData.addProperty("volume", volume)
+    outputData.addProperty("speed", speed)
+    outputData.addProperty("accent", accent)
+    outputData.addProperty("natural", natural)
 
     viewModelScope.launch {
       completeAndSaveCurrentMicrotask()
@@ -387,11 +442,82 @@ constructor(
     updateReviewStatus()
   }
 
+  /** Handle speed change */
+  fun handleSpeedChange(@StringRes speed: Int) {
+    speedRating = speed
+    var speedSlowBtnColor: Int = Color.parseColor("#000000")
+    var speedFastBtnColor: Int = Color.parseColor("#000000")
+    var speedGoodBtnColor: Int = Color.parseColor("#000000")
+
+
+
+    if (speed != R.string.rating_undefined) {
+      when (speed) {
+        R.string.speed_slow -> speedSlowBtnColor = GREEN_COLOR
+        R.string.speed_good -> speedGoodBtnColor = GREEN_COLOR
+        R.string.speed_fast -> speedFastBtnColor = GREEN_COLOR
+        else -> speedGoodBtnColor = GREEN_COLOR
+      }
+    }
+
+    _speedGroupBtnColor.value =
+      Triple(speedSlowBtnColor, speedFastBtnColor, speedGoodBtnColor)
+
+    updateReviewStatus()
+  }
+
+  /** Handle natural change */
+  fun handleNaturalChange(@StringRes natural: Int) {
+    naturalRating = natural
+    var naturalHighBtnColor: Int = Color.parseColor("#000000")
+    var naturalLowBtnColor: Int = Color.parseColor("#000000")
+
+
+
+    if (natural != R.string.rating_undefined) {
+      when (natural) {
+        R.string.natural_high -> naturalHighBtnColor = GREEN_COLOR
+        R.string.natural_low -> naturalLowBtnColor = GREEN_COLOR
+        else -> naturalLowBtnColor = GREEN_COLOR
+      }
+    }
+
+    _naturalGroupBtnColor.value =
+      Pair(naturalHighBtnColor, naturalLowBtnColor)
+
+    updateReviewStatus()
+  }
+
+  /** Handle accent change */
+  fun handleAccentChange(@StringRes accent: Int) {
+    accentRating = accent
+    var accentNativeBtnColor: Int = Color.parseColor("#000000")
+    var accentNonNativeBtnColor: Int = Color.parseColor("#000000")
+
+
+
+    if (accent != R.string.rating_undefined) {
+      when (accent) {
+        R.string.accent_native -> accentNativeBtnColor = GREEN_COLOR
+        R.string.accent_non_native -> accentNonNativeBtnColor = GREEN_COLOR
+        else -> accentNonNativeBtnColor = GREEN_COLOR
+      }
+    }
+
+    _accentGroupBtnColor.value =
+      Pair(accentNativeBtnColor, accentNonNativeBtnColor)
+
+    updateReviewStatus()
+  }
+
   private fun updateReviewStatus() {
     reviewCompleted =
       accuracyRating != R.string.rating_undefined &&
         qualityRating != R.string.rating_undefined &&
-        volumeRating != R.string.rating_undefined
+        volumeRating != R.string.rating_undefined &&
+        speedRating != R.string.rating_undefined &&
+        naturalRating != R.string.rating_undefined &&
+        accentRating != R.string.rating_undefined
 
     if (reviewCompleted) {
       setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
@@ -432,6 +558,9 @@ constructor(
     accuracyRating = R.string.accuracy_incorrect
     volumeRating = R.string.volume_low
     qualityRating = R.string.quality_bad
+    accentRating = R.string.accent_non_native
+    naturalRating = R.string.natural_low
+    speedRating = R.string.speed_slow
 
     outputData.addProperty("flag", "corrupt")
 
