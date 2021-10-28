@@ -27,6 +27,13 @@
         <item name="taskSubmittedColor">@color/c_dark_grey</item>
         <item name="taskVerifiedColor">@color/c_black</item>
 
+        <!-- Microtask instruction text view -->
+        <item name="microtaskInstructionBackgroundColor">@color/c_dark_grey</item>
+        <item name="microtaskInstructionTextColor">@color/c_white</item>
+
+        <!-- Microtask input frame -->
+        <item name="microtaskInputBackgroundColor">@color/c_very_light_green</item>
+
         <!-- Microtask input text view -->
         <item name="microtaskInputTextBackgroundColor">@color/c_white</item>
         <item name="microtaskInputTextBorderColor">@color/c_black</item>

@@ -10,37 +10,27 @@
         layout="@layout/microtask_common_header" />
 
     <TextView
-        android:id="@+id/recordPromptTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_20sdp"
-        android:textColor="#606060"
-        android:textSize="@dimen/_20ssp"
+        android:id="@+id/instructionTv"
+        style="@style/MicrotaskInstructionText"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb"
         tools:text="@string/speech_recording_instruction" />
 
-    <TextView
-        android:id="@+id/sentenceTv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/_15sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:background="@drawable/background_microtask_input_text"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/_20sdp"
-        android:textColor="#000000"
-        app:autoSizeMaxTextSize="@dimen/_30ssp"
-        app:autoSizeMinTextSize="@dimen/_12ssp"
-        app:autoSizeStepGranularity="@dimen/_2ssp"
-        app:autoSizeTextType="uniform"
-        app:fontFamily="sans-serif"
+    <FrameLayout
+        android:id="@+id/inputFrame"
+        style="@style/MicrotaskInputFrame"
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recordPromptTv"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL" />
+        app:layout_constraintTop_toBottomOf="@id/instructionTv">
+
+        <TextView
+            android:id="@+id/sentenceTv"
+            style="@style/MicrotaskInputText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="This is a sentence to be recorded" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/recordLengthLL"
@@ -49,6 +39,7 @@
         android:layout_marginVertical="@dimen/_20sdp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/inputFrame"
         app:layout_constraintBottom_toTopOf="@id/playbackProgressPb">
 
         <TextView
@@ -241,8 +232,8 @@
         android:background="@drawable/ic_pointer"
         android:elevation="@dimen/_20sdp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/sentenceTv"
-        app:layout_constraintEnd_toEndOf="@id/sentenceTv" />
+        app:layout_constraintBottom_toBottomOf="@id/inputFrame"
+        app:layout_constraintEnd_toEndOf="@id/inputFrame" />
 
     <ImageView
         android:id="@+id/backPointerIv"

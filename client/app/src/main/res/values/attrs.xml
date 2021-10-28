@@ -20,11 +20,20 @@
     <attr name="taskSubmittedColor" format="color" />
     <attr name="taskVerifiedColor" format="color" />
 
+    <!-- Microtask instruction -->
+    <attr name="microtaskInstructionBackgroundColor" format="color" />
+    <attr name="microtaskInstructionTextColor" format="color" />
+
+    <!-- Microtask input -->
+    <attr name="microtaskInputBackgroundColor" format="color" />
+
     <!-- Microtask input text box -->
     <attr name="microtaskInputTextBackgroundColor" format="color" />
     <attr name="microtaskInputTextBorderColor" format="color" />
     <attr name="microtaskInputTextColor" format="color" />
 
+    <!-- Microtask output interaction -->
+    <attr name="microtaskOutputInteractionBackgroundColor" format="color" />
 
     <!-- Other Styleables -->
     <declare-styleable name="OutlineTextView">
