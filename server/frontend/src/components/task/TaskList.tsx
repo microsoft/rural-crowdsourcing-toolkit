@@ -106,6 +106,14 @@ class TaskList extends React.Component<TaskListProps, {}> {
     this.props.updateTaskFilter(task_filter);
   };
 
+  clearFilters = () => {
+    const scenario_filter: 'all' = 'all';
+    const tags_filter: Array<string> = [];
+    const show_completed = false;
+    const task_filter = { scenario_filter, tags_filter, show_completed };
+    this.props.updateTaskFilter(task_filter);
+  };
+
   // Render component
   render() {
     let tasks = this.props.task.data as TaskRecordType[];
@@ -246,6 +254,11 @@ class TaskList extends React.Component<TaskListProps, {}> {
                     />
                     <span>Show Completed</span>
                   </label>
+                </div>
+                <div className='col s10 m4 l3'>
+                  <button className='btn-flat' id='clear-filters-btn' onClick={this.clearFilters}>
+                    Clear Filters
+                  </button>
                 </div>
               </div>
               <Collapsible accordion={false} className='no-autoinit'>
