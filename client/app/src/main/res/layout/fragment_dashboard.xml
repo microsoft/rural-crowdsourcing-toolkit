@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_8sdp"
+        app:titleText="@string/dashboard_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +60,7 @@
                 android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:progress="0"
-                android:progressTint="#6C6"
+                android:progressTint="?colorSecondary"
                 android:scaleY="2"
                 android:visibility="gone" />
 
@@ -104,7 +105,7 @@
         android:background="#CCC"
         android:paddingHorizontal="@dimen/_15sdp"
         android:paddingVertical="@dimen/_5sdp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

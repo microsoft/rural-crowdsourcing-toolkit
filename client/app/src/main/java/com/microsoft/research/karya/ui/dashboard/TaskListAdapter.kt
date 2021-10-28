@@ -57,10 +57,8 @@ class TaskListAdapter(
       with(binding) {
         task.apply {
           taskNameTv.text = taskName
-          scenarioNameTv.text = scenarioName.toString()
           numIncompleteTv.text = taskStatus.assignedMicrotasks.toString()
           numCompletedTv.text = taskStatus.completedMicrotasks.toString()
-          numSkippedTv.text = taskStatus.skippedMicrotasks.toString()
           numSubmittedTv.text = taskStatus.submittedMicrotasks.toString()
           numVerifiedTv.text = taskStatus.verifiedMicrotasks.toString()
         }
@@ -82,18 +80,8 @@ class TaskListAdapter(
 
           if (task.isGradeCard) {
             completedTasksPb.gone()
-            incompleteCl.gone()
-            completedCl.gone()
-            skippedCl.gone()
-            submittedCl.gone()
-            verifiedCl.visible()
           } else {
             completedTasksPb.visible()
-            incompleteCl.apply { if (taskStatus.assignedMicrotasks > 0) visible() else gone() }
-            completedCl.apply { if (taskStatus.completedMicrotasks > 0) visible() else gone() }
-            skippedCl.apply { if (taskStatus.skippedMicrotasks > 0) visible() else gone() }
-            submittedCl.apply { if (taskStatus.submittedMicrotasks > 0) visible() else gone() }
-            verifiedCl.apply { if (taskStatus.verifiedMicrotasks > 0) visible() else gone() }
           }
         }
 

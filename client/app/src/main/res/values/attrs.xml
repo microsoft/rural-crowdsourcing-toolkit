@@ -14,6 +14,12 @@
     <!-- Text views -->
     <attr name="multiLineTextColor" format="color" />
 
+    <!-- Dashboard colors -->
+    <attr name="taskAvailableColor" format="color" />
+    <attr name="taskCompletedColor" format="color" />
+    <attr name="taskSubmittedColor" format="color" />
+    <attr name="taskVerifiedColor" format="color" />
+
     <!-- Microtask input text box -->
     <attr name="microtaskInputTextBackgroundColor" format="color" />
     <attr name="microtaskInputTextBorderColor" format="color" />

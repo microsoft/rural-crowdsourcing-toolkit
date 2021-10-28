@@ -184,6 +184,15 @@
     <string name="change_phone_number">Change Phone Number</string>
     <string name="invalid_otp">You have entered an invalid OTP.</string>
 
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="sync_prompt">Submit Tasks / Get New Tasks</string>
+    <string name="tasks_available">available</string>
+    <string name="tasks_completed">completed</string>
+    <string name="tasks_submitted">submitted</string>
+    <string name="tasks_verified">verified</string>
+
+
     <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
 

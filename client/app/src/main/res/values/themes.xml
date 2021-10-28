@@ -6,6 +6,7 @@
         <!-- Primary colors -->
         <item name="colorPrimary">@color/c_dark_green</item>
         <item name="colorControlActivated">@color/c_dark_green</item>
+        <item name="colorSecondary">@color/c_green</item>
 
         <!-- Edit text -->
         <item name="editTextBackground">@color/c_white</item>
@@ -19,6 +20,12 @@
         <!-- Text View -->
         <item name="multiLineTextColor">@color/c_dark_grey</item>
         <item name="errorTextColor">@color/c_red</item>
+
+        <!-- Dashboard -->
+        <item name="taskAvailableColor">@color/c_red</item>
+        <item name="taskCompletedColor">@color/c_dark_green</item>
+        <item name="taskSubmittedColor">@color/c_dark_grey</item>
+        <item name="taskVerifiedColor">@color/c_black</item>
 
         <!-- Microtask input text view -->
         <item name="microtaskInputTextBackgroundColor">@color/c_white</item>
