@@ -195,16 +195,16 @@
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
     <string name="recording_accuracy">Accuracy</string>
-    <string name="accuracy_correct">Correct</string>
-    <string name="accuracy_errors">Errors</string>
-    <string name="accuracy_incorrect">Incorrect</string>
+    <string name="accuracy_good">Correct</string>
+    <string name="accuracy_okay">Errors</string>
+    <string name="accuracy_bad">Incorrect</string>
     <string name="recording_volume">Volume</string>
-    <string name="volume_high">Good</string>
+    <string name="volume_good">Good</string>
     <string name="volume_okay">Whisper</string>
-    <string name="volume_low">Inaudible</string>
+    <string name="volume_bad">Inaudible</string>
     <string name="recording_quality">Quality</string>
     <string name="quality_good">Good</string>
-    <string name="quality_noisy">Noisy</string>
+    <string name="quality_okay">Noisy</string>
     <string name="quality_bad">Bad</string>
     <string name="recording_fluency">Fluency</string>
     <string name="fluency_good">Fluent</string>

@@ -45,29 +45,47 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     playBtn.setOnClickListener { viewModel.handlePlayClick() }
     nextBtnCv.setOnClickListener { viewModel.handleNextClick() }
 
-    fluencyGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
-      if (isChecked) {
-        when (checkedId) {
-          fluencyBad.id -> viewModel.handleFluencyChange(R.string.fluency_bad)
-          fluencyOkay.id -> viewModel.handleFluencyChange(R.string.fluency_okay)
-          fluencyGood.id -> viewModel.handleFluencyChange(R.string.fluency_good)
+    with (viewModel) {
+      accuracyGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        if (isChecked) {
+          when (checkedId) {
+            accuracyBadBtn.id -> handleAccuracyChange(R.string.accuracy_bad)
+            accuracyOkayBtn.id -> handleAccuracyChange(R.string.accuracy_okay)
+            accuracyGoodBtn.id -> handleAccuracyChange(R.string.accuracy_good)
+          }
+        }
+      }
+
+      qualityGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        if (isChecked) {
+          when (checkedId) {
+            qualityBadBtn.id -> handleQualityChange(R.string.quality_bad)
+            qualityOkayBtn.id -> handleQualityChange(R.string.quality_okay)
+            qualityGoodBtn.id -> handleQualityChange(R.string.quality_good)
+          }
+        }
+      }
+
+      volumeGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        if (isChecked) {
+          when (checkedId) {
+            volumeBadBtn.id -> handleVolumeChange(R.string.volume_bad)
+            volumeOkayBtn.id -> handleVolumeChange(R.string.volume_okay)
+            volumeGoodBtn.id -> handleVolumeChange(R.string.volume_good)
+          }
+        }
+      }
+
+      fluencyGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        if (isChecked) {
+          when (checkedId) {
+            fluencyBadBtn.id -> handleFluencyChange(R.string.fluency_bad)
+            fluencyOkayBtn.id -> handleFluencyChange(R.string.fluency_okay)
+            fluencyGoodBtn.id -> handleFluencyChange(R.string.fluency_good)
+          }
         }
       }
     }
-
-    /** Set on click listeners for review buttons */
-    with(viewModel) {
-      accuracyCorrectBtn.setOnClickListener { handleAccuracyChange(R.string.accuracy_correct) }
-      accuracyIncorrectBtn.setOnClickListener { handleAccuracyChange(R.string.accuracy_incorrect) }
-      accuracyErrorsBtn.setOnClickListener { handleAccuracyChange(R.string.accuracy_errors) }
-      qualityGoodBtn.setOnClickListener { handleQualityChange(R.string.quality_good) }
-      qualityBadBtn.setOnClickListener { handleQualityChange(R.string.quality_bad) }
-      qualityNoisyBtn.setOnClickListener { handleQualityChange(R.string.quality_noisy) }
-      volumeHighBtn.setOnClickListener { handleVolumeChange(R.string.volume_high) }
-      volumeLowBtn.setOnClickListener { handleVolumeChange(R.string.volume_low) }
-      volumeOkayBtn.setOnClickListener { handleVolumeChange(R.string.volume_okay) }
-    }
-
   }
 
   private fun setupObservers() {
@@ -108,35 +126,38 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       flushButtonStates(states.first, states.second, states.third)
     }
 
-    viewModel.accuracyGroupBtnColor.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { colors ->
-      accuracyCorrectBtn.setTextColor(colors.first)
-      accuracyIncorrectBtn.setTextColor(colors.second)
-      accuracyErrorsBtn.setTextColor(colors.third)
+    viewModel.accuracyRating.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { value ->
+      when (value) {
+        R.string.accuracy_bad -> accuracyGroup.check(accuracyBadBtn.id)
+        R.string.accuracy_okay -> accuracyGroup.check(accuracyOkayBtn.id)
+        R.string.accuracy_good -> accuracyGroup.check(accuracyGoodBtn.id)
+        else -> accuracyGroup.clearChecked()
+      }
     }
 
-    viewModel.qualityGroupBtnColor.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { colors ->
-      qualityGoodBtn.setTextColor(colors.first)
-      qualityBadBtn.setTextColor(colors.second)
-      qualityNoisyBtn.setTextColor(colors.third)
+    viewModel.qualityRating.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { value ->
+      when (value) {
+        R.string.quality_bad -> qualityGroup.check(qualityBadBtn.id)
+        R.string.quality_okay -> qualityGroup.check(qualityOkayBtn.id)
+        R.string.quality_good -> qualityGroup.check(qualityGoodBtn.id)
+        else -> qualityGroup.clearChecked()
+      }
     }
 
-    viewModel.volumeGroupBtnColor.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { colors ->
-      volumeHighBtn.setTextColor(colors.first)
-      volumeOkayBtn.setTextColor(colors.second)
-      volumeLowBtn.setTextColor(colors.third)
+    viewModel.volumeRating.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { value ->
+      when (value) {
+        R.string.volume_bad -> volumeGroup.check(volumeBadBtn.id)
+        R.string.volume_okay -> volumeGroup.check(volumeOkayBtn.id)
+        R.string.volume_good -> volumeGroup.check(volumeGoodBtn.id)
+        else -> volumeGroup.clearChecked()
+      }
     }
 
     viewModel.fluencyRating.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { value ->
       when (value) {
-        R.string.fluency_bad -> fluencyGroup.check(fluencyBad.id)
-        R.string.fluency_okay -> fluencyGroup.check(fluencyOkay.id)
-        R.string.fluency_good -> fluencyGroup.check(fluencyGood.id)
+        R.string.fluency_bad -> fluencyGroup.check(fluencyBadBtn.id)
+        R.string.fluency_okay -> fluencyGroup.check(fluencyOkayBtn.id)
+        R.string.fluency_good -> fluencyGroup.check(fluencyGoodBtn.id)
         else -> fluencyGroup.clearChecked()
       }
     }
@@ -176,46 +197,46 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
 
   /** Enable reviewing */
   private fun enableReviewing() {
-    accuracyCorrectBtn.isEnabled = true
-    accuracyErrorsBtn.isEnabled = true
-    accuracyIncorrectBtn.isEnabled = true
+    accuracyGoodBtn.enable()
+    accuracyOkayBtn.enable()
+    accuracyBadBtn.enable()
 
-    qualityGoodBtn.isEnabled = true
-    qualityNoisyBtn.isEnabled = true
-    qualityBadBtn.isEnabled = true
+    qualityGoodBtn.enable()
+    qualityOkayBtn.enable()
+    qualityBadBtn.enable()
 
-    volumeHighBtn.isEnabled = true
-    volumeOkayBtn.isEnabled = true
-    volumeLowBtn.isEnabled = true
+    volumeGoodBtn.enable()
+    volumeOkayBtn.enable()
+    volumeBadBtn.enable()
 
-    fluencyBad.enable()
-    fluencyOkay.enable()
-    fluencyGood.enable()
+    fluencyBadBtn.enable()
+    fluencyOkayBtn.enable()
+    fluencyGoodBtn.enable()
   }
 
   /** Disable reviewing */
   private fun disableReview() {
-    accuracyCorrectBtn.isEnabled = false
-    accuracyErrorsBtn.isEnabled = false
-    accuracyIncorrectBtn.isEnabled = false
+    accuracyGoodBtn.disable()
+    accuracyOkayBtn.disable()
+    accuracyBadBtn.disable()
 
-    qualityGoodBtn.isEnabled = false
-    qualityNoisyBtn.isEnabled = false
-    qualityBadBtn.isEnabled = false
+    qualityGoodBtn.disable()
+    qualityOkayBtn.disable()
+    qualityBadBtn.disable()
 
-    volumeHighBtn.isEnabled = false
-    volumeOkayBtn.isEnabled = false
-    volumeLowBtn.isEnabled = false
+    volumeGoodBtn.disable()
+    volumeOkayBtn.disable()
+    volumeBadBtn.disable()
 
-    fluencyBad.disable()
-    fluencyOkay.disable()
-    fluencyGood.disable()
+    fluencyBadBtn.disable()
+    fluencyOkayBtn.disable()
+    fluencyGoodBtn.disable()
   }
 
   /** Flush the button states */
   private fun flushButtonStates(
-    playBtnState: ButtonState,
     backBtnState: ButtonState,
+    playBtnState: ButtonState,
     nextBtnState: ButtonState
   ) {
     playBtn.isClickable = playBtnState != ButtonState.DISABLED
