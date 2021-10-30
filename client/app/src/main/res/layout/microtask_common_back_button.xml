@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/backBtnCv"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:translationZ="@dimen/_10sdp"
+    app:cardCornerRadius="@dimen/_200sdp"
+    app:layout_constraintDimensionRatio="1:1">
+
+    <ImageView
+        android:id="@+id/backIv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_back_enabled"
+        android:contentDescription="@string/back"
+        android:soundEffectsEnabled="false" />
+
+</androidx.cardview.widget.CardView>

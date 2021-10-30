@@ -18,6 +18,8 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
+import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
 import kotlinx.android.synthetic.main.microtask_speech_data.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,37 +56,19 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
     val recordInstruction =
       viewModel.task.params.asJsonObject.get("instruction").asString
         ?: getString(R.string.speech_recording_instruction)
-    recordPromptTv.text = recordInstruction
-
-    /** Set card corner radius */
-    recordBtnCv.addOnLayoutChangeListener { _: View,
-                                            left: Int,
-                                            _: Int,
-                                            right: Int,
-                                            _: Int,
-                                            _: Int,
-                                            _: Int,
-                                            _: Int,
-                                            _: Int ->
-      recordBtnCv.radius = (right - left).toFloat() / 2
-    }
-
-    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
-      ->
-      playBtnCv.radius = (right - left).toFloat() / 2
-    }
+    instructionTv.text = recordInstruction
 
     /** Set on click listeners */
     recordBtn.setOnClickListener { viewModel.handleRecordClick() }
     playBtn.setOnClickListener { viewModel.handlePlayClick() }
-    nextBtn.setOnClickListener { viewModel.handleNextClick() }
-    backBtn.setOnClickListener { viewModel.handleBackClick() }
+    nextBtnCv.setOnClickListener { viewModel.handleNextClick() }
+    backBtnCv.setOnClickListener { viewModel.handleBackClick() }
   }
 
   private fun setupObservers() {
     viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
-      backBtn.isClickable = state != DISABLED
-      backBtn.setBackgroundResource(
+      backBtnCv.isClickable = state != DISABLED
+      backBtnCv.backIv.setBackgroundResource(
         when (state) {
           DISABLED -> R.drawable.ic_back_disabled
           ENABLED -> R.drawable.ic_back_enabled
@@ -99,7 +83,7 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
         when (state) {
           DISABLED -> R.drawable.ic_mic_disabled
           ENABLED -> R.drawable.ic_mic_enabled
-          ACTIVE -> R.drawable.ic_mic_enabled
+          ACTIVE -> R.drawable.ic_mic_active
         }
       )
     }
@@ -110,14 +94,14 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
         when (state) {
           DISABLED -> R.drawable.ic_speaker_disabled
           ENABLED -> R.drawable.ic_speaker_enabled
-          ACTIVE -> R.drawable.ic_speaker_enabled
+          ACTIVE -> R.drawable.ic_speaker_active
         }
       )
     }
 
     viewModel.nextBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
-      nextBtn.isClickable = state != DISABLED
-      nextBtn.setBackgroundResource(
+      nextBtnCv.isClickable = state != DISABLED
+      nextBtnCv.nextIv.setBackgroundResource(
         when (state) {
           DISABLED -> R.drawable.ic_next_disabled
           ENABLED -> R.drawable.ic_next_enabled
@@ -273,11 +257,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
       AssistantAudio.NEXT_ACTION,
       uiCue = {
         nextPointerIv.visible()
-        nextBtn.setBackgroundResource(R.drawable.ic_next_enabled)
+        nextBtnCv.nextIv.setBackgroundResource(R.drawable.ic_next_enabled)
       },
       onCompletionListener = {
         lifecycleScope.launch {
-          nextBtn.setBackgroundResource(R.drawable.ic_next_disabled)
+          nextBtnCv.nextIv.setBackgroundResource(R.drawable.ic_next_disabled)
           nextPointerIv.invisible()
           delay(500)
           playPreviousAction()
@@ -292,11 +276,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
       AssistantAudio.PREVIOUS_ACTION,
       uiCue = {
         backPointerIv.visible()
-        backBtn.setBackgroundResource(R.drawable.ic_back_enabled)
+        backBtnCv.backIv.setBackgroundResource(R.drawable.ic_back_enabled)
       },
       onCompletionListener = {
         lifecycleScope.launch {
-          backBtn.setBackgroundResource(R.drawable.ic_back_disabled)
+          backBtnCv.backIv.setBackgroundResource(R.drawable.ic_back_disabled)
           backPointerIv.invisible()
           delay(500)
           viewModel.moveToPrerecording()
