@@ -192,6 +192,26 @@
     <string name="tasks_submitted">submitted</string>
     <string name="tasks_verified">verified</string>
 
+    <!-- Speech verification strings -->
+    <string name="speech_verification_instruction">Verify the recording below</string>
+    <string name="recording_accuracy">Accuracy</string>
+    <string name="accuracy_correct">Correct</string>
+    <string name="accuracy_errors">Errors</string>
+    <string name="accuracy_incorrect">Incorrect</string>
+    <string name="recording_volume">Volume</string>
+    <string name="volume_high">Good</string>
+    <string name="volume_okay">Whisper</string>
+    <string name="volume_low">Inaudible</string>
+    <string name="recording_quality">Quality</string>
+    <string name="quality_good">Good</string>
+    <string name="quality_noisy">Noisy</string>
+    <string name="quality_bad">Bad</string>
+    <string name="recording_fluency">Fluency</string>
+    <string name="fluency_good">Fluent</string>
+    <string name="fluency_okay">Okay</string>
+    <string name="fluency_bad">Broken</string>
+    <string name="rating_undefined">Undefined</string>
+
 
     <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -224,22 +244,6 @@
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
     <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
-
-    <!-- Speech verification strings -->
-    <string name="speech_verification_instruction">Verify the recording below</string>
-    <string name="recording_accuracy">Accuracy</string>
-    <string name="accuracy_correct">Correct</string>
-    <string name="accuracy_errors">Errors</string>
-    <string name="accuracy_incorrect">Incorrect</string>
-    <string name="recording_volume">Volume</string>
-    <string name="volume_high">Good</string>
-    <string name="volume_okay">Whisper</string>
-    <string name="volume_low">Inaudible</string>
-    <string name="recording_quality">Quality</string>
-    <string name="quality_good">Good</string>
-    <string name="quality_noisy">Noisy</string>
-    <string name="quality_bad">Bad</string>
-    <string name="rating_undefined">Undefined</string>
 
     <!-- Text translation strings -->
 

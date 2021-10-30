@@ -11,9 +11,14 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragmentArgs
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationViewModel.ButtonState
+import com.microsoft.research.karya.utils.extensions.disable
+import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
+import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
+import kotlinx.android.synthetic.main.microtask_common_playback_progress.view.*
 import kotlinx.android.synthetic.main.microtask_speech_verification.*
 
 @AndroidEntryPoint
@@ -36,15 +41,19 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     super.onViewCreated(view, savedInstanceState)
     setupObservers()
 
-    /** Set corner radius for button */
-    playBtnCv.addOnLayoutChangeListener { _: View, left: Int, _: Int, right: Int, _: Int, _: Int, _: Int, _: Int, _: Int
-      ->
-      playBtnCv.radius = (right - left).toFloat() / 2
-    }
-
     /** Set on click listeners for buttons */
     playBtn.setOnClickListener { viewModel.handlePlayClick() }
-    nextBtn.setOnClickListener { viewModel.handleNextClick() }
+    nextBtnCv.setOnClickListener { viewModel.handleNextClick() }
+
+    fluencyGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+      if (isChecked) {
+        when (checkedId) {
+          fluencyBad.id -> viewModel.handleFluencyChange(R.string.fluency_bad)
+          fluencyOkay.id -> viewModel.handleFluencyChange(R.string.fluency_okay)
+          fluencyGood.id -> viewModel.handleFluencyChange(R.string.fluency_good)
+        }
+      }
+    }
 
     /** Set on click listeners for review buttons */
     with(viewModel) {
@@ -72,25 +81,25 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     viewModel.playbackSecondsTvText.observe(
       viewLifecycleOwner.lifecycle, viewLifecycleScope
     ) { text ->
-      playbackSecondsTv.text = text
+      playbackProgress.secondsTv.text = text
     }
 
     viewModel.playbackCentiSecondsTvText.observe(
       viewLifecycleOwner.lifecycle, viewLifecycleScope
     ) { text ->
-      playbackCentiSecondsTv.text = text
+      playbackProgress.centiSecondsTv.text = text
     }
 
     viewModel.playbackProgressPbMax.observe(
       viewLifecycleOwner.lifecycle, viewLifecycleScope
     ) { max ->
-      playbackProgressPb.max = max
+      playbackProgress.progressPb.max = max
     }
 
     viewModel.playbackProgress.observe(
       viewLifecycleOwner.lifecycle, viewLifecycleScope
     ) { progress ->
-      playbackProgressPb.progress = progress
+      playbackProgress.progressPb.progress = progress
     }
 
     viewModel.navAndMediaBtnGroup.observe(
@@ -121,6 +130,15 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       volumeHighBtn.setTextColor(colors.first)
       volumeOkayBtn.setTextColor(colors.second)
       volumeLowBtn.setTextColor(colors.third)
+    }
+
+    viewModel.fluencyRating.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { value ->
+      when (value) {
+        R.string.fluency_bad -> fluencyGroup.check(fluencyBad.id)
+        R.string.fluency_okay -> fluencyGroup.check(fluencyOkay.id)
+        R.string.fluency_good -> fluencyGroup.check(fluencyGood.id)
+        else -> fluencyGroup.clearChecked()
+      }
     }
 
     viewModel.reviewEnabled.observe(
@@ -169,6 +187,10 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     volumeHighBtn.isEnabled = true
     volumeOkayBtn.isEnabled = true
     volumeLowBtn.isEnabled = true
+
+    fluencyBad.enable()
+    fluencyOkay.enable()
+    fluencyGood.enable()
   }
 
   /** Disable reviewing */
@@ -184,6 +206,10 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     volumeHighBtn.isEnabled = false
     volumeOkayBtn.isEnabled = false
     volumeLowBtn.isEnabled = false
+
+    fluencyBad.disable()
+    fluencyOkay.disable()
+    fluencyGood.disable()
   }
 
   /** Flush the button states */
@@ -193,8 +219,8 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     nextBtnState: ButtonState
   ) {
     playBtn.isClickable = playBtnState != ButtonState.DISABLED
-    backBtn.isClickable = backBtnState != ButtonState.DISABLED
-    nextBtn.isClickable = nextBtnState != ButtonState.DISABLED
+    backBtnCv.isClickable = backBtnState != ButtonState.DISABLED
+    nextBtnCv.isClickable = nextBtnState != ButtonState.DISABLED
 
     playBtn.setBackgroundResource(
       when (playBtnState) {
@@ -204,19 +230,19 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       }
     )
 
-    nextBtn.setBackgroundResource(
+    nextBtnCv.nextIv.setBackgroundResource(
       when (nextBtnState) {
-        SpeechVerificationViewModel.ButtonState.DISABLED -> R.drawable.ic_next_disabled
-        SpeechVerificationViewModel.ButtonState.ENABLED -> R.drawable.ic_next_enabled
-        SpeechVerificationViewModel.ButtonState.ACTIVE -> R.drawable.ic_next_enabled
+        ButtonState.DISABLED -> R.drawable.ic_next_disabled
+        ButtonState.ENABLED -> R.drawable.ic_next_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_next_enabled
       }
     )
 
-    backBtn.setBackgroundResource(
+    backBtnCv.backIv.setBackgroundResource(
       when (backBtnState) {
-        SpeechVerificationViewModel.ButtonState.DISABLED -> R.drawable.ic_back_disabled
-        SpeechVerificationViewModel.ButtonState.ENABLED -> R.drawable.ic_back_enabled
-        SpeechVerificationViewModel.ButtonState.ACTIVE -> R.drawable.ic_back_enabled
+        ButtonState.DISABLED -> R.drawable.ic_back_disabled
+        ButtonState.ENABLED -> R.drawable.ic_back_enabled
+        ButtonState.ACTIVE -> R.drawable.ic_back_enabled
       }
     )
   }

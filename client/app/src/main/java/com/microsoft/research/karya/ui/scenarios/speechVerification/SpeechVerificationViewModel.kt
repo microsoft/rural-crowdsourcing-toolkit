@@ -67,12 +67,14 @@ constructor(
   /** Verification status */
   @StringRes
   private var accuracyRating = R.string.rating_undefined
-
   @StringRes
   private var qualityRating = R.string.rating_undefined
-
   @StringRes
   private var volumeRating = R.string.rating_undefined
+
+  private var _fluencyRating: MutableStateFlow<Int> = MutableStateFlow(R.string.rating_undefined)
+  val fluencyRating = _fluencyRating.asStateFlow()
+
   private var reviewCompleted = false
 
   private lateinit var playbackProgressThread: Thread
@@ -128,6 +130,8 @@ constructor(
     handleAccuracyChange(R.string.rating_undefined)
     handleQualityChange(R.string.rating_undefined)
     handleVolumeChange(R.string.rating_undefined)
+
+    _fluencyRating.value = R.string.rating_undefined
 
     _reviewEnabled.value = false
     reviewCompleted = false
@@ -296,9 +300,18 @@ constructor(
         else -> 0
       }
 
+    val fluency =
+      when (_fluencyRating.value) {
+        R.string.fluency_good -> 2
+        R.string.fluency_okay -> 1
+        else -> 0
+      }
+
+
     outputData.addProperty("accuracy", accuracy)
     outputData.addProperty("quality", quality)
     outputData.addProperty("volume", volume)
+    outputData.addProperty("fluency", fluency)
 
     viewModelScope.launch {
       completeAndSaveCurrentMicrotask()
@@ -385,6 +398,10 @@ constructor(
       Triple(volumeHighBtnColor, volumeOkayBtnColor, volumeLowBtnColor)
 
     updateReviewStatus()
+  }
+
+  fun handleFluencyChange(@StringRes fluency: Int) {
+    _fluencyRating.value = fluency
   }
 
   private fun updateReviewStatus() {
