@@ -110,7 +110,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/recordBtn"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/recordBtn"
@@ -135,8 +135,8 @@
             tools:layout_editor_absoluteY="0dp" />
 
         <include
-            layout="@layout/microtask_common_next_button"
             android:id="@+id/nextBtnCv"
+            layout="@layout/microtask_common_next_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -197,7 +197,7 @@
             app:layout_constraintLeft_toRightOf="@id/playPointerIv"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
