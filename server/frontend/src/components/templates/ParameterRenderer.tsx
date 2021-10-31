@@ -10,7 +10,7 @@ import { StringListInput } from './StringList';
 
 type ParameterSectionProps = {
   params: ParameterArray<any>;
-  data: { [id: string]: string | boolean | string[] };
+  data: { [id: string]: string | number | boolean | string[] };
   onChange: ChangeEventHandler;
   onBooleanChange: ChangeEventHandler;
   onStringListChange: (id: string, data: string[]) => void;

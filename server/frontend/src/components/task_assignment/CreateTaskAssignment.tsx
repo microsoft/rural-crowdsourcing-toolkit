@@ -66,10 +66,11 @@ type CreateTaskAssignmentProps = RouterProps & ConnectedProps<typeof reduxConnec
 
 // Component state
 type CreateTaskAssignmentState = {
-  params: { [id: string]: string | boolean | string[] };
+  params: { [id: string]: string | number | boolean | string[] };
   task?: TaskRecord;
   box?: BoxRecord;
   policy?: PolicyName;
+  task_policy?: boolean;
 };
 
 class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, CreateTaskAssignmentState> {
@@ -97,7 +98,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   handleTaskChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const task_id = e.currentTarget.value;
     const task = this.props.task.data.find((t) => t.id === task_id) as TaskRecord;
-    const currentState = { ...this.state, task, params: {} };
+    const currentState = { ...this.state, task, params: {}, task_policy: false };
     delete currentState.policy;
     this.setState(currentState);
   };
@@ -112,8 +113,30 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   // Change policy
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
-    console.log(policy);
-    this.setState({ policy, params: {} });
+    const task_policy = false;
+    this.setState({ policy, params: {}, task_policy });
+  };
+
+  // handle policy boolean change
+  handlePolicyBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const task_policy = e.currentTarget.checked;
+    this.setState({ task_policy });
+    const task = this.state.task;
+
+    // If checkbox is in checked state
+    if (task_policy === true && task !== undefined) {
+      // Getting the same policy as the task
+      const policy = task.policy;
+      const params = {} as { [id: string]: string | number | boolean | string[] };
+      if (policy) {
+        // Getting the required policy parameters
+        const policyObj = policyMap[policy];
+        const policyParams = policyObj.params;
+        // Copying the parameters from the task params
+        policyParams.map((p) => (params[p.id] = task.params[p.id]));
+      }
+      this.setState({ policy, params });
+    }
   };
 
   // handle param input change
@@ -194,19 +217,32 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     const scenario = scenarioMap[task?.scenario_name as ScenarioName];
     const policies = task === undefined ? [] : policyList[scenario.response_type];
     const policy = this.state.policy || 0;
+    const task_policy = this.state.task_policy;
     const policyDropDown = (
-      <div>
-        <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
-          <option value={0} disabled={true}>
-            Select a Policy
-          </option>
-          {policies.map((p) => (
-            <option value={p.name} key={p.name}>
-              {p.full_name}
+      <>
+        <div>
+          <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
+            <option value={0} disabled={true}>
+              Select a Policy
             </option>
-          ))}
-        </select>
-      </div>
+            {policies.map((p) => (
+              <option value={p.name} key={p.name}>
+                {p.full_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <label htmlFor='task_policy'>
+          <input
+            type='checkbox'
+            className='filled-in'
+            id='task_policy'
+            checked={task_policy}
+            onChange={this.handlePolicyBooleanChange}
+          />
+          <span>Choose same policy as task policy</span>
+        </label>
+      </>
     );
 
     // Policy params section
