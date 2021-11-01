@@ -43,7 +43,7 @@ class TransliterationMainFragment :
   ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewModel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, args.completed, args.total)
     return view
   }
 

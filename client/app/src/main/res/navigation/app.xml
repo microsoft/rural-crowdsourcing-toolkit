@@ -97,26 +97,36 @@
             android:id="@+id/action_dashboardActivity_to_speechDataMainFragment"
             app:destination="@id/speechDataMainFragment">
             <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_universalTransliterationMainFragment"
             app:destination="@id/universalTransliterationMainFragment">
             <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_speechVerificationFragment"
             app:destination="@id/speechVerificationFragment">
             <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_imageTranscription"
             app:destination="@id/imageTranscriptionFragment">
             <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_imageLabelling"
             app:destination="@id/imageLabellingFragment">
             <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
         </action>
     </fragment>
     <action
@@ -137,9 +147,9 @@
         android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"
         android:label="SpeechDataMainFragment"
         tools:layout="@layout/microtask_speech_data">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_speechDataMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity"
@@ -149,9 +159,9 @@
         android:id="@+id/universalTransliterationMainFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
         android:label="UniversalTransliterationMainFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_universalTransliterationMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -160,9 +170,9 @@
         android:id="@+id/speechVerificationFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationFragment"
         android:label="SpeechVerificationFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_speechVerificationFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -171,9 +181,9 @@
         android:id="@+id/imageTranscriptionFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.imageTranscription.ImageTranscriptionFragment"
         android:label="imageTrnascriptionFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_imageTranscriptionFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -182,9 +192,9 @@
         android:id="@+id/imageLabellingFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.ImageLabellingFragment"
         android:label="imageLabellingFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />

@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.properties.Delegates
 
 abstract class BaseMTRendererViewModel
 constructor(
@@ -39,8 +38,6 @@ constructor(
 ) : ViewModel() {
 
   private lateinit var taskId: String
-  private var incompleteAssignments by Delegates.notNull<Int>()
-  private var completedAssignments by Delegates.notNull<Int>()
 
   // Initialising containers
   val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
@@ -53,9 +50,6 @@ constructor(
   lateinit var currentMicroTask: MicroTaskRecord
   protected lateinit var currentAssignment: MicroTaskAssignmentRecord
 
-  //  protected var totalMicrotasks = incompleteMta + completedMta
-  protected var completedMicrotasks: Int = 0
-
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
   protected var outputData: JsonObject = JsonObject()
@@ -65,16 +59,22 @@ constructor(
   private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
   val navigateBack = _navigateBack.asSharedFlow()
 
+  private val _completedAssignments = MutableStateFlow<Int>(0)
+  val completedAssignments = _completedAssignments.asSharedFlow()
+
+  private val _totalAssignments = MutableStateFlow<Int>(1)
+  val totalAssignments = _totalAssignments.asSharedFlow()
+
   private val _inputFileDoesNotExist: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val inputFileDoesNotExist = _inputFileDoesNotExist.asSharedFlow()
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
 
-  open fun setupViewModel(taskId: String, incompleteMta: Int, completedMta: Int) {
+  open fun setupViewModel(taskId: String, completed: Int, total: Int) {
     this.taskId = taskId
-    this.incompleteAssignments = incompleteMta
-    this.completedAssignments = completedMta
+    _totalAssignments.value = total
+    _completedAssignments.value = completed
 
     // TODO: Shift this to init once we move to viewmodel factory
     runBlocking {
@@ -158,9 +158,13 @@ constructor(
     val logObj = JsonObject()
     logObj.add("logs", logs)
 
+    /** Delete all scratch files */
     deleteAssignmentScratchFiles()
 
-    /** Delete all scratch files */
+    // If assignment is not already completed, increase completed count by 1
+    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED)
+      _completedAssignments.value = _completedAssignments.value + 1
+
     withContext(Dispatchers.IO) {
       assignmentRepository.markComplete(
         microtaskAssignmentIDs[currentAssignmentIndex],

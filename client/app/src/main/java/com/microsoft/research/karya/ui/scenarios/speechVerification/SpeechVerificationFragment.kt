@@ -33,7 +33,7 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
   ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewModel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, args.completed, args.total)
     return view
   }
 

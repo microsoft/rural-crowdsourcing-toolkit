@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
+import kotlinx.android.synthetic.main.microtask_common_header.*
 
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
   BaseFragment(contentLayoutId) {
@@ -77,6 +78,14 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
   }
 
   private fun setUpObservers() {
+    viewModel.completedAssignments.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { completed ->
+      microtaskProgressPb.progress = completed
+    }
+
+    viewModel.totalAssignments.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { total ->
+      microtaskProgressPb.max = total
+    }
+
     viewModel.navigateBack.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { pop ->
       if (pop) {
         findNavController().popBackStack()
@@ -87,7 +96,6 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
       if (notExist) {
         Toast.makeText(requireContext(), getString(R.string.input_file_does_not_exist), Toast.LENGTH_LONG).show()
       }
-
     }
   }
 }

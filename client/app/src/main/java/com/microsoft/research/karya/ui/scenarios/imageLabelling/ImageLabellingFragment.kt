@@ -32,7 +32,7 @@ class ImageLabellingFragment : BaseMTRendererFragment(R.layout.microtask_image_l
     savedInstanceState: Bundle?
   ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
-    viewModel.setupViewModel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, args.completed, args.total)
     return view
   }
 

@@ -253,13 +253,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   fun onDashboardItemClick(task: TaskInfo) {
     if (!task.isGradeCard && task.taskStatus.assignedMicrotasks > 0) {
       val taskId = task.taskID
+      val status = task.taskStatus
+      val completed = status.completedMicrotasks + status.submittedMicrotasks + status.verifiedMicrotasks
+      val total = status.assignedMicrotasks + completed
       val action = with(DashboardFragmentDirections) {
         when (task.scenarioName) {
-          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment(taskId)
-          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId)
-          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId)
-          ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId)
-          ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId)
+          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment(taskId, completed, total)
+          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId, completed, total)
+          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId, completed, total)
+          ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId, completed, total)
+          ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId, completed, total)
           else -> null
         }
       }
