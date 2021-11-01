@@ -29,16 +29,18 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
   private fun setupViews() {
     with(binding) {
-      accessCodeEt.addTextChangedListener(
-        object : SeparatorTextWatcher('-', 4) {
-          override fun onAfterTextChanged(text: String, position: Int) {
-            accessCodeEt.run {
-              setText(text)
-              setSelection(position)
-            }
-          }
-        }
-      )
+      // TODO: Temporarily removing separator text watcher
+      // Need to fix it to work with num pad
+//      accessCodeEt.addTextChangedListener(
+//        object : SeparatorTextWatcher('-', 4) {
+//          override fun onAfterTextChanged(text: String, position: Int) {
+//            accessCodeEt.run {
+//              setText(text)
+//              setSelection(position)
+//            }
+//          }
+//        }
+//      )
 
       accessCodeEt.doAfterTextChanged {
         if (accessCodeEt.length() > 0) {
