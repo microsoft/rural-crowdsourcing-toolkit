@@ -168,6 +168,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
           delay(500)
           playRecordAction()
         }
+      },
+      onErrorListener = {
+        lifecycleScope.launch {
+          viewModel.moveToPrerecording()
+        }
       }
     )
   }
@@ -187,6 +192,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
             delay(500)
             playStopAction()
           }
+        },
+        onErrorListener = {
+          lifecycleScope.launch {
+            viewModel.moveToPrerecording()
+          }
         }
       )
       delay(1500)
@@ -205,6 +215,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
             recordPointerIv.invisible()
             delay(500)
             playListenAction()
+          }
+        },
+        onErrorListener = {
+          lifecycleScope.launch {
+            viewModel.moveToPrerecording()
           }
         }
       )
@@ -228,6 +243,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
           delay(500)
           playRerecordAction()
         }
+      },
+      onErrorListener = {
+        lifecycleScope.launch {
+          viewModel.moveToPrerecording()
+        }
       }
     )
   }
@@ -246,6 +266,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
           recordPointerIv.invisible()
           delay(500)
           playNextAction()
+        }
+      },
+      onErrorListener = {
+        lifecycleScope.launch {
+          viewModel.moveToPrerecording()
         }
       }
     )
@@ -266,6 +291,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
           delay(500)
           playPreviousAction()
         }
+      },
+      onErrorListener = {
+        lifecycleScope.launch {
+          viewModel.moveToPrerecording()
+        }
       }
     )
   }
@@ -283,6 +313,11 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
           backBtnCv.backIv.setBackgroundResource(R.drawable.ic_back_disabled)
           backPointerIv.invisible()
           delay(500)
+          viewModel.moveToPrerecording()
+        }
+      },
+      onErrorListener = {
+        lifecycleScope.launch {
           viewModel.moveToPrerecording()
         }
       }
