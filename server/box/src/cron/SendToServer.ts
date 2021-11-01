@@ -91,7 +91,10 @@ export async function sendNewWorkers(box: BoxRecord, axiosLocal: AxiosInstance) 
 
     type NewWorkerResponse = Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[];
 
-    const response = await axiosLocal.put<NewWorkerResponse>('/new_workers', workers);
+    const response = await axiosLocal.put<NewWorkerResponse>('/new_workers', workers, {
+      maxBodyLength: 100000000,
+      maxContentLength: 100000000,
+    });
     const workerResponse = response.data;
 
     await BBPromise.mapSeries(workerResponse, async (worker) => {
@@ -122,7 +125,10 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
 
     type NewWorkerResponse = Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[];
 
-    const response = await axiosLocal.put<NewWorkerResponse>('/workers', workers);
+    const response = await axiosLocal.put<NewWorkerResponse>('/workers', workers, {
+      maxBodyLength: 100000000,
+      maxContentLength: 100000000,
+    });
     const workerResponse = response.data;
 
     await BBPromise.mapSeries(workerResponse, async (worker) => {

@@ -57,10 +57,10 @@ boxRouter.get('/karya_file/:id', Middlewares.needIdToken, KaryaFileController.ge
 boxRouter.get('/language_assets', Middlewares.needIdToken, KaryaFileController.getLanguageAssets);
 
 // Send all newly created workers
-boxRouter.put('/new_workers', Middlewares.needIdToken, BodyParser(), WorkerController.newWorkers);
+boxRouter.put('/new_workers', Middlewares.needIdToken, BodyParser({ jsonLimit: '50mb' }), WorkerController.newWorkers);
 
 // Send all updated workers
-boxRouter.put('/workers', Middlewares.needIdToken, BodyParser(), WorkerController.updateWorkers);
+boxRouter.put('/workers', Middlewares.needIdToken, BodyParser({ jsonLimit: '50mb' }), WorkerController.updateWorkers);
 
 // Get all udpated workers
 boxRouter.get('/workers', Middlewares.needIdToken, WorkerController.get);
