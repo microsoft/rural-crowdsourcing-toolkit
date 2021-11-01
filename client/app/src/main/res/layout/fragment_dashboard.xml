@@ -105,7 +105,7 @@
         android:background="#CCC"
         android:paddingHorizontal="@dimen/_15sdp"
         android:paddingVertical="@dimen/_5sdp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

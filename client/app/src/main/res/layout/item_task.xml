@@ -55,6 +55,7 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/_1sdp"
             android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
             android:background="@drawable/background_divider"
             android:scaleType="fitXY" />
 
