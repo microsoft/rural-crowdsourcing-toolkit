@@ -210,6 +210,9 @@ constructor(
     /** Write wav file */
     scratchRecordingFileInitJob = CoroutineScope(Dispatchers.IO).launch { resetWavFile() }
 
+    // Reset progress bar
+    _playbackProgressPbProgress.value = 0
+
     _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
