@@ -46,7 +46,6 @@
         android:id="@+id/accessCodeErrorIv"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="0dp"
-        android:contentDescription="@string/status_check"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/numPad"
         app:layout_constraintDimensionRatio="1"

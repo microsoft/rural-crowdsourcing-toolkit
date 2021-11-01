@@ -189,16 +189,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       AlertDialog.Builder(it)
     }
 
-    builder?.setMessage(R.string.s_sync_prompt_message)
+    builder?.setMessage(R.string.sync_prompt_message)
 
     // Set buttons
     builder?.apply {
-      setPositiveButton(R.string.s_yes
+      setPositiveButton(R.string.yes
       ) { _, _ ->
         syncWithServer()
         dialog!!.dismiss()
       }
-      setNegativeButton(R.string.s_no, null)
+      setNegativeButton(R.string.no, null)
     }
 
     dialog = builder?.create()

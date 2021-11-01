@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_8sdp"
-        app:titleText="@string/phone_number_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/phone_number_title" />
 
     <LinearLayout
         android:id="@+id/phoneNumberPromptLl"
@@ -76,12 +76,12 @@
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_24sdp"
-        android:text="@string/s_phone_number_already_used"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/phoneNumberEt"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/phoneNumberEt"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberEt" />
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberEt"
+        tools:text="@string/access_code_already_used" />
 
     <com.microsoft.research.karya.ui.views.numpad.NumPad
         android:id="@+id/numPad"
@@ -89,5 +89,5 @@
         android:layout_height="wrap_content"
         app:field="@id/phoneNumberEt"
         app:layout_constraintBottom_toBottomOf="parent" />
-    
+
 </androidx.constraintlayout.widget.ConstraintLayout>

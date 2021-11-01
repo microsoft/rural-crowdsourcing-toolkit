@@ -191,6 +191,9 @@
     <string name="tasks_completed">completed</string>
     <string name="tasks_submitted">submitted</string>
     <string name="tasks_verified">verified</string>
+    <string name="sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
@@ -216,36 +219,15 @@
     <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
 
-    <string name="s_access_code_title">Enter Access Code</string>
-
-    <string name="s_age_title">Select Age Group</string>
-    <string name="s_gender_title">Select Gender</string>
-    <string name="s_profile_pic_title">Select Profile Picture</string>
-    <string name="s_dashboard_title">Dashboard</string>
-
-    <string name="s_consent_form_title">Consent Form</string>
-    <string name="s_access_code_prompt">You should have received a 16-digit access code from your
-        project coordinator. Please enter that access code below.</string>
-    <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
-    <string name="s_profile_picture_prompt">Please click your profile picture. You can skip this step if you do not want a profile picture</string>
     <string name="s_gender_prompt">Please choose your gender. If you do not wish to state your gender, you can skip this step</string>
     <string name="s_male">Male</string>
     <string name="s_female">Female</string>
     <string name="s_age_prompt">Please enter your year of birth</string>
-    <string name="s_phone_number_already_used">This access code is already registered.</string>
-    <string name="s_sync_tasks">Submit Tasks / Get New Tasks</string>
-    <string name="s_tasks_available">Tasks available</string>
-    <string name="s_tasks_completed">Tasks completed</string>
-    <string name="s_tasks_skipped">Tasks skipped</string>
-    <string name="s_tasks_submitted">Tasks submitted</string>
-    <string name="s_tasks_verified">Tasks verified</string>
 
     <!-- Transliteration strings -->
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
     <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
-
-    <!-- Text translation strings -->
 
     <!-- Speech recording strings -->
     <string name="speech_recording_instruction">Translate the sentence below</string>
@@ -258,22 +240,9 @@
 
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
-    <string name="creation_code_hint">0000-0000</string>
-    <string name="status_check">status</string>
-    <string name="otp_hint"> ------ </string>
-    <string name="phone_number_hint">----------</string>
     <string name="next">next</string>
     <string name="back">back</string>
-    <string name="profile_picture">profile picture</string>
-    <string name="rotate_right">rotate</string>
 
-    <string name="video_record_button">I Understand and start recording</string>
-    <string name="record_preview_message">The preview of the recording would appear here</string>
-    <string name="dialogTitle">Skip or do it later?</string>
-    <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
     <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
-    <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
-    <string name="s_yes">Yes</string>
-    <string name="s_no">No</string>
     <string name="input_file_does_not_exist">Input file does not exist for next assignment</string>
 </resources>

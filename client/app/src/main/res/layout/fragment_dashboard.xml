@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginVertical="@dimen/_10sdp"
+        android:layout_marginVertical="@dimen/_5sdp"
         android:clickable="true"
         android:elevation="@dimen/_8sdp"
         android:focusable="true"
@@ -50,7 +50,7 @@
                 app:autoSizeStepGranularity="@dimen/_2ssp"
                 app:autoSizeTextType="uniform"
                 android:gravity="center"
-                android:text="@string/s_sync_tasks" />
+                android:text="@string/sync_prompt" />
 
             <ProgressBar
                 android:id="@+id/syncProgressBar"
@@ -82,10 +82,10 @@
         android:id="@+id/tasksRv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_5sdp"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -94,6 +94,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/syncCv"
         app:layout_constraintVertical_bias="0"
+        android:background="@color/c_very_light_grey"
         tools:itemCount="2"
         tools:listitem="@layout/item_task" />
 
