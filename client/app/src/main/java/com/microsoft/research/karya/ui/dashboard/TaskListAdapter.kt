@@ -49,55 +49,30 @@ class TaskListAdapter(
   ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(taskInfo: TaskInfo) {
-      setText(binding, taskInfo)
-      setViews(binding, taskInfo)
-    }
+      val status = taskInfo.taskStatus
+      val verified = status.verifiedMicrotasks
+      val submitted = status.submittedMicrotasks + verified
+      val completed = status.completedMicrotasks + submitted
+      val assigned = status.assignedMicrotasks
 
-    private fun setText(binding: ItemTaskBinding, task: TaskInfo) {
+      val clickable = assigned > 0
+
       with(binding) {
-        task.apply {
-          taskNameTv.text = taskName
-          numIncompleteTv.text = taskStatus.assignedMicrotasks.toString()
-          numCompletedTv.text = taskStatus.completedMicrotasks.toString()
-          numSubmittedTv.text = taskStatus.submittedMicrotasks.toString()
-          numVerifiedTv.text = taskStatus.verifiedMicrotasks.toString()
-        }
-      }
-    }
+        // Set text
+        taskNameTv.text = taskInfo.taskName
+        numIncompleteTv.text = assigned.toString()
+        numCompletedTv.text = completed.toString()
+        numSubmittedTv.text = submitted.toString()
+        numVerifiedTv.text = verified.toString()
 
-    private fun setViews(binding: ItemTaskBinding, task: TaskInfo) {
-      with(binding) {
-        task.apply {
-          val microtasksTotal =
-            taskStatus.assignedMicrotasks +
-              taskStatus.completedMicrotasks +
-              taskStatus.skippedMicrotasks +
-              taskStatus.submittedMicrotasks +
-              taskStatus.verifiedMicrotasks
-          val microtasksProgress = microtasksTotal - taskStatus.assignedMicrotasks
-          completedTasksPb.max = microtasksTotal
-          completedTasksPb.progress = microtasksProgress
+        // Set views
+        completedTasksPb.max = assigned + completed
+        completedTasksPb.progress = completed
 
-          if (task.isGradeCard) {
-            completedTasksPb.gone()
-          } else {
-            completedTasksPb.visible()
-          }
-        }
-
-        taskLl.apply {
-          val status = task.taskStatus
-          val clickableAndEnabled =
-            (!task.isGradeCard && (status.assignedMicrotasks + status.completedMicrotasks) > 0) || (task.isGradeCard && status.verifiedMicrotasks > 0)
-          isClickable = clickableAndEnabled
-          isEnabled = clickableAndEnabled
-
-          setOnClickListener {
-            isClickable = false
-            isEnabled = false
-            dashboardItemClick(task)
-          }
-        }
+        // Task click listener
+        taskLl.setOnClickListener { dashboardItemClick(taskInfo) }
+        taskLl.isClickable = clickable
+        taskLl.isEnabled = clickable
       }
     }
   }
