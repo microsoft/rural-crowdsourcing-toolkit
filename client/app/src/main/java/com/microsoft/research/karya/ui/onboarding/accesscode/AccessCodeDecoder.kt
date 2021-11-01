@@ -46,7 +46,7 @@ class AccessCodeDecoder {
           throw InvalidAccessCodeException()
 
         return url
-      } catch (e: Exception) {
+      } catch (e: Throwable) {
         // TODO: Log the error somewhere
         return DEFAULT_URL
       }
