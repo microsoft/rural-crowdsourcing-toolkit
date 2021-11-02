@@ -128,6 +128,13 @@
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_quiz"
+            app:destination="@id/quizFragment">
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity"
@@ -197,6 +204,17 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.quiz.QuizMainFragment"
+        android:label="quizFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_quizFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

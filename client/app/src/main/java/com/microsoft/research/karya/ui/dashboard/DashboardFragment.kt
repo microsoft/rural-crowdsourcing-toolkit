@@ -263,6 +263,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId, completed, total)
           ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId, completed, total)
           ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId, completed, total)
+          ScenarioType.QUIZ -> actionDashboardActivityToQuiz(taskId, completed, total)
           else -> null
         }
       }

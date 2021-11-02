@@ -83,7 +83,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_10sdp"
-        android:clipToPadding="false"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_5sdp"
         android:scrollbars="none"

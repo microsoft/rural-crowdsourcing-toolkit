@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        style="@style/MicrotaskInstructionText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <FrameLayout
+        android:id="@+id/inputFrame"
+        style="@style/MicrotaskInputFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv">
+
+        <TextView
+            android:id="@+id/questionTv"
+            style="@style/MicrotaskInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_20ssp"
+            tools:text="What is your name?" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/outputFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_20sdp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/inputFrame">
+
+        <EditText
+            android:id="@+id/textResponseEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/MicrotaskOutputEditText"
+            tools:text="Vivek Seshadri"
+            />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/mcqResponseGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </FrameLayout>
+
+    <include
+        android:id="@+id/nextBtn"
+        layout="@layout/microtask_common_next_button"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/outputFrame"
+        android:layout_marginEnd="@dimen/_20sdp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
