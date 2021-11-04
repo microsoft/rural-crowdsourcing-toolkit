@@ -42,9 +42,12 @@ constructor(
   // Id button map
   private val buttonTextMap: MutableMap<Int, String> = mutableMapOf()
 
-  // Response
-  private val _response: MutableStateFlow<String> = MutableStateFlow("")
-  val response = _response.asStateFlow()
+  // Text response
+  private val _textResponse: MutableStateFlow<String> = MutableStateFlow("")
+
+  // MCQ response
+  private val _mcqResponse: MutableStateFlow<Int> = MutableStateFlow(0)
+  val mcqResponse = _mcqResponse.asStateFlow()
 
   /**
    * Setup quiz microtask
@@ -73,14 +76,14 @@ constructor(
    * Update text response
    */
   fun updateTextResponse(res: String) {
-    _response.value = res
+    _textResponse.value = res
   }
 
   /**
    * Update mcq response
    */
   fun updateMCQResponse(@IdRes id: Int) {
-    _response.value = buttonTextMap[id].toString()
+    _mcqResponse.value = id
   }
 
   /**
@@ -88,11 +91,16 @@ constructor(
    */
   fun submitResponse() {
     val key = _question.value.key
-    val res = _response.value
+    val res = when (_question.value.type) {
+      QuestionType.text -> _textResponse.value
+      QuestionType.mcq -> buttonTextMap[_mcqResponse.value].toString()
+      else -> "invalid"
+    }
     outputData.addProperty(key, res)
 
     // Clear out response
-    _response.value = ""
+    _textResponse.value = ""
+    _mcqResponse.value = 0
 
     viewModelScope.launch {
       completeAndSaveCurrentMicrotask()

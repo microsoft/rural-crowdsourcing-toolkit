@@ -83,7 +83,7 @@
         <item name="android:paddingTop">@dimen/_10sdp</item>
         <item name="android:paddingBottom">@dimen/_10sdp</item>
         <item name="android:textColor">?microtaskInputTextColor</item>
-        <item name="android:textSize">@dimen/_24ssp</item>
+        <item name="android:textSize">@dimen/_20ssp</item>
     </style>
 
 </resources>

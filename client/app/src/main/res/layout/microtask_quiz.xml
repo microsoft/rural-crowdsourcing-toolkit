@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/microtaskTb"
@@ -37,24 +37,24 @@
         android:id="@+id/outputFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/_20sdp"
         android:clipToPadding="false"
+        android:padding="@dimen/_20sdp"
         app:layout_constraintTop_toBottomOf="@id/inputFrame">
 
         <EditText
             android:id="@+id/textResponseEt"
+            style="@style/MicrotaskOutputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/MicrotaskOutputEditText"
-            tools:text="Vivek Seshadri"
-            />
+            tools:text="My Name" />
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
+        <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
             android:id="@+id/mcqResponseGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+            app:flexWrap="wrap"
+            app:justifyContent="space_between">
+        </nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup>
 
     </FrameLayout>
 
@@ -63,8 +63,8 @@
         layout="@layout/microtask_common_next_button"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/outputFrame"
-        android:layout_marginEnd="@dimen/_20sdp"/>
+        app:layout_constraintTop_toBottomOf="@id/outputFrame" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

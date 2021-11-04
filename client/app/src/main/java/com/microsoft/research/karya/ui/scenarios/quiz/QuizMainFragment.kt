@@ -1,13 +1,13 @@
 package com.microsoft.research.karya.ui.scenarios.quiz
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.button.MaterialButton
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.gone
@@ -17,11 +17,13 @@ import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_quiz.*
+import nl.bryanderidder.themedtogglebuttongroup.ThemedButton
+import com.intuit.ssp.R as ssp
 
 @AndroidEntryPoint
 class QuizMainFragment: BaseMTRendererFragment(R.layout.microtask_quiz) {
   override val viewModel: QuizViewModel by viewModels()
-  val args: QuizMainFragmentArgs by navArgs()
+  private val args: QuizMainFragmentArgs by navArgs()
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
@@ -73,14 +75,23 @@ class QuizMainFragment: BaseMTRendererFragment(R.layout.microtask_quiz) {
           viewModel.clearButtonTextMap()
 
           question.options?.forEach { option ->
-            val button = MaterialButton(requireContext())
+            val button = ThemedButton(requireContext())
             button.text = option
-            mcqResponseGroup.addView(button)
+            button.tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(ssp.dimen._20ssp))
+            button.tvSelectedText.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(ssp.dimen._20ssp))
+            button.selectedBgColor = R.color.c_dark_green
+            mcqResponseGroup.addView(button, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             viewModel.addButtonTextMap(button.id, option)
           }
 
-          mcqResponseGroup.isSingleSelection = question.multiple == false
+          mcqResponseGroup.selectableAmount = if (question.multiple == false) 1 else question.options!!.size
         }
+      }
+    }
+
+    viewModel.mcqResponse.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { id ->
+      if (id > 0) {
+        mcqResponseGroup.selectButton(id)
       }
     }
   }
@@ -92,8 +103,8 @@ class QuizMainFragment: BaseMTRendererFragment(R.layout.microtask_quiz) {
       viewModel.updateTextResponse(textResponseEt.text.toString())
     }
 
-    mcqResponseGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
-      if (isChecked) viewModel.updateMCQResponse(checkedId)
+    mcqResponseGroup.setOnSelectListener { button ->
+      viewModel.updateMCQResponse(button.id)
     }
   }
 }

@@ -147,4 +147,7 @@ dependencies {
 
   // Zoomable image
   implementation("com.jsibbold:zoomage:1.3.1")
+
+  // Themed button toggle group
+  implementation("nl.bryanderidder:themed-toggle-button-group:1.3.4")
 }
