@@ -62,17 +62,17 @@ class QuizMainFragment: BaseMTRendererFragment(R.layout.microtask_quiz) {
         }
 
         QuestionType.text -> {
-          mcqResponseGroup.invisible()
+          mcqResponseGroup.gone()
           textResponseEt.visible()
           textResponseEt.minLines = if (question.long == true) 3 else 1
         }
 
         QuestionType.mcq -> {
           textResponseEt.invisible()
+          textResponseEt.minLines = 2
           mcqResponseGroup.visible()
 
           mcqResponseGroup.removeAllViews()
-          viewModel.clearButtonTextMap()
 
           question.options?.forEach { option ->
             val button = ThemedButton(requireContext())
@@ -81,30 +81,26 @@ class QuizMainFragment: BaseMTRendererFragment(R.layout.microtask_quiz) {
             button.tvSelectedText.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(ssp.dimen._20ssp))
             button.selectedBgColor = R.color.c_dark_green
             mcqResponseGroup.addView(button, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            viewModel.addButtonTextMap(button.id, option)
           }
 
           mcqResponseGroup.selectableAmount = if (question.multiple == false) 1 else question.options!!.size
         }
       }
     }
-
-    viewModel.mcqResponse.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { id ->
-      if (id > 0) {
-        mcqResponseGroup.selectButton(id)
-      }
-    }
   }
 
   private fun setupListeners() {
-    nextBtn.setOnClickListener { viewModel.submitResponse() }
+    nextBtn.setOnClickListener {
+      viewModel.submitResponse()
+      textResponseEt.setText("")
+    }
 
     textResponseEt.doAfterTextChanged {
       viewModel.updateTextResponse(textResponseEt.text.toString())
     }
 
     mcqResponseGroup.setOnSelectListener { button ->
-      viewModel.updateMCQResponse(button.id)
+      viewModel.updateMCQResponse(button.text)
     }
   }
 }

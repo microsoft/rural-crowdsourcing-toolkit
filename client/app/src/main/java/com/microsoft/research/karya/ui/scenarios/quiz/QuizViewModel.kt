@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.quiz
 
-import androidx.annotation.IdRes
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -39,15 +38,11 @@ constructor(
     MutableStateFlow(Question(QuestionType.invalid))
   val question = _question.asStateFlow()
 
-  // Id button map
-  private val buttonTextMap: MutableMap<Int, String> = mutableMapOf()
-
   // Text response
   private val _textResponse: MutableStateFlow<String> = MutableStateFlow("")
 
   // MCQ response
-  private val _mcqResponse: MutableStateFlow<Int> = MutableStateFlow(0)
-  val mcqResponse = _mcqResponse.asStateFlow()
+  private val _mcqResponse: MutableStateFlow<String> = MutableStateFlow("")
 
   /**
    * Setup quiz microtask
@@ -56,20 +51,6 @@ constructor(
     // Parse question from microtask input
     val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
     _question.value = Gson().fromJson(inputData, Question::class.java)
-  }
-
-  /**
-   * Clear the button text map
-   */
-  fun clearButtonTextMap() {
-    buttonTextMap.clear()
-  }
-
-  /**
-   * Add entry to button map
-   */
-  fun addButtonTextMap(@IdRes id: Int, value: String) {
-    buttonTextMap[id] = value
   }
 
   /**
@@ -82,8 +63,8 @@ constructor(
   /**
    * Update mcq response
    */
-  fun updateMCQResponse(@IdRes id: Int) {
-    _mcqResponse.value = id
+  fun updateMCQResponse(value: String) {
+    _mcqResponse.value = value
   }
 
   /**
@@ -93,14 +74,14 @@ constructor(
     val key = _question.value.key
     val res = when (_question.value.type) {
       QuestionType.text -> _textResponse.value
-      QuestionType.mcq -> buttonTextMap[_mcqResponse.value].toString()
+      QuestionType.mcq -> _mcqResponse.value
       else -> "invalid"
     }
     outputData.addProperty(key, res)
 
     // Clear out response
     _textResponse.value = ""
-    _mcqResponse.value = 0
+    _mcqResponse.value = ""
 
     viewModelScope.launch {
       completeAndSaveCurrentMicrotask()
