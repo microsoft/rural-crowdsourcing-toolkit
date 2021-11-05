@@ -11,7 +11,7 @@
     <string name="consent_form_disagree">I do not want to participate</string>
     <string name="consent_form_text">
         <![CDATA[
-        <h5>Karya Participation Consent Form</h5>
+<h5>Karya Participation Consent Form</h5>
 <p>
   Thank you for your participation on the Karya platform. This document
   describes the goals of the platform and the various steps involved in your
@@ -44,9 +44,9 @@
     on your smartphone.
   </li>
   <li>
-    Your project coordinator will give you a “16-digit Access Code”. You need to
-    enter the code during the registration process. Each access code can be used
-    only once. Therefore, do not share the access code with anyone else.
+    Your project coordinator will give you an “Access Code”. You need to enter
+    the code during the registration process. Each access code can be used only
+    once. Therefore, do not share the access code with anyone else.
   </li>
   <li>
     The registration process may require you to sign-in with your phone number.
@@ -56,11 +56,6 @@
   <li>
     In addition, we will also collect some demographic information about you,
     e.g., your age range, gender, education level, etc.
-  </li>
-  <li>
-    The app will also ask you to choose a profile picture. This picture will
-    only be used for display in the application and will not be stored in our
-    platform.
   </li>
   <li>
     To receive tasks on our platform, the app must “sync” with our server. This
@@ -120,14 +115,13 @@
   request your permission before taking pictures and obtain your permission to
   use those pictures in our presentations or posters. Not providing consent for
   taking pictures will not disqualify you from participating in the study. For
-  additional information or concerns about how Microsoft handles your personal
-  information, please see the Microsoft Privacy Statement,
-  https://go.microsoft.com/fwlink/?LinkId=521839
+  additional information or concerns, please contact us through your project
+  coordinator.
 </p>
 <h5>Payment for Participation</h5>
 <p>
   You will be paid for all correctly completed tasks on the platform. The app or
-  your porject coordinator will also provide you feedback on how well you are
+  your project coordinator will also provide you feedback on how well you are
   performing on the platform so that you can improve your responses for future
   tasks. We will work with you and your project coordinator to identify the best
   mode of payment. We will collect and store your payment information for the
@@ -138,24 +132,23 @@
 </p>
 <h5>Dataset Collected from the Study</h5>
 <p>
-  We will use the dataset collected as part of your responses to different tasks
-  for further research and will aim to release them publicly for research
-  purposes. Most datasets will contain only text or audio data that is not
-  associated with personally identifiable information. In situations where a
-  dataset does contain personally identifiable information (e.g., video), we
-  will obtain explicit consent from you before providing such a task. If you
-  have any questions regarding how the dataset will be used, please feel free to
-  ask us through your project coordinator or using the phone number provided
-  below.
+  Depending on the source of the task, we will use the dataset collected as part
+  of your responses for the task for various purposes including releasing them
+  publicly for research purposes. For each task, we will explain to you the end
+  use of the dataset via your project coordinator. Most datasets will contain
+  only text or audio data that is not associated with personally identifiable
+  information. In situations where a dataset does contain personally
+  identifiable information (e.g., video), we will obtain explicit consent from
+  you before providing such a task. If you have any questions regarding how the
+  dataset will be used, please feel free to ask us through your project
+  coordinator or using the email address provided below.
 </p>
 <h5>Contact Information</h5>
 <p>
-  Should you have any questions concerning the project, you can contact Vivek
-  Seshadri by phone at 0000000000. Should you have any questions about your
-  rights as a research subject, please report your concern via email to
-  Microsoft Research Ethics Program Feedback: MSRStudyfeedback@microsoft.com. In
-  case you do not have access to email, you can contact your project
-  coordinator, and have her relay your concerns.
+  Should you have any questions about your participation, please contact us via
+  email at thekaryainc+questions@gmail.com. In case you do not have access to
+  email, you can contact your project coordinator, and have them relay your
+  concerns.
 </p>
 <h5>Consent</h5>
 <p>
