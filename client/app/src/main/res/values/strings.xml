@@ -188,6 +188,14 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
+    <!-- Sync -->
+    <string name="reset_assignment_warning">Some output files were missing.</string>
+    <string name="upload_file_error">Error while uploading files. Please contact your coordinator.</string>
+    <string name="send_db_error">Error while sending tasks. Please contact your coordinator.</string>
+    <string name="receive_db_error">Error while receiving tasks. Please contact your coordinator.</string>
+    <string name="download_file_error">Error while downloading files. Please contact your coordinator.</string>
+    <string name="received_verified_error">Error while receiving validations. Please contact your coordinator.</string>
+
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
     <string name="recording_accuracy">Accuracy</string>
@@ -230,7 +238,4 @@
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
     <string name="back">back</string>
-
-    <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
-    <string name="input_file_does_not_exist">Input file does not exist for next assignment</string>
 </resources>

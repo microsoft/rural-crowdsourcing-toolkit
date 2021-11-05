@@ -16,7 +16,6 @@ import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.base.SessionFragment
-import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_RECEIVE_DB_UPDATES_PROGRESS
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -91,10 +90,10 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           viewModel.setProgress(progress)
           viewModel.setLoading()
           // refresh the UI to show microtasks
-          if (progress == MAX_RECEIVE_DB_UPDATES_PROGRESS )
-          viewLifecycleScope.launch {
-            viewModel.refreshList()
-          }
+          if (progress == 100)
+            viewLifecycleScope.launch {
+              viewModel.refreshList()
+            }
         }
         if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
           lifecycleScope.launch {
@@ -193,7 +192,8 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
     // Set buttons
     builder?.apply {
-      setPositiveButton(R.string.yes
+      setPositiveButton(
+        R.string.yes
       ) { _, _ ->
         syncWithServer()
         dialog!!.dismiss()
@@ -259,8 +259,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       val action = with(DashboardFragmentDirections) {
         when (task.scenarioName) {
           ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment(taskId, completed, total)
-          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId, completed, total)
-          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId, completed, total)
+          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(
+            taskId,
+            completed,
+            total
+          )
           ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId, completed, total)
           ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId, completed, total)
           ScenarioType.QUIZ -> actionDashboardActivityToQuiz(taskId, completed, total)
