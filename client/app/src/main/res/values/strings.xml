@@ -219,18 +219,13 @@
     <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
 
-    <string name="s_gender_prompt">Please choose your gender. If you do not wish to state your gender, you can skip this step</string>
-    <string name="s_male">Male</string>
-    <string name="s_female">Female</string>
-    <string name="s_age_prompt">Please enter your year of birth</string>
-
     <!-- Transliteration strings -->
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
     <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
 
     <!-- Speech recording strings -->
-    <string name="speech_recording_instruction">Translate the sentence below</string>
+    <string name="speech_recording_instruction">Record the sentence below</string>
 
     <!-- Image transcription strings -->
     <string name="image_transcription_instruction">Type what you see in the image below</string>
