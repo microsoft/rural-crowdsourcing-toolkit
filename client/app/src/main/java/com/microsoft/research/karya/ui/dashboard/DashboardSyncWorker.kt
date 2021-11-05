@@ -22,7 +22,7 @@ import com.microsoft.research.karya.utils.extensions.getBlobPath
 import kotlinx.coroutines.flow.collect
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 private const val MAX_UPLOAD_PROGRESS = 25
@@ -312,7 +312,7 @@ class DashboardSyncWorker(
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
     val requestFile =
-      RequestBody.create("application/tgz".toMediaTypeOrNull(), File(assignmentTarBallPath))
+      File(assignmentTarBallPath).asRequestBody("application/tgz".toMediaTypeOrNull())
     val filePart = MultipartBody.Part.createFormData("file", tarBallName, requestFile)
 
     val md5sum = FileUtils.getMD5Digest(assignmentTarBallPath)
