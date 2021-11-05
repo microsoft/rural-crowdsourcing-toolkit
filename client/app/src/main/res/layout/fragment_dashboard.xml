@@ -85,6 +85,7 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_5sdp"
+        android:clipToPadding="false"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
