@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -369,8 +370,8 @@ constructor(
     viewModelScope.launch {
       val centiSeconds = (duration / 10) % 100
       val seconds = duration / 1000
-      _playbackSecondsTvText.value = "%d".format(seconds)
-      _playbackCentiSecondsTvText.value = "%02d".format(centiSeconds)
+      _playbackSecondsTvText.value = seconds.toString()
+      _playbackCentiSecondsTvText.value = "%02d".format(Locale.ENGLISH, centiSeconds)
     }
   }
 
