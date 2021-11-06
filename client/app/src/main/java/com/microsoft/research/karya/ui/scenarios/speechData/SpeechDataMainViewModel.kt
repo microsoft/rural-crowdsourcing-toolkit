@@ -36,7 +36,9 @@ import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.lang.Runnable
 import java.lang.Thread
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -858,8 +860,8 @@ constructor(
       val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
       val centiSeconds = (milliseconds / 10) % 100
       val seconds = milliseconds / 1000
-      _recordSecondsTvText.value = "%d".format(seconds)
-      _recordCentiSecondsTvText.value = "%02d".format(centiSeconds)
+      _recordSecondsTvText.value = seconds.toString()
+      _recordCentiSecondsTvText.value = "%02d".format(Locale.ENGLISH, centiSeconds)
     }
   }
 

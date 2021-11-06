@@ -60,10 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="0"
             android:textColor="@color/c_red"
-            android:textSize="@dimen/_40ssp"
-            app:fontFamily="monospace" />
+            android:textSize="@dimen/_40ssp" />
 
         <TextView
             android:id="@+id/recordCentiSecondsTv"
@@ -71,10 +69,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4sdp"
             android:gravity="center"
-            android:text="00"
             android:textColor="@color/c_red"
-            android:textSize="@dimen/_26ssp"
-            app:fontFamily="monospace" />
+            android:textSize="@dimen/_26ssp" />
 
     </LinearLayout>
 
