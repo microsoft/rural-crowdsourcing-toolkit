@@ -82,7 +82,7 @@ boxRouter.put<TaskController.TaskRouteState, {}>(
   '/task/:id/new_assignments',
   Middlewares.needIdToken,
   TaskController.setTask,
-  BodyParser({ jsonLimit: '20mb' }),
+  BodyParser({ jsonLimit: '50mb' }),
   // @ts-ignore Lack of full understanding of router types
   TaskController.submitNewAssignments
 );
@@ -92,7 +92,7 @@ boxRouter.put<TaskController.TaskRouteState, {}>(
   '/task/:id/completed_assignments',
   Middlewares.needIdToken,
   TaskController.setTask,
-  BodyParser({ jsonLimit: '20mb' }),
+  BodyParser({ jsonLimit: '50mb' }),
   // @ts-ignore Lack of full understanding of router types
   TaskController.submitCompletedAssignments
 );

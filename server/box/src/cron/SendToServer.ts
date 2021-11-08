@@ -144,6 +144,7 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
  */
 export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   try {
+    cronLogger.info(`Sending new assignments to server`);
     // Get all task assignments for the box
     const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
     const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -166,7 +167,10 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
       let batch: MicrotaskAssignmentRecord[];
       do {
         batch = assignments.slice(batch_id * batch_size, (batch_id + 1) * batch_size);
-        const response = await axiosLocal.put<SendNewAssignmentsResponse>(`/task/${task.id}/new_assignments`, batch);
+        const response = await axiosLocal.put<SendNewAssignmentsResponse>(`/task/${task.id}/new_assignments`, batch, {
+          maxBodyLength: 100000000,
+          maxContentLength: 100000000,
+        });
         const updates = response.data;
         await BBPromise.mapSeries(updates, async ({ id, sent_to_server_at }) => {
           await BasicModel.updateSingle('microtask_assignment', { id }, { sent_to_server_at });
@@ -184,6 +188,7 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
  */
 export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   try {
+    cronLogger.info(`Sending completed assignments to server`);
     // Get all task assignments for the box
     const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
     const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -206,7 +211,11 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
         batch = assignments.slice(batch_id * batch_size, (batch_id + 1) * batch_size);
         const response = await axiosLocal.put<SendNewAssignmentsResponse>(
           `/task/${task.id}/completed_assignments`,
-          batch
+          batch,
+          {
+            maxBodyLength: 100000000,
+            maxContentLength: 100000000,
+          }
         );
         const updates = response.data;
         await BBPromise.mapSeries(updates, async ({ id, submitted_to_server_at }) => {
