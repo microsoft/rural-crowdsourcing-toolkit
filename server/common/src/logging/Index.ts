@@ -64,6 +64,7 @@ export const httpRequestLogger: Application.Middleware = async (ctx, next) => {
   // Log the response
   const response = {
     id,
+    requester: ctx.state.entity?.id,
     status: ctx.status,
     size: ctx.response.length,
     time: end - start,

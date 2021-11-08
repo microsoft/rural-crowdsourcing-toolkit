@@ -12,8 +12,11 @@ import {
   TaskRecord,
   TaskRecordType,
 } from '@karya/core';
-import { BasicModel, MicrotaskModel, MicrotaskGroupModel } from '@karya/common';
+import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
+
+// Create an assignment logger
+const assignmentLogger = karyaLogger({ name: 'assignments' });
 
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments
@@ -91,8 +94,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       // check if there is a max limit on microtasks
       const microtaskLimit = task.params.maxMicrotasksPerUser;
       let assignLimit = 1000;
+      let assignedCount = -1;
       if (microtaskLimit > 0) {
-        const assignedCount = await MicrotaskModel.getAssignedCount(worker.id, task.id);
+        assignedCount = await MicrotaskModel.getAssignedCount(worker.id, task.id);
         assignLimit = microtaskLimit - assignedCount;
         if (assignLimit < 0) assignLimit = 0;
       }
@@ -105,6 +109,15 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
       assignLimit = assignLimit < batchSize ? assignLimit : batchSize;
       assignableMicrotasks = assignableMicrotasks.slice(0, assignLimit);
+
+      assignmentLogger.info({
+        worker_id: worker.id,
+        task_id: task.id,
+        batch_size: batchSize,
+        limit: microtaskLimit,
+        previous: assignedCount,
+        current: assignLimit,
+      });
 
       // Identify prefix that fits within max credits
       for (const microtask of assignableMicrotasks) {
