@@ -307,7 +307,9 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
 
     while (responseLength >= limit) {
       let verifiedAssignments: MicrotaskAssignmentRecord[];
-      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment').max('verified_at');
+      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+        .where('task_id', task.id)
+        .max('verified_at');
       const latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
 
       // Send request to get microtasks
