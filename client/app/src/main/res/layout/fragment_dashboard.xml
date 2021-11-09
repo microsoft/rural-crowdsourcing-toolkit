@@ -103,7 +103,7 @@
         android:id="@+id/rupeesEarnedCl"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
-        android:background="#CCC"
+        android:background="@color/c_light_grey"
         android:paddingHorizontal="@dimen/_15sdp"
         android:paddingVertical="@dimen/_5sdp"
         android:visibility="gone"
@@ -133,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:textSize="@dimen/_24ssp"
+                android:textColor="@color/c_black"
                 tools:text="100.00" />
 
         </LinearLayout>

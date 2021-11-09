@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 
@@ -161,12 +162,12 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-      /* if (totalCreditsEarned > 0.0f) {
+      if (totalCreditsEarned > 0.0f) {
         binding.rupeesEarnedCl.visible()
-        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+        binding.rupeesEarnedTv.text = "%.2f".format(Locale.ENGLISH, totalCreditsEarned)
       } else {
         binding.rupeesEarnedCl.gone()
-      } */
+      }
     }
 
     // Show a dialog box to sync with server if completed tasks and internet available
