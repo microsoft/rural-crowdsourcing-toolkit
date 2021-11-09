@@ -62,7 +62,9 @@ const dataConnector = withData('box', 'task');
 const connector = compose(dataConnector, reduxConnector);
 // Component props
 // Need filter for box.
-type CreateTaskAssignmentProps = RouterProps & ConnectedProps<typeof reduxConnector> & DataProps<typeof dataConnector>;
+type CreateTaskAssignmentProps = RouterProps &
+  ConnectedProps<typeof reduxConnector> &
+  DataProps<typeof dataConnector> & { task_id?: string; close_form_func?: () => void };
 
 // Component state
 type CreateTaskAssignmentState = {
@@ -82,12 +84,20 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   componentDidMount() {
     M.AutoInit();
     M.updateTextFields();
+    if (this.props.task_id !== undefined) {
+      const task = this.props.task.data.find((t) => t.id === this.props.task_id) as TaskRecord;
+      this.setState({ task });
+    }
   }
 
   // on update
   componentDidUpdate(prevProps: CreateTaskAssignmentProps) {
     if (prevProps.request.status === 'IN_FLIGHT' && this.props.request.status === 'SUCCESS') {
-      this.props.history.push('/task-assignments');
+      if (!this.props.close_form_func) {
+        this.props.history.push('/task-assignments');
+      } else {
+        this.props.close_form_func();
+      }
     } else {
       M.updateTextFields();
       M.AutoInit();
@@ -174,6 +184,8 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     const errorElements = [this.props.request, this.props.box, this.props.task].map((op, index) =>
       op.status === 'FAILURE' ? <ErrorMessage key={index} message={op.messages} /> : null,
     );
+
+    const task_id_props = this.props.task_id;
 
     // Task drop down
     const tasks = this.props.task.data.filter((t) => t.status === 'SUBMITTED');
@@ -265,19 +277,19 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
         {errorElements.map((err) => err)}
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
-            <h1 className='page-title'>Create Assignment</h1>
+            {task_id_props ? null : <h1 className='page-title'>Create Assignment</h1>}
             <div id='task-assignment-form'>
               <div className='row'>
                 <div className='col s10 m8 l6'>
                   {this.props.task.status === 'IN_FLIGHT' ? (
                     <ProgressBar />
-                  ) : this.props.task.status === 'SUCCESS' ? (
+                  ) : this.props.task.status === 'SUCCESS' && !task_id_props ? (
                     taskDropDown
                   ) : null}
                 </div>
               </div>
               <div className='row'>
-                <div className='col s10 m8 l6'>
+                <div className={task_id_props ? 'col s10' : 'col s10 m8 l6'}>
                   {this.props.box.status === 'IN_FLIGHT' ? (
                     <ProgressBar />
                   ) : this.props.box.status === 'SUCCESS' ? (
@@ -286,7 +298,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                 </div>
               </div>
               <div className='row'>
-                <div className='col s10 m8 l6'>{policyDropDown}</div>
+                <div className={task_id_props ? 'col s10' : 'col s10 m8 l6'}>{policyDropDown}</div>
               </div>
 
               {/** Policy parameter section */}
@@ -301,9 +313,16 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                     <button className='btn waves-effect waves-light' id='submit-assignment-btn'>
                       Submit Assignment
                     </button>
-                    <Link to='/task-assignments'>
-                      <button className='btn cancel-btn'>Cancel</button>
-                    </Link>
+                    {task_id_props ? (
+                      <div className='btn cancel-btn' onClick={this.props.close_form_func}>
+                        Cancel
+                        <i className='material-icons right'>close</i>
+                      </div>
+                    ) : (
+                      <Link to='/task-assignments'>
+                        <button className='btn cancel-btn'>Cancel</button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               )}

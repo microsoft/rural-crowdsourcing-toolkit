@@ -33,9 +33,12 @@ import { taskStatus } from './TaskUtils';
 
 // HoCs
 import { AuthProps, withAuth } from '../hoc/WithAuth';
+import { DataProps, withData } from '../hoc/WithData';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
+
+import CreateTaskAssignment from '../task_assignment/CreateTaskAssignment';
 
 // Recharts library
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -187,16 +190,18 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const connector = compose(withAuth, reduxConnector);
+const dataConnector = withData('task_assignment', 'box');
+const connector = compose(withAuth, reduxConnector, dataConnector);
 
 // Task detail props
-type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector>;
+type TaskDetailProps = OwnProps & AuthProps & ConnectedProps<typeof reduxConnector> & DataProps<typeof dataConnector>;
 
 // component state
 type TaskDetailState = {
   files: { [id: string]: File };
   show_input_form: boolean;
   show_link_form: boolean;
+  show_assignment_form: boolean;
   taskLink: TaskLink;
 };
 
@@ -206,6 +211,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     files: {},
     show_input_form: false,
     show_link_form: false,
+    show_assignment_form: false,
     taskLink: { chain: undefined, to_task: undefined, blocking: false },
   };
 
@@ -272,6 +278,8 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const file_records = this.props.file_records as (TaskOpRecord & { extras: fileExtras })[];
     const { tasks } = this.props;
     const { task_links } = this.props;
+    const task_assignments_all = this.props.task_assignment.data;
+    const boxes = this.props.box.data;
 
     type Extras = { assigned: number; completed: number; verified: number; cost: number };
     const graph_data = this.props.graph_data as (MicrotaskRecordType & { extras: Extras })[];
@@ -497,6 +505,54 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
         </div>
       );
     }
+
+    // Task assignment table and creation form
+    let task_assignment_section = null;
+    const task_assignments = task_assignments_all.filter((ta) => ta.task_id === task.id);
+    task_assignment_section = (
+      <div className='section' id='task_assignment_section'>
+        <div className='row'>
+          <h2>Assignments Created</h2>
+        </div>
+        {/** Show task assignment table if task assignments exist */}
+        {task_assignments.length !== 0 ? (
+          <table id='task-assignment-table'>
+            <thead>
+              <tr>
+                <th>Box</th>
+                <th>Policy</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {task_assignments.map((ta) => (
+                <tr key={ta.id}>
+                  <td>{boxes.find((b) => b.id === ta.box_id)?.name}</td>
+                  <td>{ta.policy}</td>
+                  <td>{ta.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : null}
+
+        {/* * Task assignment form */}
+        <div id='assignment-form' style={{ display: this.state.show_assignment_form === true ? 'block' : 'none' }}>
+          <CreateTaskAssignment
+            // @ts-ignore
+            task_id={task.id}
+            close_form_func={() => this.setState({ show_assignment_form: false })}
+          />
+        </div>
+        <button
+          className='btn-flat'
+          id='add-assignment-btn'
+          onClick={() => this.setState({ show_assignment_form: true })}
+        >
+          <i className='material-icons left'>add</i>Create assignment
+        </button>
+      </div>
+    );
 
     const errorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
@@ -747,6 +803,8 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             </div>
           </>
         ) : null}
+
+        {task_assignment_section}
       </div>
     );
   }
