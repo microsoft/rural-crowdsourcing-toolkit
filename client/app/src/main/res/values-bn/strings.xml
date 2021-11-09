@@ -102,11 +102,11 @@ Registration প্রক্রিয়ার জন্য আপনাকে �
     <!-- OTP -->
     <string name="otp_title">OTP</string>
     <string name="otp_prompt">
-        We have sent a 6-digit OTP via SMS to 0000000000. Please enter the OTP below.
+        আমরা 0000000000 নম্বরে SMS এর মাধ্যমে একটি 6-সংখ্যার ওটিপি (OTP) পাঠিয়েছি৷ অনুগ্রহ করে নীচে ওটিপি (OTP) লিখুন৷
     </string>
-    <string name="resend_otp">Resend OTP</string>
-    <string name="change_phone_number">Change Phone Number</string>
-    <string name="invalid_otp">You have entered an invalid OTP.</string>
+    <string name="resend_otp">OTP আবার পাঠান</string>
+    <string name="change_phone_number">ফোন নম্বর পরিবর্তন করুন</string>
+    <string name="invalid_otp">আপনি একটি অবৈধ OTP প্রবেশ করেছেন৷</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">ড্যাশবোর্ড</string>

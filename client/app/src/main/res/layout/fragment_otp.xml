@@ -74,7 +74,8 @@
             style="@style/secondaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:textSize="@dimen/_9ssp"
             android:text="@string/resend_otp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -84,7 +85,8 @@
             style="@style/secondaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:textSize="@dimen/_9ssp"
             android:text="@string/change_phone_number"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
