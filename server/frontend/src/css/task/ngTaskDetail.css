@@ -175,7 +175,7 @@
 }
 
 #submit-form {
-  padding-top: 3%;
+  padding-top: 2%;
   padding-left: 4%;
   padding-right: 4%;
   line-height: 1.2em;
@@ -197,8 +197,15 @@
 }
 
 #link-form {
-  padding-top: 7%;
+  padding-top: 4%;
   padding-left: 4%;
+}
+
+#link-form #task-link-error {
+  font-size: 0.95em;
+  letter-spacing: 1px;
+  color: #f44336;
+  margin-left: 3%;
 }
 
 #link-form input {

@@ -203,6 +203,7 @@ type TaskDetailState = {
   show_link_form: boolean;
   show_assignment_form: boolean;
   taskLink: TaskLink;
+  taskLinkError: string;
 };
 
 class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
@@ -213,6 +214,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     show_link_form: false,
     show_assignment_form: false,
     taskLink: { chain: undefined, to_task: undefined, blocking: false },
+    taskLinkError: '',
   };
 
   // Submit input files and close the form on successful submission only
@@ -265,6 +267,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const taskLink: TaskLink = { ...this.state.taskLink };
     taskLink.from_task = this.props.task?.id;
     taskLink.grouping = 'EITHER';
+    if (!taskLink.chain || !taskLink.to_task) {
+      this.setState({ taskLinkError: 'Please select the required values' });
+      return;
+    }
     this.props.createTaskLink(taskLink);
     this.setState({ show_link_form: false });
   };
@@ -288,9 +294,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     const workers_data = this.props.workers_data as (WorkerRecord & { extras: workerExtras })[];
 
     // Task link form values
-    const chain = this.state.taskLink.chain || 0;
-    const to_task = this.state.taskLink.to_task || 0;
+    const chain = this.state.taskLink.chain || '';
+    const to_task = this.state.taskLink.to_task || '';
     const blocking = this.state.taskLink.blocking;
+    const taskLinkError = this.state.taskLinkError;
 
     // If request in flight, show progress bar
     if (this.props.request.status === 'IN_FLIGHT') {
@@ -437,67 +444,74 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
           {/** Task link form */}
           <div id='link-form' style={{ display: this.state.show_link_form === true ? 'block' : 'none' }}>
-            <div className='row'>
-              <div className='col s10'>
-                <select id='chain' value={chain} onChange={this.handleSelectInputChange}>
-                  <option value={0} disabled={true}>
-                    Select a chain
-                  </option>
-                  {chains.map((c) => (
-                    <option value={c.name} key={c.name}>
-                      {c.full_name}
+            <form onSubmit={this.handleLinkSubmit}>
+              <p id='task-link-error'>{taskLinkError}</p>
+              <div className='row'>
+                <div className='col s10'>
+                  <select id='chain' value={chain} onChange={this.handleSelectInputChange}>
+                    <option value='' disabled={true}>
+                      Select a chain
                     </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            {/** When chain is selected show the rest of the form */}
-            {this.state.taskLink.chain !== undefined ? (
-              <>
-                <div className='row'>
-                  <div className='col s10'>
-                    <select id='to_task' value={to_task} onChange={this.handleSelectInputChange}>
-                      <option value={0} disabled={true} selected={true}>
-                        Select a task
+                    {chains.map((c) => (
+                      <option value={c.name} key={c.name}>
+                        {c.full_name}
                       </option>
-                      {/** Show all tasks that belong to the required scenario as options */}
-                      {tasks
-                        .filter(
-                          (t) => t.scenario_name === baseChainMap[this.state.taskLink.chain! as ChainName].toScenario,
-                        )
-                        .map((o) => (
-                          <option value={o.id} key={o.id}>
-                            {o.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
+                    ))}
+                  </select>
                 </div>
-                <div className='row'>
-                  <div className='col s10' id='checkbox-col'>
-                    <label htmlFor='blocking'>
-                      <input
-                        type='checkbox'
-                        className='filled-in'
-                        id='blocking'
-                        checked={blocking}
-                        onChange={this.handleBooleanChange}
-                      />
-                      <span>Blocking</span>
-                    </label>
+              </div>
+              {/** When chain is selected show the rest of the form */}
+              {this.state.taskLink.chain !== undefined ? (
+                <>
+                  <div className='row'>
+                    <div className='col s10'>
+                      <select id='to_task' value={to_task} onChange={this.handleSelectInputChange}>
+                        <option value='' disabled={true}>
+                          Select a task
+                        </option>
+                        {/** Show all tasks that belong to the required scenario as options */}
+                        {tasks
+                          .filter(
+                            (t) => t.scenario_name === baseChainMap[this.state.taskLink.chain! as ChainName].toScenario,
+                          )
+                          .map((o) => (
+                            <option value={o.id} key={o.id}>
+                              {o.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-              </>
-            ) : null}
-            <div className='row' id='btn-row1'>
-              <button className='btn' id='add-chain-btn' onClick={this.handleLinkSubmit}>
-                Add chain
-              </button>
-              <button className='btn cancel-btn' onClick={() => this.setState({ show_link_form: false })}>
-                Cancel
-                <i className='material-icons right'>close</i>
-              </button>
-            </div>
+                  <div className='row'>
+                    <div className='col s10' id='checkbox-col'>
+                      <label htmlFor='blocking'>
+                        <input
+                          type='checkbox'
+                          className='filled-in'
+                          id='blocking'
+                          checked={blocking}
+                          onChange={this.handleBooleanChange}
+                        />
+                        <span>Blocking</span>
+                      </label>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+              <div className='row' id='btn-row1'>
+                <button className='btn' id='add-chain-btn'>
+                  Add chain
+                </button>
+                <button
+                  type='button'
+                  className='btn cancel-btn'
+                  onClick={() => this.setState({ show_link_form: false, taskLinkError: '' })}
+                >
+                  Cancel
+                  <i className='material-icons right'>close</i>
+                </button>
+              </div>
+            </form>
           </div>
           <button className='btn-flat' id='add-link-btn' onClick={() => this.setState({ show_link_form: true })}>
             <i className='material-icons left'>add</i>Add chain
@@ -755,51 +769,57 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
             {/** Floating form for submission of input files */}
             <div id='submit-form' style={{ display: this.state.show_input_form === true ? 'block' : 'none' }}>
-              <p>Kindly upload the following files.</p>
-              {jsonInputFile.required ? (
-                <div className='row'>
-                  <p>
-                    <i>{jsonInputFile.description}</i>
-                  </p>
-                  <div className='col s12 file-field input-field'>
-                    <div className='btn btn-small'>
-                      <i className='material-icons'>attach_file</i>
-                      <input type='file' id='json' onChange={this.handleParamFileChange} />
-                    </div>
-                    <div className='file-path-wrapper'>
-                      <label htmlFor='json-name'>Task JSON File</label>
-                      <input id='json-name' type='text' disabled={true} className='file-path validate' />
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-              {tarInputfile.required ? (
-                <div className='row'>
-                  <p>
-                    <i>{tarInputfile.description}</i>
-                  </p>
-                  <div className='col s12 file-field input-field'>
-                    <div className='btn btn-small'>
-                      <i className='material-icons'>attach_file</i>
-                      <input type='file' id='tgz' onChange={this.handleParamFileChange} />
-                    </div>
-                    <div className='file-path-wrapper'>
-                      <label htmlFor='tgz-name'>Task TGZ File</label>
-                      <input id='tgz-name' type='text' disabled={true} className='file-path validate' />
+              <form onSubmit={this.submitInputFiles}>
+                <p>Kindly upload the following files.</p>
+                {jsonInputFile.required ? (
+                  <div className='row'>
+                    <p>
+                      <i>{jsonInputFile.description}</i>
+                    </p>
+                    <div className='col s12 file-field input-field'>
+                      <div className='btn btn-small'>
+                        <i className='material-icons'>attach_file</i>
+                        <input type='file' id='json' onChange={this.handleParamFileChange} required={true} />
+                      </div>
+                      <div className='file-path-wrapper'>
+                        <label htmlFor='json-name'>Task JSON File</label>
+                        <input id='json-name' type='text' disabled={true} className='file-path validate' />
+                      </div>
                     </div>
                   </div>
+                ) : null}
+                {tarInputfile.required ? (
+                  <div className='row'>
+                    <p>
+                      <i>{tarInputfile.description}</i>
+                    </p>
+                    <div className='col s12 file-field input-field'>
+                      <div className='btn btn-small'>
+                        <i className='material-icons'>attach_file</i>
+                        <input type='file' id='tgz' onChange={this.handleParamFileChange} required={true} />
+                      </div>
+                      <div className='file-path-wrapper'>
+                        <label htmlFor='tgz-name'>Task TGZ File</label>
+                        <input id='tgz-name' type='text' disabled={true} className='file-path validate' />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+                <div className='row' id='btn-row2'>
+                  <button className='btn' id='upload-btn'>
+                    Upload
+                    <i className='material-icons right'>upload</i>
+                  </button>
+                  <button
+                    type='reset'
+                    className='btn cancel-btn'
+                    onClick={() => this.setState({ show_input_form: false, files: {} })}
+                  >
+                    Cancel
+                    <i className='material-icons right'>close</i>
+                  </button>
                 </div>
-              ) : null}
-              <div className='row' id='btn-row2'>
-                <button className='btn' id='upload-btn' onClick={this.submitInputFiles}>
-                  Upload
-                  <i className='material-icons right'>upload</i>
-                </button>
-                <button className='btn cancel-btn' onClick={() => this.setState({ show_input_form: false })}>
-                  Cancel
-                  <i className='material-icons right'>close</i>
-                </button>
-              </div>
+              </form>
             </div>
           </>
         ) : null}

@@ -97,7 +97,8 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
   };
 
   // Submit file
-  submitLangAsset = () => {
+  submitLangAsset: React.FormEventHandler = (e) => {
+    e.preventDefault();
     const { code, file } = this.state;
     if (!code || !file) return;
     this.props.submitLangAsset(code, file);
@@ -179,34 +180,38 @@ class LangAsset extends React.Component<LangAssetProps, LangAssetState> {
                 />
               </div>
               <div id='submit-lang-form' style={{ display: this.state.show_form === true ? 'block' : 'none' }}>
-                <div className='row'>
-                  <p>Upload language asset file for {this.state.code}</p>
-                  <div className='col s12 file-field input-field'>
-                    <div className='btn btn-small'>
-                      <i className='material-icons'>attach_file</i>
-                      <input type='file' id={this.state.code} onChange={this.handleFileChange} />
-                    </div>
-                    <div className='file-path-wrapper'>
-                      <label htmlFor={`${this.state.code}-tgz-name`}>TGZ File</label>
-                      <input
-                        id={`${this.state.code}-tgz-name`}
-                        type='text'
-                        disabled={true}
-                        className='file-path validate'
-                      />
+                <form onSubmit={this.submitLangAsset}>
+                  <div className='row'>
+                    <p>
+                      <i>Upload language asset file for {this.state.code}</i>
+                    </p>
+                    <div className='col s12 file-field input-field'>
+                      <div className='btn btn-small'>
+                        <i className='material-icons'>attach_file</i>
+                        <input type='file' id={this.state.code} onChange={this.handleFileChange} required={true} />
+                      </div>
+                      <div className='file-path-wrapper'>
+                        <label htmlFor={`${this.state.code}-tgz-name`}>TGZ File</label>
+                        <input
+                          id={`${this.state.code}-tgz-name`}
+                          type='text'
+                          disabled={true}
+                          className='file-path validate'
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className='row' id='btn-row2'>
-                  <button className='btn' id='upload-btn' onClick={this.submitLangAsset}>
-                    Upload
-                    <i className='material-icons right'>upload</i>
-                  </button>
-                  <button className='btn cancel-btn' onClick={() => this.setState({ show_form: false })}>
-                    Cancel
-                    <i className='material-icons right'>close</i>
-                  </button>
-                </div>
+                  <div className='row' id='btn-row2'>
+                    <button className='btn' id='upload-btn'>
+                      Upload
+                      <i className='material-icons right'>upload</i>
+                    </button>
+                    <button type='reset' className='btn cancel-btn' onClick={() => this.setState({ show_form: false })}>
+                      Cancel
+                      <i className='material-icons right'>close</i>
+                    </button>
+                  </div>
+                </form>
               </div>
             </>
           )}
