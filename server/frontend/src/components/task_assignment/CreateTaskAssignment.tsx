@@ -314,10 +314,10 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                       Submit Assignment
                     </button>
                     {task_id_props ? (
-                      <div className='btn cancel-btn' onClick={this.props.close_form_func}>
+                      <button type='button' className='btn cancel-btn' onClick={this.props.close_form_func}>
                         Cancel
                         <i className='material-icons right'>close</i>
-                      </div>
+                      </button>
                     ) : (
                       <Link to='/task-assignments'>
                         <button className='btn cancel-btn'>Cancel</button>
