@@ -1,8 +1,16 @@
 #create-task-link {
-  margin-left: 70%;
+  margin-left: 53%;
+  margin-right: 2%;
 }
 
 #create-task-link button {
+  color: #fff;
+  background-color: #4fc3f7;
+  border-radius: 7px;
+  margin-bottom: 1%;
+}
+
+#create-task-json-btn {
   color: #fff;
   background-color: #4fc3f7;
   border-radius: 7px;
@@ -147,4 +155,49 @@
   font-size: 1.1em !important;
   font-weight: 500;
   margin-left: 3%;
+}
+
+#json-form {
+  position: fixed;
+  bottom: 8%;
+  right: 32.5%;
+  width: 35%;
+  height: 70%;
+  z-index: 2;
+  background-color: #fff;
+  border: 1px solid rgba(180, 189, 198, 0.4);
+  border-radius: 5px;
+}
+
+#json-form {
+  padding-top: 3%;
+  padding-left: 4%;
+  padding-right: 4%;
+  line-height: 1.2em;
+}
+
+#json-form .btn-small {
+  background-color: #4fc3f7;
+  box-shadow: none;
+}
+
+#json-form p i {
+  font-size: 0.95em;
+}
+
+#json-form #import-error {
+  font-size: 0.95em;
+  letter-spacing: 1px;
+  color: #f44336;
+  margin-left: 3%;
+}
+
+#json-form input {
+  color: #717787;
+  height: 1.5em;
+  border-bottom: 1px dotted #6e768d;
+}
+
+#btn-row button {
+  margin-left: 10%;
 }
