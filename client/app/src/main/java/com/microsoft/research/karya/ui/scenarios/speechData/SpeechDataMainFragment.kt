@@ -49,6 +49,9 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
 
     setupObservers()
 
+    // Setup speech data view model
+    viewModel.setupSpeechDataViewModel()
+
     /** Set OnBackPressed callback */
     requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) { viewModel.onBackPressed() }
 

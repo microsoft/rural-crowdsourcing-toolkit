@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.DataOutputStream
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.lang.Runnable
@@ -41,9 +42,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 /** Audio recording parameters */
-private const val SAMPLE_RATE = 44100
 private const val AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO
-private const val AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT
 
 @HiltViewModel
 class SpeechDataMainViewModel
@@ -66,6 +65,11 @@ constructor(
   // TODO: Pass it in constructor (once we have viewModel factory)
   private val postRecordingTime: Int = 250
   private val prerecordingTime: Int = 250
+
+  // Speech data collection parameters
+  private var samplingRate: Int = 44100
+  private var audioEncoding: Int = AudioFormat.ENCODING_PCM_16BIT
+  private var compressAudio: Boolean = true
 
   /**
    * UI button states
@@ -101,7 +105,6 @@ constructor(
   }
 
   /** UI strings */
-  private lateinit var recordInstruction: String
   private var noForcedReplay: Boolean = false
 
   /** Audio recorder and media player */
@@ -110,7 +113,7 @@ constructor(
 
   /** Audio recorder config parameters */
   private val _minBufferSize =
-    AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
+    AudioRecord.getMinBufferSize(samplingRate, AUDIO_CHANNEL, audioEncoding)
   private val _recorderBufferSize = _minBufferSize * 4
   private val _recorderBufferBytes = _recorderBufferSize
 
@@ -188,6 +191,40 @@ constructor(
       val data = datastore.data.first()
       firstTimeActivityVisit = data[firstRunKey] ?: true
       datastore.edit { prefs -> prefs[firstRunKey] = false }
+    }
+  }
+
+  /**
+   * Initialize speech data collection parameters
+   */
+  fun setupSpeechDataViewModel() {
+    compressAudio = try {
+      task.params.asJsonObject.get("compress").asBoolean
+    } catch (e: Exception) {
+      true
+    }
+
+    samplingRate = try {
+      val rate = task.params.asJsonObject.get("sampling_rate").asString
+      when (rate) {
+        "8k" -> 8000
+        "16k" -> 16000
+        "44k" -> 44100
+        else -> 44100
+      }
+    } catch (e: Exception) {
+      44100
+    }
+
+    audioEncoding = try {
+      val bitwidth = task.params.asJsonObject.get("bitwidth").asString
+      when (bitwidth) {
+        "8" -> AudioFormat.ENCODING_PCM_8BIT
+        "16" -> AudioFormat.ENCODING_PCM_16BIT
+        else -> AudioFormat.ENCODING_PCM_16BIT
+      }
+    } catch (e: Exception) {
+      AudioFormat.ENCODING_PCM_16BIT
     }
   }
 
@@ -846,9 +883,9 @@ constructor(
     audioRecorder =
       AudioRecord(
         MediaRecorder.AudioSource.MIC,
-        SAMPLE_RATE,
+        samplingRate,
         AUDIO_CHANNEL,
-        AUDIO_ENCODING,
+        audioEncoding,
         _recorderBufferSize
       )
     audioRecorder!!.startRecording()
@@ -1037,8 +1074,8 @@ constructor(
     writeInt(scratchRecordingFile, 16)
     writeShort(scratchRecordingFile, 1.toShort())
     writeShort(scratchRecordingFile, 1.toShort())
-    writeInt(scratchRecordingFile, SAMPLE_RATE)
-    writeInt(scratchRecordingFile, SAMPLE_RATE * 2)
+    writeInt(scratchRecordingFile, samplingRate)
+    writeInt(scratchRecordingFile, samplingRate * 2)
     writeShort(scratchRecordingFile, 2.toShort())
     writeShort(scratchRecordingFile, 16.toShort())
     writeString(scratchRecordingFile, "data")
@@ -1048,19 +1085,29 @@ constructor(
   /** Encode the scratch wav recording file into a compressed main file. */
   private suspend fun encodeRecording() {
     CoroutineScope(Dispatchers.IO)
-      .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
+      .launch {
+        if (compressAudio) {
+          RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath)
+        } else {
+          val source = FileInputStream(scratchRecordingFilePath)
+          val destination = FileOutputStream(outputRecordingFilePath)
+          source.copyTo(destination)
+          destination.close()
+          source.close()
+        }
+      }
       .join()
     addOutputFile("recording", outputRecordingFileParams)
   }
 
   /** Helper method to convert number of [samples] to time in milliseconds */
   private fun samplesToTime(samples: Int): Int {
-    return ((samples.toFloat() / SAMPLE_RATE) * 1000).toInt()
+    return ((samples.toFloat() / samplingRate) * 1000).toInt()
   }
 
   /** Helper methods to convert [time] in milliseconds to number of samples */
   private fun timeToSamples(time: Int): Int {
-    return time * SAMPLE_RATE / 1000
+    return time * samplingRate / 1000
   }
 
   /** Helper methods to write data in little endian format */
