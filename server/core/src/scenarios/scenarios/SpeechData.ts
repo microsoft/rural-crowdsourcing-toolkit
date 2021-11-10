@@ -12,6 +12,7 @@ type SpeechDataTaskInputParameters = {
   language: LanguageCode;
   compress: boolean;
   sampling_rate: string;
+  bitwidth: string;
 };
 
 // Speech data input format
@@ -56,6 +57,18 @@ const task_input: BaseSpeechDataScenario['task_input'] = [
       ['8k', '8 Khz'],
       ['16k', '16 Khz'],
       ['44k', '44 Khz'],
+    ],
+  },
+
+  {
+    id: 'bitwidth',
+    label: 'Bitwidth per sample',
+    description: 'Bitwidth for each sample',
+    required: true,
+    type: 'enum',
+    list: [
+      ['8', '8 bit per sample'],
+      ['16', '16 bits per sample'],
     ],
   },
 ];
