@@ -20,6 +20,7 @@ import {
 import { baseImageTranscriptionScenario, BaseImageTranscriptionScenario } from './scenarios/ImageTranscription';
 import { baseImageLabellingScenario, BaseImageLabellingScenario } from './scenarios/ImageLabelling';
 import { baseQuizScenario, BaseQuizScenario } from './scenarios/Quiz';
+import { baseImageDataScenario, BaseImageDataScenario } from './scenarios/ImageData';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -31,6 +32,7 @@ export * from './scenarios/XliterationData';
 export * from './scenarios/ImageTranscription';
 export * from './scenarios/ImageLabelling';
 export * from './scenarios/Quiz';
+export * from './scenarios/ImageData';
 
 // List of scenario names
 export const scenarioNames = [
@@ -43,6 +45,7 @@ export const scenarioNames = [
   'IMAGE_TRANSCRIPTION',
   'IMAGE_LABELLING',
   'QUIZ',
+  'IMAGE_DATA',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -65,6 +68,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseImageLabellingScenario
   : SN extends 'QUIZ'
   ? BaseQuizScenario
+  : SN extends 'IMAGE_DATA'
+  ? BaseImageDataScenario
   : never;
 
 // Scenario name to instance map
@@ -80,6 +85,7 @@ export const scenarioMap: {
   IMAGE_TRANSCRIPTION: baseImageTranscriptionScenario,
   IMAGE_LABELLING: baseImageLabellingScenario,
   QUIZ: baseQuizScenario,
+  IMAGE_DATA: baseImageDataScenario,
 };
 
 // Core scenario parameters

@@ -17,6 +17,7 @@ import { backendSignLanguageVideoVerificationScenario } from './scenarios/SignLa
 import { backendImageTranscriptionScenario } from './scenarios/ImageTranscription';
 import { backendImageLabellingScenario } from './scenarios/ImageLabelling';
 import { backendQuizScenario } from './scenarios/Quiz';
+import { backendImageDataScenario } from './scenarios/ImageData';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -31,4 +32,5 @@ export const backendScenarioMap: {
   IMAGE_TRANSCRIPTION: backendImageTranscriptionScenario,
   IMAGE_LABELLING: backendImageLabellingScenario,
   QUIZ: backendQuizScenario,
+  IMAGE_DATA: backendImageDataScenario,
 };
