@@ -21,6 +21,7 @@ export async function getAssignableMicrotasks(
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
   const maxAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('task_id', task.id)
     .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
     .groupBy('microtask_id')
     .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
