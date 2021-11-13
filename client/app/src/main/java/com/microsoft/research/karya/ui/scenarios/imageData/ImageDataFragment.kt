@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.imageData
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,18 +58,21 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
   }
 
   private fun setupObservers() {
-    viewModel.imageState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
-      localImageState = state
+    viewModel.newImageCount.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { pair ->
+      Log.d("test", pair.toString())
+      val count = pair.second
+      localImageState.clear()
+      for (i in 1..count) {
+        localImageState.add(false)
+      }
 
-      val instruction = getString(R.string.image_data_collection_instruction).replace("#", (state.size - 1).toString())
+      val instruction = getString(R.string.image_data_collection_instruction).replace("#", (count - 1).toString())
       instructionTv.text = instruction
 
       // Reinitialize state
-      if (!::imageListAdapter.isInitialized || imageListAdapter.count != state.size) {
-        resetAdapter()
-      }
+      resetAdapter()
 
-      updateNavigationState(state)
+      updateNavigationState()
     }
   }
 
@@ -94,7 +98,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
         val imagePath = viewModel.outputFilePath(currentImageIndex)
         result.toFile(File(imagePath)) { file ->
           if (file != null) {
-            viewModel.updateImageState(currentImageIndex, true)
+            localImageState[currentImageIndex] = true
             updateAdapter(currentImageIndex)
             moveToNextImage()
             takePictureBtn.enable()
@@ -124,7 +128,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     }
 
     nextBtnCv.setOnClickListener {
-      viewModel.completeDataCollection()
+      viewModel.completeDataCollection(localImageState)
     }
 
     closeFullImageViewBtn.setOnClickListener {
@@ -158,8 +162,8 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     backBtnCv.setOnClickListener { }
   }
 
-  private fun updateNavigationState(imageState: MutableList<Boolean>) {
-    val complete = imageState.all { it }
+  private fun updateNavigationState() {
+    val complete = localImageState.all { it }
     if (complete) {
       nextBtnCv.isClickable = true
       nextBtnCv.nextIv.setBackgroundResource(R.drawable.ic_next_enabled)
@@ -170,6 +174,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
   }
 
   private fun switchToGridView() {
+    updateNavigationState()
     imageDataCaptureView.invisible()
     fullImageDisplayView.invisible()
     imageDataGridView.visible()

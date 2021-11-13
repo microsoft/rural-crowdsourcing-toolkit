@@ -29,8 +29,10 @@ constructor(
   fileDirPath,
   authManager
 ) {
-  private val _imageState: MutableStateFlow<MutableList<Boolean>> = MutableStateFlow(mutableListOf())
-  val imageState = _imageState.asStateFlow()
+  private var imageId = 0
+
+  private val _newImageCount: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(0, 0))
+  val newImageCount = _newImageCount.asStateFlow()
 
   /**
    * Setup image data collection microtask
@@ -43,24 +45,9 @@ constructor(
       0
     }
 
-    // Initial image state
-    val initialImageState: MutableList<Boolean> = mutableListOf()
-    for (i in 0..numImages) {
-      initialImageState.add(false)
-    }
-    _imageState.value = initialImageState
-  }
-
-  /**
-   * Update image state
-   */
-  fun updateImageState(index: Int, value: Boolean) {
-    val newImageState: MutableList<Boolean> = mutableListOf()
-    _imageState.value.forEachIndexed { i, b ->
-      newImageState.add(b)
-    }
-    newImageState[index] = value
-    _imageState.value = newImageState
+    // Set new image count
+    imageId ++
+    _newImageCount.value = Pair(imageId, numImages + 1)
   }
 
   /**
@@ -81,12 +68,12 @@ constructor(
   /**
    * Complete microtask. Add all output files.
    */
-  fun completeDataCollection() {
-    _imageState.value.forEachIndexed { index, present ->
-      if (!present) {
-        // Something wrong. Image file is not present
+  fun completeDataCollection(imageState: MutableList<Boolean>) {
+    imageState.forEachIndexed { index, present ->
+      if (present) {
+        addOutputFile("p$index", outputFileParams(index))
       }
-      addOutputFile("p$index", outputFileParams(index))
+      // Need to do something here
     }
 
     viewModelScope.launch {
