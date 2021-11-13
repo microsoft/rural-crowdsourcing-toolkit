@@ -232,7 +232,9 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     if (localImageState[index]) {
       switchToFullImageDisplayView()
     } else {
-      switchToCaptureView()
+      recaptureBtn.disable()
+      startCaptureBtn.disable()
+      cameraCv.open()
     }
   }
 
