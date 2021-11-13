@@ -5,7 +5,7 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:translationZ="@dimen/_10sdp"
-    app:cardCornerRadius="@dimen/_200sdp"
+    app:cardCornerRadius="@dimen/_15sdp"
     app:layout_constraintDimensionRatio="1:1">
 
     <ImageView
