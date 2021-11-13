@@ -138,16 +138,20 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     }
 
     nextImageCv.setOnClickListener {
-      if (currentImageIndex < localImageState.lastIndex) {
+      if (currentImageIndex < localImageState.lastIndex && localImageState[currentImageIndex + 1]) {
         currentImageIndex++
         updateFullImageView()
+      } else {
+        switchToGridView()
       }
     }
 
     previousImageCv.setOnClickListener {
-      if (currentImageIndex > 0) {
+      if (currentImageIndex > 0 && localImageState[currentImageIndex - 1]) {
         currentImageIndex--
         updateFullImageView()
+      } else {
+        switchToGridView()
       }
     }
 
@@ -240,22 +244,5 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     // Image path
     val path = viewModel.outputFilePath(currentImageIndex)
     fullImage.setImageBitmap(bitmapFromFile(path))
-
-    // Navigation buttons
-    if (currentImageIndex == 0 || !localImageState[currentImageIndex - 1]) {
-      previousImageCv.isClickable = false
-      previousImageCv.backIv.setBackgroundResource(R.drawable.ic_back_disabled)
-    } else {
-      previousImageCv.isClickable = true
-      previousImageCv.backIv.setBackgroundResource(R.drawable.ic_back_enabled)
-    }
-
-    if (currentImageIndex == localImageState.lastIndex || !localImageState[currentImageIndex + 1]) {
-      nextImageCv.isClickable = false
-      nextImageCv.nextIv.setBackgroundResource(R.drawable.ic_next_disabled)
-    } else {
-      nextImageCv.isClickable = true
-      nextImageCv.nextIv.setBackgroundResource(R.drawable.ic_next_enabled)
-    }
   }
 }
