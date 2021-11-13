@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
+import com.microsoft.research.karya.utils.ImageUtils.bitmapFromFile
 import com.microsoft.research.karya.utils.extensions.disable
 import com.microsoft.research.karya.utils.extensions.enable
 import com.microsoft.research.karya.utils.extensions.invisible
@@ -20,9 +21,11 @@ import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.gesture.Gesture
 import com.otaliastudios.cameraview.gesture.GestureAction
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
 import kotlinx.android.synthetic.main.microtask_image_data.*
 import java.io.File
+import kotlin.math.max
 
 @AndroidEntryPoint
 class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) {
@@ -71,7 +74,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
   private fun setupListeners() {
     // Camera event listeners
-    cameraCv.addCameraListener(object: CameraListener() {
+    cameraCv.addCameraListener(object : CameraListener() {
       // When camera is opened, make capture view visible
       override fun onCameraOpened(options: CameraOptions) {
         super.onCameraOpened(options)
@@ -82,6 +85,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
       override fun onCameraClosed() {
         super.onCameraClosed()
         startCaptureBtn.enable()
+        recaptureBtn.enable()
       }
 
       // When picture is taken, move it to the correct file
@@ -101,8 +105,10 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
     // When the capture button is clicked
     startCaptureBtn.setOnClickListener {
+      val index = localImageState.indexOf(false)
+      currentImageIndex = max(index, 0)
       startCaptureBtn.disable()
-      imageDataGridView.invisible()
+      recaptureBtn.disable()
       cameraCv.open()
     }
 
@@ -121,7 +127,31 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
       viewModel.completeDataCollection()
     }
 
-    backBtnCv.setOnClickListener {  }
+    closeFullImageViewBtn.setOnClickListener {
+      switchToGridView()
+    }
+
+    recaptureBtn.setOnClickListener {
+      recaptureBtn.disable()
+      startCaptureBtn.disable()
+      cameraCv.open()
+    }
+
+    nextImageCv.setOnClickListener {
+      if (currentImageIndex < localImageState.lastIndex) {
+        currentImageIndex++
+        updateFullImageView()
+      }
+    }
+
+    previousImageCv.setOnClickListener {
+      if (currentImageIndex > 0) {
+        currentImageIndex--
+        updateFullImageView()
+      }
+    }
+
+    backBtnCv.setOnClickListener { }
   }
 
   private fun updateNavigationState(imageState: MutableList<Boolean>) {
@@ -137,21 +167,30 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
   private fun switchToGridView() {
     imageDataCaptureView.invisible()
+    fullImageDisplayView.invisible()
     imageDataGridView.visible()
     cameraCv.close()
   }
 
   private fun switchToCaptureView() {
     imageDataGridView.invisible()
+    fullImageDisplayView.invisible()
     imageDataCaptureView.visible()
     val label = if (currentImageIndex == 0) "Front Cover" else "Page $currentImageIndex"
     imageLabelTv.text = label
   }
 
+  private fun switchToFullImageDisplayView() {
+    imageDataCaptureView.invisible()
+    imageDataGridView.invisible()
+    fullImageDisplayView.visible()
+    updateFullImageView()
+  }
+
   private fun moveToNextImage() {
-    currentImageIndex ++
+    currentImageIndex++
     while (currentImageIndex < localImageState.size && localImageState[currentImageIndex]) {
-      currentImageIndex ++
+      currentImageIndex++
     }
     if (currentImageIndex >= localImageState.size) {
       currentImageIndex = 0
@@ -170,7 +209,9 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
       }
     }.toMutableList()
 
-    imageListAdapter = ImageListAdapter(requireContext(), pathList)
+    imageListAdapter = ImageListAdapter(requireContext(), pathList) { index ->
+      handleGridImageClick(index)
+    }
     imagesGv.adapter = imageListAdapter
   }
 
@@ -180,5 +221,41 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
       true -> viewModel.outputFilePath(index)
     }
     imageListAdapter.updateItem(index, path)
+  }
+
+  private fun handleGridImageClick(index: Int) {
+    currentImageIndex = index
+    if (localImageState[index]) {
+      switchToFullImageDisplayView()
+    } else {
+      switchToCaptureView()
+    }
+  }
+
+  private fun updateFullImageView() {
+    // Text label
+    val label = if (currentImageIndex == 0) "Front Cover" else "Page $currentImageIndex"
+    fullImageLabelTv.text = label
+
+    // Image path
+    val path = viewModel.outputFilePath(currentImageIndex)
+    fullImage.setImageBitmap(bitmapFromFile(path))
+
+    // Navigation buttons
+    if (currentImageIndex == 0 || !localImageState[currentImageIndex - 1]) {
+      previousImageCv.isClickable = false
+      previousImageCv.backIv.setBackgroundResource(R.drawable.ic_back_disabled)
+    } else {
+      previousImageCv.isClickable = true
+      previousImageCv.backIv.setBackgroundResource(R.drawable.ic_back_enabled)
+    }
+
+    if (currentImageIndex == localImageState.lastIndex || !localImageState[currentImageIndex + 1]) {
+      nextImageCv.isClickable = false
+      nextImageCv.nextIv.setBackgroundResource(R.drawable.ic_next_disabled)
+    } else {
+      nextImageCv.isClickable = true
+      nextImageCv.nextIv.setBackgroundResource(R.drawable.ic_next_enabled)
+    }
   }
 }
