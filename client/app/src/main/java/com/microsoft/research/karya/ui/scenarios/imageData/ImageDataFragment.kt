@@ -57,6 +57,10 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     setupListeners()
   }
 
+  override fun requiredPermissions(): Array<String> {
+    return arrayOf(android.Manifest.permission.CAMERA)
+  }
+
   private fun setupObservers() {
     viewModel.newImageCount.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { pair ->
       Log.d("test", pair.toString())

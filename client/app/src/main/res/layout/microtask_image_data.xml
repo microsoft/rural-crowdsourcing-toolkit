@@ -98,6 +98,7 @@
             app:cameraFlash="off"
             app:cameraHdr="off"
             app:cameraMode="picture"
+            app:cameraAudio="off"
             app:cameraPictureFormat="jpeg"
             app:cameraPictureSizeMaxHeight="1280"
             app:cameraWhiteBalance="auto" />
