@@ -9,7 +9,8 @@ enum class ScenarioType(val value: String) {
   XLITERATION_DATA("TRANSLITERATION DATA"),
   IMAGE_TRANSCRIPTION("IMAGE TRANSCRIPTION"),
   IMAGE_LABELLING("IMAGE LABELLING"),
-  QUIZ("QUIZ");
+  QUIZ("QUIZ"),
+  IMAGE_DATA("IMAGE_DATA");
 
   override fun toString(): String {
     return value

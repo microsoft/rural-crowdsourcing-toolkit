@@ -150,4 +150,7 @@ dependencies {
 
   // Themed button toggle group
   implementation("nl.bryanderidder:themed-toggle-button-group:1.3.4")
+
+  // Camera view
+  implementation("com.otaliastudios:cameraview:2.7.2")
 }

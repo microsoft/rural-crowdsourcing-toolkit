@@ -135,6 +135,13 @@
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageData"
+            app:destination="@id/imageDataFragment">
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity"
@@ -187,7 +194,7 @@
     <fragment
         android:id="@+id/imageTranscriptionFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.imageTranscription.ImageTranscriptionFragment"
-        android:label="imageTrnascriptionFragment">
+        android:label="imageTranscriptionFragment">
         <argument android:name="taskId" app:argType="string" />
         <argument android:name="completed" app:argType="integer" />
         <argument android:name="total" app:argType="integer" />
@@ -215,6 +222,17 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_quizFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageDataFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageData.ImageDataFragment"
+        android:label="imageDataFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_imageDataFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageDataGridView"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/microtaskTb"
+            layout="@layout/microtask_common_header" />
+
+        <TextView
+            android:id="@+id/instructionTv"
+            style="@style/MicrotaskInstructionText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/microtaskTb"
+            tools:text="@string/speech_recording_instruction" />
+
+        <GridView
+            android:id="@+id/imagesGv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/c_very_light_grey"
+            android:numColumns="4"
+            android:horizontalSpacing="@dimen/_2sdp"
+            android:verticalSpacing="@dimen/_2sdp"
+            app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+            app:layout_constraintTop_toBottomOf="@id/instructionTv" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonGroup"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_0sdp"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.13"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <include
+                android:id="@+id/backBtnCv"
+                layout="@layout/microtask_common_back_button"
+                android:visibility="invisible"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/startCaptureBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <include
+                android:id="@+id/startCaptureBtn"
+                layout="@layout/microtask_common_camera_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_mic_enabled"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@+id/nextBtnCv"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/backBtnCv"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <include
+                android:id="@+id/nextBtnCv"
+                layout="@layout/microtask_common_next_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/startCaptureBtn"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageDataCaptureView"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraCv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:keepScreenOn="true"
+            app:cameraEngine="camera2"
+            app:cameraFacing="back"
+            app:cameraFlash="off"
+            app:cameraHdr="off"
+            app:cameraMode="picture"
+            app:cameraPictureFormat="jpeg"
+            app:cameraWhiteBalance="auto" />
+
+        <TextView
+            android:id="@+id/imageLabelTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/c_dark_grey_trans"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/c_white"
+            android:textSize="@dimen/_16ssp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Front Cover" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/takePictureBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:text="Click"
+            android:textSize="@dimen/_16ssp"
+            app:fabSize="auto"
+            app:icon="@drawable/ic_camera"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backToGridViewBtn"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/backToGridViewBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_20sdp"
+            app:backgroundTint="@color/c_light_grey"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_grid"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/takePictureBtn" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

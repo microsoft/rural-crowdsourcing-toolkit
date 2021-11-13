@@ -234,6 +234,9 @@
     <!-- Image labelling string -->
     <string name="image_labelling_instruction">Label the images below</string>
 
+    <!-- Image data collection strings -->
+    <string name="image_data_collection_instruction">Take picture of the front cover and some # continuous pages</string>
+
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
