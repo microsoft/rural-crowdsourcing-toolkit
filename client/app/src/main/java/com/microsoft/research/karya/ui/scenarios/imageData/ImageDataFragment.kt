@@ -17,6 +17,8 @@ import com.microsoft.research.karya.utils.extensions.visible
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraOptions
 import com.otaliastudios.cameraview.PictureResult
+import com.otaliastudios.cameraview.gesture.Gesture
+import com.otaliastudios.cameraview.gesture.GestureAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
 import kotlinx.android.synthetic.main.microtask_image_data.*
@@ -43,6 +45,9 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    cameraCv.pictureMetering = false
+    cameraCv.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS)
 
     setupObservers()
     setupListeners()
@@ -73,6 +78,12 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
         switchToCaptureView()
       }
 
+      // Enable start capture button, after camera is closed
+      override fun onCameraClosed() {
+        super.onCameraClosed()
+        startCaptureBtn.enable()
+      }
+
       // When picture is taken, move it to the correct file
       override fun onPictureTaken(result: PictureResult) {
         super.onPictureTaken(result)
@@ -90,6 +101,8 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
     // When the capture button is clicked
     startCaptureBtn.setOnClickListener {
+      startCaptureBtn.disable()
+      imageDataGridView.invisible()
       cameraCv.open()
     }
 
@@ -123,9 +136,9 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
   }
 
   private fun switchToGridView() {
-    cameraCv.close()
     imageDataCaptureView.invisible()
     imageDataGridView.visible()
+    cameraCv.close()
   }
 
   private fun switchToCaptureView() {
