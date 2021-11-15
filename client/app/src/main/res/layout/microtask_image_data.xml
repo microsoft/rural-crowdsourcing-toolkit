@@ -93,12 +93,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:keepScreenOn="true"
+            app:cameraAudio="off"
             app:cameraEngine="camera2"
             app:cameraFacing="back"
             app:cameraFlash="off"
             app:cameraHdr="off"
             app:cameraMode="picture"
-            app:cameraAudio="off"
             app:cameraPictureFormat="jpeg"
             app:cameraPictureSizeMaxHeight="1280"
             app:cameraWhiteBalance="auto" />
@@ -111,9 +111,10 @@
             android:gravity="center"
             android:paddingVertical="@dimen/_10sdp"
             android:textColor="@color/c_white"
-            android:textSize="@dimen/_16ssp"
+            android:textSize="@dimen/_50ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Front Cover" />
+            tools:text="1" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/takePictureBtn"
@@ -163,7 +164,7 @@
             android:gravity="center"
             android:paddingVertical="@dimen/_10sdp"
             android:textColor="@color/c_white"
-            android:textSize="@dimen/_16ssp"
+            android:textSize="@dimen/_40ssp"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Front Cover" />
 
@@ -177,12 +178,15 @@
             app:layout_constraintHeight_percent="0.12"
             app:layout_constraintLeft_toLeftOf="parent">
 
-            <include
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/previousImageCv"
-                layout="@layout/microtask_common_back_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="@dimen/_3sdp"
+                android:text=""
+                app:backgroundTint="@color/c_white"
+                app:icon="@drawable/ic_left"
+                app:iconSize="@dimen/_30sdp"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@id/recaptureBtn"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -212,12 +216,15 @@
                 app:layout_constraintStart_toEndOf="@id/recaptureBtn"
                 app:layout_constraintTop_toTopOf="@id/recaptureBtn" />
 
-            <include
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/nextImageCv"
-                layout="@layout/microtask_common_next_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="@dimen/_3sdp"
+                android:text=""
+                app:backgroundTint="@color/c_white"
+                app:icon="@drawable/ic_right"
+                app:iconSize="@dimen/_30sdp"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/closeFullImageViewBtn"
