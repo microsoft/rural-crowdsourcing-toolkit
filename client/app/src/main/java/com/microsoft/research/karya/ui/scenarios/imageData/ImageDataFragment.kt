@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
@@ -104,6 +105,17 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
           if (file != null) {
             localImageState[currentImageIndex] = true
             updateAdapter(currentImageIndex)
+
+            // Show a toast to indicate that the picuture is taken
+            if (currentImageIndex < localImageState.lastIndex && !localImageState[currentImageIndex + 1]) {
+              val toastText: String = if (currentImageIndex == 0) {
+                "Picture taken. Move to a random page and take a picture."
+              } else {
+                "Picture taken. Take picture of the next page."
+              }
+              Toast.makeText(requireContext(), toastText, Toast.LENGTH_LONG).show()
+            }
+
             moveToNextImage()
             takePictureBtn.enable()
           }
