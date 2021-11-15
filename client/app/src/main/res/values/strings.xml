@@ -235,7 +235,7 @@
     <string name="image_labelling_instruction">Label the images below</string>
 
     <!-- Image data collection strings -->
-    <string name="image_data_collection_instruction">Take picture of the front cover and some # continuous pages</string>
+    <string name="image_data_collection_instruction">Take a picture of the front cover. Move to a random page. Take pictures of # continuous pages from the random page</string>
 
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>

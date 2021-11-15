@@ -21,7 +21,7 @@
             style="@style/MicrotaskInstructionText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/microtaskTb"
-            tools:text="@string/speech_recording_instruction" />
+            tools:text="@string/image_data_collection_instruction" />
 
         <GridView
             android:id="@+id/imagesGv"
