@@ -10,13 +10,14 @@ export const backendImageDataScenario: IBackendScenarioInterface<BaseImageDataSc
   ...baseImageDataScenario,
 
   async processInputFile(task, jsonData, tarFilePath, taskFolder) {
-    const mts: any[] = jsonData!;
+    const mts: { count: number }[] = jsonData!;
     const microtasks = mts.map((data) => {
+      const credits = task.params.creditsPerMicrotask * data.count;
       const mt: MicrotaskType<'IMAGE_DATA'> = {
         task_id: task.id,
         input: { data },
         deadline: task.deadline,
-        credits: task.params.creditsPerMicrotask,
+        credits,
         status: 'INCOMPLETE',
       };
       return mt;
