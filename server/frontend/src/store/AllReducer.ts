@@ -129,7 +129,7 @@ const storeReducer: StoreReducer = (state = initState, action) => {
   // Task table
   if (action.store === 'task') {
     const oldData = state.task?.data || [];
-    if (action.label === 'MARK_COMPLETE') {
+    if (action.label === 'MARK_COMPLETE' || action.label === 'EDIT_TASK') {
       const { response } = action;
       const data = mergeData(oldData, response);
       return { ...state, task: { data, last_fetched_at, status } };

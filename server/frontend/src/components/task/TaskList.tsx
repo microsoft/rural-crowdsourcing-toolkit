@@ -263,11 +263,17 @@ class TaskList extends React.Component<TaskListProps, {}> {
     const header = (task: TaskRecordType) => {
       return (
         <>
-          <span>{task.id}</span>
+          <span className='task-id'>{task.id}</span>
           <h2 className='task-name'>{task.name}</h2>
           <span className='badge language'>{languageString(task)}</span>
           <span className='badge scenario'>{scenarioTag(task)}</span>
           <span className='badge status'>{taskStatus(task)}</span>
+          <Link to={{ pathname: `/task/edit/${task.id}`, state: task }} className='edit-task-link'>
+            <span className='material-icons'>edit</span>
+          </Link>
+          <Link to={{ pathname: '/task/create', state: task }} className='copy-task-link'>
+            <span className='material-icons'>content_copy</span>
+          </Link>
           <Link to={`/task/${task.id}`} className='details-link'>
             <span>Details</span>
             <div className='arrow-2'></div>
