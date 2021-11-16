@@ -164,6 +164,9 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
       ...w.extras,
     }));
 
+    const exportFileTime = new Date().toISOString().replace(/:/, '-').split('.')[0];
+    const exportFileName = `worker-data-${exportFileTime}.csv`;
+
     // Sorting the data
     if (sort_by !== undefined) {
       sort_by === 'completed'
@@ -330,7 +333,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                 </label>
               </div>
 
-              <CSVLink data={data} filename={'worker-data.csv'} className='btn' id='download-data-btn'>
+              <CSVLink data={data} filename={exportFileName} className='btn' id='download-data-btn'>
                 <i className='material-icons left'>download</i>Download data
               </CSVLink>
             </>
