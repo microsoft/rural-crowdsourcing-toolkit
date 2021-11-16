@@ -156,9 +156,9 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
 
     // Data to be fed into graph
     var data = workers.map((w) => ({
-      id: w.id,
-      access_code: w.access_code,
-      phone_number: w.phone_number,
+      id: `I${w.id}`,
+      access_code: `A${w.access_code}`,
+      phone_number: `P${w.phone_number}`,
       gender: w.gender,
       yob: w.year_of_birth,
       ...w.extras,
