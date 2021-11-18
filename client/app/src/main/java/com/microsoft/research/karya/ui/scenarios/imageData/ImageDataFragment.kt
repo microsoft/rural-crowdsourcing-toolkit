@@ -1,7 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.imageData
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +63,6 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
   private fun setupObservers() {
     viewModel.newImageCount.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { pair ->
-      Log.d("test", pair.toString())
       val count = pair.second
       localImageState.clear()
       for (i in 1..count) {
