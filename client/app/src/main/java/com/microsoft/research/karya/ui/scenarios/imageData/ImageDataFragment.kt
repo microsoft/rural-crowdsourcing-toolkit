@@ -199,7 +199,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     imageDataGridView.invisible()
     fullImageDisplayView.invisible()
     imageDataCaptureView.visible()
-    val label = if (currentImageIndex == 0) "Front Cover" else "Page $currentImageIndex"
+    val label = if (currentImageIndex == 0) "Front Cover" else "Picture $currentImageIndex"
     imageLabelTv.text = label
   }
 
@@ -219,7 +219,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
       currentImageIndex = 0
       switchToGridView()
     } else {
-      val label = if (currentImageIndex == 0) "Front Cover" else "Page $currentImageIndex"
+      val label = if (currentImageIndex == 0) "Front Cover" else "Picture $currentImageIndex"
       imageLabelTv.text = label
     }
   }
@@ -259,7 +259,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
 
   private fun updateFullImageView() {
     // Text label
-    val label = if (currentImageIndex == 0) "Front Cover" else "Page $currentImageIndex"
+    val label = if (currentImageIndex == 0) "Front Cover" else "Picture $currentImageIndex"
     fullImageLabelTv.text = label
 
     // Image path
