@@ -65,8 +65,9 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
     viewModel.newImageCount.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { pair ->
       val count = pair.second
       localImageState.clear()
-      for (i in 1..count) {
-        localImageState.add(false)
+      for (i in 0..count-1) {
+        val outputFilePath = viewModel.outputFilePath(i)
+        localImageState.add(File(outputFilePath).exists())
       }
 
       val instruction = getString(R.string.image_data_collection_instruction).replace("#", (count - 1).toString())
