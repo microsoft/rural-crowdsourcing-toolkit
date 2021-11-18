@@ -331,4 +331,9 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
     super.onStop()
     viewModel.cleanupOnStop()
   }
+
+  override fun onResume() {
+    super.onResume()
+    viewModel.resetOnResume()
+  }
 }

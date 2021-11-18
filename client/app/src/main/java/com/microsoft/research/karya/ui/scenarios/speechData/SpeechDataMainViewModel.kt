@@ -493,9 +493,6 @@ constructor(
 
     when (activityState) {
       ActivityState.INIT,
-      ActivityState.PRERECORDING,
-      ActivityState.COMPLETED_PRERECORDING,
-      ActivityState.RECORDING,
       ActivityState.RECORDED,
       ActivityState.FIRST_PLAYBACK,
       ActivityState.FIRST_PLAYBACK_PAUSED,
@@ -507,6 +504,20 @@ constructor(
       -> {
         navigateBack()
       }
+
+      ActivityState.PRERECORDING,
+      ActivityState.COMPLETED_PRERECORDING -> {
+        preRecordingJob?.cancel()
+        releaseRecorder()
+        navigateBack()
+      }
+
+      ActivityState.RECORDING -> {
+        recordingJob?.cancel()
+        releaseRecorder()
+        navigateBack()
+      }
+
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         runBlocking {
           encodeRecording()
@@ -654,6 +665,7 @@ constructor(
       ActivityState.COMPLETED -> {
         playbackProgressThread?.join()
         setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        _playbackProgressPbProgress.value = 0
         releasePlayer()
       }
 
@@ -717,7 +729,7 @@ constructor(
       ActivityState.SIMPLE_NEXT -> {
         runBlocking {
           if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
+            preRecordingJob?.join()
           }
           moveToNextMicrotask()
           setActivityState(ActivityState.INIT)
@@ -731,7 +743,7 @@ constructor(
       ActivityState.SIMPLE_BACK -> {
         runBlocking {
           if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
+            preRecordingJob?.join()
           }
           moveToPreviousMicrotask()
           setActivityState(ActivityState.INIT)
@@ -783,75 +795,119 @@ constructor(
     setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
     setActivityState(ActivityState.ACTIVITY_STOPPED)
 
-    runBlocking {
-      when (previousActivityState) {
-        /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
-        /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
-        ActivityState.PRERECORDING,
-        ActivityState.COMPLETED_PRERECORDING -> {
-          preRecordingJob?.join()
-          preRecordBufferConsumed[0] = 0
-          preRecordBufferConsumed[1] = 0
-          releaseRecorder()
-        }
+    when (previousActivityState) {
+      /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
+      /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
+      ActivityState.PRERECORDING,
+      ActivityState.COMPLETED_PRERECORDING -> {
+        preRecordingJob?.cancel()
+        preRecordBufferConsumed[0] = 0
+        preRecordBufferConsumed[1] = 0
+        releaseRecorder()
+      }
 
-        /**
-         * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
-         * recorder.
-         */
+      /**
+       * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
+       * recorder.
+       */
 
-        /**
-         * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
-         * recorder.
-         */
-        ActivityState.RECORDING -> {
-          recordingJob?.join()
-          preRecordBufferConsumed[0] = 0
-          preRecordBufferConsumed[1] = 0
-          releaseRecorder()
-        }
+      /**
+       * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
+       * recorder.
+       */
+      ActivityState.RECORDING -> {
+        recordingJob?.cancel()
+        preRecordBufferConsumed[0] = 0
+        preRecordBufferConsumed[1] = 0
+        releaseRecorder()
+      }
 
-        /** In recorded state, wait for the file flush job to complete */
+      /** In recorded state, wait for the file flush job to complete */
 
-        /** In recorded state, wait for the file flush job to complete */
-        ActivityState.RECORDED -> {
+      /** In recorded state, wait for the file flush job to complete */
+      ActivityState.RECORDED -> {
+        viewModelScope.launch {
           audioFileFlushJob?.join()
         }
+      }
 
-        /** If playing state, pause media player */
+      /** If playing state, pause media player */
 
-        /** If playing state, pause media player */
-        ActivityState.FIRST_PLAYBACK,
-        ActivityState.FIRST_PLAYBACK_PAUSED,
-        ActivityState.NEW_PLAYING,
-        ActivityState.NEW_PAUSED,
-        ActivityState.OLD_PLAYING,
-        ActivityState.OLD_PAUSED,
-        -> {
-          releasePlayer()
-        }
+      /** If playing state, pause media player */
+      ActivityState.FIRST_PLAYBACK,
+      ActivityState.FIRST_PLAYBACK_PAUSED,
+      ActivityState.NEW_PLAYING,
+      ActivityState.NEW_PAUSED,
+      ActivityState.OLD_PLAYING,
+      ActivityState.OLD_PAUSED,
+      -> {
+        releasePlayer()
+      }
 
-        /** In simple back and next, wait for prerecording job */
+      /** In simple back and next, wait for prerecording job */
 
-        /** In simple back and next, wait for prerecording job */
-        ActivityState.SIMPLE_NEXT,
-        ActivityState.SIMPLE_BACK -> {
-          preRecordingJob?.join()
-          releaseRecorder()
-        }
+      /** In simple back and next, wait for prerecording job */
+      ActivityState.SIMPLE_NEXT,
+      ActivityState.SIMPLE_BACK -> {
+        preRecordingJob?.cancel()
+        releaseRecorder()
+      }
 
-        /** Nothing to do states */
+      /** Nothing to do states */
 
-        /** Nothing to do states */
-        ActivityState.INIT,
-        ActivityState.COMPLETED,
-        ActivityState.ENCODING_NEXT,
-        ActivityState.ENCODING_BACK,
-        ActivityState.ASSISTANT_PLAYING,
-        ActivityState.ACTIVITY_STOPPED,
-        -> {
-          // Do nothing
-        }
+      /** Nothing to do states */
+      ActivityState.INIT,
+      ActivityState.COMPLETED,
+      ActivityState.ENCODING_NEXT,
+      ActivityState.ENCODING_BACK,
+      ActivityState.ASSISTANT_PLAYING,
+      ActivityState.ACTIVITY_STOPPED,
+      -> {
+        // Do nothing
+      }
+    }
+  }
+
+  fun resetOnResume() {
+    if (activityState != ActivityState.ACTIVITY_STOPPED)
+      return
+
+    when (previousActivityState) {
+
+      /** In initial states, just reset current microtask */
+      ActivityState.INIT,
+      ActivityState.PRERECORDING,
+      ActivityState.COMPLETED_PRERECORDING,
+      ActivityState.RECORDING,
+      ActivityState.SIMPLE_BACK,
+      ActivityState.SIMPLE_NEXT,
+      ActivityState.OLD_PAUSED,
+      ActivityState.OLD_PLAYING,
+      ActivityState.ENCODING_NEXT,
+      ActivityState.ENCODING_BACK,
+      ActivityState.ASSISTANT_PLAYING, -> {
+        resetMicrotask()
+      }
+
+      /** If recorded, then move to first playback */
+      ActivityState.RECORDED,
+      ActivityState.FIRST_PLAYBACK,
+      ActivityState.FIRST_PLAYBACK_PAUSED, -> {
+        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
+        setActivityState(ActivityState.FIRST_PLAYBACK)
+      }
+
+      /** In completed states, move back to completed state */
+      ActivityState.COMPLETED,
+      ActivityState.NEW_PAUSED,
+      ActivityState.NEW_PLAYING, -> {
+        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setActivityState(ActivityState.COMPLETED)
+      }
+
+      /** Stopped activity is not possible */
+      ActivityState.ACTIVITY_STOPPED -> {
+        // This is not possible
       }
     }
   }
@@ -924,7 +980,12 @@ constructor(
           val consumedBytes = preRecordBufferConsumed[currentPreRecordBufferIndex]
           val remainingBytes = maxPreRecordBytes - consumedBytes
 
-          val readBytes = audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
+          val readBytes = try {
+            audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
+          } catch (e: Exception) {
+            break
+          }
+
           preRecordBufferConsumed[currentPreRecordBufferIndex] += readBytes
 
           if (readBytes == remainingBytes) {
@@ -956,7 +1017,12 @@ constructor(
 
         var readBytes = 0
         while (activityState == ActivityState.RECORDING || readBytes > 0) {
-          readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
+          try {
+            readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
+          } catch (e: Exception) {
+            // Exception likely caused by recording job getting cancelled
+            break
+          }
           if (readBytes > 0) {
             currentRecordBufferConsumed += readBytes
             remainingSpace -= readBytes
