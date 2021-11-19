@@ -7,6 +7,7 @@ import { KaryaFileRecord, getChecksum } from '@karya/core';
 import { BoxRouteMiddleware } from '../routes/BoxRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { BasicModel, getBlobSASURL, uploadBlobFromFileWithName } from '@karya/common';
+import { promises as fsp } from 'fs';
 
 /**
  * Upload a file from a box to the server.
@@ -38,6 +39,7 @@ export const upload: BoxRouteMiddleware = async (ctx, next) => {
 
   // Upload file
   const blobURL = await uploadBlobFromFileWithName(fileRecord.container_name, fileRecord.name, file.path);
+  await fsp.unlink(file.path);
 
   fileRecord.url = blobURL;
   fileRecord.in_server = true;
