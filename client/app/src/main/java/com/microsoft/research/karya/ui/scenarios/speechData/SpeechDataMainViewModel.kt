@@ -69,7 +69,7 @@ constructor(
   // Speech data collection parameters
   private var samplingRate: Int = 44100
   private var audioEncoding: Int = AudioFormat.ENCODING_PCM_16BIT
-  private var compressAudio: Boolean = true
+  private var compressAudio: Boolean = false
 
   /**
    * UI button states
@@ -173,7 +173,7 @@ constructor(
   private lateinit var scratchRecordingFileInitJob: Job
 
   /** Final recording file */
-  private val outputRecordingFileParams = Pair("", "m4a")
+  private var outputRecordingFileParams = Pair("", "wav")
   private lateinit var outputRecordingFilePath: String
   private var encodingJob: Job? = null
 
@@ -201,7 +201,7 @@ constructor(
     compressAudio = try {
       task.params.asJsonObject.get("compress").asBoolean
     } catch (e: Exception) {
-      true
+      false
     }
 
     samplingRate = try {
@@ -226,6 +226,8 @@ constructor(
     } catch (e: Exception) {
       AudioFormat.ENCODING_PCM_16BIT
     }
+
+    outputRecordingFileParams = if (compressAudio) Pair("", "m4a") else Pair("", "wav")
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
@@ -885,14 +887,16 @@ constructor(
       ActivityState.OLD_PLAYING,
       ActivityState.ENCODING_NEXT,
       ActivityState.ENCODING_BACK,
-      ActivityState.ASSISTANT_PLAYING, -> {
+      ActivityState.ASSISTANT_PLAYING,
+      -> {
         resetMicrotask()
       }
 
       /** If recorded, then move to first playback */
       ActivityState.RECORDED,
       ActivityState.FIRST_PLAYBACK,
-      ActivityState.FIRST_PLAYBACK_PAUSED, -> {
+      ActivityState.FIRST_PLAYBACK_PAUSED,
+      -> {
         setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
         setActivityState(ActivityState.FIRST_PLAYBACK)
       }
@@ -900,7 +904,8 @@ constructor(
       /** In completed states, move back to completed state */
       ActivityState.COMPLETED,
       ActivityState.NEW_PAUSED,
-      ActivityState.NEW_PLAYING, -> {
+      ActivityState.NEW_PLAYING,
+      -> {
         setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
         setActivityState(ActivityState.COMPLETED)
       }
@@ -1133,6 +1138,9 @@ constructor(
 
   /** Write WAV file header */
   private fun writeWavFileHeader() {
+    val bitsPerSample = if (audioEncoding == AudioFormat.ENCODING_PCM_16BIT) 16 else 8
+    val bytesPerSample = bitsPerSample / 8
+
     writeString(scratchRecordingFile, "RIFF")
     writeInt(scratchRecordingFile, 0)
     writeString(scratchRecordingFile, "WAVE")
@@ -1141,9 +1149,9 @@ constructor(
     writeShort(scratchRecordingFile, 1.toShort())
     writeShort(scratchRecordingFile, 1.toShort())
     writeInt(scratchRecordingFile, samplingRate)
-    writeInt(scratchRecordingFile, samplingRate * 2)
-    writeShort(scratchRecordingFile, 2.toShort())
-    writeShort(scratchRecordingFile, 16.toShort())
+    writeInt(scratchRecordingFile, samplingRate * bytesPerSample)
+    writeShort(scratchRecordingFile, bytesPerSample.toShort())
+    writeShort(scratchRecordingFile, bitsPerSample.toShort())
     writeString(scratchRecordingFile, "data")
     writeInt(scratchRecordingFile, 0)
   }
@@ -1153,7 +1161,7 @@ constructor(
     CoroutineScope(Dispatchers.IO)
       .launch {
         if (compressAudio) {
-          RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath)
+          RawToAACEncoder(samplingRate).encode(scratchRecordingFilePath, outputRecordingFilePath)
         } else {
           val source = FileInputStream(scratchRecordingFilePath)
           val destination = FileOutputStream(outputRecordingFilePath)
