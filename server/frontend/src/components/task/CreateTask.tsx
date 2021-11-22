@@ -273,18 +273,27 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     // Scenario cards
     const scenarios = Object.values(scenarioMap);
     const { scenario } = this.state;
-    const scenarioCards = task_props ? null : (
-      <div className='scenarios'>
-        {scenarios.map((s) => (
-          <label className='col s11 m5 l4' key={s.name}>
-            <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
-            <div className='scenario-card'>
-              <span className='scenario-name'>{s.full_name}</span>
-              <p className='description'>{s.description}</p>
-            </div>
-          </label>
-        ))}
-      </div>
+    const scenarioCards = task_props ? (
+      <h2 className='col s10' id='select-txt'>
+        Scenario:<span>{scenario?.full_name}</span>
+      </h2>
+    ) : (
+      <>
+        <h2 className='col s10' id='select-txt'>
+          Select a Scenario
+        </h2>
+        <div className='scenarios'>
+          {scenarios.map((s) => (
+            <label className='col s11 m5 l4' key={s.name}>
+              <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
+              <div className='scenario-card'>
+                <span className='scenario-name'>{s.full_name}</span>
+                <p className='description'>{s.description}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </>
     );
 
     // task creation form
@@ -534,9 +543,6 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
             <h1 className='page-title'>{task_id_props ? 'Edit Task' : 'Create Task'}</h1>
-            <h2 className='col s10' id='select-txt'>
-              {task_props ? 'Scenario: ' + scenario?.full_name : 'Select a Scenario'}
-            </h2>
             <div className='row'>{scenarioCards}</div>
           </div>
           {taskForm}

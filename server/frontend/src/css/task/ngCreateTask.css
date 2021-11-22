@@ -41,6 +41,12 @@
   color: #717787;
 }
 
+#select-txt span {
+  margin-left: 0.4em;
+  font-size: 0.932em;
+  letter-spacing: 0.03em;
+}
+
 .scenarios label:before,
 .scenarios label:after {
   position: absolute;
