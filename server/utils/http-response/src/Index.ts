@@ -36,6 +36,14 @@ export function BadRequest(ctx: ExtendableContext, messages: string | string[]) 
 }
 
 /**
+ * Set Too Many Requests response
+ * @param messages List of error messages
+ */
+ export function TooManyRequests(ctx: ExtendableContext, messages: string | string[]) {
+  GenericError(ctx, messages, 429, 'Bad request');
+}
+
+/**
  * Set Unauthorized access response
  * @param messages List of error messages
  */
