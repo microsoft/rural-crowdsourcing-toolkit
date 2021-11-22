@@ -122,7 +122,7 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     const entity = ctx.state.entity;
     const phone_number = ctx.state.phone_number;
     // Generate OTP for the worker
-    const otp = generateOTP();
+    const otp = "123456"
 
     // Update worker record with otp
     // @ts-ignore Unclear why this error is occuring.
@@ -132,7 +132,7 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
 
     // Send the otp
     try {
-      await sendOTP(phone_number, otp);
+      // await sendOTP(phone_number, otp);
       HttpResponse.OK(ctx, {});
       await next();
     } catch (e) {
@@ -140,11 +140,49 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     }
   };
 
+  const OTPRateLimiter = class {
+      private _session: Map<String, Array<Date>> = new Map();
+      maxRequestPerMinute: number;
+
+      limit: OTPMiddleware = async (ctx, next) => {
+          const access_code = ctx.entity.access_code
+          const curr_time = new Date()
+          const boundary = this.subtractMinutes(curr_time, 1)
+
+
+          if (this._session.has(access_code)) {
+              const record: Date[] = this._session.get(access_code)!
+              while (record.length  > 0 && record[0] < boundary) {
+                  record.shift()
+              }
+              record.push(curr_time)
+              if(record.length > this.maxRequestPerMinute) {
+                  HttpResponse.TooManyRequests(ctx, "OTP request limit exceeded")
+                  return;
+              }
+
+          } else {
+              this._session.set(access_code,[])
+          }
+
+      }
+
+      constructor(maxRequestPerMinute: number) {
+          this.maxRequestPerMinute = maxRequestPerMinute
+      }
+
+      private subtractMinutes(time: Date, minutes: number) {
+          time.setMinutes(time.getTime() - minutes*60*1000)
+          return time
+      }
+  }
+
   /**
    * Resend a previously generated OTP for the worker.
    * @param ctx Karya request context
    */
   const resend: OTPMiddleware = async (ctx, next) => {
+    console.log("INSIDE RESEND MIDDLEWARE")
     const entity = ctx.state.entity;
     const phone_number = ctx.state.phone_number;
     const otp = entity.otp;
@@ -157,7 +195,7 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
 
     // Send the otp
     try {
-      await sendOTP(phone_number, otp);
+      // await sendOTP(phone_number, otp);
       HttpResponse.OK(ctx, {});
       await next();
     } catch (e) {
