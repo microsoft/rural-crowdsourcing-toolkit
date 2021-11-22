@@ -14,7 +14,7 @@ import * as WorkerController from '../controllers/WorkerController';
 import * as KaryaFileController from '../controllers/KaryaFileController';
 import * as AssignmentController from '../controllers/AssignmentController';
 import { KaryaIDTokenHandlerTemplate, KaryaIDTokenState } from '@karya/common';
-import { OTPHandlerTemplate, OTPState } from '@karya/common';
+import { OTPHandlerTemplate, OTPState, OTPRateLimiter } from '@karya/common';
 
 // Karya ID token handlers and type
 export const { generateToken, authenticateRequest } = KaryaIDTokenHandlerTemplate('worker');
@@ -24,6 +24,9 @@ export type WorkerIdTokenState = KaryaIDTokenState<'worker'>;
 const OTPHandler = OTPHandlerTemplate('worker');
 type WorkerOTPState = OTPState<'worker'>;
 
+// Initializing rate limiter
+const otpRateLimiter = new OTPRateLimiter<'worker'>(2);
+
 // Router
 const router = new Router<KaryaDefaultState>();
 
@@ -32,8 +35,10 @@ router.get('/worker', WorkerController.get);
 router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
 
 // OTP routes
-router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, OTPHandler.generate);
-router.put<WorkerOTPState, {}>('/worker/otp/resend', OTPHandler.checkPhoneNumber, OTPHandler.resend);
+// @ts-ignore
+router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, otpRateLimiter.limit, OTPHandler.generate);
+// @ts-ignore
+router.put<WorkerOTPState, {}>('/worker/otp/resend', OTPHandler.checkPhoneNumber,otpRateLimiter.limit, OTPHandler.resend);
 router.put<WorkerOTPState, {}>(
   '/worker/otp/verify',
   OTPHandler.checkPhoneNumber,
