@@ -43,7 +43,7 @@ export const get: KaryaMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, records);
   } else {
     // TODO: Adjust max credits
-    await assignMicrotasksForWorker(worker, 1000);
+    await assignMicrotasksForWorker(worker, 10000);
     const assignments = await BasicModel.getRecords(
       'microtask_assignment',
       { worker_id: worker.id, status: 'ASSIGNED' },
