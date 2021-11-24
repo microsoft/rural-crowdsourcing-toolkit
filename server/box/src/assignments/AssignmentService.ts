@@ -34,10 +34,16 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
   let tasksAssigned = false;
 
   // get all available tasks i.e. all of which are in assigned state
-  const taskAssignments = await BasicModel.getRecords('task_assignment', {
-    box_id: worker.box_id,
-    status: 'ASSIGNED',
-  });
+  const taskAssignments = await BasicModel.getRecords(
+    'task_assignment',
+    {
+      box_id: worker.box_id,
+      status: 'ASSIGNED',
+    },
+    [],
+    [],
+    'task_id'
+  );
 
   // iterate over all tasks to see which all can user perform
   await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
