@@ -188,6 +188,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
+    <string name="task_outside_time_bound">You can do this task only between _START_TIME_ and _END_TIME_.</string>
+    <string name="okay">Okay</string>
+
     <!-- Sync -->
     <string name="reset_assignment_warning">Some output files were missing.</string>
     <string name="upload_file_error">Error while uploading files. Please contact your coordinator.</string>

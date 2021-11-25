@@ -22,10 +22,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.*
 
 abstract class BaseMTRendererViewModel
 constructor(
@@ -67,6 +69,10 @@ constructor(
 
   private val _inputFileDoesNotExist: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val inputFileDoesNotExist = _inputFileDoesNotExist.asSharedFlow()
+
+  private val _outsideTimeBound: MutableStateFlow<Triple<Boolean, String, String>> = MutableStateFlow(Triple(false, "", ""))
+  val outsideTimeBound = _outsideTimeBound.asStateFlow()
+
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
@@ -234,6 +240,21 @@ constructor(
   /** Get the microtask record for the current assignment and setup the microtask */
   fun getAndSetupMicrotask() {
     viewModelScope.launch {
+      val taskStartTime = try { task.params.asJsonObject.get("startTime").asString } catch (e: Exception) { null }
+      val taskEndTime = try { task.params.asJsonObject.get("endTime").asString } catch (e: Exception) { null }
+
+      if (taskStartTime != null && taskEndTime != null) {
+        val currentTime = Calendar.getInstance()
+        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+        val minutes = currentTime.get(Calendar.MINUTE)
+        val now = "$hour:$minutes"
+
+        if (now < taskStartTime || now > taskEndTime) {
+          _outsideTimeBound.emit(Triple(true, taskStartTime, taskEndTime))
+          return@launch
+        }
+      }
+
       val assignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
 
       // Fetch the assignment and the microtask
