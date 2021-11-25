@@ -70,7 +70,8 @@ constructor(
   private val _inputFileDoesNotExist: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val inputFileDoesNotExist = _inputFileDoesNotExist.asSharedFlow()
 
-  private val _outsideTimeBound: MutableStateFlow<Triple<Boolean, String, String>> = MutableStateFlow(Triple(false, "", ""))
+  private val _outsideTimeBound: MutableStateFlow<Triple<Boolean, String, String>> =
+    MutableStateFlow(Triple(false, "", ""))
   val outsideTimeBound = _outsideTimeBound.asStateFlow()
 
   protected fun navigateBack() {
@@ -240,8 +241,18 @@ constructor(
   /** Get the microtask record for the current assignment and setup the microtask */
   fun getAndSetupMicrotask() {
     viewModelScope.launch {
-      val taskStartTime = try { task.params.asJsonObject.get("startTime").asString } catch (e: Exception) { null }
-      val taskEndTime = try { task.params.asJsonObject.get("endTime").asString } catch (e: Exception) { null }
+      var taskStartTime = try {
+        task.params.asJsonObject.get("startTime").asString.trim()
+      } catch (e: Exception) {
+        null
+      }
+      var taskEndTime = try {
+        task.params.asJsonObject.get("endTime").asString.trim()
+      } catch (e: Exception) {
+        null
+      }
+      taskStartTime = if (taskStartTime == "") null else taskStartTime
+      taskEndTime = if (taskEndTime == "") null else taskEndTime
 
       if (taskStartTime != null && taskEndTime != null) {
         val currentTime = Calendar.getInstance()
