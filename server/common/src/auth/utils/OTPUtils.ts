@@ -10,6 +10,8 @@ import { BasicModel } from '../../Index';
 import Application from 'koa';
 import * as HttpResponse from '@karya/http-response';
 
+const ONE_DAY_IN_MILLIS: number = 10000
+
 // 2Factor OTP config type
 export type PhoneOTPConfig = {
   available: boolean;
@@ -123,59 +125,23 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     const phone_number = ctx.state.phone_number;
     // Generate OTP for the worker
     const otp = "123456"
+    const otp_generated_at = new Date().getTime();
 
     // Update worker record with otp
     // @ts-ignore Unclear why this error is occuring.
-    await BasicModel.updateSingle(entityType, { id: entity.id }, { phone_number, otp });
+    await BasicModel.updateSingle(entityType, { id: entity.id }, { phone_number, otp, otp_generated_at });
 
     // TODO: Need to update generation time and handle rate limits
 
     // Send the otp
     try {
       // await sendOTP(phone_number, otp);
-      HttpResponse.OK(ctx, {});
+      HttpResponse.OK(ctx, {}); 
       await next();
     } catch (e) {
       HttpResponse.Unavailable(ctx, 'Could not send OTP');
     }
   };
-
-  const OTPRateLimiter = class {
-      private _session: Map<String, Array<Date>> = new Map();
-      maxRequestPerMinute: number;
-
-      limit: OTPMiddleware = async (ctx, next) => {
-          const access_code = ctx.entity.access_code
-          const curr_time = new Date()
-          const boundary = this.subtractMinutes(curr_time, 1)
-
-
-          if (this._session.has(access_code)) {
-              const record: Date[] = this._session.get(access_code)!
-              while (record.length  > 0 && record[0] < boundary) {
-                  record.shift()
-              }
-              record.push(curr_time)
-              if(record.length > this.maxRequestPerMinute) {
-                  HttpResponse.TooManyRequests(ctx, "OTP request limit exceeded")
-                  return;
-              }
-
-          } else {
-              this._session.set(access_code,[])
-          }
-
-      }
-
-      constructor(maxRequestPerMinute: number) {
-          this.maxRequestPerMinute = maxRequestPerMinute
-      }
-
-      private subtractMinutes(time: Date, minutes: number) {
-          time.setMinutes(time.getTime() - minutes*60*1000)
-          return time
-      }
-  }
 
   /**
    * Resend a previously generated OTP for the worker.
@@ -216,6 +182,16 @@ export function OTPHandlerTemplate<EntityType extends 'server_user' | 'worker'>(
     // Check if otp is valid
     if (!otp || otp instanceof Array) {
       HttpResponse.BadRequest(ctx, 'Missing or multiple OTPs');
+      return false;
+    }
+
+    // Check if otp is not expired
+    const curr_time = new Date().getTime()
+    // @ts-ignore QUERY: WHY IS OTP_GENERATED OF TYPE ANY?
+    if(curr_time - entity.otp_generated_at > ONE_DAY_IN_MILLIS) {
+      // @ts-ignore: Unclear why this error is occuring.
+      await BasicModel.updateSingle(entityType, { id: entity.id }, { otp: null });
+      HttpResponse.Unauthorized(ctx, 'OTP EXPIRED')
       return false;
     }
 

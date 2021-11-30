@@ -7,6 +7,7 @@ import { DbRecordType, RegistrationMechanism } from '@karya/core';
 
 export { AuthState } from './Common';
 export * from './utils/OTPUtils';
+export * from './utils/OTPRateLimiter'
 export * from './utils/KaryaIDTokenUtils';
 export * from './utils/GoogleAuthUtils';
 

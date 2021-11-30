@@ -209,11 +209,11 @@ export function KaryaIDTokenHandlerTemplate<EntityType extends 'server_user' | '
       // @ts-ignore Not sure why this is an error
       ctx.state.entity = await BasicModel.getSingle(entityType, { access_code });
       ctx.state.auth_mechanism = 'access-code';
-      await next();
     } catch (e) {
       HttpResponse.Unauthorized(ctx, 'Invalid access code');
       return;
     }
+    await next();
   };
 
   return { generateToken, authenticateRequest };

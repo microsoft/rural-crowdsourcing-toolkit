@@ -25,7 +25,8 @@ const OTPHandler = OTPHandlerTemplate('worker');
 type WorkerOTPState = OTPState<'worker'>;
 
 // Initializing rate limiter
-const otpRateLimiter = new OTPRateLimiter<'worker'>(2);
+const resendOTPRateLimiter = new OTPRateLimiter<'worker'>(3);
+const generateOTPRateLimiter = new OTPRateLimiter<'worker'>(3);
 
 // Router
 const router = new Router<KaryaDefaultState>();
@@ -36,9 +37,9 @@ router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
 
 // OTP routes
 // @ts-ignore
-router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, otpRateLimiter.limit, OTPHandler.generate);
+router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, generateOTPRateLimiter.limiter, OTPHandler.generate);
 // @ts-ignore
-router.put<WorkerOTPState, {}>('/worker/otp/resend', OTPHandler.checkPhoneNumber,otpRateLimiter.limit, OTPHandler.resend);
+router.put<WorkerOTPState, {}>('/worker/otp/resend', OTPHandler.checkPhoneNumber,resendOTPRateLimiter.limiter, OTPHandler.resend);
 router.put<WorkerOTPState, {}>(
   '/worker/otp/verify',
   OTPHandler.checkPhoneNumber,
