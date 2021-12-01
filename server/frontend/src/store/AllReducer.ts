@@ -49,6 +49,8 @@ const initState: AllState = {
   microtask_group_assignment: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   box: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   karya_file: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  payments_account: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS'},
+  payments_transaction: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS'},
   auth: { cwp: null, status: 'SUCCESS' },
 };
 
