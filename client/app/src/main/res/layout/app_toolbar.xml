@@ -78,15 +78,13 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/languageName"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="@dimen/_40sdp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/_40sdp"
             android:text="@string/language_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:insetLeft="@dimen/_0sdp"
-            android:insetRight="@dimen/_0sdp"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
