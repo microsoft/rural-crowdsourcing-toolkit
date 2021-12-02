@@ -93,6 +93,8 @@ type CoreScenarioParamsType = {
   instruction: string;
   creditsPerMicrotask: number;
   maxMicrotasksPerUser: number;
+  startTime?: string;
+  endTime?: string;
 };
 
 export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
@@ -119,6 +121,22 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
     label: 'Max Microtasks per User (0 for no limit)',
     description: 'Maximum number of microtasks per user',
     required: true,
+  },
+
+  {
+    id: 'startTime',
+    type: 'time',
+    label: 'Start Time (24h format. leave empty for none)',
+    description: 'Strict start time for tasks on each day',
+    required: false,
+  },
+
+  {
+    id: 'endTime',
+    type: 'time',
+    label: 'End Time (24h format. leave empty for none)',
+    description: 'Strict end time for tasks on each day',
+    required: false,
   },
 ];
 

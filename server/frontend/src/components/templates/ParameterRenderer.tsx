@@ -24,6 +24,7 @@ export const ParameterSection = (props: ParameterSectionProps) => {
           case 'string':
           case 'int':
           case 'float':
+          case 'time':
             return (
               <div className='row' key={param.id}>
                 <ColTextInput

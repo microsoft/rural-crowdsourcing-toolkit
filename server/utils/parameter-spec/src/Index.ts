@@ -11,7 +11,8 @@ type ParameterType =
   | { type: 'float' }
   | { type: 'boolean' }
   | { type: 'enum'; list: [string, string][] }
-  | { type: 'list' };
+  | { type: 'list' }
+  | { type: 'time' };
 
 /**
  * Parameter specification
@@ -64,6 +65,9 @@ export function joiSchema<ParamsType>(params: ParameterArray<ParamsType>): Joi.O
       }
       case 'list':
         base = Joi.array().items(Joi.string());
+        break;
+      case 'time':
+        base = Joi.string().regex(/^([01]\d|2[0-3]):?([0-5]\d)$/);
         break;
     }
     base = base.label(label).description(description);
