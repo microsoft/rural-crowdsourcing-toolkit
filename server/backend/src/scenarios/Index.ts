@@ -16,6 +16,8 @@ import { backendXliterationDataScenario } from './scenarios/XliterationData';
 import { backendSignLanguageVideoVerificationScenario } from './scenarios/SignLanguageVideoVerification';
 import { backendImageTranscriptionScenario } from './scenarios/ImageTranscription';
 import { backendImageLabellingScenario } from './scenarios/ImageLabelling';
+import { backendSentenceCorpusScenario } from './scenarios/SentenceCorpus';
+import { backendSentenceCorpusVerificationScenario } from './scenarios/SentenceCorpusVerification';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -29,4 +31,6 @@ export const backendScenarioMap: {
   XLITERATION_DATA: backendXliterationDataScenario,
   IMAGE_TRANSCRIPTION: backendImageTranscriptionScenario,
   IMAGE_LABELLING: backendImageLabellingScenario,
+  SENTENCE_CORPUS: backendSentenceCorpusScenario,
+  SENTENCE_CORPUS_VERIFICATION: backendSentenceCorpusVerificationScenario,
 };
