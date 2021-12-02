@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="language_name">EN</string>
+    <string name="language_name">മലയാളം</string>
 
     <!-- Errors -->
     <string name="unknown_error">ചില പ്രശ്നം നേരിടുന്നു. നിങ്ങളുടെ കോർഡിനേറ്ററുമായി ബന്ധപ്പെടുക.</string>

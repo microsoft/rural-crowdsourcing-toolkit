@@ -166,4 +166,6 @@ Registration প্রক্রিয়ার জন্য আপনাকে �
     <!-- Image alt texts -->
     <string name="next">পরবর্তী</string>
     <string name="back">পেছনে</string>
+    <string name="okay">ঠিক আছে</string>
+    <string name="task_outside_time_bound">আপনি এই কাজ টি করতে পারেন শুধু মাত্র _START_TIME_ টা থেকে _END_TIME_ টার মধ্যে</string>
 </resources>
