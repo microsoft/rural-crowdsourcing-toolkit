@@ -274,6 +274,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId, completed, total)
           ScenarioType.QUIZ -> actionDashboardActivityToQuiz(taskId, completed, total)
           ScenarioType.IMAGE_DATA -> actionDashboardActivityToImageData(taskId, completed, total)
+          ScenarioType.SENTENCE_VALIDATION -> actionDashboardActivityToSentenceValidation(taskId, completed, total)
           else -> null
         }
       }

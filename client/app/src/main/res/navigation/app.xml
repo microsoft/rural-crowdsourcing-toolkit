@@ -142,6 +142,13 @@
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_sentenceValidation"
+            app:destination="@id/sentenceValidationFragment">
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity"
@@ -233,6 +240,17 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_imageDataFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/sentenceValidationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.sentenceValidation.SentenceValidationFragment"
+        android:label="sentenceValidationFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_sentenceValidationFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

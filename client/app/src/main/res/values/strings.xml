@@ -240,6 +240,9 @@
     <!-- Image data collection strings -->
     <string name="image_data_collection_instruction">Take a picture of the front cover. Move to a random page. Take pictures of # continuous pages from the random page</string>
 
+    <!-- Sentence validation strings -->
+    <string name="sentence_validation_instruction">Is the sentence below correct?</string>
+
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
