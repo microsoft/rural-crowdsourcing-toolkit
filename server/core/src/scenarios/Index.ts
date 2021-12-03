@@ -21,6 +21,11 @@ import { baseImageTranscriptionScenario, BaseImageTranscriptionScenario } from '
 import { baseImageLabellingScenario, BaseImageLabellingScenario } from './scenarios/ImageLabelling';
 import { baseQuizScenario, BaseQuizScenario } from './scenarios/Quiz';
 import { baseImageDataScenario, BaseImageDataScenario } from './scenarios/ImageData';
+import { baseSentenceCorpusScenario, BaseSentenceCorpusScenario } from './scenarios/SentenceCorpus';
+import {
+  baseSentenceCorpusVerificationScenario,
+  BaseSentenceCorpusVerificationScenario,
+} from './scenarios/SentenceCorpusVerification';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -33,6 +38,8 @@ export * from './scenarios/ImageTranscription';
 export * from './scenarios/ImageLabelling';
 export * from './scenarios/Quiz';
 export * from './scenarios/ImageData';
+export * from './scenarios/SentenceCorpus';
+export * from './scenarios/SentenceCorpusVerification';
 
 // List of scenario names
 export const scenarioNames = [
@@ -46,6 +53,8 @@ export const scenarioNames = [
   'IMAGE_LABELLING',
   'QUIZ',
   'IMAGE_DATA',
+  'SENTENCE_CORPUS',
+  'SENTENCE_CORPUS_VERIFICATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -70,6 +79,10 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseQuizScenario
   : SN extends 'IMAGE_DATA'
   ? BaseImageDataScenario
+  : SN extends 'SENTENCE_CORPUS'
+  ? BaseSentenceCorpusScenario
+  : SN extends 'SENTENCE_CORPUS_VERIFICATION'
+  ? BaseSentenceCorpusVerificationScenario
   : never;
 
 // Scenario name to instance map
@@ -86,6 +99,8 @@ export const scenarioMap: {
   IMAGE_LABELLING: baseImageLabellingScenario,
   QUIZ: baseQuizScenario,
   IMAGE_DATA: baseImageDataScenario,
+  SENTENCE_CORPUS: baseSentenceCorpusScenario,
+  SENTENCE_CORPUS_VERIFICATION: baseSentenceCorpusVerificationScenario,
 };
 
 // Core scenario parameters

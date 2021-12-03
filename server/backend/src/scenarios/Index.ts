@@ -18,6 +18,8 @@ import { backendImageTranscriptionScenario } from './scenarios/ImageTranscriptio
 import { backendImageLabellingScenario } from './scenarios/ImageLabelling';
 import { backendQuizScenario } from './scenarios/Quiz';
 import { backendImageDataScenario } from './scenarios/ImageData';
+import { backendSentenceCorpusScenario } from './scenarios/SentenceCorpus';
+import { backendSentenceCorpusVerificationScenario } from './scenarios/SentenceCorpusVerification';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -33,4 +35,6 @@ export const backendScenarioMap: {
   IMAGE_LABELLING: backendImageLabellingScenario,
   QUIZ: backendQuizScenario,
   IMAGE_DATA: backendImageDataScenario,
+  SENTENCE_CORPUS: backendSentenceCorpusScenario,
+  SENTENCE_CORPUS_VERIFICATION: backendSentenceCorpusVerificationScenario,
 };
