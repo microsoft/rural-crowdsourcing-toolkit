@@ -139,6 +139,7 @@ export async function getTaskAssignments(box: BoxRecord, axiosLocal: AxiosInstan
  * Get new microtasks for incomplete task assignments
  */
 export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting new microtasks for tasks`);
   // Get incomplete task assignments
   const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
   const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -198,7 +199,6 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
 
       responseLength = granularity == 'GROUP' ? groups.length : microtasks.length;
     }
-    cronLogger.info(`Received microtasks for task ${task.id}`);
   });
 }
 
@@ -292,6 +292,7 @@ async function downloadKaryaFile(url: string, filepath: string) {
  * Get verified assignments for all tasks
  */
 export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting verified assignments for tasks`);
   // Get incomplete task assignments
   const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
   const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -307,7 +308,9 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
 
     while (responseLength >= limit) {
       let verifiedAssignments: MicrotaskAssignmentRecord[];
-      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment').max('verified_at');
+      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+        .where('task_id', task.id)
+        .max('verified_at');
       const latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
 
       // Send request to get microtasks
@@ -333,6 +336,5 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
 
       responseLength = verifiedAssignments.length;
     }
-    cronLogger.info(`Received verified assignments for task ${task.id}`);
   });
 }

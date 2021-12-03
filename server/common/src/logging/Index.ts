@@ -64,6 +64,7 @@ export const httpRequestLogger: Application.Middleware = async (ctx, next) => {
   // Log the response
   const response = {
     id,
+    requester: ctx.state.entity?.id,
     status: ctx.status,
     size: ctx.response.length,
     time: end - start,
@@ -72,7 +73,12 @@ export const httpRequestLogger: Application.Middleware = async (ctx, next) => {
 
   // If failed request, log more details
   if (ctx.status >= 400) {
-    requestErrorLogger.error({ request, status: ctx.status, message: ctx.response.body });
+    requestErrorLogger.error({
+      request,
+      requester: ctx.state.entity?.id,
+      status: ctx.status,
+      message: ctx.response.body,
+    });
   }
 };
 
