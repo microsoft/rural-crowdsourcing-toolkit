@@ -26,6 +26,7 @@ import {
   baseSentenceCorpusVerificationScenario,
   BaseSentenceCorpusVerificationScenario,
 } from './scenarios/SentenceCorpusVerification';
+import { baseSentenceValidationScenario, BaseSentenceValidationScenario } from './scenarios/SentenceValidation';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -40,6 +41,7 @@ export * from './scenarios/Quiz';
 export * from './scenarios/ImageData';
 export * from './scenarios/SentenceCorpus';
 export * from './scenarios/SentenceCorpusVerification';
+export * from './scenarios/SentenceValidation';
 
 // List of scenario names
 export const scenarioNames = [
@@ -55,6 +57,7 @@ export const scenarioNames = [
   'IMAGE_DATA',
   'SENTENCE_CORPUS',
   'SENTENCE_CORPUS_VERIFICATION',
+  'SENTENCE_VALIDATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -83,6 +86,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseSentenceCorpusScenario
   : SN extends 'SENTENCE_CORPUS_VERIFICATION'
   ? BaseSentenceCorpusVerificationScenario
+  : SN extends 'SENTENCE_VALIDATION'
+  ? BaseSentenceValidationScenario
   : never;
 
 // Scenario name to instance map
@@ -101,6 +106,7 @@ export const scenarioMap: {
   IMAGE_DATA: baseImageDataScenario,
   SENTENCE_CORPUS: baseSentenceCorpusScenario,
   SENTENCE_CORPUS_VERIFICATION: baseSentenceCorpusVerificationScenario,
+  SENTENCE_VALIDATION: baseSentenceValidationScenario,
 };
 
 // Core scenario parameters
