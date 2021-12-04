@@ -241,5 +241,7 @@
     <string name="back">वापस</string>
     <string name="task_outside_time_bound">आप यह कार्य केवल _START_TIME_ और _END_TIME_ के बीच ही कर सकते हैं।</string>
     <string name="okay">ठीक</string>
+    <string name="grammar_question">क्या इस वाक्य का व्याकरण ठीक है?</string>
+    <string name="spelling_question">क्या इस वाक्य में सभी शब्दों की वर्तनी (स्पेलिंग) सही है?</string>
 </resources>
 

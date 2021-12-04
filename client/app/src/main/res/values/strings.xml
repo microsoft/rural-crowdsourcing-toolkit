@@ -242,6 +242,8 @@
 
     <!-- Sentence validation strings -->
     <string name="sentence_validation_instruction">Is the sentence below correct?</string>
+    <string name="grammar_question">Is the above sentence grammatically correct?</string>
+    <string name="spelling_question">Are all the words spelt correctly in the sentence?</string>
 
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>

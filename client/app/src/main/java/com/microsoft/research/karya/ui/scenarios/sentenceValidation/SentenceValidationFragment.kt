@@ -18,7 +18,8 @@ class SentenceValidationFragment : BaseMTRendererFragment(R.layout.microtask_sen
   override val viewModel: SentenceValidationViewModel by viewModels()
   private val args: SentenceValidationFragmentArgs by navArgs()
 
-  private var valid: Boolean? = null
+  private var grammarValid: Boolean? = null
+  private var spellingValid: Boolean? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -57,21 +58,42 @@ class SentenceValidationFragment : BaseMTRendererFragment(R.layout.microtask_sen
   }
 
   private fun setupListeners() {
-    validationButtonGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+    grammarGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
       if (isChecked) {
-        valid = when (checkedId) {
-          yesBtn.id -> true
-          noBtn.id -> false
+        grammarValid = when (checkedId) {
+          grammarGoodBtn.id -> true
+          grammarBadBtn.id -> false
           else -> false
         }
-        enableNextBtn()
+        updateNextButtonStatus()
+      }
+    }
+
+    spellingGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+      if (isChecked) {
+        spellingValid = when (checkedId) {
+          spellingGoodBtn.id -> true
+          spellingBadBtn.id -> false
+          else -> false
+        }
+        updateNextButtonStatus()
       }
     }
 
     nextBtn.setOnClickListener {
-      viewModel.submitResponse(valid!!)
-      validationButtonGroup.clearChecked()
-      valid = null
+      viewModel.submitResponse(grammarValid!!, spellingValid!!)
+      grammarGroup.clearChecked()
+      spellingGroup.clearChecked()
+      grammarValid = null
+      spellingValid = null
+    }
+  }
+
+  private fun updateNextButtonStatus() {
+    if (grammarValid != null && spellingValid != null) {
+      enableNextBtn()
+    } else {
+      disableNextBtn()
     }
   }
 
