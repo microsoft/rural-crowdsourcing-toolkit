@@ -18,7 +18,8 @@ type SentenceValidationMicrotaskInput = {
 };
 
 type SentenceValidationMicrotaskOutput = {
-  valid: boolean;
+  grammar: boolean;
+  spelling: boolean;
 };
 
 // Base sentence validation scenario type
