@@ -195,12 +195,6 @@ class TaskList extends React.Component<TaskListProps, {}> {
     type Extras = { assigned: number; completed: number; verified: number; cost: number };
     const tasks_summary = this.props.tasks_summary as (MicrotaskAssignmentRecord & { extras: Extras })[];
 
-    // Create error message element if necessary
-    const getErrorElement =
-      this.props.task.status === 'FAILURE' ? (
-        <ErrorMessageWithRetry message={this.props.task.messages} onRetry={this.props.getData('task')} />
-      ) : null;
-
     // scenario tag function
     const scenarioTag = (task: TaskRecordType) => {
       const scenario = scenarioMap[task.scenario_name as ScenarioName];
@@ -315,7 +309,7 @@ class TaskList extends React.Component<TaskListProps, {}> {
           {this.props.task.status === 'IN_FLIGHT' ? (
             <ProgressBar />
           ) : this.props.task.status === 'FAILURE' ? (
-            { getErrorElement }
+            <ErrorMessageWithRetry message={this.props.task.messages} onRetry={this.props.getData('task')} />
           ) : (
             <>
               <h1 className='page-title'>
