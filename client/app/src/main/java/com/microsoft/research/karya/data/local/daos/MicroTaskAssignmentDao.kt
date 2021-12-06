@@ -22,7 +22,7 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
     """
       SELECT count(id)
       FROM microtask_assignment
-      WHERE microtask_id in (SELECT id from microtask WHERE task_id=:taskId)
+      WHERE task_id=:taskId
       AND status = :status
     """
   )
