@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.Gson
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -64,6 +65,7 @@ class DashboardSyncWorker(
     try {
       uploadOutputFiles()
     } catch (e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
       throw Exception(applicationContext.getString(R.string.upload_file_error))
     }
     setProgressAsync(Data.Builder().putInt("progress", MAX_UPLOAD_PROGRESS).build())
@@ -72,6 +74,7 @@ class DashboardSyncWorker(
     try {
       sendDbUpdates()
     } catch (e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
       throw Exception(applicationContext.getString(R.string.send_db_error))
     }
     setProgressAsync(Data.Builder().putInt("progress", MAX_SEND_DB_UPDATES_PROGRESS).build())
@@ -80,6 +83,7 @@ class DashboardSyncWorker(
     try {
       receiveDbUpdates()
     } catch (e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
       throw Exception(applicationContext.getString(R.string.receive_db_error))
     }
     setProgressAsync(Data.Builder().putInt("progress", MAX_RECEIVE_DB_UPDATES_PROGRESS).build())
@@ -88,6 +92,7 @@ class DashboardSyncWorker(
     try {
       downloadInputFiles()
     } catch (e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
       throw Exception(applicationContext.getString(R.string.download_file_error))
     }
     setProgressAsync(Data.Builder().putInt("progress", MAX_DOWNLOAD_PROGRESS).build())
@@ -96,6 +101,7 @@ class DashboardSyncWorker(
     try {
       fetchVerifiedAssignments()
     } catch (e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
       throw Exception(applicationContext.getString(R.string.received_verified_error))
     }
     setProgressAsync(Data.Builder().putInt("progress", MAX_FETCH_VERIFIED_PROGRESS).build())
