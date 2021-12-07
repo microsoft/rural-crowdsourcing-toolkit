@@ -1,8 +1,16 @@
 #create-task-link {
-  margin-left: 70%;
+  margin-left: 53%;
+  margin-right: 2%;
 }
 
 #create-task-link button {
+  color: #fff;
+  background-color: #4fc3f7;
+  border-radius: 7px;
+  margin-bottom: 1%;
+}
+
+#create-task-json-btn {
   color: #fff;
   background-color: #4fc3f7;
   border-radius: 7px;
@@ -18,6 +26,12 @@
 #filter_row input {
   font-size: 1.1em;
   border-bottom: 1px solid #b4bdc6;
+}
+
+#clear-filters-btn {
+  font-weight: 500;
+  text-transform: capitalize;
+  margin-bottom: 1.5%;
 }
 
 .collapsible {
@@ -50,8 +64,20 @@
   color: #717787;
   margin-top: 0.5%;
   margin-bottom: 0.5%;
-  margin-left: 1.5%;
+  margin-left: 3%;
   width: 10%;
+}
+
+.task-id {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #717787;
+  margin-top: 0.3%;
+  margin-bottom: 0.5%;
+  margin-left: 0.5%;
 }
 
 .badge {
@@ -70,13 +96,37 @@
 }
 
 .scenario {
-  margin-left: 3% !important;
+  margin-left: 1% !important;
   width: 25%;
 }
 
 .language {
-  margin-left: 6% !important;
+  margin-left: 4% !important;
   width: 15%;
+}
+
+.copy-task-link,
+.edit-task-link {
+  margin-right: 1.8%;
+}
+
+.copy-task-link span,
+.edit-task-link span {
+  font-size: 1.3em;
+  color: #a4d4ff;
+  margin-top: 0.2%;
+  border-radius: 10em;
+  padding: 0.18em;
+}
+
+.copy-task-link span:hover,
+.edit-task-link span:hover {
+  color: #717787;
+  opacity: 0.8;
+  background-color: #f0f8ff;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+  transform: scale(0.95);
+  transition: all 0.2s ease;
 }
 
 .arrow-2 {
@@ -101,7 +151,7 @@
 }
 
 .details-link {
-  width: 10%;
+  width: 8%;
   color: #2bbbad;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.88em;
@@ -109,7 +159,8 @@
 }
 
 .details-link:hover {
-  transform: scale(1.08);
+  color: #1ccfbd;
+  transform: scale(1.05);
 }
 
 .body-col {
@@ -141,4 +192,49 @@
   font-size: 1.1em !important;
   font-weight: 500;
   margin-left: 3%;
+}
+
+#json-form {
+  position: fixed;
+  bottom: 8%;
+  right: 32.5%;
+  width: 35%;
+  height: 70%;
+  z-index: 2;
+  background-color: #fff;
+  border: 1px solid rgba(180, 189, 198, 0.4);
+  border-radius: 5px;
+}
+
+#json-form {
+  padding-top: 3%;
+  padding-left: 4%;
+  padding-right: 4%;
+  line-height: 1.2em;
+}
+
+#json-form .btn-small {
+  background-color: #4fc3f7;
+  box-shadow: none;
+}
+
+#json-form p i {
+  font-size: 0.95em;
+}
+
+#json-form #import-error {
+  font-size: 0.95em;
+  letter-spacing: 1px;
+  color: #f44336;
+  margin-left: 3%;
+}
+
+#json-form input {
+  color: #717787;
+  height: 1.5em;
+  border-bottom: 1px dotted #6e768d;
+}
+
+#btn-row button {
+  margin-left: 10%;
 }

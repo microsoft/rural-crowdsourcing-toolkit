@@ -316,3 +316,42 @@ export const markComplete: TaskRouteMiddleware = async (ctx) => {
   const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, { status: 'COMPLETED' });
   HttpResponse.OK(ctx, updatedRecord);
 };
+
+/**
+ * Edit a task
+ */
+export const editTask: UserRouteMiddleware = async (ctx) => {
+  try {
+    const task: Task = ctx.request.body;
+
+    // TODO: Validate the task object
+
+    // Validate the task parameters
+    const scenario = scenarioMap[task.scenario_name!];
+    const policy = policyMap[task.policy!];
+
+    const schema = joiSchema(scenario.task_input.concat(policy.params).concat(coreScenarioParameters));
+    const { value: params, error: paramsError } = schema.validate(task.params);
+
+    if (paramsError) {
+      HttpResponse.BadRequest(ctx, 'Invalid task parameters');
+      return;
+    }
+
+    // update params
+    task.params = params;
+
+    // update other fields
+    task.status = 'SUBMITTED';
+
+    try {
+      const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, task);
+      HttpResponse.OK(ctx, updatedRecord);
+    } catch (e) {
+      // Internal server error
+      HttpResponse.BadRequest(ctx, 'Unknown error occured');
+    }
+  } catch (e) {
+    HttpResponse.BadRequest(ctx, 'Unknown error occured');
+  }
+};

@@ -10,7 +10,7 @@ import { StringListInput } from './StringList';
 
 type ParameterSectionProps = {
   params: ParameterArray<any>;
-  data: { [id: string]: string | boolean | string[] };
+  data: { [id: string]: string | number | boolean | string[] };
   onChange: ChangeEventHandler;
   onBooleanChange: ChangeEventHandler;
   onStringListChange: (id: string, data: string[]) => void;
@@ -29,6 +29,8 @@ export const ParameterSection = (props: ParameterSectionProps) => {
                 <ColTextInput
                   id={param.id}
                   label={param.label}
+                  // @ts-ignore
+                  value={props.data[param.id]}
                   width='s10 m8 l5'
                   onChange={props.onChange}
                   required={param.required}
@@ -40,7 +42,14 @@ export const ParameterSection = (props: ParameterSectionProps) => {
               <div className='row checkbox-row' key={param.id}>
                 <div className='col s10 m8 l5 input-field'>
                   <label>
-                    <input type='checkbox' className='filled-in' id={param.id} onChange={props.onBooleanChange} />
+                    <input
+                      type='checkbox'
+                      className='filled-in'
+                      id={param.id}
+                      // @ts-ignore
+                      value={props.data[param.id]}
+                      onChange={props.onBooleanChange}
+                    />
                     <span>{param.label}</span>
                   </label>
                 </div>
@@ -50,7 +59,12 @@ export const ParameterSection = (props: ParameterSectionProps) => {
             return (
               <div className='row' key={param.id}>
                 <div className='col s10 m8 l5 input-field'>
-                  <select id={param.id} onChange={props.onChange}>
+                  <select
+                    id={param.id}
+                    // @ts-ignore
+                    value={props.data[param.id]}
+                    onChange={props.onChange}
+                  >
                     <option value='null' disabled={true} selected={true}>
                       {param.label}
                     </option>
@@ -70,6 +84,8 @@ export const ParameterSection = (props: ParameterSectionProps) => {
               <StringListInput
                 key={param.id}
                 id={param.id}
+                // @ts-ignore
+                value={props.data[param.id]}
                 label={param.label}
                 data={props.data[param.id] as string[]}
                 onListChange={props.onStringListChange}

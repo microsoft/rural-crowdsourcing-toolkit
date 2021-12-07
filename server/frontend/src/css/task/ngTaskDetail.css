@@ -99,13 +99,15 @@
 
 #i-files,
 #o-files,
-#task_link_section {
+#task_link_section,
+#task_assignment_section {
   margin-left: 4%;
 }
 
 #i-files h2,
 #o-files h2,
-#task_link_section h2 {
+#task_link_section h2,
+#task_assignment_section h2 {
   margin-left: 5%;
   font-family: 'Montserrat', sans-serif;
   font-size: 1.2em;
@@ -118,7 +120,8 @@
 
 #add-link-btn,
 #submit-new-btn,
-#generate-btn {
+#generate-btn,
+#add-assignment-btn {
   margin-left: 6%;
   margin-bottom: 4%;
   margin-top: 4%;
@@ -126,7 +129,8 @@
 
 #input-table,
 #output-table,
-#task-link-table {
+#task-link-table,
+#task-assignment-table {
   font-size: 0.97em;
   color: #6e768d;
   letter-spacing: 0.08em;
@@ -142,7 +146,9 @@
 #output-table td,
 #output-table th,
 #task-link-table td,
-#task-link-table th {
+#task-link-table th,
+#task-assignment-table td,
+#task-assignment-table th {
   border-top: 2px solid #fff;
   border-bottom: 2px solid #fff;
   padding-top: 1%;
@@ -155,7 +161,8 @@
 }
 
 #submit-form,
-#link-form {
+#link-form,
+#assignment-form {
   position: fixed;
   bottom: 8%;
   right: 32.5%;
@@ -168,7 +175,7 @@
 }
 
 #submit-form {
-  padding-top: 3%;
+  padding-top: 2%;
   padding-left: 4%;
   padding-right: 4%;
   line-height: 1.2em;
@@ -190,8 +197,15 @@
 }
 
 #link-form {
-  padding-top: 7%;
+  padding-top: 4%;
   padding-left: 4%;
+}
+
+#link-form #task-link-error {
+  font-size: 0.95em;
+  letter-spacing: 1px;
+  color: #f44336;
+  margin-left: 3%;
 }
 
 #link-form input {

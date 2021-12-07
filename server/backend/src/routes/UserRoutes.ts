@@ -101,8 +101,8 @@ userRouter.get('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BoxCont
 // Create a new task
 userRouter.post('/tasks', Middlewares.needIdToken, BodyParser(), TaskController.create);
 
-// TODO: Edit task
-// userRouter.put('/task/:id');
+// Edit task
+userRouter.put('/task/:id', Middlewares.needIdToken, BodyParser(), TaskController.editTask);
 
 // Submit input files for a task
 userRouter.post<TaskController.TaskRouteState, {}>(
@@ -144,6 +144,15 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getMicrotasksSummary
 );
 
+// Get summary for each and every task
+userRouter.get<TaskController.TaskRouteState, {}>(
+  '/task/summary',
+  // @ts-ignore
+  Middlewares.needIdToken,
+  TaskController.getTasksSummary
+);
+
+// Mark a task complete
 userRouter.put<TaskController.TaskRouteState, {}>(
   '/task/:id/mark_complete',
   // @ts-ignores
@@ -168,7 +177,11 @@ userRouter.post(
 // Get all task assignments
 userRouter.get('/task_assignments', Middlewares.needIdToken, Middlewares.onlyAdmin, TaskAssignmentController.get);
 
-//Create task link
+/**
+ * Task link related routes. Create, get task links
+ */
+
+// Create task link
 userRouter.post<TaskController.TaskRouteState, {}>(
   '/task/:id/task_links',
   Middlewares.needIdToken,
@@ -187,13 +200,9 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskLinkController.get
 );
 
-// Get summary for each and every task
-userRouter.get<TaskController.TaskRouteState, {}>(
-  '/task/summary',
-  // @ts-ignore
-  Middlewares.needIdToken,
-  TaskController.getTasksSummary
-);
+/**
+ * Worker related routes. Get summary info
+ */
 
 // Get summary for each and every worker
 userRouter.get<WorkerController.WorkerRouteState, {}>(
@@ -211,6 +220,10 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.checkTask,
   TaskController.getWorkersTaskSummary
 );
+
+/**
+ * Language asset related routes. Submit, get language assets
+ */
 
 // Submit language assets
 userRouter.post(

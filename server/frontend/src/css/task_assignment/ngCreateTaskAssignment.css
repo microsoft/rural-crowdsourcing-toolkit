@@ -18,6 +18,11 @@
   margin-top: 5%;
 }
 
+#task-assignment-form .cancel-btn {
+  margin-left: 6%;
+  margin-top: 5%;
+}
+
 #submit-assignment-btn {
   background-color: #4fc3f7;
 }

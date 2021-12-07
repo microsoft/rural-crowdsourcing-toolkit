@@ -98,7 +98,7 @@ class TaskAssignmentList extends React.Component<TaskAssignmentListProps> {
           ) : (
             <>
               <h1 className='page-title'>Task Assignments{createTaskAssignmentButton}</h1>
-              <div className='basic-table' id='task-assignment-table'>
+              <div className='basic-table' id='task-assignments-table'>
                 <TableList<TaskAssignmentRecord>
                   columns={tableColumns}
                   rows={task_assignments}

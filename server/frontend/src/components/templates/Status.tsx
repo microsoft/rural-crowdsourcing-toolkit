@@ -60,7 +60,9 @@ export const ErrorMessageWithRetry = (props: ErrorMessageWithRetryProps) => {
     <div>
       <ErrorMessage message={message} />
       <div>
-        <button className='btn grey bmar20'>Retry</button>
+        <button className='btn grey bmar20' onClick={props.onRetry}>
+          Retry
+        </button>
       </div>
     </div>
   );
