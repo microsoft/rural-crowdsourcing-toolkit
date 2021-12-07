@@ -4,6 +4,7 @@
 // This file implements a set of misc helper utilities.
 
 import Crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 
 /**
  * Helper utility generates a random creation code of a given length.
@@ -56,4 +57,13 @@ export function envGetBoolean(key: string, defaultValue?: boolean): boolean {
   const value = eV != undefined ? eV == 'true' : defaultValue;
   if (value == undefined) throw new Error(`Undefined environment variable '${key}'`);
   return value;
+}
+
+// Calculate MD5 hash
+export function calculateHash(...args: String[]): String {
+  // Concatenate all the strings
+  let message = args.join()
+  let hash = CryptoJS.MD5(JSON.stringify({ message }));
+  // Convert to string
+  return hash.toString(CryptoJS.enc.Utf8)
 }
