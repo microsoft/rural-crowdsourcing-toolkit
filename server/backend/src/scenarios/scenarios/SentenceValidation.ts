@@ -4,7 +4,15 @@
 // Backend implementation of the sentence validation scenario
 
 import { IBackendScenarioInterface } from '../ScenarioInterface';
-import { BaseSentenceValidationScenario, baseSentenceValidationScenario, MicrotaskType } from '@karya/core';
+import {
+  BaseSentenceValidationScenario,
+  baseSentenceValidationScenario,
+  MicrotaskRecordType,
+  MicrotaskType,
+} from '@karya/core';
+import { BasicModel } from '@karya/common';
+import { Promise as BBPromise } from 'bluebird';
+import { promises as fsp } from 'fs';
 
 // Backend text translation scenario
 export const backendSentenceValidationScenario: IBackendScenarioInterface<BaseSentenceValidationScenario> = {
@@ -39,7 +47,28 @@ export const backendSentenceValidationScenario: IBackendScenarioInterface<BaseSe
    * TODO: output format should be made a task parameter.
    */
   async generateOutput(task, assignments, microtasks, task_folder, timestamp) {
-    return [];
+    const allSentences = await BBPromise.mapSeries(assignments, async (assignment) => {
+      // get the microtask record
+      const mt = (await BasicModel.getSingle('microtask', {
+        id: assignment.microtask_id,
+      })) as MicrotaskRecordType<'SENTENCE_VALIDATION'>;
+
+      return {
+        sentence: mt.input.data.sentence,
+        rating: assignment.output!.data!,
+      };
+    });
+
+    const validSentences = allSentences.filter((s) => s.rating.grammar && s.rating.spelling);
+    const rest = allSentences.filter((s) => !(s.rating.grammar && s.rating.spelling));
+
+    const validJsonFileName = `valid-${timestamp}.json`;
+    const invalidJsonFileName = `invalid-${timestamp}.json`;
+
+    await fsp.writeFile(`${task_folder}/${validJsonFileName}`, JSON.stringify(validSentences, null, 2) + '\n');
+    await fsp.writeFile(`${task_folder}/${invalidJsonFileName}`, JSON.stringify(rest, null, 2) + '\n');
+
+    return [validJsonFileName, invalidJsonFileName];
   },
 
   /**

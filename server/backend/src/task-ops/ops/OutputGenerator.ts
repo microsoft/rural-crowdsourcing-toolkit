@@ -59,10 +59,11 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
 
   // Get the task output folder
   const localFolder = envGetString('LOCAL_FOLDER');
+  const timestamp = currentOpTime.replace(/:/g, '.');
   const taskOutputBlobParameters: BlobParameters = {
     cname: 'task-output',
     task_id: task.id,
-    timestamp: currentOpTime.replace(/:/g, '.'),
+    timestamp,
     ext: 'tgz',
   };
   const taskOutputName = getBlobName(taskOutputBlobParameters);
@@ -83,7 +84,7 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
   // Call the output generator for the scenario
   const scenarioObj = backendScenarioMap[task.scenario_name];
   // @ts-ignore <weird type error for assignments>
-  const files = await scenarioObj.generateOutput(task, assignments, microtasks, task_folder, currentOpTime);
+  const files = await scenarioObj.generateOutput(task, assignments, microtasks, task_folder, timestamp);
 
   // If no files, return
   if (files.length == 0) return;
