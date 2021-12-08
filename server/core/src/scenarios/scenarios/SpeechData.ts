@@ -13,6 +13,7 @@ type SpeechDataTaskInputParameters = {
   compress: boolean;
   sampling_rate: string;
   bitwidth: string;
+  includeLogs: string;
 };
 
 // Speech data input format
@@ -70,6 +71,14 @@ const task_input: BaseSpeechDataScenario['task_input'] = [
       ['8', '8 bit per sample'],
       ['16', '16 bits per sample'],
     ],
+  },
+
+  {
+    id: 'includeLogs',
+    label: 'Include logs in output',
+    description: 'Include detailed work logs in output',
+    required: false,
+    type: 'boolean',
   },
 ];
 
