@@ -97,6 +97,14 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'task';
+      label: 'EDIT_TASK';
+      request: DBT.Task;
+      task_id: string;
+      files?: undefined;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'task';
       label: 'GET_ALL';
       params: DBT.Task;
     }
@@ -240,6 +248,12 @@ export type BackendRequestSuccessAction =
       type: 'BR_SUCCESS';
       store: 'task';
       label: 'CREATE';
+      response: DBT.TaskRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task';
+      label: 'EDIT_TASK';
       response: DBT.TaskRecord;
     }
   | {
@@ -436,6 +450,16 @@ export async function backendRequest(
         store,
         label,
         response: await POST('/tasks', action.request),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Edit a task
+    if (action.store === 'task' && action.label === 'EDIT_TASK') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await PUT(`/task/${action.task_id}`, action.request),
       } as BackendRequestSuccessAction;
     }
 

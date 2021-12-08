@@ -31,20 +31,24 @@ import { BackendRequestInitAction } from '../../store/apis/APIs';
 import '../../css/task/ngCreateTask.css';
 
 // Create router props
-type RouterProps = RouteComponentProps<{}>;
+type RouteParams = { id?: string };
+type RouterProps = RouteComponentProps<RouteParams>;
 
 // Load state to props
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state: RootState, ownProps: RouterProps) => {
+  const task_id = ownProps.match.params.id;
   const { data, ...request } = state.all.task;
   return {
-    task: data,
     request,
     auth: state.all.auth,
+    task_id,
   };
 };
 
 // Map dispatch to props
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any, ownProps: RouterProps) => {
+  const id = ownProps.match.params.id;
+  const task_id = id ? id : '';
   return {
     createTask: (task: Task) => {
       const action: BackendRequestInitAction = {
@@ -52,6 +56,17 @@ const mapDispatchToProps = (dispatch: any) => {
         store: 'task',
         label: 'CREATE',
         request: task,
+      };
+      dispatch(action);
+    },
+
+    editTask: (task: Task) => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'task',
+        label: 'EDIT_TASK',
+        request: task,
+        task_id,
       };
       dispatch(action);
     },
@@ -63,12 +78,12 @@ const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
 const connector = reduxConnector;
 
 // component prop type
-type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
+type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector> & { task?: Task };
 
 // component state
 type CreateTaskState = {
   task: Task;
-  params: { [id: string]: string | boolean | string[] };
+  params: { [id: string]: string | number | boolean | string[] };
   itags: Array<string>;
   scenario?: BaseScenarioInterface<any, object, any, object, any, object>;
   policy?: PolicyName;
@@ -107,6 +122,23 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   componentDidMount() {
     M.updateTextFields();
     M.AutoInit();
+    if (this.props.location.state) {
+      const task_props = this.props.location.state as Task;
+      const task: Task = {
+        name: task_props.name,
+        description: task_props.description,
+        display_name: task_props.display_name,
+      };
+      const itags = task_props.itags ? task_props.itags.itags : [];
+      const params = task_props.params ? task_props.params : {};
+      const policy = task_props.policy;
+      const scenario = scenarioMap[task_props.scenario_name as ScenarioName];
+      task.assignment_batch_size = task_props.assignment_batch_size;
+      task.assignment_granularity = task_props.assignment_granularity;
+      task.group_assignment_order = task_props.group_assignment_order;
+      task.microtask_assignment_order = task_props.microtask_assignment_order;
+      this.setState({ task, itags, params, policy, scenario });
+    }
   }
 
   // On update, update materialize fields
@@ -220,11 +252,19 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     task.policy = this.state.policy;
     const batch_size = task.assignment_batch_size;
     task.assignment_batch_size = batch_size ? Number.parseInt(batch_size.toString(), 10) : null;
-    this.props.createTask(task);
+    const task_id = this.props.task_id;
+    if (task_id) {
+      task.id = task_id;
+      this.props.editTask(task);
+    } else {
+      this.props.createTask(task);
+    }
   };
 
   render() {
     const { auth } = this.props;
+    const task_id_props = this.props.task_id;
+    const task_props = this.props.location.state as Task;
 
     // Generate error with task creation
     const createErrorElement =
@@ -233,18 +273,27 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     // Scenario cards
     const scenarios = Object.values(scenarioMap);
     const { scenario } = this.state;
-    const scenarioCards = (
-      <div className='scenarios'>
-        {scenarios.map((s) => (
-          <label className='col s11 m5 l4' key={s.name}>
-            <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
-            <div className='scenario-card'>
-              <span className='scenario-name'>{s.full_name}</span>
-              <p className='description'>{s.description}</p>
-            </div>
-          </label>
-        ))}
-      </div>
+    const scenarioCards = task_props ? (
+      <h2 className='col s10' id='select-txt'>
+        Scenario:<span>{scenario?.full_name}</span>
+      </h2>
+    ) : (
+      <>
+        <h2 className='col s10' id='select-txt'>
+          Select a Scenario
+        </h2>
+        <div className='scenarios'>
+          {scenarios.map((s) => (
+            <label className='col s11 m5 l4' key={s.name}>
+              <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
+              <div className='scenario-card'>
+                <span className='scenario-name'>{s.full_name}</span>
+                <p className='description'>{s.description}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </>
     );
 
     // task creation form
@@ -485,7 +534,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
                 <Link to='/task' className='breadcrumb'>
                   Tasks
                 </Link>
-                <p className='breadcrumb'>Create Task</p>
+                <p className='breadcrumb'>{task_id_props ? 'Edit Task' : 'Create Task'}</p>
               </div>
             </div>
           </nav>
@@ -493,10 +542,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
 
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
-            <h1 className='page-title'>Create Task</h1>
-            <h2 className='col s10' id='select-txt'>
-              Select a Scenario
-            </h2>
+            <h1 className='page-title'>{task_id_props ? 'Edit Task' : 'Create Task'}</h1>
             <div className='row'>{scenarioCards}</div>
           </div>
           {taskForm}

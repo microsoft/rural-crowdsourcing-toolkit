@@ -62,14 +62,17 @@ const dataConnector = withData('box', 'task');
 const connector = compose(dataConnector, reduxConnector);
 // Component props
 // Need filter for box.
-type CreateTaskAssignmentProps = RouterProps & ConnectedProps<typeof reduxConnector> & DataProps<typeof dataConnector>;
+type CreateTaskAssignmentProps = RouterProps &
+  ConnectedProps<typeof reduxConnector> &
+  DataProps<typeof dataConnector> & { task_id?: string; close_form_func?: () => void };
 
 // Component state
 type CreateTaskAssignmentState = {
-  params: { [id: string]: string | boolean | string[] };
+  params: { [id: string]: string | number | boolean | string[] };
   task?: TaskRecord;
   box?: BoxRecord;
   policy?: PolicyName;
+  task_policy?: boolean;
 };
 
 class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, CreateTaskAssignmentState> {
@@ -81,12 +84,20 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   componentDidMount() {
     M.AutoInit();
     M.updateTextFields();
+    if (this.props.task_id !== undefined) {
+      const task = this.props.task.data.find((t) => t.id === this.props.task_id) as TaskRecord;
+      this.setState({ task });
+    }
   }
 
   // on update
   componentDidUpdate(prevProps: CreateTaskAssignmentProps) {
     if (prevProps.request.status === 'IN_FLIGHT' && this.props.request.status === 'SUCCESS') {
-      this.props.history.push('/task-assignments');
+      if (!this.props.close_form_func) {
+        this.props.history.push('/task-assignments');
+      } else {
+        this.props.close_form_func();
+      }
     } else {
       M.updateTextFields();
       M.AutoInit();
@@ -97,7 +108,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   handleTaskChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const task_id = e.currentTarget.value;
     const task = this.props.task.data.find((t) => t.id === task_id) as TaskRecord;
-    const currentState = { ...this.state, task, params: {} };
+    const currentState = { ...this.state, task, params: {}, task_policy: false };
     delete currentState.policy;
     this.setState(currentState);
   };
@@ -112,8 +123,30 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   // Change policy
   handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const policy = e.currentTarget.value as PolicyName;
-    console.log(policy);
-    this.setState({ policy, params: {} });
+    const task_policy = false;
+    this.setState({ policy, params: {}, task_policy });
+  };
+
+  // handle policy boolean change
+  handlePolicyBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const task_policy = e.currentTarget.checked;
+    this.setState({ task_policy });
+    const task = this.state.task;
+
+    // If checkbox is in checked state
+    if (task_policy === true && task !== undefined) {
+      // Getting the same policy as the task
+      const policy = task.policy;
+      const params = {} as { [id: string]: string | number | boolean | string[] };
+      if (policy) {
+        // Getting the required policy parameters
+        const policyObj = policyMap[policy];
+        const policyParams = policyObj.params;
+        // Copying the parameters from the task params
+        policyParams.map((p) => (params[p.id] = task.params[p.id]));
+      }
+      this.setState({ policy, params });
+    }
   };
 
   // handle param input change
@@ -151,6 +184,8 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     const errorElements = [this.props.request, this.props.box, this.props.task].map((op, index) =>
       op.status === 'FAILURE' ? <ErrorMessage key={index} message={op.messages} /> : null,
     );
+
+    const task_id_props = this.props.task_id;
 
     // Task drop down
     const tasks = this.props.task.data.filter((t) => t.status === 'SUBMITTED');
@@ -194,19 +229,32 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     const scenario = scenarioMap[task?.scenario_name as ScenarioName];
     const policies = task === undefined ? [] : policyList[scenario.response_type];
     const policy = this.state.policy || 0;
+    const task_policy = this.state.task_policy;
     const policyDropDown = (
-      <div>
-        <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
-          <option value={0} disabled={true}>
-            Select a Policy
-          </option>
-          {policies.map((p) => (
-            <option value={p.name} key={p.name}>
-              {p.full_name}
+      <>
+        <div>
+          <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
+            <option value={0} disabled={true}>
+              Select a Policy
             </option>
-          ))}
-        </select>
-      </div>
+            {policies.map((p) => (
+              <option value={p.name} key={p.name}>
+                {p.full_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <label htmlFor='task_policy'>
+          <input
+            type='checkbox'
+            className='filled-in'
+            id='task_policy'
+            checked={task_policy}
+            onChange={this.handlePolicyBooleanChange}
+          />
+          <span>Choose same policy as task policy</span>
+        </label>
+      </>
     );
 
     // Policy params section
@@ -229,19 +277,19 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
         {errorElements.map((err) => err)}
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
-            <h1 className='page-title'>Create Assignment</h1>
+            {task_id_props ? null : <h1 className='page-title'>Create Assignment</h1>}
             <div id='task-assignment-form'>
               <div className='row'>
                 <div className='col s10 m8 l6'>
                   {this.props.task.status === 'IN_FLIGHT' ? (
                     <ProgressBar />
-                  ) : this.props.task.status === 'SUCCESS' ? (
+                  ) : this.props.task.status === 'SUCCESS' && !task_id_props ? (
                     taskDropDown
                   ) : null}
                 </div>
               </div>
               <div className='row'>
-                <div className='col s10 m8 l6'>
+                <div className={task_id_props ? 'col s10' : 'col s10 m8 l6'}>
                   {this.props.box.status === 'IN_FLIGHT' ? (
                     <ProgressBar />
                   ) : this.props.box.status === 'SUCCESS' ? (
@@ -250,7 +298,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                 </div>
               </div>
               <div className='row'>
-                <div className='col s10 m8 l6'>{policyDropDown}</div>
+                <div className={task_id_props ? 'col s10' : 'col s10 m8 l6'}>{policyDropDown}</div>
               </div>
 
               {/** Policy parameter section */}
@@ -265,9 +313,16 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                     <button className='btn waves-effect waves-light' id='submit-assignment-btn'>
                       Submit Assignment
                     </button>
-                    <Link to='/task-assignments'>
-                      <button className='btn cancel-btn'>Cancel</button>
-                    </Link>
+                    {task_id_props ? (
+                      <button type='button' className='btn cancel-btn' onClick={this.props.close_form_func}>
+                        Cancel
+                        <i className='material-icons right'>close</i>
+                      </button>
+                    ) : (
+                      <Link to='/task-assignments'>
+                        <button className='btn cancel-btn'>Cancel</button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               )}
