@@ -266,11 +266,12 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 
 		payments_account: {
 			columns: [
+        ['hash', ['string', 128], 'unique', 'not nullable', 'not mutable'],
 				['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
 				['fund_id',['string', 64], 'unique', 'nullable', 'mutable'], 
 				['account_type', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
 				['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-				['active', ['string', 16], 'not unique', 'not nullable', 'mutable'],
+				['active', ['boolean'], 'not unique', 'not nullable', 'mutable'],
 				['meta', ['object'], 'not unique', 'nullable', 'mutable']
 			]
 		},
