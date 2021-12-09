@@ -1,8 +1,8 @@
 import { BasicModel } from "@karya/common";
 import { AccountTaskStatus, PaymentsAccountRecord } from "@karya/core";
 import { Job } from "bullmq";
-import { qAxios } from "../HttpUtils";
-import { RegistrationQJobData } from "./Types";
+import { qAxios } from "../../HttpUtils";
+import { RegistrationQJobData } from "../Types";
 
 export default async (job: Job<RegistrationQJobData>) => {
     // Get the box record

@@ -5,8 +5,8 @@ import * as HttpResponse from '@karya/http-response'
 import { calculateHash } from '@karya/misc-utils';
 import * as underscore from 'underscore';
 import { RegistrationQWrapper } from "../Queue/Registration/RegistrationQWrapper";
-import ReguistrationQOpts from "../Queue/Registration/RegistrationQOpts";
 import { RegistrationQPayload } from "../Queue/Registration/Types";
+import { RegistrationQConfig } from "../Queue/Registration/RegistrationQConfig";
 
 const ACCOUNT_REGISTRATION_QUEUE_NAME: string = "ACCOUNT_REGISTRATION_QUEUE"
 
@@ -98,7 +98,7 @@ export const addAccount: KaryaMiddleware = async (ctx) => {
         hash
     }
 
-    const accountRegistrationQueue = new RegistrationQWrapper( { qname: ACCOUNT_REGISTRATION_QUEUE_NAME,  opts: ReguistrationQOpts } )
+    const accountRegistrationQueue = new RegistrationQWrapper( RegistrationQConfig )
     const enQResult = await accountRegistrationQueue.enqueue(hash , jobPayload)
     const createdAccountRecord = enQResult.createdAccountRecord
 

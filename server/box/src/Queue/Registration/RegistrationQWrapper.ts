@@ -1,7 +1,15 @@
-import { BasicModel, QResult, QueueWrapper } from '@karya/common'
+import { BasicModel, karyaLogger, Logger, QResult, QueueWrapper } from '@karya/common'
 import { AccountTaskStatus } from '@karya/core';
 import { Queue } from "bullmq";
+import { registrationConsumer } from './consumer/registrationConsumer';
 import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResult } from './Types'
+
+
+const QLogger: Logger = karyaLogger({
+    name: 'RegistrationQ',
+    logToConsole: true,
+    consoleLogLevel: 'info',
+});
 
 export class RegistrationQWrapper extends QueueWrapper<Queue> {
 
@@ -45,3 +53,12 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
         return this.queue.close()
     }
 }
+
+// Defining success and failure cases for the consumer working on Queue
+registrationConsumer.on("completed", (job) => {
+    console.log(`Completed job ${job.id} successfully`)
+})
+
+registrationConsumer.on("failed", (job, error) => {
+    console.log(`Failed job ${job.id} with ${error}`)
+})
