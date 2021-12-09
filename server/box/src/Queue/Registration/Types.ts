@@ -11,6 +11,11 @@ export interface RegistrationQPayload extends Payload {
         ifsc?: string
     },
     hash: string,
+
+}
+
+export type RegistrationQJobData = {
+    account_record_id: string
 }
 
 export type Qconfig = {

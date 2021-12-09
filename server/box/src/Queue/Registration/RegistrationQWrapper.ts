@@ -1,7 +1,7 @@
 import { BasicModel, QResult, QueueWrapper } from '@karya/common'
 import { AccountTaskStatus } from '@karya/core';
-import { Queue, QueueOptions } from "bullmq";
-import { Qconfig, RegistrationQPayload, RegistrationQResult } from './Types'
+import { Queue } from "bullmq";
+import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResult } from './Types'
 
 export class RegistrationQWrapper extends QueueWrapper<Queue> {
 
@@ -9,9 +9,14 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
         super(config)
     }
 
+    // static getQueue(qname: string) {
+    //     let q = new RegistrationQWrapper({qname: qname, opts: RegistrationQOpts})
+    //     return q
+    // }
+
     intialiseQueue(): void {
         console.log(this.config, this.config.opts)
-        this.queue = new Queue<RegistrationQPayload>(this.config.qname, this.config.opts)
+        this.queue = new Queue<RegistrationQJobData>(this.config.qname, this.config.opts)
     }
 
     onStart(): void {
@@ -32,7 +37,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
         })
 
         // TODO: Make a single object Job with payload and jobname
-        let addedJob = await this.queue.add(jobName, payload)
+        let addedJob = await this.queue.add(jobName, {account_record_id: createdAccountRecord.id})
 
         return { jobId: addedJob.id!, createdAccountRecord }
     }
