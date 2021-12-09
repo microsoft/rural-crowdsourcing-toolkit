@@ -19,6 +19,7 @@ export type RegistrationQJobData = {
 }
 
 export type Qconfig = {
+    qname: string
     opts: QueueOptions
 }
 
