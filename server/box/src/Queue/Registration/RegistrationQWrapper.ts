@@ -1,7 +1,7 @@
 import { BasicModel, QResult, QueueWrapper } from '@karya/common'
-import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core';
+import { AccountTaskStatus } from '@karya/core';
 import { Queue, QueueOptions } from "bullmq";
-import { RegistrationQPayload } from './RegistrationPayload'
+import { Qconfig, RegistrationQPayload, RegistrationQResult } from './Types'
 
 export class RegistrationQWrapper extends QueueWrapper<Queue> {
 
@@ -26,7 +26,8 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
             status: AccountTaskStatus.INITIALISED,
             active: false,
             meta: {
-                ...payload
+                name: payload.name,
+                account_details: payload.accountDetails
             }
         })
 
@@ -38,13 +39,4 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
     close() {
         return this.queue.close()
     }
-}
-
-type Qconfig = {
-    qname: string
-    opts: QueueOptions
-}
-
-interface RegistrationQResult extends QResult{
-    createdAccountRecord: PaymentsAccountRecord
 }

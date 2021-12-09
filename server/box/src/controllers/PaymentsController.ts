@@ -3,9 +3,10 @@ import { PaymentsAccountRecord } from '@karya/core'
 import { BasicModel, mainLogger } from '@karya/common'
 import * as HttpResponse from '@karya/http-response'
 import { calculateHash } from '@karya/misc-utils';
-import { RegistrationQPayload } from "../Queue/Registration/RegistrationPayload";
+import * as underscore from 'underscore';
 import { RegistrationQWrapper } from "../Queue/Registration/RegistrationQWrapper";
 import config from "../Queue/Registration/config";
+import { RegistrationQPayload } from "../Queue/Registration/Types";
 
 const ACCOUNT_REGISTRATION_QUEUE_NAME: string = "ACCOUNT_REGISTRATION_QUEUE"
 
@@ -17,6 +18,19 @@ type accountRegReqObject = {
         ifsc?: string
     }
 }
+
+const accountRegResObjectFields = [
+    "hash",
+    "worker_id",
+    "fund_id",
+    "account_type",
+    "status",
+    "active",
+    "meta",
+    "extras",
+    "created_at",
+    "last_updated_at",
+]
 
 export const addAccount: KaryaMiddleware = async (ctx) => {
 
@@ -55,8 +69,8 @@ export const addAccount: KaryaMiddleware = async (ctx) => {
     for (var st of inProgressStatus) {
         try {
             inProgressRecord = await BasicModel.getSingle('payments_account', { status: st })
-            HttpResponse.BadRequest(ctx, `Verification for ${inProgressRecord.id} already in progress with status: ${st}`)
-            return
+            // HttpResponse.BadRequest(ctx, `Verification for ${inProgressRecord.id} already in progress with status: ${st}`)
+            // return
         } catch (e) {
             mainLogger.info(`Cant find account record with status ${st} for user_id: ${ctx.state.entity.id}`)
         }``
@@ -69,7 +83,8 @@ export const addAccount: KaryaMiddleware = async (ctx) => {
     try {
         let record = await BasicModel.getSingle('payments_account', { hash })
         // Send the existing record
-        HttpResponse.OK(ctx, record)
+        const result = underscore.pick(record, accountRegResObjectFields)
+        HttpResponse.OK(ctx, result)
         return
     } catch (e) {
         mainLogger.info(`Cant find account record with hash ${hash} for user_id: ${ctx.state.entity.id}`)
@@ -85,8 +100,10 @@ export const addAccount: KaryaMiddleware = async (ctx) => {
         
     console.log({ qname: ACCOUNT_REGISTRATION_QUEUE_NAME }, config)
     const accountRegistrationQueue = new RegistrationQWrapper( { qname: ACCOUNT_REGISTRATION_QUEUE_NAME,  opts: config } )
-    const result = await accountRegistrationQueue.enqueue(hash , jobPayload)
+    const enQResult = await accountRegistrationQueue.enqueue(hash , jobPayload)
+    const createdAccountRecord = enQResult.createdAccountRecord
 
+    const result = underscore.pick(createdAccountRecord, accountRegResObjectFields)
     HttpResponse.OK(ctx, result)
     return
 }
