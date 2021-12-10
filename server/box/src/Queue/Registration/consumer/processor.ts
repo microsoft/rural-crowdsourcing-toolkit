@@ -4,8 +4,11 @@ import { Job } from "bullmq";
 import { qAxios } from "../../HttpUtils";
 import { RegistrationQJobData } from "../Types";
 
+const SERVER_ADD_ACCOUNT_RELATIVE_URL = 'api_box/payments/accounts'
+
 // Setting up Db Connection
 setupDbConnection();
+
 export default async (job: Job<RegistrationQJobData>) => {
     // Get the box record
     // TODO: Maybe cache the id_token rather than calling the database every time
@@ -17,8 +20,11 @@ export default async (job: Job<RegistrationQJobData>) => {
         // set request header
         const headers = { 'karya-id-token': box.id_token }
         qAxios.defaults.headers = headers
-
-        const response = await qAxios.post<PaymentsAccountRecord>('/payments/accounts')
+        // send the post request
+        console.log("%%%%%%%%%%%%")
+        console.log(accountRecord)
+        console.log("%%%%%%%%%%%%")
+        const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord)
         BasicModel.updateSingle('payments_account', { id: job.data.account_record_id }, { ...response.data })
     } catch (e) {
 
@@ -27,6 +33,8 @@ export default async (job: Job<RegistrationQJobData>) => {
         // sending the account record for registration
 
         // TODO: Log the error here
+        console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+        console.log(e)
         let updatedRecordMeta = accountRecord!.meta
         // Update the record to status failed with faluire reason
         // TODO: Set the type of meta to be any
@@ -34,6 +42,4 @@ export default async (job: Job<RegistrationQJobData>) => {
         updatedRecordMeta["failure_reason"] = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
         BasicModel.updateSingle('payments_account', { id: job.data.account_record_id}, { status: AccountTaskStatus.FAILED, meta: updatedRecordMeta })
     }
-    
-
 }
