@@ -178,4 +178,9 @@ class WorkerRepository @Inject constructor(
 
   suspend fun upsertWorker(worker: WorkerRecord) =
     withContext(Dispatchers.IO) { workerDao.upsert(worker) }
+
+  suspend fun updateLanguage(id: String, lang: String) =
+    withContext(Dispatchers.IO) {
+      workerDao.updateLanguage(id, lang)
+    }
 }

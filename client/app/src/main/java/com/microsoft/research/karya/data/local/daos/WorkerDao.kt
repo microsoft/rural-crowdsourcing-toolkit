@@ -44,4 +44,7 @@ interface WorkerDao : BasicDao<WorkerRecord> {
     insertForUpsert(records)
     updateForUpsert(records)
   }
+
+  @Query("UPDATE worker SET language=:lang WHERE id == :id")
+  suspend fun updateLanguage(id: String, lang: String)
 }
