@@ -96,24 +96,23 @@ class DashboardSyncWorker(
 
     var count = 0
     for (assignment in filteredAssignments) {
+      val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
+      val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
+      val outputDir = microtaskOutputContainer.getDirectory()
+      val outputFiles = assignment.output.asJsonObject.get("files").asJsonObject
+      val fileNames = outputFiles.keySet().map { it -> outputFiles.get(it).asString }
+      val outputFilePaths = fileNames.map { "$outputDir/${it}" }
       try {
-        val assignmentTarBallPath = microtaskOutputContainer.getBlobPath(assignment.id)
-        val tarBallName = microtaskOutputContainer.getBlobName(assignment.id)
-        val outputDir = microtaskOutputContainer.getDirectory()
-        val outputFiles = assignment.output.asJsonObject.get("files").asJsonObject
-        val fileNames = outputFiles.keySet().map { it -> outputFiles.get(it).asString }
-        val outputFilePaths = fileNames.map { "$outputDir/${it}" }
         FileUtils.createTarBall(assignmentTarBallPath, outputFilePaths, fileNames)
-        uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
-        count += 1
-        val localProgress = (count * MAX_UPLOAD_PROGRESS) / filteredAssignments.size
-        setProgressAsync(Data.Builder().putInt("progress", localProgress).build())
       } catch (e: Exception) {
         // The assignments for which output file can not be prepared, mark them assigned.
         assignmentRepository.markAssigned(assignment.id, DateUtils.getCurrentDate())
         warningMsg = applicationContext.getString(R.string.FAILED_UPLOAD_RECORD_AGAIN_MSG)
-        Log.e("UPLOAD_OUTPUT_FILE", "Failed to prepare output file for the assignment")
       }
+      uploadTarBall(assignment, assignmentTarBallPath, tarBallName)
+      count += 1
+      val localProgress = (count * MAX_UPLOAD_PROGRESS) / filteredAssignments.size
+      setProgressAsync(Data.Builder().putInt("progress", localProgress).build())
     }
   }
 
