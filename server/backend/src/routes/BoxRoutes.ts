@@ -3,7 +3,7 @@
 //
 // List of end points for the server user.
 
-import { AuthMechanism, BoxRecord } from '@karya/core';
+import { AccountTaskStatus, AuthMechanism, BoxRecord } from '@karya/core';
 import Application from 'koa';
 import BodyParser from 'koa-body';
 import Router from 'koa-router';

@@ -113,6 +113,9 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['tags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['tags_updated_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'mutable'],
         ['sent_to_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
+        ['selected_account', ['>', 'payments_account'], 'unique', 'nullable', 'mutable'],
+        ['payments_active', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['payments_meta', ['object'], 'not unique', 'nullable', 'mutable']
       ],
     },
 

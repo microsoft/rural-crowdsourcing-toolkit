@@ -1,5 +1,5 @@
 import { BasicModel, setupDbConnection } from "@karya/common";
-import { AccountTaskStatus, PaymentsAccountRecord } from "@karya/core";
+import { AccountTaskStatus, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord } from "@karya/core";
 import { Job } from "bullmq";
 import { qAxios } from "../../HttpUtils";
 import { RegistrationQJobData } from "../Types";
@@ -30,7 +30,6 @@ export default async (job: Job<RegistrationQJobData>) => {
         // sending the account record for registration
 
         // TODO: Log the error here
-        console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         console.log(e)
         let updatedRecordMeta = accountRecord!.meta
         // Update the record to status failed with faluire reason
@@ -39,4 +38,22 @@ export default async (job: Job<RegistrationQJobData>) => {
         updatedRecordMeta["failure_reason"] = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
         BasicModel.updateSingle('payments_account', { id: job.data.account_record_id}, { status: AccountTaskStatus.FAILED, meta: updatedRecordMeta })
     }
+}
+
+const getContactsID = async (workerId: string) => {
+    let workerRecord: WorkerRecord
+    try {
+        workerRecord = await BasicModel.getSingle('worker', { id: workerId })
+    } catch (e) {
+        throw new RecordNotFoundError("Cannot find worker record with given id in accounts record")
+    }
+    // Check if contactsId already exists in the worker record
+    let contactsId = (workerRecord!.payments_meta! as any).contacts_id
+    if (contactsId) {
+        return contactsId
+    }
+    // Contacts ID doesnot exist, make a request to Razorpay
+    
+
+
 }

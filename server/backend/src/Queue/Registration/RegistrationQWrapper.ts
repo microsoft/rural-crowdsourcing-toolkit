@@ -6,7 +6,7 @@ import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResul
 
 
 const QLogger: Logger = karyaLogger({
-    name: 'RegistrationQBox',
+    name: 'RegistrationQBackend',
     logToConsole: true,
     consoleLogLevel: 'info',
 });
@@ -32,17 +32,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
     }
 
     async enqueue(jobName: string, payload: RegistrationQPayload, ...args: any[]): Promise<RegistrationQResult> {
-        let createdAccountRecord = await BasicModel.insertRecord('payments_account', {
-            hash: payload.hash,
-            worker_id: payload.workerID,
-            account_type: payload.accountType,
-            status: AccountTaskStatus.INITIALISED,
-            active: false,
-            meta: {
-                name: payload.name,
-                account_details: payload.accountDetails
-            }
-        })
+        let createdAccountRecord = await BasicModel.insertRecord('payments_account', payload.accountRecord)
 
         // TODO: Make a single object Job with payload and jobname
         let addedJob = await this.queue.add(jobName, {account_record_id: createdAccountRecord.id})
