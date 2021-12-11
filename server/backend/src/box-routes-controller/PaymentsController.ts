@@ -10,7 +10,9 @@ export const addAccount: BoxRouteMiddleware = async (ctx) => {
     try {
         const accountRecord: PaymentsAccountRecord = ctx.request.body
         const registrationQWrapper = new RegistrationQWrapper(RegistrationQConfig)
-        const qResult = await registrationQWrapper.enqueue(accountRecord.id, { accountRecord: accountRecord })
+        const qResult = await registrationQWrapper.enqueue(accountRecord.id, { 
+            accountRecord: {...accountRecord, box_id: ctx.state.entity.id} 
+        })
         HttpResponse.OK(ctx, qResult.createdAccountRecord)
     } catch (err) {
         // TODO: Handle different type of error and send appropriate response

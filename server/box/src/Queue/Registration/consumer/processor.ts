@@ -30,7 +30,6 @@ export default async (job: Job<RegistrationQJobData>) => {
         // sending the account record for registration
 
         // TODO: Log the error here
-        console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         console.log(e)
         let updatedRecordMeta = accountRecord!.meta
         // Update the record to status failed with faluire reason

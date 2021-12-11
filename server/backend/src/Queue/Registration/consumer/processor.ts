@@ -1,10 +1,11 @@
 import { BasicModel, setupDbConnection } from "@karya/common";
-import { AccountTaskStatus, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord } from "@karya/core";
+import { AccountTaskStatus, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord } from "@karya/core";
 import { Job } from "bullmq";
-import { qAxios } from "../../HttpUtils";
+import { razorPayAxios } from "../../HttpUtils";
 import { RegistrationQJobData } from "../Types";
 
 const SERVER_ADD_ACCOUNT_RELATIVE_URL = 'api_box/payments/accounts'
+const RAZORPAY_CONTACTS_RELATIVE_URL = 'contacts'
 
 // Setting up Db Connection
 setupDbConnection();
@@ -14,15 +15,7 @@ export default async (job: Job<RegistrationQJobData>) => {
     // TODO: Maybe cache the id_token rather than calling the database every time
     let accountRecord: PaymentsAccountRecord
     try {
-        const box = (await BasicModel.getRecords('box', {}))[0];
-
-        accountRecord = await BasicModel.getSingle('payments_account', { id: job.data.account_record_id })
-        // set request header
-        const headers = { 'karya-id-token': box.id_token }
-        qAxios.defaults.headers = headers
-        // send the post request
-        const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord)
-        BasicModel.updateSingle('payments_account', { id: job.data.account_record_id }, { ...response.data })
+        getContactsID(job.data.account_record_id)
     } catch (e) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
@@ -53,7 +46,14 @@ const getContactsID = async (workerId: string) => {
         return contactsId
     }
     // Contacts ID doesnot exist, make a request to Razorpay
-    
-
-
+    // 1. Create the request body
+    const contactsRequestBody: ContactsRequest = {
+        name: workerId,
+        contact: workerRecord.phone_number!,
+        type: "worker"
+    }
+    //2. Make the post request
+    // TODO: Maybe rertry the request few times before marking the record as failed
+    const response = await razorPayAxios.post<ContactsResponse>(RAZORPAY_CONTACTS_RELATIVE_URL, contactsRequestBody)
+    console.log(response.data)
 }
