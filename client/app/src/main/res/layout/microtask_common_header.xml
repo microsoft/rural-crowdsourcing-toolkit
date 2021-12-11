@@ -5,9 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
         android:id="@+id/appTb"
-        layout="@layout/app_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="" />
 
     <FrameLayout
         android:layout_width="match_parent"

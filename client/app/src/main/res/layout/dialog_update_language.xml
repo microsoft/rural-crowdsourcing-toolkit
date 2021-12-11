@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="1"
+    android:padding="@dimen/_10sdp"
+    tools:ignore="HardcodedText">
+
+    <Button
+        android:id="@+id/languageEnglish"
+        style="@style/LanguageUpdateButton"
+        android:text="English" />
+
+    <Button
+        android:id="@+id/languageHindi"
+        style="@style/LanguageUpdateButton"
+        android:text="हिन्दी" />
+
+    <Button
+        android:id="@+id/languageBengali"
+        style="@style/LanguageUpdateButton"
+        android:text="বাংলা" />
+
+    <Button
+        android:id="@+id/languageMalayalam"
+        style="@style/LanguageUpdateButton"
+        android:text="മലയാളം" />
+
+</GridLayout>
