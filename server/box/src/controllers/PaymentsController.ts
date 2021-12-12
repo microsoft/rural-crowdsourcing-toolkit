@@ -8,10 +8,8 @@ import { RegistrationQWrapper } from "../Queue/Registration/RegistrationQWrapper
 import { RegistrationQPayload } from "../Queue/Registration/Types";
 import { RegistrationQConfig } from "../Queue/Registration/RegistrationQConfig";
 
-const ACCOUNT_REGISTRATION_QUEUE_NAME: string = "ACCOUNT_REGISTRATION_QUEUE"
-
 type accountRegReqObject = {
-    type: 'bank' | 'upi',
+    type: 'bank_account' | 'vpa',
     name: string
     account: {
         id: string,
@@ -47,12 +45,12 @@ export const addAccount: KaryaMiddleware = async (ctx) => {
         isAccountBodyValid = false
     }
 
-    if (accountBody.type == 'bank') {
+    if (accountBody.type == 'bank_account') {
         if (!(accountBody.account.ifsc 
             && typeof accountBody.account.ifsc == 'string')) {
                 isAccountBodyValid = false
             }
-    } else if (accountBody.type != 'upi') {
+    } else if (accountBody.type != 'vpa') {
         isAccountBodyValid = false
     }
 

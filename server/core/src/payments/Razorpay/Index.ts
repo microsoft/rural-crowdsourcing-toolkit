@@ -1,3 +1,4 @@
+// Razorpay Contacts
 export type ContactsRequest = {
     name: string,
     email?: string,
@@ -21,5 +22,40 @@ export type ContactsResponse = {
     created_at: string
 }
 
+// Razorpay Funds
+export type FundAccountRequest = {
+    contacts_id: string,
+    account_type: FundAccountType,
+    bank_account: BankAccountDetails
+} | {
+    contacts_id: string,
+    account_type: FundAccountType,
+    vpa: VpaAccountDetails
+}
+
+interface FundAccountCommonResponseFields {
+    id: string,
+    entity: string,
+    contact_id: string,
+    account_type: FundAccountType,
+    active: boolean,
+    batch_id: string,
+    created_at: string
+}
+
+export type FundsAccountResponse = (FundAccountCommonResponseFields & 
+    ({ bank_account: BankAccountDetails} | { vpa: VpaAccountDetails })
+)
 
 export type ContactType = "worker"
+export type FundAccountType = "bank_account" | "vpa"
+
+export type BankAccountDetails = {
+    name: string,
+    ifsc: string,
+    account_number: string
+}
+
+export type VpaAccountDetails = {
+    address: string
+}

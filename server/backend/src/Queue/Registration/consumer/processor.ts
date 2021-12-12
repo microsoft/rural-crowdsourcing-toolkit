@@ -1,21 +1,24 @@
 import { BasicModel, setupDbConnection } from "@karya/common";
-import { AccountTaskStatus, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord } from "@karya/core";
+import { FundAccountRequest, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord, FundAccountType, FundsAccountResponse } from "@karya/core";
 import { Job } from "bullmq";
+import { worker } from "cluster";
 import { razorPayAxios } from "../../HttpUtils";
 import { RegistrationQJobData } from "../Types";
 
 const SERVER_ADD_ACCOUNT_RELATIVE_URL = 'api_box/payments/accounts'
 const RAZORPAY_CONTACTS_RELATIVE_URL = 'contacts'
+const RAZORPAY_FUND_ACCOUNT_RELATIVE_URL = 'fund_accounts'
 
 // Setting up Db Connection
 setupDbConnection();
 
 export default async (job: Job<RegistrationQJobData>) => {
     // Get the box record
-    // TODO: Maybe cache the id_token rather than calling the database every time
-    let accountRecord: PaymentsAccountRecord
+    // TODO @enhancement: Maybe cache the id_token rather than calling the database every time
+    let accountRecord: PaymentsAccountRecord = job.data.accountRecord
     try {
-        getContactsID(job.data.accountRecord.worker_id)
+        const contactsId = await getContactsID(accountRecord.worker_id)
+        let fundsId = await createAndSaveFundsId(accountRecord, contactsId)
     } catch (e) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
@@ -33,6 +36,13 @@ export default async (job: Job<RegistrationQJobData>) => {
     }
 }
 
+// TODO: @Refacotor: Maybe encapsulate these functions in a 'Razorpay' class
+/**
+ * 
+ * @param workerId
+ * @returns contacts Id for the worker
+ * 
+ */
 const getContactsID = async (workerId: string) => {
     let workerRecord: WorkerRecord
     try {
@@ -53,8 +63,48 @@ const getContactsID = async (workerId: string) => {
         contact: workerRecord.phone_number!,
         type: "worker"
     }
-    //2. Make the post request
-    // TODO: Maybe rertry the request few times before marking the record as failed
+    // 2. Make the post request
+    // TODO @enhancement: Maybe rertry the request few times before marking the record as failed
     const response = await razorPayAxios.post<ContactsResponse>(RAZORPAY_CONTACTS_RELATIVE_URL, contactsRequestBody)
-    console.log(response.data)
+    // 3. Update the worker record with the obtained contactsId
+    BasicModel.updateSingle('worker', { id: workerId }, { 
+        payments_meta: {
+            contacts_id: response.data.id
+        }
+     })
+     // 4. Return the contactsId
+    return response.data.id
 }
+
+/**
+ * Request fundsId from Razorpay and save it in accounts table
+ * @param accountRecord 
+ * @param contactsId 
+ */
+const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: string) => {
+    let fundAccountRequestBody: FundAccountRequest
+    // 1. Determine the account type and create appropriate request body
+    if (accountRecord.account_type === 'bank_account') { 
+        fundAccountRequestBody = {
+            account_type: 'bank_account',
+            contact_id: contactsId,
+            bank_account: {
+                name: (accountRecord.meta as any).name,
+                account_number: (accountRecord.meta as any).account_details.id,
+                ifsc: (accountRecord.meta as any).account_details.ifsc
+            }
+        }
+    } else {
+        fundAccountRequestBody = {
+            account_type: 'vpa',
+            contact_id: contactsId,
+            vpa: {
+                address: (accountRecord.meta as any).account_details.id
+            }
+        }
+    }
+
+    // 2. Make the request to Razorpay
+    const response = await razorPayAxios.post<FundsAccountResponse>(RAZORPAY_FUND_ACCOUNT_RELATIVE_URL, fundAccountRequestBody)
+    console.log(response.data)
+} 
