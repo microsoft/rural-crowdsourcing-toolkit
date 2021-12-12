@@ -35,7 +35,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
         let createdAccountRecord = await BasicModel.insertRecord('payments_account', payload.accountRecord)
 
         // TODO: Make a single object Job with payload and jobname
-        let addedJob = await this.queue.add(jobName, {account_record_id: createdAccountRecord.id})
+        let addedJob = await this.queue.add(jobName, { accountRecord: createdAccountRecord })
 
         return { jobId: addedJob.id!, createdAccountRecord }
     }

@@ -15,7 +15,7 @@ export default async (job: Job<RegistrationQJobData>) => {
     // TODO: Maybe cache the id_token rather than calling the database every time
     let accountRecord: PaymentsAccountRecord
     try {
-        getContactsID(job.data.account_record_id)
+        getContactsID(job.data.accountRecord.worker_id)
     } catch (e) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
@@ -29,7 +29,7 @@ export default async (job: Job<RegistrationQJobData>) => {
         // TODO: Set the type of meta to be any
         // @ts-ignore adding property to meta field
         updatedRecordMeta["failure_reason"] = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
-        BasicModel.updateSingle('payments_account', { id: job.data.account_record_id}, { status: AccountTaskStatus.FAILED, meta: updatedRecordMeta })
+        // BasicModel.updateSingle('payments_account', { id: job.data.account_record_id}, { status: AccountTaskStatus.FAILED, meta: updatedRecordMeta })
     }
 }
 
@@ -38,11 +38,12 @@ const getContactsID = async (workerId: string) => {
     try {
         workerRecord = await BasicModel.getSingle('worker', { id: workerId })
     } catch (e) {
-        throw new RecordNotFoundError("Cannot find worker record with given id in accounts record")
+        throw new RecordNotFoundError("Could not find worker record with given id in accounts record")
     }
     // Check if contactsId already exists in the worker record
-    let contactsId = (workerRecord!.payments_meta! as any).contacts_id
-    if (contactsId) {
+    const payments_meta = workerRecord!.payments_meta
+    if (payments_meta && (payments_meta as any).contacts_id) {
+        const contactsId = (payments_meta as any).contacts_id
         return contactsId
     }
     // Contacts ID doesnot exist, make a request to Razorpay
