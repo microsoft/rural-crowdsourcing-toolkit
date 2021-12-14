@@ -43,7 +43,7 @@ interface FundAccountCommonResponseFields {
     created_at: string
 }
 
-export type FundsAccountResponse = (FundAccountCommonResponseFields & 
+export type FundAccountResponse = (FundAccountCommonResponseFields & 
     ({ bank_account: BankAccountDetails} | { vpa: VpaAccountDetails })
 )
 

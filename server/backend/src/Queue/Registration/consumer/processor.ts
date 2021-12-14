@@ -1,7 +1,7 @@
 import { BasicModel, setupDbConnection } from "@karya/common";
-import { FundAccountRequest, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord, FundAccountType, FundsAccountResponse } from "@karya/core";
+import { FundAccountRequest, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord, FundAccountType, FundAccountResponse } from "@karya/core";
 import { Job } from "bullmq";
-import { worker } from "cluster";
+import {AxiosResponse} from 'axios'
 import { razorPayAxios } from "../../HttpUtils";
 import { RegistrationQJobData } from "../Types";
 
@@ -19,14 +19,14 @@ export default async (job: Job<RegistrationQJobData>) => {
     try {
         const contactsId = await getContactsID(accountRecord.worker_id)
         let fundsId = await createAndSaveFundsId(accountRecord, contactsId)
-    } catch (e) {
+    } catch (e: any) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
         // Possible Handling: Move the job to failed stage and keep retrying
         // sending the account record for registration
 
         // TODO: Log the error here
-        console.log(e)
+        console.error(e)
         let updatedRecordMeta = accountRecord!.meta
         // Update the record to status failed with faluire reason
         // TODO: Set the type of meta to be any
@@ -87,7 +87,7 @@ const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contac
     if (accountRecord.account_type === 'bank_account') { 
         fundAccountRequestBody = {
             account_type: 'bank_account',
-            contact_id: contactsId,
+            contacts_id: contactsId,
             bank_account: {
                 name: (accountRecord.meta as any).name,
                 account_number: (accountRecord.meta as any).account_details.id,
@@ -97,7 +97,7 @@ const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contac
     } else {
         fundAccountRequestBody = {
             account_type: 'vpa',
-            contact_id: contactsId,
+            contacts_id: contactsId,
             vpa: {
                 address: (accountRecord.meta as any).account_details.id
             }
@@ -105,6 +105,21 @@ const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contac
     }
 
     // 2. Make the request to Razorpay
-    const response = await razorPayAxios.post<FundsAccountResponse>(RAZORPAY_FUND_ACCOUNT_RELATIVE_URL, fundAccountRequestBody)
-    console.log(response.data)
+    let response: AxiosResponse<FundAccountResponse>
+    try {
+        response = await razorPayAxios.post<FundAccountResponse>(RAZORPAY_FUND_ACCOUNT_RELATIVE_URL, fundAccountRequestBody)
+    } catch (e: any) {
+        throw new Error(e.response.data.error.description)
+    }
+    
+    // 3. Update the account record with the obtained fund id
+    const updatedRecord = BasicModel.updateSingle('payments_account', 
+    { id: accountRecord.id }, 
+    {
+        ...accountRecord, 
+        fund_id: response.data.id,
+        meta: {}
+    })
+    // 4. Return the fund account id
+    return response.data.id
 } 
