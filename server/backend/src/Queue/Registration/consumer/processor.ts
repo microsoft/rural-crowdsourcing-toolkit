@@ -1,5 +1,5 @@
 import { BasicModel, setupDbConnection } from "@karya/common";
-import { FundAccountRequest, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord, FundAccountType, FundAccountResponse } from "@karya/core";
+import { FundAccountRequest, ContactsRequest, ContactsResponse, PaymentsAccountRecord, RecordNotFoundError, WorkerRecord, FundAccountType, FundAccountResponse, AccountTaskStatus } from "@karya/core";
 import { Job } from "bullmq";
 import {AxiosResponse} from 'axios'
 import { razorPayAxios } from "../../HttpUtils";
@@ -27,12 +27,11 @@ export default async (job: Job<RegistrationQJobData>) => {
 
         // TODO: Log the error here
         console.error(e)
-        let updatedRecordMeta = accountRecord!.meta
+        let reason = `Failure inside Registration Account Queue Processor at box | ${e.message}`
         // Update the record to status failed with faluire reason
         // TODO: Set the type of meta to be any
         // @ts-ignore adding property to meta field
-        updatedRecordMeta["failure_reason"] = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
-        // BasicModel.updateSingle('payments_account', { id: job.data.account_record_id}, { status: AccountTaskStatus.FAILED, meta: updatedRecordMeta })
+        BasicModel.updateSingle('payments_account', { id: accountRecord.id}, { status: AccountTaskStatus.FAILED, meta: { failure_reason: reason} })
     }
 }
 
