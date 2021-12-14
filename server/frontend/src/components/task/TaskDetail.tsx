@@ -218,7 +218,8 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
   };
 
   // Submit input files and close the form on successful submission only
-  submitInputFiles = () => {
+  submitInputFiles: FormEventHandler = (e) => {
+    e.preventDefault();
     this.props.submitInputFiles(this.state.files);
     this.setState({ show_input_form: false });
   };
