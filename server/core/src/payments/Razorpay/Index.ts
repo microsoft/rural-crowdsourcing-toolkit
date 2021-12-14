@@ -22,6 +22,8 @@ export type ContactsResponse = {
     created_at: string
 }
 
+export type ContactType = "worker"
+
 // Razorpay Funds
 export type FundAccountRequest = {
     contacts_id: string,
@@ -47,8 +49,40 @@ export type FundAccountResponse = (FundAccountCommonResponseFields &
     ({ bank_account: BankAccountDetails} | { vpa: VpaAccountDetails })
 )
 
-export type ContactType = "worker"
 export type FundAccountType = "bank_account" | "vpa"
+
+// Razorpay Payouts
+export type PayoutRequest = {
+    accout_number: string,
+    fund_account_id: string,
+    amount: number,
+    currency: string,
+    mode: string,
+    purpose: string
+}
+
+export type PayoutResponse = {
+    id: string,
+    entity: string,
+    fund_account_id: string,
+    amount: number,
+    currency: string,
+    notes: any,
+    fees: number,
+    tax: number,
+    status: string,
+    utr: string,
+    mode: string,
+    purpose: string,
+    reference_id: string,
+    narration: string,
+    batch_id: string,
+    failure_reason: string,
+    created_at: number
+}
+
+
+
 
 export type BankAccountDetails = {
     name: string,
@@ -59,3 +93,7 @@ export type BankAccountDetails = {
 export type VpaAccountDetails = {
     address: string
 }
+
+export type Currency = "INR"
+export type PaymentMode = "NEFT" | "RTGS" | "IMPS"
+export type TransactionPurpose = "VERIFICATION"

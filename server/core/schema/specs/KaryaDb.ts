@@ -281,13 +281,14 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 
     payments_transaction: {
       columns: [
-        ['amount', ['float'], 'not unique', 'nullable', 'not mutable'],
+        ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+        ['currency', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
         ['account_id', ['>', 'payments_account'], 'not unique', 'not nullable', 'not mutable'],
         ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
         ['source_account', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
         ['UTR', ['string', 64], 'unique', 'nullable', 'mutable'],
         ['mode', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
-        ['purpose', ['string', 32], 'not unique', 'nullable', 'mutable'],
+        ['purpose', ['string', 32], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['meta', ['object'], 'not unique', 'nullable', 'mutable']
       ]
