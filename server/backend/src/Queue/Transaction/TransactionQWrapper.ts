@@ -11,7 +11,7 @@ const QLogger: Logger = karyaLogger({
     consoleLogLevel: 'info',
 });
 
-export class RegistrationQWrapper extends QueueWrapper<Queue> {
+export class TransactionQWrapper extends QueueWrapper<Queue> {
 
     constructor(config: Qconfig) {
         super(config)
@@ -34,6 +34,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
             worker_id: payload.workerId,
             source_account: this.config.adminAccountNumber,
             purpose: payload.purpose,
+            mode: payload.mode,
             status: AccountTaskStatus.TRANSACTION_QUEUE,
             meta: {
                 idempotency_key: payload.idempotencyKey
@@ -41,7 +42,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
         })
 
         // TODO: Make a single object Job with payload and jobname
-        let addedJob = await this.queue.add(jobName, { transactionRecord: createdTransactionRecord })
+        let addedJob = await this.queue.add(jobName, { transactionRecord: createdTransactionRecord, fundId: payload.fundId })
 
         return { jobId: addedJob.id!, createdTransactionRecord }
     }

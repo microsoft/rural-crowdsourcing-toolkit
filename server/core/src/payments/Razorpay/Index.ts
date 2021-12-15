@@ -26,11 +26,11 @@ export type ContactType = "worker"
 
 // Razorpay Funds
 export type FundAccountRequest = {
-    contacts_id: string,
+    contact_id: string,
     account_type: FundAccountType,
     bank_account: BankAccountDetails
 } | {
-    contacts_id: string,
+    contact_id: string,
     account_type: FundAccountType,
     vpa: VpaAccountDetails
 }
@@ -53,7 +53,7 @@ export type FundAccountType = "bank_account" | "vpa"
 
 // Razorpay Payouts
 export type PayoutRequest = {
-    accout_number: string,
+    account_number: string,
     fund_account_id: string,
     amount: number,
     currency: string,

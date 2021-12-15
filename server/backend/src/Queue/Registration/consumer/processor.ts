@@ -4,8 +4,10 @@ import { Job } from "bullmq";
 import {AxiosResponse} from 'axios'
 import { razorPayAxios } from "../../HttpUtils";
 import { RegistrationQJobData } from "../Types";
+import { TransactionQConfig } from "../../Transaction/TransactionQConfig";
+import { TransactionQWrapper } from "../../Transaction/TransactionQWrapper";
+import { TransactionQPayload } from "../../Transaction/Types";
 
-const SERVER_ADD_ACCOUNT_RELATIVE_URL = 'api_box/payments/accounts'
 const RAZORPAY_CONTACTS_RELATIVE_URL = 'contacts'
 const RAZORPAY_FUND_ACCOUNT_RELATIVE_URL = 'fund_accounts'
 
@@ -19,6 +21,19 @@ export default async (job: Job<RegistrationQJobData>) => {
     try {
         const contactsId = await getContactsID(accountRecord.worker_id)
         let fundsId = await createAndSaveFundsId(accountRecord, contactsId)
+        // create and push a cerification transaction task
+        const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
+        const payload: TransactionQPayload = {
+            accountId: accountRecord.id,
+            amount: 200,
+            currency: "INR",
+            fundId: fundsId,
+            idempotencyKey: "543821",
+            mode: "IMPS",
+            purpose: "VERIFICATION",
+            workerId: accountRecord.worker_id
+        }
+        transactionQWrapper.enqueue("VERIFICATION_TRANSACTION", payload )
     } catch (e: any) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
@@ -86,7 +101,7 @@ const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contac
     if (accountRecord.account_type === 'bank_account') { 
         fundAccountRequestBody = {
             account_type: 'bank_account',
-            contacts_id: contactsId,
+            contact_id: contactsId,
             bank_account: {
                 name: (accountRecord.meta as any).name,
                 account_number: (accountRecord.meta as any).account_details.id,
@@ -96,13 +111,14 @@ const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contac
     } else {
         fundAccountRequestBody = {
             account_type: 'vpa',
-            contacts_id: contactsId,
+            contact_id: contactsId,
             vpa: {
                 address: (accountRecord.meta as any).account_details.id
             }
         }
     }
 
+    console.log(fundAccountRequestBody)
     // 2. Make the request to Razorpay
     let response: AxiosResponse<FundAccountResponse>
     try {

@@ -10,7 +10,7 @@ export interface TransactionQPayload extends Payload {
     currency: Currency
     mode: PaymentMode
     purpose: TransactionPurpose
-    idempotencyKey: number
+    idempotencyKey: string
 }
 
 export type TransactionQJobData = {
