@@ -1,6 +1,5 @@
 import { PaymentsAccountRecord } from "@karya/core";
 import { BoxRouteMiddleware } from "../routes/BoxRoutes";
-import { BasicModel } from '@karya/common';
 import { RegistrationQWrapper } from '../Queue/Registration/RegistrationQWrapper';
 import { RegistrationQConfig } from '../Queue/Registration/RegistrationQConfig';
 import * as HttpResponse from '@karya/http-response';

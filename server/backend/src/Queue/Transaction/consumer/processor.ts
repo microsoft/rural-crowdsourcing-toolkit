@@ -1,5 +1,5 @@
-import { BasicModel, setupDbConnection } from "@karya/common";
-import { PayoutRequest, PaymentsTransactionRecord, PayoutResponse } from "@karya/core";
+import { BasicModel, setupDbConnection, WorkerModel } from "@karya/common";
+import { PayoutRequest, PaymentsTransactionRecord, PayoutResponse, InsufficientBalanceError, RazorPayRequestError } from "@karya/core";
 import { Job } from "bullmq";
 import { AxiosResponse } from 'axios'
 import { razorPayAxios } from "../../HttpUtils";
@@ -12,11 +12,20 @@ setupDbConnection();
 
 export default async (job: Job<TransactionQJobData>) => {
 
-    console.log(job.data, "job data")
     let transactionRecord: PaymentsTransactionRecord = job.data.transactionRecord
+    // Check if user has sufficient balance
+    const userBalance = await WorkerModel.getBalance(transactionRecord.worker_id)
+    if (userBalance >= parseInt(transactionRecord.amount)) {
+        throw new InsufficientBalanceError("Insufficient Balance")
+    }
     const result = await sendPayoutRequest(transactionRecord, job.data.fundId)
 }
 
+/**
+ * Send Payout Request to Razorpay
+ * @param transactionRecord 
+ * @param fundId 
+ */
 const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, fundId: string) => {
      // Create Request Body
      const payoutRequestBody: PayoutRequest = {
@@ -42,7 +51,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
         console.log(response, 'response')
         createdPayout = response.data
     } catch(e: any) {
-        throw new Error(e.response.data.error.description)
+        throw new InsufficientBalanceError(e.response.data.error.description)
     }
 
     // Update the transaction record

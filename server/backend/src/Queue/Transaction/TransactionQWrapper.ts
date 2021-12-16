@@ -1,5 +1,5 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
-import { AccountTaskStatus, TransactionPurpose } from '@karya/core'
+import { TransactionStatus } from '@karya/core'
 import { Queue } from "bullmq";
 import { transactionConsumer } from './consumer/transactionConsumer';
 import { Qconfig, TransactionQJobData, TransactionQPayload, TransactionQResult } from './Types'
@@ -35,7 +35,7 @@ export class TransactionQWrapper extends QueueWrapper<Queue> {
             source_account: this.config.adminAccountNumber,
             purpose: payload.purpose,
             mode: payload.mode,
-            status: AccountTaskStatus.TRANSACTION_QUEUE,
+            status: TransactionStatus.CREATED,
             meta: {
                 idempotency_key: payload.idempotencyKey
             }

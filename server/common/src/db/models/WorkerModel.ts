@@ -77,3 +77,17 @@ export async function workersTaskSummary(task_id: string): Promise<any[]> {
     return { ...rest, extras };
   });
 }
+
+/**
+   * 
+   * @param worker_id 
+   * Get Balance (credits - claimed) for a particular worker
+   */
+ export async function getBalance(worker_id: string): Promise<number> {
+  const response = await knex.raw(`SELECT  sum(credits) - (SELECT sum(amount) 
+  FROM payments_transaction WHERE worker_id = ${worker_id} 
+  AND status IN ('created', 'queued', 'processing', 'processed') ) as total 
+  FROM microtask_assignment WHERE status='VERIFIED' AND worker_id = ${worker_id};`)
+  let balance = response.rows[0].total
+  return balance? balance: 0
+ }
