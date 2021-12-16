@@ -68,17 +68,7 @@ transactionConsumer.on("failed", async (job, error) => {
     } 
     
     const transactionRecord = job.data.transactionRecord as PaymentsTransactionRecord
-    const accountRecord = await BasicModel.getSingle('payments_account', {id: transactionRecord.account_id})
-    // Update the account record with failure message
-    const updatedAccountnMeta = {
-        ...accountRecord.meta,
-        source: "Something went wrong at Transaction Queue",
-        failure_reason: `${error.message}`
-    }
 
-    let updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: transactionRecord.account_id}, 
-    {status: AccountTaskStatus.FAILED, meta: updatedAccountnMeta})
-    
     // Update the transaction record with failure message
     // TODO: @Enhancement: Make a central error object pattern
     const updatedTransactionMeta = {
@@ -90,4 +80,17 @@ transactionConsumer.on("failed", async (job, error) => {
     let updatedTransactionRecord = await BasicModel.updateSingle('payments_transaction', {id: transactionRecord.id},
     {status: updatedStatus, meta: updatedTransactionMeta})
 
+    // Update account record if purpose of transaction was verification
+    if (transactionRecord.purpose = "VERIFICATION") {
+        const accountRecord = await BasicModel.getSingle('payments_account', {id: transactionRecord.account_id})
+        // Update the account record with failure message
+        const updatedAccountnMeta = {
+            ...accountRecord.meta,
+            source: "Something went wrong at Transaction Queue",
+            failure_reason: `${error.message}`
+        }
+
+        let updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: transactionRecord.account_id}, 
+        {status: AccountTaskStatus.FAILED, meta: updatedAccountnMeta})
+    }
 })
