@@ -20,15 +20,30 @@ export default async (job: Job<RegistrationQJobData>) => {
     let accountRecord: PaymentsAccountRecord = job.data.accountRecord
     try {
         const contactsId = await getContactsID(accountRecord.worker_id)
-        let fundsId = await createAndSaveFundsId(accountRecord, contactsId)
-        // create and push a cerification transaction task
+        let fundsId = await createFundsId(accountRecord, contactsId)
+
+        // Update the account record with the obtained fund id
+        const updatedAccountRecord = BasicModel.updateSingle('payments_account', 
+        { id: accountRecord.id }, 
+        {
+            ...accountRecord, 
+            fund_id: fundsId,
+            active: true,
+            meta: {}
+        })
+
+        // Update the current account for worker
+        const updatedWorkerRecord = BasicModel.updateSingle('worker', 
+            {id: accountRecord.worker_id}, {selected_account: accountRecord.id})
+
+        // create and push a verification transaction task
         const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
         const payload: TransactionQPayload = {
             accountId: accountRecord.id,
             amount: 200,
             currency: "INR",
             fundId: fundsId,
-            idempotencyKey: "543821",
+            idempotencyKey: accountRecord.hash,
             mode: "IMPS",
             purpose: "VERIFICATION",
             workerId: accountRecord.worker_id
@@ -95,7 +110,7 @@ const getContactsID = async (workerId: string) => {
  * @param accountRecord 
  * @param contactsId 
  */
-const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: string) => {
+const createFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: string) => {
     let fundAccountRequestBody: FundAccountRequest
     // 1. Determine the account type and create appropriate request body
     if (accountRecord.account_type === 'bank_account') { 
@@ -126,15 +141,6 @@ const createAndSaveFundsId = async (accountRecord: PaymentsAccountRecord, contac
     } catch (e: any) {
         throw new Error(e.response.data.error.description)
     }
-    
-    // 3. Update the account record with the obtained fund id
-    const updatedRecord = BasicModel.updateSingle('payments_account', 
-    { id: accountRecord.id }, 
-    {
-        ...accountRecord, 
-        fund_id: response.data.id,
-        meta: {}
-    })
     // 4. Return the fund account id
     return response.data.id
 } 
