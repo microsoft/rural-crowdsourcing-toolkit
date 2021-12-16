@@ -1,5 +1,5 @@
 import { KaryaMiddleware } from "../KoaContextState"
-import { PaymentsAccountRecord } from '@karya/core'
+import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core'
 import { BasicModel, mainLogger } from '@karya/common'
 import * as HttpResponse from '@karya/http-response'
 import { calculateHash } from '@karya/misc-utils';
@@ -30,10 +30,7 @@ const accountRegResObjectFields = [
     "last_updated_at",
 ]
 
-export const addAccount: KaryaMiddleware = async (ctx) => {
-
-    console.log("Inside addAccount")
-
+export const addAccount: KaryaMiddleware = async (ctx, next) => {
     // Validate request body
     let accountBody: accountRegReqObject = ctx.request.body
     let isAccountBodyValid = true
@@ -104,4 +101,30 @@ export const addAccount: KaryaMiddleware = async (ctx) => {
     const result = underscore.pick(createdAccountRecord, accountRegResObjectFields)
     HttpResponse.OK(ctx, result)
     return
+}
+
+export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
+    // Validate Request
+    const verifyBody = ctx.request.body
+    if (!verifyBody.confirm) {
+        HttpResponse.BadRequest(ctx, "Missing field in body: confirm")
+        return
+    }
+
+    const account_id = ctx.params.id
+    let accountRecord: PaymentsAccountRecord
+    try {
+        accountRecord = await BasicModel.getSingle('payments_account', { id: account_id })
+    } catch (err) {
+        HttpResponse.BadRequest(ctx, "Account Id is not valid")
+        return
+    }
+    // Verify if the account needs to be verified
+    if (accountRecord!.status != AccountTaskStatus.VERIFICATION) {
+        HttpResponse.BadRequest(ctx, `Provided account id has the status ${accountRecord!.status}`)
+        return
+    }
+
+    
+
 }
