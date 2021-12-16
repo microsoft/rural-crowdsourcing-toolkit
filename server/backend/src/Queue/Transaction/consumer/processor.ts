@@ -51,7 +51,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
         console.log(response, 'response')
         createdPayout = response.data
     } catch(e: any) {
-        throw new InsufficientBalanceError(e.response.data.error.description)
+        throw new RazorPayRequestError(e.response.data.error.description)
     }
 
     // Update the transaction record
@@ -66,13 +66,6 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
     } catch (e: any) {
         throw new Error("Could not update the transaction record after successful payout request")
     }
-
-    // // Update the status of account record
-    // try { 
-    //     let updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: transactionRecord.account_id}, {status: AccountTaskStatus.TRANSACTION_CREATED})
-    // } catch (e: any) {
-    //     throw new Error("Could not update account record after successful payout request")
-    // }
 }
 
 /**

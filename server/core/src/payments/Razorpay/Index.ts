@@ -104,5 +104,6 @@ export enum TransactionStatus {
     PROCESSED = 'processed',
     CANCELLED = 'cancelled',
     REVERSED = 'reversed',
-    FAILED = 'failed' 
+    FAILED = 'failed',
+    FAILED_KARYA = 'failed_at_karya'
 }

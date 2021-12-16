@@ -1,5 +1,5 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
-import { TransactionStatus } from '@karya/core'
+import { AccountTaskStatus, InsufficientBalanceError, PaymentsTransactionRecord, RazorPayRequestError, TransactionStatus } from '@karya/core'
 import { Queue } from "bullmq";
 import { transactionConsumer } from './consumer/transactionConsumer';
 import { Qconfig, TransactionQJobData, TransactionQPayload, TransactionQResult } from './Types'
@@ -56,6 +56,38 @@ transactionConsumer.on("completed", (job) => {
     QLogger.info(`Completed job ${job.id} successfully`)
 })
 
-transactionConsumer.on("failed", (job, error) => {
-    QLogger.error(`Failed job ${job.id} with ${error}`)
+// Handling errors
+transactionConsumer.on("failed", async (job, error) => {
+    QLogger.error(`Failed job ${job.id} with ${error} and data: ${job.data}`)
+
+    let transactionRequestSucess = true
+    // Determine if payout transaction was successful
+    if (error instanceof RazorPayRequestError 
+            || error instanceof InsufficientBalanceError) {
+        transactionRequestSucess = false
+    } 
+    
+    const transactionRecord = job.data.transactionRecord as PaymentsTransactionRecord
+    const accountRecord = await BasicModel.getSingle('payments_account', {id: transactionRecord.account_id})
+    // Update the account record with failure message
+    const updatedAccountnMeta = {
+        ...accountRecord.meta,
+        source: "Something went wrong at Transaction Queue",
+        failure_reason: `${error.message}`
+    }
+
+    let updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: transactionRecord.account_id}, 
+    {status: AccountTaskStatus.FAILED, meta: updatedAccountnMeta})
+    
+    // Update the transaction record with failure message
+    // TODO: @Enhancement: Make a central error object pattern
+    const updatedTransactionMeta = {
+        ...transactionRecord.meta,
+        source: "Something went wrong at Transaction Queue",
+        failure_reason: `${error.message}`
+    }
+    const updatedStatus = transactionRequestSucess? TransactionStatus.FAILED_KARYA : TransactionStatus.FAILED
+    let updatedTransactionRecord = await BasicModel.updateSingle('payments_transaction', {id: transactionRecord.id},
+    {status: updatedStatus, meta: updatedTransactionMeta})
+
 })
