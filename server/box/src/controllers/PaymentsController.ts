@@ -108,6 +108,7 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
 export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
     // Validate Request
     const verifyBody = ctx.request.body
+    console.log("VERIFY_BODY", verifyBody.confirm, verifyBody)
     if (!verifyBody.confirm) {
         HttpResponse.BadRequest(ctx, "Missing field in body: confirm")
         return
@@ -122,7 +123,7 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
         return
     }
     // Verify if the account needs to be verified
-    if (accountRecord!.status != AccountTaskStatus.VERIFICATION) {
+    if (accountRecord!.status != AccountTaskStatus.VERIFICATION && accountRecord!.status != AccountTaskStatus.CONFIRMATION_FAILED) {
         HttpResponse.BadRequest(ctx, `Provided account id has the status ${accountRecord!.status}`)
         return
     }

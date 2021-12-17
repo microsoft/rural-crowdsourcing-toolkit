@@ -10,9 +10,13 @@ setupDbConnection();
 export default async (job: Job<VerifyAccountQJobData>) => {
 
     const jobData = job.data
-    // send the post request
     
     const relativeUrl = `api_box/payments/accounts/${jobData.accountId}/verify`
+    // set request header
+    const box = (await BasicModel.getRecords('box', {}))[0];
+    const headers = { 'karya-id-token': box.id_token }
+    qAxios.defaults.headers = headers
+    // Make the request
     const response = await qAxios.put<PaymentsAccountRecord>(relativeUrl, { 
         workerId: jobData.workerId,
         confirm: jobData.confirm

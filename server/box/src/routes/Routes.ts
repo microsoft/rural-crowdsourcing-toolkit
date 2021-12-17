@@ -88,5 +88,6 @@ router.get('/renew_id_token', needIdToken, generateToken, WorkerController.sendG
 
 // Payments Routes
 router.post('/payments/accounts', BodyParser(), PaymentsController.addAccount)
+router.put('/payments/accounts/:id/verify', BodyParser(), PaymentsController.verifyAccount)
 
 export default router;
