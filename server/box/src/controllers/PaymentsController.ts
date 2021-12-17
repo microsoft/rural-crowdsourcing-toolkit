@@ -134,5 +134,4 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
         workerId: ctx.state.entity.id })
     
     HttpResponse.OK(ctx, result.updatedAccountRecord)
-
 }

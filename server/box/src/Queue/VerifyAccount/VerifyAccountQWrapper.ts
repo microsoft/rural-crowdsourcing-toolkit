@@ -1,7 +1,7 @@
-import { BasicModel, karyaLogger, Logger, QResult, QueueWrapper } from '@karya/common'
-import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core';
+import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
+import { AccountTaskStatus } from '@karya/core';
 import { Queue } from "bullmq";
-import { registrationConsumer } from './consumer/registrationConsumer';
+import { verifyAccountQConsumer } from './consumer/verifyAccountQConsumer';
 import { Qconfig, VerifyAccountQJobData, VerifyAccountQPayload, VerifyAccountQResult } from './Types'
 
 
@@ -46,11 +46,11 @@ export class VerifyAccountQWrapper extends QueueWrapper<Queue> {
 }
 
 // Defining success and failure cases for the consumer working on Queue
-registrationConsumer.on("completed", (job) => {
+verifyAccountQConsumer.on("completed", (job) => {
     QLogger.info(`Completed job ${job.id} successfully`)
 })
 
-registrationConsumer.on("failed", async (job, error) => {
+verifyAccountQConsumer.on("failed", async (job, error) => {
     QLogger.error(`Failed job ${job.id} with ${error}`)
     await BasicModel.updateSingle('payments_account', { id: job.data.accountId }, {status: AccountTaskStatus.CONFIRMATION_FAILED})
 })

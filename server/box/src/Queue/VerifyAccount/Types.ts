@@ -1,4 +1,5 @@
 import { Payload, QResult } from "@karya/common";
+import { PaymentsAccountRecord } from "@karya/core";
 import { QueueOptions } from "bullmq";
 
 export interface VerifyAccountQPayload extends Payload {
@@ -15,4 +16,5 @@ export type Qconfig = {
 }
 
 export interface VerifyAccountQResult extends QResult{
+    updatedAccountRecord: PaymentsAccountRecord
 }

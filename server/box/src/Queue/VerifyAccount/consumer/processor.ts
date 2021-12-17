@@ -1,5 +1,5 @@
 import { BasicModel, setupDbConnection } from "@karya/common";
-import { AccountTaskStatus, PaymentsAccountRecord } from "@karya/core";
+import { PaymentsAccountRecord } from "@karya/core";
 import { Job } from "bullmq";
 import { qAxios } from "../../HttpUtils";
 import { VerifyAccountQJobData } from "../Types";
