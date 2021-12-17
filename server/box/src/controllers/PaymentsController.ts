@@ -108,12 +108,12 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
 export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
     // Validate Request
     const verifyBody = ctx.request.body
-    console.log("VERIFY_BODY", verifyBody.confirm, verifyBody)
     if (!verifyBody.confirm) {
         HttpResponse.BadRequest(ctx, "Missing field in body: confirm")
         return
     }
 
+    // Verify if account exits
     const accountId = ctx.params.id
     let accountRecord: PaymentsAccountRecord
     try {
@@ -122,6 +122,10 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
         HttpResponse.BadRequest(ctx, "Account Id is not valid")
         return
     }
+    // Verify if account is associated with the worker
+    if(accountRecord!.worker_id != ctx.state.entity.id) {
+        HttpResponse.BadRequest(ctx, "Account Id is not associated with the worker")
+    } 
     // Verify if the account needs to be verified
     if (accountRecord!.status != AccountTaskStatus.VERIFICATION && accountRecord!.status != AccountTaskStatus.CONFIRMATION_FAILED) {
         HttpResponse.BadRequest(ctx, `Provided account id has the status ${accountRecord!.status}`)
