@@ -1,5 +1,5 @@
 import { BasicModel, karyaLogger, Logger, QResult, QueueWrapper } from '@karya/common'
-import { AccountTaskStatus } from '@karya/core';
+import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core';
 import { Queue } from "bullmq";
 import { registrationConsumer } from './consumer/registrationConsumer';
 import { Qconfig, VerifyAccountQJobData, VerifyAccountQPayload, VerifyAccountQResult } from './Types'
@@ -50,6 +50,7 @@ registrationConsumer.on("completed", (job) => {
     QLogger.info(`Completed job ${job.id} successfully`)
 })
 
-registrationConsumer.on("failed", (job, error) => {
+registrationConsumer.on("failed", async (job, error) => {
     QLogger.error(`Failed job ${job.id} with ${error}`)
+    await BasicModel.updateSingle('payments_account', { id: job.data.accountId }, {status: AccountTaskStatus.CONFIRMATION_FAILED})
 })

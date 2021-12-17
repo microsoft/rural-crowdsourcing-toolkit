@@ -7,6 +7,8 @@ import * as underscore from 'underscore';
 import { RegistrationQWrapper } from "../Queue/Registration/RegistrationQWrapper";
 import { RegistrationQPayload } from "../Queue/Registration/Types";
 import { RegistrationQConfig } from "../Queue/Registration/RegistrationQConfig";
+import { VerifyAccountQWrapper } from "../Queue/VerifyAccount/VerifyAccountQWrapper";
+import { VerifyAccountQConfig } from "../Queue/VerifyAccount/VerifyAccountQConfig";
 
 type accountRegReqObject = {
     type: 'bank_account' | 'vpa',
@@ -111,10 +113,10 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
         return
     }
 
-    const account_id = ctx.params.id
+    const accountId = ctx.params.id
     let accountRecord: PaymentsAccountRecord
     try {
-        accountRecord = await BasicModel.getSingle('payments_account', { id: account_id })
+        accountRecord = await BasicModel.getSingle('payments_account', { id: accountId })
     } catch (err) {
         HttpResponse.BadRequest(ctx, "Account Id is not valid")
         return
@@ -124,7 +126,13 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
         HttpResponse.BadRequest(ctx, `Provided account id has the status ${accountRecord!.status}`)
         return
     }
-
+    // Initialise Queue
+    const verifyAccountQueue = new VerifyAccountQWrapper( VerifyAccountQConfig )
+    const result = await verifyAccountQueue.enqueue(accountId, { 
+        accountId: accountId, 
+        confirm: verifyBody.confirm,
+        workerId: ctx.state.entity.id })
     
+    HttpResponse.OK(ctx, result.updatedAccountRecord)
 
 }
