@@ -1,7 +1,7 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
 import { AccountTaskStatus, InsufficientBalanceError, PaymentsTransactionRecord, RazorPayRequestError, TransactionStatus } from '@karya/core'
 import { Queue } from "bullmq";
-import { transactionConsumer } from './consumer/transactionConsumer';
+import { transactionQConsumer } from './consumer/transactionQConsumer';
 import { Qconfig, TransactionQJobData, TransactionQPayload, TransactionQResult } from './Types'
 
 
@@ -52,12 +52,12 @@ export class TransactionQWrapper extends QueueWrapper<Queue> {
 }
 
 // Defining success and failure cases for the consumer working on Queue
-transactionConsumer.on("completed", (job) => {
+transactionQConsumer.on("completed", (job) => {
     QLogger.info(`Completed job ${job.id} successfully`)
 })
 
 // Handling errors
-transactionConsumer.on("failed", async (job, error) => {
+transactionQConsumer.on("failed", async (job, error) => {
     QLogger.error(`Failed job ${job.id} with ${error} and data: ${job.data}`)
 
     let transactionRequestSucess = true
