@@ -52,5 +52,5 @@ verifyAccountQConsumer.on("completed", (job) => {
 
 verifyAccountQConsumer.on("failed", async (job, error) => {
     QLogger.error(`Failed job ${job.id} with ${error}`)
-    await BasicModel.updateSingle('payments_account', { id: job.data.accountId }, {status: AccountTaskStatus.CONFIRMATION_FAILED})
+    const record = await BasicModel.updateSingle('payments_account', { id: job.data.accountId }, {status: AccountTaskStatus.CONFIRMATION_FAILED})
 })

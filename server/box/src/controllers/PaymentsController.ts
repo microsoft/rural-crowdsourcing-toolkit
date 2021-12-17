@@ -108,7 +108,7 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
 export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
     // Validate Request
     const verifyBody = ctx.request.body
-    if (!verifyBody.confirm) {
+    if (verifyBody.confirm === undefined) {
         HttpResponse.BadRequest(ctx, "Missing field in body: confirm")
         return
     }

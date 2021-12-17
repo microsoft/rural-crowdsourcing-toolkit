@@ -126,6 +126,6 @@ boxRouter.post(
 boxRouter.put(
   '/payments/accounts/:id/verify', 
   Middlewares.needIdToken,
-  BodyParser({ jsonLimit: '50mb' }), 
+  BodyParser(), 
   PaymentsController.verifyAccount
 );
