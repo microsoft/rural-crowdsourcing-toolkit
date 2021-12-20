@@ -346,11 +346,17 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
    */
 export async function getAccountRecords(axiosLocal: AxiosInstance) {
   cronLogger.info(`Getting updated account records`);
+	// Get latest receive time on transaction records
+  const response = await knex<PaymentsTransactionRecord>('payments_transaction').max('last_updated_at');
+  const latest_update_time = response[0].max || new Date(0).toISOString();
+
 
 	let accountRecords: PaymentsAccountRecord[]
 
 	try {
-		const response = await axiosLocal.get<PaymentsAccountRecord[]>(`/payments/accounts`)
+		const response = await axiosLocal.get<PaymentsAccountRecord[]>(`/payments/accounts`, {
+      params: { from: latest_update_time },
+    })
 		accountRecords = response.data
 	} catch (e) {
 		cronLogger.error('Failed to get update for account records')
@@ -370,11 +376,16 @@ export async function getAccountRecords(axiosLocal: AxiosInstance) {
    */
 export async function getTransactionRecords(axiosLocal: AxiosInstance) {
   cronLogger.info(`Getting updated transaction records`);
+	// Get latest receive time on transaction records
+  const response = await knex<PaymentsTransactionRecord>('payments_transaction').max('last_updated_at');
+  const latest_update_time = response[0].max || new Date(0).toISOString();
 
 	let transactionRecords: PaymentsTransactionRecord[]
 
 	try {
-		const response = await axiosLocal.get<PaymentsTransactionRecord[]>(`/payments/accounts`)
+		const response = await axiosLocal.get<PaymentsTransactionRecord[]>(`/payments/transactions`, {
+      params: { from: latest_update_time },
+    })
 		transactionRecords = response.data
 	} catch (e) {
 		cronLogger.error('Failed to get update for transaction records')
