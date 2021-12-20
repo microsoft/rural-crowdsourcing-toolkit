@@ -14,6 +14,8 @@ import {
   TaskRecord,
   WorkerRecord,
   getChecksum,
+	PaymentsAccountRecord,
+	PaymentsTransactionRecord,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import axios, { AxiosInstance } from 'axios';
@@ -337,4 +339,52 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
       responseLength = verifiedAssignments.length;
     }
   });
+}
+
+/**
+   * Get all account record updates from the server
+   */
+export async function getAccountRecords(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting updated account records`);
+
+	let accountRecords: PaymentsAccountRecord[]
+
+	try {
+		const response = await axiosLocal.get<PaymentsAccountRecord[]>(`/payments/accounts`)
+		accountRecords = response.data
+	} catch (e) {
+		cronLogger.error('Failed to get update for account records')
+	}
+
+	try {
+		await BBPromise.mapSeries(accountRecords!, async (accountRecord) => {
+			await BasicModel.upsertRecord('payments_account', {...accountRecord})
+		})
+	} catch (e) {
+		cronLogger.error('Failed to upsert the account records')
+	}
+}
+
+/**
+   * Get all transaction record updates from the server
+   */
+export async function getTransactionRecords(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting updated transaction records`);
+
+	let transactionRecords: PaymentsTransactionRecord[]
+
+	try {
+		const response = await axiosLocal.get<PaymentsTransactionRecord[]>(`/payments/accounts`)
+		transactionRecords = response.data
+	} catch (e) {
+		cronLogger.error('Failed to get update for transaction records')
+	}
+
+	try {
+		await BBPromise.mapSeries(transactionRecords!, async (transactionRecord) => {
+			await BasicModel.upsertRecord('payments_transaction', {...transactionRecord})
+		})
+	} catch (e) {
+		cronLogger.error('Failed to upsert the account records')
+	}
 }

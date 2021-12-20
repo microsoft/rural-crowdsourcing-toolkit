@@ -22,6 +22,8 @@ import {
   getUpdatedWorkers,
   getVerifiedAssignments,
   getLanguageAssets,
+  getAccountRecords,
+  getTransactionRecords,
 } from './ReceiveFromServer';
 
 /**
@@ -104,4 +106,10 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Get verified assignments
   await getVerifiedAssignments(box, axios);
+
+  // Get updated account records
+  await getAccountRecords(axios);
+
+  // Get updated account records
+  await getTransactionRecords(axios);
 }
