@@ -68,3 +68,51 @@ export const verifyAccount: BoxRouteMiddleware = async (ctx, next) => {
     }
 
 }
+
+/**
+ * Get Updated Account Records for a particular box
+ * @param ctx 
+ * @param next 
+ */
+export const getUpdatedAccountRecords: BoxRouteMiddleware = async (ctx, next) => {
+    let from = ctx.query.from || new Date(0).toISOString();
+    if (from instanceof Array) from = from[0];
+
+    let limitString = ctx.query.limit;
+    if (limitString instanceof Array) limitString = limitString[0];
+    const limit = limitString ? Number.parseInt(limitString) : undefined;
+
+    const updatedRecords = await BasicModel.getRecords(
+        'payments_account',
+        {box_id: ctx.state.entity.id},
+        [],
+        [['last_updated_at', from, null]],
+        'last_updated_at',
+        limit
+    );
+    HttpResponse.OK(ctx, updatedRecords);
+}
+
+/**
+ * Get Updated Transaction Records for a particular box
+ * @param ctx 
+ * @param next 
+ */
+ export const getUpdatedTransactionRecords: BoxRouteMiddleware = async (ctx, next) => {
+    let from = ctx.query.from || new Date(0).toISOString();
+    if (from instanceof Array) from = from[0];
+
+    let limitString = ctx.query.limit;
+    if (limitString instanceof Array) limitString = limitString[0];
+    const limit = limitString ? Number.parseInt(limitString) : undefined;
+
+    const updatedRecords = await BasicModel.getRecords(
+        'payments_transaction',
+        {box_id: ctx.state.entity.id},
+        [],
+        [['last_updated_at', from, null]],
+        'last_updated_at',
+        limit
+    );
+    HttpResponse.OK(ctx, updatedRecords);
+}

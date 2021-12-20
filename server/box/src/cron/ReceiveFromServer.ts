@@ -354,19 +354,21 @@ export async function getAccountRecords(axiosLocal: AxiosInstance) {
 	let accountRecords: PaymentsAccountRecord[]
 
 	try {
-		const response = await axiosLocal.get<PaymentsAccountRecord[]>(`/payments/accounts`, {
+		const response = await axiosLocal.get<PaymentsAccountRecord[]>(`/payments/accounts/updates`, {
       params: { from: latest_update_time },
     })
 		accountRecords = response.data
+		console.log(accountRecords)
 	} catch (e) {
 		cronLogger.error('Failed to get update for account records')
 	}
 
 	try {
 		await BBPromise.mapSeries(accountRecords!, async (accountRecord) => {
-			await BasicModel.upsertRecord('payments_account', {...accountRecord})
+			await BasicModel.updateSingle('payments_account', {id: accountRecord.id}, {...accountRecord})
 		})
 	} catch (e) {
+		console.log(e)
 		cronLogger.error('Failed to upsert the account records')
 	}
 }
@@ -383,7 +385,7 @@ export async function getTransactionRecords(axiosLocal: AxiosInstance) {
 	let transactionRecords: PaymentsTransactionRecord[]
 
 	try {
-		const response = await axiosLocal.get<PaymentsTransactionRecord[]>(`/payments/transactions`, {
+		const response = await axiosLocal.get<PaymentsTransactionRecord[]>(`/payments/transactions/updates`, {
       params: { from: latest_update_time },
     })
 		transactionRecords = response.data

@@ -39,6 +39,7 @@ export default async (job: Job<RegistrationQJobData>) => {
         // create and push a verification transaction task
         const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
         const payload: TransactionQPayload = {
+            boxId: accountRecord.box_id,
             accountId: accountRecord.id,
             amount: 200,
             currency: "INR",

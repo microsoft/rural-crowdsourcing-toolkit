@@ -28,6 +28,7 @@ export class TransactionQWrapper extends QueueWrapper<Queue> {
 
     async enqueue(jobName: string, payload: TransactionQPayload, ...args: any[]): Promise<TransactionQResult> {
         let createdTransactionRecord = await BasicModel.insertRecord('payments_transaction', {
+            box_id: payload.boxId,
             amount: payload.amount.toString(),
             currency: payload.currency,
             account_id: payload.accountId,

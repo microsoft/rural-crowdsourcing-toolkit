@@ -123,6 +123,20 @@ boxRouter.post(
   PaymentsController.addAccount
 );
 
+boxRouter.get(
+  '/payments/accounts/updates', 
+  Middlewares.needIdToken, 
+  BodyParser({ jsonLimit: '50mb' }), 
+  PaymentsController.getUpdatedAccountRecords
+);
+
+boxRouter.get(
+  '/payments/transactions/updates', 
+  Middlewares.needIdToken, 
+  BodyParser({ jsonLimit: '50mb' }), 
+  PaymentsController.getUpdatedTransactionRecords
+);
+
 boxRouter.put(
   '/payments/accounts/:id/verify', 
   Middlewares.needIdToken,

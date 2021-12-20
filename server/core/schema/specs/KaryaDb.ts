@@ -281,6 +281,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 
     payments_transaction: {
       columns: [
+        ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
         ['payout_id', ['string', 64], 'unique', 'nullable', 'mutable'],
         ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['currency', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
