@@ -21,7 +21,8 @@ export const karyaTableNames = [
   'microtask_group_assignment',
   'microtask_assignment',
 	'payments_account',
-  'payments_transaction'
+  'payments_transaction',
+  'payments_bulk_transaction'
 ] as const;
 
 export type KaryaTableName = typeof karyaTableNames[number];
@@ -294,7 +295,17 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['meta', ['object'], 'not unique', 'nullable', 'mutable']
       ]
-    }
+    },
+
+    payments_bulk_transaction: {
+      columns: [
+        ['user_id', ['>', 'server_user'], 'not unique', 'not nullable', 'not mutable'],
+        ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+        ['number', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+        ['meta', ['object'], 'not unique', 'nullable', 'mutable']
+      ]
+    },
   },
 };
 
