@@ -6,7 +6,7 @@ import { Qconfig, TransactionQJobData, TransactionQPayload, TransactionQResult }
 
 
 const QLogger: Logger = karyaLogger({
-    name: 'RegistrationQBackend',
+    name: 'TransactionQBackend',
     logToConsole: true,
     consoleLogLevel: 'info',
 });

@@ -23,17 +23,18 @@ export default async (job: Job<RegistrationQJobData>) => {
         let fundsId = await createFundsId(accountRecord, contactsId)
 
         // Update the account record with the obtained fund id
-        const updatedAccountRecord = BasicModel.updateSingle('payments_account', 
+        const updatedAccountRecord = await BasicModel.updateSingle('payments_account', 
         { id: accountRecord.id }, 
         {
             ...accountRecord, 
             fund_id: fundsId,
             active: true,
+            status: AccountTaskStatus.SERVER_ACCOUNTS_QUEUE,
             meta: {}
         })
 
         // Update the worker record with the obtained contactsId
-        BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, {
+        await BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, {
             selected_account: accountRecord.id, 
             payments_meta: {
                 contacts_id: contactsId
@@ -42,7 +43,7 @@ export default async (job: Job<RegistrationQJobData>) => {
         })
 
         // Update the current account for worker
-        const updatedWorkerRecord = BasicModel.updateSingle('worker', 
+        const updatedWorkerRecord = await BasicModel.updateSingle('worker', 
             {id: accountRecord.worker_id}, {})
 
         // create and push a verification transaction task
@@ -59,6 +60,16 @@ export default async (job: Job<RegistrationQJobData>) => {
             workerId: accountRecord.worker_id
         }
         transactionQWrapper.enqueue("VERIFICATION_TRANSACTION", payload )
+        // Update the status of account record
+        await BasicModel.updateSingle('payments_account', 
+        { id: accountRecord.id }, 
+        {
+            ...accountRecord, 
+            fund_id: fundsId,
+            active: true,
+            status: AccountTaskStatus.TRANSACTION_CREATED,
+            meta: {}
+        })
     } catch (e: any) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
