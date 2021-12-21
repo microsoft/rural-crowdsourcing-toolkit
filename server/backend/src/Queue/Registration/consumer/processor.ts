@@ -32,9 +32,18 @@ export default async (job: Job<RegistrationQJobData>) => {
             meta: {}
         })
 
+        // Update the worker record with the obtained contactsId
+        BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, {
+            selected_account: accountRecord.id, 
+            payments_meta: {
+                contacts_id: contactsId
+            },
+            tags_updated_at: new Date().toISOString()
+        })
+
         // Update the current account for worker
         const updatedWorkerRecord = BasicModel.updateSingle('worker', 
-            {id: accountRecord.worker_id}, {selected_account: accountRecord.id})
+            {id: accountRecord.worker_id}, {})
 
         // create and push a verification transaction task
         const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
@@ -96,18 +105,13 @@ const getContactsID = async (workerId: string) => {
     // 2. Make the post request
     // TODO @enhancement: Maybe rertry the request few times before marking the record as failed
     const response = await razorPayAxios.post<ContactsResponse>(RAZORPAY_CONTACTS_RELATIVE_URL, contactsRequestBody)
-    // 3. Update the worker record with the obtained contactsId
-    BasicModel.updateSingle('worker', { id: workerId }, { 
-        payments_meta: {
-            contacts_id: response.data.id
-        }
-     })
-     // 4. Return the contactsId
+    
+     // 3. Return the contactsId
     return response.data.id
 }
 
 /**
- * Request fundsId from Razorpay and save it in accounts table
+ * Request fundsId from Razorpay
  * @param accountRecord 
  * @param contactsId 
  */

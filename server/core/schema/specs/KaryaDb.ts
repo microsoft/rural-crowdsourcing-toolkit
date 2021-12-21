@@ -22,7 +22,6 @@ export const karyaTableNames = [
   'microtask_assignment',
 	'payments_account',
   'payments_transaction',
-  'payments_bulk_transaction'
 ] as const;
 
 export type KaryaTableName = typeof karyaTableNames[number];
@@ -115,7 +114,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['tags_updated_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'mutable'],
         ['sent_to_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
         ['selected_account', ['>', 'payments_account'], 'unique', 'nullable', 'mutable'],
-        ['payments_active', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['payments_active', ['boolean', true], 'not unique', 'not nullable', 'mutable'],
         ['payments_meta', ['object'], 'not unique', 'nullable', 'mutable']
       ],
     },
@@ -293,16 +292,6 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['mode', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
         ['purpose', ['string', 32], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-        ['meta', ['object'], 'not unique', 'nullable', 'mutable']
-      ]
-    },
-
-    payments_bulk_transaction: {
-      columns: [
-        ['user_id', ['>', 'server_user'], 'not unique', 'not nullable', 'not mutable'],
-        ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-        ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
-        ['number', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['meta', ['object'], 'not unique', 'nullable', 'mutable']
       ]
     },

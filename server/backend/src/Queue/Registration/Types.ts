@@ -3,6 +3,7 @@ import { PaymentsAccountRecord } from "@karya/core";
 import { QueueOptions } from "bullmq";
 
 export interface RegistrationQPayload extends Payload {
+    boxId: string,
     accountRecord: PaymentsAccountRecord
 }
 

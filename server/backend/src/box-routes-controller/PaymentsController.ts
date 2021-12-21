@@ -11,7 +11,8 @@ export const addAccount: BoxRouteMiddleware = async (ctx) => {
         const accountRecord: PaymentsAccountRecord = ctx.request.body
         const registrationQWrapper = new RegistrationQWrapper(RegistrationQConfig)
         const qResult = await registrationQWrapper.enqueue(accountRecord.id, { 
-            accountRecord: {...accountRecord, box_id: ctx.state.entity.id} 
+            accountRecord: {...accountRecord},
+            boxId: ctx.state.entity.id 
         })
         HttpResponse.OK(ctx, qResult.createdAccountRecord)
     } catch (err) {

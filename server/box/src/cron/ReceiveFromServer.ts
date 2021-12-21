@@ -55,7 +55,7 @@ export async function getLanguageAssets(axiosLocal: AxiosInstance) {
 }
 
 /**
- * Get all workers whose tags have been updated
+ * Get all workers whose tags and payments have been updated
  */
 export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   // Get the latest time tags were updated
@@ -63,7 +63,7 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   const latest_tag_updated_time = response[0].max || new Date(0).toISOString();
 
   // Response type for get updated workes query
-  type UpdatedWorkerRespnse = Pick<WorkerRecord, 'id' | 'tags' | 'tags_updated_at'>[];
+  type UpdatedWorkerRespnse = Pick<WorkerRecord, 'id' | 'tags' | 'tags_updated_at' | 'payments_active' | 'payments_meta' | 'selected_account'>[];
 
   // Get updated workers
   let updatedWorkerData: UpdatedWorkerRespnse;
@@ -71,17 +71,18 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
     const response = await axiosLocal.get<UpdatedWorkerRespnse>('/workers', {
       params: { from: latest_tag_updated_time },
     });
+    console.log(response)
     updatedWorkerData = response.data;
   } catch (e) {
     cronLogger.error(`Failed to receive updated workers`);
     return;
   }
 
-  // Update tag information for workers
+  // Update tag and payment information for workers
   try {
     await BBPromise.mapSeries(updatedWorkerData, async (worker) => {
-      const { id, tags, tags_updated_at } = worker;
-      await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+      const { id, tags, tags_updated_at, payments_active, payments_meta, selected_account  } = worker;
+      await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at, payments_active, payments_meta, selected_account });
     });
   } catch (e) {
     cronLogger.error(`Failed to update tag information about workers`);
@@ -359,13 +360,14 @@ export async function getAccountRecords(axiosLocal: AxiosInstance) {
     })
 		accountRecords = response.data
 		console.log(accountRecords)
+    console.log(await BasicModel.getSingle('payments_account', { id: accountRecords[0].id}))
 	} catch (e) {
 		cronLogger.error('Failed to get update for account records')
 	}
 
 	try {
 		await BBPromise.mapSeries(accountRecords!, async (accountRecord) => {
-			await BasicModel.updateSingle('payments_account', {id: accountRecord.id}, {...accountRecord})
+			await BasicModel.upsertRecord('payments_account', accountRecord)
 		})
 	} catch (e) {
 		console.log(e)
@@ -395,7 +397,7 @@ export async function getTransactionRecords(axiosLocal: AxiosInstance) {
 
 	try {
 		await BBPromise.mapSeries(transactionRecords!, async (transactionRecord) => {
-			await BasicModel.upsertRecord('payments_transaction', {...transactionRecord})
+			await BasicModel.upsertRecord('payments_transaction', transactionRecord)
 		})
 	} catch (e) {
 		cronLogger.error('Failed to upsert the account records')

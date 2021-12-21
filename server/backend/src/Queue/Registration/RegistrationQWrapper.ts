@@ -32,7 +32,10 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
     }
 
     async enqueue(jobName: string, payload: RegistrationQPayload, ...args: any[]): Promise<RegistrationQResult> {
-        let createdAccountRecord = await BasicModel.upsertRecord('payments_account', payload.accountRecord)
+        let createdAccountRecord = await BasicModel.upsertRecord('payments_account', { 
+            ...payload.accountRecord,
+            box_id: payload.boxId
+        })
 
         // TODO: Make a single object Job with payload and jobname
         let addedJob = await this.queue.add(jobName, { accountRecord: createdAccountRecord })
