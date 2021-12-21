@@ -1,6 +1,6 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
 import { BulkTransactionTaskStatus } from '@karya/core'
-import { Queue } from "bullmq";
+import { Job, Queue } from "bullmq";
 import { bulkTransactionQConsumer } from './consumer/bulkTransactionQConsumer';
 import { Qconfig, BulkTransactionQJobData, BulkTransactionQPayload, BulkTransactionQResult } from './Types'
 
@@ -34,7 +34,12 @@ export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
         })
 
         // TODO: Make a single object Job with payload and jobname
-        let addedJob = await this.queue.add(jobName, { transactionRecord: createdBulkTransactionRecord })
+        let addedJob = await this.queue.add(jobName, 
+            { 
+                transactionRecord: createdBulkTransactionRecord,
+                bulkTransactionRequest: payload.bulkTransactionRequest
+            }
+        )
 
         return { jobId: addedJob.id!, createdBulkTransactionRecord }
     }
@@ -49,6 +54,17 @@ bulkTransactionQConsumer.on("completed", (job) => {
 })
 
 // Handling errors
-bulkTransactionQConsumer.on("failed", async (job, error) => {
+bulkTransactionQConsumer.on("failed", async (job: Job<BulkTransactionQJobData>, error) => {
     QLogger.error(`Failed job ${job.id} with ${error} and data: ${job.data}`)
+    const bulkTransactionRecord = job.data.bulkTransactionRecord
+    const updatedBulkTransactionRecord = await BasicModel.updateSingle('bulk_payments_transaction', 
+        {id: bulkTransactionRecord.id},
+        {
+            status: BulkTransactionTaskStatus.FAILED,
+            meta: {
+                source: "Something went wron at Bulk Transaction Queue",
+                failure_reason: error.message
+            }
+        }
+    )
 })

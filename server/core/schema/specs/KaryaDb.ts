@@ -283,6 +283,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     payments_transaction: {
       columns: [
         ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
+        ['bulk_id', ['bigint'], 'not unique', 'nullable', 'not mutable'],
         ['payout_id', ['string', 64], 'unique', 'nullable', 'mutable'],
         ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['currency', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
@@ -346,7 +347,8 @@ const serverTables: KaryaTableName[] = [
   'task_op',
   'task_link',
   'task_assignment',
-  'payments_transaction'
+  'payments_transaction',
+  'bulk_payments_transaction'
 ];
 
 // ID fields for server tables on the server side

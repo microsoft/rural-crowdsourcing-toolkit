@@ -3,6 +3,7 @@ import { Currency, PaymentMode, TransactionPurpose, PaymentsTransactionRecord } 
 import { QueueOptions } from "bullmq";
 
 export interface TransactionQPayload extends Payload {
+    bulk_id?: string,
     boxId: string,
     amount: number,
     accountId: string,
