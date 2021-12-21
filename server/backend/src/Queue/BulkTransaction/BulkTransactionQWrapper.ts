@@ -1,7 +1,7 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
 import { BulkTransactionTaskStatus } from '@karya/core'
 import { Queue } from "bullmq";
-import { bulkTransactionQConsumer } from './consumer/BulkTransactionQConsumer';
+import { bulkTransactionQConsumer } from './consumer/bulkTransactionQConsumer';
 import { Qconfig, BulkTransactionQJobData, BulkTransactionQPayload, BulkTransactionQResult } from './Types'
 
 
@@ -34,7 +34,7 @@ export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
         })
 
         // TODO: Make a single object Job with payload and jobname
-        let addedJob = await this.queue.add(jobName, { transactionRecord: createdBulkTransactionRecord, fundId: payload.fundId })
+        let addedJob = await this.queue.add(jobName, { transactionRecord: createdBulkTransactionRecord })
 
         return { jobId: addedJob.id!, createdBulkTransactionRecord }
     }

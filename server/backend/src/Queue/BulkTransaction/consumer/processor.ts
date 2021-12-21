@@ -1,9 +1,8 @@
 import { BasicModel, setupDbConnection, WorkerModel } from "@karya/common";
-import { PayoutRequest, PaymentsTransactionRecord, PayoutResponse, InsufficientBalanceError, RazorPayRequestError, AccountTaskStatus } from "@karya/core";
 import { Job } from "bullmq";
 import { AxiosResponse } from 'axios'
 import { razorPayAxios } from "../../HttpUtils";
-import { TransactionQJobData } from "../Types";
+import { BulkTransactionQJobData } from "../Types";
 
 const RAZORPAY_PAYOUTS_RELATIVE_URL = 'payouts'
 
