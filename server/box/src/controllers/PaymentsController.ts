@@ -89,6 +89,7 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
     }
     // Create and enque account registration task
     let jobPayload: RegistrationQPayload = {
+        boxId: ctx.state.entity.box_id,
         workerID: ctx.state.entity.id,
         name: accountBody.name,
         accountType: accountBody.type,

@@ -274,7 +274,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 				['fund_id',['string', 64], 'unique', 'nullable', 'mutable'], 
 				['account_type', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
 				['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-				['active', ['boolean'], 'not unique', 'not nullable', 'mutable'],
+				['active', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
 				['meta', ['object'], 'not unique', 'not nullable', 'mutable']
 			]
 		},

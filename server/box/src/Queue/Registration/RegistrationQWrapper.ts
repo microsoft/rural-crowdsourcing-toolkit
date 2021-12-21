@@ -33,6 +33,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
 
     async enqueue(jobName: string, payload: RegistrationQPayload, ...args: any[]): Promise<RegistrationQResult> {
         let createdAccountRecord = await BasicModel.insertRecord('payments_account', {
+            box_id: payload.boxId,
             hash: payload.hash,
             worker_id: payload.workerID,
             account_type: payload.accountType,
