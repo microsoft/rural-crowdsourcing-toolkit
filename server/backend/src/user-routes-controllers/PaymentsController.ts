@@ -3,8 +3,9 @@ import { UserRouteMiddleware } from "../routes/UserRoutes";
 import * as HttpResponse from '@karya/http-response';
 import { BulkTransactionQWrapper } from "../Queue/BulkTransaction/BulkTransactionQWrapper";
 import { BulkTransactionQConfig } from "../Queue/BulkTransaction/BulkTransactionQConfig";
+import { WorkerModel } from "@karya/common";
 
-
+// Controller to process bulk payments request
 export const processBulkPayments: UserRouteMiddleware = async (ctx) => {
 
     const bulkTransactionReq: TransactionRequest[] = ctx.request.body
@@ -41,4 +42,10 @@ export const processBulkPayments: UserRouteMiddleware = async (ctx) => {
     )
 
     HttpResponse.OK(ctx, response.createdBulkTransactionRecord)
+}
+
+// controller to return list of eligible workers for payment with respective amount
+export const calculateEligibleWorkers: UserRouteMiddleware = async (ctx) => {
+    const response = await WorkerModel.getEligibleWorkersForPayments()
+    HttpResponse.OK(ctx, response)
 }

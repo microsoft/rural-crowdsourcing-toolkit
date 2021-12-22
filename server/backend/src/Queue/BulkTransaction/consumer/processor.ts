@@ -65,7 +65,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
             'bulk_payments_transaction',
             {id: bulkTransactionRecord.id},
             {
-                status: BulkTransactionTaskStatus.PARTIAL_SUCCESS,
+                status: BulkTransactionTaskStatus.PARTIAL_PROCESSED,
                 meta: { 
                     failedForWorkerIds
                 }
@@ -76,7 +76,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
             'bulk_payments_transaction',
             {id: bulkTransactionRecord.id},
             {
-                status: BulkTransactionTaskStatus.SUCESS,
+                status: BulkTransactionTaskStatus.TRANSACTIONS_PROCESSED,
             }
         )
     }

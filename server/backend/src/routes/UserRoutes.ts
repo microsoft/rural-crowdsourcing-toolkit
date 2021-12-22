@@ -238,4 +238,10 @@ userRouter.post(
   PaymentsController.processBulkPayments
 )
 
+userRouter.get(
+  '/payments/users/eligible',
+  Middlewares.needIdToken,
+  PaymentsController.calculateEligibleWorkers
+)
+
 export { userRouter };
