@@ -55,7 +55,7 @@ export default async (job: Job<RegistrationQJobData>) => {
             purpose: "VERIFICATION",
             workerId: accountRecord.worker_id
         }
-        transactionQWrapper.enqueue("VERIFICATION_TRANSACTION", payload )
+        await transactionQWrapper.enqueue("VERIFICATION_TRANSACTION", payload )
         // Update the status of account record
         await BasicModel.updateSingle('payments_account', 
         { id: accountRecord.id }, 
@@ -63,7 +63,7 @@ export default async (job: Job<RegistrationQJobData>) => {
             ...accountRecord, 
             fund_id: fundsId,
             active: true,
-            status: AccountTaskStatus.TRANSACTION_CREATED,
+            status: AccountTaskStatus.TRANSACTION_QUEUE,
             meta: {}
         })
     } catch (e: any) {

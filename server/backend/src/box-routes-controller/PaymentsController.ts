@@ -76,6 +76,7 @@ export const verifyAccount: BoxRouteMiddleware = async (ctx, next) => {
  * @param next 
  */
 export const getUpdatedAccountRecords: BoxRouteMiddleware = async (ctx, next) => {
+    // TODO @query: Check if it is ctx.request.query.from
     let from = ctx.query.from || new Date(0).toISOString();
     if (from instanceof Array) from = from[0];
 

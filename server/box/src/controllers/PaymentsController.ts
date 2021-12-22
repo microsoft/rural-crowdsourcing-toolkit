@@ -71,7 +71,7 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
             // return
         } catch (e) {
             mainLogger.info(`Cant find account record with status ${st} for user_id: ${ctx.state.entity.id}`)
-        }``
+        }
     }
 
     // No account verification in progress. Calculate hash from worker id, account id and ifsc code
@@ -140,4 +140,52 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
         workerId: ctx.state.entity.id })
     
     HttpResponse.OK(ctx, result.updatedAccountRecord)
+}
+
+export const getCurrentActiveAccount: KaryaMiddleware = async (ctx, next) => {
+
+    const workerId = ctx.state.entity.id
+    // See if there is a selected account in the workerRecord
+    const workerRecord = await BasicModel.getSingle('worker', { id: workerId })
+    if (workerRecord.selected_account) {
+        const accountRecord = await BasicModel.getSingle('payments_account', { id: workerRecord.selected_account })
+        HttpResponse.OK(ctx, accountRecord)
+        return
+    }
+
+    // See if there is an account in box which has not yet received updates
+    let inBoxStatus = ['INITIALISED', 'BOX_ACCOUNTS_QUEUE', 'SERVER_API']
+    for (var st of inBoxStatus) {
+        try {
+            const accountRecord = await BasicModel.getSingle('payments_account', { status: st })
+            HttpResponse.OK(ctx, accountRecord)
+            return
+        } catch (e) {
+            mainLogger.info(`Cant find account record with status ${st} for user_id: ${ctx.state.entity.id}`)
+        }
+    }
+
+    // No record found, return an empty response object
+    HttpResponse.OK(ctx, {})
+    return
+}
+
+// Controller to send Transaction records to client
+export const getTransactionRecords: KaryaMiddleware = async (ctx, next) => {
+    // Check if from is valid
+  // TODO: Check if from is formatted correctly
+  const from = ctx.request.query.from;
+  if (!from || from instanceof Array) {
+    HttpResponse.BadRequest(ctx, 'Missing or invalid from time');
+    return;
+  }
+
+  const records = await BasicModel.getRecords(
+    'payments_transaction',
+    { worker_id: ctx.state.entity.id },
+    [],
+    [['last_updated_at', from, null]],
+    'last_updated_at'
+  );
+  HttpResponse.OK(ctx, records);
 }
