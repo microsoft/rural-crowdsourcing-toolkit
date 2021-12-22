@@ -23,7 +23,8 @@ export default async (job: Job<BulkTransactionQJobData>) => {
     const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
     // Create transaction for every record
     const failedForWorkerIds: string[] = []
-    bulkTransactionRequest.forEach(async (transactionRequest: TransactionRequest) => {
+
+    for (const transactionRequest of bulkTransactionRequest) {
         try {
             // Get Worker Record
             const workerRecord = await BasicModel.getSingle('worker', { id: transactionRequest.workerId })
@@ -34,6 +35,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
                 throw new Error("The worker do not have an active verified account")
             }
             // Create the transaction task payload
+            // TODO @enhancement: Change the idempotency key to a random number
             const transactionPayload: TransactionQPayload = {
                 bulk_id: bulkTransactionRecord.id,
                 boxId: currentActiveAccount.box_id,
@@ -41,9 +43,9 @@ export default async (job: Job<BulkTransactionQJobData>) => {
                 amount: transactionRequest.amount,
                 currency: "INR",
                 fundId: currentActiveAccount.fund_id!,
-                idempotencyKey: currentActiveAccount.hash,
+                idempotencyKey: currentActiveAccount.hash + bulkTransactionRecord.id,
                 mode: "IMPS",
-                purpose: "VERIFICATION",
+                purpose: "BULK_PAYMENT",
                 workerId: transactionRequest.workerId
             }
             // Push the payload into the queue
@@ -55,9 +57,9 @@ export default async (job: Job<BulkTransactionQJobData>) => {
             console.log("BULK_TRANSACTION_QUEUE: ", e.message)
             failedForWorkerIds.push(transactionRequest.workerId)
         }
-    })
+    }
 
-    // Check if only sopme transactions were able to succeed
+    // Check if only some transactions were able to succeed
     if (failedForWorkerIds.length > 0) {
         const updatedBulkTransactionRecord = BasicModel.updateSingle(
             'bulk_payments_transaction',

@@ -1,17 +1,17 @@
 import { Payload, QResult } from "@karya/common";
-import { BulkPaymentsTransactionRecord, BulkTransactionRequest } from "@karya/core";
+import { BulkPaymentsTransactionRecord, TransactionRequest } from "@karya/core";
 import { QueueOptions } from "bullmq";
 
 export interface BulkTransactionQPayload extends Payload {
     userId: string,
     n_workers: number,
     amount: number,
-    bulkTransactionRequest: BulkTransactionRequest
+    bulkTransactionRequest: TransactionRequest[]
 }
 
 export type BulkTransactionQJobData = {
     bulkTransactionRecord: BulkPaymentsTransactionRecord,
-    bulkTransactionRequest: BulkTransactionRequest
+    bulkTransactionRequest: TransactionRequest[]
 }
 
 export type Qconfig = {

@@ -1,6 +1,6 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common'
 import { AccountTaskStatus, InsufficientBalanceError, PaymentsTransactionRecord, RazorPayRequestError, TransactionStatus } from '@karya/core'
-import { Queue } from "bullmq";
+import { Job, Queue } from "bullmq";
 import { transactionQConsumer } from './consumer/transactionQConsumer';
 import { Qconfig, TransactionQJobData, TransactionQPayload, TransactionQResult } from './Types'
 
@@ -59,7 +59,7 @@ transactionQConsumer.on("completed", (job) => {
 })
 
 // Handling errors
-transactionQConsumer.on("failed", async (job, error) => {
+transactionQConsumer.on("failed", async (job: Job<TransactionQJobData>, error) => {
     QLogger.error(`Failed job ${job.id} with ${error} and data: ${job.data}`)
 
     let transactionRequestSucess = true
@@ -83,8 +83,9 @@ transactionQConsumer.on("failed", async (job, error) => {
     {status: updatedStatus, meta: updatedTransactionMeta})
 
     // Update account record if purpose of transaction was verification
-    if (transactionRecord.purpose = "VERIFICATION") {
-        const accountRecord = await BasicModel.getSingle('payments_account', {id: transactionRecord.account_id})
+    if (transactionRecord.purpose == "VERIFICATION") {
+        const accountRecord = await BasicModel.getSingle('payments_account', {
+            id: transactionRecord.account_id})
         // Update the account record with failure message
         const updatedAccountnMeta = {
             ...accountRecord.meta,

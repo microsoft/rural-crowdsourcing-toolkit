@@ -28,6 +28,7 @@ export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
 
     async enqueue(jobName: string, payload: BulkTransactionQPayload, ...args: any[]): Promise<BulkTransactionQResult> {
         let createdBulkTransactionRecord = await BasicModel.insertRecord('bulk_payments_transaction', {
+            user_id: payload.userId,
             amount: payload.amount.toString(),
             n_workers: payload.n_workers.toString(),
             status: BulkTransactionTaskStatus.INITIALISED,
@@ -36,7 +37,7 @@ export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
         // TODO: Make a single object Job with payload and jobname
         let addedJob = await this.queue.add(jobName, 
             { 
-                transactionRecord: createdBulkTransactionRecord,
+                bulkTransactionRecord: createdBulkTransactionRecord,
                 bulkTransactionRequest: payload.bulkTransactionRequest
             }
         )

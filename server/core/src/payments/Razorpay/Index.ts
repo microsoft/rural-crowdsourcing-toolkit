@@ -96,7 +96,7 @@ export type VpaAccountDetails = {
 
 export type Currency = "INR"
 export type PaymentMode = "NEFT" | "RTGS" | "IMPS"
-export type TransactionPurpose = "VERIFICATION"
+export type TransactionPurpose = "VERIFICATION" | "BULK_PAYMENT"
 export enum TransactionStatus {
     CREATED = "created",
     QUEUED = "queued",

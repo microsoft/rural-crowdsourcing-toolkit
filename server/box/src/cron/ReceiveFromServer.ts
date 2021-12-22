@@ -71,7 +71,6 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
     const response = await axiosLocal.get<UpdatedWorkerRespnse>('/workers', {
       params: { from: latest_tag_updated_time },
     });
-    console.log(response)
     updatedWorkerData = response.data;
   } catch (e) {
     cronLogger.error(`Failed to receive updated workers`);
@@ -359,8 +358,6 @@ export async function getAccountRecords(axiosLocal: AxiosInstance) {
       params: { from: latest_update_time },
     })
 		accountRecords = response.data
-		console.log(accountRecords)
-    console.log(await BasicModel.getSingle('payments_account', { id: accountRecords[0].id}))
 	} catch (e) {
 		cronLogger.error('Failed to get update for account records')
 	}
@@ -370,7 +367,6 @@ export async function getAccountRecords(axiosLocal: AxiosInstance) {
 			await BasicModel.upsertRecord('payments_account', accountRecord)
 		})
 	} catch (e) {
-		console.log(e)
 		cronLogger.error('Failed to upsert the account records')
 	}
 }

@@ -35,16 +35,12 @@ export default async (job: Job<RegistrationQJobData>) => {
 
         // Update the worker record with the obtained contactsId
         await BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, {
-            selected_account: accountRecord.id, 
+            selected_account: updatedAccountRecord.id, 
             payments_meta: {
                 contacts_id: contactsId
             },
             tags_updated_at: new Date().toISOString()
         })
-
-        // Update the current account for worker
-        const updatedWorkerRecord = await BasicModel.updateSingle('worker', 
-            {id: accountRecord.worker_id}, {})
 
         // create and push a verification transaction task
         const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
