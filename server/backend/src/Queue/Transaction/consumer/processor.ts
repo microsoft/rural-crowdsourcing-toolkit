@@ -15,7 +15,7 @@ export default async (job: Job<TransactionQJobData>) => {
     let transactionRecord: PaymentsTransactionRecord = job.data.transactionRecord
     // Check if user has sufficient balance
     const userBalance = await WorkerModel.getBalance(transactionRecord.worker_id)
-    if (userBalance >= parseInt(transactionRecord.amount)) {
+    if (userBalance < parseInt(transactionRecord.amount)) {
         throw new InsufficientBalanceError("Insufficient Balance")
     }
     const result = await sendPayoutRequest(transactionRecord, job.data.fundId)
@@ -33,7 +33,8 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
      // Create Request Body
      const payoutRequestBody: PayoutRequest = {
         account_number: transactionRecord.source_account,
-        amount: parseInt(transactionRecord.amount!),
+        // Converting rupees to paisa
+        amount: parseInt(transactionRecord.amount!)*100,
         currency: transactionRecord.currency,
         fund_account_id: fundId,
         mode: transactionRecord.mode,
