@@ -83,7 +83,13 @@ export const get: BoxRouteMiddleware = async (ctx) => {
     'tags_updated_at'
   );
   const response = workers.map((w) => {
-    return { id: w.id, tags: w.tags, tags_updated_at: w.tags_updated_at };
+    return { id: w.id,
+      tags: w.tags,
+      tags_updated_at: w.tags_updated_at,
+      payments_active: w.payments_active,
+      payments_meta: w.payments_meta,
+      selected_account: w.selected_account,
+    };
   });
   HttpResponse.OK(ctx, response);
 };

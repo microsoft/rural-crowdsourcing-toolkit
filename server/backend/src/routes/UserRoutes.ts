@@ -17,6 +17,7 @@ import * as TaskAssignmentController from '../user-routes-controllers/TaskAssign
 import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
 import * as WorkerController from '../user-routes-controllers/WorkerController';
 import * as LanguageController from '../user-routes-controllers/LanguageController';
+import * as PaymentsController from '../user-routes-controllers/PaymentsController';
 
 // Default state for all routes
 export type DefaultUserRouteState = {
@@ -241,5 +242,19 @@ userRouter.get(
   Middlewares.needIdToken,
   LanguageController.getLangAssets
 );
+
+// Payments Routes
+userRouter.post(
+  '/payments/transactions/bulk_payments',
+  Middlewares.needIdToken,
+  BodyParser(),
+  PaymentsController.processBulkPayments
+)
+
+userRouter.get(
+  '/payments/users/eligible',
+  Middlewares.needIdToken,
+  PaymentsController.calculateEligibleWorkers
+)
 
 export { userRouter };
