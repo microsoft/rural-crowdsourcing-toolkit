@@ -25,6 +25,8 @@ export const processBulkPayments: UserRouteMiddleware = async (ctx) => {
                 "Invalid Body: Incorrect type in one or more items of array")
             return 
         }
+        // Covert Rupee to Paisa
+        transactionReq.amount *= 100
         totalAmount += transactionReq.amount
     }
 
