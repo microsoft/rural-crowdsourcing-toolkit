@@ -10,6 +10,7 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import { userRouter } from './routes/UserRoutes';
 import { boxRouter } from './routes/BoxRoutes';
+import { webhookRouter } from './routes/WebhookRoutes';
 import { catchAll, httpRequestLogger, setupDbConnection, mainLogger as logger } from '@karya/common';
 import { createBlobContainers, createLocalFolders, setupBlobStore } from '@karya/common';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
@@ -26,6 +27,7 @@ app.use(catchAll);
 const mainRouter = new Router();
 mainRouter.use('/api_user', userRouter.allowedMethods(), userRouter.routes());
 mainRouter.use('/api_box', boxRouter.allowedMethods(), boxRouter.routes());
+mainRouter.use('/webhooks', webhookRouter.allowedMethods(), webhookRouter.routes());
 
 // Connect app to main router
 app.use(mainRouter.routes());
