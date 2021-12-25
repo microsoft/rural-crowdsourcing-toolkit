@@ -243,18 +243,41 @@ userRouter.get(
   LanguageController.getLangAssets
 );
 
-// Payments Routes
+/**
+ * Payments related routes
+ */
+
+// Process bulk payment requests
 userRouter.post(
   '/payments/transactions/bulk_payments',
   Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
   BodyParser(),
   PaymentsController.processBulkPayments
 )
 
+// Get Bulk transaction records
+userRouter.get(
+  '/payments/transactions/bulk_payments',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.processBulkPayments
+)
+
+// Get list of eligible worker ids and their resspective amount for payment
 userRouter.get(
   '/payments/users/eligible',
   Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
   PaymentsController.calculateEligibleWorkers
+)
+
+// Get transaction record
+userRouter.get(
+  'payments/transactions',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.getTransactionRecords
 )
 
 export { userRouter };

@@ -1,9 +1,9 @@
-import { TransactionRequest } from "@karya/core";
+import { PaymentsTransactionRecord, TransactionRequest } from "@karya/core";
 import { UserRouteMiddleware } from "../routes/UserRoutes";
 import * as HttpResponse from '@karya/http-response';
 import { BulkTransactionQWrapper } from "../Queue/BulkTransaction/BulkTransactionQWrapper";
 import { BulkTransactionQConfig } from "../Queue/BulkTransaction/BulkTransactionQConfig";
-import { WorkerModel } from "@karya/common";
+import { BasicModel, WorkerModel } from "@karya/common";
 
 // Controller to process bulk payments request
 export const processBulkPayments: UserRouteMiddleware = async (ctx) => {
@@ -48,4 +48,58 @@ export const processBulkPayments: UserRouteMiddleware = async (ctx) => {
 export const calculateEligibleWorkers: UserRouteMiddleware = async (ctx) => {
     const response = await WorkerModel.getEligibleWorkersForPayments()
     HttpResponse.OK(ctx, response)
+}
+
+// Controller to get transaction records for the user
+export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
+    const from = ctx.request.query.from;
+    const qUserId = ctx.request.query.user_id;
+
+    if (!from || from instanceof Array) {
+        HttpResponse.BadRequest(ctx, 'No from time specified');
+        return;
+    }
+
+    // Get all relevant transaction records
+    // TODO @enhancement: Apply pagination
+    let transactionRecords: PaymentsTransactionRecord[]
+    if (qUserId) {
+        // Get records for a particular user
+        transactionRecords = await BasicModel.getRecords(
+            'payments_transaction',
+            { worker_id: qUserId as string },
+            [],
+            [['last_updated_at', from, null]]
+        );
+    } else {
+        transactionRecords = await BasicModel.getRecords(
+            'payments_transaction',
+            {},
+            [],
+            [['last_updated_at', from, null]]
+        );
+    }
+
+    HttpResponse.OK(ctx, transactionRecords);
+}
+
+// Controller to get bulk payment transaction records for the user
+export const getBulkTransactionRecords: UserRouteMiddleware = async (ctx) => {
+    const from = ctx.request.query.from;
+
+    if (!from || from instanceof Array) {
+        HttpResponse.BadRequest(ctx, 'No from time specified');
+        return;
+    }
+
+    // Get all relevant transaction records
+    // TODO @enhancement: Apply pagination
+    let transactionRecords = await BasicModel.getRecords(
+        'bulk_payments_transaction',
+        {},
+        [],
+        [['last_updated_at', from, null]]
+    )
+    
+    HttpResponse.OK(ctx, transactionRecords);
 }
