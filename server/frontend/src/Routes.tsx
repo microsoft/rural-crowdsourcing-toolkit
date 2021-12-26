@@ -79,6 +79,9 @@ const Routes = (
     {/** Language routes */}
     <AdminRoute exact path='/lang-assets' component={LangAsset} />
 
+    {/** Payments routes */}
+    <AdminRoute exact path='/payments' component={LangAsset} />
+
     </Switch>
     </div>
     </main>

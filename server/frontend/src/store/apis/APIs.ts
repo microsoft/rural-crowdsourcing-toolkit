@@ -191,6 +191,23 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'karya_file';
       label: 'GET_LANGUAGE_ASSETS';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'payments_transaction';
+      label: 'GET_ALL'
+    } 
+  | 
+    {
+      type: 'BR_INIT';
+      store: 'worker';
+      label: 'GET_ELIGIBLE_WORKERS';
+    }
+  |
+    {
+      type: 'BR_INIT';
+      store: 'bulk_payments_transaction';
+      label: 'GET_ALL';
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -339,6 +356,24 @@ export type BackendRequestSuccessAction =
       store: 'karya_file';
       label: 'GET_LANGUAGE_ASSETS';
       response: DBT.KaryaFileRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'payments_transaction';
+      label: 'GET_ALL';
+      response: DBT.PaymentsTransaction[];
+    }
+  | {
+    type: 'BR_SUCCESS';
+    store: 'worker';
+    label: 'GET_ELIGIBLE_WORKERS';
+    response: (DBT.WorkerRecord & {amount: number})[] ;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'bulk_payments_transaction';
+      label: 'GET_ALL';
+      response: DBT.BulkPaymentsTransactionRecord[];
     };
 
 export type BackendRequestFailureAction = {
@@ -599,6 +634,36 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/lang-assets'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get payment transaction records
+    if (action.store === 'payments_transaction' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/transactions'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get bulk payment transaction records
+    if (action.store === 'bulk_payments_transaction' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/transactions/bulk_payments'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get payable workers with their respective amount
+    if (action.store === 'worker' && action.label === 'GET_ELIGIBLE_WORKERS') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/worker/eligible'),
       } as BackendRequestSuccessAction;
     }
 
