@@ -266,7 +266,7 @@ userRouter.get(
 
 // Get list of eligible worker ids and their resspective amount for payment
 userRouter.get(
-  '/payments/users/eligible',
+  '/payments/worker/eligible',
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   PaymentsController.calculateEligibleWorkers
