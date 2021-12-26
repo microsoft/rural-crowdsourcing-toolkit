@@ -6,9 +6,10 @@
 import * as DBT from '@karya/core';
 import { LanguageCode } from '@karya/core';
 import { AuthHeader } from '../../components/auth/Auth.extra';
+import { ViewName } from '../Views';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
-export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_user'
+export type DbParamsType<Table extends DBT.DbTableName | ViewName> = Table extends 'server_user'
   ? 'DBT.ServerUser'
   : Table extends 'box'
   ? 'DBT.Box'
@@ -200,7 +201,7 @@ export type BackendRequestInitAction =
   | 
     {
       type: 'BR_INIT';
-      store: 'payments_eligible_workers';
+      store: 'payments_eligible_worker';
       label: 'GET_ALL';
     }
   |
@@ -365,7 +366,7 @@ export type BackendRequestSuccessAction =
     }
   | {
       type: 'BR_SUCCESS';
-      store: 'payments_eligible_workers';
+      store: 'payments_eligible_worker';
       label: 'GET_ALL';
       response: (DBT.WorkerRecord & {amount: number})[] ;
     }
@@ -658,7 +659,7 @@ export async function backendRequest(
     }
 
     // Get payable workers with their respective amount
-    if (action.store === 'payments_eligible_workers' && action.label === 'GET_ALL') {
+    if (action.store === 'payments_eligible_worker' && action.label === 'GET_ALL') {
       return {
         type: 'BR_SUCCESS',
         store,

@@ -18,14 +18,15 @@ import { RootState } from '../../store/Index';
 
 // Types
 import { DbTableName } from '@karya/core';
+import { ViewName } from '../../store/Views';
 
 /**
  * Type listing the additional props that will be attached to a component when
  * using this HoC. All requested tables are mapped. In addtion, a dispatcher
  * that will allow the component to re-fetch the data if necessary.
  */
-type WithDataProps<Table extends DbTableName> = Pick<AllState, Table> & {
-  getData: (table: Table) => () => any;
+type WithDataProps<T extends DbTableName | ViewName> = Pick<AllState, T> & {
+  getData: (table: T) => () => any;
 };
 
 /**
@@ -33,13 +34,13 @@ type WithDataProps<Table extends DbTableName> = Pick<AllState, Table> & {
  * the wrapped component.
  * @param tables List of tables that need to be mapped to the component
  */
-export const withData = <Table extends DbTableName>(...tables: Table[]) => (
+export const withData = <T extends DbTableName | ViewName>(...tables: T[]) => (
   WrappedComponent: any,
-): React.ComponentType<WithDataProps<Table>> => {
+): React.ComponentType<WithDataProps<T>> => {
   // Filter all relevant tables from the root state to props
   const mapStateToProps = (state: RootState) => {
     // @ts-ignore
-    const returnState: Pick<AllState, Table> = {};
+    const returnState: Pick<AllState, T> = {};
     tables.forEach((table) => {
       returnState[table] = state.all[table];
     });
@@ -49,7 +50,7 @@ export const withData = <Table extends DbTableName>(...tables: Table[]) => (
   // Dispatch function to force fetch values of a table from the backend
   const mapDispatchToProps = (dispatch: typeof store.dispatch) => {
     return {
-      getData: (table: Table) => (params: DbParamsType<Table> | {} = {}) =>
+      getData: (table: T) => (params: DbParamsType<T> | {} = {}) =>
         dispatch({
           type: 'BR_INIT',
           store: table,
@@ -60,7 +61,7 @@ export const withData = <Table extends DbTableName>(...tables: Table[]) => (
   };
 
   // Wrapper component
-  class DataWrapper extends React.Component<WithDataProps<Table>> {
+  class DataWrapper extends React.Component<WithDataProps<T>> {
     // On mount, fetch data if it has never been fetched. Wrapped components can
     // use the getData(table) function to force fetch data if needed.
     componentDidMount() {
