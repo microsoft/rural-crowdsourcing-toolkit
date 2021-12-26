@@ -12,7 +12,7 @@ import { Reducer } from 'redux';
 import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSuccessAction } from './apis/APIs';
 
 // Types for state
-import { DbRecordType, DbTableName, ServerUserRecord } from '@karya/core';
+import { DbRecordType, DbTableName, ServerUserRecord, WorkerRecord } from '@karya/core';
 
 // Table state
 type RequestStatus = { status: 'IN_FLIGHT' } | { status: 'SUCCESS' } | { status: 'FAILURE'; messages: string[] };
@@ -27,6 +27,11 @@ export type AllState = {
   [id in DbTableName]: StoreState<id>;
 } & {
   auth: { cwp: ServerUserRecord | null } & RequestStatus;
+  // Add state type for payment eligible workers response
+  payments_eligible_workers: {
+    data: (WorkerRecord & {amount: number})[];
+    last_fetched_at: Date;
+  } & RequestStatus;
 };
 
 // Store actions
@@ -52,6 +57,7 @@ const initState: AllState = {
   payments_account: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS'},
   payments_transaction: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS'},
   bulk_payments_transaction: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS'},
+  payments_eligible_workers: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS'},
   auth: { cwp: null, status: 'SUCCESS' },
 };
 

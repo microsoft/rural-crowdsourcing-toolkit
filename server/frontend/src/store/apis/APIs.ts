@@ -200,8 +200,8 @@ export type BackendRequestInitAction =
   | 
     {
       type: 'BR_INIT';
-      store: 'worker';
-      label: 'GET_ELIGIBLE_WORKERS';
+      store: 'payments_eligible_workers';
+      label: 'GET_ALL';
     }
   |
     {
@@ -364,10 +364,10 @@ export type BackendRequestSuccessAction =
       response: DBT.PaymentsTransaction[];
     }
   | {
-    type: 'BR_SUCCESS';
-    store: 'worker';
-    label: 'GET_ELIGIBLE_WORKERS';
-    response: (DBT.WorkerRecord & {amount: number})[] ;
+      type: 'BR_SUCCESS';
+      store: 'payments_eligible_workers';
+      label: 'GET_ALL';
+      response: (DBT.WorkerRecord & {amount: number})[] ;
     }
   | {
       type: 'BR_SUCCESS';
@@ -658,7 +658,7 @@ export async function backendRequest(
     }
 
     // Get payable workers with their respective amount
-    if (action.store === 'worker' && action.label === 'GET_ELIGIBLE_WORKERS') {
+    if (action.store === 'payments_eligible_workers' && action.label === 'GET_ALL') {
       return {
         type: 'BR_SUCCESS',
         store,
