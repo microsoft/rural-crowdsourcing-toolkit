@@ -195,6 +195,11 @@ export type BackendRequestInitAction =
       label: 'GET_LANGUAGE_ASSETS';
     }
   | {
+    type: 'BR_INIT';
+    store: 'payments_account';
+    label: 'GET_ALL';
+    }
+  | {
       type: 'BR_INIT';
       store: 'payments_transaction';
       label: 'GET_ALL'
@@ -367,10 +372,15 @@ export type BackendRequestSuccessAction =
       response: DBT.KaryaFileRecord[];
     }
   | {
+    type: 'BR_INIT';
+    store: 'payments_account';
+    label: 'GET_ALL';
+    }
+  | {
       type: 'BR_SUCCESS';
       store: 'payments_transaction';
       label: 'GET_ALL';
-      response: DBT.PaymentsTransaction[];
+      response: DBT.PaymentsAccount[];
     }
   | {
       type: 'BR_SUCCESS';
@@ -649,6 +659,16 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/lang-assets'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get worker accounts for payment
+    if (action.store === 'payments_account' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/account'),
       } as BackendRequestSuccessAction;
     }
 

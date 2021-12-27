@@ -31,6 +31,7 @@ import { CSVLink } from 'react-csv';
 
 // CSS
 import '../../css/worker/WorkerOverview.css';
+import AccountsList from '../payments/AccountsList';
 
 // Data connector
 const dataConnector = withData('task');
@@ -336,6 +337,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
             </>
           )}
         </div>
+        {/** @ts-ignore */}
+        <AccountsList />
       </div>
     );
   }
