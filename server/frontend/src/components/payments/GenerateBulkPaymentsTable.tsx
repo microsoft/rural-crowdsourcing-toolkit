@@ -31,7 +31,7 @@ class GenerateBulkPaymentsTable extends React.Component {
 
     return (
       <div className='row main-row'>
-        <h1 className='page-title' id='boxes-title'>
+        <h1 className='page-title'>
           Bulk Payments
         </h1>
 				<p className='table-headline'>Generate list of workers with their amount earned to pay them in bulk</p>

@@ -8,15 +8,9 @@
 // React stuff
 import React from 'react';
 
-// Redux stuff
-import { connect, ConnectedProps } from 'react-redux';
-import { compose } from 'redux';
-
 // HTML helpers
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
-
-import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
@@ -29,11 +23,19 @@ const connector = withData('bulk_payments_transaction');
 
 // Box list props
 type BulkTransactionHistoryListProps = DataProps<typeof connector>;
+type BulkTransactionTableRecord = BulkPaymentsTransactionRecord & {failedForWorkerIds: string | null}
+
 
 // Box list component
 class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryListProps> {
   render() {
-    const data = this.props.bulk_payments_transaction.data;
+    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data.map( item => {
+      return {
+        ...item,
+        created_at: new Date(item.created_at).toDateString(),
+        failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds) as string : null
+      }
+    });
     console.log(data);
 
     // get error element
@@ -41,11 +43,13 @@ class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryL
       this.props.bulk_payments_transaction.status === 'FAILURE' ? <ErrorMessage message={this.props.bulk_payments_transaction.messages} /> : null;
 
     // Box table columns
-    const tableColumns: Array<TableColumnType<BulkPaymentsTransactionRecord>> = [
+    const tableColumns: Array<TableColumnType<BulkTransactionTableRecord>> = [
       { header: 'Batch ID', type: 'field', field: 'id' },
       { header: 'Amount ', type: 'field', field: 'amount' },
       { header: '# of Workers', type: 'field', field: 'n_workers' },
-      { header: 'Status', type: 'field', field: 'status' }
+      { header: 'Status', type: 'field', field: 'status' },
+      { header: 'Failure for Workers', type: 'field', field: 'failedForWorkerIds' },
+      { header: 'Created at', type: 'field', field: 'created_at' },
     ];
 
     return (
@@ -53,7 +57,7 @@ class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryL
         {errorElement}
         {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar /> }
         <div className='basic-table'>
-          <TableList<BulkPaymentsTransactionRecord> columns={tableColumns} rows={data} emptyMessage='No bulk transaction has been made' />
+          <TableList<BulkTransactionTableRecord> columns={tableColumns} rows={data} emptyMessage='No bulk transaction has been made' />
         </div>
       </div>
     );
