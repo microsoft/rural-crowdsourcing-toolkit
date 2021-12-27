@@ -53,7 +53,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
 
   render() {
     const workers = this.props.payments_eligible_worker.data;
-    console.log(workers);
+    const totalAmount = workers.reduce((acc, item) => item.amount+acc, 0)
 
     // get error element
     const errorElement =
@@ -69,6 +69,8 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
       <div>
         {errorElement}
         {this.props.payments_eligible_worker.status === 'IN_FLIGHT' && <ProgressBar /> }
+        <br/>
+        <b className='table-headline'>{workers.length ? `Total Amount: ₹${totalAmount}` : undefined}</b>
         <div className='basic-table' id='box-table'>
           <TableList<PaymentEligibleWorkerRecord> columns={tableColumns} rows={workers} emptyMessage='No worker pending for payment' />
         </div>

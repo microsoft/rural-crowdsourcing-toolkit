@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 /**
- * Component to display the list of boxes in the system. The component also
- * provides an action button to generate a new creation code for a box.
+ * The component allows the user to make bulk payments. 
+ * Component contains BulkTranasctionHistory component and BulkPaymentsList component.
  */
 
 // React stuff
@@ -23,8 +23,7 @@ import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 // CSS
-import '../../css/box/ngBoxList.css';
-import { PaymentEligibleWorkerRecord } from '../../store/Views';
+import '../../css/payments/Payments.css';
 import { Button } from 'react-materialize';
 import BulkPaymentsList from './BulkPaymentsList';
 import BulkTransactionHistoryList from './BulkTransactionHistoryList';
@@ -50,9 +49,11 @@ class GenerateBulkPaymentsTable extends React.Component {
         <h1 className='page-title' id='boxes-title'>
           Bulk Payments
         </h1>
-				<p>Generate list of workers with their amount earned to pay them in bulk</p>
-				<Button onClick={this.handleGenerateListClick}>Generate List</Button>
-				<Button onClick={this.handleHistoryButtonClick}>View History</Button>
+				<p className='table-headline'>Generate list of workers with their amount earned to pay them in bulk</p>
+        <div className='header-buttons'>
+				  <Button onClick={this.handleGenerateListClick}>Generate List</Button>
+				  <Button onClick={this.handleHistoryButtonClick}>View History</Button>
+        </div>
   
 				{  
           this.state.visibleEntity === 'workerList' ? (

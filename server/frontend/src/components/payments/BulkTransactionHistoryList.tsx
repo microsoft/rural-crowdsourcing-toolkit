@@ -2,12 +2,11 @@
 // Licensed under the MIT license.
 
 /**
- * Component to display the list of boxes in the system. The component also
- * provides an action button to generate a new creation code for a box.
+ * Component to display the list of bulk transaction history.
  */
 
 // React stuff
-import React, { ChangeEventHandler, FormEventHandler } from 'react';
+import React from 'react';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -23,8 +22,6 @@ import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
 
 // CSS
-import '../../css/box/ngBoxList.css';
-import { PaymentEligibleWorkerRecord } from '../../store/Views';
 import { BulkPaymentsTransactionRecord } from '@karya/core';
 
 // Map dispatch to props
@@ -51,7 +48,6 @@ type BulkTransactionHistoryListProps = DataProps<typeof dataConnector> & Connect
 
 // Box list component
 class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryListProps> {
-
   render() {
     const data = this.props.bulk_payments_transaction.data;
     console.log(data);
@@ -72,7 +68,7 @@ class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryL
       <div>
         {errorElement}
         {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar /> }
-        <div className='basic-table' id='box-table'>
+        <div className='basic-table'>
           <TableList<BulkPaymentsTransactionRecord> columns={tableColumns} rows={data} emptyMessage='No bulk transaction has been made' />
         </div>
       </div>
