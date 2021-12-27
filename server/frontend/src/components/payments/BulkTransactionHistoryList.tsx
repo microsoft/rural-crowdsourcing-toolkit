@@ -25,6 +25,7 @@ import { DataProps, withData } from '../hoc/WithData';
 // CSS
 import '../../css/box/ngBoxList.css';
 import { PaymentEligibleWorkerRecord } from '../../store/Views';
+import { BulkPaymentsTransactionRecord } from '@karya/core';
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any) => {
@@ -32,7 +33,7 @@ const mapDispatchToProps = (dispatch: any) => {
     generateList: () => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
-        store: 'payments_eligible_worker',
+        store: 'bulk_payments_transaction',
         label: 'GET_ALL',
       };
       dispatch(action);
@@ -42,42 +43,41 @@ const mapDispatchToProps = (dispatch: any) => {
 
 // Create the connector
 const reduxConnector = connect(null, mapDispatchToProps);
-const dataConnector = withData('payments_eligible_worker');
+const dataConnector = withData('bulk_payments_transaction');
 const connector = compose(dataConnector, reduxConnector);
 
 // Box list props
-type BulkPaymentsListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type BulkTransactionHistoryListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
 
 // Box list component
-class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
+class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryListProps> {
 
   render() {
-    const workers = this.props.payments_eligible_worker.data;
-    console.log(workers);
+    const data = this.props.bulk_payments_transaction.data;
+    console.log(data);
 
     // get error element
     const errorElement =
-      this.props.payments_eligible_worker.status === 'FAILURE' ? <ErrorMessage message={this.props.payments_eligible_worker.messages} /> : null;
+      this.props.bulk_payments_transaction.status === 'FAILURE' ? <ErrorMessage message={this.props.bulk_payments_transaction.messages} /> : null;
 
     // Box table columns
-    const tableColumns: Array<TableColumnType<PaymentEligibleWorkerRecord>> = [
-      { header: 'Worker ID', type: 'field', field: 'id' },
+    const tableColumns: Array<TableColumnType<BulkPaymentsTransactionRecord>> = [
+      { header: 'Batch ID', type: 'field', field: 'id' },
       { header: 'Amount ', type: 'field', field: 'amount' },
+      { header: '# of Workers', type: 'field', field: 'n_workers' },
+      { header: 'Status', type: 'field', field: 'status' }
     ];
 
     return (
-      <div className='row main-row'>
+      <div>
         {errorElement}
-        <h1 className='page-title' id='boxes-title'>
-          Workers
-        </h1>
-        {this.props.payments_eligible_worker.status === 'IN_FLIGHT' && <ProgressBar /> }
+        {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar /> }
         <div className='basic-table' id='box-table'>
-          <TableList<PaymentEligibleWorkerRecord> columns={tableColumns} rows={workers} emptyMessage='No worker pending for payment' />
+          <TableList<BulkPaymentsTransactionRecord> columns={tableColumns} rows={data} emptyMessage='No bulk transaction has been made' />
         </div>
       </div>
     );
   }
 }
 
-export default connector(BulkPaymentsList);
+export default connector(BulkTransactionHistoryList);
