@@ -276,6 +276,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 				['account_type', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
 				['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
 				['active', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['created_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'not mutable'],
 				['meta', ['object'], 'not unique', 'nullable', 'mutable']
 			]
 		},
@@ -294,6 +295,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['mode', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
         ['purpose', ['string', 32], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['created_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'not mutable'],
         ['meta', ['object'], 'not unique', 'nullable', 'mutable']
       ]
     },
@@ -304,6 +306,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['n_workers', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['created_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'not mutable'],
         ['meta', ['object'], 'not unique', 'nullable', 'mutable']
       ]
     },
