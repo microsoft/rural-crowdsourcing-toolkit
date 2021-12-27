@@ -1,4 +1,4 @@
-import { PaymentsTransactionRecord, TransactionRequest } from "@karya/core";
+import { PaymentsAccountRecord, PaymentsTransactionRecord, TransactionRequest } from "@karya/core";
 import { UserRouteMiddleware } from "../routes/UserRoutes";
 import * as HttpResponse from '@karya/http-response';
 import { BulkTransactionQWrapper } from "../Queue/BulkTransaction/BulkTransactionQWrapper";
@@ -50,14 +50,49 @@ export const calculateEligibleWorkers: UserRouteMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, response)
 }
 
-// Controller to get transaction records for the user
-export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
-    const from = ctx.request.query.from;
+// Controller to get Payments Account
+export const getPaymentsAccount: UserRouteMiddleware = async (ctx) => {
+    let from = ctx.request.query.from;
     const qUserId = ctx.request.query.user_id;
 
     if (!from || from instanceof Array) {
-        HttpResponse.BadRequest(ctx, 'No from time specified');
-        return;
+        from = new Date(0).toISOString();
+        // HttpResponse.BadRequest(ctx, 'No from time specified');
+        // return;
+    }
+
+    // Get all relevant transaction records
+    // TODO @enhancement: Apply pagination
+    let transactionRecords: PaymentsAccountRecord[]
+    if (qUserId) {
+        // Get records for a particular user
+        transactionRecords = await BasicModel.getRecords(
+            'payments_account',
+            { worker_id: qUserId as string },
+            [],
+            [['last_updated_at', from, null]]
+        );
+    } else {
+        transactionRecords = await BasicModel.getRecords(
+            'payments_account',
+            {},
+            [],
+            [['last_updated_at', from, null]]
+        );
+    }
+
+    HttpResponse.OK(ctx, transactionRecords);
+}
+
+// Controller to get transaction records for the user
+export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
+    let from = ctx.request.query.from;
+    const qUserId = ctx.request.query.user_id;
+
+    if (!from || from instanceof Array) {
+        from = new Date(0).toISOString();
+        // HttpResponse.BadRequest(ctx, 'No from time specified');
+        // return;
     }
 
     // Get all relevant transaction records
@@ -85,11 +120,11 @@ export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
 
 // Controller to get bulk payment transaction records for the user
 export const getBulkTransactionRecords: UserRouteMiddleware = async (ctx) => {
-    const from = ctx.request.query.from;
+    let from = ctx.request.query.from;
 
     if (!from || from instanceof Array) {
-        HttpResponse.BadRequest(ctx, 'No from time specified');
-        return;
+        from = new Date(0).toISOString();
+        // HttpResponse.BadRequest(ctx, 'No from time specified');
     }
 
     // Get all relevant transaction records

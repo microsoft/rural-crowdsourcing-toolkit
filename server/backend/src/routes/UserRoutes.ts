@@ -261,10 +261,18 @@ userRouter.get(
   '/payments/transactions/bulk_payments',
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
-  PaymentsController.processBulkPayments
+  PaymentsController.getBulkTransactionRecords
 )
 
-// Get list of eligible worker ids and their resspective amount for payment
+// Get Payments Account
+userRouter.get(
+  '/payments/account',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.getPaymentsAccount
+)
+
+// Get list of eligible worker ids and their respective amount for payment
 userRouter.get(
   '/payments/worker/eligible',
   Middlewares.needIdToken,
@@ -274,7 +282,7 @@ userRouter.get(
 
 // Get transaction record
 userRouter.get(
-  'payments/transactions',
+  '/payments/transactions',
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   PaymentsController.getTransactionRecords
