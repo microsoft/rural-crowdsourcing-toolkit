@@ -24,19 +24,23 @@ import { DataProps, withData } from '../hoc/WithData';
 
 // CSS
 import '../../css/box/ngBoxList.css';
-import { PaymentEligibleWorkerRecord } from '../../store/Views';
+import { PaymentEligibleWorkerRecord } from '../../data/Views';
+import { BulkPaymentsTransactionRequest } from '../../data/Index';
+import { Button } from 'react-materialize';
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    generateList: () => {
+    createBulkTransaction: (requestBody: BulkPaymentsTransactionRequest) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
-        store: 'payments_eligible_worker',
-        label: 'GET_ALL',
+        store: 'bulk_payments_transaction',
+        label: 'CREATE',
+        request: requestBody
       };
       dispatch(action);
     },
+
   };
 };
 
@@ -50,6 +54,23 @@ type BulkPaymentsListProps = DataProps<typeof dataConnector> & ConnectedProps<ty
 
 // Box list component
 class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
+
+  handleMakePaymentBtnClick = () => {
+    const requestBody = this.createBulkPaymentsRequestBody()
+    this.props.createBulkTransaction(requestBody)
+  }
+
+  createBulkPaymentsRequestBody = () => {
+    const requestBody: BulkPaymentsTransactionRequest = 
+      this.props.payments_eligible_worker.data.map( worker => {
+        return {
+          workerId: worker.id,
+          amount: worker.amount
+        }
+    })
+
+    return requestBody
+  }
 
   render() {
     const workers = this.props.payments_eligible_worker.data;
@@ -74,6 +95,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
         <div className='basic-table' id='box-table'>
           <TableList<PaymentEligibleWorkerRecord> columns={tableColumns} rows={workers} emptyMessage='No worker pending for payment' />
         </div>
+        <Button onClick={this.handleMakePaymentBtnClick}>Make Payment</Button>
       </div>
     );
   }

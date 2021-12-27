@@ -6,7 +6,8 @@
 import * as DBT from '@karya/core';
 import { LanguageCode } from '@karya/core';
 import { AuthHeader } from '../../components/auth/Auth.extra';
-import { ViewName } from '../Views';
+import { BulkPaymentsTransactionRequest } from '../../data/Index';
+import { ViewName } from '../../data/Views';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
 export type DbParamsType<Table extends DBT.DbTableName | ViewName> = Table extends 'server_user'
@@ -209,6 +210,13 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'bulk_payments_transaction';
       label: 'GET_ALL';
+    }
+  |
+    {
+      type: 'BR_INIT';
+      store: 'bulk_payments_transaction';
+      request: BulkPaymentsTransactionRequest;
+      label: 'CREATE';
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -375,6 +383,12 @@ export type BackendRequestSuccessAction =
       store: 'bulk_payments_transaction';
       label: 'GET_ALL';
       response: DBT.BulkPaymentsTransactionRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'bulk_payments_transaction';
+      label: 'CREATE';
+      response: DBT.BulkPaymentsTransactionRecord;
     };
 
 export type BackendRequestFailureAction = {
@@ -655,6 +669,16 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/payments/transactions/bulk_payments'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Create new bulk payment transaction
+    if (action.store === 'bulk_payments_transaction' && action.label === 'CREATE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST('/payments/transactions/bulk_payments', action.request),
       } as BackendRequestSuccessAction;
     }
 

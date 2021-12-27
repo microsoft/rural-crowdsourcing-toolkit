@@ -24,27 +24,11 @@ import { DataProps, withData } from '../hoc/WithData';
 // CSS
 import { BulkPaymentsTransactionRecord } from '@karya/core';
 
-// Map dispatch to props
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    generateList: () => {
-      const action: BackendRequestInitAction = {
-        type: 'BR_INIT',
-        store: 'bulk_payments_transaction',
-        label: 'GET_ALL',
-      };
-      dispatch(action);
-    },
-  };
-};
-
 // Create the connector
-const reduxConnector = connect(null, mapDispatchToProps);
-const dataConnector = withData('bulk_payments_transaction');
-const connector = compose(dataConnector, reduxConnector);
+const connector = withData('bulk_payments_transaction');
 
 // Box list props
-type BulkTransactionHistoryListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type BulkTransactionHistoryListProps = DataProps<typeof connector>;
 
 // Box list component
 class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryListProps> {

@@ -15,7 +15,7 @@ import { BackendRequestFailureAction, BackendRequestInitAction, BackendRequestSu
 import { DbRecordType, DbTableName, ServerUserRecord } from '@karya/core';
 
 // Views for state
-import { ViewName, ViewRecordType } from './Views'
+import { ViewName, ViewRecordType } from '../data/Views'
 
 // Table state
 type RequestStatus = { status: 'IN_FLIGHT' } | { status: 'SUCCESS' } | { status: 'FAILURE'; messages: string[] };

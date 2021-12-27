@@ -18,7 +18,7 @@ import { RootState } from '../../store/Index';
 
 // Types
 import { DbTableName } from '@karya/core';
-import { ViewName } from '../../store/Views';
+import { ViewName } from '../../data/Views';
 
 /**
  * Type listing the additional props that will be attached to a component when

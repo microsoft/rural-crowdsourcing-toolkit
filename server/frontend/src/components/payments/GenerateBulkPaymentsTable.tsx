@@ -7,20 +7,7 @@
  */
 
 // React stuff
-import React, { ChangeEventHandler, FormEventHandler } from 'react';
-
-// Redux stuff
-import { connect, ConnectedProps } from 'react-redux';
-import { compose } from 'redux';
-
-// HTML helpers
-import { ErrorMessage, ProgressBar } from '../templates/Status';
-import { TableColumnType, TableList } from '../templates/TableList';
-
-import { BackendRequestInitAction } from '../../store/apis/APIs';
-
-// HoCs
-import { DataProps, withData } from '../hoc/WithData';
+import React from 'react';
 
 // CSS
 import '../../css/payments/Payments.css';
@@ -36,11 +23,9 @@ class GenerateBulkPaymentsTable extends React.Component {
 		this.setState((state, props) => ({ visibleEntity: 'workerList' }))
 	}
 
-  handleHistoryButtonClick = () => {
+  handleHistoryBtnClick = () => {
     this.setState((state, props) => ({ visibleEntity: 'history' }))
   }
-
-
 
   render() {
 
@@ -52,7 +37,7 @@ class GenerateBulkPaymentsTable extends React.Component {
 				<p className='table-headline'>Generate list of workers with their amount earned to pay them in bulk</p>
         <div className='header-buttons'>
 				  <Button onClick={this.handleGenerateListClick}>Generate List</Button>
-				  <Button onClick={this.handleHistoryButtonClick}>View History</Button>
+				  <Button onClick={this.handleHistoryBtnClick}>View History</Button>
         </div>
   
 				{  
@@ -60,7 +45,6 @@ class GenerateBulkPaymentsTable extends React.Component {
             <div className='worker-list-section'>
               {/*// @ts-ignore */}
               <BulkPaymentsList />
-              <Button>Make Payment</Button>
             </div>
           ) : this.state.visibleEntity === 'history' ? (
             // @ts-ignore
