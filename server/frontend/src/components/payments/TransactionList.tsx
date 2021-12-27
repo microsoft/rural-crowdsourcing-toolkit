@@ -8,10 +8,6 @@
 // React stuff
 import React from 'react';
 
-// Redux stuff
-import { connect, ConnectedProps } from 'react-redux';
-import { compose } from 'redux';
-
 // HTML helpers
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
@@ -32,14 +28,31 @@ type TransactionTableRecord = PaymentsTransactionRecord & {failure_reason: strin
 
 // Box list component
 class TransactionList extends React.Component<TransactionListProps> {
+
+  state: {
+    tableCollapsed: boolean
+   } = {
+     tableCollapsed: false
+   }
+
+   handleTableCollapseClick = () => {
+    const showTable = !this.state.tableCollapsed
+    this.setState((state, props) => ({
+      tableCollapsed: showTable
+     }))
+  }
+
   render() {
     const data: TransactionTableRecord[] = this.props.payments_transaction.data.map(item => {
       return {
         ...item,
+        created_at: new Date(item.created_at).toDateString(),
         failure_reason: item.meta ? ((item.meta as any).failure_reason) as string : null
       }
     });
-    console.log(data);
+
+    const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table'
+
 
     // get error element
     const errorElement =
@@ -63,12 +76,16 @@ class TransactionList extends React.Component<TransactionListProps> {
         <h1 className='page-title'>
         Transactions History
         </h1>
-        <h3></h3>
+        <a href="#" onClick={this.handleTableCollapseClick}>{collapseTableText}</a>
         {errorElement}
         {this.props.payments_transaction.status === 'IN_FLIGHT' && <ProgressBar /> }
-        <div className='basic-table'>
-          <TableList<TransactionTableRecord> columns={tableColumns} rows={data} emptyMessage='No transaction has been made' />
-        </div>
+        {
+          !this.state.tableCollapsed && 
+          <div className='basic-table'>
+            <TableList<TransactionTableRecord> columns={tableColumns} rows={data} emptyMessage='No transaction has been made' />
+          </div>
+        }
+
       </div>
     );
   }

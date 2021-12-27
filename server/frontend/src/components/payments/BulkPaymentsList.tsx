@@ -86,6 +86,9 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
       { header: 'Amount ', type: 'field', field: 'amount' },
     ];
 
+    const makePaymentButton = workers.length ? 
+    <Button onClick={this.handleMakePaymentBtnClick}>Make Payment</Button> : null
+
     return (
       <div>
         {errorElement}
@@ -95,7 +98,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
         <div className='basic-table' id='box-table'>
           <TableList<PaymentEligibleWorkerRecord> columns={tableColumns} rows={workers} emptyMessage='No worker pending for payment' />
         </div>
-        <Button onClick={this.handleMakePaymentBtnClick}>Make Payment</Button>
+        
       </div>
     );
   }

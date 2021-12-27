@@ -17,17 +17,38 @@ import BulkTransactionHistoryList from './BulkTransactionHistoryList';
 
 class GenerateBulkPaymentsTable extends React.Component {
 
-	state: { visibleEntity?: 'workerList' | 'history' } = {}
+	state: { 
+    visibleEntity?: 'workerList' | 'history'
+    tableCollapsed: boolean
+   } = {
+     tableCollapsed: true
+   }
 
 	handleGenerateListClick = () => {
-		this.setState((state, props) => ({ visibleEntity: 'workerList' }))
+		this.setState((state, props) => ({ 
+      visibleEntity: 'workerList',
+      tableCollapsed: false
+     }))
 	}
 
   handleHistoryBtnClick = () => {
-    this.setState((state, props) => ({ visibleEntity: 'history' }))
+    this.setState((state, props) => ({ 
+      visibleEntity: 'history',
+      tableCollapsed: false
+     }))
+  }
+
+  handleTableCollapseClick = () => {
+    this.setState((state, props) => ({ 
+      ...state,
+      tableCollapsed: true
+     }))
   }
 
   render() {
+
+    const collapseTableButton = !this.state.tableCollapsed ? 
+    <a href="#" onClick={this.handleTableCollapseClick}>Collapse Table</a> : null
 
     return (
       <div className='row main-row'>
@@ -39,8 +60,9 @@ class GenerateBulkPaymentsTable extends React.Component {
 				  <Button onClick={this.handleGenerateListClick}>Generate List</Button>
 				  <Button onClick={this.handleHistoryBtnClick}>View History</Button>
         </div>
-  
-				{  
+        <br />
+        { collapseTableButton }
+				{ !this.state.tableCollapsed ?  
           this.state.visibleEntity === 'workerList' ? (
             <div className='worker-list-section'>
               {/*// @ts-ignore */}
@@ -50,6 +72,7 @@ class GenerateBulkPaymentsTable extends React.Component {
             // @ts-ignore
             <BulkTransactionHistoryList />
           ) : null
+          : null
         }
       </div>
     );
