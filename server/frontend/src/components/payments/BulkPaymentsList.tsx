@@ -98,7 +98,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
         <div className='basic-table' id='box-table'>
           <TableList<PaymentEligibleWorkerRecord> columns={tableColumns} rows={workers} emptyMessage='No worker pending for payment' />
         </div>
-        
+        {makePaymentButton}
       </div>
     );
   }
