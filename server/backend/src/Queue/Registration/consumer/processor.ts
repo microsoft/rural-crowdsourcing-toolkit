@@ -22,6 +22,16 @@ export default async (job: Job<RegistrationQJobData>) => {
         const contactsId = await getContactsID(accountRecord.worker_id)
         let fundsId = await createFundsId(accountRecord, contactsId)
 
+
+        // Update the worker record with the obtained contactsId
+        await BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, {
+            selected_account: accountRecord.id, 
+            payments_meta: {
+                contacts_id: contactsId
+            },
+            tags_updated_at: new Date().toISOString()
+        })
+
         // Update the account record with the obtained fund id
         const updatedAccountRecord = await BasicModel.updateSingle('payments_account', 
         { id: accountRecord.id }, 
@@ -31,15 +41,6 @@ export default async (job: Job<RegistrationQJobData>) => {
             active: true,
             status: AccountTaskStatus.SERVER_ACCOUNTS_QUEUE,
             meta: {}
-        })
-
-        // Update the worker record with the obtained contactsId
-        await BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, {
-            selected_account: updatedAccountRecord.id, 
-            payments_meta: {
-                contacts_id: contactsId
-            },
-            tags_updated_at: new Date().toISOString()
         })
 
         // create and push a verification transaction task
