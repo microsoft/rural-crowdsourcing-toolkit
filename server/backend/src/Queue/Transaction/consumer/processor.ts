@@ -14,7 +14,8 @@ export default async (job: Job<TransactionQJobData>) => {
 
     let transactionRecord: PaymentsTransactionRecord = job.data.transactionRecord
     // Check if user has sufficient balance
-    const userBalance = await WorkerModel.getBalance(transactionRecord.worker_id)
+    // Add the transaction amount since the transaction account has status CREATED and would be subtracted in getBalace function
+    const userBalance = (await WorkerModel.getBalance(transactionRecord.worker_id)) + parseInt(transactionRecord.amount)
     if (userBalance < parseInt(transactionRecord.amount)) {
         throw new InsufficientBalanceError("Insufficient Balance")
     }
