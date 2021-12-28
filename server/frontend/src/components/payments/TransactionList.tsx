@@ -61,6 +61,7 @@ class TransactionList extends React.Component<TransactionListProps> {
     // Box table columns
     const tableColumns: Array<TableColumnType<TransactionTableRecord>> = [
       { header: 'Worker ID', type: 'field', field: 'worker_id' },
+      { header: 'Bulk ID ', type: 'field', field: 'bulk_id' },
       { header: 'Amount ', type: 'field', field: 'amount' },
       { header: 'Account ID', type: 'field', field: 'account_id' },
       { header: 'Mode', type: 'field', field: 'mode' },
