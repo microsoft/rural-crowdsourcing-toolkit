@@ -92,4 +92,10 @@ router.put('/payments/accounts/:id/verify', BodyParser(), PaymentsController.ver
 router.get('/payments/accounts/current', PaymentsController.getCurrentActiveAccount)
 router.get('/payments/transaction', PaymentsController.getTransactionRecords)
 
+// Get Balance for a worker
+router.get(
+  '/payments/worker/:id/balance', 
+  PaymentsController.getWorkerBalance
+);
+
 export default router;

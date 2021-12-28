@@ -1,6 +1,6 @@
 import { KaryaMiddleware } from "../KoaContextState"
 import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core'
-import { BasicModel, mainLogger } from '@karya/common'
+import { BasicModel, mainLogger, WorkerModel } from '@karya/common'
 import * as HttpResponse from '@karya/http-response'
 import { calculateHash } from '@karya/misc-utils';
 import * as underscore from 'underscore';
@@ -175,4 +175,15 @@ export const getTransactionRecords: KaryaMiddleware = async (ctx, next) => {
     'last_updated_at'
   );
   HttpResponse.OK(ctx, records);
+}
+
+/**
+ * Get Balance for a worker
+ */
+ export const getWorkerBalance: KaryaMiddleware = async (ctx, next) => {
+    // TODO @enhancement: Validate the input
+    const workerId = ctx.params.id
+    const workerBalance = await WorkerModel.getBalance(workerId)
+    const totalSpent = await WorkerModel.getTotalSpent(workerId)
+    return HttpResponse.OK(ctx, { worker_balance: workerBalance, total_spent: totalSpent});
 }
