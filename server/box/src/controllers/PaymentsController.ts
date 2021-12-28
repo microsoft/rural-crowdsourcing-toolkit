@@ -152,7 +152,7 @@ export const getCurrentActiveAccount: KaryaMiddleware = async (ctx, next) => {
         [],
         [],
         'created_at'
-    ))[0]
+    )).pop() || {} // Get the last element to get latest added account
 
     return HttpResponse.OK(ctx, accountRecord)
 }
