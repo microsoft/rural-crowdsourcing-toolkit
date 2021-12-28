@@ -17,7 +17,7 @@ setupDbConnection();
 export default async (job: Job<RegistrationQJobData>) => {
     // Get the box record
     // TODO @enhancement: Maybe cache the id_token rather than calling the database every time
-    let accountRecord: PaymentsAccountRecord = job.data.accountRecord
+    const accountRecord: PaymentsAccountRecord = job.data.accountRecord
     try {
         const contactsId = await getContactsID(accountRecord.worker_id)
         let fundsId = await createFundsId(accountRecord, contactsId)
@@ -32,6 +32,12 @@ export default async (job: Job<RegistrationQJobData>) => {
             tags_updated_at: new Date().toISOString()
         })
 
+        // Update accountsMeta to remove account information
+        const accountsMeta = accountRecord.meta;
+        // Only include last 4 digit of account number
+        console.log(accountsMeta)
+        // @ts-ignore
+        accountsMeta.account = { id: accountsMeta.account.id.slice(-4) }
         // Update the account record with the obtained fund id
         const updatedAccountRecord = await BasicModel.updateSingle('payments_account', 
         { id: accountRecord.id }, 
@@ -40,7 +46,7 @@ export default async (job: Job<RegistrationQJobData>) => {
             fund_id: fundsId,
             active: true,
             status: AccountTaskStatus.SERVER_ACCOUNTS_QUEUE,
-            meta: {}
+            meta: accountsMeta
         })
 
         // create and push a verification transaction task
@@ -65,7 +71,6 @@ export default async (job: Job<RegistrationQJobData>) => {
             fund_id: fundsId,
             active: true,
             status: AccountTaskStatus.TRANSACTION_QUEUE,
-            meta: {}
         })
     } catch (e: any) {
 
@@ -78,8 +83,12 @@ export default async (job: Job<RegistrationQJobData>) => {
         let reason = `Failure inside Registration Account Queue Processor at box | ${e.message}`
         // Update the record to status failed with faluire reason
         // TODO: Set the type of meta to be any
+        const updatedAccountRecord = await BasicModel.getSingle('payments_account', { id: accountRecord.id})
         // @ts-ignore adding property to meta field
-        BasicModel.updateSingle('payments_account', { id: accountRecord.id}, { status: AccountTaskStatus.FAILED, meta: { failure_reason: reason} })
+        const updatedMeta = updatedAccountRecord.meta
+        // @ts-ignore
+        updatedMeta['failure_reason'] = reason
+        BasicModel.updateSingle('payments_account', { id: accountRecord.id}, { status: AccountTaskStatus.FAILED, meta: { meta: updatedMeta } })
     }
 }
 
@@ -132,8 +141,8 @@ const createFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: s
             contact_id: contactsId,
             bank_account: {
                 name: (accountRecord.meta as any).name,
-                account_number: (accountRecord.meta as any).account_details.id,
-                ifsc: (accountRecord.meta as any).account_details.ifsc
+                account_number: (accountRecord.meta as any).account.id,
+                ifsc: (accountRecord.meta as any).account.ifsc
             }
         }
     } else {
@@ -141,7 +150,7 @@ const createFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: s
             account_type: 'vpa',
             contact_id: contactsId,
             vpa: {
-                address: (accountRecord.meta as any).account_details.id
+                address: (accountRecord.meta as any).account.id
             }
         }
     }

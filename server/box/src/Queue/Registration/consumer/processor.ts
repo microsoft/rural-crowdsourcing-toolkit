@@ -22,8 +22,8 @@ export default async (job: Job<RegistrationQJobData>) => {
         qAxios.defaults.headers = headers
         // send the post request
         const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord)
-        BasicModel.updateSingle('payments_account', { id: job.data.account_record_id }, { ...response.data })
-    } catch (e) {
+        await BasicModel.updateSingle('payments_account', { id: job.data.account_record_id }, { ...response.data })
+    } catch (e: any) {
 
         // TODO: Handle error for the case where accountRecord cannot be fetched from database
         // Possible Handling: Move the job to failed stage and keep retrying
@@ -31,11 +31,14 @@ export default async (job: Job<RegistrationQJobData>) => {
 
         // TODO: Log the error here
         console.log(e)
-        let updatedRecordMeta = accountRecord!.meta
-        // Update the record to status failed with faluire reason
-        // TODO: Set the type of meta to be any
+        const accountsId = job.data.account_record_id
+
+        const updatedAccountRecord = await BasicModel.getSingle('payments_account', { id: accountsId})
         // @ts-ignore adding property to meta field
-        updatedRecordMeta["failure_reason"] = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
-        BasicModel.updateSingle('payments_account', { id: job.data.account_record_id}, { status: AccountTaskStatus.FAILED, meta: updatedRecordMeta })
+        const updatedMeta = updatedAccountRecord.meta
+        const reason = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
+        // @ts-ignore
+        updatedMeta['failure_reason'] = reason
+        await BasicModel.updateSingle('payments_account', { id: accountsId}, { status: AccountTaskStatus.FAILED, meta: { meta: updatedMeta } })
     }
 }

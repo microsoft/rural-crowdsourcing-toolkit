@@ -41,7 +41,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
             active: false,
             meta: {
                 name: payload.name,
-                account_details: payload.accountDetails
+                account: payload.accountDetails
             }
         })
 

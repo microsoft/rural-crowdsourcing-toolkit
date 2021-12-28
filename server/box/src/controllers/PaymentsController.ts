@@ -155,30 +155,6 @@ export const getCurrentActiveAccount: KaryaMiddleware = async (ctx, next) => {
     ))[0]
 
     return HttpResponse.OK(ctx, accountRecord)
-
-    // See if there is a selected account in the workerRecord
-    // const workerRecord = await BasicModel.getSingle('worker', { id: workerId })
-    // if (workerRecord.selected_account) {
-    //     const accountRecord = await BasicModel.getSingle('payments_account', { id: workerRecord.selected_account })
-    //     HttpResponse.OK(ctx, accountRecord)
-    //     return
-    // }
-
-    // // See if there is an account in box which has not yet received updates
-    // let inBoxStatus = ['INITIALISED', 'BOX_ACCOUNTS_QUEUE', 'SERVER_API']
-    // for (var st of inBoxStatus) {
-    //     try {
-    //         const accountRecord = await BasicModel.getSingle('payments_account', { status: st })
-    //         HttpResponse.OK(ctx, accountRecord)
-    //         return
-    //     } catch (e) {
-    //         mainLogger.info(`Cant find account record with status ${st} for user_id: ${ctx.state.entity.id}`)
-    //     }
-    // }
-
-    // // No record found, return an empty response object
-    // HttpResponse.OK(ctx, {})
-    // return
 }
 
 // Controller to send Transaction records to client

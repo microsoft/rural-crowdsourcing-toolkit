@@ -21,7 +21,9 @@ export default async (job: Job<TransactionQJobData>) => {
     const result = await sendPayoutRequest(transactionRecord, job.data.fundId)
     // Update the status of account record
     // TODO: @Quick: Change the status to transaction created when we have the webhooks working
-    const updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: transactionRecord.account_id}, { status: AccountTaskStatus.VERIFICATION })
+    if (transactionRecord.purpose == 'VERIFICATION') {
+        const updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: transactionRecord.account_id}, { status: AccountTaskStatus.VERIFICATION })
+    }
 }
 
 /**

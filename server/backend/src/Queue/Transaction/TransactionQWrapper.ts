@@ -86,6 +86,8 @@ transactionQConsumer.on("failed", async (job: Job<TransactionQJobData>, error) =
     if (transactionRecord.purpose == "VERIFICATION") {
         const accountRecord = await BasicModel.getSingle('payments_account', {
             id: transactionRecord.account_id})
+        console.log('#######################')
+        console.log(accountRecord)
         // Update the account record with failure message
         const updatedAccountnMeta = {
             ...accountRecord.meta,
