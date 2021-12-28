@@ -3,7 +3,8 @@ import { BoxRouteMiddleware } from "../routes/BoxRoutes";
 import { RegistrationQWrapper } from '../Queue/Registration/RegistrationQWrapper';
 import { RegistrationQConfig } from '../Queue/Registration/RegistrationQConfig';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel } from "@karya/common";
+import { BasicModel, WorkerModel } from "@karya/common";
+import { worker } from "cluster";
 
 export const addAccount: BoxRouteMiddleware = async (ctx) => {
     // TODO: Need to validate incoming request
@@ -116,5 +117,5 @@ export const getUpdatedAccountRecords: BoxRouteMiddleware = async (ctx, next) =>
         'last_updated_at',
         limit
     );
-    HttpResponse.OK(ctx, updatedRecords);
+    return HttpResponse.OK(ctx, updatedRecords);
 }

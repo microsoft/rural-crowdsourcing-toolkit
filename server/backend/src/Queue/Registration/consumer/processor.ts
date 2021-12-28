@@ -54,7 +54,7 @@ export default async (job: Job<RegistrationQJobData>) => {
         const payload: TransactionQPayload = {
             boxId: accountRecord.box_id,
             accountId: accountRecord.id,
-            amount: 200,
+            amount: 2,
             currency: "INR",
             fundId: fundsId,
             idempotencyKey: accountRecord.hash,

@@ -65,6 +65,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
         const updatedMeta = pushExtraFields(transactionRecord.meta, createdPayout)
 
         const updatedTransactionRecord = await BasicModel.updateSingle('payments_transaction', { id: transactionRecord.id }, {
+            payout_id: createdPayout.id,
             UTR: createdPayout.utr,
             status: createdPayout.status,
             meta: updatedMeta
