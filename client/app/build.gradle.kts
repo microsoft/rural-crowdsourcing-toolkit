@@ -62,6 +62,16 @@ android {
     exclude("META-INF/ASL2.0")
     exclude("META-INF/*.kotlin_module")
   }
+  flavorDimensions("size")
+  productFlavors {
+    create("large") {
+      dimension = "size"
+      applicationIdSuffix = "large"
+    }
+    create("standard") {
+      dimension = "size"
+    }
+  }
 }
 
 ktfmt {
