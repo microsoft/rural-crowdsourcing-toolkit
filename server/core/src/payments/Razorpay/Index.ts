@@ -94,6 +94,7 @@ export type VpaAccountDetails = {
     address: string
 }
 
+// TODO: @enhancement: Change these to enums
 export type Currency = "INR"
 export type PaymentMode = "NEFT" | "RTGS" | "IMPS"
 export type TransactionPurpose = "VERIFICATION" | "BULK_PAYMENT"
@@ -107,3 +108,10 @@ export enum TransactionStatus {
     FAILED = 'failed',
     FAILED_KARYA = 'failed_at_karya'
 }
+export const FINAL_TRANSACTION_STATES = [
+    TransactionStatus.PROCESSED.toString(),
+    TransactionStatus.CANCELLED.toString(),
+    TransactionStatus.REVERSED.toString(),
+    TransactionStatus.FAILED.toString(),
+    TransactionStatus.FAILED_KARYA.toString(),
+]

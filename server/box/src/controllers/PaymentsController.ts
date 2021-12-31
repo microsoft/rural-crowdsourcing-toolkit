@@ -20,6 +20,7 @@ type accountRegReqObject = {
 }
 
 const accountRegResObjectFields = [
+    "id",
     "hash",
     "worker_id",
     "fund_id",
@@ -61,7 +62,7 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
 
     // Check if account verification is in progress for the user
     let inProgressRecord: PaymentsAccountRecord
-    let inProgressStatus = ['INITIALISED', 'BOX_ACCOUNTS_QUEUE', 'SERVER_API', 'SERVER_ACCOUNTS_QUEUE', 'TRANSACTION_CREATED']
+    let inProgressStatus = ['INITIALISED', 'BOX_ACCOUNTS_QUEUE', 'SERVER_API', 'SERVER_ACCOUNTS_QUEUE', 'TRANSACTION_CREATED', 'VERIFICATION', 'CONFIRMATION_RECEIVED', 'CONFIRMATION_FAILED']
 
     for (var st of inProgressStatus) {
         try {
@@ -171,9 +172,11 @@ export const getTransactionRecords: KaryaMiddleware = async (ctx, next) => {
     'payments_transaction',
     { worker_id: ctx.state.entity.id },
     [],
-    [['last_updated_at', from, null]],
-    'last_updated_at'
+    [['created_at', from, null]],
+    'created_at'
   );
+  // Reverse the array
+  records.reverse()
   HttpResponse.OK(ctx, records);
 }
 
