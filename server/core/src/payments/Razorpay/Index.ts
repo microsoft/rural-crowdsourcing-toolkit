@@ -96,7 +96,7 @@ export type VpaAccountDetails = {
 
 // TODO: @enhancement: Change these to enums
 export type Currency = "INR"
-export type PaymentMode = "NEFT" | "RTGS" | "IMPS"
+export type PaymentMode = "NEFT" | "RTGS" | "IMPS" | "UPI"
 export type TransactionPurpose = "VERIFICATION" | "BULK_PAYMENT"
 export enum TransactionStatus {
     CREATED = "created",

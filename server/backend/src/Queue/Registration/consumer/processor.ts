@@ -35,9 +35,8 @@ export default async (job: Job<RegistrationQJobData>) => {
         // Update accountsMeta to remove account information
         const accountsMeta = accountRecord.meta;
         // Only include last 4 digit of account number
-        console.log(accountsMeta)
         // @ts-ignore
-        accountsMeta.account = { id: accountsMeta.account.id.slice(-4) }
+        accountsMeta.account.id = accountsMeta.account.id.slice(-4)
         // Update the account record with the obtained fund id
         const updatedAccountRecord = await BasicModel.updateSingle('payments_account', 
         { id: accountRecord.id }, 
@@ -51,6 +50,8 @@ export default async (job: Job<RegistrationQJobData>) => {
 
         // create and push a verification transaction task
         const transactionQWrapper = new TransactionQWrapper(TransactionQConfig)
+        // TODO: @enhancement: Change the hard coded strings to enums
+        const transactionMode = accountRecord.account_type === 'bank_account' ? 'IMPS' : 'UPI'
         const payload: TransactionQPayload = {
             boxId: accountRecord.box_id,
             accountId: accountRecord.id,
@@ -58,7 +59,7 @@ export default async (job: Job<RegistrationQJobData>) => {
             currency: "INR",
             fundId: fundsId,
             idempotencyKey: accountRecord.hash,
-            mode: "IMPS",
+            mode: transactionMode,
             purpose: "VERIFICATION",
             workerId: accountRecord.worker_id
         }
