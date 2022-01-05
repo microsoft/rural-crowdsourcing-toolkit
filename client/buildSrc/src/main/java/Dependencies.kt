@@ -3,7 +3,7 @@ private const val ANDROIDX_HILT_VERSION = "1.0.0-beta01"
 private const val CRASHLYTICS_VERSION = "2.5.2"
 private const val DAGGER_HILT_VERSION = "2.34.1-beta"
 private const val GMS_VERSION = "4.3.5"
-private const val KOTLIN_VERSION = "1.5.30"
+private const val KOTLIN_VERSION = "1.6.10"
 private const val LINT_VERSION = "27.3.0-alpha04"
 private const val NAVIGATION_VERSION = "2.3.5"
 
@@ -25,7 +25,7 @@ object Dependencies {
   object Kotlin {
 
     object Coroutines {
-      private const val version = "1.5.2"
+      private const val version = "1.6.0"
 
       const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
       const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
@@ -81,7 +81,7 @@ object Dependencies {
 
   object Google {
 
-    const val gson = "com.google.code.gson:gson:2.8.6"
+    const val gson = "com.google.code.gson:gson:2.8.9"
     const val material = "com.google.android.material:material:1.4.0-alpha02"
 
     object Firebase {

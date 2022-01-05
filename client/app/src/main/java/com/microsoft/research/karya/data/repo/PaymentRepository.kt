@@ -26,7 +26,7 @@ constructor(private val paymentAPI: PaymentAPI, private val paymentAccountDao: P
           failure_reason = "",
           status = AccountRecordStatus.valueOf(paymentInfoResponse.status),
           ifsc = paymentInfoResponse.meta.account.ifsc ?: "",
-          name = paymentInfoResponse.meta.name ?: ""
+          name = paymentInfoResponse.meta.name
         )
 
       paymentAccountDao.insertForUpsert(paymentAccountRecord)
