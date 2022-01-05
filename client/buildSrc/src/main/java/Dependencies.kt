@@ -25,7 +25,7 @@ object Dependencies {
   object Kotlin {
 
     object Coroutines {
-      private const val version = "1.6.0"
+      private const val version = "1.5.2"
 
       const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
       const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
