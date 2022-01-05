@@ -150,6 +150,15 @@
             app:destination="@id/imageLabellingFragment">
             <argument android:name="taskId" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_paymentRegistrationFragment"
+            app:destination="@id/paymentRegistrationFragment" />
+        <action
+            android:id="@+id/action_dashboardActivity_to_paymentVerificationFragment"
+            app:destination="@id/paymentVerificationFragment" />
+        <action
+            android:id="@+id/action_dashboardActivity_to_paymentDashboardFragment"
+            app:destination="@id/paymentDashboardFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
@@ -224,4 +233,74 @@
             android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
+    <fragment
+        android:id="@+id/paymentRegistrationFragment"
+        android:name="com.microsoft.research.karya.ui.payment.registration.PaymentRegistrationFragment"
+        android:label="PaymentRegistrationFragment"
+        tools:layout="@layout/fragment_payment_registration">
+        <action
+            android:id="@+id/action_paymentRegistrationFragment_to_paymentDetailBankFragment"
+            app:destination="@id/paymentDetailBankFragment" />
+        <action
+            android:id="@+id/action_paymentRegistrationFragment_to_paymentDetailUPIFragment"
+            app:destination="@id/paymentDetailUPIFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentDetailBankFragment"
+        android:name="com.microsoft.research.karya.ui.payment.details.bank.PaymentDetailBankFragment"
+        android:label="PaymentDetailBankFragment"
+        tools:layout="@layout/fragment_payment_details_bank">
+        <action
+            android:id="@+id/action_paymentDetailBankFragment_to_paymentVerificationFragment"
+            app:destination="@id/paymentVerificationFragment"
+            app:popUpTo="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentDetailUPIFragment"
+        android:name="com.microsoft.research.karya.ui.payment.details.upi.PaymentDetailUPIFragment"
+        android:label="PaymentDetailUPIFragment"
+        tools:layout="@layout/fragment_payment_details_upi">
+        <action
+            android:id="@+id/action_paymentDetailUPIFragment_to_paymentVerificationFragment"
+            app:destination="@id/paymentVerificationFragment"
+            app:popUpTo="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentVerificationFragment"
+        android:name="com.microsoft.research.karya.ui.payment.verification.PaymentVerificationFragment"
+        android:label="PaymentVerificationFragment"
+        tools:layout="@layout/fragment_payment_verification">
+        <action
+            android:id="@+id/action_paymentVerificationFragment_to_paymentDashboardFragment"
+            app:destination="@id/paymentDashboardFragment"
+            app:popUpTo="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentFailureFragment"
+        android:name="com.microsoft.research.karya.ui.payment.failure.PaymentFailureFragment"
+        android:label="PaymentFailureFragment"
+        tools:layout="@layout/fragment_payment_failure" >
+        <action
+            android:id="@+id/action_paymentFailureFragment_to_paymentRegistrationFragment"
+            app:destination="@id/paymentRegistrationFragment" />
+        <action
+            android:id="@+id/action_paymentFailureFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment><action android:id="@+id/action_global_paymentFailureFragment" app:destination="@id/paymentFailureFragment"/>
+    <fragment
+        android:id="@+id/paymentDashboardFragment"
+        android:name="com.microsoft.research.karya.ui.payment.dashboard.PaymentDashboardFragment"
+        android:label="PaymentDashboardFragment"
+        tools:layout="@layout/fragment_payment_dashboard">
+        <action
+            android:id="@+id/action_paymentDashboardFragment_to_paymentTransactionFragment"
+            app:destination="@id/paymentTransactionFragment" />
+        <action
+            android:id="@+id/action_paymentDashboardFragment_to_paymentRegistrationFragment"
+            app:destination="@id/paymentRegistrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentTransactionFragment"
+        android:name="com.microsoft.research.karya.ui.payment.transactions.PaymentTransactionFragment"
+        android:label="PaymentTransactionFragment" />
 </navigation>
