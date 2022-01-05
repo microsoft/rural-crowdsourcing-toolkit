@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -64,6 +65,17 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
     viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
       binding.syncProgressBar.progress = i
+    }
+
+    viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
+        val resId = when(navigation) {
+            DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
+            DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
+            DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
+            DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
+        }
+
+        findNavController().navigate(resId)
     }
 
     WorkManager.getInstance(requireContext())
@@ -139,7 +151,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         layoutManager = LinearLayoutManager(context)
       }
 
-      binding.syncCv.setOnClickListener { syncWithServer() }
+      syncCv.setOnClickListener { syncWithServer() }
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
       appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
@@ -164,12 +176,26 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-      /* if (totalCreditsEarned > 0.0f) {
-        binding.rupeesEarnedCl.visible()
-        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+       if (totalCreditsEarned > 0.0f) {
+         binding.rupeesEarnedCl.visible()
+         binding.rupeeIconIv.visible()
+         binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+         if (totalCreditsEarned > 2.0f) {
+             binding.rupeesEarnedCl.setOnClickListener {
+                 viewModel.navigatePayment()
+             }
+         } else {
+             binding.rupeesEarnedCl.setOnClickListener {
+                 Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
+             }
+         }
+      } else if (totalCreditsEarned == 0.0f) {
+          binding.rupeesEarnedCl.gone()
       } else {
-        binding.rupeesEarnedCl.gone()
-      } */
+         binding.rupeesEarnedCl.visible()
+         binding.rupeeIconIv.gone()
+         binding.rupeesEarnedTv.text = getString(R.string.no_internet)
+      }
     }
 
     // Show a dialog box to sync with server if completed tasks and internet available
