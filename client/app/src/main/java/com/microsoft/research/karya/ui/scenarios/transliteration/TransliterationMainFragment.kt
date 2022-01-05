@@ -25,8 +25,7 @@ import kotlinx.android.synthetic.main.item_float_word.view.*
 import kotlinx.android.synthetic.main.microtask_transliteration.*
 
 @AndroidEntryPoint
-class TransliterationMainFragment :
-  BaseMTRendererFragment(R.layout.microtask_transliteration) {
+class TransliterationMainFragment : BaseMTRendererFragment(R.layout.microtask_transliteration) {
   override val viewModel: TransliterationViewModel by viewModels()
   val args: TransliterationMainFragmentArgs by navArgs()
 
@@ -36,11 +35,7 @@ class TransliterationMainFragment :
     return emptyArray()
   }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
     viewModel.setupViewModel(args.taskId, 0, 0)
@@ -54,15 +49,15 @@ class TransliterationMainFragment :
 
     textTransliteration.inputType =
       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-    textTransliteration.filters = arrayOf(
-      InputFilter { source, start, end, dest, dstart, dend ->
-        return@InputFilter source.replace(Regex("[^a-z]*"), "")
-      }
-    )
+    textTransliteration.filters =
+      arrayOf(
+        InputFilter { source, start, end, dest, dstart, dend ->
+          return@InputFilter source.replace(Regex("[^a-z]*"), "")
+        }
+      )
 
     /** record instruction */
-    val recordInstruction =
-      viewModel.task.params.asJsonObject.get("instruction").asString ?: ""
+    val recordInstruction = viewModel.task.params.asJsonObject.get("instruction").asString ?: ""
     instructionTv.text = recordInstruction
 
     addBtn.setOnClickListener { addWord() }
@@ -97,21 +92,20 @@ class TransliterationMainFragment :
       return
     }
 
-    if (inputVariants.values.count { wordDetail ->
-        wordDetail.verificationStatus == WordVerificationStatus.NEW
-      } == viewModel.limit) {
+    if (inputVariants.values.count { wordDetail -> wordDetail.verificationStatus == WordVerificationStatus.NEW } ==
+        viewModel.limit
+    ) {
       showError("Only upto ${viewModel.limit} words are allowed.")
       return
     }
 
-    if (viewModel.mlFeedback
-      && !Validator.isValid(viewModel.sourceLanguage, viewModel.sourceWord, word)
-      && word != prevInvalidWord
+    if (viewModel.mlFeedback &&
+        !Validator.isValid(viewModel.sourceLanguage, viewModel.sourceWord, word) &&
+        word != prevInvalidWord
     ) {
       prevInvalidWord = word
       showError(
-        "This transliteration doesn't seem right. Please check it and " +
-          "press add again if you think its correct"
+        "This transliteration doesn't seem right. Please check it and " + "press add again if you think its correct"
       )
       return
     }
@@ -157,13 +151,9 @@ class TransliterationMainFragment :
   }
 
   private fun setupObservers() {
-    viewModel.wordTvText.observe(
-      viewLifecycleOwner.lifecycle,
-      viewLifecycleScope
-    ) { text -> wordTv.text = text }
+    viewModel.wordTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text -> wordTv.text = text }
 
     viewModel.outputVariants.observe(viewLifecycleOwner) { variants ->
-
       verifyFlowLayout.removeAllViews()
 
       for ((word, wordDetail) in variants) {
@@ -182,20 +172,13 @@ class TransliterationMainFragment :
           if (!viewModel.allowValidation) return@setOnClickListener
 
           when (wordDetail.verificationStatus) {
-            WordVerificationStatus.VALID -> viewModel.modifyStatus(
-              word,
-              WordVerificationStatus.INVALID
-            )
-            WordVerificationStatus.INVALID, WordVerificationStatus.UNKNOWN -> viewModel.modifyStatus(
-              word,
-              WordVerificationStatus.VALID
-            )
+            WordVerificationStatus.VALID -> viewModel.modifyStatus(word, WordVerificationStatus.INVALID)
+            WordVerificationStatus.INVALID, WordVerificationStatus.UNKNOWN ->
+              viewModel.modifyStatus(word, WordVerificationStatus.VALID)
           }
-
         }
 
         verifyFlowLayout.addView(view)
-
       }
     }
 
@@ -214,36 +197,20 @@ class TransliterationMainFragment :
       // Clear the edittext
       textTransliteration.setText("")
     }
-
   }
 
   private fun setValidUI(view: View) {
-    view.float_word_card.background.setTint(
-      ContextCompat.getColor(
-        requireContext(),
-        R.color.light_green
-      )
-    )
+    view.float_word_card.background.setTint(ContextCompat.getColor(requireContext(), R.color.light_green))
     view.removeImageView.gone()
   }
 
   private fun setInvaidUI(view: View) {
-    view.float_word_card.background.setTint(
-      ContextCompat.getColor(
-        requireContext(),
-        R.color.light_red
-      )
-    )
+    view.float_word_card.background.setTint(ContextCompat.getColor(requireContext(), R.color.light_red))
     view.removeImageView.gone()
   }
 
   private fun setNewUI(view: View) {
-    view.float_word_card.background.setTint(
-      ContextCompat.getColor(
-        requireContext(),
-        R.color.light_yellow
-      )
-    )
+    view.float_word_card.background.setTint(ContextCompat.getColor(requireContext(), R.color.light_yellow))
     view.removeImageView.visible()
   }
 
@@ -254,16 +221,13 @@ class TransliterationMainFragment :
 
   fun EditText.onSubmit(func: () -> Unit) {
     setOnEditorActionListener { _, actionId, _ ->
-
       if (actionId == EditorInfo.IME_ACTION_DONE ||
-        actionId == EditorInfo.IME_ACTION_NEXT ||
-        actionId == EditorInfo.IME_ACTION_GO
+          actionId == EditorInfo.IME_ACTION_NEXT ||
+          actionId == EditorInfo.IME_ACTION_GO
       ) {
         func()
       }
       true
     }
   }
-
 }
-

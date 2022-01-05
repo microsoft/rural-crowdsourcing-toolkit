@@ -9,11 +9,9 @@ import com.microsoft.research.karya.data.model.karya.WorkerRecord
 @Dao
 interface WorkerDao : BasicDao<WorkerRecord> {
 
-  @Query("SELECT * FROM worker")
-  suspend fun getAll(): List<WorkerRecord>
+  @Query("SELECT * FROM worker") suspend fun getAll(): List<WorkerRecord>
 
-  @Query("SELECT * FROM worker WHERE id == :id")
-  suspend fun getById(id: String): WorkerRecord?
+  @Query("SELECT * FROM worker WHERE id == :id") suspend fun getById(id: String): WorkerRecord?
 
   @Query("SELECT * FROM worker where accessCode == :accessCode")
   suspend fun getByAccessCode(accessCode: String): WorkerRecord?

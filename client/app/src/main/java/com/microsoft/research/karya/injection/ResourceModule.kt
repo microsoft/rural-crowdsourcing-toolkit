@@ -18,15 +18,11 @@ class ResourceModule {
   @Provides
   @Reusable
   @FilesDir
-  fun providesContextDirectoryPath(@ApplicationContext context: Context): String =
-    context.filesDir.path
+  fun providesContextDirectoryPath(@ApplicationContext context: Context): String = context.filesDir.path
 
   @Provides
   @Reusable
-  fun providesResourceManager(
-    languageRepository: LanguageRepository,
-    @FilesDir filesDirPath: String
-  ): ResourceManager {
+  fun providesResourceManager(languageRepository: LanguageRepository, @FilesDir filesDirPath: String): ResourceManager {
     return ResourceManager(languageRepository, filesDirPath)
   }
 }

@@ -21,11 +21,7 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
   override val viewModel: SpeechVerificationViewModel by viewModels()
   val args: SpeechDataMainFragmentArgs by navArgs()
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
     viewModel.setupViewModel(args.taskId, 0, 0)
@@ -58,74 +54,53 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       volumeLowBtn.setOnClickListener { handleVolumeChange(R.string.volume_low) }
       volumeOkayBtn.setOnClickListener { handleVolumeChange(R.string.volume_okay) }
     }
-
   }
 
   private fun setupObservers() {
 
-    viewModel.sentenceTvText.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { text ->
+    viewModel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       sentenceTv.text = text
     }
 
-    viewModel.playbackSecondsTvText.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { text ->
+    viewModel.playbackSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       playbackSecondsTv.text = text
     }
 
-    viewModel.playbackCentiSecondsTvText.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { text ->
+    viewModel.playbackCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       playbackCentiSecondsTv.text = text
     }
 
-    viewModel.playbackProgressPbMax.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { max ->
+    viewModel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { max ->
       playbackProgressPb.max = max
     }
 
-    viewModel.playbackProgress.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { progress ->
+    viewModel.playbackProgress.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { progress ->
       playbackProgressPb.progress = progress
     }
 
-    viewModel.navAndMediaBtnGroup.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { states ->
+    viewModel.navAndMediaBtnGroup.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { states ->
       flushButtonStates(states.first, states.second, states.third)
     }
 
-    viewModel.accuracyGroupBtnColor.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { colors ->
+    viewModel.accuracyGroupBtnColor.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { colors ->
       accuracyCorrectBtn.setTextColor(colors.first)
       accuracyIncorrectBtn.setTextColor(colors.second)
       accuracyErrorsBtn.setTextColor(colors.third)
     }
 
-    viewModel.qualityGroupBtnColor.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { colors ->
+    viewModel.qualityGroupBtnColor.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { colors ->
       qualityGoodBtn.setTextColor(colors.first)
       qualityBadBtn.setTextColor(colors.second)
       qualityNoisyBtn.setTextColor(colors.third)
     }
 
-    viewModel.volumeGroupBtnColor.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { colors ->
+    viewModel.volumeGroupBtnColor.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { colors ->
       volumeHighBtn.setTextColor(colors.first)
       volumeOkayBtn.setTextColor(colors.second)
       volumeLowBtn.setTextColor(colors.third)
     }
 
-    viewModel.reviewEnabled.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { enabled ->
+    viewModel.reviewEnabled.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { enabled ->
       if (enabled) {
         enableReviewing()
       } else {
@@ -133,23 +108,17 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       }
     }
 
-    viewModel.showErrorWithDialog.observe(
-      viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { msg ->
+    viewModel.showErrorWithDialog.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { msg ->
       if (msg.isNotEmpty()) {
         showErrorDialog(msg)
       }
     }
-
-
   }
 
   private fun showErrorDialog(msg: String) {
     val alertDialogBuilder = AlertDialog.Builder(requireContext())
     alertDialogBuilder.setMessage(msg)
-    alertDialogBuilder.setNeutralButton("Ok") { _, _ ->
-      viewModel.handleCorruptAudio()
-    }
+    alertDialogBuilder.setNeutralButton("Ok") { _, _ -> viewModel.handleCorruptAudio() }
     val alertDialog = alertDialogBuilder.create()
     alertDialog.setCancelable(false)
     alertDialog.setCanceledOnTouchOutside(false)
@@ -187,11 +156,7 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
   }
 
   /** Flush the button states */
-  private fun flushButtonStates(
-    playBtnState: ButtonState,
-    backBtnState: ButtonState,
-    nextBtnState: ButtonState
-  ) {
+  private fun flushButtonStates(playBtnState: ButtonState, backBtnState: ButtonState, nextBtnState: ButtonState) {
     playBtn.isClickable = playBtnState != ButtonState.DISABLED
     backBtn.isClickable = backBtnState != ButtonState.DISABLED
     nextBtn.isClickable = nextBtnState != ButtonState.DISABLED
@@ -220,5 +185,4 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       }
     )
   }
-
 }

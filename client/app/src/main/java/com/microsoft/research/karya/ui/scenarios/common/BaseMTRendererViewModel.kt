@@ -18,6 +18,8 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import java.io.File
+import kotlin.properties.Delegates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +27,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.File
-import kotlin.properties.Delegates
 
 abstract class BaseMTRendererViewModel
 constructor(
@@ -103,8 +103,8 @@ constructor(
   }
 
   /**
-   * Setup microtask after updating [currentAssignmentIndex]. Called at the end of [onResume], and
-   * navigating to next or previous tasks
+   * Setup microtask after updating [currentAssignmentIndex]. Called at the end of [onResume], and navigating to next or
+   * previous tasks
    */
   protected abstract fun setupMicrotask()
 
@@ -149,8 +149,8 @@ constructor(
   }
 
   /**
-   * Mark the current microtask as complete with the [outputData], [outputFiles], and [logs]
-   * attached to the current assignment's output field. Delete all scratch files.
+   * Mark the current microtask as complete with the [outputData], [outputFiles], and [logs] attached to the current
+   * assignment's output field. Delete all scratch files.
    */
   protected suspend fun completeAndSaveCurrentMicrotask() {
 
@@ -174,10 +174,7 @@ constructor(
   protected suspend fun skipAndSaveCurrentMicrotask() {
     /** Delete all scratch files */
     withContext(Dispatchers.IO) {
-      assignmentRepository.markSkip(
-        microtaskAssignmentIDs[currentAssignmentIndex],
-        date = DateUtils.getCurrentDate()
-      )
+      assignmentRepository.markSkip(microtaskAssignmentIDs[currentAssignmentIndex], date = DateUtils.getCurrentDate())
     }
   }
 
@@ -214,10 +211,7 @@ constructor(
     }
   }
 
-  /**
-   * Move to previous microtask and setup. Returns false if there is no previous microtask. Else
-   * true
-   */
+  /** Move to previous microtask and setup. Returns false if there is no previous microtask. Else true */
   protected fun moveToPreviousMicrotask() {
     if (hasPreviousMicrotask()) {
       currentAssignmentIndex--
@@ -240,16 +234,12 @@ constructor(
       _inputFileDoesNotExist.value = false
       if (currentMicroTask.input_file_id != null) {
         val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
-        val microtaskInputDirectory =
-          microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
+        val microtaskInputDirectory = microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
 
         if (!File(microtaskTarBallPath).exists()) {
           _inputFileDoesNotExist.value = true
         } else {
-          FileUtils.extractGZippedTarBallIntoDirectory(
-            microtaskTarBallPath,
-            microtaskInputDirectory
-          )
+          FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
         }
       }
 
@@ -285,9 +275,9 @@ constructor(
   }
 
   /**
-   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a
-   * file identifier and extension. The file name is usually the current assignmentID appended with
-   * the identifier. The full file name is unique for a unique [params] pair.
+   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a file identifier and
+   * extension. The file name is usually the current assignmentID appended with the identifier. The full file name is
+   * unique for a unique [params] pair.
    */
   private fun getAssignmentFileName(params: Pair<String, String>): String {
     val identifier = params.first

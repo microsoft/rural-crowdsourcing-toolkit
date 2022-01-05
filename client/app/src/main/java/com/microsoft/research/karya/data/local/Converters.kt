@@ -174,19 +174,19 @@ class Converters {
     return gson.toJson(scenarioType)
   }
 
-    @TypeConverter
-    fun fromStringToAccountRecordStatus(value: String?): AccountRecordStatus? {
-        if (value == null) {
-            return null
-        }
-        return AccountRecordStatus.valueOf(value)
+  @TypeConverter
+  fun fromStringToAccountRecordStatus(value: String?): AccountRecordStatus? {
+    if (value == null) {
+      return null
     }
+    return AccountRecordStatus.valueOf(value)
+  }
 
-    @TypeConverter
-    fun fromAccountRecordStatusToString(accountRecordStatus: AccountRecordStatus?): String? {
-        if (accountRecordStatus == null) {
-            return null
-        }
-        return accountRecordStatus.status
+  @TypeConverter
+  fun fromAccountRecordStatusToString(accountRecordStatus: AccountRecordStatus?): String? {
+    if (accountRecordStatus == null) {
+      return null
     }
+    return accountRecordStatus.status
+  }
 }

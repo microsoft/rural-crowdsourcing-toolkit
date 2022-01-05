@@ -6,18 +6,16 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class AccessCodeViewModel
 @Inject
-constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) :
-  ViewModel() {
+constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) : ViewModel() {
 
-  private val _accessCodeUiState: MutableStateFlow<AccessCodeUiState> =
-    MutableStateFlow(AccessCodeUiState.Initial)
+  private val _accessCodeUiState: MutableStateFlow<AccessCodeUiState> = MutableStateFlow(AccessCodeUiState.Initial)
   val accessCodeUiState = _accessCodeUiState.asStateFlow()
 
   private val _accessCodeEffects: MutableSharedFlow<AccessCodeEffects> = MutableSharedFlow()

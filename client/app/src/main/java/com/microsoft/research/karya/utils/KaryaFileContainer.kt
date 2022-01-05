@@ -9,11 +9,12 @@ sealed class KaryaFileContainer(val cname: String, val fileDirPath: String) {
 
   /** Get the local directory path for a container */
   fun getDirectory(path: String = ""): String {
-    val dirPath = if (path.isEmpty()) {
-      "$fileDirPath/$cname"
-    } else {
-      "$fileDirPath/$cname/$path"
-    }
+    val dirPath =
+      if (path.isEmpty()) {
+        "$fileDirPath/$cname"
+      } else {
+        "$fileDirPath/$cname/$path"
+      }
     val dir = File(dirPath)
 
     var success = true
@@ -60,11 +61,9 @@ class MicrotaskInput(fileDirPath: String) : KaryaFileContainer("microtask-input"
     val directory = getDirectory(microtaskId)
     return "$directory/$fileName"
   }
-
 }
 
-class MicrotaskAssignmentOutput(fileDirPath: String) :
-  KaryaFileContainer("microtask-assignment-output", fileDirPath) {
+class MicrotaskAssignmentOutput(fileDirPath: String) : KaryaFileContainer("microtask-assignment-output", fileDirPath) {
   override fun getBlobName(vararg params: String): String {
     val assignmentId = params[0]
     val ext = "tgz"
@@ -72,9 +71,9 @@ class MicrotaskAssignmentOutput(fileDirPath: String) :
   }
 
   /**
-   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a
-   * file identifier and extension. The file name is usually the current assignmentID appended with
-   * the identifier. The full file name is unique for a unique [params] pair.
+   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a file identifier and
+   * extension. The file name is usually the current assignmentID appended with the identifier. The full file name is
+   * unique for a unique [params] pair.
    */
   fun getAssignmentFileName(assignmentId: String, params: Pair<String, String>): String {
     val identifier = params.first

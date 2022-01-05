@@ -7,7 +7,7 @@ plugins {
   id("com.google.firebase.crashlytics")
   id("dagger.hilt.android.plugin")
   id("androidx.navigation.safeargs.kotlin")
-  id("com.ncorti.ktfmt.gradle") version "0.5.0"
+  id("com.ncorti.ktfmt.gradle") version "0.7.0"
   id("com.github.ben-manes.versions") version "0.38.0"
 }
 

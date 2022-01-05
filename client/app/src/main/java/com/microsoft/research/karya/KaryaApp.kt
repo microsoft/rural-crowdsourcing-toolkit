@@ -9,12 +9,8 @@ import javax.inject.Inject
 @HiltAndroidApp
 class KaryaApp : Application(), Configuration.Provider {
 
-  @Inject
-  lateinit var workerFactory: SyncDelegatingWorkerFactory
+  @Inject lateinit var workerFactory: SyncDelegatingWorkerFactory
 
   override fun getWorkManagerConfiguration(): Configuration =
-    Configuration.Builder()
-      .setMinimumLoggingLevel(android.util.Log.DEBUG)
-      .setWorkerFactory(workerFactory)
-      .build()
+    Configuration.Builder().setMinimumLoggingLevel(android.util.Log.DEBUG).setWorkerFactory(workerFactory).build()
 }

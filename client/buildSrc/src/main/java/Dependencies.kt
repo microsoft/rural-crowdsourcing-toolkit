@@ -3,7 +3,7 @@ private const val ANDROIDX_HILT_VERSION = "1.0.0-beta01"
 private const val CRASHLYTICS_VERSION = "2.5.2"
 private const val DAGGER_HILT_VERSION = "2.34.1-beta"
 private const val GMS_VERSION = "4.3.5"
-private const val KOTLIN_VERSION = "1.4.30"
+private const val KOTLIN_VERSION = "1.5.30"
 private const val LINT_VERSION = "27.3.0-alpha04"
 private const val NAVIGATION_VERSION = "2.3.5"
 

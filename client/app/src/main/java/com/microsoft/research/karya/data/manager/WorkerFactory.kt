@@ -39,6 +39,5 @@ class WorkerFactory(
         // Return null, so that the base class can delegate to the default WorkerFactory.
         null
     }
-
   }
 }

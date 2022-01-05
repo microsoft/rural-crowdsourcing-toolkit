@@ -27,11 +27,13 @@ import kotlinx.coroutines.withContext
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 
 enum class ERROR_TYPE {
-  SYNC_ERROR, TASK_ERROR
+  SYNC_ERROR,
+  TASK_ERROR
 }
 
 enum class ERROR_LVL {
-  WARNING, ERROR
+  WARNING,
+  ERROR
 }
 
 @AndroidEntryPoint
@@ -54,72 +56,62 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     viewModel.dashboardUiState.observe(lifecycle, lifecycleScope) { dashboardUiState ->
       when (dashboardUiState) {
         is DashboardUiState.Success -> showSuccessUi(dashboardUiState.data)
-        is DashboardUiState.Error -> showErrorUi(
-          dashboardUiState.throwable,
-          ERROR_TYPE.TASK_ERROR,
-          ERROR_LVL.ERROR
-        )
+        is DashboardUiState.Error -> showErrorUi(dashboardUiState.throwable, ERROR_TYPE.TASK_ERROR, ERROR_LVL.ERROR)
         DashboardUiState.Loading -> showLoadingUi()
       }
     }
 
-    viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
-      binding.syncProgressBar.progress = i
-    }
+    viewModel.progress.observe(lifecycle, lifecycleScope) { i -> binding.syncProgressBar.progress = i }
 
     viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
-        val resId = when(navigation) {
-            DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
-            DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
-            DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
-            DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
+      val resId =
+        when (navigation) {
+          DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
+          DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
+          DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
+          DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
         }
 
-        findNavController().navigate(resId)
+      findNavController().navigate(resId)
     }
 
     WorkManager.getInstance(requireContext())
       .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
-      .observe(viewLifecycleOwner, { workInfos ->
-        if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
-        val workInfo = workInfos[0] // Picking the first workInfo
-        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-          lifecycleScope.launch {
-            val warningMsg = workInfo.outputData.getString("warningMsg")
-            if (warningMsg != null) { // Check if there are any warning messages set by Workmanager
-              showErrorUi(Throwable(warningMsg), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.WARNING)
+      .observe(
+        viewLifecycleOwner,
+        { workInfos ->
+          if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
+          val workInfo = workInfos[0] // Picking the first workInfo
+          if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+            lifecycleScope.launch {
+              val warningMsg = workInfo.outputData.getString("warningMsg")
+              if (warningMsg != null) { // Check if there are any warning messages set by Workmanager
+                showErrorUi(Throwable(warningMsg), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.WARNING)
+              }
+              viewModel.setProgress(100)
+              viewModel.refreshList()
             }
-            viewModel.setProgress(100)
-            viewModel.refreshList()
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
+            viewModel.setProgress(0)
+            viewModel.setLoading()
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
+            // Check if the current work's state is "successfully finished"
+            val progress: Int = workInfo.progress.getInt("progress", 0)
+            viewModel.setProgress(progress)
+            viewModel.setLoading()
+            // refresh the UI to show microtasks
+            if (progress == MAX_RECEIVE_DB_UPDATES_PROGRESS) viewLifecycleScope.launch { viewModel.refreshList() }
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
+            lifecycleScope.launch {
+              showErrorUi(Throwable(workInfo.outputData.getString("errorMsg")), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.ERROR)
+              viewModel.refreshList()
+            }
           }
         }
-        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
-          viewModel.setProgress(0)
-          viewModel.setLoading()
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
-          // Check if the current work's state is "successfully finished"
-          val progress: Int = workInfo.progress.getInt("progress", 0)
-          viewModel.setProgress(progress)
-          viewModel.setLoading()
-          // refresh the UI to show microtasks
-          if (progress == MAX_RECEIVE_DB_UPDATES_PROGRESS )
-          viewLifecycleScope.launch {
-            viewModel.refreshList()
-          }
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
-          lifecycleScope.launch {
-            showErrorUi(
-              Throwable(workInfo.outputData.getString("errorMsg")),
-              ERROR_TYPE.SYNC_ERROR,
-              ERROR_LVL.ERROR
-            )
-            viewModel.refreshList()
-          }
-        }
-      })
-
+      )
   }
 
   override fun onSessionExpired() {
@@ -129,18 +121,15 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
   override fun onResume() {
     super.onResume()
-    viewModel.getAllTasks() // TODO: Remove onResume and get taskId from scenario viewmodel (similar to onActivity Result)
+    viewModel.getAllTasks() // TODO: Remove onResume and get taskId from scenario viewmodel (similar to
+    // onActivity Result)
   }
 
   private fun setupWorkRequests() {
     // TODO: SHIFT IT FROM HERE
-    val constraints = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .build()
+    val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
 
-    syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>()
-      .setConstraints(constraints)
-      .build()
+    syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>().setConstraints(constraints).build()
   }
 
   private fun setupViews() {
@@ -166,35 +155,38 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   }
 
   private fun showSuccessUi(data: DashboardStateSuccess) {
-    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(syncWorkRequest.id)
-      .observe(viewLifecycleOwner, Observer { workInfo ->
-        if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED) {
-          hideLoading() // Only hide loading if no work is in queue
+    WorkManager.getInstance(requireContext())
+      .getWorkInfoByIdLiveData(syncWorkRequest.id)
+      .observe(
+        viewLifecycleOwner,
+        Observer { workInfo ->
+          if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED
+          ) {
+            hideLoading() // Only hide loading if no work is in queue
+          }
         }
-      })
+      )
     binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-       if (totalCreditsEarned > 0.0f) {
-         binding.rupeesEarnedCl.visible()
-         binding.rupeeIconIv.visible()
-         binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
-         if (totalCreditsEarned > 2.0f) {
-             binding.rupeesEarnedCl.setOnClickListener {
-                 viewModel.navigatePayment()
-             }
-         } else {
-             binding.rupeesEarnedCl.setOnClickListener {
-                 Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
-             }
-         }
+      if (totalCreditsEarned > 0.0f) {
+        binding.rupeesEarnedCl.visible()
+        binding.rupeeIconIv.visible()
+        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+        if (totalCreditsEarned > 2.0f) {
+          binding.rupeesEarnedCl.setOnClickListener { viewModel.navigatePayment() }
+        } else {
+          binding.rupeesEarnedCl.setOnClickListener {
+            Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
+          }
+        }
       } else if (totalCreditsEarned == 0.0f) {
-          binding.rupeesEarnedCl.gone()
+        binding.rupeesEarnedCl.gone()
       } else {
-         binding.rupeesEarnedCl.visible()
-         binding.rupeeIconIv.gone()
-         binding.rupeesEarnedTv.text = getString(R.string.no_internet)
+        binding.rupeesEarnedCl.visible()
+        binding.rupeeIconIv.gone()
+        binding.rupeesEarnedTv.text = getString(R.string.no_internet)
       }
     }
 
@@ -213,16 +205,13 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
     if (dialog != null && dialog!!.isShowing) return
 
-    val builder: AlertDialog.Builder? = activity?.let {
-      AlertDialog.Builder(it)
-    }
+    val builder: AlertDialog.Builder? = activity?.let { AlertDialog.Builder(it) }
 
     builder?.setMessage(R.string.s_sync_prompt_message)
 
     // Set buttons
     builder?.apply {
-      setPositiveButton(R.string.s_yes
-      ) { _, _ ->
+      setPositiveButton(R.string.s_yes) { _, _ ->
         syncWithServer()
         dialog!!.dismiss()
       }
@@ -269,8 +258,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
     lifecycleScope.launchWhenStarted {
       withContext(Dispatchers.IO) {
-        val profilePicPath =
-          authManager.getLoggedInWorker().profilePicturePath ?: return@withContext
+        val profilePicPath = authManager.getLoggedInWorker().profilePicturePath ?: return@withContext
         val bitmap = BitmapFactory.decodeFile(profilePicPath)
 
         withContext(Dispatchers.Main.immediate) { binding.appTb.setProfilePicture(bitmap) }
@@ -281,16 +269,17 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   fun onDashboardItemClick(task: TaskInfo) {
     if (!task.isGradeCard && task.taskStatus.assignedMicrotasks > 0) {
       val taskId = task.taskID
-      val action = with(DashboardFragmentDirections) {
-        when (task.scenarioName) {
-          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment2(taskId)
-          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId)
-          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId)
-          ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId)
-          ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId)
-          else -> null
+      val action =
+        with(DashboardFragmentDirections) {
+          when (task.scenarioName) {
+            ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment2(taskId)
+            ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId)
+            ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId)
+            ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId)
+            ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId)
+            else -> null
+          }
         }
-      }
       if (action != null) findNavController().navigate(action)
     }
   }

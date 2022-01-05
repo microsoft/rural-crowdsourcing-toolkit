@@ -21,68 +21,69 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class PaymentDetailBankFragment : Fragment(R.layout.fragment_payment_details_bank) {
 
-    private val binding by viewBinding(FragmentPaymentDetailsBankBinding::bind)
-    private val viewModel by viewModels<PaymentDetailBankViewModel>()
+  private val binding by viewBinding(FragmentPaymentDetailsBankBinding::bind)
+  private val viewModel by viewModels<PaymentDetailBankViewModel>()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupListeners()
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setupListeners()
+  }
+
+  private fun setupListeners() {
+    binding.submitButton.setOnClickListener {
+      with(binding) {
+        hideKeyboard()
+        viewModel.submitBankDetails(
+          nameEt.text.toString(),
+          ifscCodeEt.text.toString(),
+          accountNumberEt.text.toString(),
+          accountNumberRepeatEt.text.toString()
+        )
+      }
     }
 
-    private fun setupListeners() {
-        binding.submitButton.setOnClickListener {
-            with(binding) {
-                hideKeyboard()
-                viewModel.submitBankDetails(
-                    nameEt.text.toString(),
-                    ifscCodeEt.text.toString(),
-                    accountNumberEt.text.toString(),
-                    accountNumberRepeatEt.text.toString()
-                )
-            }
+    viewModel.uiStateFlow.observe(lifecycle, viewLifecycleScope) { paymentModel -> render(paymentModel) }
+
+    viewModel
+      .navigationFlow
+      .onEach { paymentDetailNavigation ->
+        when (paymentDetailNavigation) {
+          PaymentDetailNavigation.VERIFICATION -> navigateToVerification()
+          PaymentDetailNavigation.FAILURE -> navigateToFailure()
         }
+      }
+      .launchIn(viewLifecycleScope)
+  }
 
-        viewModel.uiStateFlow.observe(lifecycle, viewLifecycleScope) { paymentModel ->
-            render(paymentModel)
-        }
-
-        viewModel.navigationFlow.onEach { paymentDetailNavigation ->
-            when(paymentDetailNavigation) {
-                PaymentDetailNavigation.VERIFICATION -> navigateToVerification()
-                PaymentDetailNavigation.FAILURE -> navigateToFailure()
-            }
-        }.launchIn(viewLifecycleScope)
+  private fun render(paymentDetailBankModel: PaymentDetailBankModel) {
+    if (paymentDetailBankModel.isLoading) {
+      with(binding) {
+        progressBar.visible()
+        submitButton.gone()
+        errorTv.gone()
+        errorTv.text = ""
+      }
     }
 
-    private fun render(paymentDetailBankModel: PaymentDetailBankModel) {
-        if (paymentDetailBankModel.isLoading) {
-            with(binding) {
-                progressBar.visible()
-                submitButton.gone()
-                errorTv.gone()
-                errorTv.text = ""
-            }
-        }
-
-        if (paymentDetailBankModel.errorMessage.isNotEmpty()) {
-            with(binding) {
-                progressBar.gone()
-                submitButton.visible()
-                errorTv.visible()
-                errorTv.text = paymentDetailBankModel.errorMessage
-            }
-        }
+    if (paymentDetailBankModel.errorMessage.isNotEmpty()) {
+      with(binding) {
+        progressBar.gone()
+        submitButton.visible()
+        errorTv.visible()
+        errorTv.text = paymentDetailBankModel.errorMessage
+      }
     }
+  }
 
-    private fun navigateToVerification() {
-        findNavController().navigate(R.id.action_paymentDetailBankFragment_to_paymentVerificationFragment)
-    }
+  private fun navigateToVerification() {
+    findNavController().navigate(R.id.action_paymentDetailBankFragment_to_paymentVerificationFragment)
+  }
 
-    private fun navigateToFailure() {
-        findNavController().navigate(R.id.action_global_paymentFailureFragment)
-    }
+  private fun navigateToFailure() {
+    findNavController().navigate(R.id.action_global_paymentFailureFragment)
+  }
 
-    companion object {
-        fun newInstance() = PaymentDetailBankFragment()
-    }
+  companion object {
+    fun newInstance() = PaymentDetailBankFragment()
+  }
 }

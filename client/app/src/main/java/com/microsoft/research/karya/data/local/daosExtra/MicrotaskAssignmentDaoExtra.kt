@@ -41,10 +41,7 @@ interface MicrotaskAssignmentDaoExtra {
   )
   suspend fun getCountForTask(taskId: String, status: MicrotaskAssignmentStatus): Int
 
-  /**
-   * Query to get all the microtask assignment IDs for a given [taskId] and with a given list of
-   * [statuses]
-   */
+  /** Query to get all the microtask assignment IDs for a given [taskId] and with a given list of [statuses] */
   @Query(
     "SELECT id FROM microtask_assignment WHERE " +
       "status IN (:statuses) AND " +
@@ -57,31 +54,23 @@ interface MicrotaskAssignmentDaoExtra {
   ): List<String>
 
   /**
-   * Query to get all unsubmitted microtask assignments for a given [taskId]. [includeCompleted]
-   * specifies if completed assignments that are not yet submitted should be included in the
-   * returned list.
+   * Query to get all unsubmitted microtask assignments for a given [taskId]. [includeCompleted] specifies if completed
+   * assignments that are not yet submitted should be included in the returned list.
    */
   suspend fun getUnsubmittedIDsForTask(taskId: String, includeCompleted: Boolean): List<String> {
     return if (includeCompleted) {
-      getIDsForTask(
-        taskId,
-        arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED)
-      )
+      getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.COMPLETED))
     } else {
       getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.ASSIGNED))
     }
   }
 
-  /**
-   * Get list of verified assignment IDs for a task
-   */
+  /** Get list of verified assignment IDs for a task */
   suspend fun getLocalVerifiedAssignments(taskId: String): List<String> {
     return getIDsForTask(taskId, arrayListOf(MicrotaskAssignmentStatus.VERIFIED))
   }
 
-  /**
-   * Query to mark the microtask assignment with the given [id] as complete with the given [output].
-   */
+  /** Query to mark the microtask assignment with the given [id] as complete with the given [output]. */
   @Query(
     "UPDATE microtask_assignment SET " +
       "status=:status, output=:output, logs=:logs, last_updated_at=:date, completed_at=:date " +
@@ -95,14 +84,8 @@ interface MicrotaskAssignmentDaoExtra {
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.COMPLETED,
   )
 
-  /**
-   * Query to mark the microtask assignment with the given [id] as skipped with the given [output].
-   */
-  @Query(
-    "UPDATE microtask_assignment SET " +
-      "status=:status, output=:output, last_updated_at=:date " +
-      "WHERE id=:id"
-  )
+  /** Query to mark the microtask assignment with the given [id] as skipped with the given [output]. */
+  @Query("UPDATE microtask_assignment SET " + "status=:status, output=:output, last_updated_at=:date " + "WHERE id=:id")
   suspend fun markSkip(
     id: String,
     date: String,
@@ -110,14 +93,8 @@ interface MicrotaskAssignmentDaoExtra {
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.SKIPPED,
   )
 
-  /**
-   * Query to mark the microtask assignment with the given [id] as assigned with the given [output].
-   */
-  @Query(
-    "UPDATE microtask_assignment SET " +
-      "status=:status, output=:output, last_updated_at=:date " +
-      "WHERE id=:id"
-  )
+  /** Query to mark the microtask assignment with the given [id] as assigned with the given [output]. */
+  @Query("UPDATE microtask_assignment SET " + "status=:status, output=:output, last_updated_at=:date " + "WHERE id=:id")
   suspend fun markAssigned(
     id: String,
     date: String,

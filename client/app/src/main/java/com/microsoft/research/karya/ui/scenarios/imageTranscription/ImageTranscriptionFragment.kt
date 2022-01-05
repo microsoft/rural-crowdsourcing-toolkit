@@ -21,11 +21,7 @@ class ImageTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_ima
   override val viewModel: ImageTranscriptionViewModel by viewModels()
   val args: ImageTranscriptionFragmentArgs by navArgs()
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     viewModel.setupViewModel(args.taskId, 0, 0)
     return view
@@ -36,11 +32,12 @@ class ImageTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_ima
     setupObservers()
 
     // Set microtask instruction
-    val instruction = try {
-      viewModel.task.params.asJsonObject.get("instruction").asString
-    } catch (e: Exception) {
-      getString(R.string.image_transcription_instruction)
-    }
+    val instruction =
+      try {
+        viewModel.task.params.asJsonObject.get("instruction").asString
+      } catch (e: Exception) {
+        getString(R.string.image_transcription_instruction)
+      }
     instructionTv.text = instruction
 
     // Set next button click handler

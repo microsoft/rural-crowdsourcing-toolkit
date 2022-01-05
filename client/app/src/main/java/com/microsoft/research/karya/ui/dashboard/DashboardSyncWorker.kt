@@ -26,11 +26,12 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import java.io.File
 import kotlinx.coroutines.flow.collect
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.io.File
+
 object PROGRESS_STATUS {
   const val MAX_UPLOAD_PROGRESS = 25
   const val MAX_SEND_DB_UPDATES_PROGRESS = 40
@@ -91,7 +92,9 @@ class DashboardSyncWorker(
       updates.filter {
         // output_file_id is the id of the file in the blob storage(cloud) and will be non-empty if
         // the file was already uploaded
-        it.output_file_id == null && !it.output.isJsonNull && it.output.asJsonObject.get("files").asJsonObject.size() > 0
+        it.output_file_id == null &&
+          !it.output.isJsonNull &&
+          it.output.asJsonObject.get("files").asJsonObject.size() > 0
       }
 
     var count = 0
@@ -124,28 +127,21 @@ class DashboardSyncWorker(
     // Get completed assignments from the database
     val completedAssignments =
       assignmentRepository.getLocalCompletedAssignments().filter {
-        it.output.isJsonNull || it.output.asJsonObject.get("files").asJsonObject.size() == 0 || it.output_file_id !=
-          null
+        it.output.isJsonNull ||
+          it.output.asJsonObject.get("files").asJsonObject.size() == 0 ||
+          it.output_file_id != null
       }
     // Submit the completed assignments
-    assignmentRepository
-      .submitCompletedAssignments(worker.idToken, completedAssignments)
-      .collect { assignmentIds ->
-        assignmentRepository.markMicrotaskAssignmentsSubmitted(
-          assignmentIds
-        )
-      }
+    assignmentRepository.submitCompletedAssignments(worker.idToken, completedAssignments).collect { assignmentIds ->
+      assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds)
+    }
 
     // Get skipped assignments from the database
     val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
     // Submit the skipped assignments
-    assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
+    assignmentRepository // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .submitSkippedAssignments(worker.idToken, skippedAssignments)
-      .collect { assignmentIds ->
-        assignmentRepository.markMicrotaskAssignmentsSubmitted(
-          assignmentIds
-        )
-      }
+      .collect { assignmentIds -> assignmentRepository.markMicrotaskAssignmentsSubmitted(assignmentIds) }
   }
 
   private suspend fun receiveDbUpdates() {
@@ -155,9 +151,9 @@ class DashboardSyncWorker(
     val from = assignmentRepository.getNewAssignmentsFromTime(worker.id)
 
     // Get Assignment DB updates
-    assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
+    assignmentRepository // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .getNewAssignments(worker.idToken, from)
-//      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      //      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
 
@@ -183,17 +179,13 @@ class DashboardSyncWorker(
     // Download each file
     var count = 0
     for (assignment in filteredAssignments) {
-      assignmentRepository
-        .getInputFile(
+      assignmentRepository.getInputFile(
           worker.idToken,
           assignment.id
         ) // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
-//        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+        //        .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
         .collect { response ->
-          FileUtils.downloadFileToLocalPath(
-            response,
-            microtaskInputContainer.getBlobPath(assignment.microtask_id)
-          )
+          FileUtils.downloadFileToLocalPath(response, microtaskInputContainer.getBlobPath(assignment.microtask_id))
         }
       count += 1
       val localProgress = (count * 25) / filteredAssignments.size + MAX_RECEIVE_DB_UPDATES_PROGRESS
@@ -209,14 +201,11 @@ class DashboardSyncWorker(
 
     assignmentRepository // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .getVerifiedAssignments(worker.idToken, from)
-//      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
+      //      .catch { _dashboardUiState.value = DashboardUiState.Error(it) }
       .collect()
   }
 
-  /**
-   * Remove karya files that are already uploaded to the server. Remove input files of submitted
-   * microtasks
-   */
+  /** Remove karya files that are already uploaded to the server. Remove input files of submitted microtasks */
   private suspend fun cleanupKaryaFiles() {
     // Get all assignments whose output karya files are uploaded to the server
     val uploadedAssignments = assignmentRepository.getAssignmentsWithUploadedFiles()
@@ -227,19 +216,19 @@ class DashboardSyncWorker(
 
     // Delete all files for these assignments
     for (assignment in uploadedAssignments) {
-      val assignmentOutputFiles = try {
-        val outputFilesDict = assignment.output.asJsonObject.getAsJsonObject("files")
-        val outputFiles = arrayListOf<String>()
-        outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
-        outputFiles
-      } catch (e: Exception) {
-        arrayListOf<String>()
-      }
+      val assignmentOutputFiles =
+        try {
+          val outputFilesDict = assignment.output.asJsonObject.getAsJsonObject("files")
+          val outputFiles = arrayListOf<String>()
+          outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
+          outputFiles
+        } catch (e: Exception) {
+          arrayListOf<String>()
+        }
       val assignmentFiles =
         files.filter {
-          !(assignmentOutputFiles.contains(it.name)) && (it.name.startsWith("${assignment.id}-") || it.name.startsWith(
-            "${assignment.id}."
-          ))
+          !(assignmentOutputFiles.contains(it.name)) &&
+            (it.name.startsWith("${assignment.id}-") || it.name.startsWith("${assignment.id}."))
         }
       assignmentFiles.forEach { if (it.exists()) it.delete() }
     }
@@ -274,28 +263,21 @@ class DashboardSyncWorker(
     val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
-    val requestFile =
-      RequestBody.create("application/tgz".toMediaTypeOrNull(), File(assignmentTarBallPath))
+    val requestFile = RequestBody.create("application/tgz".toMediaTypeOrNull(), File(assignmentTarBallPath))
     val filePart = MultipartBody.Part.createFormData("file", tarBallName, requestFile)
 
     val md5sum = FileUtils.getMD5Digest(assignmentTarBallPath)
     val uploadFileRequest =
-      UploadFileRequest(
-        microtaskOutputContainer.cname,
-        tarBallName,
-        ChecksumAlgorithm.MD5.toString(),
-        md5sum
-      )
+      UploadFileRequest(microtaskOutputContainer.cname, tarBallName, ChecksumAlgorithm.MD5.toString(), md5sum)
 
     val dataPart = MultipartBody.Part.createFormData("data", Gson().toJson(uploadFileRequest))
 
     // Send the tarball
-    assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
+    assignmentRepository // TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .submitAssignmentOutputFile(worker.idToken, assignment.id, dataPart, filePart)
       .collect { fileRecord -> // Because we want this to be synchronous
         karyaFileRepository.insertKaryaFile(fileRecord)
         assignmentRepository.updateOutputFileId(assignment.id, fileRecord.id)
       }
   }
-
 }

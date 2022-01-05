@@ -21,6 +21,12 @@ import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewMo
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.DataOutputStream
+import java.io.FileOutputStream
+import java.io.RandomAccessFile
+import java.lang.Runnable
+import java.lang.Thread
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.microtask_speech_data.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,12 +37,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.DataOutputStream
-import java.io.FileOutputStream
-import java.io.RandomAccessFile
-import java.lang.Runnable
-import java.lang.Thread
-import javax.inject.Inject
 
 /** Audio recording parameters */
 private const val SAMPLE_RATE = 44100
@@ -53,13 +53,7 @@ constructor(
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
   private val datastore: DataStore<Preferences>
-) : BaseMTRendererViewModel(
-  assignmentRepository,
-  taskRepository,
-  microTaskRepository,
-  fileDirPath,
-  authManager
-) {
+) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
 
   // TODO: Pass it in constructor (once we have viewModel factory)
   private val postRecordingTime: Int = 250
@@ -107,14 +101,12 @@ constructor(
   private var mediaPlayer: MediaPlayer? = null
 
   /** Audio recorder config parameters */
-  private val _minBufferSize =
-    AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
+  private val _minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
   private val _recorderBufferSize = _minBufferSize * 4
   private val _recorderBufferBytes = _recorderBufferSize
 
   /** UI State */
-  @JvmField
-  var activityState: ActivityState = ActivityState.INIT
+  @JvmField var activityState: ActivityState = ActivityState.INIT
   var previousActivityState: ActivityState = ActivityState.INIT
 
   private val _recordBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
@@ -210,8 +202,7 @@ constructor(
     /** Write wav file */
     scratchRecordingFileInitJob = CoroutineScope(Dispatchers.IO).launch { resetWavFile() }
 
-    _sentenceTvText.value =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    _sentenceTvText.value = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
 
     if (firstTimeActivityVisit) {
@@ -234,8 +225,8 @@ constructor(
     /** Determine action based on current state */
     when (activityState) {
       /**
-       * Prerecording states: Set target button states. Wait for wave file init job and prerecording
-       * job to finish. Write the prerecord buffer to wav file. Start regular recording.
+       * Prerecording states: Set target button states. Wait for wave file init job and prerecording job to finish.
+       * Write the prerecord buffer to wav file. Start regular recording.
        */
       ActivityState.PRERECORDING,
       ActivityState.COMPLETED_PRERECORDING -> {
@@ -257,8 +248,7 @@ constructor(
       ActivityState.OLD_PLAYING,
       ActivityState.OLD_PAUSED,
       ActivityState.NEW_PLAYING,
-      ActivityState.NEW_PAUSED,
-      -> {
+      ActivityState.NEW_PAUSED, -> {
         setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED)
 
         releasePlayer()
@@ -273,8 +263,7 @@ constructor(
       }
 
       /**
-       * All other states: Record button is not clickable. This function should not have been
-       * called. Throw an error.
+       * All other states: Record button is not clickable. This function should not have been called. Throw an error.
        */
       ActivityState.INIT,
       ActivityState.RECORDED,
@@ -285,8 +274,7 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.SIMPLE_NEXT,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED,
-      -> {
+      ActivityState.ACTIVITY_STOPPED, -> {
         // throw Exception("Record button should not be clicked in '$activityState' state")
       }
     }
@@ -358,8 +346,7 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.SIMPLE_NEXT,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED,
-      -> {
+      ActivityState.ACTIVITY_STOPPED, -> {
         // throw Exception("Play button should not be clicked in '$activityState' state")
       }
     }
@@ -395,8 +382,7 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED,
-      -> {
+      ActivityState.ACTIVITY_STOPPED, -> {
         // throw Exception("Next button should not be clicked in '$activityState' state")
       }
     }
@@ -417,8 +403,7 @@ constructor(
       ActivityState.PRERECORDING,
       ActivityState.COMPLETED_PRERECORDING,
       ActivityState.OLD_PLAYING,
-      ActivityState.OLD_PAUSED,
-      -> {
+      ActivityState.OLD_PAUSED, -> {
         setActivityState(ActivityState.SIMPLE_BACK)
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
@@ -435,8 +420,7 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
-      ActivityState.ACTIVITY_STOPPED,
-      -> {
+      ActivityState.ACTIVITY_STOPPED, -> {
         // throw Exception("Back button should not be clicked in '$activityState' state")
       }
     }
@@ -461,8 +445,7 @@ constructor(
       ActivityState.OLD_PAUSED,
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
-      ActivityState.ASSISTANT_PLAYING,
-      -> {
+      ActivityState.ASSISTANT_PLAYING, -> {
         navigateBack()
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
@@ -505,8 +488,7 @@ constructor(
           playRecordPrompt()
         }
       }
-      else -> {
-      }
+      else -> {}
     }
   }
 
@@ -551,8 +533,8 @@ constructor(
     // Handle state change
     when (activityState) {
       /**
-       * INIT: release audio recorder and media player. May not be necessary? Microtask setup will
-       * transition to next state
+       * INIT: release audio recorder and media player. May not be necessary? Microtask setup will transition to next
+       * state
        */
       ActivityState.INIT -> {
         releasePlayer()
@@ -572,8 +554,8 @@ constructor(
       }
 
       /**
-       * RECORDING: If not coming from prerecording states, initialize the audio recorder and start
-       * recording. Start chronometer. Write audio data to file.
+       * RECORDING: If not coming from prerecording states, initialize the audio recorder and start recording. Start
+       * chronometer. Write audio data to file.
        */
       ActivityState.RECORDING -> {
         if (!isPrerecordingState(previousActivityState)) initializeAndStartRecorder()
@@ -587,10 +569,7 @@ constructor(
         finishRecordingAndFinalizeWavFile()
       }
 
-      /**
-       * FIRST_PLAYBACK: Start media player and play the scratch wav file If coming from paused
-       * state, resume player
-       */
+      /** FIRST_PLAYBACK: Start media player and play the scratch wav file If coming from paused state, resume player */
       ActivityState.FIRST_PLAYBACK -> {
         if (previousActivityState == ActivityState.RECORDED || previousActivityState == ActivityState.ACTIVITY_STOPPED
         ) {
@@ -616,8 +595,8 @@ constructor(
       }
 
       /**
-       * NEW_PLAYING: if coming from paused state, start player. Else initialize and start the
-       * player. Set the onCompletion listener to go back to the completed state
+       * NEW_PLAYING: if coming from paused state, start player. Else initialize and start the player. Set the
+       * onCompletion listener to go back to the completed state
        */
       ActivityState.NEW_PLAYING -> {
         if (previousActivityState == ActivityState.NEW_PAUSED) {
@@ -639,9 +618,8 @@ constructor(
       }
 
       /**
-       * OLD_PLAYING: if coming from paused state, start player. Else initialize and start the
-       * player. Set the onCompletion listener to go back to the completed state. Play old output
-       * file.
+       * OLD_PLAYING: if coming from paused state, start player. Else initialize and start the player. Set the
+       * onCompletion listener to go back to the completed state. Play old output file.
        */
       ActivityState.OLD_PLAYING -> {
         if (previousActivityState == ActivityState.OLD_PAUSED) {
@@ -650,12 +628,7 @@ constructor(
           initializePlayer()
           mediaPlayer!!.setOnCompletionListener {
             _playbackProgressPbProgress.value = _playbackProgressPbMax.value
-            setButtonStates(
-              ButtonState.ENABLED,
-              ButtonState.ENABLED,
-              ButtonState.ENABLED,
-              ButtonState.ENABLED
-            )
+            setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
             setActivityState(ActivityState.COMPLETED_PRERECORDING)
           }
           playFile(outputRecordingFilePath)
@@ -668,10 +641,7 @@ constructor(
         mediaPlayer!!.pause()
       }
 
-      /**
-       * SIMPLE_NEXT: If prerecording, then wait for prerecording job to finish. Then move to next
-       * microtask
-       */
+      /** SIMPLE_NEXT: If prerecording, then wait for prerecording job to finish. Then move to next microtask */
       ActivityState.SIMPLE_NEXT -> {
         runBlocking {
           if (isPrerecordingState(previousActivityState)) {
@@ -682,10 +652,7 @@ constructor(
         }
       }
 
-      /**
-       * SIMPLE_BACK: If prerecording, then wait for prerecording job to finish. Then move to
-       * previous microtask
-       */
+      /** SIMPLE_BACK: If prerecording, then wait for prerecording job to finish. Then move to previous microtask */
       ActivityState.SIMPLE_BACK -> {
         runBlocking {
           if (isPrerecordingState(previousActivityState)) {
@@ -710,9 +677,7 @@ constructor(
         }
       }
 
-      /**
-       * ENCODING_BACK: Encode scratch file to compressed output file. Move to previous microtask.
-       */
+      /** ENCODING_BACK: Encode scratch file to compressed output file. Move to previous microtask. */
       ActivityState.ENCODING_BACK -> {
         runBlocking {
           encodingJob =
@@ -730,8 +695,8 @@ constructor(
       }
       ActivityState.ACTIVITY_STOPPED -> {
         /**
-         * This is a dummy state to trigger events (e.g., end recordings). [cleanupOnStop] should
-         * take care of handling actual cleanup.
+         * This is a dummy state to trigger events (e.g., end recordings). [cleanupOnStop] should take care of handling
+         * actual cleanup.
          */
       }
     }
@@ -753,15 +718,9 @@ constructor(
           releaseRecorder()
         }
 
-        /**
-         * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
-         * recorder.
-         */
+        /** If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release recorder. */
 
-        /**
-         * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
-         * recorder.
-         */
+        /** If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release recorder. */
         ActivityState.RECORDING -> {
           recordingJob?.join()
           preRecordBufferConsumed[0] = 0
@@ -784,8 +743,7 @@ constructor(
         ActivityState.NEW_PLAYING,
         ActivityState.NEW_PAUSED,
         ActivityState.OLD_PLAYING,
-        ActivityState.OLD_PAUSED,
-        -> {
+        ActivityState.OLD_PAUSED, -> {
           releasePlayer()
         }
 
@@ -806,8 +764,7 @@ constructor(
         ActivityState.ENCODING_NEXT,
         ActivityState.ENCODING_BACK,
         ActivityState.ASSISTANT_PLAYING,
-        ActivityState.ACTIVITY_STOPPED,
-        -> {
+        ActivityState.ACTIVITY_STOPPED, -> {
           // Do nothing
         }
       }
@@ -839,13 +796,7 @@ constructor(
   /** Initialize [audioRecorder] */
   private fun initializeAndStartRecorder() {
     audioRecorder =
-      AudioRecord(
-        MediaRecorder.AudioSource.MIC,
-        SAMPLE_RATE,
-        AUDIO_CHANNEL,
-        AUDIO_ENCODING,
-        _recorderBufferSize
-      )
+      AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, _recorderBufferSize)
     audioRecorder!!.startRecording()
   }
 
@@ -894,8 +845,8 @@ constructor(
   }
 
   /**
-   * Start recording. Wait for prerecording to complete, if coming from prerecording state. Write
-   * recorded data directly to the wav file.
+   * Start recording. Wait for prerecording to complete, if coming from prerecording state. Write recorded data directly
+   * to the wav file.
    */
   private fun writeAudioDataToRecordBuffer() {
     recordingJob =
@@ -905,8 +856,7 @@ constructor(
         }
 
         totalRecordedBytes = preRecordBufferConsumed[0] + preRecordBufferConsumed[1]
-        totalRecordedBytes =
-          if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
+        totalRecordedBytes = if (totalRecordedBytes > maxPreRecordBytes) maxPreRecordBytes else totalRecordedBytes
 
         var data = ByteArray(_recorderBufferBytes)
         currentRecordBufferConsumed = 0
@@ -962,11 +912,7 @@ constructor(
 
           // If other buffer is not empty, first write tail from other buffer
           if (otherBufferBytes != 0) {
-            scratchRecordingFile.write(
-              otherBuffer,
-              currentBufferBytes,
-              maxPreRecordBytes - currentBufferBytes
-            )
+            scratchRecordingFile.write(otherBuffer, currentBufferBytes, maxPreRecordBytes - currentBufferBytes)
             totalRecordedBytes = maxPreRecordBytes - currentBufferBytes
           }
 
@@ -1004,10 +950,7 @@ constructor(
           scratchFile.close()
         }
 
-      /**
-       * If still in recorded state, switch to playback. User may have stopped activity by pressing
-       * home button.
-       */
+      /** If still in recorded state, switch to playback. User may have stopped activity by pressing home button. */
       CoroutineScope(Dispatchers.IO).launch {
         audioFileFlushJob!!.join()
         if (activityState == ActivityState.RECORDED) {

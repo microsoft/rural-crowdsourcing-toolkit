@@ -31,11 +31,7 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
     return arrayOf(android.Manifest.permission.RECORD_AUDIO)
   }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
     viewModel.setupViewModel(args.taskId, 0, 0)
@@ -52,20 +48,20 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
 
     /** record instruction */
     val recordInstruction =
-      viewModel.task.params.asJsonObject.get("instruction").asString
-        ?: getString(R.string.speech_recording_instruction)
+      viewModel.task.params.asJsonObject.get("instruction").asString ?: getString(R.string.speech_recording_instruction)
     recordPromptTv.text = recordInstruction
 
     /** Set card corner radius */
-    recordBtnCv.addOnLayoutChangeListener { _: View,
-                                            left: Int,
-                                            _: Int,
-                                            right: Int,
-                                            _: Int,
-                                            _: Int,
-                                            _: Int,
-                                            _: Int,
-                                            _: Int ->
+    recordBtnCv.addOnLayoutChangeListener {
+      _: View,
+      left: Int,
+      _: Int,
+      right: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int,
+      _: Int ->
       recordBtnCv.radius = (right - left).toFloat() / 2
     }
 
@@ -130,38 +126,23 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
       sentenceTv.text = text
     }
 
-    viewModel.recordSecondsTvText.observe(
-      viewLifecycleOwner.lifecycle,
-      viewLifecycleScope
-    ) { text ->
+    viewModel.recordSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       recordSecondsTv.text = text
     }
 
-    viewModel.recordCentiSecondsTvText.observe(
-      viewLifecycleOwner.lifecycle,
-      viewLifecycleScope
-    ) { text ->
+    viewModel.recordCentiSecondsTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       recordCentiSecondsTv.text = text
     }
 
-    viewModel.playbackProgressPb.observe(
-      viewLifecycleOwner.lifecycle,
-      viewLifecycleScope
-    ) { progress ->
+    viewModel.playbackProgressPb.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { progress ->
       playbackProgressPb.progress = progress
     }
 
-    viewModel.playbackProgressPbMax.observe(
-      viewLifecycleOwner.lifecycle,
-      viewLifecycleScope
-    ) { max ->
+    viewModel.playbackProgressPbMax.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { max ->
       playbackProgressPb.max = max
     }
 
-    viewModel.playRecordPromptTrigger.observe(
-      viewLifecycleOwner.lifecycle,
-      viewLifecycleScope
-    ) { play ->
+    viewModel.playRecordPromptTrigger.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { play ->
       if (play) {
         playRecordPrompt()
       }

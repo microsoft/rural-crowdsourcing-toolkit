@@ -9,11 +9,11 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
-import javax.inject.Inject
 
 private const val INITIAL_TIME = "1970-01-01T00:00:00Z"
 
@@ -163,12 +163,7 @@ constructor(
   }
 
   suspend fun updateOutputFileId(assignmentId: String, fileRecordId: String) =
-    withContext(Dispatchers.IO) {
-      assignmentDaoExtra.updateOutputFileID(
-        assignmentId,
-        fileRecordId
-      )
-    }
+    withContext(Dispatchers.IO) { assignmentDaoExtra.updateOutputFileID(assignmentId, fileRecordId) }
 
   suspend fun markComplete(
     id: String,
@@ -218,6 +213,4 @@ constructor(
   suspend fun getLocalVerifiedAssignments(task_id: String): List<String> {
     return assignmentDaoExtra.getLocalVerifiedAssignments(task_id)
   }
-
-
 }

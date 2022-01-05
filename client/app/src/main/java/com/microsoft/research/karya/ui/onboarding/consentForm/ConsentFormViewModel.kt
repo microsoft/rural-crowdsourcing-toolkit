@@ -5,21 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class ConsentFormViewModel
 @Inject
-constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) :
-  ViewModel() {
+constructor(private val workerRepository: WorkerRepository, private val authManager: AuthManager) : ViewModel() {
 
-  private val _consentFormUiState: MutableStateFlow<ConsentFormUiState> =
-    MutableStateFlow(ConsentFormUiState.Initial)
+  private val _consentFormUiState: MutableStateFlow<ConsentFormUiState> = MutableStateFlow(ConsentFormUiState.Initial)
   val consentFormUiState = _consentFormUiState.asStateFlow()
 
   private val _consentFormEffects: MutableSharedFlow<ConsentFormEffects> = MutableSharedFlow()

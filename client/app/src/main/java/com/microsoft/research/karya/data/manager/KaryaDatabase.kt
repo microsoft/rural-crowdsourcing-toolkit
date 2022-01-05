@@ -17,18 +17,15 @@ import com.microsoft.research.karya.data.model.karya.*
 
 @Database(
   entities =
-  [
-    WorkerRecord::class,
-    KaryaFileRecord::class,
-    TaskRecord::class,
-    MicroTaskRecord::class,
-    MicroTaskAssignmentRecord::class,
-    PaymentAccountRecord::class
-  ],
+    [
+      WorkerRecord::class,
+      KaryaFileRecord::class,
+      TaskRecord::class,
+      MicroTaskRecord::class,
+      MicroTaskAssignmentRecord::class,
+      PaymentAccountRecord::class],
   version = 2,
-  autoMigrations = [
-    AutoMigration(from = 1, to = 2)
-  ],
+  autoMigrations = [AutoMigration(from = 1, to = 2)],
   exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -49,9 +46,7 @@ abstract class KaryaDatabase : RoomDatabase() {
     fun getInstance(context: Context): KaryaDatabase? {
       if (INSTANCE == null) {
         synchronized(KaryaDatabase::class) {
-          INSTANCE =
-            Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db")
-              .build()
+          INSTANCE = Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db").build()
         }
       }
       return INSTANCE

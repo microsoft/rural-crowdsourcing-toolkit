@@ -12,8 +12,7 @@ import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentSt
 @Dao
 interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
 
-  @Query("SELECT * FROM microtask_assignment")
-  suspend fun getAll(): List<MicroTaskAssignmentRecord>
+  @Query("SELECT * FROM microtask_assignment") suspend fun getAll(): List<MicroTaskAssignmentRecord>
 
   @Query("SELECT * FROM microtask_assignment WHERE id == :id")
   suspend fun getById(id: String): MicroTaskAssignmentRecord

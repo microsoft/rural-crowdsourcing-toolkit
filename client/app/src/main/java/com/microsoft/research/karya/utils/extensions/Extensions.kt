@@ -51,8 +51,7 @@ fun Fragment.hideKeyboard() {
 
 fun Fragment.finish() = requireActivity().finish()
 
-fun Context.getDirectory(directoryName: String): String =
-  getDir(directoryName, Context.MODE_PRIVATE).path
+fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
 
 fun Context.isNetworkAvailable(): Boolean {
   val connectivityManager = getSystemService<ConnectivityManager>()

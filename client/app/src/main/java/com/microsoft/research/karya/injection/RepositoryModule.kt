@@ -55,6 +55,6 @@ class RepositoryModule {
   @Provides
   @Singleton
   fun providesPaymentRepository(paymentAPI: PaymentAPI, paymentAccountDao: PaymentAccountDao): PaymentRepository {
-      return PaymentRepository(paymentAPI, paymentAccountDao)
+    return PaymentRepository(paymentAPI, paymentAccountDao)
   }
 }

@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 /**
- * This activity defines an abstract class that performs some common functions and provides some
- * common helper functions for other activities in the application. For instance, almost every
- * activity needs to access the database, fetch values for specific string resources, etc.
+ * This activity defines an abstract class that performs some common functions and provides some common helper functions
+ * for other activities in the application. For instance, almost every activity needs to access the database, fetch
+ * values for specific string resources, etc.
  */
 package com.microsoft.research.karya.ui.base
 
@@ -25,11 +25,11 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.KaryaDatabase
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.utils.ImageUtils
-import kotlinx.android.synthetic.main.app_toolbar.*
-import kotlinx.coroutines.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.android.synthetic.main.app_toolbar.*
+import kotlinx.coroutines.*
 
 abstract class BaseActivity() : AppCompatActivity() {
 
@@ -224,8 +224,8 @@ abstract class BaseActivity() : AppCompatActivity() {
   protected abstract suspend fun setInitialUIStrings()
 
   /**
-   * Get value from language resource using the resource Id and language Id By value we mean what a
-   * particular word is known in a particular language
+   * Get value from language resource using the resource Id and language Id By value we mean what a particular word is
+   * known in a particular language
    */
   suspend fun getValueFromName(@StringRes resId: Int, languageId: Int = appLanguageId!!): String {
     //        val name = getString(resId)

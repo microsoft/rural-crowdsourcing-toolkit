@@ -114,8 +114,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     when (destination) {
       Destination.TempDataFlow -> navigateToTempDataFlow()
       Destination.Dashboard -> navigateToDashBoard()
-      else -> {
-      }
+      else -> {}
     }
   }
 

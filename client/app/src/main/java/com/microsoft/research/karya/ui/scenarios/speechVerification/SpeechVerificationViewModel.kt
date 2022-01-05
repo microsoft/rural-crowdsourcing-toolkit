@@ -13,10 +13,10 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class SpeechVerificationViewModel
@@ -27,13 +27,7 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(
-  assignmentRepository,
-  taskRepository,
-  microTaskRepository,
-  fileDirPath,
-  authManager
-) {
+) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
 
   /** UI button states */
   enum class ButtonState {
@@ -65,14 +59,11 @@ constructor(
   private var backBtnState: ButtonState = ButtonState.DISABLED
 
   /** Verification status */
-  @StringRes
-  private var accuracyRating = R.string.rating_undefined
+  @StringRes private var accuracyRating = R.string.rating_undefined
 
-  @StringRes
-  private var qualityRating = R.string.rating_undefined
+  @StringRes private var qualityRating = R.string.rating_undefined
 
-  @StringRes
-  private var volumeRating = R.string.rating_undefined
+  @StringRes private var volumeRating = R.string.rating_undefined
   private var reviewCompleted = false
 
   private lateinit var playbackProgressThread: Thread
@@ -132,12 +123,9 @@ constructor(
     _reviewEnabled.value = false
     reviewCompleted = false
 
-    val sentence =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
-    val recordingFileName =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
-    val recordingFile =
-      microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id, recordingFileName)
+    val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    val recordingFileName = currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
+    val recordingFile = microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id, recordingFileName)
 
     _sentenceTvText.value = sentence
 
@@ -178,8 +166,7 @@ constructor(
 
     when (activityState) {
       /** INIT: may not be necessary */
-      ActivityState.INIT -> {
-      }
+      ActivityState.INIT -> {}
 
       /** Wait for the play button to be clicked */
       ActivityState.WAIT_FOR_PLAY -> {
@@ -220,8 +207,7 @@ constructor(
       }
 
       /** Activity stopped */
-      ActivityState.ACTIVITY_STOPPED -> {
-      }
+      ActivityState.ACTIVITY_STOPPED -> {}
     }
   }
 
@@ -253,8 +239,7 @@ constructor(
       ActivityState.PLAYBACK_PAUSED -> {
         setActivityState(ActivityState.PLAYBACK)
       }
-      ActivityState.INIT, ActivityState.ACTIVITY_STOPPED -> {
-      }
+      ActivityState.INIT, ActivityState.ACTIVITY_STOPPED -> {}
     }
   }
 
@@ -316,7 +301,6 @@ constructor(
     _navAndMediaBtnGroup.value = Triple(backState, playState, nextState)
   }
 
-
   /** Handle accuracy change */
   fun handleAccuracyChange(@StringRes accuracy: Int) {
     accuracyRating = accuracy
@@ -333,8 +317,7 @@ constructor(
       }
     }
 
-    _accuracyGroupBtnColor.value =
-      Triple(accuracyBtnColor, accuracyIncorrectBtnColor, accuracyErrorsBtnColor)
+    _accuracyGroupBtnColor.value = Triple(accuracyBtnColor, accuracyIncorrectBtnColor, accuracyErrorsBtnColor)
 
     updateReviewStatus()
   }
@@ -346,8 +329,6 @@ constructor(
     var qualityBadBtnColor: Int = Color.parseColor("#000000")
     var qualityNoisyBtnColor: Int = Color.parseColor("#000000")
 
-
-
     if (quality != R.string.rating_undefined) {
       when (quality) {
         R.string.quality_good -> qualityGoodBtnColor = GREEN_COLOR
@@ -357,8 +338,7 @@ constructor(
       }
     }
 
-    _qualityGroupBtnColor.value =
-      Triple(qualityGoodBtnColor, qualityBadBtnColor, qualityNoisyBtnColor)
+    _qualityGroupBtnColor.value = Triple(qualityGoodBtnColor, qualityBadBtnColor, qualityNoisyBtnColor)
 
     updateReviewStatus()
   }
@@ -370,8 +350,6 @@ constructor(
     var volumeLowBtnColor: Int = Color.parseColor("#000000")
     var volumeOkayBtnColor: Int = Color.parseColor("#000000")
 
-
-
     if (volume != R.string.rating_undefined) {
       when (volume) {
         R.string.volume_high -> volumeHighBtnColor = GREEN_COLOR
@@ -381,8 +359,7 @@ constructor(
       }
     }
 
-    _volumeGroupBtnColor.value =
-      Triple(volumeHighBtnColor, volumeOkayBtnColor, volumeLowBtnColor)
+    _volumeGroupBtnColor.value = Triple(volumeHighBtnColor, volumeOkayBtnColor, volumeLowBtnColor)
 
     updateReviewStatus()
   }
@@ -438,6 +415,4 @@ constructor(
     // Move to next task
     handleNextClick()
   }
-
 }
-

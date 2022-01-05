@@ -12,8 +12,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 
-abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
-  BaseFragment(contentLayoutId) {
+abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) : BaseFragment(contentLayoutId) {
 
   abstract val viewModel: BaseMTRendererViewModel
 
@@ -37,11 +36,7 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
     val permissions = requiredPermissions()
     if (permissions.isNotEmpty()) {
       for (permission in permissions) {
-        if (checkSelfPermission(
-            requireContext(),
-            permission
-          ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
           hasAllPermissions = false
           requestPermissions(permissions, REQUEST_PERMISSIONS)
           break
@@ -87,7 +82,6 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
       if (notExist) {
         Toast.makeText(requireContext(), getString(R.string.input_file_does_not_exist), Toast.LENGTH_LONG).show()
       }
-
     }
   }
 }

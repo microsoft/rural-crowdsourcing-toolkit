@@ -4,14 +4,14 @@ import android.util.Log
 import com.microsoft.research.karya.data.repo.LanguageRepository
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.Result
+import java.io.File
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.withContext
-import java.io.File
-import javax.inject.Inject
 
 class ResourceManager
 @Inject
@@ -52,10 +52,7 @@ constructor(
     runCatching {
       withContext(Dispatchers.IO) {
         FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
-        FileUtils.extractGZippedTarBallIntoDirectory(
-          getTarballPath(language),
-          getAudioFolderPath(language)
-        )
+        FileUtils.extractGZippedTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
       }
     }
       .onSuccess { emit(Result.Success(Unit)) }

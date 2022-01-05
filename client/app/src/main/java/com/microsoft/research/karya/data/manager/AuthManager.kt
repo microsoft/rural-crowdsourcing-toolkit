@@ -10,15 +10,18 @@ import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.AuthRepository
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 enum class AUTH_STATUS {
-  LOGGED_IN, AUTHENTICATED, UNAUTHENTICATED, LOGGED_OUT
+  LOGGED_IN,
+  AUTHENTICATED,
+  UNAUTHENTICATED,
+  LOGGED_OUT
 }
 
 class AuthManager
@@ -101,5 +104,4 @@ constructor(
   private fun setAuthStatus(status: AUTH_STATUS) {
     _currAuthStatus.postValue(status)
   }
-
 }
