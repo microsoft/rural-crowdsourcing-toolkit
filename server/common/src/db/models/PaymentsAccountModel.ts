@@ -6,17 +6,17 @@ export async function updateStatusOnTransactionRecordUpdate(
     accountRecord: PaymentsAccountRecord) {
 
     let newAccountStatus = accountRecord.status
-    console.log(newAccountStatus) 
     switch(transactionRecord.status) {
-        case TransactionStatus.PROCESSED.toString():
+        case TransactionStatus.PROCESSED:
             newAccountStatus = AccountTaskStatus.VERIFICATION
             break;
-        case TransactionStatus.REVERSED.toString():
-        case TransactionStatus.CANCELLED.toString():
-        case TransactionStatus.FAILED.toString():
+        case TransactionStatus.REVERSED:
+        case TransactionStatus.CANCELLED:
+        case TransactionStatus.FAILED:
             newAccountStatus = AccountTaskStatus.INVALID
             break;
-        case TransactionStatus.FAILED_KARYA.toString():
+        case TransactionStatus.FAILED_BEFORE_TRANSACTION:
+        case TransactionStatus.FAILED_AFTER_TRANSACTION:
             newAccountStatus = AccountTaskStatus.FAILED
             break;
     }

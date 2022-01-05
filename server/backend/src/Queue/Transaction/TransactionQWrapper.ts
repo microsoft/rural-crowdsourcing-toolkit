@@ -78,7 +78,7 @@ transactionQConsumer.on("failed", async (job: Job<TransactionQJobData>, error) =
         source: "Something went wrong at Transaction Queue",
         failure_reason: `${error.message}`
     }
-    const updatedStatus = transactionRequestSucess? TransactionStatus.FAILED_KARYA : TransactionStatus.FAILED
+    const updatedStatus = transactionRequestSucess? TransactionStatus.FAILED_AFTER_TRANSACTION: TransactionStatus.FAILED_BEFORE_TRANSACTION
     let updatedTransactionRecord = await BasicModel.updateSingle('payments_transaction', {id: transactionRecord.id},
     {status: updatedStatus, meta: updatedTransactionMeta})
 

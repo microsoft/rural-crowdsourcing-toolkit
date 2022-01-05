@@ -106,12 +106,14 @@ export enum TransactionStatus {
     CANCELLED = 'cancelled',
     REVERSED = 'reversed',
     FAILED = 'failed',
-    FAILED_KARYA = 'failed_at_karya'
+    FAILED_BEFORE_TRANSACTION = 'failed_before_transaction',
+    FAILED_AFTER_TRANSACTION = 'failed_after_transaction',
 }
-export const FINAL_TRANSACTION_STATES = [
-    TransactionStatus.PROCESSED.toString(),
-    TransactionStatus.CANCELLED.toString(),
-    TransactionStatus.REVERSED.toString(),
-    TransactionStatus.FAILED.toString(),
-    TransactionStatus.FAILED_KARYA.toString(),
+export const FINAL_TRANSACTION_STATES: String[] = [
+    TransactionStatus.PROCESSED,
+    TransactionStatus.CANCELLED,
+    TransactionStatus.REVERSED,
+    TransactionStatus.FAILED,
+    TransactionStatus.FAILED_BEFORE_TRANSACTION,
+    TransactionStatus.FAILED_AFTER_TRANSACTION
 ]
