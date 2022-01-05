@@ -49,12 +49,13 @@ constructor(
         .singleOrNull()
         ?: return@flow
 
-    runCatching {
-      withContext(Dispatchers.IO) {
-        FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
-        FileUtils.extractGZippedTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
+    kotlin
+      .runCatching {
+        withContext(Dispatchers.IO) {
+          FileUtils.downloadFileToLocalPath(responseBody, getTarballPath(language))
+          FileUtils.extractGZippedTarBallIntoDirectory(getTarballPath(language), getAudioFolderPath(language))
+        }
       }
-    }
       .onSuccess { emit(Result.Success(Unit)) }
       .onFailure {
         it.printStackTrace()
