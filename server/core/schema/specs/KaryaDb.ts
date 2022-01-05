@@ -106,6 +106,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['year_of_birth', ['string', 4], 'not unique', 'nullable', 'mutable'],
         ['gender', ['string', 16, 'Gender'], 'not unique', 'nullable', 'mutable'],
         ['language', ['string', 8, 'LanguageCode'], 'not unique', 'nullable', 'mutable'],
+        ['profile', ['object'], 'not unique', 'nullable', 'mutable'],
         ['profile_updated_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'mutable'],
         ['wgroup', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['tags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
