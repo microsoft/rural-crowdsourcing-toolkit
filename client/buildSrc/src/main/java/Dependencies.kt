@@ -25,7 +25,7 @@ object Dependencies {
   object Kotlin {
 
     object Coroutines {
-      private const val version = "1.4.3"
+      private const val version = "1.6.0"
 
       const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
       const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
@@ -65,7 +65,7 @@ object Dependencies {
     }
 
     object Room {
-      private const val version = "2.4.0-alpha01"
+      private const val version = "2.4.0"
 
       const val roomRuntime = "androidx.room:room-runtime:$version"
       const val roomCompiler = "androidx.room:room-compiler:$version"

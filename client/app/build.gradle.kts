@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdkVersion(31)
   defaultConfig {
     applicationId = "com.microsoft.research.karya"
     minSdkVersion(21)
@@ -40,6 +40,11 @@ android {
   }
   kotlinOptions {
     jvmTarget = "1.8"
+    kapt {
+      arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+      }
+    }
   }
   lintOptions {
     isAbortOnError = false
@@ -107,6 +112,7 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
   implementation(Dependencies.AndroidX.Navigation.uiKtx)
+  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
 
   kapt(Dependencies.AndroidX.Room.roomCompiler)
 
