@@ -66,9 +66,10 @@ export const updateTransaction: Application.Middleware = async (ctx, next) => {
     // Update the transaction record status
     const updatedTransactionRecord = await BasicModel.updateSingle('payments_transaction', { id: transactionRecord.id }, {
         status: razorpayStatus,
+        UTR: payoutEntity.utr,
         meta: {
-            UTR: payoutEntity.utr,
             ...transactionRecord.meta,
+            UTR: payoutEntity.utr,
             failure_reason: payoutEntity.failure_reason
         }
     })
