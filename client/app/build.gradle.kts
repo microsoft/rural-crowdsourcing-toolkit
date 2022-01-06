@@ -163,4 +163,11 @@ dependencies {
 
   // Camera view
   implementation("com.otaliastudios:cameraview:2.7.2")
+
+  // Video data collection
+  "largeImplementation" ("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
+  "largeImplementation" ("com.google.android.gms:play-services-mlkit-face-detection:16.2.0")
+  "largeImplementation" ("com.google.mlkit:face-detection:16.1.2")
+  "largeImplementation" ("com.github.fishwjy:VideoCompressor:master-SNAPSHOT")
+
 }
