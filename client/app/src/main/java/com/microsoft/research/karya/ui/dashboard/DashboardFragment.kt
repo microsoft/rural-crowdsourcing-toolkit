@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -56,7 +55,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     setupViews()
     setupWorkRequests()
     observeUi()
-      performOnFirstRun()
+    performOnFirstRun()
   }
 
   private fun observeUi() {
@@ -291,19 +290,19 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     }
   }
 
-    private fun performOnFirstRun() {
-        val firstFetchKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_FETCH)
+  private fun performOnFirstRun() {
+    val firstFetchKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_FETCH)
 
-        lifecycleScope.launch {
-            this@DashboardFragment.requireContext().dataStore.edit { prefs ->
-                val isFirstFetch = prefs[firstFetchKey] ?: true
+    lifecycleScope.launch {
+      this@DashboardFragment.requireContext().dataStore.edit { prefs ->
+        val isFirstFetch = prefs[firstFetchKey] ?: true
 
-                if (isFirstFetch) {
-                    syncWithServer()
-                }
-
-                prefs[firstFetchKey] = false
-            }
+        if (isFirstFetch) {
+          syncWithServer()
         }
+
+        prefs[firstFetchKey] = false
+      }
     }
+  }
 }

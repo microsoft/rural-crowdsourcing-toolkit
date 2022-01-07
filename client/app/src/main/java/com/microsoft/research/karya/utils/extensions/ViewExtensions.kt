@@ -28,6 +28,6 @@ fun View.disable() {
 
 @OptIn(ExperimentalCoroutinesApi::class)
 fun View.clicks(): Flow<Unit> = callbackFlow {
-    setOnClickListener { trySend(Unit) }
-    awaitClose { setOnClickListener(null) }
+  setOnClickListener { trySend(Unit) }
+  awaitClose { setOnClickListener(null) }
 }
