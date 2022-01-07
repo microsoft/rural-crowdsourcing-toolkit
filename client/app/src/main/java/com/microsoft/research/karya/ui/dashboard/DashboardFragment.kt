@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +21,7 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.base.SessionFragment
 import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_RECEIVE_DB_UPDATES_PROGRESS
+import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +56,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     setupViews()
     setupWorkRequests()
     observeUi()
+      performOnFirstRun()
   }
 
   private fun observeUi() {
@@ -286,4 +290,20 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       if (action != null) findNavController().navigate(action)
     }
   }
+
+    private fun performOnFirstRun() {
+        val firstFetchKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_FETCH)
+
+        lifecycleScope.launch {
+            this@DashboardFragment.requireContext().dataStore.edit { prefs ->
+                val isFirstFetch = prefs[firstFetchKey] ?: true
+
+                if (isFirstFetch) {
+                    syncWithServer()
+                }
+
+                prefs[firstFetchKey] = false
+            }
+        }
+    }
 }
