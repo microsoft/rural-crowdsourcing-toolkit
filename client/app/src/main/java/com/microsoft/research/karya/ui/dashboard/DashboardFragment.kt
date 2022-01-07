@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -21,6 +22,8 @@ import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_RECEIVE_DB_
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -140,7 +143,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         layoutManager = LinearLayoutManager(context)
       }
 
-      syncCv.setOnClickListener { syncWithServer() }
+      syncCv.clicks().throttleFirst(500L).onEach { syncWithServer() }.launchIn(lifecycleScope)
 
       appTb.setTitle(getString(R.string.s_dashboard_title))
       appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
