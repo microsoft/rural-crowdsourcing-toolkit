@@ -53,7 +53,7 @@ constructor(private val authManager: AuthManager, private val paymentRepository:
           transactions ->
           val transaction = transactions.first()
 
-          val ifsc = paymentInfoResponse.meta.account.ifsc ?: ""
+          val ifsc = paymentInfoResponse.meta!!.account.ifsc ?: ""
           val idPrefix = if (ifsc.isEmpty()) "xxxxxx@xx" else "XXXXXXXXXXXX"
           val userAccountDetail =
             UserAccountDetail(
