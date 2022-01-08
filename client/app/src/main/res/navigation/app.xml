@@ -159,6 +159,11 @@
         <action
             android:id="@+id/action_dashboardActivity_to_paymentDashboardFragment"
             app:destination="@id/paymentDashboardFragment" />
+        <action
+            android:id="@+id/action_dashboardActivity_to_textTranslationValidationMainFragment"
+            app:destination="@id/textTranslationValidationMainFragment">
+            <argument android:name="taskId" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
@@ -231,6 +236,18 @@
             app:argType="string" />
         <action
             android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/textTranslationValidationMainFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.textTranslationValidation.TextTranslationValidationMainFragment"
+        android:label="TextTranslationValidationMainFragment"
+        tools:layout="@layout/microtask_text_translation_validation" >
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_textTranslationValidationMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
     <fragment

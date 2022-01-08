@@ -7,6 +7,6 @@ data class PaymentInfoResponse(
   @SerializedName("active") val active: Boolean,
   @SerializedName("fund_id") val fundId: String,
   @SerializedName("id") val id: String?,
-  @SerializedName("meta") val meta: Meta,
+  @SerializedName("meta") val meta: Meta?,
   @SerializedName("status") val status: String
 )

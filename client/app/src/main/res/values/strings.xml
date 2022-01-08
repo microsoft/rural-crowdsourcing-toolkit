@@ -272,4 +272,7 @@
     <string name="ifsc_s">IFSC: %s</string>
     <string name="update_account_details">Update Account Details</string>
     <string name="no_internet">No internet available</string>
+    <string name="text_translation_score_text">score</string>
+    <string name="seekbar_no_score_text">Please slide the bar to set a score</string>
+    <string name="text_translation_no_score_provided_text">Please provide a score for the transalation</string>
 </resources>
