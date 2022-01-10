@@ -275,4 +275,5 @@
     <string name="text_translation_score_text">score</string>
     <string name="seekbar_no_score_text">Please slide the bar to set a score</string>
     <string name="text_translation_no_score_provided_text">Please provide a score for the transalation</string>
+    <string name="translation_validation_instruction">आपको निम्न तरीके से 0-100 के बीच स्कोर करना होगा:\n 1. 0-10: जब अनुवाद पूरी तरह से गलत हो |\n\n 2. 11-29: कुछ सही शब्दों के साथ एक अनुवाद, लेकिन अर्थ बहुत अलग है |\n\n 3. 30-50: बड़ी गलतियों वाला अनुवाद |\n\n 4. 51-59: अनुवाद जो समझ में आता है और समग्र अर्थ बताता है लेकिन इसमें टाइपो या व्याकरण संबंधी गलतियाँ हैं |\n\n 5. 70-90: एक ऐसा अनुवाद जो लगभग सही है लेकिन उसमें सुधार की गुंजाइश है |\n\n 6. 90-100: बिल्कुल सही अनुवाद |</string>
 </resources>
