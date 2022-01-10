@@ -32,6 +32,7 @@ constructor(
   private val _score: MutableStateFlow<Int> = MutableStateFlow(-1)
 
   var limit by Delegates.notNull<Int>()
+  private var startingTime by Delegates.notNull<Long>()
 
   override fun setupMicrotask() {
     // TODO: Move to Gson
@@ -40,6 +41,8 @@ constructor(
 
     _sourceTvText.value = sourceSentence
     _targetTvText.value = targetSentence
+    // Start measuring time
+    startingTime = System.currentTimeMillis()
   }
 
   /** Handle next button click */
@@ -49,10 +52,10 @@ constructor(
     val message = JsonObject()
     message.addProperty("type", "o")
     message.addProperty("button", "NEXT")
+    message.addProperty("time_taken", System.currentTimeMillis()-startingTime)
     log(message)
 
     outputData.addProperty("score", _score.value)
-
     _score.value = -1
 
     viewModelScope.launch {
