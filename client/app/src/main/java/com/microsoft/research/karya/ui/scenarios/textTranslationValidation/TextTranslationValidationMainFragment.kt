@@ -46,6 +46,7 @@ class TextTranslationValidationMainFragment : BaseMTRendererFragment(R.layout.mi
     scoreSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
         scoreTv.text = p1.toString()
+        viewModel.setScore(p1)
         isScoreSet = true
       }
 
@@ -69,9 +70,8 @@ class TextTranslationValidationMainFragment : BaseMTRendererFragment(R.layout.mi
     }
 //    errorTv.gone()
     //TODO: Reset Progress Bar
-    resetUI()
-    viewModel.setScore(scoreSeekbar.progress)
     viewModel.handleNextClick()
+    resetUI()
   }
 
   private fun setupObservers() {
