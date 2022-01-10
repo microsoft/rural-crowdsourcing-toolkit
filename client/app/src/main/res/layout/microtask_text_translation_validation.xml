@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:textSize="@dimen/_24ssp"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
@@ -43,13 +43,14 @@
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:textSize="@dimen/_24ssp"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sourceTextTv"
         tools:text="HOWDY" />
 
     <LinearLayout
+        android:id="@+id/scoreLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
@@ -74,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_4sdp"
-                android:text="10"
+                android:text="0"
                 android:textSize="@dimen/_16sdp"
                 android:textColor="@color/black" />
         </LinearLayout>
@@ -89,6 +90,20 @@
             android:max="100"/>
 
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="@id/scoreLayout"
+        app:layout_constraintRight_toRightOf="@id/scoreLayout"
+        app:layout_constraintTop_toBottomOf="@id/scoreLayout"
+        app:layout_constraintBottom_toTopOf="@id/nextBtn" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/translation_validation_instruction"
+            android:textSize="@dimen/_12sdp" />
+    </ScrollView>
 
     <ImageButton
         android:id="@+id/nextBtn"
