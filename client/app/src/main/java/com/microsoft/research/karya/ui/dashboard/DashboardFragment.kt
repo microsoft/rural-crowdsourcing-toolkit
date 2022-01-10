@@ -97,10 +97,12 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
               viewModel.setProgress(100)
               viewModel.refreshList()
             }
+            return@observe
           }
           if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
             viewModel.setProgress(0)
             viewModel.setLoading()
+            return@observe
           }
           if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
             // Check if the current work's state is "successfully finished"
@@ -109,13 +111,19 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             viewModel.setLoading()
             // refresh the UI to show microtasks
             if (progress == MAX_RECEIVE_DB_UPDATES_PROGRESS) viewLifecycleScope.launch { viewModel.refreshList() }
+            return@observe
           }
           if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
             lifecycleScope.launch {
               showErrorUi(Throwable(workInfo.outputData.getString("errorMsg")), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.ERROR)
               viewModel.refreshList()
             }
+            return@observe
           }
+          lifecycleScope.launch {
+            viewModel.refreshList()
+          }
+          return@observe
         }
       )
   }
@@ -132,10 +140,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   }
 
   private fun setupWorkRequests() {
-    // TODO: SHIFT IT FROM HERE
-    val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-
-    syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>().setConstraints(constraints).build()
+    syncWorkRequest = OneTimeWorkRequestBuilder<DashboardSyncWorker>().build()
   }
 
   private fun setupViews() {
@@ -166,7 +171,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       .observe(
         viewLifecycleOwner,
         Observer { workInfo ->
-          if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED
+          if (workInfo == null || workInfo.state == WorkInfo.State.SUCCEEDED || workInfo.state == WorkInfo.State.FAILED || workInfo.state == WorkInfo.State.CANCELLED
           ) {
             hideLoading() // Only hide loading if no work is in queue
           }
