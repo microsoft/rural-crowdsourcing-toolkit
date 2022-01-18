@@ -152,4 +152,7 @@ dependencies {
 
   // Zoomable image
   implementation("com.jsibbold:zoomage:1.3.1")
+
+  //BOW dependency
+  implementation(project(":app-bow"))
 }

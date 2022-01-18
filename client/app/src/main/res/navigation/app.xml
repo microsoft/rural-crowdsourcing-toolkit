@@ -164,6 +164,11 @@
             app:destination="@id/textTranslationValidationMainFragment">
             <argument android:name="taskId" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_textToTextTranslationMainFragment"
+            app:destination="@id/textToTextTranslationMainFragment" >
+            <argument android:name="taskId" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity4"
@@ -320,4 +325,15 @@
         android:id="@+id/paymentTransactionFragment"
         android:name="com.microsoft.research.karya.ui.payment.transactions.PaymentTransactionFragment"
         android:label="PaymentTransactionFragment" />
+    <fragment
+        android:id="@+id/textToTextTranslationMainFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.textToTextTranslation.TextToTextTranslationMainFragment"
+        android:label="TextToTextTranslationMainFragment" >
+        <action
+            android:id="@+id/action_textToTextTranslationMainFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+        <argument
+            android:name="taskId"
+            app:argType="string" />
+    </fragment>
 </navigation>

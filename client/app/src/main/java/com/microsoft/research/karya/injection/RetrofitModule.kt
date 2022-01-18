@@ -36,7 +36,7 @@ class RetrofitModule {
   @Reusable
   @BaseUrl
   fun provideBaseUrl(): String {
-    return "http://10.0.2.2:8000"
+    return "https://karyaboxtest.eastus.cloudapp.azure.com"
   }
 
   @Provides
@@ -70,8 +70,8 @@ class RetrofitModule {
     httpLoggingInterceptor: HttpLoggingInterceptor,
   ): OkHttpClient {
     return OkHttpClient.Builder()
-      .connectTimeout(10, TimeUnit.MINUTES)
-      .readTimeout(10, TimeUnit.MINUTES)
+      .connectTimeout(1, TimeUnit.MINUTES)
+      .readTimeout(1, TimeUnit.MINUTES)
       .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(idTokenRenewInterceptor)
       .addInterceptor(versionInterceptor)
