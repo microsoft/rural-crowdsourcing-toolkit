@@ -149,7 +149,7 @@ class TextToTextTranslationMainFragment : BaseMTRendererFragment(R.layout.microt
   private fun getEditText(): EditText {
     /*Set the parameters for edittext, used for BOW*/
     editText = EditText(requireActivity())
-    editText.hint = "Type your translation here"
+    editText.hint = getString(R.string.text_translation_hint)
     editText.maxLines = 4
     editText.setText("")
     editText.setPadding(30, 30, 30, 30)

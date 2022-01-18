@@ -45,8 +45,7 @@
         app:layout_constraintTop_toBottomOf="@id/sourceTextTv"
         app:langspec="en-hi"
         app:nRowWords="4"
-        app:n_suggestions="16"
-        app:src_sentence="शेर जंगल का राजा है" />
+        app:n_suggestions="16" />
 
     <ImageButton
         android:id="@+id/nextBtn"

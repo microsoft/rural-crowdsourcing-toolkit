@@ -216,6 +216,7 @@
     <string name="rating_undefined">Undefined</string>
 
     <!-- Text translation strings -->
+    <string name="text_translation_hint">Type your translation here</string>
 
     <!-- Speech recording strings -->
     <string name="speech_recording_instruction">Translate the sentence below</string>

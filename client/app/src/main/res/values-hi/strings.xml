@@ -116,6 +116,7 @@
 
     <!-- Text translation strings -->
     <string name="text_translation_instruction">नीचे दिए गए वाक्य का अनुवाद करें</string>
+    <string name="text_translation_hint">अपना अनुवाद यहाँ टाइप करें</string>
 
     <!-- Speech recording strings -->
     <string name="speech_recording_instruction">नीचे दिए गए वाक्य का अनुवाद करें</string>
