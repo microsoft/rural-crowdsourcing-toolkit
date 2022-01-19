@@ -1,3 +1,3 @@
 export interface QResult {
-    jobId: string
+  jobId: string;
 }

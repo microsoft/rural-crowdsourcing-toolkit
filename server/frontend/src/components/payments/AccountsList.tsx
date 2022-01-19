@@ -24,39 +24,39 @@ const connector = withData('payments_account');
 // Box list props
 type AccountsListProps = DataProps<typeof connector>;
 
-type AccountsTableRecord = PaymentsAccountRecord & {failure_reason: string | null}
+type AccountsTableRecord = PaymentsAccountRecord & { failure_reason: string | null };
 
 // Box list component
 class AccountsList extends React.Component<AccountsListProps> {
-
   state: {
-    tableCollapsed: boolean
-   } = {
-     tableCollapsed: false
-   }
+    tableCollapsed: boolean;
+  } = {
+    tableCollapsed: false,
+  };
 
-   handleTableCollapseClick = () => {
-    const showTable = !this.state.tableCollapsed
+  handleTableCollapseClick = () => {
+    const showTable = !this.state.tableCollapsed;
     this.setState((state, props) => ({
-      tableCollapsed: showTable
-     }))
-  }
+      tableCollapsed: showTable,
+    }));
+  };
 
   render() {
-    const data: AccountsTableRecord[] = this.props.payments_account.data.map(item => {
+    const data: AccountsTableRecord[] = this.props.payments_account.data.map((item) => {
       return {
         ...item,
         created_at: new Date(item.created_at).toDateString(),
-        failure_reason: item.meta ? ((item.meta as any).failure_reason) as string : null
-      }
+        failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
+      };
     });
 
-    const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table'
-
+    const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table';
 
     // get error element
     const errorElement =
-      this.props.payments_account.status === 'FAILURE' ? <ErrorMessage message={this.props.payments_account.messages} /> : null;
+      this.props.payments_account.status === 'FAILURE' ? (
+        <ErrorMessage message={this.props.payments_account.messages} />
+      ) : null;
 
     // Box table columns
     const tableColumns: Array<TableColumnType<AccountsTableRecord>> = [
@@ -71,19 +71,21 @@ class AccountsList extends React.Component<AccountsListProps> {
 
     return (
       <div>
-        <h1 className='page-title'>
-        Accountss History
-        </h1>
-        <a href="#" onClick={this.handleTableCollapseClick}>{collapseTableText}</a>
+        <h1 className='page-title'>Accountss History</h1>
+        <a href='#' onClick={this.handleTableCollapseClick}>
+          {collapseTableText}
+        </a>
         {errorElement}
-        {this.props.payments_account.status === 'IN_FLIGHT' && <ProgressBar /> }
-        {
-          !this.state.tableCollapsed && 
+        {this.props.payments_account.status === 'IN_FLIGHT' && <ProgressBar />}
+        {!this.state.tableCollapsed && (
           <div className='basic-table'>
-            <TableList<AccountsTableRecord> columns={tableColumns} rows={data} emptyMessage='No account has been created' />
+            <TableList<AccountsTableRecord>
+              columns={tableColumns}
+              rows={data}
+              emptyMessage='No account has been created'
+            />
           </div>
-        }
-
+        )}
       </div>
     );
   }

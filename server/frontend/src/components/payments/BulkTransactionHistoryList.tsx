@@ -23,24 +23,25 @@ const connector = withData('bulk_payments_transaction');
 
 // Box list props
 type BulkTransactionHistoryListProps = DataProps<typeof connector>;
-type BulkTransactionTableRecord = BulkPaymentsTransactionRecord & {failedForWorkerIds: string | null}
-
+type BulkTransactionTableRecord = BulkPaymentsTransactionRecord & { failedForWorkerIds: string | null };
 
 // Box list component
 class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryListProps> {
   render() {
-    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data.map( item => {
+    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data.map((item) => {
       return {
         ...item,
         created_at: new Date(item.created_at).toDateString(),
-        failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds) as string : null
-      }
+        failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds as string) : null,
+      };
     });
     console.log(data);
 
     // get error element
     const errorElement =
-      this.props.bulk_payments_transaction.status === 'FAILURE' ? <ErrorMessage message={this.props.bulk_payments_transaction.messages} /> : null;
+      this.props.bulk_payments_transaction.status === 'FAILURE' ? (
+        <ErrorMessage message={this.props.bulk_payments_transaction.messages} />
+      ) : null;
 
     // Box table columns
     const tableColumns: Array<TableColumnType<BulkTransactionTableRecord>> = [
@@ -55,9 +56,13 @@ class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryL
     return (
       <div>
         {errorElement}
-        {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar /> }
+        {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar />}
         <div className='basic-table'>
-          <TableList<BulkTransactionTableRecord> columns={tableColumns} rows={data} emptyMessage='No bulk transaction has been made' />
+          <TableList<BulkTransactionTableRecord>
+            columns={tableColumns}
+            rows={data}
+            emptyMessage='No bulk transaction has been made'
+          />
         </div>
       </div>
     );

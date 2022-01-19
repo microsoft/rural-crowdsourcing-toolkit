@@ -84,18 +84,15 @@ router.put('/skipped_assignments', needIdToken, BodyParser({ jsonLimit: '20mb' }
 router.get('/assignments', needIdToken, AssignmentController.get);
 
 // Token Routes
-router.get('/renew_id_token', needIdToken, generateToken, WorkerController.sendGeneratedIdToken)
+router.get('/renew_id_token', needIdToken, generateToken, WorkerController.sendGeneratedIdToken);
 
 // Payments Routes
-router.post('/payments/accounts', BodyParser(), PaymentsController.addAccount)
-router.put('/payments/accounts/:id/verify', BodyParser(), PaymentsController.verifyAccount)
-router.get('/payments/accounts/current', PaymentsController.getCurrentActiveAccount)
-router.get('/payments/transaction', PaymentsController.getTransactionRecords)
+router.post('/payments/accounts', BodyParser(), PaymentsController.addAccount);
+router.put('/payments/accounts/:id/verify', BodyParser(), PaymentsController.verifyAccount);
+router.get('/payments/accounts/current', PaymentsController.getCurrentActiveAccount);
+router.get('/payments/transaction', PaymentsController.getTransactionRecords);
 
 // Get Balance for a worker
-router.get(
-  '/payments/worker/:id/balance', 
-  PaymentsController.getWorkerBalance
-);
+router.get('/payments/worker/:id/balance', PaymentsController.getWorkerBalance);
 
 export default router;

@@ -20,9 +20,9 @@ export const karyaTableNames = [
   'task_assignment',
   'microtask_group_assignment',
   'microtask_assignment',
-	'payments_account',
+  'payments_account',
   'payments_transaction',
-  'bulk_payments_transaction'
+  'bulk_payments_transaction',
 ] as const;
 
 export type KaryaTableName = typeof karyaTableNames[number];
@@ -117,7 +117,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['sent_to_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
         ['selected_account', ['>', 'payments_account'], 'unique', 'nullable', 'mutable'],
         ['payments_active', ['boolean', true], 'not unique', 'not nullable', 'mutable'],
-        ['payments_meta', ['object'], 'not unique', 'nullable', 'mutable']
+        ['payments_meta', ['object'], 'not unique', 'nullable', 'mutable'],
       ],
     },
 
@@ -269,17 +269,17 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
       ],
     },
 
-		payments_account: {
-			columns: [
+    payments_account: {
+      columns: [
         ['hash', ['string', 128], 'unique', 'not nullable', 'not mutable'],
-				['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
-				['fund_id',['string', 64], 'unique', 'nullable', 'mutable'], 
-				['account_type', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
-				['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-				['active', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
-				['meta', ['object'], 'not unique', 'nullable', 'mutable']
-			]
-		},
+        ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
+        ['fund_id', ['string', 64], 'unique', 'nullable', 'mutable'],
+        ['account_type', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
+        ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
+        ['active', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['meta', ['object'], 'not unique', 'nullable', 'mutable'],
+      ],
+    },
 
     payments_transaction: {
       columns: [
@@ -295,8 +295,8 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['mode', ['string', 16], 'not unique', 'not nullable', 'not mutable'],
         ['purpose', ['string', 32], 'not unique', 'not nullable', 'mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-        ['meta', ['object'], 'not unique', 'nullable', 'mutable']
-      ]
+        ['meta', ['object'], 'not unique', 'nullable', 'mutable'],
+      ],
     },
 
     bulk_payments_transaction: {
@@ -305,8 +305,8 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['n_workers', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
-        ['meta', ['object'], 'not unique', 'nullable', 'mutable']
-      ]
+        ['meta', ['object'], 'not unique', 'nullable', 'mutable'],
+      ],
     },
   },
 };
@@ -349,7 +349,7 @@ const serverTables: KaryaTableName[] = [
   'task_link',
   'task_assignment',
   'payments_transaction',
-  'bulk_payments_transaction'
+  'bulk_payments_transaction',
 ];
 
 // ID fields for server tables on the server side
@@ -363,7 +363,12 @@ const boxSideServerIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaO
 ];
 
 // Box tables - Tables for which the box can also create records
-const boxTables: KaryaTableName[] = ['worker', 'microtask_group_assignment', 'microtask_assignment', 'payments_account'];
+const boxTables: KaryaTableName[] = [
+  'worker',
+  'microtask_group_assignment',
+  'microtask_assignment',
+  'payments_account',
+];
 
 // ID fields for box tables on the box side
 const boxSideBoxIdFields: TableColumnSpec<KaryaTableName, KaryaString, KaryaObject>[] = [

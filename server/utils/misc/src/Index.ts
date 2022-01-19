@@ -62,8 +62,8 @@ export function envGetBoolean(key: string, defaultValue?: boolean): boolean {
 // Calculate MD5 hash
 export function calculateHash(...args: String[]): string {
   // Concatenate all the strings
-  let message = args.join()
+  let message = args.join();
   let hash = CryptoJS.MD5(JSON.stringify({ message }));
   // Convert to string
-  return hash.toString()
+  return hash.toString();
 }

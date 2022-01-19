@@ -117,29 +117,24 @@ boxRouter.get<TaskController.TaskRouteState, {}>(
 
 // Payments routes
 boxRouter.post(
-  '/payments/accounts', 
-  Middlewares.needIdToken, 
-  BodyParser({ jsonLimit: '50mb' }), 
+  '/payments/accounts',
+  Middlewares.needIdToken,
+  BodyParser({ jsonLimit: '50mb' }),
   PaymentsController.addAccount
 );
 
 boxRouter.get(
-  '/payments/accounts/updates', 
-  Middlewares.needIdToken, 
-  BodyParser({ jsonLimit: '50mb' }), 
+  '/payments/accounts/updates',
+  Middlewares.needIdToken,
+  BodyParser({ jsonLimit: '50mb' }),
   PaymentsController.getUpdatedAccountRecords
 );
 
 boxRouter.get(
-  '/payments/transactions/updates', 
-  Middlewares.needIdToken, 
-  BodyParser({ jsonLimit: '50mb' }), 
+  '/payments/transactions/updates',
+  Middlewares.needIdToken,
+  BodyParser({ jsonLimit: '50mb' }),
   PaymentsController.getUpdatedTransactionRecords
 );
 
-boxRouter.put(
-  '/payments/accounts/:id/verify', 
-  Middlewares.needIdToken,
-  BodyParser(), 
-  PaymentsController.verifyAccount
-);
+boxRouter.put('/payments/accounts/:id/verify', Middlewares.needIdToken, BodyParser(), PaymentsController.verifyAccount);

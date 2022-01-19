@@ -1,4 +1,4 @@
 export type BulkPaymentsTransactionRequest = {
-    workerId: string,
-    amount: number
+  workerId: string;
+  amount: number;
 }[];

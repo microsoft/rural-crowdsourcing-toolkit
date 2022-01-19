@@ -1,21 +1,21 @@
-import { Payload, QResult } from "@karya/common";
-import { PaymentsAccountRecord } from "@karya/core";
-import { QueueOptions } from "bullmq";
+import { Payload, QResult } from '@karya/common';
+import { PaymentsAccountRecord } from '@karya/core';
+import { QueueOptions } from 'bullmq';
 
 export interface RegistrationQPayload extends Payload {
-    boxId: string,
-    accountRecord: PaymentsAccountRecord
+  boxId: string;
+  accountRecord: PaymentsAccountRecord;
 }
 
 export type RegistrationQJobData = {
-    accountRecord: PaymentsAccountRecord
-}
+  accountRecord: PaymentsAccountRecord;
+};
 
 export type Qconfig = {
-    qname: string
-    opts: QueueOptions
-}
+  qname: string;
+  opts: QueueOptions;
+};
 
-export interface RegistrationQResult extends QResult{
-    createdAccountRecord: PaymentsAccountRecord
+export interface RegistrationQResult extends QResult {
+  createdAccountRecord: PaymentsAccountRecord;
 }

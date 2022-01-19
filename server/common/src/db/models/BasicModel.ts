@@ -31,7 +31,7 @@ export async function getSingle<TableName extends DbTableName>(
   tableName: TableName,
   match: DbObjectType<TableName>
 ): Promise<DbRecordType<TableName>> {
-  const p = 1
+  const p = 1;
   const response = await knex(tableName).where(match).first();
 
   // if undefined response, throw error

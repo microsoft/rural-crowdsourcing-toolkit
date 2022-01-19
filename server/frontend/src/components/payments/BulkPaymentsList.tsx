@@ -36,11 +36,10 @@ const mapDispatchToProps = (dispatch: any) => {
         type: 'BR_INIT',
         store: 'bulk_payments_transaction',
         label: 'CREATE',
-        request: requestBody
+        request: requestBody,
       };
       dispatch(action);
     },
-
   };
 };
 
@@ -54,31 +53,31 @@ type BulkPaymentsListProps = DataProps<typeof dataConnector> & ConnectedProps<ty
 
 // Box list component
 class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
-
   handleMakePaymentBtnClick = () => {
-    const requestBody = this.createBulkPaymentsRequestBody()
-    this.props.createBulkTransaction(requestBody)
-  }
+    const requestBody = this.createBulkPaymentsRequestBody();
+    this.props.createBulkTransaction(requestBody);
+  };
 
   createBulkPaymentsRequestBody = () => {
-    const requestBody: BulkPaymentsTransactionRequest = 
-      this.props.payments_eligible_worker.data.map( worker => {
-        return {
-          workerId: worker.id,
-          amount: worker.amount
-        }
-    })
+    const requestBody: BulkPaymentsTransactionRequest = this.props.payments_eligible_worker.data.map((worker) => {
+      return {
+        workerId: worker.id,
+        amount: worker.amount,
+      };
+    });
 
-    return requestBody
-  }
+    return requestBody;
+  };
 
   render() {
     const workers = this.props.payments_eligible_worker.data;
-    const totalAmount = workers.reduce((acc, item) => item.amount+acc, 0)
+    const totalAmount = workers.reduce((acc, item) => item.amount + acc, 0);
 
     // get error element
     const errorElement =
-      this.props.payments_eligible_worker.status === 'FAILURE' ? <ErrorMessage message={this.props.payments_eligible_worker.messages} /> : null;
+      this.props.payments_eligible_worker.status === 'FAILURE' ? (
+        <ErrorMessage message={this.props.payments_eligible_worker.messages} />
+      ) : null;
 
     // Box table columns
     const tableColumns: Array<TableColumnType<PaymentEligibleWorkerRecord>> = [
@@ -86,17 +85,22 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps> {
       { header: 'Amount ', type: 'field', field: 'amount' },
     ];
 
-    const makePaymentButton = workers.length ? 
-    <Button onClick={this.handleMakePaymentBtnClick}>Make Payment</Button> : null
+    const makePaymentButton = workers.length ? (
+      <Button onClick={this.handleMakePaymentBtnClick}>Make Payment</Button>
+    ) : null;
 
     return (
       <div>
         {errorElement}
-        {this.props.payments_eligible_worker.status === 'IN_FLIGHT' && <ProgressBar /> }
-        <br/>
+        {this.props.payments_eligible_worker.status === 'IN_FLIGHT' && <ProgressBar />}
+        <br />
         <b className='table-headline'>{workers.length ? `Total Amount: ₹${totalAmount}` : undefined}</b>
         <div className='basic-table' id='box-table'>
-          <TableList<PaymentEligibleWorkerRecord> columns={tableColumns} rows={workers} emptyMessage='No worker pending for payment' />
+          <TableList<PaymentEligibleWorkerRecord>
+            columns={tableColumns}
+            rows={workers}
+            emptyMessage='No worker pending for payment'
+          />
         </div>
         {makePaymentButton}
       </div>

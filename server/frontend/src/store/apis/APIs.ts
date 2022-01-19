@@ -195,29 +195,26 @@ export type BackendRequestInitAction =
       label: 'GET_LANGUAGE_ASSETS';
     }
   | {
-    type: 'BR_INIT';
-    store: 'payments_account';
-    label: 'GET_ALL';
+      type: 'BR_INIT';
+      store: 'payments_account';
+      label: 'GET_ALL';
     }
   | {
       type: 'BR_INIT';
       store: 'payments_transaction';
-      label: 'GET_ALL'
-    } 
-  | 
-    {
+      label: 'GET_ALL';
+    }
+  | {
       type: 'BR_INIT';
       store: 'payments_eligible_worker';
       label: 'GET_ALL';
     }
-  |
-    {
+  | {
       type: 'BR_INIT';
       store: 'bulk_payments_transaction';
       label: 'GET_ALL';
     }
-  |
-    {
+  | {
       type: 'BR_INIT';
       store: 'bulk_payments_transaction';
       request: BulkPaymentsTransactionRequest;
@@ -372,9 +369,9 @@ export type BackendRequestSuccessAction =
       response: DBT.KaryaFileRecord[];
     }
   | {
-    type: 'BR_INIT';
-    store: 'payments_account';
-    label: 'GET_ALL';
+      type: 'BR_INIT';
+      store: 'payments_account';
+      label: 'GET_ALL';
     }
   | {
       type: 'BR_SUCCESS';
@@ -386,7 +383,7 @@ export type BackendRequestSuccessAction =
       type: 'BR_SUCCESS';
       store: 'payments_eligible_worker';
       label: 'GET_ALL';
-      response: (DBT.WorkerRecord & {amount: number})[] ;
+      response: (DBT.WorkerRecord & { amount: number })[];
     }
   | {
       type: 'BR_SUCCESS';

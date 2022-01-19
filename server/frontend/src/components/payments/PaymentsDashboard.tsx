@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 /**
- * The component allows the user to make bulk payments. 
+ * The component allows the user to make bulk payments.
  * Component contains BulkTranasctionHistory component and BulkPaymentsList component.
  */
 
@@ -15,9 +15,7 @@ import GenerateBulkPaymentsTable from './GenerateBulkPaymentsTable';
 import TransactionList from './TransactionList';
 
 class PaymentsDashboard extends React.Component {
-
   render() {
-
     return (
       <div>
         <GenerateBulkPaymentsTable />

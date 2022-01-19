@@ -24,39 +24,39 @@ const connector = withData('payments_transaction');
 // Box list props
 type TransactionListProps = DataProps<typeof connector>;
 
-type TransactionTableRecord = PaymentsTransactionRecord & {failure_reason: string | null}
+type TransactionTableRecord = PaymentsTransactionRecord & { failure_reason: string | null };
 
 // Box list component
 class TransactionList extends React.Component<TransactionListProps> {
-
   state: {
-    tableCollapsed: boolean
-   } = {
-     tableCollapsed: false
-   }
+    tableCollapsed: boolean;
+  } = {
+    tableCollapsed: false,
+  };
 
-   handleTableCollapseClick = () => {
-    const showTable = !this.state.tableCollapsed
+  handleTableCollapseClick = () => {
+    const showTable = !this.state.tableCollapsed;
     this.setState((state, props) => ({
-      tableCollapsed: showTable
-     }))
-  }
+      tableCollapsed: showTable,
+    }));
+  };
 
   render() {
-    const data: TransactionTableRecord[] = this.props.payments_transaction.data.map(item => {
+    const data: TransactionTableRecord[] = this.props.payments_transaction.data.map((item) => {
       return {
         ...item,
         created_at: new Date(item.created_at).toDateString(),
-        failure_reason: item.meta ? ((item.meta as any).failure_reason) as string : null
-      }
+        failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
+      };
     });
 
-    const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table'
-
+    const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table';
 
     // get error element
     const errorElement =
-      this.props.payments_transaction.status === 'FAILURE' ? <ErrorMessage message={this.props.payments_transaction.messages} /> : null;
+      this.props.payments_transaction.status === 'FAILURE' ? (
+        <ErrorMessage message={this.props.payments_transaction.messages} />
+      ) : null;
 
     // Box table columns
     const tableColumns: Array<TableColumnType<TransactionTableRecord>> = [
@@ -74,19 +74,21 @@ class TransactionList extends React.Component<TransactionListProps> {
 
     return (
       <div>
-        <h1 className='page-title'>
-        Transactions History
-        </h1>
-        <a href="#" onClick={this.handleTableCollapseClick}>{collapseTableText}</a>
+        <h1 className='page-title'>Transactions History</h1>
+        <a href='#' onClick={this.handleTableCollapseClick}>
+          {collapseTableText}
+        </a>
         {errorElement}
-        {this.props.payments_transaction.status === 'IN_FLIGHT' && <ProgressBar /> }
-        {
-          !this.state.tableCollapsed && 
+        {this.props.payments_transaction.status === 'IN_FLIGHT' && <ProgressBar />}
+        {!this.state.tableCollapsed && (
           <div className='basic-table'>
-            <TableList<TransactionTableRecord> columns={tableColumns} rows={data} emptyMessage='No transaction has been made' />
+            <TableList<TransactionTableRecord>
+              columns={tableColumns}
+              rows={data}
+              emptyMessage='No transaction has been made'
+            />
           </div>
-        }
-
+        )}
       </div>
     );
   }

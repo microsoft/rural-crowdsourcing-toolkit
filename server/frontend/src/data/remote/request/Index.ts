@@ -1,1 +1,1 @@
-export * from './BulkTransactionPaymentRequest'
+export * from './BulkTransactionPaymentRequest';

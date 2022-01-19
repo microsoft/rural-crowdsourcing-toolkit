@@ -1,9 +1,9 @@
-import { VerifyAccountQConfig } from "../VerifyAccountQConfig";
+import { VerifyAccountQConfig } from '../VerifyAccountQConfig';
 
 export default {
-    processor_path: __dirname + '/processor.js',
-    opts: {
-        connection: VerifyAccountQConfig.opts.connection,
-        concurrency: 1000,
-    }
-}
+  processor_path: __dirname + '/processor.js',
+  opts: {
+    connection: VerifyAccountQConfig.opts.connection,
+    concurrency: 1000,
+  },
+};

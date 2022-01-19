@@ -254,7 +254,7 @@ userRouter.post(
   Middlewares.onlyAdmin,
   BodyParser(),
   PaymentsController.processBulkPayments
-)
+);
 
 // Get Bulk transaction records
 userRouter.get(
@@ -262,7 +262,7 @@ userRouter.get(
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   PaymentsController.getBulkTransactionRecords
-)
+);
 
 // Get Payments Account
 userRouter.get(
@@ -270,7 +270,7 @@ userRouter.get(
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   PaymentsController.getPaymentsAccount
-)
+);
 
 // Get list of eligible worker ids and their respective amount for payment
 userRouter.get(
@@ -278,7 +278,7 @@ userRouter.get(
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   PaymentsController.calculateEligibleWorkers
-)
+);
 
 // Get transaction record
 userRouter.get(
@@ -286,6 +286,6 @@ userRouter.get(
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   PaymentsController.getTransactionRecords
-)
+);
 
 export { userRouter };

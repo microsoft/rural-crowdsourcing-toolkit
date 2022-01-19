@@ -83,7 +83,8 @@ export const get: BoxRouteMiddleware = async (ctx) => {
     'tags_updated_at'
   );
   const response = workers.map((w) => {
-    return { id: w.id,
+    return {
+      id: w.id,
       tags: w.tags,
       tags_updated_at: w.tags_updated_at,
       payments_active: w.payments_active,
