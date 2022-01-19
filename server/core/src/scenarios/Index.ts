@@ -19,6 +19,10 @@ import {
 } from './scenarios/SignLanguageVideoVerification';
 import { baseImageTranscriptionScenario, BaseImageTranscriptionScenario } from './scenarios/ImageTranscription';
 import { baseImageLabellingScenario, BaseImageLabellingScenario } from './scenarios/ImageLabelling';
+import {
+  baseTextTranslationValidationScenario,
+  BaseTextTranslationValidationScenario,
+} from './scenarios/TextTranslationValidation';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -29,6 +33,7 @@ export * from './scenarios/SignLanguageVideoVerification';
 export * from './scenarios/XliterationData';
 export * from './scenarios/ImageTranscription';
 export * from './scenarios/ImageLabelling';
+export * from './scenarios/TextTranslationValidation';
 
 // List of scenario names
 export const scenarioNames = [
@@ -40,6 +45,7 @@ export const scenarioNames = [
   'XLITERATION_DATA',
   'IMAGE_TRANSCRIPTION',
   'IMAGE_LABELLING',
+  'TEXT_TRANSLATION_VALIDATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -60,6 +66,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseImageTranscriptionScenario
   : SN extends 'IMAGE_LABELLING'
   ? BaseImageLabellingScenario
+  : SN extends 'TEXT_TRANSLATION_VALIDATION'
+  ? BaseTextTranslationValidationScenario
   : never;
 
 // Scenario name to instance map
@@ -74,6 +82,7 @@ export const scenarioMap: {
   XLITERATION_DATA: baseXliterationDataScenario,
   IMAGE_TRANSCRIPTION: baseImageTranscriptionScenario,
   IMAGE_LABELLING: baseImageLabellingScenario,
+  TEXT_TRANSLATION_VALIDATION: baseTextTranslationValidationScenario,
 };
 
 // Core scenario parameters
@@ -136,32 +145,30 @@ export type TaskType<SN extends ScenarioName = ScenarioName, PN extends PolicyNa
   TaskRecordType<SN, PN>
 >;
 
-export type MicrotaskRecordType<
-  SN extends ScenarioName = ScenarioName
-> = ScenarioType<SN> extends BaseScenarioInterface<
-  SN,
-  infer _TaskParamsType,
-  infer InputDataType,
-  infer InputFilesType,
-  infer OutputDataType,
-  infer OutputFilesType
->
-  ? MicrotaskRecord<InputDataType, InputFilesType, OutputDataType, OutputFilesType>
-  : never;
+export type MicrotaskRecordType<SN extends ScenarioName = ScenarioName> =
+  ScenarioType<SN> extends BaseScenarioInterface<
+    SN,
+    infer _TaskParamsType,
+    infer InputDataType,
+    infer InputFilesType,
+    infer OutputDataType,
+    infer OutputFilesType
+  >
+    ? MicrotaskRecord<InputDataType, InputFilesType, OutputDataType, OutputFilesType>
+    : never;
 
 export type MicrotaskType<SN extends ScenarioName = ScenarioName> = Partial<MicrotaskRecordType<SN>>;
 
-export type AssignmentRecordType<
-  SN extends ScenarioName = ScenarioName
-> = ScenarioType<SN> extends BaseScenarioInterface<
-  SN,
-  infer _TaskParamsType,
-  infer _InputDataType,
-  infer _InputFilesType,
-  infer OutputDataType,
-  infer OutputFilesType
->
-  ? MicrotaskAssignmentRecord<OutputDataType, OutputFilesType>
-  : never;
+export type AssignmentRecordType<SN extends ScenarioName = ScenarioName> =
+  ScenarioType<SN> extends BaseScenarioInterface<
+    SN,
+    infer _TaskParamsType,
+    infer _InputDataType,
+    infer _InputFilesType,
+    infer OutputDataType,
+    infer OutputFilesType
+  >
+    ? MicrotaskAssignmentRecord<OutputDataType, OutputFilesType>
+    : never;
 
 export type AssignmentType<SN extends ScenarioName = ScenarioName> = Partial<AssignmentRecordType<SN>>;
