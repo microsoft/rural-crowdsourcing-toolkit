@@ -31,14 +31,14 @@ export async function getAssignableMicrotasks(
     .where('worker_id', worker.id)
     .pluck('microtask_id');
 
+  const unassignableMicrotasks = new Set(await workerAssignedMicrotasks.union(maxAssignedMicrotasks));
+
   const microtasks = await knex<MicrotaskRecord>('microtask')
     .where('task_id', task.id)
     .where('status', 'not in', ['COMPLETED'])
-    .where('id', 'not in', knex.raw('?', [maxAssignedMicrotasks]))
-    .where('id', 'not in', knex.raw('?', [workerAssignedMicrotasks]))
     .select();
 
-  return microtasks;
+  return microtasks.filter((mt) => !unassignableMicrotasks.has(mt.id));
 }
 
 export async function getAssignedCount(worker_id: string, task_id: string) {
