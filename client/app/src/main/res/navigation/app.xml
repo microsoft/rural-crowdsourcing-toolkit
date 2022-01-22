@@ -156,6 +156,13 @@
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_signVideoVerification"
+            app:destination="@id/signVideoVerificationFragment">
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity"
@@ -269,6 +276,17 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_signVideoFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/signVideoVerificationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.signVideoVerification.SignVideoVerificationFragment"
+        android:label="signVideoVerificationFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_signVideoVerificationFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

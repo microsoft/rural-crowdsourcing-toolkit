@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        style="@style/MicrotaskInstructionText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb"
+        tools:text="@string/speech_recording_instruction" />
+
+    <FrameLayout
+        android:id="@+id/inputFrame"
+        style="@style/MicrotaskInputFrame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/videoPlayer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv">
+
+        <TextView
+            android:id="@+id/sentenceTv"
+            style="@style/MicrotaskInputText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="This is a sentence to be recorded" />
+
+    </FrameLayout>
+
+    <com.potyvideo.library.AndExoPlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:andexo_full_screen="true"
+        app:layout_constraintBottom_toTopOf="@id/ratingGroup"
+        app:layout_constraintHeight_percent="0.4" />
+
+    <TextView
+        android:id="@+id/videoPlayerPlaceHolder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:background="#000"
+        android:gravity="center"
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toTopOf="@id/ratingGroup"
+        app:layout_constraintHeight_percent="0.4" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/ratingGroup"
+        style="@style/RatingButtonGroup"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:layout_constraintBottom_toTopOf="@id/nextBtnCv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/videoPlayer">
+
+        <Button
+            android:id="@+id/videoPoorBtn"
+            style="@style/RatingButton"
+            android:text="@string/video_poor"
+            android:textSize="@dimen/_16ssp" />
+
+        <Button
+            android:id="@+id/videoAverageBtn"
+            style="@style/RatingButton"
+            android:text="@string/video_average"
+            android:textSize="@dimen/_16ssp" />
+
+        <Button
+            android:id="@+id/videoGoodBtn"
+            style="@style/RatingButton"
+            android:text="@string/video_good"
+            android:textSize="@dimen/_16ssp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+    <EditText
+        android:id="@+id/feedbackEt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:hint="Optional Feedback..."
+        android:maxLines="2"
+        android:minLines="2"
+        app:layout_constraintBottom_toBottomOf="@id/nextBtnCv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/nextBtnCv" />
+
+    <include
+        android:id="@+id/nextBtnCv"
+        layout="@layout/microtask_common_next_button"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="0dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

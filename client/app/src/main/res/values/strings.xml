@@ -245,6 +245,11 @@
     <string name="grammar_question">Is the above sentence grammatically correct?</string>
     <string name="spelling_question">Are all the words spelt correctly in the sentence?</string>
 
+    <!-- Sign verification strings -->
+    <string name="video_good">Good</string>
+    <string name="video_average">Average</string>
+    <string name="video_poor">Poor</string>
+
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
