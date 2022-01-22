@@ -20,8 +20,9 @@ setupDbConnection();
 export default async (job: Job<TransactionQJobData>) => {
   let transactionRecord: PaymentsTransactionRecord = job.data.transactionRecord;
   // Check if user has sufficient balance
-  // Add the transaction amount since the transaction account has status CREATED and would be subtracted in getBalace function
+  // Add the transaction amount since the transaction record has status CREATED and would be subtracted in getBalace function
   const userBalance = (await WorkerModel.getBalance(transactionRecord.worker_id)) + parseInt(transactionRecord.amount);
+  //TODO @test: Write a test here
   if (userBalance < parseInt(transactionRecord.amount)) {
     throw new InsufficientBalanceError('Insufficient Balance');
   }
@@ -63,9 +64,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
   let response: AxiosResponse<PayoutResponse>;
   let createdPayout: PayoutResponse;
   try {
-    console.log(payoutRequestBody);
     response = await razorPayAxios.post<PayoutResponse>(RAZORPAY_PAYOUTS_RELATIVE_URL, payoutRequestBody, config);
-    console.log(response, 'response');
     createdPayout = response.data;
   } catch (e: any) {
     throw new RazorPayRequestError(e.response.data.error.description);

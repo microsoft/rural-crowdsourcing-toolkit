@@ -85,7 +85,7 @@ export async function workersTaskSummary(task_id: string): Promise<any[]> {
  * Get Balance (credits - claimed) for a particular worker
  */
 export async function getBalance(worker_id: string): Promise<number> {
-  const response = await knex.raw(`SELECT  sum(credits) - (SELECT COALESCE(sum(amount), 0)  
+  const response = await knex.raw(`SELECT  COALESCE(sum(credits), 0) - (SELECT COALESCE(sum(amount), 0)  
   FROM payments_transaction WHERE worker_id = ${worker_id} 
   AND status IN ('created', 'queued', 'processing', 'processed', 'failed_after_transaction') ) as total 
   FROM microtask_assignment WHERE status='VERIFIED' AND worker_id = ${worker_id};`);
