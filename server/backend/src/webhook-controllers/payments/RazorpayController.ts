@@ -25,7 +25,7 @@ export const authenticateWebhookRequest: Application.Middleware = async (ctx, ne
     const webhookSignature = ctx.request.header['x-razorpay-signature'] as string;
     const webhookSecret = envGetString('RAZORPAY_WEBHOOK_SECRET');
     verifyWebhookSignature(webhookBody, webhookSignature, webhookSecret);
-    console.log('SUCCESSFULLY VERIFIED THE SIGNATURE', webhookBody, webhookSignature, webhookSecret);
+    console.log('SUCCESSFULLY VERIFIED THE SIGNATURE');
     await next();
   } catch (e: any) {
     console.log('VERIFICATION FAILED', e);

@@ -1,7 +1,7 @@
-import { Qconfig } from './Types';
+import { TransactionQconfig } from './Types';
 import { envGetString } from '@karya/misc-utils';
 
-const TransactionQConfig: Qconfig = {
+export const TransactionQconfigObject: TransactionQconfig = {
   qname: 'BACKEND_ACCOUNT_TRANSACTION_QUEUE',
   adminAccountNumber: envGetString('ADMIN_ACCOUNT_NUMBER'),
   opts: {
@@ -11,5 +11,3 @@ const TransactionQConfig: Qconfig = {
     },
   },
 };
-
-export { TransactionQConfig };

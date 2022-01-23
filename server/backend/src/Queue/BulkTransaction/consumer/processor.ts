@@ -8,7 +8,7 @@ import {
   TransactionRequest,
 } from '@karya/core';
 import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
-import { TransactionQConfig } from '../../Transaction/TransactionQConfig';
+import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQPayload } from '../../Transaction/Types';
 
 const RAZORPAY_PAYOUTS_RELATIVE_URL = 'payouts';
@@ -27,7 +27,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
 
   const bulkTransactionRequest: TransactionRequest[] = job.data.bulkTransactionRequest;
   // Create Transaction Queue
-  const transactionQWrapper = new TransactionQWrapper(TransactionQConfig);
+  const transactionQWrapper = new TransactionQWrapper(TransactionQconfigObject);
   // Create transaction for every record
   const failedForWorkerIds: string[] = [];
 

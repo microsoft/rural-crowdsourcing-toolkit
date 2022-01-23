@@ -6,7 +6,6 @@ import {
   PaymentsAccountRecord,
   RecordNotFoundError,
   WorkerRecord,
-  FundAccountType,
   FundAccountResponse,
   AccountTaskStatus,
 } from '@karya/core';
@@ -14,7 +13,7 @@ import { Job } from 'bullmq';
 import { AxiosResponse } from 'axios';
 import { razorPayAxios } from '../../HttpUtils';
 import { RegistrationQJobData } from '../Types';
-import { TransactionQConfig } from '../../Transaction/TransactionQConfig';
+import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 import { TransactionQPayload } from '../../Transaction/Types';
 
@@ -64,7 +63,7 @@ export default async (job: Job<RegistrationQJobData>) => {
     );
 
     // create and push a verification transaction task
-    const transactionQWrapper = new TransactionQWrapper(TransactionQConfig);
+    const transactionQWrapper = new TransactionQWrapper(TransactionQconfigObject);
     // TODO: @enhancement: Change the hard coded strings to enums
     const transactionMode = accountRecord.account_type === 'bank_account' ? 'IMPS' : 'UPI';
     const payload: TransactionQPayload = {

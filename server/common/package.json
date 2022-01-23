@@ -31,6 +31,7 @@
     "@karya/misc-utils": "^2.0.0",
     "axios": "^0.21.2",
     "bluebird": "^3.7.2",
+    "bullmq": "^1.57.0",
     "google-auth-library": "^7.0.4",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.4",

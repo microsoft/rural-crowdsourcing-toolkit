@@ -80,8 +80,8 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
     try {
       inProgressRecord = await BasicModel.getSingle('payments_account', { status: st });
       // TODO: Uncomment this line
-      HttpResponse.BadRequest(ctx, `Verification for ${inProgressRecord.id} already in progress with status: ${st}`);
-      return;
+      // HttpResponse.BadRequest(ctx, `Verification for ${inProgressRecord.id} already in progress with status: ${st}`);
+      // return;
     } catch (e) {
       mainLogger.info(`Cant find account record with status ${st} for user_id: ${ctx.state.entity.id}`);
     }

@@ -1,6 +1,5 @@
-import { Payload, QResult } from '@karya/common';
+import { Payload, QResult, BullQconfig } from '@karya/common';
 import { Currency, PaymentMode, TransactionPurpose, PaymentsTransactionRecord } from '@karya/core';
-import { QueueOptions } from 'bullmq';
 
 export interface TransactionQPayload extends Payload {
   bulk_id?: string;
@@ -20,12 +19,10 @@ export type TransactionQJobData = {
   fundId: string;
 };
 
-export type Qconfig = {
-  qname: string;
-  adminAccountNumber: string;
-  opts: QueueOptions;
-};
-
 export interface TransactionQResult extends QResult {
   createdTransactionRecord: PaymentsTransactionRecord;
+}
+
+export interface TransactionQconfig extends BullQconfig {
+  adminAccountNumber: string;
 }
