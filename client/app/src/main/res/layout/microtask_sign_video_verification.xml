@@ -14,6 +14,7 @@
         style="@style/MicrotaskInstructionText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb"
+        android:visibility="gone"
         tools:text="@string/speech_recording_instruction" />
 
     <FrameLayout
@@ -62,8 +63,7 @@
         android:layout_marginBottom="@dimen/_20sdp"
         app:layout_constraintBottom_toTopOf="@id/nextBtnCv"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/videoPlayer">
+        app:layout_constraintRight_toRightOf="parent">
 
         <Button
             android:id="@+id/videoPoorBtn"

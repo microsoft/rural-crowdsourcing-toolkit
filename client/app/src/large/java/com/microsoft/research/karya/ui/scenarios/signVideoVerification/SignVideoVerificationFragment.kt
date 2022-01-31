@@ -62,7 +62,7 @@ class SignVideoVerificationFragment :
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
     ) { filePath ->
-       if (filePath.isNotEmpty()) videoPlayer.setSource(filePath)
+      if (filePath.isNotEmpty()) videoPlayer.setSource(filePath)
     }
 
     viewModel.sentenceTvText.observe(
@@ -85,7 +85,11 @@ class SignVideoVerificationFragment :
     videoPlayerPlaceHolder.visible()
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
     viewModel.setupViewModel(args.taskId, 0, 0)
@@ -94,6 +98,11 @@ class SignVideoVerificationFragment :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    /** grade instruction */
+    val gradeInstruction =
+      viewModel.task.params.asJsonObject.get("instruction").asString
+    instructionTv.text = gradeInstruction
 
     setupObservers()
     /** Set OnBackPressed callback */

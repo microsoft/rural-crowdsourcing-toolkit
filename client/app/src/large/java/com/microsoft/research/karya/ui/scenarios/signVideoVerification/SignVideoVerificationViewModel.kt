@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.scenarios.signVideoVerification
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
@@ -128,15 +129,37 @@ constructor(
 
     // TODO: Pick up from server
     val sentence = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
-    val recordingFileName =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
-    val recordFilePath = microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id,
-      recordingFileName
-    )
 
-    _recordingFile.value = recordFilePath
-    _videoPlayerVisibility.value = true
-    _sentenceTvText.value = sentence
+    try {
+      val recordingFileName =
+        currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
+      val recordFilePath = microtaskInputContainer.getMicrotaskInputFilePath(
+        currentMicroTask.id,
+        recordingFileName
+      )
+
+      _recordingFile.value = recordFilePath
+      _videoPlayerVisibility.value = true
+      _sentenceTvText.value = sentence
+    } catch (e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
+      // log the state transition
+      val message = JsonObject()
+      message.addProperty("type", "m")
+      message.addProperty("message", "NO_FILE")
+      log(message)
+
+      outputData.addProperty("score", 0)
+      outputData.addProperty("remarks", "No recording file present")
+
+      _videoPlayerVisibility.value = false
+
+      viewModelScope.launch {
+        completeAndSaveCurrentMicrotask()
+        moveToNextMicrotask()
+      }
+      resetStates()
+    }
   }
 
 }
