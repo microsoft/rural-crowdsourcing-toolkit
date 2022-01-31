@@ -52,6 +52,9 @@ constructor(
   lateinit var currentMicroTask: MicroTaskRecord
   protected lateinit var currentAssignment: MicroTaskAssignmentRecord
 
+  // Microtask group id -- track this to move back to dashboard on group boundaries
+  private var groupId: String? = null
+
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
   protected var outputData: JsonObject = JsonObject()
@@ -271,6 +274,14 @@ constructor(
       // Fetch the assignment and the microtask
       currentAssignment = assignmentRepository.getAssignmentById(assignmentID)
       currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
+
+      // Check if we are crossing group boundaries
+      if (groupId != null && currentMicroTask.group_id != groupId) {
+        navigateBack()
+        return@launch
+      }
+
+      groupId = currentMicroTask.group_id
 
       /** If microtask has input files, extract them */
       _inputFileDoesNotExist.value = false
