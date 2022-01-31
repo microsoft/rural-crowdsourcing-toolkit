@@ -10,6 +10,7 @@ import {
   TaskRecordType,
   MicrotaskType,
   MicrotaskRecordType,
+  MicrotaskGroup,
 } from '@karya/core';
 import { BasicModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
@@ -28,19 +29,42 @@ async function processInputFile(
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList<'SIGN_LANGUAGE_VIDEO'>> {
-  const sentences: { sentence: string }[] = jsonData!!;
-  const microtasks = sentences.map((sentence) => {
-    const mt: MicrotaskType<'SIGN_LANGUAGE_VIDEO'> = {
-      task_id: task.id,
-      input: { data: sentence },
-      deadline: task.deadline,
-      credits: task.params.creditsPerMicrotask,
-      status: 'INCOMPLETE',
-    };
-    return mt;
-  });
+  if (task.assignment_granularity == 'MICROTASK') {
+    const sentences: { sentence: string }[] = jsonData!!;
+    const microtasks = sentences.map((sentence) => {
+      const mt: MicrotaskType<'SIGN_LANGUAGE_VIDEO'> = {
+        task_id: task.id,
+        input: { data: sentence },
+        deadline: task.deadline,
+        credits: task.params.creditsPerMicrotask,
+        status: 'INCOMPLETE',
+      };
+      return mt;
+    });
 
-  return [{ mg: null, microtasks }];
+    return [{ mg: null, microtasks }];
+  } else {
+    const conversations: { sentence: string }[][] = jsonData!!;
+    const groups = conversations.map((conversation) => {
+      const microtasks = conversation.map((sentence) => {
+        const mt: MicrotaskType<'SIGN_LANGUAGE_VIDEO'> = {
+          task_id: task.id,
+          input: { data: sentence },
+          deadline: task.deadline,
+          credits: task.params.creditsPerMicrotask,
+          status: 'INCOMPLETE',
+        };
+        return mt;
+      });
+      const mg: MicrotaskGroup = {
+        task_id: task.id,
+        microtask_assignment_order: task.microtask_assignment_order,
+        status: 'INCOMPLETE',
+      };
+      return { mg, microtasks };
+    });
+    return groups;
+  }
 }
 
 // Backend speech data scenario

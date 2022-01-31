@@ -24,6 +24,8 @@ export type BaseSignLanguageVideoScenario = BaseScenarioInterface<
   SignLanguageVideoMicrotaskOutputFiles
 >;
 
+const mtSchema = Joi.object({ sentence: Joi.string().required() }).unknown(true);
+
 // Task input file format for sign language video data task
 const task_input_file: BaseSignLanguageVideoScenario['task_input_file'] = {
   json: {
@@ -32,7 +34,7 @@ const task_input_file: BaseSignLanguageVideoScenario['task_input_file'] = {
     JSON file containing an array of objects. Each object must have a sentence field that contains the\
     sentence prompt for the recording.\
     `,
-    schema: Joi.array().items(Joi.object({ sentence: Joi.string().required() }).unknown(true)),
+    schema: Joi.array().items(Joi.alternatives().try(mtSchema, Joi.array().items(mtSchema))),
   },
   tgz: { required: false },
 };
@@ -50,7 +52,7 @@ export const baseSignLanguageVideoScenario: BaseSignLanguageVideoScenario = {
   microtask_input_files: [],
   microtask_output: Joi.object({}),
   microtask_output_files: ['recording'],
-  assignment_granularity: 'MICROTASK',
+  assignment_granularity: 'EITHER',
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_SUBJECTIVE',
