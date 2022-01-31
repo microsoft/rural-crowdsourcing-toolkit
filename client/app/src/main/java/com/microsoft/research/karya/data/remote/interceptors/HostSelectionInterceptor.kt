@@ -14,7 +14,7 @@ class HostSelectionInterceptor(val baseUrlManager: BaseUrlManager): Interceptor 
     val newRequestBuilder = request.newBuilder()
     val newRequest = runBlocking {
       val baseUrl = baseUrlManager.getBaseUrl()
-      val newUrl = request.url.toString().replace(request.url.host, URL(baseUrl).host)
+      val newUrl = request.url.toString().replace("http://__url__", baseUrl)
       newRequestBuilder
         .url(newUrl)
         .build()
