@@ -13,13 +13,15 @@ export const tokenAuthoriser: UserRouteMiddleware = async (ctx, next) => {
   const userTokens = await TokenAuthHandler.getTokens(serverUser);
 
   const accessAllowed = isAccessAllowed(userTokens, resourceTokens);
-  console.log(resourceTokens, userTokens, accessAllowed, ctx);
   if (!accessAllowed) return HttpResponse.Forbidden(ctx, 'User does not have enough permissions, please contact admin');
 
   await next();
 };
 
 const isAccessAllowed = (userTokens: string[], resourceTokens: string[][]): boolean => {
+  // No tokens required if length is zero
+  if (resourceTokens.length === 0) return true;
+
   return resourceTokens.some((tokenArray) => {
     const isSubset = tokenArray.every((token) => userTokens.includes(token));
     return isSubset;

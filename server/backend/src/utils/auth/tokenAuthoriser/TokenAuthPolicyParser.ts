@@ -5,6 +5,9 @@ export class PolicyParser {
 
   getResourceTokens(ctx: ParameterizedContext) {
     const rawTokenArrays: string[][] = this.policy[ctx._matchedRouteName];
+    // If no policy defined for the API return empty array
+    if (!rawTokenArrays) return [];
+
     const parsedTokenArrays: string[][] = [];
 
     rawTokenArrays.forEach((tokenArray) => {
