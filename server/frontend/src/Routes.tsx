@@ -47,41 +47,40 @@ const Routes = (
     <Route exact path='/unauthorized' component={Unauthorized} />
     <Route exact path='/login' component={LoginRegister} />
     <Route exact path='/' component={LoginRegister} />
-    
+
     <>
-    <NavBar />
-    <main>
-    <div id='main-container' className='container'>
-    <Switch>
-    {/**  Dashboard routes */}
-    <AdminRoute path='/admin-dashboard' component={AdminDashboard} />
-    <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
+      <NavBar />
+      <main>
+        <div id='main-container' className='container'>
+          <Switch>
+            {/**  Dashboard routes */}
+            <AdminRoute path='/admin-dashboard' component={AdminDashboard} />
+            <WorkProviderRoute path='/wp-dashboard' component={WorkProviderDashboard} />
 
-    {/** Task routes */}
-    <WorkProviderRoute exact path='/task' component={TaskList} />
-    <WorkProviderRoute exact path='/task/create' component={CreateTask} />
-    <WorkProviderRoute exact path='/task/edit/:id' component={CreateTask} />
-    <WorkProviderRoute exact path='/task/:id' component={TaskDetail} />
+            {/** Task routes */}
+            <WorkProviderRoute exact path='/task' component={TaskList} />
+            <WorkProviderRoute exact path='/task/create' component={CreateTask} />
+            <WorkProviderRoute exact path='/task/edit/:id' component={CreateTask} />
+            <WorkProviderRoute exact path='/task/:id' component={TaskDetail} />
 
-    {/** Work Provider routes */}
-    <AdminRoute exact path='/work_provider' component={WorkProviderList} />
+            {/** Work Provider routes */}
+            <AdminRoute exact path='/work_provider' component={WorkProviderList} />
 
-    {/** Worker routes */}
-    <AdminRoute exact path='/worker' component={WorkerOverview} />
-    
-    {/** Box routes */}
-    <AdminRoute exact path='/box' component={ngBoxList} />
+            {/** Worker routes */}
+            <AdminRoute exact path='/worker' component={WorkerOverview} />
 
-    {/** Task assignment routes */}
-    <AdminRoute exact path='/task-assignments' component={TaskAssignmentList} />
-    <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
-    
-    {/** Language routes */}
-    <AdminRoute exact path='/lang-assets' component={LangAsset} />
+            {/** Box routes */}
+            <AdminRoute exact path='/box' component={ngBoxList} />
 
-    </Switch>
-    </div>
-    </main>
+            {/** Task assignment routes */}
+            <AdminRoute exact path='/task-assignments' component={TaskAssignmentList} />
+            <AdminRoute exact path='/task-assignments/create' component={CreateTaskAssignment} />
+
+            {/** Language routes */}
+            <AdminRoute exact path='/lang-assets' component={LangAsset} />
+          </Switch>
+        </div>
+      </main>
     </>
   </Switch>
 );

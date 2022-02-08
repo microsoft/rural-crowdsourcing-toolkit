@@ -56,17 +56,17 @@ type ServerUserListState = {
 class ServerUserList extends React.Component<ServerUserListProps, ServerUserListState> {
   // setup creation code state
   state: ServerUserListState = {
-    ccForm: { full_name: '', email: '', phone_number: '' },
+    ccForm: { full_name: '', email: '', phone_number: '', role: undefined },
   };
 
   // clear form
   clearForm = () => {
-    const ccForm: ServerUser = { full_name: '', email: '', phone_number: '' };
+    const ccForm: ServerUser = { full_name: '', email: '', phone_number: '', role: undefined };
     this.setState({ ccForm });
   };
 
   // handle form change
-  handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     const ccForm = { ...this.state.ccForm, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ ccForm });
   };
@@ -79,11 +79,13 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
 
   // On mount, get all work providers
   componentDidMount() {
+    M.AutoInit();
     M.updateTextFields();
   }
 
   // On update, update text fields
   componentDidUpdate(prevProps: ServerUserListProps) {
+    M.AutoInit();
     if (prevProps.server_user.status === 'IN_FLIGHT' && this.props.server_user.status === 'SUCCESS') {
       this.clearForm();
     }
@@ -102,7 +104,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
       ) : null;
 
     const tableColumns: Array<TableColumnType<ServerUserRecord>> = [
-      { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'ADMIN' ? 'Yes' : 'No') },
+      { type: 'field', field: 'role', header: 'Role' },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
       { type: 'function', header: 'Registration Type', function: (wp) => AuthProviderName(wp.reg_mechanism) },
@@ -142,6 +144,17 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
               onChange={this.handleChange}
               width='s4'
             />
+            <div className='col s3 input-field'>
+              <select multiple={false} id='role' onChange={this.handleChange}>
+                <option value='' disabled={true} selected={true}>
+                  User Type
+                </option>
+                <option value='WORK_PROVIDER'>WORK PROVIDER</option>
+                <option value='COORDINATOR'>COORDINATOR</option>
+              </select>
+            </div>
+          </div>
+          <div className='row'>
             <div className='col s3'>
               <button className='btn' id='gen-cc-btn'>
                 <i className='material-icons left'>add</i>Generate Code
@@ -156,7 +169,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
       <div className='row main-row'>
         {errorMessageElement}
         <h1 className='page-title' id='wp-title'>
-          Work Providers
+          Server Users
         </h1>
         {this.props.server_user.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
         <div className='basic-table' id='wp-table'>

@@ -79,8 +79,8 @@ class NavBar extends React.Component<NavBarProps> {
                           </NavLink>
                         </li>
                         <li>
-                          <NavLink activeClassName='active-tab' to='/work_provider'>
-                            Work Providers
+                          <NavLink activeClassName='active-tab' to='/server_users'>
+                            Users
                           </NavLink>
                         </li>
                         <li>
@@ -91,6 +91,23 @@ class NavBar extends React.Component<NavBarProps> {
                         <li>
                           <NavLink activeClassName='active-tab' to='/lang-assets'>
                             Language Assets
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                ) : auth.cwp.role === 'COORDINATOR' ? (
+                  <div className='nav-wrapper' id='tab-bar'>
+                    <div className='container'>
+                      <ul id='tabs'>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/task'>
+                            Tasks
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink activeClassName='active-tab' to='/worker'>
+                            Workers
                           </NavLink>
                         </li>
                       </ul>
