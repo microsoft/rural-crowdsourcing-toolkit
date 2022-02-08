@@ -17,6 +17,8 @@ import * as TaskAssignmentController from '../user-routes-controllers/TaskAssign
 import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
 import * as WorkerController from '../user-routes-controllers/WorkerController';
 import * as LanguageController from '../user-routes-controllers/LanguageController';
+import * as PaymentsController from '../user-routes-controllers/PaymentsController';
+import { tokenAuthoriser } from '../utils/auth/tokenAuthoriser/Index';
 
 // Default state for all routes
 export type DefaultUserRouteState = {
@@ -71,6 +73,7 @@ userRouter.get('/server_user/logout', AuthController.logout);
 
 // Create a new server user
 userRouter.post(
+  'create_server_users',
   '/server_users',
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
@@ -99,10 +102,17 @@ userRouter.get('/boxes', Middlewares.needIdToken, Middlewares.onlyAdmin, BoxCont
  */
 
 // Create a new task
-userRouter.post('/tasks', Middlewares.needIdToken, BodyParser(), TaskController.create);
+userRouter.post('create_task', '/tasks', Middlewares.needIdToken, BodyParser(), TaskController.create);
 
 // Edit task
-userRouter.put('/task/:id', Middlewares.needIdToken, BodyParser(), TaskController.editTask);
+userRouter.put(
+  'edit_task',
+  '/task/:id',
+  Middlewares.needIdToken,
+  tokenAuthoriser,
+  BodyParser(),
+  TaskController.editTask
+);
 
 // Submit input files for a task
 userRouter.post<TaskController.TaskRouteState, {}>(
@@ -124,7 +134,7 @@ userRouter.get<TaskController.TaskRouteState, {}>(
 );
 
 // Get all tasks
-userRouter.get('/tasks', Middlewares.needIdToken, TaskController.getAll);
+userRouter.get('get_all_tasks', '/tasks', Middlewares.needIdToken, tokenAuthoriser, TaskController.getAll);
 
 // Trigger output file creation
 userRouter.post<TaskController.TaskRouteState, {}>(
@@ -137,10 +147,11 @@ userRouter.post<TaskController.TaskRouteState, {}>(
 
 // Get microtask level summary of a task
 userRouter.get<TaskController.TaskRouteState, {}>(
+  'get_microtask_summary_of_task',
   '/task/:id/microtask_summary',
-  // @ts-ignore
   Middlewares.needIdToken,
   TaskController.checkTask,
+  // @ts-ignore
   TaskController.getMicrotasksSummary
 );
 
@@ -154,9 +165,11 @@ userRouter.get<TaskController.TaskRouteState, {}>(
 
 // Mark a task complete
 userRouter.put<TaskController.TaskRouteState, {}>(
+  'mark_task_complete',
   '/task/:id/mark_complete',
-  // @ts-ignores
   Middlewares.needIdToken,
+  tokenAuthoriser,
+  // @ts-ignores
   TaskController.checkTask,
   TaskController.markComplete
 );
