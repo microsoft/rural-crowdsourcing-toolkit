@@ -1,19 +1,57 @@
 import { ServerUserRecord } from '@karya/core';
 import { envGetString } from '@karya/misc-utils';
+import querystring from 'querystring';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 const BASE_URL = envGetString('KEYCLOACK_BASE_URL');
-const ACCESS_TOKEN = envGetString('KEYCLOACK_ACCESS_TOKEN');
 const REALM = envGetString('KEYCLOACK_REALM');
+let accessToken: string | undefined;
 
-const authHeaderValue = 'Bearer ' + ACCESS_TOKEN;
 const keycloakAxios = axios.create({
   baseURL: BASE_URL,
-  headers: { Authorization: authHeaderValue },
 });
 
+const RELATIVE_TOKEN_URL = 'auth/realms/master/protocol/openid-connect/token';
 const RELATIVE_REALM_URL = `auth/admin/realms/${REALM}`;
 const RELATIVE_ROLE_URL = `auth/admin/realms/${REALM}/roles`;
+
+const getKeycloakAccessTokenResponse = async () => {
+  return await axios.post(
+    `${BASE_URL}/${RELATIVE_TOKEN_URL}`,
+    querystring.stringify({
+      username: envGetString('KEYCLOAK_USERNAME'),
+      password: envGetString('KEYCLOAK_PASSWORD'),
+      client_id: 'admin-cli',
+      grant_type: 'password',
+      scope: 'openid',
+    })
+  );
+};
+
+// Interceptor to refresh token when required
+keycloakAxios.interceptors.request.use(async (config) => {
+  const setAccessToken = async () => {
+    const response = await getKeycloakAccessTokenResponse();
+    accessToken = response.data.access_token;
+  };
+
+  if (!accessToken) {
+    await setAccessToken();
+  }
+
+  // Check if jwt token is expired
+  const decoded = jwt.decode(accessToken!);
+  // @ts-ignore
+  if (decoded!.exp < Date.now()) {
+    // Token expired, regenerate
+    await setAccessToken();
+  }
+
+  config.headers.Authorization = 'Bearer ' + accessToken;
+
+  return config;
+});
 
 export const createNewToken = async (token: string) => {
   const response = await keycloakAxios.post(RELATIVE_ROLE_URL, {
