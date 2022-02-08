@@ -23,6 +23,7 @@ import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
 import { csvToJson } from '../scenarios/Common';
 import { Promise as BBPromise } from 'bluebird';
+import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -62,6 +63,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
     try {
       const insertedRecord = await BasicModel.insertRecord('task', task);
+      await TokenAuthHandler.grantTaskPermission(user, insertedRecord.id, ['read', 'edit']);
       HttpResponse.OK(ctx, insertedRecord);
     } catch (e) {
       // Internal server error

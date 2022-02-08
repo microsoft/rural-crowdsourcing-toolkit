@@ -8,6 +8,7 @@ import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
+import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 /**
  * Create a new server user. Cannot create an admin through this endpoint.
@@ -33,6 +34,8 @@ export const create: UserRouteMiddleware = async (ctx) => {
   server_user.role = 'WORK_PROVIDER';
 
   const record = await BasicModel.insertRecord('server_user', server_user);
+  // Assign work-provider role
+  await TokenAuthHandler.assignRole(record, 'work-provider');
   HttpResponse.OK(ctx, record);
 };
 

@@ -1,6 +1,6 @@
-import { PolicyParser } from './PolicyParser';
-import * as TokenHandler from './tokenHandler/TokenHandler';
-import Policy from './Policy';
+import { PolicyParser } from './TokenAuthPolicyParser';
+import * as TokenAuthHandler from './tokenAuthHandler/TokenAuthHandler';
+import Policy from './TokenAuthPolicy';
 import { BasicModel } from '@karya/common';
 import { UserRouteMiddleware } from '../../../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
@@ -10,7 +10,7 @@ const policyParser = new PolicyParser(Policy);
 export const tokenAuthoriser: UserRouteMiddleware = async (ctx, next) => {
   const resourceTokens = policyParser.getResourceTokens(ctx);
   const serverUser = await BasicModel.getSingle('server_user', { id: ctx.state.entity.id });
-  const userTokens = await TokenHandler.getTokens(serverUser);
+  const userTokens = await TokenAuthHandler.getTokens(serverUser);
 
   const accessAllowed = isAccessAllowed(userTokens, resourceTokens);
   console.log(resourceTokens, userTokens, accessAllowed, ctx);
