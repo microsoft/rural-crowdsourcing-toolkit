@@ -1,4 +1,4 @@
-import { ServerUserRecord } from '@karya/core';
+import { ServerRole, ServerUserRecord } from '@karya/core';
 import { BasicModel, KeycloakUtils } from '@karya/common';
 
 export const setTokens = async (user: ServerUserRecord, tokens: string[]) => {
@@ -44,11 +44,10 @@ const createTokenMapping = async (user: ServerUserRecord, token: string) => {
       }
     );
   }
-  console.log(keyCloackUserId);
   await KeycloakUtils.createTokenMapping(keyCloackUserId, token);
 };
 
-export const assignRole = async (user: ServerUserRecord, role: 'admin' | 'work-provider') => {
+export const assignRole = async (user: ServerUserRecord, role: ServerRole) => {
   await setTokens(user, [role]);
 };
 

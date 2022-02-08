@@ -40,7 +40,7 @@ export async function bootstrapAuth() {
   const insertedRecord = await BasicModel.insertRecord('server_user', workProvider);
 
   /**Create role for admin */
-  await TokenAuthHandler.setTokens(insertedRecord, ['admin']);
+  await TokenAuthHandler.assignRole(insertedRecord, 'ADMIN');
 
   if (insertedRecord === null) {
     throw new Error('Failed to create record');
