@@ -53,7 +53,7 @@ You can also use the following command to clean build.
 
 ### 1. Start the Keycloak server
 
-After downloading and unpacking the ZIP | tar.gz from the keycloack official website, run standalons.sh inside the bin folder under the root Keycloak folder. Make sure you have JAVA installed.
+After downloading and unpacking the ZIP | tar.gz from the keycloack official website, run standalone.sh inside the bin folder under the root Keycloak folder. Make sure you have JAVA installed.
 
 `# keycloak-16.1.0> bin/standalone.sh`
 
