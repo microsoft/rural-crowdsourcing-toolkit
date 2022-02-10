@@ -20,6 +20,7 @@ backend server.
    providers and admins with the server.
 5. **OTP Provider** - If you need to send OTP for authentication. The codebase
    currently uses 2factor.in APIs.
+6. **Keycloak** - Karya uses Keycloak for role management at server side. You can download it from [here](https://www.keycloak.org/downloads) (Download the distribution provided by WildFly).
 
 ## Common Server Setup
 
@@ -47,6 +48,25 @@ files.
 You can also use the following command to clean build.
 
 `# > npx lerna run build`
+
+## Keycloak setup
+
+### 1. Start the Keycloak server
+
+After downloading and unpacking the ZIP | tar.gz from the keycloack official website, run standalons.sh inside the bin folder under the root Keycloak folder. Make sure you have JAVA installed.
+
+`# keycloak-16.1.0> bin/standalone.sh`
+
+### 2. Creating the admin account
+
+1. Before you can use Keycloak, you need to create an admin account which you use to log in to the Keycloak admin console.
+
+2. Open http://localhost:8080/auth in your web browser. The welcome page opens, confirming that the server is running.
+3. Enter a username and password to create an initial admin user.
+
+### 3. Update `.env` file in backend
+
+Paste the username and password in KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD in .env file for the backend server. (More on how to setup `.env` file in following section)
 
 ## Server Backend
 
