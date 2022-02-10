@@ -17,7 +17,6 @@ import * as TaskAssignmentController from '../user-routes-controllers/TaskAssign
 import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
 import * as WorkerController from '../user-routes-controllers/WorkerController';
 import * as LanguageController from '../user-routes-controllers/LanguageController';
-import * as PaymentsController from '../user-routes-controllers/PaymentsController';
 import { tokenAuthoriser } from '../utils/auth/tokenAuthoriser/Index';
 
 // Default state for all routes
