@@ -152,6 +152,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const graph_display = this.state.graph_display;
     const show_reg = this.state.show_reg;
 
+    // Getting all the box ids as an array with no duplicates
+    const boxIds_duplicates = workers.map((w) => w.box_id);
+    const boxIds = Array.from(new Set([...boxIds_duplicates]));
+
     // Filtering workers by tags
     workers = workers.filter((w) => tags_filter.every((val) => w.tags.tags.includes(val)));
 
@@ -160,10 +164,6 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const arr: string[] = [];
     const tags_duplicates = arr.concat(...tags_array);
     const tags = Array.from(new Set([...tags_duplicates]));
-
-    // Getting all the box ids as an array with no duplicates
-    const boxIds_duplicates = workers.map((w) => w.box_id);
-    const boxIds = Array.from(new Set([...boxIds_duplicates]));
 
     // Filtering workers by box id
     if (box_id_filter !== undefined && box_id_filter !== 'all') {
