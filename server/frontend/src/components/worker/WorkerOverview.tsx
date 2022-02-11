@@ -32,7 +32,6 @@ import { CSVLink } from 'react-csv';
 // CSS
 import '../../css/worker/WorkerOverview.css';
 import { TableColumnType, TableList } from '../templates/TableList';
-import { Icon } from 'react-materialize';
 
 // Pagination
 import Pagination from 'react-js-pagination';
@@ -178,6 +177,13 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
       workers = workers.filter((w) => w.reg_mechanism === null);
     }
 
+    // Sorting the workers
+    if (sort_by !== undefined) {
+      sort_by === 'completed'
+        ? (workers = workers.sort((prev, next) => prev.extras.completed - next.extras.completed))
+        : (workers = workers.sort((prev, next) => prev.extras.verified - next.extras.verified));
+    }
+
     // Worker Table Columns
     const workerTableColumns: Array<TableColumnType<WorkerRecord>> = [
       { type: 'field', field: 'id', header: 'ID' },
@@ -198,13 +204,6 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
 
     const exportFileTime = new Date().toISOString().replace(/:/, '-').split('.')[0];
     const exportFileName = `worker-data-${exportFileTime}.csv`;
-
-    // Sorting the data
-    if (sort_by !== undefined) {
-      sort_by === 'completed'
-        ? (data = data.sort((prev, next) => prev.completed - next.completed))
-        : (data = data.sort((prev, next) => prev.verified - next.verified));
-    }
 
     // Create error message element if necessary
     const getErrorElement =
@@ -330,7 +329,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                 </label>
               </div>
 
-              <div className='basic-table' id='wp-table'>
+              <div className='basic-table' id='worker-table'>
                 <TableList<WorkerRecord>
                   columns={workerTableColumns}
                   rows={workers.slice(
