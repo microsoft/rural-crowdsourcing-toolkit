@@ -42,3 +42,43 @@
 #reg_row span {
   font-size: 1.2em;
 }
+
+#worker-table {
+  margin-left: 7%;
+  margin-top: 4.5%;
+  margin-bottom: 3%;
+}
+
+#worker-table .section {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #6e768d;
+}
+
+#worker-table table {
+  width: 94%;
+}
+
+#worker-table th {
+  font-size: 0.96em;
+}
+
+#worker-table td {
+  padding-top: 1.6%;
+  padding-bottom: 1.6%;
+  padding-left: 2.5%;
+}
+
+#worker-table td {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+#worker-table td:nth-child(4) {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
