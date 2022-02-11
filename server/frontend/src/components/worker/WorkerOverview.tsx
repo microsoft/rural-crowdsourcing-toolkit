@@ -31,6 +31,11 @@ import { CSVLink } from 'react-csv';
 
 // CSS
 import '../../css/worker/WorkerOverview.css';
+import { TableColumnType, TableList } from '../templates/TableList';
+import { Icon } from 'react-materialize';
+
+// Pagination
+import Pagination from 'react-js-pagination';
 
 // Data connector
 const dataConnector = withData('task');
@@ -70,6 +75,10 @@ type WorkerOverviewState = {
   sort_by?: string;
   graph_display: { assigned: boolean; completed: boolean; verified: boolean; earned: boolean };
   show_reg?: string;
+  worker_table: {
+    total_rows_per_page: number;
+    current_page: number;
+  };
 };
 
 // Task list component
@@ -78,6 +87,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   state: WorkerOverviewState = {
     tags_filter: [],
     graph_display: { assigned: true, completed: true, verified: true, earned: false },
+    worker_table: {
+      total_rows_per_page: 10,
+      current_page: 1,
+    },
   };
 
   componentDidMount() {
@@ -153,6 +166,14 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     } else if (show_reg === 'no') {
       workers = workers.filter((w) => w.reg_mechanism === null);
     }
+
+    // Worker Table Columns
+    const workerTableColumns: Array<TableColumnType<WorkerRecord>> = [
+      { type: 'field', field: 'id', header: 'ID' },
+      { type: 'field', field: 'access_code', header: 'Access Code' },
+      { type: 'field', field: 'phone_number', header: 'Phone Number' },
+      { type: 'function', header: 'Registered', function: (w) => (!!w.reg_mechanism).toString() },
+    ];
 
     // Data to be fed into graph
     var data = workers.map((w) => ({
@@ -284,6 +305,31 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   />
                   <span>Earned</span>
                 </label>
+              </div>
+
+              <div className='basic-table' id='wp-table'>
+                <TableList<WorkerRecord>
+                  columns={workerTableColumns}
+                  rows={workers.slice(
+                    (this.state.worker_table.current_page - 1) * this.state.worker_table.total_rows_per_page,
+                    this.state.worker_table.current_page * this.state.worker_table.total_rows_per_page,
+                  )}
+                  emptyMessage='No Workers'
+                />
+                <Pagination
+                  activePage={this.state.worker_table.current_page}
+                  itemsCountPerPage={this.state.worker_table.total_rows_per_page}
+                  totalItemsCount={workers.length}
+                  pageRangeDisplayed={5}
+                  onChange={(pageNo) =>
+                    this.setState((prevState) => ({
+                      worker_table: {
+                        ...prevState.worker_table,
+                        current_page: pageNo,
+                      },
+                    }))
+                  }
+                />
               </div>
               <ResponsiveContainer width='90%' height={400}>
                 <LineChart data={data} margin={{ top: 30, right: 10, left: 20, bottom: 5 }}>
