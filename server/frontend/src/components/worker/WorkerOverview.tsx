@@ -185,12 +185,24 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     }
 
     // Worker Table Columns
-    const workerTableColumns: Array<TableColumnType<WorkerRecord>> = [
+    var workerTableColumns: Array<TableColumnType<WorkerRecord & { extras: Extras }> | null> = [
       { type: 'field', field: 'id', header: 'ID' },
       { type: 'field', field: 'access_code', header: 'Access Code' },
-      { type: 'field', field: 'phone_number', header: 'Phone Number' },
       { type: 'function', header: 'Registered', function: (w) => (!!w.reg_mechanism).toString() },
+      graph_display.assigned
+        ? { type: 'function', header: 'Assigned', function: (w) => w.extras.assigned.toString() }
+        : null,
+      graph_display.completed
+        ? { type: 'function', header: 'Completed', function: (w) => w.extras.completed.toString() }
+        : null,
+      graph_display.verified
+        ? { type: 'function', header: 'Verified', function: (w) => w.extras.verified.toString() }
+        : null,
+      graph_display.earned ? { type: 'function', header: 'Earned', function: (w) => w.extras.earned.toString() } : null,
     ];
+
+    // Filtering null values out of worker table columns
+    workerTableColumns = workerTableColumns.filter((col) => col !== null);
 
     // Data to be fed into graph
     var data = workers.map((w) => ({
@@ -330,8 +342,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
               </div>
 
               <div className='basic-table' id='worker-table'>
-                <TableList<WorkerRecord>
-                  columns={workerTableColumns}
+                <TableList<WorkerRecord & { extras: Extras }>
+                  columns={workerTableColumns as TableColumnType<WorkerRecord & { extras: Extras }>[]}
                   rows={workers.slice(
                     (this.state.worker_table.current_page - 1) * this.state.worker_table.total_rows_per_page,
                     this.state.worker_table.current_page * this.state.worker_table.total_rows_per_page,
