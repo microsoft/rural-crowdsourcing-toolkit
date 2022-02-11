@@ -67,18 +67,20 @@
 #worker-table td {
   padding-top: 1.6%;
   padding-bottom: 1.6%;
-  padding-left: 2.5%;
-}
-
-#worker-table td {
+  padding-left: 4%;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.95em;
   font-weight: 400;
   letter-spacing: 0.04em;
 }
 
-#worker-table td:nth-child(4) {
+#worker-table td:nth-child(3) {
   font-size: 0.85em;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+#worker-table td:nth-child(1),
+#worker-table td:nth-child(2) {
+  padding-left: 2%;
 }
