@@ -1,5 +1,6 @@
 import { ServerRole, ServerUserRecord } from '@karya/core';
-import { BasicModel, KeycloakUtils } from '@karya/common';
+import { BasicModel } from '@karya/common';
+import * as KeycloakUtils from '../../KeycloakUtils';
 
 export const setTokens = async (user: ServerUserRecord, tokens: string[]) => {
   for (const token of tokens) {

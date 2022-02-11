@@ -9,7 +9,6 @@ export { AuthState } from './Common';
 export * from './utils/OTPUtils';
 export * from './utils/KaryaIDTokenUtils';
 export * from './utils/GoogleAuthUtils';
-export * as KeycloakUtils from './utils/KeycloakUtils';
 
 export type UserRegistrationState<EntityType extends 'server_user' | 'worker'> = {
   reg_mechanism: RegistrationMechanism;
