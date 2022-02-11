@@ -14,7 +14,7 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { WorkerRecord } from '@karya/core';
+import { TaskRecord, WorkerRecord } from '@karya/core';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
@@ -72,6 +72,7 @@ type WorkerOverviewProps = DataProps<typeof dataConnector> & ConnectedProps<type
 type WorkerOverviewState = {
   tags_filter: Array<string>;
   box_id_filter?: string;
+  task_filter?: TaskRecord;
   sort_by?: string;
   graph_display: { assigned: boolean; completed: boolean; verified: boolean; earned: boolean };
   show_reg?: string;
@@ -108,6 +109,13 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     this.setState({ tags_filter });
   };
 
+  // Handle task change
+  handleTaskChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const task_id = e.currentTarget.value;
+    const task_filter = this.props.task.data.find((t) => t.id === task_id) as TaskRecord;
+    this.setState({ task_filter });
+  };
+
   // Handle box id change
   handleBoxIdChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const box_id_filter = e.currentTarget.value;
@@ -136,8 +144,11 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   render() {
     type Extras = { assigned: number; completed: number; verified: number; earned: number };
     var workers = this.props.workers_data as (WorkerRecord & { extras: Extras })[];
-    const tags_filter = this.state.tags_filter;
-    const box_id_filter = this.state.box_id_filter;
+    const tasks = this.props.task.data;
+    const { task_filter } = this.state;
+    const tags_filter = task_filter ? this.state.tags_filter.concat(task_filter.itags.itags) : this.state.tags_filter;
+    const { box_id_filter } = this.state;
+    const task_id_filter = task_filter ? task_filter.id : 0;
     const sort_by = this.state.sort_by;
     const graph_display = this.state.graph_display;
     const show_reg = this.state.show_reg;
@@ -214,7 +225,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                 Workers
               </h1>
               <div className='row' id='filter_row'>
-                <div className='col s10 m8 l5'>
+                <div className='col s10 m8 l4'>
                   <select multiple={true} id='tags_filter' value={tags_filter} onChange={this.handleTagsChange}>
                     <option value='' disabled={true} selected={true}>
                       Filter workers by tags
@@ -226,7 +237,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                     ))}
                   </select>
                 </div>
-                <div className='col s10 m8 l4'>
+                <div className='col s10 m8 l3'>
                   <select id='box_id_filter' value={box_id_filter} onChange={this.handleBoxIdChange}>
                     <option value='' disabled={true} selected={true}>
                       Filter workers by box ID
@@ -235,6 +246,18 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                     {boxIds.map((i) => (
                       <option value={i} key={i}>
                         {i}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className='col s10 m8 l3'>
+                  <select id='task_id_filter' value={task_id_filter} onChange={this.handleTaskChange}>
+                    <option value={0} disabled={true}>
+                      Filter workers by task
+                    </option>
+                    {tasks.map((t) => (
+                      <option value={t.id} key={t.id}>
+                        {t.name}
                       </option>
                     ))}
                   </select>
