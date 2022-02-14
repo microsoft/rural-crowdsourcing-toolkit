@@ -4,8 +4,8 @@ import querystring from 'querystring';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 
-const BASE_URL = envGetString('KEYCLOACK_BASE_URL');
-const REALM = envGetString('KEYCLOACK_REALM');
+const BASE_URL = envGetString('KEYCLOAK_BASE_URL');
+const REALM = envGetString('KEYCLOAK_REALM');
 let accessToken: string | undefined;
 
 const keycloakAxios = axios.create({
