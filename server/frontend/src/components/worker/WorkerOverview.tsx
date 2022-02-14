@@ -188,7 +188,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     var workerTableColumns: Array<TableColumnType<WorkerRecord & { extras: Extras }> | null> = [
       { type: 'field', field: 'id', header: 'ID' },
       { type: 'field', field: 'access_code', header: 'Access Code' },
-      { type: 'function', header: 'Registered', function: (w) => (!!w.reg_mechanism).toString() },
+      // { type: 'function', header: 'Registered', function: (w) => (!!w.reg_mechanism).toString() },
+      { type: 'field', field: 'phone_number', header: 'Phone Number' },
       graph_display.assigned
         ? { type: 'function', header: 'Assigned', function: (w) => w.extras.assigned.toString() }
         : null,
