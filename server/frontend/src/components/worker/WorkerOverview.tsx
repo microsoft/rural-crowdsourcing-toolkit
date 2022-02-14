@@ -272,6 +272,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                         {t.name}
                       </option>
                     ))}
+                    <option value={undefined}>None</option>
                   </select>
                 </div>
               </div>
