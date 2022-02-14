@@ -345,6 +345,39 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   <span>Earned</span>
                 </label>
               </div>
+              <div className='row' id='reg_row'>
+                <p>Show: </p>
+                <label key='registered'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='show_reg'
+                    value='yes'
+                    onChange={this.handleShowRegChange}
+                  />
+                  <span>Registered</span>
+                </label>
+                <label key='unregistered'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='show_reg'
+                    value='no'
+                    onChange={this.handleShowRegChange}
+                  />
+                  <span>Unregistered</span>
+                </label>
+                <label key='all'>
+                  <input
+                    type='radio'
+                    className='with-gap'
+                    name='show_reg'
+                    value='all'
+                    onChange={this.handleShowRegChange}
+                  />
+                  <span>All</span>
+                </label>
+              </div>
 
               <div className='basic-table' id='worker-table'>
                 <TableList<WorkerRecord & { extras: Extras }>
@@ -383,40 +416,6 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   {graph_display.earned && <Line type='monotone' dataKey='earned' stroke='#ea80fc' dot={false} />}
                 </LineChart>
               </ResponsiveContainer>
-
-              <div className='row' id='reg_row'>
-                <p>Show </p>
-                <label key='registered'>
-                  <input
-                    type='radio'
-                    className='with-gap'
-                    name='show_reg'
-                    value='yes'
-                    onChange={this.handleShowRegChange}
-                  />
-                  <span>Registered</span>
-                </label>
-                <label key='unregistered'>
-                  <input
-                    type='radio'
-                    className='with-gap'
-                    name='show_reg'
-                    value='no'
-                    onChange={this.handleShowRegChange}
-                  />
-                  <span>Unregistered</span>
-                </label>
-                <label key='all'>
-                  <input
-                    type='radio'
-                    className='with-gap'
-                    name='show_reg'
-                    value='all'
-                    onChange={this.handleShowRegChange}
-                  />
-                  <span>All</span>
-                </label>
-              </div>
             </>
           )}
         </div>
