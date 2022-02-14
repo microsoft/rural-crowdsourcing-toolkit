@@ -13,6 +13,15 @@
   border-radius: 7px;
 }
 
+#text_filter_row {
+  margin-left: 0.5%;
+}
+
+#text_filter_row .input-field {
+  margin-left: 4%;
+  margin-top: 0.01%;
+}
+
 #sort_row,
 #display_row,
 #reg_row {

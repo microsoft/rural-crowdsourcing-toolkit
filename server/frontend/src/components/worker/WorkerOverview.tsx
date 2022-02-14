@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 /**
- * Component to display a graph with the required workers' data
+ * Component to display the required workers' data
  */
 
 // React stuff
@@ -18,6 +18,8 @@ import { TaskRecord, WorkerRecord } from '@karya/core';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
+// HTML Helpers
+import { ColTextInput } from '../templates/FormInputs';
 import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
 
 // HoCs
@@ -72,9 +74,11 @@ type WorkerOverviewState = {
   tags_filter: Array<string>;
   box_id_filter?: string;
   task_filter?: TaskRecord;
+  phone_no_input: string;
+  access_code_input: string;
   sort_by?: string;
-  graph_display: { assigned: boolean; completed: boolean; verified: boolean; earned: boolean };
   show_reg?: string;
+  graph_display: { assigned: boolean; completed: boolean; verified: boolean; earned: boolean };
   worker_table: {
     total_rows_per_page: number;
     current_page: number;
@@ -86,6 +90,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   // Initial state
   state: WorkerOverviewState = {
     tags_filter: [],
+    phone_no_input: '',
+    access_code_input: '',
     graph_display: { assigned: true, completed: true, verified: true, earned: false },
     worker_table: {
       total_rows_per_page: 10,
@@ -95,10 +101,12 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
 
   componentDidMount() {
     this.props.getWorkersSummary();
+    M.updateTextFields();
     M.AutoInit();
   }
 
   componentDidUpdate() {
+    M.updateTextFields();
     M.AutoInit();
   }
 
@@ -119,6 +127,11 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   handleBoxIdChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const box_id_filter = e.currentTarget.value;
     this.setState({ box_id_filter });
+  };
+
+  // Handle input change
+  handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.setState({ ...this.state, [e.currentTarget.id]: e.currentTarget.value });
   };
 
   // Handle change in sorting parameter
@@ -148,9 +161,11 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const tags_filter = task_filter ? this.state.tags_filter.concat(task_filter.itags.itags) : this.state.tags_filter;
     const { box_id_filter } = this.state;
     const task_id_filter = task_filter ? task_filter.id : 0;
-    const sort_by = this.state.sort_by;
-    const graph_display = this.state.graph_display;
-    const show_reg = this.state.show_reg;
+    const { phone_no_input } = this.state;
+    const { access_code_input } = this.state;
+    const { sort_by } = this.state;
+    const { graph_display } = this.state;
+    const { show_reg } = this.state;
 
     // Getting all the box ids as an array with no duplicates
     const boxIds_duplicates = workers.map((w) => w.box_id);
@@ -168,6 +183,16 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     // Filtering workers by box id
     if (box_id_filter !== undefined && box_id_filter !== 'all') {
       workers = workers.filter((w) => w.box_id === box_id_filter);
+    }
+
+    // Filtering workers by phone number
+    if (phone_no_input !== undefined && phone_no_input !== '') {
+      workers = workers.filter((w) => w.phone_number?.startsWith(phone_no_input));
+    }
+
+    // Filtering workers by access code
+    if (access_code_input !== undefined && access_code_input !== '') {
+      workers = workers.filter((w) => w.access_code?.startsWith(access_code_input));
     }
 
     // Filtering registered or unregistered workers
@@ -275,6 +300,24 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                     <option value={undefined}>None</option>
                   </select>
                 </div>
+              </div>
+              <div className='row' id='text_filter_row'>
+                <ColTextInput
+                  id='phone_no_input'
+                  value={this.state.phone_no_input}
+                  onChange={this.handleInputChange}
+                  label='Filter by phone number'
+                  width='s10 m8 l4'
+                  required={false}
+                />
+                <ColTextInput
+                  id='access_code_input'
+                  value={this.state.access_code_input}
+                  onChange={this.handleInputChange}
+                  label='Filter by access code'
+                  width='s10 m8 l4'
+                  required={false}
+                />
               </div>
 
               <CSVLink data={data} filename={exportFileName} className='btn' id='download-btn'>
