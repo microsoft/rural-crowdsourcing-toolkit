@@ -274,6 +274,11 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   </select>
                 </div>
               </div>
+
+              <CSVLink data={data} filename={exportFileName} className='btn' id='download-btn'>
+                <i className='material-icons left'>download</i>Download data
+              </CSVLink>
+
               <div className='row' id='sort_row'>
                 <p>Sort by: </p>
                 <label key='completed'>
@@ -412,10 +417,6 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   <span>All</span>
                 </label>
               </div>
-
-              <CSVLink data={data} filename={exportFileName} className='btn' id='download-data-btn'>
-                <i className='material-icons left'>download</i>Download data
-              </CSVLink>
             </>
           )}
         </div>
