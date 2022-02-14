@@ -14,13 +14,10 @@
 }
 
 #sort_row,
-#display_row {
-  margin-left: 8%;
-  margin-bottom: 0.05%;
-}
-
+#display_row,
 #reg_row {
-  margin-left: 20%;
+  margin-left: 8%;
+  margin-bottom: 0.01%;
 }
 
 #sort_row p,
@@ -43,7 +40,7 @@
 }
 
 #reg_row label {
-  margin-left: 3%;
+  margin-left: 7%;
 }
 
 #sort_row span,
