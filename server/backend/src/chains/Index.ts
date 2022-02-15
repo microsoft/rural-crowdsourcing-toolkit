@@ -54,24 +54,26 @@ export async function executeForwardLink(
   const toMicrotasks = await chainObj.handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks);
 
   // Create the chained microtasks objects
-  const chainedMicrotasks = toMicrotasks.map((mt, i) => {
-    const assignment = assignments[i];
-    const input: ChainedMicrotaskType['input'] = {
-      ...mt.input!,
-      chain: {
-        linkId: link.id,
-        taskId: fromTask.id,
-        workerId: assignment.worker_id,
-        assignmentId: assignment.id,
-        microtaskId: assignment.microtask_id,
-      },
-    };
-    const chainedMT: ChainedMicrotaskType = {
-      ...mt,
-      input,
-    };
-    return chainedMT;
-  });
+  const chainedMicrotasks = toMicrotasks
+    .map((mt, i) => {
+      const assignment = assignments[i];
+      const input: ChainedMicrotaskType['input'] = {
+        ...mt.input!,
+        chain: {
+          linkId: link.id,
+          taskId: fromTask.id,
+          workerId: assignment.worker_id,
+          assignmentId: assignment.id,
+          microtaskId: assignment.microtask_id,
+        },
+      };
+      const chainedMT: ChainedMicrotaskType = {
+        ...mt,
+        input,
+      };
+      return chainedMT;
+    })
+    .filter((mt) => mt.status == 'INCOMPLETE');
 
   // Insert the chained microtasks
   await BBPromise.mapSeries(chainedMicrotasks, async (mt) => {

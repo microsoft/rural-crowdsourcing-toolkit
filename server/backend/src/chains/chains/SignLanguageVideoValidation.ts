@@ -3,7 +3,7 @@
 //
 // Backend implementation of the sign language video validation chain
 
-import { baseSignLanguageVideoValidation, MicrotaskType } from '@karya/core';
+import { baseSignLanguageVideoValidation, MicrotaskStatus, MicrotaskType } from '@karya/core';
 import { BackendChainInterface } from '../BackendChainInterface';
 
 export const signLanguageVideoValidation: BackendChainInterface<
@@ -17,6 +17,10 @@ export const signLanguageVideoValidation: BackendChainInterface<
    */
   async handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks) {
     const chainedMicrotasks = assignments.map((assignment, i) => {
+      let status: MicrotaskStatus = 'INCOMPLETE';
+      if (fromTask.id != '2' && Math.random() > 0.1) {
+        status = 'COMPLETED';
+      }
       const microtask = microtasks[i];
       const chainedMicrotask: MicrotaskType<'SGN_LANG_VIDEO_VERIFICATION'> = {
         task_id: toTask.id,
@@ -27,7 +31,7 @@ export const signLanguageVideoValidation: BackendChainInterface<
         input_file_id: assignment.output_file_id,
         deadline: toTask.deadline,
         credits: toTask.params.creditsPerMicrotask,
-        status: 'INCOMPLETE',
+        status,
       };
       return chainedMicrotask;
     });
