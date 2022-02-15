@@ -58,26 +58,26 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
         const { accuracy, volume, quality, fluency: rfluency } = report;
         const fluency = rfluency ?? 0;
 
-        if (accuracy == 0 || volume == 0 || quality == 0 || fluency == 0) {
-          fraction = 0;
-        } else if (accuracy == 1 || fluency == 1) {
-          fraction = 0.75;
-        } else {
-          fraction = 1;
-        }
-
-        // const sum = accuracy + quality + volume;
-        // if (accuracy == 0 || quality == 0 || volume == 0) {
+        // if (accuracy == 0 || volume == 0 || quality == 0 || fluency == 0) {
         //   fraction = 0;
-        // } else if (sum == 3) {
-        //   fraction = 0.25;
-        // } else if (sum == 4) {
-        //   fraction = 0.5;
-        // } else if (sum == 5) {
+        // } else if (accuracy == 1 || fluency == 1) {
         //   fraction = 0.75;
-        // } else if (sum == 6) {
+        // } else {
         //   fraction = 1;
         // }
+
+        const sum = accuracy + quality + volume;
+        if (accuracy == 0 || quality == 0 || volume == 0) {
+          fraction = 0;
+        } else if (sum == 3) {
+          fraction = 0.25;
+        } else if (sum == 4) {
+          fraction = 0.5;
+        } else if (sum == 5) {
+          fraction = 0.75;
+        } else if (sum == 6) {
+          fraction = 1;
+        }
       }
 
       const credits = fraction * fromTask.params.creditsPerMicrotask;
