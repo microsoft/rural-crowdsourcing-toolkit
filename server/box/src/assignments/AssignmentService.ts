@@ -51,6 +51,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
     // Get task for the assignment
     const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
+    if (task.status == 'COMPLETED') return;
 
     // check if the task is assignable to the worker
     if (!assignable(task, worker)) return;
