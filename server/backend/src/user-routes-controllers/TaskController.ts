@@ -324,6 +324,8 @@ export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
 export const markComplete: TaskRouteMiddleware = async (ctx) => {
   const task = ctx.state.task as TaskRecordType;
   const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, { status: 'COMPLETED' });
+  // Mark all task_assignments as completed
+  await BasicModel.updateRecords('task_assignment', { task_id: task.id }, { status: 'COMPLETED' });
   HttpResponse.OK(ctx, updatedRecord);
 };
 
