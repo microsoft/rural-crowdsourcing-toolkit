@@ -194,8 +194,9 @@ class TaskList extends React.Component<TaskListProps, {}> {
     }
 
     // Getting summary info of tasks from props
-    type Extras = { assigned: number; completed: number; verified: number; cost: number };
+    type Extras = { assigned: number; completed: number; verified: number; cost: number; data: object };
     const tasks_summary = this.props.tasks_summary as (MicrotaskAssignmentRecord & { extras: Extras })[];
+    console.log(tasks_summary);
 
     // scenario tag function
     const scenarioTag = (task: TaskRecordType) => {
@@ -284,30 +285,44 @@ class TaskList extends React.Component<TaskListProps, {}> {
       );
     };
 
-    const task_data = (task: TaskRecordType) => tasks_summary.find((t) => t.task_id === task.id);
+    const task_summary = (task: TaskRecordType) => tasks_summary.find((t) => t.id === task.id);
 
     const body = (task: TaskRecordType) => {
+      const summary = task_summary(task)
+        ? task_summary(task)!.extras
+        : { completed: 0, verified: 0, cost: 0, data: {} as any };
       return (
-        <div className='row'>
-          <div className='body-col'>
-            <p>
-              Completed Assignments:
-              <span>{task_data(task) !== undefined ? task_data(task)!.extras.completed : 0}</span>
-            </p>
+        <>
+          <div className='row'>
+            <div className='body-col'>
+              <p>
+                Completed Assignments:
+                <span>{summary.completed}</span>
+              </p>
+            </div>
+            <div className='body-col'>
+              <p>
+                Verified Assignments:
+                <span>{summary.verified}</span>
+              </p>
+            </div>
+            <div className='body-col'>
+              <p>
+                Total Cost:
+                <span>{summary.cost}</span>
+              </p>
+            </div>
           </div>
-          <div className='body-col'>
-            <p>
-              Verified Assignments:
-              <span>{task_data(task) !== undefined ? task_data(task)!.extras.verified : 0}</span>
-            </p>
+          <div className='row'>
+            {Object.keys(summary.data).map((k) => (
+              <div className='body-col'>
+                <p>
+                  {summary.data[k].name}: <span>{summary.data[k].val}</span>
+                </p>
+              </div>
+            ))}
           </div>
-          <div className='body-col'>
-            <p>
-              Total Cost:
-              <span>{task_data(task) !== undefined ? task_data(task)!.extras.cost : 0}</span>
-            </p>
-          </div>
-        </div>
+        </>
       );
     };
 
