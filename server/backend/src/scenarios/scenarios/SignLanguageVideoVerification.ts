@@ -89,4 +89,9 @@ export const backendSignLanguageVideoVerificationScenario: IBackendScenarioInter
     data.score = data.score / assignments.length;
     return { data };
   },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
+  },
 };

@@ -96,4 +96,9 @@ export const backendSignLanguageVideoScenario: IBackendScenarioInterface<BaseSig
   async microtaskOutput(task, microtask, assignments) {
     return null;
   },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
+  },
 };

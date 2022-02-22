@@ -51,4 +51,9 @@ export const backendSentenceCorpusScenario: IBackendScenarioInterface<BaseSenten
     const assignment = assignments[0];
     return assignment.output!;
   },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
+  },
 };
