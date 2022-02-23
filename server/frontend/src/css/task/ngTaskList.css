@@ -191,6 +191,7 @@
 .body-col span {
   font-size: 1.1em !important;
   font-weight: 500;
+  text-transform: none;
   margin-left: 3%;
 }
 

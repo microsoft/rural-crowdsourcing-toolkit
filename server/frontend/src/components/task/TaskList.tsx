@@ -317,7 +317,7 @@ class TaskList extends React.Component<TaskListProps, {}> {
             {Object.keys(summary.data).map((k) => (
               <div className='body-col'>
                 <p>
-                  {summary.data[k].name}: <span>{summary.data[k].val}</span>
+                  {summary.data[k].name}:<span>{summary.data[k].val}</span>
                 </p>
               </div>
             ))}
