@@ -18,7 +18,7 @@ export const signLanguageVideoValidation: BackendChainInterface<
   async handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks) {
     const chainedMicrotasks = assignments.map((assignment, i) => {
       let status: MicrotaskStatus = 'INCOMPLETE';
-      if (fromTask.id != '2' && Math.random() > 0.1) {
+      if (fromTask.id != '2' && Math.random() > 0.3) {
         status = 'COMPLETED';
       }
       const microtask = microtasks[i];
