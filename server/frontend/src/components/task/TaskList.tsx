@@ -196,7 +196,6 @@ class TaskList extends React.Component<TaskListProps, {}> {
     // Getting summary info of tasks from props
     type Extras = { assigned: number; completed: number; verified: number; cost: number; data: object };
     const tasks_summary = this.props.tasks_summary as (MicrotaskAssignmentRecord & { extras: Extras })[];
-    console.log(tasks_summary);
 
     // scenario tag function
     const scenarioTag = (task: TaskRecordType) => {
