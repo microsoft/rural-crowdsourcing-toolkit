@@ -27,6 +27,7 @@ import {
   BaseSentenceCorpusVerificationScenario,
 } from './scenarios/SentenceCorpusVerification';
 import { baseSentenceValidationScenario, BaseSentenceValidationScenario } from './scenarios/SentenceValidation';
+import { baseVideoTranscriptionScenario, BaseVideoTranscriptionScenario } from './scenarios/VideoTranscription';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -42,6 +43,7 @@ export * from './scenarios/ImageData';
 export * from './scenarios/SentenceCorpus';
 export * from './scenarios/SentenceCorpusVerification';
 export * from './scenarios/SentenceValidation';
+export * from './scenarios/VideoTranscription';
 
 // List of scenario names
 export const scenarioNames = [
@@ -58,6 +60,7 @@ export const scenarioNames = [
   'SENTENCE_CORPUS',
   'SENTENCE_CORPUS_VERIFICATION',
   'SENTENCE_VALIDATION',
+  'VIDEO_TRANSCRIPTION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -88,6 +91,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseSentenceCorpusVerificationScenario
   : SN extends 'SENTENCE_VALIDATION'
   ? BaseSentenceValidationScenario
+  : SN extends 'VIDEO_TRANSCRIPTION'
+  ? BaseVideoTranscriptionScenario
   : never;
 
 // Scenario name to instance map
@@ -107,6 +112,7 @@ export const scenarioMap: {
   SENTENCE_CORPUS: baseSentenceCorpusScenario,
   SENTENCE_CORPUS_VERIFICATION: baseSentenceCorpusVerificationScenario,
   SENTENCE_VALIDATION: baseSentenceValidationScenario,
+  VIDEO_TRANSCRIPTION: baseVideoTranscriptionScenario,
 };
 
 // Core scenario parameters

@@ -21,6 +21,7 @@ import { backendImageDataScenario } from './scenarios/ImageData';
 import { backendSentenceCorpusScenario } from './scenarios/SentenceCorpus';
 import { backendSentenceCorpusVerificationScenario } from './scenarios/SentenceCorpusVerification';
 import { backendSentenceValidationScenario } from './scenarios/SentenceValidation';
+import { backendVideoTranscriptionScenario } from './scenarios/VideoTranscription';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -39,4 +40,5 @@ export const backendScenarioMap: {
   SENTENCE_CORPUS: backendSentenceCorpusScenario,
   SENTENCE_CORPUS_VERIFICATION: backendSentenceCorpusVerificationScenario,
   SENTENCE_VALIDATION: backendSentenceValidationScenario,
+  VIDEO_TRANSCRIPTION: backendVideoTranscriptionScenario,
 };
