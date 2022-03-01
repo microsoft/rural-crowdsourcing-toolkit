@@ -350,6 +350,10 @@ export const editTask: UserRouteMiddleware = async (ctx) => {
 
     try {
       const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, task);
+      // Mark all task_assignments as updated so that the task updates can be
+      // pushed to the respective boxes.
+      // TODO: This is a hack. Can potentially be implemented more efficiently
+      await BasicModel.updateRecords('task_assignment', { task_id: task.id }, {});
       HttpResponse.OK(ctx, updatedRecord);
     } catch (e) {
       // Internal server error
