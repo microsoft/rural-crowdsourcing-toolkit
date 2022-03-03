@@ -579,6 +579,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
     const microtasks = graph_data.length;
     const completed_assignments = graph_data.reduce((prev, current) => prev + current.extras.completed, 0);
+    const verified_assignments = graph_data.reduce((prev, current) => prev + current.extras.verified, 0);
     const cost = graph_data.reduce((prev, current) => prev + current.extras.cost, 0);
     const data = graph_data.map((m) => ({ ...m.extras, id: m.id }));
 
@@ -645,6 +646,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
           <div className='number-col'>
             <h2>Completed Assignments</h2>
             <p>{completed_assignments}</p>
+          </div>
+          <div className='number-col'>
+            <h2>Verified Assignments</h2>
+            <p>{verified_assignments}</p>
           </div>
           <div className='number-col'>
             <h2>Total Cost</h2>
