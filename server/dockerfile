@@ -1,0 +1,8 @@
+FROM node:14.18.2
+
+WORKDIR /usr/src/karya
+
+COPY . .
+
+RUN npx lerna bootstrap
+RUN npx lerna run build
