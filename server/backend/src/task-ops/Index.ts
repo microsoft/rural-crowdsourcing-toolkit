@@ -6,31 +6,38 @@
 import { BasicModel } from '@karya/common';
 import { executeForwardTaskLinks, ForwardTaskLinkHandlerObject } from './ops/ForwardTaskLinkHandler';
 import { executeBackwardTaskLinks, BackwardTaskLinkHandlerObject } from './ops/BackwardTaskLinkHandler';
-import Bull from 'bull';
+import Bull, { QueueOptions } from 'bull';
 import { generateTaskOutput, TaskOutputGeneratorObject } from './ops/OutputGenerator';
 import { processInputFile, TaskInputProcessorObject } from './ops/InputProcessor';
 
+const REDIS_CONNECTION: QueueOptions = {
+  redis: {
+    host: 'karya-backend-redis',
+    port: 6379,
+  },
+};
+
 // Input processor queue
-export const inputProcessorQ = new Bull<TaskInputProcessorObject>('TASK_INPUT');
+export const inputProcessorQ = new Bull<TaskInputProcessorObject>('TASK_INPUT', REDIS_CONNECTION);
 inputProcessorQ.process(async (job) => {
   const { task, jsonFilePath, tgzFilePath, folderPath } = job.data;
   await processInputFile(task, jsonFilePath, tgzFilePath, folderPath);
 });
 
 // Forward task link handler
-export const forwardTaskLinkQ = new Bull<ForwardTaskLinkHandlerObject>('FORWARD_TASK_LINK');
+export const forwardTaskLinkQ = new Bull<ForwardTaskLinkHandlerObject>('FORWARD_TASK_LINK', REDIS_CONNECTION);
 forwardTaskLinkQ.process(async (job) => {
   await executeForwardTaskLinks(job.data);
 });
 
 // Backward task link handler
-export const backwardTaskLinkQ = new Bull<BackwardTaskLinkHandlerObject>('BACKWARD_TASK_LINK');
+export const backwardTaskLinkQ = new Bull<BackwardTaskLinkHandlerObject>('BACKWARD_TASK_LINK', REDIS_CONNECTION);
 backwardTaskLinkQ.process(async (job) => {
   await executeBackwardTaskLinks(job.data);
 });
 
 // Output generator
-export const outputGeneratorQ = new Bull<TaskOutputGeneratorObject>('TASK_OUTPUT');
+export const outputGeneratorQ = new Bull<TaskOutputGeneratorObject>('TASK_OUTPUT', REDIS_CONNECTION);
 outputGeneratorQ.process(async (job) => {
   await generateTaskOutput(job.data);
 });
