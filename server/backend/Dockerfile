@@ -1,4 +1,4 @@
-FROM karya-root:latest
+FROM karya-base:latest
 
 WORKDIR /usr/src/karya/backend
 

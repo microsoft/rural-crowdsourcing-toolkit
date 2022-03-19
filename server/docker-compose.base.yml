@@ -1,6 +1,6 @@
 services:
   karya-root:
-    image: karya-root
+    image: karya-base
     build: .
     command: lerna run compile
     volumes:
