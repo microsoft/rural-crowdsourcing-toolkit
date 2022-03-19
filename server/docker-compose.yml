@@ -51,7 +51,7 @@ services:
       - .:/usr/src/karya
     ports:
       - 3000:3000
-    command: npx serve -s build/ -l 3000
+    command: serve -s build/ -l 3000
 
   karya-backend-db:
     image: postgres:14-alpine
