@@ -1,42 +1,54 @@
 version: '3'
 
 services:
-  karya-root:
-    build: .
-    image: karya-root
-    container_name: karya-root
-    # volumes:
-    #   - .:/usr/src/karya
-    # command: npx lerna run build
+  # karya-root:
+  #   build: .
+  #   image: karya-root
+  #   container_name: karya-root
+  # volumes:
+  #   - .:/usr/src/karya
+  # command: npx lerna run build
 
   karya-backend:
-    build: ./backend/
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
     image: karya-backend
     depends_on:
-      - karya-root
+      # - karya-root
       - karya-backend-db
       - karya-backend-redis
       - keycloak
+    volumes:
+      - .:/usr/src/karya
     ports:
       - 5000:5000
     command: node dist/Server.js
 
   karya-box:
-    build: ./box/
+    build:
+      context: .
+      dockerfile: ./box/Dockerfile
     image: karya-box
     depends_on:
-      - karya-root
+      # - karya-root
       - karya-box-db
+    volumes:
+      - .:/usr/src/karya
     ports:
       - 8000:8000
     command: node dist/Server.js
 
   karya-frontend:
-    build: ./frontend/
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
     image: karya-frontend
     depends_on:
-      - karya-root
+      # - karya-root
       - karya-backend
+    volumes:
+      - .:/usr/src/karya
     ports:
       - 3000:3000
     command: npx serve -s build/ -l 3000

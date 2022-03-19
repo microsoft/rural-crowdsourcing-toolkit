@@ -1,0 +1,7 @@
+services:
+  karya-root:
+    image: karya-root
+    build: .
+    command: lerna run compile
+    volumes:
+      - .:/usr/src/karya
