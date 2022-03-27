@@ -23,6 +23,7 @@ import { upsertKaryaFile } from '../models/KaryaFileModel';
 import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
 import { csvToJson } from '../scenarios/Common';
 import { Promise as BBPromise } from 'bluebird';
+import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -62,6 +63,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
     try {
       const insertedRecord = await BasicModel.insertRecord('task', task);
+      await TokenAuthHandler.grantTaskPermission(user, insertedRecord.id, ['read', 'edit']);
       HttpResponse.OK(ctx, insertedRecord);
     } catch (e) {
       // Internal server error
@@ -314,6 +316,8 @@ export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
 export const markComplete: TaskRouteMiddleware = async (ctx) => {
   const task = ctx.state.task as TaskRecordType;
   const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, { status: 'COMPLETED' });
+  // Mark all task_assignments as completed
+  await BasicModel.updateRecords('task_assignment', { task_id: task.id }, { status: 'COMPLETED' });
   HttpResponse.OK(ctx, updatedRecord);
 };
 
@@ -346,6 +350,10 @@ export const editTask: UserRouteMiddleware = async (ctx) => {
 
     try {
       const updatedRecord = await BasicModel.updateSingle('task', { id: task.id }, task);
+      // Mark all task_assignments as updated so that the task updates can be
+      // pushed to the respective boxes.
+      // TODO: This is a hack. Can potentially be implemented more efficiently
+      await BasicModel.updateRecords('task_assignment', { task_id: task.id }, {});
       HttpResponse.OK(ctx, updatedRecord);
     } catch (e) {
       // Internal server error

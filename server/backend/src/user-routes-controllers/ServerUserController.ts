@@ -8,6 +8,7 @@ import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
+import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 /**
  * Create a new server user. Cannot create an admin through this endpoint.
@@ -15,6 +16,10 @@ import * as HttpResponse from '@karya/http-response';
 export const create: UserRouteMiddleware = async (ctx) => {
   // Get basic box info
   const server_user: ServerUser = ctx.request.body;
+
+  if (server_user.role === 'ADMIN') {
+    return HttpResponse.BadRequest(ctx, 'Cannot create user with ADMIN role');
+  }
 
   // Generate access code and ensure it is not repeated
   let access_code: string = '';
@@ -30,9 +35,10 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
   // Update box record with access code
   server_user.access_code = access_code;
-  server_user.role = 'WORK_PROVIDER';
 
   const record = await BasicModel.insertRecord('server_user', server_user);
+  // Assign work-provider role
+  await TokenAuthHandler.assignRole(record, server_user.role!);
   HttpResponse.OK(ctx, record);
 };
 

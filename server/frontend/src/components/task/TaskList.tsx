@@ -41,10 +41,11 @@ const dataConnector = withData('task');
 
 // Map state to props
 const mapStateToProps = (state: RootState) => {
+  const auth = state.all.auth;
   const tasks_summary = state.all.microtask_assignment.data;
   const task_filter = state.ui.task_filter;
   const { ...request } = state.all.task;
-  return { tasks_summary, task_filter, request };
+  return { tasks_summary, task_filter, request, auth };
 };
 
 // Map dispatch to props
@@ -166,6 +167,7 @@ class TaskList extends React.Component<TaskListProps, {}> {
 
   // Render component
   render() {
+    const { auth } = this.props;
     let tasks = this.props.task.data as TaskRecordType[];
     const scenarios = Object.values(scenarioMap);
     const tags_filter = this.props.task_filter.tags_filter;
@@ -202,20 +204,22 @@ class TaskList extends React.Component<TaskListProps, {}> {
     };
 
     // create task button
-    const createTaskButton = (
-      <Link to='/task/create' id='create-task-link'>
-        <button className='btn waves-effect waves-light'>
-          Create Task <i className='material-icons left'>add</i>
-        </button>
-      </Link>
-    );
+    const createTaskButton =
+      auth.cwp?.role === 'COORDINATOR' ? null : (
+        <Link to='/task/create' id='create-task-link'>
+          <button className='btn waves-effect waves-light'>
+            Create Task <i className='material-icons left'>add</i>
+          </button>
+        </Link>
+      );
 
     // create task from JSON button
-    const createTaskFromJSONButton = (
-      <button className='btn' id='create-task-json-btn' onClick={() => this.setState({ show_json_form: true })}>
-        Import From JSON <i className='material-icons left'>add</i>
-      </button>
-    );
+    const createTaskFromJSONButton =
+      auth.cwp?.role === 'COORDINATOR' ? null : (
+        <button className='btn' id='create-task-json-btn' onClick={() => this.setState({ show_json_form: true })}>
+          Import From JSON <i className='material-icons left'>add</i>
+        </button>
+      );
 
     const createTaskFromJSONForm = (
       <div id='json-form' style={{ display: this.state.show_json_form === true ? 'block' : 'none' }}>
@@ -262,12 +266,16 @@ class TaskList extends React.Component<TaskListProps, {}> {
           <span className='badge language'>{languageString(task)}</span>
           <span className='badge scenario'>{scenarioTag(task)}</span>
           <span className='badge status'>{taskStatus(task)}</span>
-          <Link to={{ pathname: `/task/edit/${task.id}`, state: task }} className='edit-task-link'>
-            <span className='material-icons'>edit</span>
-          </Link>
-          <Link to={{ pathname: '/task/create', state: task }} className='copy-task-link'>
-            <span className='material-icons'>content_copy</span>
-          </Link>
+          {auth.cwp?.role === 'COORDINATOR' ? null : (
+            <>
+              <Link to={{ pathname: `/task/edit/${task.id}`, state: task }} className='edit-task-link'>
+                <span className='material-icons'>edit</span>
+              </Link>
+              <Link to={{ pathname: '/task/create', state: task }} className='copy-task-link'>
+                <span className='material-icons'>content_copy</span>
+              </Link>
+            </>
+          )}
           <Link to={`/task/${task.id}`} className='details-link'>
             <span>Details</span>
             <div className='arrow-2'></div>

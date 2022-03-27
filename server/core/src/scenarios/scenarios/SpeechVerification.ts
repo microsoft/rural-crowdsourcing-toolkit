@@ -23,6 +23,7 @@ type SpeechVerificationMicrotaskOutput =
       accuracy: number;
       quality: number;
       volume: number;
+      fluency?: number;
     }
   | {
       auto: true;

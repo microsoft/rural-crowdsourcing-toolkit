@@ -1,0 +1,23 @@
+[
+  {
+    "type": "text",
+    "question": "What is your name?",
+    "long": false,
+    "key": "name"
+  },
+
+  {
+    "type": "mcq",
+    "question": "What is your gender?",
+    "options": ["Male", "Female", "Other"],
+    "multiple": false,
+    "key": "gender"
+  },
+
+  {
+    "type": "text",
+    "question": "What is your year of birth?",
+    "long": "false",
+    "key": "yob"
+  }
+]

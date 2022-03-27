@@ -66,7 +66,7 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
       const recordingFile = assFiles.recording || Object.values(assFiles)[0];
 
       // JSON data
-      const jsonData = {
+      const jsonData: { [id: string]: any } = {
         sentence_id: mt.id,
         sentence: mt.input.data.sentence,
         worker_id: assignment.worker_id,
@@ -74,7 +74,16 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
         report: assignment.report,
         max_credits: assignment.max_credits,
         credits: assignment.credits,
+        assigned_at: assignment.created_at,
+        completed_at: assignment.completed_at,
+        submitted_at: assignment.submitted_to_box_at,
+        verified_at: assignment.verified_at,
       };
+
+      // Add logs to the output
+      if (task.params.includeLogs) {
+        jsonData.logs = assignment.logs;
+      }
 
       // Write the json data to file
       const jsonFile = `${assignment.id}.json`;

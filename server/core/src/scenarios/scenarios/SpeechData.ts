@@ -10,6 +10,10 @@ import { LanguageCode, languageMap, languageParameter } from '../../languages/In
 // Speech data task input parameters
 type SpeechDataTaskInputParameters = {
   language: LanguageCode;
+  compress: boolean;
+  sampling_rate: string;
+  bitwidth: string;
+  includeLogs: string;
 };
 
 // Speech data input format
@@ -35,6 +39,47 @@ export type BaseSpeechDataScenario = BaseScenarioInterface<
  */
 const task_input: BaseSpeechDataScenario['task_input'] = [
   languageParameter('language', 'Language', 'Language in which the recordings are collected'),
+
+  {
+    id: 'compress',
+    label: 'Compress audio files?',
+    description: 'If checked, audio files will be compressed using AAC',
+    type: 'boolean',
+    required: false,
+  },
+
+  {
+    id: 'sampling_rate',
+    label: 'Sampling rate',
+    description: 'Sampling rate to be used for the audio recording',
+    type: 'enum',
+    required: true,
+    list: [
+      ['8k', '8 Khz'],
+      ['16k', '16 Khz'],
+      ['44k', '44 Khz'],
+    ],
+  },
+
+  {
+    id: 'bitwidth',
+    label: 'Bitwidth per sample',
+    description: 'Bitwidth for each sample',
+    required: true,
+    type: 'enum',
+    list: [
+      ['8', '8 bit per sample'],
+      ['16', '16 bits per sample'],
+    ],
+  },
+
+  {
+    id: 'includeLogs',
+    label: 'Include logs in output',
+    description: 'Include detailed work logs in output',
+    required: false,
+    type: 'boolean',
+  },
 ];
 
 // Task input file format for speech data task

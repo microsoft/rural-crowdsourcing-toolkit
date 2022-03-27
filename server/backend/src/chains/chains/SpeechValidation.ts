@@ -55,7 +55,17 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
       if (report.auto) {
         fraction = report.fraction;
       } else {
-        const { accuracy, volume, quality } = report;
+        const { accuracy, volume, quality, fluency: rfluency } = report;
+        const fluency = rfluency ?? 0;
+
+        // if (accuracy == 0 || volume == 0 || quality == 0 || fluency == 0) {
+        //   fraction = 0;
+        // } else if (accuracy == 1 || fluency == 1) {
+        //   fraction = 0.75;
+        // } else {
+        //   fraction = 1;
+        // }
+
         const sum = accuracy + quality + volume;
         if (accuracy == 0 || quality == 0 || volume == 0) {
           fraction = 0;

@@ -67,9 +67,10 @@ const Routes = (
             <WorkProviderRoute exact path='/task/create' component={CreateTask} />
             <WorkProviderRoute exact path='/task/edit/:id' component={CreateTask} />
             <WorkProviderRoute exact path='/task/:id' component={TaskDetail} />
+            <WorkProviderRoute exact path='/worker' component={WorkerOverview} />
 
-            {/** Work Provider routes */}
-            <AdminRoute exact path='/work_provider' component={WorkProviderList} />
+            {/** Server Users routes */}
+            <AdminRoute exact path='/server_users' component={WorkProviderList} />
 
             {/** Worker routes */}
             <AdminRoute exact path='/worker' component={WorkerOverview} />

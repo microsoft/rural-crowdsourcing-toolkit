@@ -19,6 +19,15 @@ import {
 } from './scenarios/SignLanguageVideoVerification';
 import { baseImageTranscriptionScenario, BaseImageTranscriptionScenario } from './scenarios/ImageTranscription';
 import { baseImageLabellingScenario, BaseImageLabellingScenario } from './scenarios/ImageLabelling';
+import { baseQuizScenario, BaseQuizScenario } from './scenarios/Quiz';
+import { baseImageDataScenario, BaseImageDataScenario } from './scenarios/ImageData';
+import { baseSentenceCorpusScenario, BaseSentenceCorpusScenario } from './scenarios/SentenceCorpus';
+import {
+  baseSentenceCorpusVerificationScenario,
+  BaseSentenceCorpusVerificationScenario,
+} from './scenarios/SentenceCorpusVerification';
+import { baseSentenceValidationScenario, BaseSentenceValidationScenario } from './scenarios/SentenceValidation';
+import { baseImageAnnotationScenario, BaseImageAnnotationScenario } from './scenarios/ImageAnnotation';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -29,6 +38,12 @@ export * from './scenarios/SignLanguageVideoVerification';
 export * from './scenarios/XliterationData';
 export * from './scenarios/ImageTranscription';
 export * from './scenarios/ImageLabelling';
+export * from './scenarios/Quiz';
+export * from './scenarios/ImageData';
+export * from './scenarios/SentenceCorpus';
+export * from './scenarios/SentenceCorpusVerification';
+export * from './scenarios/SentenceValidation';
+export * from './scenarios/ImageAnnotation';
 
 // List of scenario names
 export const scenarioNames = [
@@ -40,6 +55,12 @@ export const scenarioNames = [
   'XLITERATION_DATA',
   'IMAGE_TRANSCRIPTION',
   'IMAGE_LABELLING',
+  'QUIZ',
+  'IMAGE_DATA',
+  'SENTENCE_CORPUS',
+  'SENTENCE_CORPUS_VERIFICATION',
+  'SENTENCE_VALIDATION',
+  'IMAGE_ANNOTATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -60,6 +81,18 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseImageTranscriptionScenario
   : SN extends 'IMAGE_LABELLING'
   ? BaseImageLabellingScenario
+  : SN extends 'QUIZ'
+  ? BaseQuizScenario
+  : SN extends 'IMAGE_DATA'
+  ? BaseImageDataScenario
+  : SN extends 'SENTENCE_CORPUS'
+  ? BaseSentenceCorpusScenario
+  : SN extends 'SENTENCE_CORPUS_VERIFICATION'
+  ? BaseSentenceCorpusVerificationScenario
+  : SN extends 'SENTENCE_VALIDATION'
+  ? BaseSentenceValidationScenario
+  : SN extends 'IMAGE_ANNOTATION'
+  ? BaseImageAnnotationScenario
   : never;
 
 // Scenario name to instance map
@@ -74,6 +107,12 @@ export const scenarioMap: {
   XLITERATION_DATA: baseXliterationDataScenario,
   IMAGE_TRANSCRIPTION: baseImageTranscriptionScenario,
   IMAGE_LABELLING: baseImageLabellingScenario,
+  QUIZ: baseQuizScenario,
+  IMAGE_DATA: baseImageDataScenario,
+  SENTENCE_CORPUS: baseSentenceCorpusScenario,
+  SENTENCE_CORPUS_VERIFICATION: baseSentenceCorpusVerificationScenario,
+  SENTENCE_VALIDATION: baseSentenceValidationScenario,
+  IMAGE_ANNOTATION: baseImageAnnotationScenario,
 };
 
 // Core scenario parameters
@@ -81,6 +120,8 @@ type CoreScenarioParamsType = {
   instruction: string;
   creditsPerMicrotask: number;
   maxMicrotasksPerUser: number;
+  startTime?: string;
+  endTime?: string;
 };
 
 export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
@@ -107,6 +148,22 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
     label: 'Max Microtasks per User (0 for no limit)',
     description: 'Maximum number of microtasks per user',
     required: true,
+  },
+
+  {
+    id: 'startTime',
+    type: 'time',
+    label: 'Start Time (24h format. leave empty for none)',
+    description: 'Strict start time for tasks on each day',
+    required: false,
+  },
+
+  {
+    id: 'endTime',
+    type: 'time',
+    label: 'End Time (24h format. leave empty for none)',
+    description: 'Strict end time for tasks on each day',
+    required: false,
   },
 ];
 

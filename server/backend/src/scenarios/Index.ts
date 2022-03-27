@@ -16,6 +16,12 @@ import { backendXliterationDataScenario } from './scenarios/XliterationData';
 import { backendSignLanguageVideoVerificationScenario } from './scenarios/SignLanguageVideoVerification';
 import { backendImageTranscriptionScenario } from './scenarios/ImageTranscription';
 import { backendImageLabellingScenario } from './scenarios/ImageLabelling';
+import { backendQuizScenario } from './scenarios/Quiz';
+import { backendImageDataScenario } from './scenarios/ImageData';
+import { backendSentenceCorpusScenario } from './scenarios/SentenceCorpus';
+import { backendSentenceCorpusVerificationScenario } from './scenarios/SentenceCorpusVerification';
+import { backendSentenceValidationScenario } from './scenarios/SentenceValidation';
+import { backendImageAnnotationScenario } from './scenarios/ImageAnnotation';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -29,4 +35,10 @@ export const backendScenarioMap: {
   XLITERATION_DATA: backendXliterationDataScenario,
   IMAGE_TRANSCRIPTION: backendImageTranscriptionScenario,
   IMAGE_LABELLING: backendImageLabellingScenario,
+  QUIZ: backendQuizScenario,
+  IMAGE_DATA: backendImageDataScenario,
+  SENTENCE_CORPUS: backendSentenceCorpusScenario,
+  SENTENCE_CORPUS_VERIFICATION: backendSentenceCorpusVerificationScenario,
+  SENTENCE_VALIDATION: backendSentenceValidationScenario,
+  IMAGE_ANNOTATION: backendImageAnnotationScenario,
 };

@@ -11,7 +11,7 @@ export async function workersSummary(): Promise<any[]> {
       COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
       COALESCE((mta.completed + mta.verified)::int, 0) as completed,
       COALESCE((mta.verified)::int, 0) as verified,
-      (mta.earned) as earned,
+      COALESCE((mta.earned)::int, 0) as earned,
       (mta.earliest) as earliest,
       (mta.latest) as latest
     FROM 
@@ -50,7 +50,7 @@ export async function workersTaskSummary(task_id: string): Promise<any[]> {
       COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
       COALESCE((mta.completed + mta.verified)::int, 0) as completed,
       COALESCE((mta.verified)::int, 0) as verified,
-      (mta.earned) as earned
+      COALESCE((mta.earned)::int, 0) as earned
     FROM 
       worker as w
     LEFT JOIN
