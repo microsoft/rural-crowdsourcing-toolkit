@@ -18,7 +18,7 @@
   font-size: 1.1em;
   font-weight: 400;
   letter-spacing: 0.04em;
-  margin-bottom: 4%;
+  margin-bottom: 2%;
   margin-top: 2%;
   color: #717787;
 }
@@ -34,9 +34,10 @@
 
 .number-col {
   display: inline-block;
-  width: 30%;
+  width: 24%;
   border-right: 2px solid rgba(235, 237, 236, 0.48);
   color: #717787;
+  margin-top: 1.5%;
 }
 
 .number-col:last-of-type {

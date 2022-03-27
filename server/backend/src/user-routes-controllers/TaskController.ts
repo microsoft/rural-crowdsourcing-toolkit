@@ -13,6 +13,7 @@ import {
   TaskRecordType,
   policyMap,
   coreScenarioParameters,
+  ScenarioName,
 } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
 import { BasicModel, MicrotaskModel, TaskModel, TaskOpModel, WorkerModel, getBlobSASURL } from '@karya/common';
@@ -24,6 +25,7 @@ import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
 import { csvToJson } from '../scenarios/Common';
 import { Promise as BBPromise } from 'bluebird';
 import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
+import { backendScenarioMap } from '../scenarios/Index';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -289,6 +291,12 @@ export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
 export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
   try {
     const records = await TaskModel.tasksSummary();
+    await BBPromise.mapSeries(records, async (r) => {
+      const scenario = backendScenarioMap[r.scenario_name as ScenarioName];
+      const data = await scenario.getTaskData(r.id);
+      r.extras.data = data;
+      return r;
+    });
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error

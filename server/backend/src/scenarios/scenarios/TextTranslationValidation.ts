@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 //
-// Backend implementation of the text-translation scenario
+// Backend implementation of the text-translation validation scenario
 
 import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
 import {
-  baseTextTranslationScenario,
-  BaseTextTranslationScenario,
+  baseTextTranslationValidationScenario,
+  BaseTextTranslationValidationScenario,
   TaskRecordType,
   MicrotaskType,
   MicrotaskRecordType,
@@ -16,23 +16,24 @@ import { promises as fsp } from 'fs';
 import { BasicModel } from '@karya/common';
 
 /**
- * Process the input file for the text translation task.
- * @param task Text translation task record
+ * Process the input file for the text translation validation task.
+ * @param task Text translation validation task record
  * @param jsonFilePath Path to JSON file
  * @param tarFilePath --
  * @param task_folder Task folder path
  */
 async function processInputFile(
-  task: TaskRecordType<'TEXT_TRANSLATION'>,
+  task: TaskRecordType<'TEXT_TRANSLATION_VALIDATION'>,
   jsonData?: any,
   tarFilePath?: string,
   task_folder?: string
-): Promise<MicrotaskList<'TEXT_TRANSLATION'>> {
-  const sentences: { sentence: string }[] = jsonData!!;
-  const microtasks = sentences.map((sentence) => {
-    const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
+): Promise<MicrotaskList<'TEXT_TRANSLATION_VALIDATION'>> {
+  const sentences: { source: string; target: string }[] = jsonData!!;
+  console.log(jsonData);
+  const microtasks = sentences.map((sentencePair) => {
+    const mt: MicrotaskType<'TEXT_TRANSLATION_VALIDATION'> = {
       task_id: task.id,
-      input: { data: sentence },
+      input: { data: sentencePair },
       deadline: task.deadline,
       credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
@@ -43,14 +44,14 @@ async function processInputFile(
   return [{ mg: null, microtasks }];
 }
 
-// Backend text translation scenario
-export const backendTextTranslationScenario: IBackendScenarioInterface<BaseTextTranslationScenario> = {
-  ...baseTextTranslationScenario,
+// Backend text translation validation scenario
+export const backendTextTranslationValidationScenario: IBackendScenarioInterface<BaseTextTranslationValidationScenario> = {
+  ...baseTextTranslationValidationScenario,
   processInputFile,
 
   /**
-   * Generate output for text translation. For each verified assignment,
-   * generate JSON with the source sentence, translated sentence, and
+   * Generate output for text translation validation. For each verified assignment,
+   * generate JSON with the source sentence, translated sentence, score and
    * verification report.
    *
    * TODO: output format should be made a task parameter.
@@ -65,7 +66,7 @@ export const backendTextTranslationScenario: IBackendScenarioInterface<BaseTextT
       // Generate JSON data
       const jsonData = {
         source: mt.input.data.sentence,
-        translation: assignment.output!.data.sentence,
+        score: assignment.output!.data.score,
         worker_id: assignment.worker_id,
         report: assignment.report,
         credits: assignment.credits,
@@ -82,7 +83,7 @@ export const backendTextTranslationScenario: IBackendScenarioInterface<BaseTextT
   },
 
   /**
-   * Text translation microtask output
+   * Text translation validation microtask output
    * TODO: Temporarily returning null, as microtask output can be generated
    * directly from the task level output and is typically not necessary for
    * chaining.
