@@ -6,7 +6,7 @@
 import { BaseChainInterface } from '../BaseChainInterface';
 
 export const baseSignVideoTranscription: BaseChainInterface<'SIGN_LANGUAGE_VIDEO', 'VIDEO_TRANSCRIPTION'> = {
-  name: 'SIGN_VIDEO_VALIDATION',
+  name: 'SIGN_VIDEO_TRANSCRIPTION',
   full_name: 'Sign Video Transcription',
   fromScenario: 'SIGN_LANGUAGE_VIDEO',
   toScenario: 'VIDEO_TRANSCRIPTION',
