@@ -18,15 +18,23 @@ import { localPolicyMap } from './policies/Index';
 // Create an assignment logger
 const assignmentLogger = karyaLogger({ name: 'assignments' });
 
+// Current assignment map for workers
+const assigning: { [id: string]: boolean } = {};
+
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments
  * @param worker worker to whom assignments will be assigned
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
 export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
+  // Check if we are currently assigning anything to these workers
+  if (assigning[worker.id]) return;
+  assigning[worker.id] = true;
+
   // Check if the worker has incomplete assignments. If so, return
   const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
   if (hasCurrentAssignments) {
+    assigning[worker.id] = false;
     return;
   }
 
@@ -165,6 +173,8 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       });
     });
   });
+
+  assigning[worker.id] = false;
 }
 
 /**
