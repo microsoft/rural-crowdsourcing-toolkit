@@ -18,11 +18,13 @@ services:
       # - karya-root
       - karya-backend-db
       - karya-backend-redis
-      - keycloak
+      # - keycloak
     volumes:
       - .:/usr/src/karya
     ports:
       - 5000:5000
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     command: node dist/Server.js
 
   karya-box:
@@ -37,6 +39,8 @@ services:
       - .:/usr/src/karya
     ports:
       - 8000:8000
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     command: node dist/Server.js
 
   karya-frontend:
@@ -61,6 +65,8 @@ services:
       - POSTGRES_DB=karya
       - POSTGRES_USER=karya
       - POSTGRES_PASSWORD=karya
+    volumes:
+      - ./data/psql/backend:/var/lib/postgresql/data
 
   karya-box-db:
     image: postgres:14-alpine
@@ -70,13 +76,20 @@ services:
       - POSTGRES_DB=box
       - POSTGRES_USER=karya
       - POSTGRES_PASSWORD=karya
+    volumes:
+      - ./data/psql/box:/var/lib/postgresql/data
 
   karya-backend-redis:
     image: redis
     ports:
       - 6379:6379
 
-  keycloak:
-    image: jboss/keycloak
-    ports:
-      - 8080:8080
+  # keycloak:
+  #   image: jboss/keycloak
+  #   environment:
+  #     - KEYCLOAK_USER=admin
+  #     - KEYCLOAK_PASSWORD=password
+  #   # volumes:
+  #   #   - ./data/keycloak:/opt/jboss/keycloak/standalone/data/
+  #   ports:
+  #     - 8080:8080

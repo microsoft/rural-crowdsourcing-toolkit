@@ -3,3 +3,5 @@ dist
 *.tsbuildinfo
 *.log
 .env*
+# Mount directory for database and keycloak
+data 
