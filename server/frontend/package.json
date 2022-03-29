@@ -16,13 +16,14 @@
     "react-csv": "^2.0.3",
     "react-dom": "^16.13.1",
     "react-google-login": "^5.1.21",
-    "react-materialize": "^3.9.3",
     "react-js-pagination": "^3.0.3",
+    "react-materialize": "^3.9.3",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "recharts": "^2.0.9",
     "redux": "^4.0.5",
+    "serve": "^13.0.2",
     "tar-stream": "^2.1.4"
   },
   "scripts": {

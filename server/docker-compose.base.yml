@@ -1,0 +1,7 @@
+services:
+  karya-root:
+    image: karya-base
+    build: .
+    command: sh -c "lerna bootstrap && lerna run build"
+    volumes:
+      - .:/usr/src/karya
