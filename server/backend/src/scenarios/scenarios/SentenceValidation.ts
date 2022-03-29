@@ -10,7 +10,7 @@ import {
   MicrotaskRecordType,
   MicrotaskType,
 } from '@karya/core';
-import { BasicModel } from '@karya/common';
+import { BasicModel, knex } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 
@@ -82,7 +82,19 @@ export const backendSentenceValidationScenario: IBackendScenarioInterface<BaseSe
   },
 
   async getTaskData(task_id) {
-    const ob = {} as object;
-    return ob;
+    const response = await knex.raw(`
+      SELECT
+        COUNT(DISTINCT microtask_id) as num_sentences
+      FROM
+        microtask_assignment
+      WHERE
+        task_id = ${task_id} AND
+        output::json->'data'->>'spelling'='true' AND
+        output::json->'data'->>'grammar'='true' AND
+        output::json->'data'->>'appropriate'='true'
+    `);
+
+    const num_sentences = response.rowCount == 0 ? 0 : response.rows[0].num_sentences;
+    return { num_sentences: { name: 'Number of Valid Sentences', val: `${num_sentences}` } };
   },
 };
