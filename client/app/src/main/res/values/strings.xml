@@ -240,6 +240,9 @@
     <!-- Image data collection strings -->
     <string name="image_data_collection_instruction">Take a picture of the front cover. Move to a random page. Take pictures of # continuous pages from the random page</string>
 
+    <!-- Image annotation strings -->
+    <string name="image_annotation_instruction">Annotation instruction goes here</string>
+
     <!-- Sentence validation strings -->
     <string name="sentence_validation_instruction">Is the sentence below correct?</string>
     <string name="grammar_question">Is the above sentence grammatically correct?</string>

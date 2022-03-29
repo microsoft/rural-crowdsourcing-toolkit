@@ -61,8 +61,8 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.microtask_sign_vid
     }
 
     viewModel.backBtnState.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { state ->
-      backBtnCv.isClickable = state != DISABLED
-      backBtnCv.backIv.setBackgroundResource(
+      backBtn.isClickable = state != DISABLED
+      backBtn.backIv.setBackgroundResource(
         when (state) {
           DISABLED -> R.drawable.ic_back_disabled
           ENABLED -> R.drawable.ic_back_enabled
@@ -164,7 +164,7 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.microtask_sign_vid
       viewModel.handleRecordClick()
     }
     nextBtnCv.setOnClickListener { viewModel.handleNextClick() }
-    backBtnCv.setOnClickListener { viewModel.handleBackClick() }
+    backBtn.setOnClickListener { viewModel.handleBackClick() }
   }
 }
 

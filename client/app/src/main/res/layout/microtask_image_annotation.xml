@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/image_annotation_instruction"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/boxSpinner"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
+        app:layout_constraintVertical_bias="0.55">
+        <com.isseiaoki.simplecropview.CropImageView
+            android:id="@+id/sourceImageIv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_8sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            app:scv_crop_mode="free"
+            app:scv_focus_frame_color="#0000FF"
+            app:scv_frame_stroke_weight="1dp"
+            app:scv_guide_show_mode="show_always"
+            app:scv_guide_stroke_weight="1dp"
+            app:scv_handle_color="#0000FF"
+            app:scv_handle_show_mode="show_always"
+            app:scv_handle_size="10dp"
+            app:scv_min_frame_size="10dp"
+            app:scv_touch_padding="8dp"
+            tools:layout_editor_absoluteX="13dp" />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/boxSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:background="@drawable/background_microtask_input_text"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/spinner_item_color"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+        />
+
+    <View
+        android:id="@+id/spinner_item_color"
+        android:layout_width="32dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_4sdp"
+        app:layout_constraintTop_toTopOf="@id/boxSpinner"
+        app:layout_constraintBottom_toBottomOf="@id/boxSpinner"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/boxSpinner"
+        android:background="@color/black" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_0sdp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.13"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+
+        <ImageButton
+            android:id="@+id/removeBoxButton"
+            android:layout_width="0dp"
+            android:layout_margin="@dimen/_4sdp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_cross_on"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addBoxButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageButton
+            android:id="@+id/addBoxButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_add_button"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/removeBoxButton"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <include
+            android:id="@+id/nextBtn"
+            layout="@layout/microtask_common_next_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addBoxButton"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

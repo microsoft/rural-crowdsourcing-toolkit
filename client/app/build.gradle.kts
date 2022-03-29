@@ -118,8 +118,9 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
   implementation(Dependencies.AndroidX.Navigation.uiKtx)
+    implementation(files("C:\\Projects\\Karya\\rural-crowdsourcing-toolkit\\client\\app\\libs\\simplecropview-debug.aar"))
 
-  kapt(Dependencies.AndroidX.Room.roomCompiler)
+    kapt(Dependencies.AndroidX.Room.roomCompiler)
 
   implementation(Dependencies.Google.gson)
   implementation(Dependencies.Google.material)

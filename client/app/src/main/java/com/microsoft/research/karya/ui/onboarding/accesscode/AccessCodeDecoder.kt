@@ -17,9 +17,9 @@ private const val PROD = 1
 private const val DIRECT_MAP = 0
 private const val TEMPLATE = 1
 
-private const val DEFAULT_URL: String = "https://www.DEFAULT_URL.com"
-private const val PHYSICAL_BOX_URL: String = "http://PRIVATE_IP:PORT"
-private const val DEV_URL: String = "http://localhost:8080"
+private const val DEFAULT_URL: String = "http://10.0.2.2:8000"
+private const val PHYSICAL_BOX_URL: String = "http://localhost:8000"
+private const val DEV_URL: String = "http://localhost:8000"
 
 private const val ACCESS_CODE_MAPPING_FILENAME = "accessCodeMappings.json"
 

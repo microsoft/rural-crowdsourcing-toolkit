@@ -11,9 +11,10 @@ enum class ScenarioType(val value: String) {
   IMAGE_LABELLING("IMAGE LABELLING"),
   QUIZ("QUIZ"),
   IMAGE_DATA("IMAGE_DATA"),
-  SENTENCE_VALIDATION("SENTENCE_VALIDATION");
+  SENTENCE_VALIDATION("SENTENCE_VALIDATION"),
+  IMAGE_ANNOTATION("IMAGE_ANNOTATION");
 
-  override fun toString(): String {
+    override fun toString(): String {
     return value
   }
 }
