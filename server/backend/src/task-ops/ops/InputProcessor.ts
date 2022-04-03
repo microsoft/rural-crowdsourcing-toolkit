@@ -3,13 +3,23 @@
 //
 // Task input processor op
 
-import { BlobParameters, getBlobName, TaskOpRecord, TaskRecordType } from '@karya/core';
-import { promises as fsp } from 'fs';
+import {
+  BlobParameters,
+  getBlobName,
+  Microtask,
+  MicrotaskInputFiles,
+  MicrotaskType,
+  ScenarioName,
+  TaskOpRecord,
+  TaskRecordType,
+} from '@karya/core';
+import { accessSync, promises as fsp } from 'fs';
 import { Promise as BBPromise } from 'bluebird';
 import { BasicModel } from '@karya/common';
 import tar from 'tar';
 import { upsertKaryaFile } from '../../models/KaryaFileModel';
 import { backendScenarioMap } from '../../scenarios/Index';
+import { MicrotaskList } from '../../scenarios/ScenarioInterface';
 
 // Task input processor object
 export type TaskInputProcessorObject = {
@@ -86,6 +96,8 @@ export async function processInputFile(
       // create and upload microtask input files if necessary
       if (mtRecord.input.files) {
         const fileList = Object.values(mtRecord.input.files);
+        if (fileList.length == 0) return;
+
         const inputBlobParams: BlobParameters = {
           cname: 'microtask-input',
           microtask_id: mtRecord.id,
@@ -111,4 +123,56 @@ export async function processInputFile(
     // Something went wrong while cleaning up
     // Ignore
   }
+}
+
+/**
+ * Factory function to generate an input file handler for a scenario. The
+ * factory function assumes that the input JSON file is an array of objects,
+ * where in each object contains all the data keys and the file keys required
+ * by the microtask. The generated handler stores the file keys as part of the
+ * files field in the microtask input and checks if those files indeed exist.
+ *
+ * @param fileKeys List of file keys
+ */
+export function getInputFileProcessor<SN extends ScenarioName>(fileKeys: MicrotaskInputFiles<SN>[] = []) {
+  return async function (
+    task: TaskRecordType<SN>,
+    jsonData?: any,
+    tarFilePath?: string,
+    taskFolder?: string
+  ): Promise<MicrotaskList<SN>> {
+    const inputPoints: any[] = jsonData!;
+
+    const microtasks = inputPoints.map((inputPoint) => {
+      const inputData: { [id: string]: any } = {};
+      const inputFiles: { [id: string]: string } = {};
+      Object.entries(inputPoint).forEach(([key, value]) => {
+        if (key in fileKeys) {
+          inputFiles[key] = value as string;
+          // Check if the file exists
+          const filePath = `${taskFolder}/${value}`;
+
+          try {
+            accessSync(filePath);
+          } catch (e) {
+            throw new Error(`File ${value} not present`);
+          }
+        } else {
+          inputData[key] = value;
+        }
+      });
+
+      const mt: Microtask = {
+        task_id: task.id,
+        input: { data: inputData, files: inputFiles },
+        deadline: task.deadline,
+        credits: task.params.creditsPerMicrotask,
+        status: 'INCOMPLETE',
+      };
+
+      return mt as MicrotaskType<SN>;
+    });
+
+    return [{ mg: null, microtasks }];
+  };
 }

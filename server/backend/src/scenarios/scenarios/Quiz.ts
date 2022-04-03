@@ -4,34 +4,14 @@
 // Backend implementation of the text-translation scenario
 
 import { IBackendScenarioInterface } from '../ScenarioInterface';
-import { baseQuizScenario, BaseQuizScenario, MicrotaskType } from '@karya/core';
+import { baseQuizScenario, BaseQuizScenario } from '@karya/core';
+import { getInputFileProcessor } from '../../task-ops/ops/InputProcessor';
 
 // Backend text translation scenario
 export const backendQuizScenario: IBackendScenarioInterface<BaseQuizScenario> = {
   ...baseQuizScenario,
 
-  /**
-   * Process the input file for the quiz task.
-   * @param task Quiz task record
-   * @param jsonFilePath Path to JSON file
-   * @param tarFilePath --
-   * @param task_folder Task folder path
-   */
-  async processInputFile(task, jsonData, tarFilePath, taskFolder) {
-    const mts: any[] = jsonData!!;
-    const microtasks = mts.map((mtData) => {
-      const mt: MicrotaskType<'QUIZ'> = {
-        task_id: task.id,
-        input: { data: mtData },
-        deadline: task.deadline,
-        credits: task.params.creditsPerMicrotask,
-        status: 'INCOMPLETE',
-      };
-      return mt;
-    });
-
-    return [{ mg: null, microtasks }];
-  },
+  processInputFile: getInputFileProcessor(),
 
   /**
    * Generate output for quiz.

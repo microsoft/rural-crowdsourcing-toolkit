@@ -3,51 +3,22 @@
 //
 // Backend implementation of the text-translation validation scenario
 
-import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
+import { IBackendScenarioInterface } from '../ScenarioInterface';
 import {
   baseTextTranslationValidationScenario,
   BaseTextTranslationValidationScenario,
-  TaskRecordType,
-  MicrotaskType,
   MicrotaskRecordType,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
 import { BasicModel } from '@karya/common';
-
-/**
- * Process the input file for the text translation validation task.
- * @param task Text translation validation task record
- * @param jsonFilePath Path to JSON file
- * @param tarFilePath --
- * @param task_folder Task folder path
- */
-async function processInputFile(
-  task: TaskRecordType<'TEXT_TRANSLATION_VALIDATION'>,
-  jsonData?: any,
-  tarFilePath?: string,
-  task_folder?: string
-): Promise<MicrotaskList<'TEXT_TRANSLATION_VALIDATION'>> {
-  const sentences: { source: string; target: string }[] = jsonData!!;
-  console.log(jsonData);
-  const microtasks = sentences.map((sentencePair) => {
-    const mt: MicrotaskType<'TEXT_TRANSLATION_VALIDATION'> = {
-      task_id: task.id,
-      input: { data: sentencePair },
-      deadline: task.deadline,
-      credits: task.params.creditsPerMicrotask,
-      status: 'INCOMPLETE',
-    };
-    return mt;
-  });
-
-  return [{ mg: null, microtasks }];
-}
+import { getInputFileProcessor } from '../../task-ops/ops/InputProcessor';
 
 // Backend text translation validation scenario
 export const backendTextTranslationValidationScenario: IBackendScenarioInterface<BaseTextTranslationValidationScenario> = {
   ...baseTextTranslationValidationScenario,
-  processInputFile,
+
+  processInputFile: getInputFileProcessor(),
 
   /**
    * Generate output for text translation validation. For each verified assignment,

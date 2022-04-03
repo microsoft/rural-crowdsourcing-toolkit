@@ -231,3 +231,16 @@ export type AssignmentRecordType<
   : never;
 
 export type AssignmentType<SN extends ScenarioName = ScenarioName> = Partial<AssignmentRecordType<SN>>;
+
+export type MicrotaskInputFiles<
+  SN extends ScenarioName = ScenarioName
+> = ScenarioType<SN> extends BaseScenarioInterface<
+  SN,
+  infer _TaskParamsType,
+  infer _InputDataType,
+  infer InputFilesType,
+  infer _OutputDataType,
+  infer _OutputFilesType
+>
+  ? keyof InputFilesType
+  : never;

@@ -3,50 +3,17 @@
 //
 // Implementation of the speech-data scenario
 
-import { MicrotaskList, IBackendScenarioInterface } from '../ScenarioInterface';
-import {
-  baseSpeechDataScenario,
-  BaseSpeechDataScenario,
-  TaskRecordType,
-  MicrotaskType,
-  MicrotaskRecordType,
-} from '@karya/core';
+import { IBackendScenarioInterface } from '../ScenarioInterface';
+import { baseSpeechDataScenario, BaseSpeechDataScenario, MicrotaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import { BasicModel, knex } from '@karya/common';
 import { promises as fsp } from 'fs';
-
-/**
- * Process the input file for the speech data task.
- * @param task Speech data task record
- * @param jsonFilePath Path to JSON file
- * @param tarFilePath --
- * @param task_folder Task folder path
- */
-async function processInputFile(
-  task: TaskRecordType<'SPEECH_DATA'>,
-  jsonData?: any,
-  tarFilePath?: string,
-  task_folder?: string
-): Promise<MicrotaskList<'SPEECH_DATA'>> {
-  const sentences: { sentence: string }[] = jsonData!;
-  const microtasks = sentences.map((sentence) => {
-    const mt: MicrotaskType<'SPEECH_DATA'> = {
-      task_id: task.id,
-      input: { data: sentence },
-      deadline: task.deadline,
-      credits: task.params.creditsPerMicrotask,
-      status: 'INCOMPLETE',
-    };
-    return mt;
-  });
-
-  return [{ mg: null, microtasks }];
-}
+import { getInputFileProcessor } from '../../task-ops/ops/InputProcessor';
 
 // Backend speech data scenario
 export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechDataScenario> = {
   ...baseSpeechDataScenario,
-  processInputFile,
+  processInputFile: getInputFileProcessor<'SPEECH_DATA'>(),
 
   /**
    * Generate output files for speech data task. There are two files for each

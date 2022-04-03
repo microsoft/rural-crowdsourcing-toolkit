@@ -3,48 +3,16 @@
 //
 // Backend implementation of the sign language video verification scenario
 
-import {
-  BaseSignLanguageVideoVerificationScenario,
-  baseSignLanguageVideoVerificationScenario,
-  MicrotaskType,
-} from '@karya/core';
+import { BaseSignLanguageVideoVerificationScenario, baseSignLanguageVideoVerificationScenario } from '@karya/core';
 import { IBackendScenarioInterface } from '../ScenarioInterface';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
+import { getInputFileProcessor } from '../../task-ops/ops/InputProcessor';
 
 export const backendSignLanguageVideoVerificationScenario: IBackendScenarioInterface<BaseSignLanguageVideoVerificationScenario> = {
   ...baseSignLanguageVideoVerificationScenario,
 
-  /** Process input files */
-  async processInputFile(task, jsonData, tarFilePath, taskFolder) {
-    // Get all the objects from the json Data
-    const verifications: { sentence: string; recording: string }[] = jsonData!;
-
-    // Extract the microtasks
-    const microtasks = await BBPromise.mapSeries(verifications, async ({ sentence, recording }) => {
-      const filePath = `${taskFolder}/${recording}`;
-      try {
-        await fsp.access(filePath);
-
-        const microtask: MicrotaskType<'SGN_LANG_VIDEO_VERIFICATION'> = {
-          task_id: task.id,
-          input: {
-            data: { sentence },
-            files: { recording },
-          },
-          deadline: task.deadline,
-          credits: task.params.creditsPerMicrotask,
-          status: 'INCOMPLETE',
-        };
-
-        return microtask;
-      } catch (e) {
-        throw new Error(`Recording file not present`);
-      }
-    });
-
-    return [{ mg: null, microtasks }];
-  },
+  processInputFile: getInputFileProcessor(['recording']),
 
   /**
    * Generate output for sign video verification task. A single JSON file for each

@@ -3,38 +3,15 @@
 //
 // Implementation of backend sentence corpus scenario
 
-import {
-  baseSentenceCorpusScenario,
-  BaseSentenceCorpusScenario,
-  MicrotaskRecordType,
-  MicrotaskType,
-} from '@karya/core';
+import { baseSentenceCorpusScenario, BaseSentenceCorpusScenario } from '@karya/core';
 import { IBackendScenarioInterface } from '../ScenarioInterface';
-import { Promise as BBPromise } from 'bluebird';
-import { promises as fsp } from 'fs';
-import { BasicModel } from '@karya/common';
+import { getInputFileProcessor } from '../../task-ops/ops/InputProcessor';
 
 // Backend transliteration data scenario
 export const backendSentenceCorpusScenario: IBackendScenarioInterface<BaseSentenceCorpusScenario> = {
   ...baseSentenceCorpusScenario,
 
-  /**
-   * Process input json file for the sentence corpus
-   */
-  async processInputFile(task, jsonData, tarFilePath, task_folder) {
-    const mts: any[] = jsonData!;
-    const microtasks = mts.map((mt) => {
-      const microtask: MicrotaskType<'SENTENCE_CORPUS'> = {
-        task_id: task.id,
-        input: { data: mt },
-        deadline: task.deadline,
-        credits: task.params.creditsPerMicrotask * mt.limit,
-        status: 'INCOMPLETE',
-      };
-      return microtask;
-    });
-    return [{ mg: null, microtasks }];
-  },
+  processInputFile: getInputFileProcessor(),
 
   /**
    * Generate output files for sentence corpus task.

@@ -4,42 +4,17 @@
 // Backend implementation of the sentence validation scenario
 
 import { IBackendScenarioInterface } from '../ScenarioInterface';
-import {
-  BaseSentenceValidationScenario,
-  baseSentenceValidationScenario,
-  MicrotaskRecordType,
-  MicrotaskType,
-} from '@karya/core';
+import { BaseSentenceValidationScenario, baseSentenceValidationScenario, MicrotaskRecordType } from '@karya/core';
 import { BasicModel, knex } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
 import { promises as fsp } from 'fs';
+import { getInputFileProcessor } from '../../task-ops/ops/InputProcessor';
 
 // Backend text translation scenario
 export const backendSentenceValidationScenario: IBackendScenarioInterface<BaseSentenceValidationScenario> = {
   ...baseSentenceValidationScenario,
 
-  /**
-   * Process the input file for the quiz task.
-   * @param task Quiz task record
-   * @param jsonFilePath Path to JSON file
-   * @param tarFilePath --
-   * @param task_folder Task folder path
-   */
-  async processInputFile(task, jsonData, tarFilePath, taskFolder) {
-    const mts: any[] = jsonData!!;
-    const microtasks = mts.map((mtData) => {
-      const mt: MicrotaskType<'SENTENCE_VALIDATION'> = {
-        task_id: task.id,
-        input: { data: mtData },
-        deadline: task.deadline,
-        credits: task.params.creditsPerMicrotask,
-        status: 'INCOMPLETE',
-      };
-      return mt;
-    });
-
-    return [{ mg: null, microtasks }];
-  },
+  processInputFile: getInputFileProcessor(),
 
   /**
    * Generate output for sentence corpus validation.
