@@ -257,4 +257,8 @@
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
     <string name="back">back</string>
+    <string name="proceed_text">Proceed</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="no_annotation_box_annotation_message_text">No boxes are drawn to the screen. Do you want to proceed?</string>
+    <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
 </resources>

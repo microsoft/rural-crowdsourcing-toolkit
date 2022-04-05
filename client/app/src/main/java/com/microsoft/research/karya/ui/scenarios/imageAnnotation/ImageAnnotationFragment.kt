@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.imageAnnotation
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -74,7 +76,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     boxSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
       override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
 //        spinner_item_color.setBackgroundColor(colors[position])
-        spinner_item_color.setBackgroundColor(Color.parseColor(colors[position]))
+        spinner_item_color.setCardBackgroundColor(Color.parseColor(colors[position]))
       } // to close the onItemSelected
 
       override fun onNothingSelected(parent: AdapterView<*>) {
@@ -87,7 +89,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       val selectedId = boxSpinner.selectedItemId
       // attach random UUID with the selected box type
       val key = labels[selectedId.toInt()] + "_" + UUID.randomUUID().toString();
-      sourceImageIv.addCropRectangle(key, (spinner_item_color.getBackground() as ColorDrawable).color)
+      sourceImageIv.addCropRectangle(key, Color.parseColor(colors[boxSpinner.selectedItemPosition]))
     }
     // Set Listeners to remove box
     removeBoxButton.setOnClickListener { sourceImageIv.removeCropRectangle() }
@@ -95,8 +97,37 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 
   private fun handleNextClick() {
 
+    val cropCoors = sourceImageIv.getCropCoors()
+    if (cropCoors.isEmpty()) {
+      // Display an alert box warning the user of no annotation boxes
+      showNoBoxAlertBox()
+      return
+    }
     viewModel.setBoxCoors(sourceImageIv.getCropCoors())
     viewModel.handleNextCLick()
+  }
+
+  private fun showNoBoxAlertBox() {
+
+    val alertDialog: AlertDialog? = activity?.let {
+      val builder = AlertDialog.Builder(it)
+      builder.apply {
+        setPositiveButton(getString(R.string.proceed_text),
+          DialogInterface.OnClickListener { dialog, id ->
+            viewModel.handleNextCLick()
+          })
+        setNegativeButton(getString(R.string.cancel_text),
+          DialogInterface.OnClickListener { dialog, id ->
+            // User cancelled the dialog
+          })
+      }
+
+      builder.setMessage(getString(R.string.no_annotation_box_annotation_message_text))
+        .setTitle(getString(R.string.no_annotation_box_dialog_title_text))
+      // Create the AlertDialog
+      builder.create()
+    }
+    alertDialog!!.show()
   }
 
   private fun setupObservers() {

@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
         android:background="@drawable/background_microtask_input_text"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
@@ -62,16 +62,17 @@
         app:layout_constraintBottom_toTopOf="@id/buttonGroup"
         />
 
-    <View
+    <androidx.cardview.widget.CardView
         android:id="@+id/spinner_item_color"
-        android:layout_width="32dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        app:cardCornerRadius="100dp"
         android:layout_marginHorizontal="@dimen/_4sdp"
         app:layout_constraintTop_toTopOf="@id/boxSpinner"
         app:layout_constraintBottom_toBottomOf="@id/boxSpinner"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/boxSpinner"
-        android:background="@color/black" />
+        app:cardBackgroundColor="@color/black" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
