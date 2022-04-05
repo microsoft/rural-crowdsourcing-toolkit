@@ -66,13 +66,17 @@
   margin-top: 2% !important;
 }
 
-#download-data-btn {
+#download-data-btn, #refresh-wtsummary-btn {
   margin-left: 12%;
   margin-bottom: 4%;
   margin-top: 3%;
   color: #fff;
   background-color: #a4d4ff;
   border-radius: 7px;
+}
+
+#refresh-wtsummary-btn {
+  margin-left: 3%;
 }
 
 #task-details {

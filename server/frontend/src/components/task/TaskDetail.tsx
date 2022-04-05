@@ -164,12 +164,13 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
     },
 
     // For displaying workers graph
-    getWorkersTaskSummary: () => {
+    getWorkersTaskSummary: (force_refresh?: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
         label: 'GET_ALL',
         task_id,
+        force_refresh,
       };
       dispatch(action);
     },
@@ -274,6 +275,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     }
     this.props.createTaskLink(taskLink);
     this.setState({ show_link_form: false });
+  };
+
+  refreshWorkersTaskSummary = () => {
+    this.props.getWorkersTaskSummary(true);
   };
 
   render() {
@@ -700,6 +705,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <CSVLink data={workers_graph_data} filename={'workers-data.csv'} className='btn' id='download-data-btn'>
               <i className='material-icons left'>download</i>Download data
             </CSVLink>
+            <button className='btn' id='refresh-wtsummary-btn' onClick={this.refreshWorkersTaskSummary}>
+              <i className='material-icons left'>refresh</i>Refresh data
+            </button>
           </>
         ) : null}
 

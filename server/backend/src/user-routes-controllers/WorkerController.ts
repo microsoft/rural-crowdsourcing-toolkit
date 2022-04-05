@@ -17,7 +17,8 @@ export type WorkerRouteState = UserRouteState<WorkerState>;
  */
 export const getWorkersSummary: WorkerRouteMiddleware = async (ctx) => {
   try {
-    const records = await WorkerModel.workersSummary();
+    const force_refresh = ctx.params.refresh;
+    const records = await WorkerModel.workersSummary(force_refresh);
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error

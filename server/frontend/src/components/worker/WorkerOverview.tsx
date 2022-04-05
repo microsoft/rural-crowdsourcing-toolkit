@@ -52,11 +52,12 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // For getting workers' data
-    getWorkersSummary: () => {
+    getWorkersSummary: (force_refresh?: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
         label: 'GET_ALL',
+        force_refresh,
       };
       dispatch(action);
     },
@@ -152,6 +153,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     this.setState({ graph_display });
   };
 
+  refreshWorkersSummary = () => {
+    this.props.getWorkersSummary(true);
+  };
+
   // Render component
   render() {
     type Extras = { assigned: number; completed: number; verified: number; earned: number };
@@ -243,6 +248,12 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const exportFileTime = new Date().toISOString().replace(/:/, '-').split('.')[0];
     const exportFileName = `worker-data-${exportFileTime}.csv`;
 
+    const refreshButton = (
+      <button className='btn' id='refresh-wsummary-btn' onClick={this.refreshWorkersSummary}>
+        <i className='material-icons left'>refresh</i>Refresh data
+      </button>
+    );
+
     // Create error message element if necessary
     const getErrorElement =
       this.props.status === 'FAILURE' ? (
@@ -323,6 +334,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
               <CSVLink data={data} filename={exportFileName} className='btn' id='download-btn'>
                 <i className='material-icons left'>download</i>Download data
               </CSVLink>
+
+              {refreshButton}
 
               <div className='row' id='sort_row'>
                 <p>Sort by: </p>

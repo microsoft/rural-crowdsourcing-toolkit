@@ -4,13 +4,17 @@
   margin-top: 3%;
 }
 
-#download-btn {
+#download-btn, #refresh-wsummary-btn {
   margin-left: 6.5%;
   margin-bottom: 3.4%;
   margin-top: 1%;
   color: #fff;
   background-color: #a4d4ff;
   border-radius: 7px;
+}
+
+#refresh-wsummary-btn {
+  margin-left: 4.8%;
 }
 
 #text_filter_row {

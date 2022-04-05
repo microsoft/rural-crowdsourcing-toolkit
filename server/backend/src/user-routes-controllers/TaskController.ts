@@ -290,7 +290,8 @@ export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
  */
 export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
   try {
-    const records = await TaskModel.tasksSummary();
+    const force_refresh = ctx.query.refresh as string | undefined;
+    const records = await TaskModel.tasksSummary(force_refresh);
     await BBPromise.mapSeries(records, async (r) => {
       const scenario = backendScenarioMap[r.scenario_name as ScenarioName];
       const data = await scenario.getTaskData(r.id);
@@ -300,6 +301,7 @@ export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error
+    console.log(e);
     HttpResponse.BadRequest(ctx, 'Unknown error');
   }
 };
@@ -309,8 +311,9 @@ export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
  */
 export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
   try {
+    const force_refresh = ctx.params.refresh;
     const task = ctx.state.task as TaskRecordType;
-    const records = await WorkerModel.workersTaskSummary(task.id);
+    const records = await WorkerModel.workersTaskSummary(task.id, force_refresh);
     HttpResponse.OK(ctx, records);
   } catch (e) {
     // TODO: Convert this to an internal server error

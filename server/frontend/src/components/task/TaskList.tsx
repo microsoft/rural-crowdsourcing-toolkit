@@ -52,11 +52,12 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // For getting summary of tasks
-    getTasksSummary: () => {
+    getTasksSummary: (force_refresh?: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'microtask_assignment',
         label: 'GET_ALL',
+        force_refresh,
       };
       dispatch(action);
     },
@@ -132,6 +133,10 @@ class TaskList extends React.Component<TaskListProps, {}> {
     const show_completed = false;
     const task_filter = { scenario_filter, tags_filter, show_completed };
     this.props.updateTaskFilter(task_filter);
+  };
+
+  refreshTasksSummary = () => {
+    this.props.getTasksSummary(true);
   };
 
   // Handle file change
@@ -379,9 +384,19 @@ class TaskList extends React.Component<TaskListProps, {}> {
                     <span>Show Completed</span>
                   </label>
                 </div>
-                <div className='col s10 m4 l3'>
+                <div className='col s6 m4 l2'>
                   <button className='btn-flat' id='clear-filters-btn' onClick={this.clearFilters}>
                     Clear Filters
+                  </button>
+                </div>
+                <div className='col s6 l1'>
+                  <button
+                    className='material-icons'
+                    id='refresh-tsummary-btn'
+                    onClick={this.refreshTasksSummary}
+                    title='Refresh'
+                  >
+                    refresh
                   </button>
                 </div>
               </div>

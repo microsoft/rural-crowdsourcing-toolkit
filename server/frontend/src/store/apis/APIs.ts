@@ -172,12 +172,14 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_assignment';
       label: 'GET_ALL';
+      force_refresh?: boolean;
     }
   | {
       type: 'BR_INIT';
       store: 'worker';
       label: 'GET_ALL';
       task_id?: string;
+      force_refresh?: boolean;
     }
   | {
       type: 'BR_INIT';
@@ -555,29 +557,31 @@ export async function backendRequest(
 
     // Get summary info for all tasks
     if (action.store === 'microtask_assignment' && action.label === 'GET_ALL') {
+      const param = action.force_refresh ? '?refresh=true' : '';
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET('/task/summary'),
+        response: await GET('/task/summary' + param),
       } as BackendRequestSuccessAction;
     }
 
     // Get summary info for workers
     if (action.store === 'worker' && action.label === 'GET_ALL') {
+      const param = action.force_refresh ? '?refresh=true' : '';
       if (action.task_id !== undefined) {
         return {
           type: 'BR_SUCCESS',
           store,
           label,
-          response: await GET(`/task/${action.task_id}/worker_summary`),
+          response: await GET(`/task/${action.task_id}/worker_summary` + param),
         } as BackendRequestSuccessAction;
       } else {
         return {
           type: 'BR_SUCCESS',
           store,
           label,
-          response: await GET('/worker/summary'),
+          response: await GET(`/worker/summary` + param),
         } as BackendRequestSuccessAction;
       }
     }
