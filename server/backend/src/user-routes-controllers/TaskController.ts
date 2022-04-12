@@ -290,7 +290,7 @@ export const getMicrotasksSummary: TaskRouteMiddleware = async (ctx) => {
  */
 export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
   try {
-    const force_refresh = ctx.query.refresh as string | undefined;
+    const force_refresh = ctx.query.refresh === 'true' ? true : false;
     const records = await TaskModel.tasksSummary(force_refresh);
     await BBPromise.mapSeries(records, async (r) => {
       const scenario = backendScenarioMap[r.scenario_name as ScenarioName];
@@ -311,7 +311,7 @@ export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
  */
 export const getWorkersTaskSummary: TaskRouteMiddleware = async (ctx) => {
   try {
-    const force_refresh = ctx.params.refresh;
+    const force_refresh = ctx.query.refresh === 'true' ? true : false;
     const task = ctx.state.task as TaskRecordType;
     const records = await WorkerModel.workersTaskSummary(task.id, force_refresh);
     HttpResponse.OK(ctx, records);

@@ -3,7 +3,7 @@ import { knex } from '../Client';
 /**
  * Get summary info of all workers
  */
-export async function workersSummary(force_refresh?: string): Promise<any[]> {
+export async function workersSummary(force_refresh: boolean): Promise<any[]> {
   if (force_refresh) {
     await knex.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY worker_summary`);
   }
@@ -19,7 +19,7 @@ export async function workersSummary(force_refresh?: string): Promise<any[]> {
 /**
  * Get summary info of workers for a particular task
  */
-export async function workersTaskSummary(task_id: string, force_refresh?: string): Promise<any[]> {
+export async function workersTaskSummary(task_id: string, force_refresh: boolean): Promise<any[]> {
   if (force_refresh) {
     await knex.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY worker_task_summary`);
   }

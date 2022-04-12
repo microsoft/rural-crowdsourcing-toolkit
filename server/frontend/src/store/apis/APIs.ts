@@ -557,31 +557,31 @@ export async function backendRequest(
 
     // Get summary info for all tasks
     if (action.store === 'microtask_assignment' && action.label === 'GET_ALL') {
-      const param = action.force_refresh ? '?refresh=true' : '';
+      const param = action.force_refresh ? { refresh: true } : {};
       return {
         type: 'BR_SUCCESS',
         store,
         label,
-        response: await GET('/task/summary' + param),
+        response: await GET('/task/summary', param),
       } as BackendRequestSuccessAction;
     }
 
     // Get summary info for workers
     if (action.store === 'worker' && action.label === 'GET_ALL') {
-      const param = action.force_refresh ? '?refresh=true' : '';
+      const param = action.force_refresh ? { refresh: true } : {};
       if (action.task_id !== undefined) {
         return {
           type: 'BR_SUCCESS',
           store,
           label,
-          response: await GET(`/task/${action.task_id}/worker_summary` + param),
+          response: await GET(`/task/${action.task_id}/worker_summary`, param),
         } as BackendRequestSuccessAction;
       } else {
         return {
           type: 'BR_SUCCESS',
           store,
           label,
-          response: await GET(`/worker/summary` + param),
+          response: await GET(`/worker/summary`, param),
         } as BackendRequestSuccessAction;
       }
     }

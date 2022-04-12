@@ -6,7 +6,7 @@ import { knex } from '../Client';
 /**
  * Get summary info for all tasks
  */
-export async function tasksSummary(force_refresh?: string): Promise<any[]> {
+export async function tasksSummary(force_refresh: boolean): Promise<any[]> {
   if (force_refresh) {
     await knex.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY task_summary`);
   }

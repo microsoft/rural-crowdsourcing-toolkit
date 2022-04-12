@@ -17,7 +17,7 @@ export type WorkerRouteState = UserRouteState<WorkerState>;
  */
 export const getWorkersSummary: WorkerRouteMiddleware = async (ctx) => {
   try {
-    const force_refresh = ctx.params.refresh;
+    const force_refresh = ctx.query.refresh === 'true' ? true : false;
     const records = await WorkerModel.workersSummary(force_refresh);
     HttpResponse.OK(ctx, records);
   } catch (e) {
