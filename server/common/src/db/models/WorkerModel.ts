@@ -1,3 +1,4 @@
+import { WorkerRecord } from '@karya/core';
 import { knex } from '../Client';
 
 /**
@@ -76,4 +77,16 @@ export async function workersTaskSummary(task_id: string): Promise<any[]> {
     const extras = { assigned, completed, verified, earned };
     return { ...rest, extras };
   });
+}
+
+/** Code to handle worker disabling */
+const disabledTag = '_DISABLED_';
+
+/**
+ * Check if a worker is disabled
+ * @param worker Worker record
+ */
+export function isDisabled(worker: Pick<WorkerRecord, 'tags'>): boolean {
+  const workerTags = worker.tags.tags;
+  return workerTags.indexOf(disabledTag) >= 0;
 }
