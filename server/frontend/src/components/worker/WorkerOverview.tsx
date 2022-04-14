@@ -60,6 +60,18 @@ const mapDispatchToProps = (dispatch: any) => {
       };
       dispatch(action);
     },
+
+    // disable worker
+    disableWorker: (worker_id: string) => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'worker',
+        label: 'DISABLE_WORKER',
+        worker_id,
+        request: {},
+      };
+      dispatch(action);
+    },
   };
 };
 
@@ -209,6 +221,19 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
         : (workers = workers.sort((prev, next) => prev.extras.verified - next.extras.verified));
     }
 
+    // Worker diable icon
+    const disableWorker = (w: WorkerRecord) => {
+      const tags = w.tags.tags;
+      const disabled = tags.indexOf('_DISABLED_') >= 0;
+      return disabled ? (
+        <span>Disabled</span>
+      ) : (
+        <span className='material-icons' onClick={() => this.props.disableWorker(w.id)}>
+          delete
+        </span>
+      );
+    };
+
     // Worker Table Columns
     var workerTableColumns: Array<TableColumnType<WorkerRecord & { extras: Extras }> | null> = [
       { type: 'field', field: 'id', header: 'ID' },
@@ -225,6 +250,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
         ? { type: 'function', header: 'Verified', function: (w) => w.extras.verified.toString() }
         : null,
       graph_display.earned ? { type: 'function', header: 'Earned', function: (w) => w.extras.earned.toString() } : null,
+      { type: 'function', header: 'Disable', function: disableWorker },
     ];
 
     // Filtering null values out of worker table columns

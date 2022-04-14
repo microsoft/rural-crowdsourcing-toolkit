@@ -181,6 +181,13 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
+      store: 'worker';
+      label: 'DISABLE_WORKER';
+      worker_id: string;
+      request: {};
+    }
+  | {
+      type: 'BR_INIT';
       store: 'karya_file';
       label: 'CREATE_LANGUAGE_ASSET';
       code: LanguageCode;
@@ -580,6 +587,16 @@ export async function backendRequest(
           response: await GET('/worker/summary'),
         } as BackendRequestSuccessAction;
       }
+    }
+
+    // Disable worker
+    if (action.store === 'worker' && action.label === 'DISABLE_WORKER') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await PUT(`/worker/${action.worker_id}/disable`, {}),
+      } as BackendRequestSuccessAction;
     }
 
     // Submit new language asset file
