@@ -268,6 +268,9 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 const computeIdFunction = `CREATE OR REPLACE FUNCTION compute_id()
   RETURNS TRIGGER AS $$
   BEGIN
+  IF NEW.id IS NOT NULL THEN
+  RETURN NEW;
+  END IF;
   IF NEW.box_id IS NULL THEN
   NEW.id = 0;
   ELSE
