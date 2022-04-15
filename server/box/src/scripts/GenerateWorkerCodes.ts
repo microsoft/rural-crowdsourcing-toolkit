@@ -5,12 +5,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { InvalidArgumentError, program } from 'commander';
-import { knex, setupDbConnection, BasicModel } from '@karya/common';
+import { knex, setupDbConnection, BasicModel, AccessCodeInfo, generateAccessCode } from '@karya/common';
 import { Box, BoxRecord, LanguageCode, languageCodes, Worker, WorkerRecord } from '@karya/core';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 import fs, { promises as fsp } from 'fs';
 import { Promise as BBPromise } from 'bluebird';
-import { AccessCodeInfo, generateAccessCode } from '../access-code/Index';
 
 /** Custom parsers */
 function intArg(value: string, dummy: number) {
