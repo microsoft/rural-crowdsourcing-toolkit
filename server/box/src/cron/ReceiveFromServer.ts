@@ -62,13 +62,10 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   const response = await knex<WorkerRecord>('worker').max('tags_updated_at');
   const latest_tag_updated_time = response[0].max || new Date(0).toISOString();
 
-  // Response type for get updated workes query
-  type UpdatedWorkerRespnse = Pick<WorkerRecord, 'id' | 'tags' | 'tags_updated_at'>[];
-
   // Get updated workers
-  let updatedWorkerData: UpdatedWorkerRespnse;
+  let updatedWorkerData: WorkerRecord[];
   try {
-    const response = await axiosLocal.get<UpdatedWorkerRespnse>('/workers', {
+    const response = await axiosLocal.get<WorkerRecord[]>('/workers', {
       params: { from: latest_tag_updated_time },
     });
     updatedWorkerData = response.data;
@@ -81,7 +78,11 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   try {
     await BBPromise.mapSeries(updatedWorkerData, async (worker) => {
       const { id, tags, tags_updated_at } = worker;
-      await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+      try {
+        await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+      } catch (e) {
+        await BasicModel.upsertRecord('worker', worker);
+      }
 
       // If the worker is disabled, mark all their 'ASSIGNED'
       // assignments as EXPIRED
