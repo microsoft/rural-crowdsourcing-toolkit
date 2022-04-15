@@ -278,6 +278,17 @@ userRouter.put<WorkerController.WorkerRouteState, {}>(
   WorkerController.markDisabled
 );
 
+// Generate new workers
+userRouter.post<WorkerController.WorkerRouteState, {}>(
+  'GENERATE_WORKERS',
+  '/workers',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  // @ts-ignore
+  BodyParser(),
+  WorkerController.generateNewWorkers
+);
+
 /**
  * Language asset related routes. Submit, get language assets
  */
