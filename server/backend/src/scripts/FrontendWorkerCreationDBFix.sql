@@ -5,7 +5,9 @@ SELECT setval('worker_local_id_seq', 1);
 CREATE OR REPLACE FUNCTION compute_worker_id()
   RETURNS TRIGGER AS $$
   BEGIN
+  IF NEW.id IS NULL THEN
   NEW.id = NEW.local_id;
+  END IF;
   RETURN NEW;
   END;
   $$ language 'plpgsql';
