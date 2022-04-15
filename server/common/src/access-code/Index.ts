@@ -95,11 +95,13 @@ export async function generateWorkerCodes(
     }
 
     // Generate a worker record
+    const now = new Date().toISOString();
     const createWorker: Worker = {
       access_code,
       box_id: box.id,
       language,
       tags: { tags },
+      tags_updated_at: now,
       wgroup,
     };
 
