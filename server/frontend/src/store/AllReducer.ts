@@ -155,8 +155,19 @@ const storeReducer: StoreReducer = (state = initState, action) => {
 
   // Get language assets
   if (action.store === 'karya_file' && action.label === 'GET_LANGUAGE_ASSETS') {
-    console.log(action.response);
     return { ...state, karya_file: { data: action.response, last_fetched_at: new Date(), status } };
+  }
+
+  // Disable worker
+  if (action.store === 'worker' && action.label === 'DISABLE_WORKER') {
+    const data = state.worker?.data || [];
+    const updated = action.response;
+    const index = data.findIndex((record) => record.id === updated.id);
+    if (index >= 0) {
+      data[index].tags = updated.tags;
+      data[index].tags_updated_at = updated.tags_updated_at;
+    }
+    return { ...state, worker: { data, last_fetched_at, status } };
   }
 
   // All action should be covered by now

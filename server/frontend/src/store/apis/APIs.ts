@@ -337,6 +337,12 @@ export type BackendRequestSuccessAction =
     }
   | {
       type: 'BR_SUCCESS';
+      store: 'worker';
+      label: 'DISABLE_WORKER';
+      response: DBT.WorkerRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
       store: 'karya_file';
       label: 'CREATE_LANGUAGE_ASSET';
       response: DBT.KaryaFileRecord;
