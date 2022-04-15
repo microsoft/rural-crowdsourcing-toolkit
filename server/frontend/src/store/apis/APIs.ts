@@ -188,6 +188,17 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
+      store: 'worker';
+      label: 'GENERATE_WORKERS';
+      request: {
+        box_id: string;
+        num_codes: number;
+        language: LanguageCode;
+        tags: string[];
+      };
+    }
+  | {
+      type: 'BR_INIT';
       store: 'karya_file';
       label: 'CREATE_LANGUAGE_ASSET';
       code: LanguageCode;
@@ -340,6 +351,12 @@ export type BackendRequestSuccessAction =
       store: 'worker';
       label: 'DISABLE_WORKER';
       response: DBT.WorkerRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'worker';
+      label: 'GENERATE_WORKERS';
+      response: DBT.WorkerRecord[];
     }
   | {
       type: 'BR_SUCCESS';
@@ -602,6 +619,16 @@ export async function backendRequest(
         store,
         label,
         response: await PUT(`/worker/${action.worker_id}/disable`, {}),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Generate workers
+    if (action.store === 'worker' && action.label === 'GENERATE_WORKERS') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST(`/workers`, action.request),
       } as BackendRequestSuccessAction;
     }
 

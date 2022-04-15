@@ -170,6 +170,13 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     return { ...state, worker: { data, last_fetched_at, status } };
   }
 
+  // Generate workers
+  if (action.store === 'worker' && action.label === 'GENERATE_WORKERS') {
+    const data = state.worker?.data || [];
+    const newWorkers = action.response;
+    return { ...state, worker: { data: data.concat(newWorkers), last_fetched_at, status } };
+  }
+
   // All action should be covered by now
   ((obj: never) => {
     throw new Error('Should never have come here');

@@ -14,7 +14,7 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { TaskRecord, WorkerRecord } from '@karya/core';
+import { LanguageCode, languageMap, TaskRecord, WorkerRecord } from '@karya/core';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
@@ -24,6 +24,7 @@ import { ErrorMessageWithRetry, ProgressBar } from '../templates/Status';
 
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
+import { AuthProps, withAuth } from '../hoc/WithAuth';
 
 // Recharts library
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -39,7 +40,7 @@ import { TableColumnType, TableList } from '../templates/TableList';
 import Pagination from 'react-js-pagination';
 
 // Data connector
-const dataConnector = withData('task');
+const dataConnector = withData('task', 'box');
 
 // Map state to props
 const mapStateToProps = (state: RootState) => {
@@ -72,14 +73,30 @@ const mapDispatchToProps = (dispatch: any) => {
       };
       dispatch(action);
     },
+
+    // generate workers
+    generateWorkers: (box_id: string, num_codes: number, language: LanguageCode, tags: string[]) => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'worker',
+        label: 'GENERATE_WORKERS',
+        request: {
+          box_id,
+          num_codes,
+          language,
+          tags,
+        },
+      };
+      dispatch(action);
+    },
   };
 };
 
 // Create the connector
 const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
-const connector = compose(dataConnector, reduxConnector);
+const connector = compose(withAuth, dataConnector, reduxConnector);
 
-type WorkerOverviewProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type WorkerOverviewProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector> & AuthProps;
 
 // component state
 type WorkerOverviewState = {
@@ -95,6 +112,8 @@ type WorkerOverviewState = {
     total_rows_per_page: number;
     current_page: number;
   };
+  num_codes: string;
+  language: LanguageCode | '';
 };
 
 // Task list component
@@ -109,6 +128,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
       total_rows_per_page: 10,
       current_page: 1,
     },
+    num_codes: '',
+    language: '',
   };
 
   componentDidMount() {
@@ -141,6 +162,12 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     this.setState({ box_id_filter });
   };
 
+  // Handle language change
+  handleLanguageChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const language = e.currentTarget.value as LanguageCode;
+    this.setState({ language });
+  };
+
   // Handle input change
   handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     this.setState({ ...this.state, [e.currentTarget.id]: e.currentTarget.value });
@@ -162,6 +189,15 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   handleBooleanChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const graph_display = { ...this.state.graph_display, [e.currentTarget.id]: e.currentTarget.checked };
     this.setState({ graph_display });
+  };
+
+  generateWorkers = () => {
+    const box_id = this.state.box_id_filter || this.props.box.data[0].id;
+    const num_codes = Number.parseInt(this.state.num_codes, 10);
+    const language = this.state.language as LanguageCode;
+    const task = this.state.task_filter;
+    const tags = task ? this.state.tags_filter.concat(task.itags.itags) : this.state.tags_filter;
+    this.props.generateWorkers(box_id, num_codes, language, tags);
   };
 
   // Render component
@@ -252,7 +288,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
         ? { type: 'function', header: 'Verified', function: (w) => w.extras.verified.toString() }
         : null,
       graph_display.earned ? { type: 'function', header: 'Earned', function: (w) => w.extras.earned.toString() } : null,
-      { type: 'function', header: 'Disable', function: disableWorker },
+      this.props.cwp.role === 'ADMIN' ? { type: 'function', header: 'Disable', function: disableWorker } : null,
     ];
 
     // Filtering null values out of worker table columns
@@ -329,6 +365,35 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                   </select>
                 </div>
               </div>
+              {this.props.cwp.role === 'ADMIN' ? (
+                <div className='row' id='gen_worker_row'>
+                  <ColTextInput
+                    id='num_codes'
+                    value={this.state.num_codes}
+                    onChange={this.handleInputChange}
+                    label='Number of Workers'
+                    width='s4 m2 l2'
+                  />
+                  <div className='col s10 m8 l3'>
+                    <select id='language' value={this.state.language} onChange={this.handleLanguageChange}>
+                      <option value={''} disabled={true}>
+                        Choose Language
+                      </option>
+                      {Object.entries(languageMap).map(([code, info]) => (
+                        <option value={code} key={code}>
+                          {`${info.name} (${info.primary_name})`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className='col s10 m8 l3'>
+                    <button className='btn' onClick={this.generateWorkers}>
+                      Generate Workers
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               <div className='row' id='text_filter_row'>
                 <ColTextInput
                   id='phone_no_input'
