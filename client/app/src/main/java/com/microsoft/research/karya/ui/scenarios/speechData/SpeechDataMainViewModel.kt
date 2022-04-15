@@ -160,6 +160,7 @@ constructor(
   private var currentPreRecordBufferIndex = 0
   private var totalRecordedBytes = 0
   var preRecordingJob: Job? = null
+  private var recordingLength: Float = 0.0f
 
   private var recordBuffers: ArrayList<ByteArray> = arrayListOf()
   private var currentRecordBufferConsumed = 0
@@ -958,6 +959,7 @@ constructor(
       val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
       val centiSeconds = (milliseconds / 10) % 100
       val seconds = milliseconds / 1000
+      recordingLength = milliseconds.toFloat() / 1000
       _recordSecondsTvText.value = seconds.toString()
       _recordCentiSecondsTvText.value = "%02d".format(Locale.ENGLISH, centiSeconds)
     }
@@ -1171,6 +1173,7 @@ constructor(
         }
       }
       .join()
+    outputData.addProperty("duration", recordingLength)
     addOutputFile("recording", outputRecordingFileParams)
   }
 
