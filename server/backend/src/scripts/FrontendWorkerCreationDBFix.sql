@@ -1,6 +1,6 @@
 CREATE SEQUENCE worker_local_id_seq;
 ALTER TABLE worker ALTER local_id SET DEFAULT nextval('worker_local_id_seq');
-SELECT setval('worker_local_id_seq', 1);
+SELECT setval('worker_local_id_seq', 16777216);
 
 CREATE OR REPLACE FUNCTION compute_worker_id()
   RETURNS TRIGGER AS $$
