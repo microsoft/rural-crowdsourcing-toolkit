@@ -5,8 +5,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { InvalidArgumentError, program } from 'commander';
-import { knex, setupDbConnection, BasicModel, AccessCodeInfo, generateAccessCode } from '@karya/common';
-import { Box, BoxRecord, LanguageCode, languageCodes, Worker, WorkerRecord } from '@karya/core';
+import { knex, setupDbConnection, BasicModel, AccessCodeInfo, generateWorkerCodes } from '@karya/common';
+import { Box, BoxRecord, LanguageCode, languageCodes } from '@karya/core';
 import { envGetNumber, envGetString } from '@karya/misc-utils';
 import fs, { promises as fsp } from 'fs';
 import { Promise as BBPromise } from 'bluebird';
@@ -61,53 +61,6 @@ program
   .option('--length <length>', 'Length of the access codes', intArg, codeLength)
   .option('--embed-version <v>', 'Embedded access code version (0 or 1)', intArg, codeVersion)
   .option('-d --dry-run', 'Dry run. Just print options. Do not create codes.');
-
-export async function generateWorkerCodes(
-  box: BoxRecord,
-  numCodes: number,
-  language: LanguageCode,
-  accessCodeInfo: AccessCodeInfo,
-  tags: string[],
-  wgroup: string | null = null
-) {
-  // Repeat for num_cc times
-  const newWorkers: WorkerRecord[] = [];
-  while (newWorkers.length < numCodes) {
-    // Get a new acess code
-    let access_code: string = '';
-
-    while (true) {
-      try {
-        access_code = generateAccessCode(accessCodeInfo);
-        await BasicModel.getSingle('worker', { access_code });
-      } catch (e) {
-        // access code does not exist.
-        break;
-      }
-    }
-
-    // Generate a worker record
-    const createWorker: Worker = {
-      access_code,
-      box_id: box.id,
-      language,
-      tags: { tags },
-      wgroup,
-    };
-
-    try {
-      const workerRecord = await BasicModel.insertRecord('worker', createWorker);
-      newWorkers.push(workerRecord);
-    } catch (e) {
-      console.log('Failed to insert worker.');
-      break;
-    }
-  }
-
-  for (const worker of newWorkers) {
-    console.log(worker.access_code);
-  }
-}
 
 // Main script
 (async () => {
@@ -165,7 +118,10 @@ export async function generateWorkerCodes(
     return;
   }
 
-  await generateWorkerCodes(box, numCodes, languageCode, accessCodeInfo, workerTags, wgroup);
+  const newWorkers = await generateWorkerCodes(box, numCodes, languageCode, accessCodeInfo, workerTags, wgroup);
+  for (const worker of newWorkers) {
+    console.log(worker.access_code);
+  }
 })()
   .catch((err) => {
     console.log(err);
