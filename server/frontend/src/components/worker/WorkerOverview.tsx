@@ -228,9 +228,11 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
       return disabled ? (
         <span>Disabled</span>
       ) : (
-        <span className='material-icons' onClick={() => this.props.disableWorker(w.id)}>
-          delete
-        </span>
+        <button>
+          <span className='material-icons' onClick={() => this.props.disableWorker(w.id)}>
+            delete
+          </span>
+        </button>
       );
     };
 
