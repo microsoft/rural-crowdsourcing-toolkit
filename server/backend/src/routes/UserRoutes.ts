@@ -285,6 +285,7 @@ userRouter.post<WorkerController.WorkerRouteState, {}>(
   Middlewares.needIdToken,
   Middlewares.onlyAdmin,
   // @ts-ignore
+  BodyParser(),
   WorkerController.generateNewWorkers
 );
 
