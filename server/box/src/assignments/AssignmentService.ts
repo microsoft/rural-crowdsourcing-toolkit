@@ -12,7 +12,7 @@ import {
   TaskRecord,
   TaskRecordType,
 } from '@karya/core';
-import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger } from '@karya/common';
+import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
 
 // Create an assignment logger
@@ -30,6 +30,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
   // Check if we are currently assigning anything to these workers
   if (assigning[worker.id]) return;
   assigning[worker.id] = true;
+
+  // If worker is disabled, return
+  if (WorkerModel.isDisabled(worker)) return;
 
   // Check if the worker has incomplete assignments. If so, return
   const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
