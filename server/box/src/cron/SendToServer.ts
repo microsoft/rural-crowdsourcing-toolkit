@@ -58,7 +58,14 @@ export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: Axios
         maxContentLength: 100000000,
       });
       await BasicModel.updateSingle('karya_file', { id: file.id }, { in_server: true });
-    } catch (e) {
+    } catch (e: any) {
+      // TODO: Temporary hack to handle a failed upload
+      // Marking the file as not present in the box
+      await BasicModel.updateSingle(
+        'karya_file',
+        { id: file.id },
+        { in_box: false, extras: { failed: true, message: e.message } }
+      );
       failedUpload.push(file.id);
     }
   });
