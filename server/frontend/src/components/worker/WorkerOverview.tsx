@@ -153,7 +153,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   handleTaskChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const task_id = e.currentTarget.value;
     const task_filter = this.props.task.data.find((t) => t.id === task_id) as TaskRecord;
-    this.setState({ task_filter });
+    const language = (task_filter.params.language as LanguageCode) ?? this.state.language;
+    this.setState({ task_filter, language });
   };
 
   // Handle box id change
@@ -198,13 +199,14 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const task = this.state.task_filter;
     const tags = task ? this.state.tags_filter.concat(task.itags.itags) : this.state.tags_filter;
     this.props.generateWorkers(box_id, num_codes, language, tags);
+    this.setState({ language: '', num_codes: '' });
   };
 
   // Render component
   render() {
     type Extras = { assigned: number; completed: number; verified: number; earned: number };
     var workers = this.props.workers_data as (WorkerRecord & { extras: Extras })[];
-    const tasks = this.props.task.data;
+    const tasks = this.props.task.data.filter((t) => t.status !== 'COMPLETED');
     const { task_filter } = this.state;
     const tags_filter = task_filter ? this.state.tags_filter.concat(task_filter.itags.itags) : this.state.tags_filter;
     const { box_id_filter } = this.state;
