@@ -98,4 +98,9 @@ export const backendXliterationDataScenario: IBackendScenarioInterface<BaseXlite
     const assignment = assignments[0];
     return assignment.output!;
   },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
+  },
 };

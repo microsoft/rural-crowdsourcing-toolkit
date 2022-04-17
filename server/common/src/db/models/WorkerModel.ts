@@ -70,7 +70,7 @@ export async function workersTaskSummary(task_id: string): Promise<any[]> {
     ) as mta
     ON w.id = mta.worker_id
     WHERE
-      mta.assigned > 0
+      mta.assigned > 0 OR mta.completed > 0 OR mta.verified > 0
     `);
 
   return response.rows.map((row: any) => {

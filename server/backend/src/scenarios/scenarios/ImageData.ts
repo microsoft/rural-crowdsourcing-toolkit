@@ -32,4 +32,9 @@ export const backendImageDataScenario: IBackendScenarioInterface<BaseImageDataSc
   async microtaskOutput(task, microtask, assignments) {
     return null;
   },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
+  },
 };
