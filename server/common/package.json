@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.33",
     "@types/cookies": "^0.7.6",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/koa": "^2.13.1",
     "@types/node": "^14.14.35",
@@ -31,6 +32,7 @@
     "@karya/misc-utils": "^2.0.0",
     "axios": "^0.21.2",
     "bluebird": "^3.7.2",
+    "bullmq": "^1.57.0",
     "google-auth-library": "^7.0.4",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.4",

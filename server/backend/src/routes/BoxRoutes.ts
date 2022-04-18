@@ -3,7 +3,7 @@
 //
 // List of end points for the server user.
 
-import { AuthMechanism, BoxRecord } from '@karya/core';
+import { AccountTaskStatus, AuthMechanism, BoxRecord } from '@karya/core';
 import Application from 'koa';
 import BodyParser from 'koa-body';
 import Router from 'koa-router';
@@ -11,6 +11,7 @@ import Router from 'koa-router';
 import * as Middlewares from '../box-routes-controller/Middlewares';
 import * as AuthController from '../box-routes-controller/AuthController';
 import * as KaryaFileController from '../box-routes-controller/KaryaFileController';
+import * as PaymentsController from '../box-routes-controller/PaymentsController';
 import { getPhoneAuthInfo } from '../box-routes-controller/PhoneAuthController';
 import * as WorkerController from '../box-routes-controller/WorkerController';
 import * as TaskController from '../box-routes-controller/TaskController';
@@ -113,3 +114,27 @@ boxRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.setTask,
   TaskController.getVerifiedAssignments
 );
+
+// Payments routes
+boxRouter.post(
+  '/payments/accounts',
+  Middlewares.needIdToken,
+  BodyParser({ jsonLimit: '50mb' }),
+  PaymentsController.addAccount
+);
+
+boxRouter.get(
+  '/payments/accounts/updates',
+  Middlewares.needIdToken,
+  BodyParser({ jsonLimit: '50mb' }),
+  PaymentsController.getUpdatedAccountRecords
+);
+
+boxRouter.get(
+  '/payments/transactions/updates',
+  Middlewares.needIdToken,
+  BodyParser({ jsonLimit: '50mb' }),
+  PaymentsController.getUpdatedTransactionRecords
+);
+
+boxRouter.put('/payments/accounts/:id/verify', Middlewares.needIdToken, BodyParser(), PaymentsController.verifyAccount);

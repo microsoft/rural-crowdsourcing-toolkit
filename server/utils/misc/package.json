@@ -15,10 +15,12 @@
     "compile": "tsc -b tsconfig.json"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.0.2",
     "@types/node": "^14.14.35",
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1"
   }
 }
