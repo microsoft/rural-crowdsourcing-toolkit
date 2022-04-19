@@ -164,12 +164,13 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
     },
 
     // For displaying workers graph
-    getWorkersTaskSummary: () => {
+    getWorkersTaskSummary: (force_refresh: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
         label: 'GET_ALL',
         task_id,
+        force_refresh,
       };
       dispatch(action);
     },
@@ -229,7 +230,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     this.props.getFiles();
     this.props.getMicrotasksSummary();
     this.props.getTaskLinks();
-    this.props.getWorkersTaskSummary();
+    this.props.getWorkersTaskSummary(false);
     if (this.props.task === undefined) {
       this.props.getTask();
     }
@@ -274,6 +275,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     }
     this.props.createTaskLink(taskLink);
     this.setState({ show_link_form: false });
+  };
+
+  refreshWorkersTaskSummary = () => {
+    this.props.getWorkersTaskSummary(true);
   };
 
   render() {
@@ -579,6 +584,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
     const microtasks = graph_data.length;
     const completed_assignments = graph_data.reduce((prev, current) => prev + current.extras.completed, 0);
+    const verified_assignments = graph_data.reduce((prev, current) => prev + current.extras.verified, 0);
     const cost = graph_data.reduce((prev, current) => prev + current.extras.cost, 0);
     const data = graph_data.map((m) => ({ ...m.extras, id: m.id }));
 
@@ -647,6 +653,10 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <p>{completed_assignments}</p>
           </div>
           <div className='number-col'>
+            <h2>Verified Assignments</h2>
+            <p>{verified_assignments}</p>
+          </div>
+          <div className='number-col'>
             <h2>Total Cost</h2>
             <p>{cost}</p>
           </div>
@@ -695,6 +705,9 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
             <CSVLink data={workers_graph_data} filename={'workers-data.csv'} className='btn' id='download-data-btn'>
               <i className='material-icons left'>download</i>Download data
             </CSVLink>
+            <button className='btn' id='refresh-wtsummary-btn' onClick={this.refreshWorkersTaskSummary}>
+              <i className='material-icons left'>refresh</i>Refresh data
+            </button>
           </>
         ) : null}
 

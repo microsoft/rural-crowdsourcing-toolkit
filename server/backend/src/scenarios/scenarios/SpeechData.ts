@@ -12,7 +12,7 @@ import {
   MicrotaskRecordType,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
-import { BasicModel } from '@karya/common';
+import { BasicModel, knex } from '@karya/common';
 import { promises as fsp } from 'fs';
 
 /**
@@ -105,5 +105,28 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
    */
   async microtaskOutput(task, microtask, assignments) {
     return null;
+  },
+
+  async getTaskData(task_id) {
+    const response = await knex.raw(`
+      SELECT
+        SUM(COALESCE(output::json->'data'->>'duration', '0.0')::float) as no_of_sec
+      FROM
+        microtask_assignment
+      WHERE
+        task_id = ${task_id}
+      GROUP BY task_id
+    `);
+    if (response.rowCount == 0) {
+      const data = { no_of_sec: { name: 'Amount of Data', val: '0 s' } } as object;
+      return data;
+    } else {
+      const t = response.rows[0].no_of_sec;
+      const h = Math.floor(t / 3600).toString() + 'h ';
+      const m = Math.floor((t % 3600) / 60).toString() + 'm ';
+      const s = Math.floor((t % 3600) % 60).toString() + 's';
+      const data = { no_of_sec: { name: 'Amount of Data', val: h + m + s } } as object;
+      return data;
+    }
   },
 };

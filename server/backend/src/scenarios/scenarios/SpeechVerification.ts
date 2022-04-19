@@ -116,4 +116,9 @@ export const backendSpeechVerificationScenario: IBackendScenarioInterface<BaseSp
       });
     return { data };
   },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
+  },
 };

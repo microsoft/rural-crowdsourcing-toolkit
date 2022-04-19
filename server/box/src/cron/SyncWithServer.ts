@@ -104,4 +104,7 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Get verified assignments
   await getVerifiedAssignments(box, axios);
+
+  // Refresh all materialized views
+  await axios.get('/refresh-all-matviews');
 }
