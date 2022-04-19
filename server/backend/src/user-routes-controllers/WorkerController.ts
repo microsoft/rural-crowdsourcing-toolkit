@@ -8,6 +8,7 @@ import * as HttpResponse from '@karya/http-response';
 import { WorkerModel, BasicModel, AccessCodeInfo, AccessCodeVersion, generateWorkerCodes } from '@karya/common';
 import { LanguageCode } from '@karya/core';
 import { envGetNumber } from '@karya/misc-utils';
+import { refreshWorkerSummaryMV } from '../models/MatViewModel';
 
 type WorkerRouteMiddleware = UserRouteMiddleware<{}>;
 export type WorkerRouteState = UserRouteState<{}>;
@@ -78,6 +79,9 @@ export const generateNewWorkers: WorkerRouteMiddleware = async (ctx) => {
       earned: 0,
     };
   });
+
+  // Refresh worker summary asynchronously
+  refreshWorkerSummaryMV().catch((e) => {});
 
   HttpResponse.OK(ctx, workers);
 };
