@@ -172,14 +172,14 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'microtask_assignment';
       label: 'GET_ALL';
-      force_refresh?: boolean;
+      force_refresh: boolean;
     }
   | {
       type: 'BR_INIT';
       store: 'worker';
       label: 'GET_ALL';
       task_id?: string;
-      force_refresh?: boolean;
+      force_refresh: boolean;
     }
   | {
       type: 'BR_INIT';

@@ -52,7 +52,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // For getting workers' data
-    getWorkersSummary: (force_refresh?: boolean) => {
+    getWorkersSummary: (force_refresh: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
@@ -101,7 +101,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   };
 
   componentDidMount() {
-    this.props.getWorkersSummary();
+    this.props.getWorkersSummary(false);
     M.updateTextFields();
     M.AutoInit();
   }
@@ -257,7 +257,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     // Create error message element if necessary
     const getErrorElement =
       this.props.status === 'FAILURE' ? (
-        <ErrorMessageWithRetry message={['Unable to fetch the data']} onRetry={this.props.getWorkersSummary} />
+        <ErrorMessageWithRetry
+          message={['Unable to fetch the data']}
+          onRetry={() => this.props.getWorkersSummary(false)}
+        />
       ) : null;
 
     return (

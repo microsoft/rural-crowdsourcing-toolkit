@@ -164,7 +164,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: OwnProps) => {
     },
 
     // For displaying workers graph
-    getWorkersTaskSummary: (force_refresh?: boolean) => {
+    getWorkersTaskSummary: (force_refresh: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
@@ -230,7 +230,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     this.props.getFiles();
     this.props.getMicrotasksSummary();
     this.props.getTaskLinks();
-    this.props.getWorkersTaskSummary();
+    this.props.getWorkersTaskSummary(false);
     if (this.props.task === undefined) {
       this.props.getTask();
     }

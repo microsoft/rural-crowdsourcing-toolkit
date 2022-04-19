@@ -52,7 +52,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // For getting summary of tasks
-    getTasksSummary: (force_refresh?: boolean) => {
+    getTasksSummary: (force_refresh: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'microtask_assignment',
@@ -96,7 +96,7 @@ class TaskList extends React.Component<TaskListProps, {}> {
   state = { show_json_form: false, json_file: undefined, importError: '' };
 
   componentDidMount() {
-    this.props.getTasksSummary();
+    this.props.getTasksSummary(false);
     M.AutoInit();
   }
 
