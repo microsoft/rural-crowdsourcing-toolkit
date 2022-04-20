@@ -240,3 +240,16 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
     cronLogger.error('Unknown error while sending assignments');
   }
 }
+
+/**
+ * Refresh the mat views for all boxes
+ */
+export async function refreshMatViews(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Refreshing all mat views`);
+  // Refreshing mat fiews
+  try {
+    await axiosLocal.put('/refresh-all-matviews');
+  } catch (e) {
+    cronLogger.error('Failed to refresh mat views');
+  }
+}
