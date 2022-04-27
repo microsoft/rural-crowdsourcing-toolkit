@@ -52,11 +52,12 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // For getting summary of tasks
-    getTasksSummary: () => {
+    getTasksSummary: (force_refresh: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'microtask_assignment',
         label: 'GET_ALL',
+        force_refresh,
       };
       dispatch(action);
     },
@@ -95,7 +96,7 @@ class TaskList extends React.Component<TaskListProps, {}> {
   state = { show_json_form: false, json_file: undefined, importError: '' };
 
   componentDidMount() {
-    this.props.getTasksSummary();
+    this.props.getTasksSummary(false);
     M.AutoInit();
   }
 
@@ -132,6 +133,10 @@ class TaskList extends React.Component<TaskListProps, {}> {
     const show_completed = false;
     const task_filter = { scenario_filter, tags_filter, show_completed };
     this.props.updateTaskFilter(task_filter);
+  };
+
+  refreshTasksSummary = () => {
+    this.props.getTasksSummary(true);
   };
 
   // Handle file change
@@ -194,7 +199,7 @@ class TaskList extends React.Component<TaskListProps, {}> {
     }
 
     // Getting summary info of tasks from props
-    type Extras = { assigned: number; completed: number; verified: number; cost: number };
+    type Extras = { assigned: number; completed: number; verified: number; cost: number; data: object };
     const tasks_summary = this.props.tasks_summary as (MicrotaskAssignmentRecord & { extras: Extras })[];
 
     // scenario tag function
@@ -284,30 +289,44 @@ class TaskList extends React.Component<TaskListProps, {}> {
       );
     };
 
-    const task_data = (task: TaskRecordType) => tasks_summary.find((t) => t.task_id === task.id);
+    const task_summary = (task: TaskRecordType) => tasks_summary.find((t) => t.id === task.id);
 
     const body = (task: TaskRecordType) => {
+      const summary = task_summary(task)
+        ? task_summary(task)!.extras
+        : { completed: 0, verified: 0, cost: 0, data: {} as any };
       return (
-        <div className='row'>
-          <div className='body-col'>
-            <p>
-              Completed Assignments:
-              <span>{task_data(task) !== undefined ? task_data(task)!.extras.completed : 0}</span>
-            </p>
+        <>
+          <div className='row'>
+            <div className='body-col'>
+              <p>
+                Completed Assignments:
+                <span>{summary.completed}</span>
+              </p>
+            </div>
+            <div className='body-col'>
+              <p>
+                Verified Assignments:
+                <span>{summary.verified}</span>
+              </p>
+            </div>
+            <div className='body-col'>
+              <p>
+                Total Cost:
+                <span>{summary.cost}</span>
+              </p>
+            </div>
           </div>
-          <div className='body-col'>
-            <p>
-              Verified Assignments:
-              <span>{task_data(task) !== undefined ? task_data(task)!.extras.verified : 0}</span>
-            </p>
+          <div className='row'>
+            {Object.keys(summary.data).map((k) => (
+              <div className='body-col'>
+                <p>
+                  {summary.data[k].name}:<span>{summary.data[k].val}</span>
+                </p>
+              </div>
+            ))}
           </div>
-          <div className='body-col'>
-            <p>
-              Total Cost:
-              <span>{task_data(task) !== undefined ? task_data(task)!.extras.cost : 0}</span>
-            </p>
-          </div>
-        </div>
+        </>
       );
     };
 
@@ -365,9 +384,19 @@ class TaskList extends React.Component<TaskListProps, {}> {
                     <span>Show Completed</span>
                   </label>
                 </div>
-                <div className='col s10 m4 l3'>
+                <div className='col s6 m4 l2'>
                   <button className='btn-flat' id='clear-filters-btn' onClick={this.clearFilters}>
                     Clear Filters
+                  </button>
+                </div>
+                <div className='col s6 l1'>
+                  <button
+                    className='material-icons'
+                    id='refresh-tsummary-btn'
+                    onClick={this.refreshTasksSummary}
+                    title='Refresh'
+                  >
+                    refresh
                   </button>
                 </div>
               </div>

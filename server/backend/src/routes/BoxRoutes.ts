@@ -3,7 +3,7 @@
 //
 // List of end points for the server user.
 
-import { AccountTaskStatus, AuthMechanism, BoxRecord } from '@karya/core';
+import { AuthMechanism, BoxRecord } from '@karya/core';
 import Application from 'koa';
 import BodyParser from 'koa-body';
 import Router from 'koa-router';
@@ -15,6 +15,7 @@ import * as PaymentsController from '../box-routes-controller/PaymentsController
 import { getPhoneAuthInfo } from '../box-routes-controller/PhoneAuthController';
 import * as WorkerController from '../box-routes-controller/WorkerController';
 import * as TaskController from '../box-routes-controller/TaskController';
+import * as MatViewController from '../box-routes-controller/MatViewController';
 
 // Default state for all routes
 export type DefaultBoxRouteState = {
@@ -115,7 +116,6 @@ boxRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getVerifiedAssignments
 );
 
-// Payments routes
 boxRouter.post(
   '/payments/accounts',
   Middlewares.needIdToken,
@@ -138,3 +138,5 @@ boxRouter.get(
 );
 
 boxRouter.put('/payments/accounts/:id/verify', Middlewares.needIdToken, BodyParser(), PaymentsController.verifyAccount);
+
+boxRouter.put('/refresh-all-matviews', Middlewares.needIdToken, MatViewController.refreshMatViews);

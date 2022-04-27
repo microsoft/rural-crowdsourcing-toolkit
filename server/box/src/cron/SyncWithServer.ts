@@ -8,6 +8,7 @@ import { axios } from './HttpUtils';
 import { cronLogger } from './Cron';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import {
+  refreshMatViews,
   sendCompletedAssignments,
   sendNewAssignments,
   sendNewWorkers,
@@ -112,4 +113,9 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Get updated account records
   await getTransactionRecords(axios);
+  // Refresh mat views
+  await refreshMatViews(axios);
+
+  // Log for successful completion of sync
+  cronLogger.info(`Completed sync for box ${box.id}`);
 }

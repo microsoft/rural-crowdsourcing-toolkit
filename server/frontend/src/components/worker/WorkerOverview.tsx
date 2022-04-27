@@ -54,11 +54,12 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // For getting workers' data
-    getWorkersSummary: () => {
+    getWorkersSummary: (force_refresh: boolean) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
         label: 'GET_ALL',
+        force_refresh,
       };
       dispatch(action);
     },
@@ -134,7 +135,7 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
   };
 
   componentDidMount() {
-    this.props.getWorkersSummary();
+    this.props.getWorkersSummary(false);
     M.updateTextFields();
     M.AutoInit();
   }
@@ -201,6 +202,10 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const tags = task ? this.state.tags_filter.concat(task.itags.itags) : this.state.tags_filter;
     this.props.generateWorkers(box_id, num_codes, language, tags);
     this.setState({ language: '', num_codes: '' });
+  };
+
+  refreshWorkersSummary = () => {
+    this.props.getWorkersSummary(true);
   };
 
   // Render component
@@ -310,10 +315,19 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const exportFileTime = new Date().toISOString().replace(/:/, '-').split('.')[0];
     const exportFileName = `worker-data-${exportFileTime}.csv`;
 
+    const refreshButton = (
+      <button className='btn' id='refresh-wsummary-btn' onClick={this.refreshWorkersSummary}>
+        <i className='material-icons left'>refresh</i>Refresh data
+      </button>
+    );
+
     // Create error message element if necessary
     const getErrorElement =
       this.props.status === 'FAILURE' ? (
-        <ErrorMessageWithRetry message={['Unable to fetch the data']} onRetry={this.props.getWorkersSummary} />
+        <ErrorMessageWithRetry
+          message={['Unable to fetch the data']}
+          onRetry={() => this.props.getWorkersSummary(false)}
+        />
       ) : null;
 
     return (
@@ -419,6 +433,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
               <CSVLink data={data} filename={exportFileName} className='btn' id='download-btn'>
                 <i className='material-icons left'>download</i>Download data
               </CSVLink>
+
+              {refreshButton}
 
               <div className='row' id='sort_row'>
                 <p>Sort by: </p>

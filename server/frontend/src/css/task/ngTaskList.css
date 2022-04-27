@@ -18,7 +18,7 @@
 }
 
 #filter_row div {
-  margin-left: 4%;
+  margin-left: 2.5%;
   margin-top: 1%;
   margin-bottom: 1%;
 }
@@ -32,6 +32,29 @@
   font-weight: 500;
   text-transform: capitalize;
   margin-bottom: 1.5%;
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+#refresh-tsummary-btn {
+  font-size: 1.64em;
+  color: #717787;
+  opacity: 0.6;
+  border: none;
+  background-color: transparent;
+  border-radius: 10em;
+  padding: 0.18em;
+  margin-bottom: 1.5%;
+  cursor: pointer;
+}
+
+#refresh-tsummary-btn:hover {
+  color: #717787;
+  opacity: 0.8;
+  background-color: #f0f8ff;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+  transform: scale(0.95);
+  transition: all 0.2s ease;
 }
 
 .collapsible {
@@ -191,6 +214,7 @@
 .body-col span {
   font-size: 1.1em !important;
   font-weight: 500;
+  text-transform: none;
   margin-left: 3%;
 }
 

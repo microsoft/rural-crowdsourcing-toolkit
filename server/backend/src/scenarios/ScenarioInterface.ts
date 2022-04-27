@@ -91,6 +91,13 @@ export interface BackendScenarioInterface<
     microtask: MicrotaskRecordType<SN>,
     assignments: AssignmentRecordType<SN>[]
   ): Promise<MicrotaskRecordType<SN>['output'] | null>;
+
+  /**
+   * Get scenario-specific data for a given task. Return empty
+   * object if no data.
+   * @param task_id Task record corresponding to the microtask
+   */
+  getTaskData(task_id: string): Promise<object>;
 }
 
 // Shorthand for backend scenario interface type
