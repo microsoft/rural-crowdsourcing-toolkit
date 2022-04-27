@@ -174,6 +174,13 @@ const storeReducer: StoreReducer = (state = initState, action) => {
   if (action.store === 'worker' && action.label === 'GENERATE_WORKERS') {
     const data = state.worker?.data || [];
     const newWorkers = action.response;
+
+    const newCodes = newWorkers.map((w) => w.access_code).join('\n');
+    navigator.clipboard
+      .writeText(newCodes)
+      .then(() => M.toast({ html: 'Copied access codes to clipboard' }))
+      .catch(() => {});
+
     return { ...state, worker: { data: data.concat(newWorkers), last_fetched_at, status } };
   }
 
