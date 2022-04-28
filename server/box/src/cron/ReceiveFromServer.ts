@@ -321,10 +321,17 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
 
     while (responseLength >= limit) {
       let verifiedAssignments: MicrotaskAssignmentRecord[];
-      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
-        .where('task_id', task.id)
-        .max('verified_at');
-      const latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
+      let latest_verified = new Date(0).toISOString();
+      try {
+        const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+          .where('task_id', task.id)
+          .max('verified_at');
+        latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
+      } catch (e) {
+        cronLogger.error('Failed to get response from db for latest verified');
+        cronLogger.error(JSON.stringify(e));
+        return;
+      }
 
       // Send request to get microtasks
       try {
