@@ -181,6 +181,8 @@ const storeReducer: StoreReducer = (state = initState, action) => {
       .then(() => M.toast({ html: 'Copied access codes to clipboard' }))
       .catch(() => {});
 
+    download('access-codes.txt', newCodes);
+
     return { ...state, worker: { data: data.concat(newWorkers), last_fetched_at, status } };
   }
 
@@ -218,6 +220,22 @@ function mergeData<RecordType extends { id: string }>(
  */
 const defaultSorter = (r1: DbRecordType<DbTableName>, r2: DbRecordType<DbTableName>) =>
   r1.created_at < r2.created_at ? -1 : 1;
+
+/**
+ * Helper function to download text as file
+ */
+function download(filename: string, text: string) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
 
 // Export the reducer
 export default storeReducer;
