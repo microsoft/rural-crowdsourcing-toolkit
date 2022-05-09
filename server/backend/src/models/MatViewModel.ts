@@ -134,6 +134,18 @@ export async function createTaskSummaryMV() {
   );
 }
 
+export async function refreshWorkerSummaryMV() {
+  await knex.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY worker_summary`);
+}
+
+export async function refreshWorkerTaskSummaryMV() {
+  await knex.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY worker_task_summary`);
+}
+
+export async function refreshTaskSummaryMV() {
+  await knex.raw(`REFRESH MATERIALIZED VIEW CONCURRENTLY task_summary`);
+}
+
 /**
  * Function to create the microtask summary materialized view
  */

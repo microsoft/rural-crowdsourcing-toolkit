@@ -26,6 +26,10 @@
   margin-top: 0.01%;
 }
 
+#gen_worker_row {
+  margin-left: 4%;
+}
+
 #sort_row,
 #display_row,
 #reg_row {

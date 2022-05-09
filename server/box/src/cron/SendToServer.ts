@@ -58,7 +58,14 @@ export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: Axios
         maxContentLength: 100000000,
       });
       await BasicModel.updateSingle('karya_file', { id: file.id }, { in_server: true });
-    } catch (e) {
+    } catch (e: any) {
+      // TODO: Temporary hack to handle a failed upload
+      // Marking the file as not present in the box
+      await BasicModel.updateSingle(
+        'karya_file',
+        { id: file.id },
+        { in_box: false, extras: { failed: true, message: e.message } }
+      );
       failedUpload.push(file.id);
     }
   });
@@ -231,5 +238,18 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
     });
   } catch (e) {
     cronLogger.error('Unknown error while sending assignments');
+  }
+}
+
+/**
+ * Refresh the mat views for all boxes
+ */
+export async function refreshMatViews(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Refreshing all mat views`);
+  // Refreshing mat fiews
+  try {
+    await axiosLocal.put('/refresh-all-matviews');
+  } catch (e) {
+    cronLogger.error('Failed to refresh mat views');
   }
 }

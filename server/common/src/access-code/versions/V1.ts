@@ -13,7 +13,7 @@
 // 7. Random bits
 
 import { readFileSync } from 'fs';
-import { mainLogger } from '@karya/common';
+import { mainLogger } from '../../Index';
 import { AccessCodeInfo, AccessCodeVersion } from '../Index';
 import { intToBinaryString, randomBinaryString } from '../utils/Common';
 

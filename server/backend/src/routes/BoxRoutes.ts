@@ -14,7 +14,7 @@ import * as KaryaFileController from '../box-routes-controller/KaryaFileControll
 import { getPhoneAuthInfo } from '../box-routes-controller/PhoneAuthController';
 import * as WorkerController from '../box-routes-controller/WorkerController';
 import * as TaskController from '../box-routes-controller/TaskController';
-import { refreshAllMatViews } from '../models/MatViewModel';
+import * as MatViewController from '../box-routes-controller/MatViewController';
 
 // Default state for all routes
 export type DefaultBoxRouteState = {
@@ -115,4 +115,4 @@ boxRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getVerifiedAssignments
 );
 
-boxRouter.get('/refresh-all-matviews', Middlewares.needIdToken, refreshAllMatViews);
+boxRouter.put('/refresh-all-matviews', Middlewares.needIdToken, MatViewController.refreshMatViews);

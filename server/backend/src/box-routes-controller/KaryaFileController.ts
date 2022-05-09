@@ -34,6 +34,7 @@ export const upload: BoxRouteMiddleware = async (ctx, next) => {
   const checksum = await getChecksum(file.path, fileRecord.algorithm);
   if (checksum != fileRecord.checksum) {
     HttpResponse.BadRequest(ctx, 'Invalid checksum');
+    await fsp.unlink(file.path);
     return;
   }
 

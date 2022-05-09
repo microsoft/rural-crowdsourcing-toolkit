@@ -268,6 +268,27 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getWorkersTaskSummary
 );
 
+// Disable a worker
+userRouter.put<WorkerController.WorkerRouteState, {}>(
+  'DISABLE_WORKER',
+  '/worker/:id/disable',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  // @ts-ignore
+  WorkerController.markDisabled
+);
+
+// Generate new workers
+userRouter.post<WorkerController.WorkerRouteState, {}>(
+  'GENERATE_WORKERS',
+  '/workers',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  // @ts-ignore
+  BodyParser(),
+  WorkerController.generateNewWorkers
+);
+
 /**
  * Language asset related routes. Submit, get language assets
  */

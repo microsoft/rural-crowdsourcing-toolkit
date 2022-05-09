@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+import { BoxRecord, LanguageCode, WorkerRecord, Worker } from '@karya/core';
+import { BasicModel } from '../Index';
 import { generateV0Code, parseV0Code } from './versions/V0';
 import { generateV1Code, parseV1Code } from './versions/V1';
 
@@ -61,4 +63,55 @@ export function parseAccessCode(accessCode: string): Partial<AccessCodeInfo> {
     default:
       throw new Error('Only versions 0 and 1 are supported now');
   }
+}
+
+/**
+ * Helper function to generate a number of access codes with a specified set of
+ * tags, language, and access code version. Returns a set of worker records for
+ * the created access codes.
+ */
+export async function generateWorkerCodes(
+  box: BoxRecord,
+  numCodes: number,
+  language: LanguageCode,
+  accessCodeInfo: AccessCodeInfo,
+  tags: string[],
+  wgroup: string | null = null
+): Promise<WorkerRecord[]> {
+  // Repeat for num_cc times
+  const newWorkers: WorkerRecord[] = [];
+  while (newWorkers.length < numCodes) {
+    // Get a new acess code
+    let access_code: string = '';
+
+    while (true) {
+      try {
+        access_code = generateAccessCode(accessCodeInfo);
+        await BasicModel.getSingle('worker', { access_code });
+      } catch (e) {
+        // access code does not exist.
+        break;
+      }
+    }
+
+    // Generate a worker record
+    const now = new Date().toISOString();
+    const createWorker: Worker = {
+      access_code,
+      box_id: box.id,
+      language,
+      tags: { tags },
+      tags_updated_at: now,
+      wgroup,
+    };
+
+    try {
+      const workerRecord = await BasicModel.insertRecord('worker', createWorker);
+      newWorkers.push(workerRecord);
+    } catch (e) {
+      break;
+    }
+  }
+
+  return newWorkers;
 }
