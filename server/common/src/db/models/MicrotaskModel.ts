@@ -110,31 +110,9 @@ export async function matchingResponseCount(microtask_id: string): Promise<numbe
  */
 export async function microtasksWithAssignmentSummary(task_id: string): Promise<any[]> {
   const response = await knex.raw(`
-  SELECT
-    mt.*,
-    COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
-    COALESCE((mta.completed + mta.verified)::int, 0) as completed,
-    COALESCE((mta.verified)::int, 0) as verified,
-    (mta.cost) as cost
-  FROM
-    microtask as mt
-  LEFT JOIN
-    (
-      SELECT
-        microtask_id,
-        COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
-        COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
-        COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
-        COALESCE(SUM(credits), 0) as cost
-      FROM
-        microtask_assignment
-      WHERE
-        task_id = ${task_id}
-      GROUP BY microtask_id
-    ) as mta
-  ON mt.id = mta.microtask_id
+  SELECT * FROM microtask_summary
   WHERE
-    mt.task_id = ${task_id}
+    task_id = ${task_id}
   `);
 
   return response.rows.map((row: any) => {

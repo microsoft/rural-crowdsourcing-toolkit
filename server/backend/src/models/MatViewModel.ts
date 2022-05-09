@@ -15,6 +15,7 @@ export async function createAllMatViews() {
   await createWorkerSummaryMV();
   await createTaskSummaryMV();
   await createWorkerTaskSummaryMV();
+  await createMicrotaskSummaryMV();
   logger.info(`Materialized views created`);
 }
 
@@ -130,6 +131,39 @@ export async function createTaskSummaryMV() {
     ON t.id = mta.task_id
     `,
     'id'
+  );
+}
+
+/**
+ * Function to create the microtask summary materialized view
+ */
+export async function createMicrotaskSummaryMV() {
+  await createMatView(
+    'microtask_summary',
+    `SELECT
+      mt.*,
+      COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
+      COALESCE((mta.completed + mta.verified)::int, 0) as completed,
+      COALESCE((mta.verified)::int, 0) as verified,
+      (mta.cost) as cost
+    FROM
+      microtask as mt
+    LEFT JOIN
+      (
+        SELECT
+          microtask_id,
+          task_id,
+          COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
+          COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
+          COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
+          COALESCE(SUM(credits), 0) as cost
+        FROM
+          microtask_assignment
+        GROUP BY (microtask_id, task_id)
+      ) as mta
+    ON mt.id = mta.microtask_id
+    `,
+    'id, task_id'
   );
 }
 
