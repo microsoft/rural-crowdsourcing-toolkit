@@ -94,7 +94,8 @@ export const backendSpeechVerificationScenario: IBackendScenarioInterface<BaseSp
   async microtaskOutput(task, microtask, assignments) {
     // TODO: Make the reduction function dependent on a task parameter?
 
-    const data = assignments
+    const data = assignments[0].output!.data;
+    /*
       .map((mta) => mta.output!.data)
       .reduce((value, current) => {
         if (!current.auto && !value.auto) {
@@ -113,7 +114,7 @@ export const backendSpeechVerificationScenario: IBackendScenarioInterface<BaseSp
         } else {
           return value;
         }
-      });
+      }); */
     return { data };
   },
 
