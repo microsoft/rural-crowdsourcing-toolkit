@@ -22,30 +22,26 @@
         android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
-    <LinearLayout
+
+    <com.jsibbold.zoomage.ZoomageView
+        android:id="@+id/sourceImageIv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
         app:layout_constraintBottom_toTopOf="@id/boxSpinner"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
-        app:layout_constraintVertical_bias="0.55">
-        <com.isseiaoki.simplecropview.CropImageView
-            android:id="@+id/sourceImageIv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_8sdp"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            app:scv_crop_mode="free"
-            app:scv_focus_frame_color="#0000FF"
-            app:scv_frame_stroke_weight="1dp"
-            app:scv_guide_show_mode="show_always"
-            app:scv_guide_stroke_weight="1dp"
-            app:scv_handle_color="#0000FF"
-            app:scv_handle_show_mode="show_always"
-            app:scv_handle_size="10dp"
-            app:scv_min_frame_size="10dp"
-            app:scv_touch_padding="8dp"
-            tools:layout_editor_absoluteX="13dp" />
-    </LinearLayout>
+        app:layout_constraintVertical_bias="0.55"
+        app:zoomage_animateOnReset="false"
+        app:zoomage_autoCenter="true"
+        app:zoomage_autoResetMode="UNDER"
+        app:zoomage_maxScale="8"
+        app:zoomage_minScale="1"
+        app:zoomage_minCropRecHeight="20"
+        app:zoomage_minCropRecWidth="20"
+        app:zoomage_restrictBounds="true"
+        app:zoomage_translatable="true"
+        app:zoomage_zoomable="true" />
 
     <Spinner
         android:id="@+id/boxSpinner"
@@ -57,22 +53,42 @@
         android:background="@drawable/background_microtask_input_text"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/spinner_item_color"
         app:layout_constraintBottom_toTopOf="@id/buttonGroup"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/spinner_item_color" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/spinner_item_color"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        app:cardBackgroundColor="@color/black"
         app:cardCornerRadius="100dp"
-        android:layout_marginHorizontal="@dimen/_4sdp"
-        app:layout_constraintTop_toTopOf="@id/boxSpinner"
         app:layout_constraintBottom_toBottomOf="@id/boxSpinner"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/boxSpinner"
-        app:cardBackgroundColor="@color/black" />
+        app:layout_constraintTop_toTopOf="@id/boxSpinner" />
+
+    <ImageView
+        android:id="@+id/lockCropRectBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        app:layout_constraintRight_toLeftOf="@id/editRectColorBtn"
+        app:layout_constraintLeft_toRightOf="@id/spinner_item_color"
+        app:layout_constraintTop_toTopOf="@id/spinner_item_color"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_item_color"
+        android:src="@drawable/ic_baseline_lock_open_24" />
+
+    <ImageView
+        android:id="@+id/editRectColorBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/lockCropRectBtn"
+        app:layout_constraintTop_toTopOf="@id/spinner_item_color"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_item_color"
+        android:src="@drawable/paint_icon" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,13 +105,13 @@
         <ImageButton
             android:id="@+id/removeBoxButton"
             android:layout_width="0dp"
-            android:layout_margin="@dimen/_4sdp"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/_4sdp"
             android:background="@drawable/ic_cross_on"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/addBoxButton"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="0dp" />
 
         <ImageButton
@@ -121,7 +137,6 @@
             tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

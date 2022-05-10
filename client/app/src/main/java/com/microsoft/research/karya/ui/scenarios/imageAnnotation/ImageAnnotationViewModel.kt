@@ -1,10 +1,9 @@
 package com.microsoft.research.karya.ui.scenarios.imageAnnotation
 
+import android.graphics.RectF
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
@@ -39,7 +38,7 @@ constructor(
   val imageFilePath = _imageFilePath.asStateFlow()
 
   // Labeled Box coordinates
-  private val _boxCoors: MutableStateFlow<HashMap<String, ArrayList<Float>>> = MutableStateFlow(HashMap())
+  private val _boxCoors: MutableStateFlow<HashMap<String, RectF>> = MutableStateFlow(HashMap())
   val boxCoors = _boxCoors.asStateFlow()
 
   /**
@@ -59,7 +58,7 @@ constructor(
   /**
    * Set box Coors
    */
-  fun setBoxCoors(boxCoors: HashMap<String, ArrayList<Float>>) {
+  fun setBoxCoors(boxCoors: java.util.HashMap<String, RectF>) {
     _boxCoors.value = boxCoors
   }
 
@@ -69,15 +68,20 @@ constructor(
   fun handleNextCLick() {
     val annotationsH = HashMap<String, JsonArray>()
     boxCoors.value.keys.forEach {
-      val array = JsonArray()
-      boxCoors.value[it]?.forEach { coor -> array.add(coor.toString()) }
+      val coordinates = JsonArray()
+      val rectF = boxCoors.value[it]!!
+      // Add coordinates in the JSON array
+      coordinates.add(rectF.left)
+      coordinates.add(rectF.top)
+      coordinates.add(rectF.right)
+      coordinates.add(rectF.bottom)
       // Make a split on "_" and take the first element as the key
       val key = it.split("_")[0]
       if (annotationsH.containsKey(key)) {
-        annotationsH[key]?.add(array)
+        annotationsH[key]?.add(coordinates)
       } else {
         val list = JsonArray()
-        list.add(array)
+        list.add(coordinates)
         annotationsH[key] = list
       }
     }

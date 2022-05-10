@@ -13,15 +13,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.jsibbold.zoomage.dataClass.RectFData
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
+import kotlinx.android.synthetic.main.microtask_image_annotation.view.*
 import java.util.*
-
-import android.graphics.drawable.ColorDrawable
 
 
 
@@ -84,6 +84,12 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       }
     }
 
+    editRectColorBtn.setOnClickListener {
+      if (!((sourceImageIv.focusedCropRectangleId).isNullOrEmpty())) {
+        sourceImageIv.setCropRectColor(sourceImageIv.focusedCropRectangleId, Color.parseColor(colors[boxSpinner.selectedItemPosition]))
+      }
+    }
+
     // Set listeners to add box
     addBoxButton.setOnClickListener {
       val selectedId = boxSpinner.selectedItemId
@@ -92,18 +98,31 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       sourceImageIv.addCropRectangle(key, Color.parseColor(colors[boxSpinner.selectedItemPosition]))
     }
     // Set Listeners to remove box
-    removeBoxButton.setOnClickListener { sourceImageIv.removeCropRectangle() }
+    removeBoxButton.setOnClickListener { sourceImageIv.removeCropRectangle(sourceImageIv.focusedCropRectangleId) }
+
+    // Set Listener to lock a crop box
+    lockCropRectBtn.setOnClickListener {
+      val isLocked = sourceImageIv.lockOrUnlockCropRectangle(sourceImageIv.focusedCropRectangleId)
+      // Change the image wrt the state of lock
+      if (isLocked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
+      else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+    }
+
+    sourceImageIv.setOnCropRectangleClickListener { rectFData ->
+        if (rectFData.locked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
+        else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+    }
   }
 
   private fun handleNextClick() {
 
-    val cropCoors = sourceImageIv.getCropCoors()
+    val cropCoors = sourceImageIv.coordinatesForCropBoxes
     if (cropCoors.isEmpty()) {
       // Display an alert box warning the user of no annotation boxes
       showNoBoxAlertBox()
       return
     }
-    viewModel.setBoxCoors(sourceImageIv.getCropCoors())
+    viewModel.setBoxCoors(cropCoors)
     viewModel.handleNextCLick()
   }
 
@@ -139,7 +158,10 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       //TODO: Put an else condition to put a placeholder image
 
       // Clear the existing boxes
-      sourceImageIv.removeAllRectangles()
+      val ids = sourceImageIv.allCropRectangleIds
+      for (id in ids) {
+        sourceImageIv.removeCropRectangle(id)
+      }
     }
   }
 }
