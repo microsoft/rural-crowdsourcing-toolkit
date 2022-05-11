@@ -231,8 +231,9 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
 
     // Getting all the tasks' tags as a single flat array with no duplicates
     const tags_array = workers.map((w) => w.tags.tags);
+    const task_tags = tasks.map((t) => t.itags.itags);
     const arr: string[] = [];
-    const tags_duplicates = arr.concat(...tags_array);
+    const tags_duplicates = arr.concat(...tags_array, ...task_tags);
     const tags = Array.from(new Set([...tags_duplicates]));
 
     // Filtering workers by box id
