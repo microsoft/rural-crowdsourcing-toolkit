@@ -4,7 +4,8 @@
   margin-top: 3%;
 }
 
-#download-btn, #refresh-wsummary-btn {
+#download-btn,
+#refresh-wsummary-btn {
   margin-left: 6.5%;
   margin-bottom: 3.4%;
   margin-top: 1%;
@@ -27,6 +28,10 @@
 }
 
 #gen_worker_row {
+  margin-left: 4%;
+}
+
+#task_list_row {
   margin-left: 4%;
 }
 

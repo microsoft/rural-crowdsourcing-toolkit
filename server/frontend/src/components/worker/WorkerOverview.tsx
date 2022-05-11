@@ -117,6 +117,15 @@ type WorkerOverviewState = {
   language: LanguageCode | '';
 };
 
+/**
+ * Get list of doable tasks from a set of tags
+ * TODO: Should ideally be in the core module
+ **/
+function doableTasks(tasks: TaskRecord[], tags: string[]) {
+  if (tags.includes('_DISABLED_')) return [];
+  return tasks.filter((task) => task.itags.itags.every((tag) => tags.includes(tag)));
+}
+
 // Task list component
 class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverviewState> {
   // Initial state
@@ -235,6 +244,13 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
     const arr: string[] = [];
     const tags_duplicates = arr.concat(...tags_array, ...task_tags);
     const tags = Array.from(new Set([...tags_duplicates]));
+
+    // Get list of doable tasks
+    const doableTaskList = doableTasks(tasks, tags_filter);
+    const doableTaskText =
+      doableTaskList.length === 0
+        ? 'No task can be performed with these tags'
+        : doableTaskList.map((t) => t.name).join(', ');
 
     // Filtering workers by box id
     if (box_id_filter !== undefined && box_id_filter !== 'all') {
@@ -383,32 +399,37 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
                 </div>
               </div>
               {this.props.cwp.role === 'ADMIN' ? (
-                <div className='row' id='gen_worker_row'>
-                  <ColTextInput
-                    id='num_codes'
-                    value={this.state.num_codes}
-                    onChange={this.handleInputChange}
-                    label='Number of Workers'
-                    width='s4 m2 l2'
-                  />
-                  <div className='col s10 m8 l3'>
-                    <select id='language' value={this.state.language} onChange={this.handleLanguageChange}>
-                      <option value={''} disabled={true}>
-                        Choose Language
-                      </option>
-                      {Object.entries(languageMap).map(([code, info]) => (
-                        <option value={code} key={code}>
-                          {`${info.name} (${info.primary_name})`}
+                <>
+                  <div className='row' id='task_list_row'>
+                    <b>Tasks Doable:</b> {doableTaskText}
+                  </div>
+                  <div className='row' id='gen_worker_row'>
+                    <ColTextInput
+                      id='num_codes'
+                      value={this.state.num_codes}
+                      onChange={this.handleInputChange}
+                      label='Number of Workers'
+                      width='s4 m2 l2'
+                    />
+                    <div className='col s10 m8 l3'>
+                      <select id='language' value={this.state.language} onChange={this.handleLanguageChange}>
+                        <option value={''} disabled={true}>
+                          Choose Language
                         </option>
-                      ))}
-                    </select>
+                        {Object.entries(languageMap).map(([code, info]) => (
+                          <option value={code} key={code}>
+                            {`${info.name} (${info.primary_name})`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className='col s10 m8 l3'>
+                      <button className='btn' onClick={this.generateWorkers}>
+                        Generate Workers
+                      </button>
+                    </div>
                   </div>
-                  <div className='col s10 m8 l3'>
-                    <button className='btn' onClick={this.generateWorkers}>
-                      Generate Workers
-                    </button>
-                  </div>
-                </div>
+                </>
               ) : null}
 
               <div className='row' id='text_filter_row'>
