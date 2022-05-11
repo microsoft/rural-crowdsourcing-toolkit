@@ -25,6 +25,8 @@ services:
       - 5000:5000
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+    env_file:
+      - ./backend/.env
     command: node dist/Server.js
 
   karya-box:
@@ -41,6 +43,8 @@ services:
       - 8000:8000
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+    env_file:
+      - ./box/.env
     command: node dist/Server.js
 
   karya-frontend:
@@ -55,6 +59,8 @@ services:
       - .:/usr/src/karya
     ports:
       - 3000:3000
+    env_file:
+      - ./frontend/.env
     command: serve -s build/ -l 3000
 
   karya-backend-db:
