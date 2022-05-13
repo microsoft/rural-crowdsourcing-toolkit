@@ -29,7 +29,7 @@
         android:layout_height="0dp"
         android:layout_margin="@dimen/_8sdp"
         android:layout_marginHorizontal="@dimen/_15sdp"
-        app:layout_constraintBottom_toTopOf="@id/boxSpinner"
+        app:layout_constraintBottom_toTopOf="@id/labelTv"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
         app:layout_constraintVertical_bias="0.55"
         app:zoomage_animateOnReset="false"
@@ -43,8 +43,8 @@
         app:zoomage_translatable="true"
         app:zoomage_zoomable="true" />
 
-    <Spinner
-        android:id="@+id/boxSpinner"
+    <TextView
+        android:id="@+id/labelTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
@@ -64,9 +64,9 @@
         android:layout_marginHorizontal="@dimen/_8sdp"
         app:cardBackgroundColor="@color/black"
         app:cardCornerRadius="100dp"
-        app:layout_constraintBottom_toBottomOf="@id/boxSpinner"
-        app:layout_constraintLeft_toRightOf="@id/boxSpinner"
-        app:layout_constraintTop_toTopOf="@id/boxSpinner" />
+        app:layout_constraintBottom_toBottomOf="@id/labelTv"
+        app:layout_constraintLeft_toRightOf="@id/labelTv"
+        app:layout_constraintTop_toTopOf="@id/labelTv" />
 
     <ImageView
         android:id="@+id/lockCropRectBtn"
@@ -88,7 +88,7 @@
         app:layout_constraintLeft_toRightOf="@id/lockCropRectBtn"
         app:layout_constraintTop_toTopOf="@id/spinner_item_color"
         app:layout_constraintBottom_toBottomOf="@id/spinner_item_color"
-        android:src="@drawable/paint_icon" />
+        android:src="@drawable/ic_baseline_edit_24" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

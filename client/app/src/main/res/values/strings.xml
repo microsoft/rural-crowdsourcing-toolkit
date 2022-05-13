@@ -261,4 +261,6 @@
     <string name="cancel_text">Cancel</string>
     <string name="no_annotation_box_annotation_message_text">No boxes are drawn to the screen. Do you want to proceed?</string>
     <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
+    <string name="select_image_annotation_label_dialog_instruction">Select Label</string>
+    <string name="image_annotation_edit_label">Select new label</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.imageAnnotation
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -9,29 +8,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.jsibbold.zoomage.dataClass.RectFData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
-import kotlinx.android.synthetic.main.microtask_image_annotation.view.*
 import java.util.*
 
 
-
-
-private val colors = listOf("#4DD0E1", "#EEFF41", "#7E57C2", "#F44336")
+private val colors = listOf(
+  Color.parseColor("#4DD0E1"),
+  Color.parseColor("#EEFF41"),
+  Color.parseColor("#7E57C2"),
+  Color.parseColor("#F44336")
+)
 
 @AndroidEntryPoint
 class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_annotation) {
   override val viewModel: ImageAnnotationViewModel by viewModels()
   private val args: ImageAnnotationFragmentArgs by navArgs()
+
+  // Array of Pair to hold label names and corresponding colors
+  lateinit var labelDetailArray: Array<Pair<String, Int>>
+  lateinit var labels: List<String>
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -59,43 +63,59 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     nextBtn.setOnClickListener { handleNextClick() }
 
     // Get labels
-    val labels = try {
+    labels = try {
       viewModel.task.params.asJsonObject.get("labels").asJsonArray.map { it.asString }
     } catch (e: Exception) {
       arrayListOf()
     }
-
-    val spinnerArrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
-      requireContext(), android.R.layout.simple_spinner_item,
-      labels
-    ) //selected item will look like a spinner set from XML
-    spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    boxSpinner.adapter = spinnerArrayAdapter
-
-    // Set the color when a label is chosen
-    boxSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-      override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-//        spinner_item_color.setBackgroundColor(colors[position])
-        spinner_item_color.setCardBackgroundColor(Color.parseColor(colors[position]))
-      } // to close the onItemSelected
-
-      override fun onNothingSelected(parent: AdapterView<*>) {
-
-      }
+    // Create label detail array
+    labelDetailArray = Array(labels.size) { idx ->
+      Pair(labels[idx], colors[idx]);
     }
 
     editRectColorBtn.setOnClickListener {
-      if (!((sourceImageIv.focusedCropRectangleId).isNullOrEmpty())) {
-        sourceImageIv.setCropRectColor(sourceImageIv.focusedCropRectangleId, Color.parseColor(colors[boxSpinner.selectedItemPosition]))
+      if ((sourceImageIv.focusedCropRectangleId).isNullOrEmpty()) {
+        return@setOnClickListener
       }
+      var alertDialog: AlertDialog? = null
+      val onLabelItemClickListener = object : OnLabelItemClickListener {
+        override fun onClick(labelView: View, position: Int) {
+
+          sourceImageIv.setCropRectColor(
+            sourceImageIv.focusedCropRectangleId,
+            (colors[position])
+          )
+          alertDialog!!.dismiss()
+        }
+      }
+      alertDialog = buildLabelListDialogBox(
+        getString(R.string.select_image_annotation_label_dialog_instruction),
+        onLabelItemClickListener
+      )
+      alertDialog!!.show()
     }
 
     // Set listeners to add box
     addBoxButton.setOnClickListener {
-      val selectedId = boxSpinner.selectedItemId
-      // attach random UUID with the selected box type
-      val key = labels[selectedId.toInt()] + "_" + UUID.randomUUID().toString();
-      sourceImageIv.addCropRectangle(key, Color.parseColor(colors[boxSpinner.selectedItemPosition]))
+      var alertDialog: AlertDialog? = null
+      val onLabelItemClickListener = object : OnLabelItemClickListener {
+        override fun onClick(labelView: View, position: Int) {
+          // attach random UUID with the selected box type
+          val key = labels[position] + "_" + UUID.randomUUID().toString();
+          sourceImageIv.addCropRectangle(key, colors[position])
+          alertDialog!!.dismiss()
+        }
+      }
+      alertDialog = buildLabelListDialogBox(
+        getString(R.string.select_image_annotation_label_dialog_instruction),
+        onLabelItemClickListener
+      )
+      alertDialog!!.show()
+
+//      val selectedId = boxSpinner.selectedItemId
+//      // attach random UUID with the selected box type
+//      val key = labels[selectedId.toInt()] + "_" + UUID.randomUUID().toString();
+//      sourceImageIv.addCropRectangle(key, (colors[boxSpinner.selectedItemPosition]))
     }
     // Set Listeners to remove box
     removeBoxButton.setOnClickListener { sourceImageIv.removeCropRectangle(sourceImageIv.focusedCropRectangleId) }
@@ -109,8 +129,10 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     }
 
     sourceImageIv.setOnCropRectangleClickListener { rectFData ->
-        if (rectFData.locked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
-        else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+      if (rectFData.locked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
+      else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+      spinner_item_color.setCardBackgroundColor(rectFData.color)
+      labelTv.text = labels[colors.indexOf(rectFData.color)]
     }
   }
 
@@ -131,14 +153,16 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     val alertDialog: AlertDialog? = activity?.let {
       val builder = AlertDialog.Builder(it)
       builder.apply {
-        setPositiveButton(getString(R.string.proceed_text),
-          DialogInterface.OnClickListener { dialog, id ->
-            viewModel.handleNextCLick()
-          })
-        setNegativeButton(getString(R.string.cancel_text),
-          DialogInterface.OnClickListener { dialog, id ->
-            // User cancelled the dialog
-          })
+        setPositiveButton(
+          getString(R.string.proceed_text)
+        ) { _, _ ->
+          viewModel.handleNextCLick()
+        }
+        setNegativeButton(
+          getString(R.string.cancel_text)
+        ) { _, _ ->
+          // User cancelled the dialog
+        }
       }
 
       builder.setMessage(getString(R.string.no_annotation_box_annotation_message_text))
@@ -164,4 +188,30 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       }
     }
   }
+
+  private fun buildLabelListDialogBox(title: String, onLabelItemClickListener: OnLabelItemClickListener): AlertDialog? {
+
+    var alertDialog: AlertDialog? = null
+    alertDialog = activity?.let { fragmentActivity ->
+      val builder = AlertDialog.Builder(fragmentActivity)
+      // Get the layout inflater
+      val inflater = requireActivity().layoutInflater;
+      // Inflate and set the layout for the dialog
+      // Pass null as the parent view because its going in the dialog layout
+      val view = inflater.inflate(R.layout.image_annotation_label_list_dialog_layout, null)
+      builder.setView(view)
+
+      val adapter = LabelAdapter(labelDetailArray, onLabelItemClickListener)
+      val recyclerView = view.findViewById<RecyclerView>(R.id.image_annotation_label_list_rv)
+      recyclerView.layoutManager = LinearLayoutManager(fragmentActivity)
+      recyclerView.adapter = adapter
+
+      builder.setTitle(title)
+      // Create the AlertDialog
+      builder.create()
+    }
+
+    return alertDialog
+  }
+
 }
