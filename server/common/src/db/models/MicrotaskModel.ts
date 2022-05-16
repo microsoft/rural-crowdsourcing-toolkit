@@ -110,7 +110,7 @@ export async function matchingResponseCount(microtask_id: string): Promise<numbe
  */
 export async function microtasksWithAssignmentSummary(task_id: string): Promise<any[]> {
   const response = await knex.raw(`
-  SELECT * FROM microtask_summary
+  SELECT id, task_id, assigned, completed, verified, cost FROM microtask_summary
   WHERE
     task_id = ${task_id}
   `);

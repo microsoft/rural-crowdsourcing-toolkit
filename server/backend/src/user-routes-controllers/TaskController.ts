@@ -293,9 +293,10 @@ export const getTasksSummary: TaskRouteMiddleware = async (ctx) => {
     const force_refresh = ctx.query.refresh === 'true' ? true : false;
     const records = await TaskModel.tasksSummary(force_refresh);
     await BBPromise.mapSeries(records, async (r) => {
-      const scenario = backendScenarioMap[r.scenario_name as ScenarioName];
-      const data = await scenario.getTaskData(r.id);
-      r.extras.data = data;
+      // TODO: Commenting the below lines due to performance issues
+      // const scenario = backendScenarioMap[r.scenario_name as ScenarioName];
+      // const data = await scenario.getTaskData(r.id);
+      r.extras.data = {};
       return r;
     });
     HttpResponse.OK(ctx, records);
