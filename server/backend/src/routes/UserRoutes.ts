@@ -209,6 +209,16 @@ userRouter.post(
   TaskAssignmentController.create
 );
 
+// Edit task assignment
+userRouter.put(
+  'EDIT_TASK_ASSIGNMENT',
+  '/task_assignment/:id',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  BodyParser(),
+  TaskAssignmentController.edit
+);
+
 // Get all task assignments
 userRouter.get(
   'GET_ALL_TASK_ASSIGNMENTS',

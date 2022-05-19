@@ -36,6 +36,32 @@ export const create: UserRouteMiddleware = async (ctx) => {
 };
 
 /**
+ * Edit a task assignment.
+ */
+export const edit: UserRouteMiddleware = async (ctx) => {
+  // Get task assignment info
+  const task_assignment: TaskAssignment = ctx.request.body;
+
+  // Validate the policy params
+  const policy = task_assignment.policy!;
+  const params = task_assignment.params;
+
+  const policyObj = policyMap[policy];
+  const schema = joiSchema(policyObj.params);
+  const { error, value } = schema.validate(params);
+
+  if (error) {
+    HttpResponse.BadRequest(ctx, 'Invalid policy parameters');
+    return;
+  }
+
+  task_assignment.params = value;
+
+  const record = await BasicModel.updateSingle('task_assignment', { id: task_assignment.id }, task_assignment);
+  HttpResponse.OK(ctx, record);
+};
+
+/**
  * Get all task assignments.
  */
 export const get: UserRouteMiddleware = async (ctx) => {

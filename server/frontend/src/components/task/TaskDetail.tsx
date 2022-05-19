@@ -26,6 +26,7 @@ import {
   TaskLink,
   MicrotaskRecordType,
   WorkerRecord,
+  TaskAssignmentRecord,
 } from '@karya/core';
 
 // Utils
@@ -203,6 +204,7 @@ type TaskDetailState = {
   show_input_form: boolean;
   show_link_form: boolean;
   show_assignment_form: boolean;
+  assignment_edit: TaskAssignmentRecord | undefined;
   taskLink: TaskLink;
   taskLinkError: string;
 };
@@ -214,6 +216,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     show_input_form: false,
     show_link_form: false,
     show_assignment_form: false,
+    assignment_edit: undefined,
     taskLink: { chain: undefined, to_task: undefined, blocking: false },
     taskLinkError: '',
   };
@@ -550,6 +553,16 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                   <td>{boxes.find((b) => b.id === ta.box_id)?.name}</td>
                   <td>{ta.policy}</td>
                   <td>{ta.status}</td>
+                  <td>
+                    {
+                      <button
+                        id='edit-assignment-btn'
+                        onClick={() => this.setState({ show_assignment_form: true, assignment_edit: ta })}
+                      >
+                        <span className='material-icons left'>edit</span>
+                      </button>
+                    }
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -557,13 +570,16 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
         ) : null}
 
         {/* * Task assignment form */}
-        <div id='assignment-form' style={{ display: this.state.show_assignment_form === true ? 'block' : 'none' }}>
-          <CreateTaskAssignment
-            // @ts-ignore
-            task_id={task.id}
-            close_form_func={() => this.setState({ show_assignment_form: false })}
-          />
-        </div>
+        {this.state.show_assignment_form && (
+          <div id='assignment-form'>
+            <CreateTaskAssignment
+              // @ts-ignore
+              task_id={task.id}
+              close_form_func={() => this.setState({ show_assignment_form: false, assignment_edit: undefined })}
+              assignment_edit={this.state.assignment_edit}
+            />
+          </div>
+        )}
         <button
           className='btn-flat'
           id='add-assignment-btn'

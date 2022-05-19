@@ -146,6 +146,13 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'task_assignment';
+      label: 'EDIT_TASK_ASSIGNMENT';
+      request: DBT.TaskAssignment;
+      task_assignment_id: string;
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'task_assignment';
       label: 'GET_ALL';
       params: DBT.TaskAssignment;
     }
@@ -310,6 +317,12 @@ export type BackendRequestSuccessAction =
       type: 'BR_SUCCESS';
       store: 'task_assignment';
       label: 'CREATE';
+      response: DBT.TaskAssignmentRecord;
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'task_assignment';
+      label: 'EDIT_TASK_ASSIGNMENT';
       response: DBT.TaskAssignmentRecord;
     }
   | {
@@ -555,6 +568,16 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
+    // Edit task assignment
+    if (action.store === 'task_assignment' && action.label === 'EDIT_TASK_ASSIGNMENT') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await PUT(`/task_assignment/${action.task_assignment_id}`, action.request),
+      } as BackendRequestSuccessAction;
+    }
+
     // Get all microtask info for a particular task
     if (action.store === 'microtask' && action.label === 'GET_ALL') {
       return {
@@ -575,7 +598,7 @@ export async function backendRequest(
       } as BackendRequestSuccessAction;
     }
 
-    // Create new task assignment
+    // Create new task link
     if (action.store === 'task_link' && action.label === 'CREATE') {
       return {
         type: 'BR_SUCCESS',

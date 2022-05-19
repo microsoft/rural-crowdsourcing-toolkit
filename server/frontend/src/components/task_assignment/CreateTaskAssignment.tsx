@@ -15,7 +15,7 @@ import { compose } from 'redux';
 import { RootState } from '../../store/Index';
 
 // Store types and actions
-import { scenarioMap, ScenarioName } from '@karya/core';
+import { scenarioMap, ScenarioName, TaskAssignmentRecord } from '@karya/core';
 import { policyMap, policyList, PolicyName } from '@karya/core';
 
 // HTML helpers
@@ -53,6 +53,17 @@ const mapDispatchToProps = (dispatch: any) => {
       };
       dispatch(action);
     },
+
+    editTaskAssignment: (ta: TaskAssignmentRecord) => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'task_assignment',
+        label: 'EDIT_TASK_ASSIGNMENT',
+        request: ta,
+        task_assignment_id: ta.id,
+      };
+      dispatch(action);
+    },
   };
 };
 
@@ -64,7 +75,11 @@ const connector = compose(dataConnector, reduxConnector);
 // Need filter for box.
 type CreateTaskAssignmentProps = RouterProps &
   ConnectedProps<typeof reduxConnector> &
-  DataProps<typeof dataConnector> & { task_id?: string; close_form_func?: () => void };
+  DataProps<typeof dataConnector> & {
+    task_id?: string;
+    close_form_func?: () => void;
+    assignment_edit?: TaskAssignmentRecord;
+  };
 
 // Component state
 type CreateTaskAssignmentState = {
@@ -84,9 +99,17 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   componentDidMount() {
     M.AutoInit();
     M.updateTextFields();
+
     if (this.props.task_id !== undefined) {
       const task = this.props.task.data.find((t) => t.id === this.props.task_id) as TaskRecord;
       this.setState({ task });
+    }
+    if (this.props.assignment_edit !== undefined) {
+      const ta = this.props.assignment_edit;
+      const params = ta.params;
+      const box = this.props.box.data.find((b) => b.id === ta.box_id) as BoxRecord;
+      const policy = ta.policy;
+      this.setState({ params: params, box: box, policy: policy });
     }
   }
 
@@ -170,14 +193,23 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
   // handle form submit
   handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    const ta: TaskAssignment = {
-      task_id: this.state.task?.id,
-      box_id: this.state.box?.id,
-      policy: this.state.policy,
-      params: this.state.params,
-      status: 'ASSIGNED',
-    };
-    this.props.createTaskAssignment(ta);
+    const assignment_edit = this.props.assignment_edit;
+
+    if (!assignment_edit) {
+      const ta: TaskAssignment = {
+        task_id: this.state.task?.id,
+        box_id: this.state.box?.id,
+        policy: this.state.policy,
+        params: this.state.params,
+        status: 'ASSIGNED',
+      };
+      this.props.createTaskAssignment(ta);
+    } else {
+      const ta: TaskAssignmentRecord = assignment_edit;
+      ta.policy = this.state.policy ? this.state.policy : ta.policy;
+      ta.params = this.state.params;
+      this.props.editTaskAssignment(ta);
+    }
   };
 
   render() {
@@ -186,6 +218,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     );
 
     const task_id_props = this.props.task_id;
+    const assignment_edit = this.props.assignment_edit;
 
     // Task drop down
     const tasks = this.props.task.data.filter((t) => t.status === 'SUBMITTED');
@@ -292,7 +325,7 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
                 <div className={task_id_props ? 'col s10' : 'col s10 m8 l6'}>
                   {this.props.box.status === 'IN_FLIGHT' ? (
                     <ProgressBar />
-                  ) : this.props.box.status === 'SUCCESS' ? (
+                  ) : this.props.box.status === 'SUCCESS' && !assignment_edit ? (
                     boxDropDown
                   ) : null}
                 </div>

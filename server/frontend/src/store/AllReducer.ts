@@ -136,6 +136,16 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
+  // Task assignment table
+  if (action.store === 'task_assignment') {
+    const oldData = state.task_assignment?.data || [];
+    if (action.label === 'EDIT_TASK_ASSIGNMENT') {
+      const { response } = action;
+      const data = mergeData(oldData, response);
+      return { ...state, task_assignment: { data, last_fetched_at, status } };
+    }
+  }
+
   // Submit input files
   if (action.store === 'task_op') {
     const oldData = state.task_op?.data || [];

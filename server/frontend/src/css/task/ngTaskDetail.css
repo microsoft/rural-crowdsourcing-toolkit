@@ -66,7 +66,8 @@
   margin-top: 2% !important;
 }
 
-#download-data-btn, #refresh-wtsummary-btn {
+#download-data-btn,
+#refresh-wtsummary-btn {
   margin-left: 12%;
   margin-bottom: 4%;
   margin-top: 3%;
@@ -162,6 +163,17 @@
 
 #input-table a,
 #output-table a {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+#task-assignment-table button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#task-assignment-table button span {
+  font-size: 1.4em;
   color: rgba(0, 0, 0, 0.35);
 }
 
