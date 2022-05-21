@@ -135,6 +135,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         limit: microtaskLimit,
         previous: assignedCount,
         current: assignLimit,
+        actual: assignableMicrotasks.length,
       });
 
       // Identify prefix that fits within max credits
