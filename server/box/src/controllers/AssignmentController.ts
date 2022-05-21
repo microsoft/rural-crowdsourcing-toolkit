@@ -18,6 +18,7 @@ export const get: KaryaMiddleware = async (ctx) => {
   const worker = ctx.state.entity;
   const assignment_type = ctx.request.query.type;
   const from = ctx.request.query.from;
+  const limit_param = ctx.request.query.limit;
 
   // Check assignment type
   if (assignment_type != 'new' && assignment_type != 'verified') {
@@ -32,13 +33,21 @@ export const get: KaryaMiddleware = async (ctx) => {
     return;
   }
 
+  // Check limit
+  if (limit_param instanceof Array) {
+    HttpResponse.BadRequest(ctx, 'Invalid limit');
+    return;
+  }
+  const limit = limit_param ? Number.parseInt(limit_param, 10) : 1000;
+
   if (assignment_type == 'verified') {
     const records = await BasicModel.getRecords(
       'microtask_assignment',
       { worker_id: worker.id, status: 'VERIFIED' },
       [],
       [['verified_at', from, null]],
-      'verified_at'
+      'verified_at',
+      limit
     );
     HttpResponse.OK(ctx, records);
   } else {
