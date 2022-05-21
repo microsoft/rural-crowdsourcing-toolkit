@@ -42,7 +42,7 @@ import { envGetString, randomKey } from '@karya/misc-utils';
   // Register box with server
   const serverUrl = envGetString('BACKEND_SERVER_URL');
   const response = await axios.put<BoxRecord>(`${serverUrl}/api_box/register`, box, {
-    headers: { 'access-code': access_code },
+    headers: { 'access-code': access_code as string },
   });
 
   // Insert box locally

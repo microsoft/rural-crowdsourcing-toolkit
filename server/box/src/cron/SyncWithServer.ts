@@ -32,7 +32,7 @@ export async function syncBoxWithServer(box: BoxRecord) {
   cronLogger.info(`Syncing box ${box.id} with server`);
 
   // set request header
-  const headers = { 'karya-id-token': box.id_token };
+  const headers = { 'karya-id-token': box.id_token as string };
 
   // Renew ID token
   let newBoxRecord: BoxRecord;
@@ -50,12 +50,13 @@ export async function syncBoxWithServer(box: BoxRecord) {
   try {
     const { id, id_token } = newBoxRecord;
     await BasicModel.updateSingle('box', { id }, { id_token });
-    headers['karya-id-token'] = id_token;
+    headers['karya-id-token'] = id_token as string;
   } catch (e) {
     cronLogger.warn('Failed to update box with renewed ID token. Continuing with old token');
   }
 
   // Set axios default header
+  // @ts-ignore
   axios.defaults.headers = headers;
 
   // Check if OTP service is available
