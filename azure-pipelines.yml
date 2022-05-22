@@ -10,8 +10,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: $(Agent.TempDirectory)
+    Contents: ‘**\backend.env’
+    TargetFolder: '$(Build.SourcesDirectory)/server/backend/.env'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
