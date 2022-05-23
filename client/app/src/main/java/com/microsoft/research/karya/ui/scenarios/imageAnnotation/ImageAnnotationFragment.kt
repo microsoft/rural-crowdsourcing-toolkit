@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
 import java.util.*
+import kotlin.collections.HashMap
 
 
 private val colors = listOf(
@@ -32,6 +34,7 @@ private val colors = listOf(
 class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_annotation) {
   override val viewModel: ImageAnnotationViewModel by viewModels()
   private val args: ImageAnnotationFragmentArgs by navArgs()
+  private var cropCoors: HashMap<String, RectF>? = null
 
   // Array of Pair to hold label names and corresponding colors
   lateinit var labelDetailArray: Array<Pair<String, Int>>
@@ -133,6 +136,22 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
       spinner_item_color.setCardBackgroundColor(rectFData.color)
       labelTv.text = labels[colors.indexOf(rectFData.color)]
+    }
+  }
+
+  override fun onPause() {
+    super.onPause()
+    cropCoors = sourceImageIv.coordinatesForCropBoxes
+  }
+
+  override fun onResume() {
+    super.onResume()
+    if (sourceImageIv.coordinatesForCropBoxes.isEmpty() && cropCoors != null) {
+      for (id in cropCoors!!.keys) {
+        val label = id.split("_")[0]
+        val position = labels.indexOf(label)
+        sourceImageIv.addCropRectangle(id, colors[position], cropCoors!![id])
+      }
     }
   }
 
