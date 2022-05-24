@@ -206,7 +206,6 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
       this.props.createTaskAssignment(ta);
     } else {
       const ta: TaskAssignmentRecord = assignment_edit;
-      ta.policy = this.state.policy ? this.state.policy : ta.policy;
       ta.params = this.state.params;
       this.props.editTaskAssignment(ta);
     }
@@ -266,7 +265,12 @@ class CreateTaskAssignment extends React.Component<CreateTaskAssignmentProps, Cr
     const policyDropDown = (
       <>
         <div>
-          <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
+          <select
+            id='policy_id'
+            value={policy}
+            onChange={this.handlePolicyChange}
+            disabled={assignment_edit ? true : false}
+          >
             <option value={0} disabled={true}>
               Select a Policy
             </option>
