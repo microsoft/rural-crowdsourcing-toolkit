@@ -12,10 +12,10 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdkVersion(31)
   defaultConfig {
     applicationId = "com.microsoft.research.karya"
-    minSdkVersion(21)
+    minSdkVersion(24)
     targetSdkVersion(30)
     multiDexEnabled = true
     versionCode = 25
@@ -118,9 +118,8 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
   implementation(Dependencies.AndroidX.Navigation.uiKtx)
-    implementation(files("C:\\Projects\\Karya\\rural-crowdsourcing-toolkit\\client\\app\\libs\\simplecropview-debug.aar"))
 
-    kapt(Dependencies.AndroidX.Room.roomCompiler)
+  kapt(Dependencies.AndroidX.Room.roomCompiler)
 
   implementation(Dependencies.Google.gson)
   implementation(Dependencies.Google.material)
@@ -156,14 +155,14 @@ dependencies {
   implementation("com.intuit.ssp:ssp-android:1.0.6")
   implementation("com.intuit.sdp:sdp-android:1.0.6")
 
-  // Zoomable image
-  implementation("com.jsibbold:zoomage:1.3.1")
-
   // Themed button toggle group
   implementation("nl.bryanderidder:themed-toggle-button-group:1.3.4")
 
   // Camera view
   implementation("com.otaliastudios:cameraview:2.7.2")
+
+  // Custom aars
+  implementation(files("libs/zoomage-debug.aar"))
 
   // Video data collection
   "largeImplementation" ("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
