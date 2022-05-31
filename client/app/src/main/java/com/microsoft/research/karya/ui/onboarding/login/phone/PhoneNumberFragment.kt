@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.onboarding.login.phone
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +26,6 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
     setupViews()
     observeUi()
     observeEffects()
-    requestSoftKeyFocus(binding.phoneNumberEt)
   }
 
   override fun onResume() {
@@ -36,21 +34,22 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
   }
 
   private fun setupViews() {
-    // registrationActivity = activity as RegistrationActivity
-    // registrationActivity.current_assistant_audio = R.string.audio_phone_number_prompt
 
     with(binding) {
+      // Check if phone number can be submitted
       phoneNumberEt.doAfterTextChanged { phoneNumber ->
+        hideError()
+
         if (!phoneNumber.isNullOrEmpty() && phoneNumber.length == PHONE_NUMBER_LENGTH) {
-          phoneNumberNextIv.handlePhoneNumberReady()
+          numPad.enableDoneButton()
         } else {
-          phoneNumberNextIv.handlePhoneNumberNotReady()
+          numPad.disableDoneButton()
         }
       }
 
-      phoneNumberNextIv.setOnClickListener { handleNextClick(phoneNumberEt.text.toString()) }
+      // Set on done listener for the num pad
+      numPad.setOnDoneListener { handleNextClick(phoneNumberEt.text.toString()) }
 
-      appTb.setTitle(getString(R.string.s_phone_number_title))
       appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.PHONE_NUMBER_PROMPT) }
     }
   }
@@ -58,7 +57,7 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
   private fun observeUi() {
     viewModel.phoneNumberUiState.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { state ->
       when (state) {
-        is PhoneNumberUiState.Error -> showErrorUi(state.throwable.message!!)
+        is PhoneNumberUiState.Error -> showErrorUi(getErrorMessage(state.throwable))
         PhoneNumberUiState.Initial -> showInitialUi()
         PhoneNumberUiState.Loading -> showLoadingUi()
         PhoneNumberUiState.Success -> showSuccessUi()
@@ -75,71 +74,50 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
   }
 
   private fun navigateToOTPFragment() {
-    findNavController().navigate(R.id.action_phoneNumberFragment2_to_OTPFragment2)
+    findNavController().navigate(R.id.action_phoneNumberFragment_to_OTPFragment)
   }
 
   private fun showInitialUi() {
-    with(binding) {
-      failToSendOtpTv.gone()
-      phoneNumberNextIv.handlePhoneNumberNotReady()
-      hideLoading()
-    }
+    binding.numPad.disableDoneButton()
+    hideError()
+    hideLoading()
   }
 
   private fun showLoadingUi() {
-    with(binding) {
-      failToSendOtpTv.gone()
-      showLoading()
-      phoneNumberNextIv.handlePhoneNumberNotReady()
-      phoneNumberNextIv.invisible()
-    }
+    hideError()
+    showLoading()
   }
 
   private fun showSuccessUi() {
-    with(binding) {
-      failToSendOtpTv.gone()
-      hideLoading()
-      phoneNumberNextIv.handlePhoneNumberReady()
-    }
+    hideError()
+    hideLoading()
   }
 
   private fun showErrorUi(message: String) {
-    with(binding) {
-      failToSendOtpTv.text = message
-      failToSendOtpTv.visible()
-      hideLoading()
-      phoneNumberNextIv.handlePhoneNumberReady()
-    }
+    showError(message)
+    hideLoading()
   }
 
   private fun handleNextClick(phoneNumber: String) {
-    hideKeyboard()
     viewModel.sendOTP(phoneNumber)
   }
 
-  private fun ImageView.handlePhoneNumberReady() {
-    setImageResource(0)
-    setImageResource(R.drawable.ic_next_enabled)
-    isClickable = true
-  }
-
-  private fun ImageView.handlePhoneNumberNotReady() {
-    setImageResource(0)
-    setImageResource(R.drawable.ic_next_disabled)
-    isClickable = false
-  }
-
   private fun hideLoading() {
-    with(binding) {
-      loadingPb.gone()
-      phoneNumberNextIv.visible()
-    }
+    binding.loadingPb.gone()
   }
 
   private fun showLoading() {
-    with(binding) {
-      loadingPb.visible()
-      phoneNumberNextIv.gone()
+    binding.loadingPb.visible()
+  }
+
+  private fun showError(message: String) {
+    with(binding.sendOTPErrorTv) {
+      text = message
+      visible()
     }
+  }
+
+  private fun hideError() {
+    binding.sendOTPErrorTv.invisible()
   }
 }

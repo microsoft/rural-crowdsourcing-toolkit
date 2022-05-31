@@ -11,17 +11,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
+import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.base.SessionFragment
-import com.microsoft.research.karya.ui.dashboard.PROGRESS_STATUS.MAX_RECEIVE_DB_UPDATES_PROGRESS
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 
@@ -91,10 +92,10 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           viewModel.setProgress(progress)
           viewModel.setLoading()
           // refresh the UI to show microtasks
-          if (progress == MAX_RECEIVE_DB_UPDATES_PROGRESS )
-          viewLifecycleScope.launch {
-            viewModel.refreshList()
-          }
+          if (progress == 100)
+            viewLifecycleScope.launch {
+              viewModel.refreshList()
+            }
         }
         if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
           lifecycleScope.launch {
@@ -141,8 +142,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
       binding.syncCv.setOnClickListener { syncWithServer() }
 
-      appTb.setTitle(getString(R.string.s_dashboard_title))
-      appTb.setProfileClickListener { findNavController().navigate(R.id.action_global_tempDataFlow) }
       loadProfilePic()
     }
   }
@@ -164,12 +163,12 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-      /* if (totalCreditsEarned > 0.0f) {
+      if (totalCreditsEarned > 0.0f) {
         binding.rupeesEarnedCl.visible()
-        binding.rupeesEarnedTv.text = "%.2f".format(totalCreditsEarned)
+        binding.rupeesEarnedTv.text = "%.2f".format(Locale.ENGLISH, totalCreditsEarned)
       } else {
         binding.rupeesEarnedCl.gone()
-      } */
+      }
     }
 
     // Show a dialog box to sync with server if completed tasks and internet available
@@ -191,16 +190,17 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       AlertDialog.Builder(it)
     }
 
-    builder?.setMessage(R.string.s_sync_prompt_message)
+    builder?.setMessage(R.string.sync_prompt_message)
 
     // Set buttons
     builder?.apply {
-      setPositiveButton(R.string.s_yes
+      setPositiveButton(
+        R.string.yes
       ) { _, _ ->
         syncWithServer()
         dialog!!.dismiss()
       }
-      setNegativeButton(R.string.s_no, null)
+      setNegativeButton(R.string.no, null)
     }
 
     dialog = builder?.create()
@@ -255,13 +255,64 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   fun onDashboardItemClick(task: TaskInfo) {
     if (!task.isGradeCard && task.taskStatus.assignedMicrotasks > 0) {
       val taskId = task.taskID
-      val action = with(DashboardFragmentDirections) {
+      val status = task.taskStatus
+      val completed =
+        status.completedMicrotasks + status.submittedMicrotasks + status.verifiedMicrotasks
+      val total = status.assignedMicrotasks + completed
+      var action = with(DashboardFragmentDirections) {
         when (task.scenarioName) {
-          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment2(taskId)
-          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(taskId)
-          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(taskId)
-          ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(taskId)
-          ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(taskId)
+          ScenarioType.SPEECH_DATA -> actionDashboardActivityToSpeechDataMainFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.XLITERATION_DATA -> actionDashboardActivityToUniversalTransliterationMainFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.SPEECH_VERIFICATION -> actionDashboardActivityToSpeechVerificationFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.IMAGE_TRANSCRIPTION -> actionDashboardActivityToImageTranscription(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.IMAGE_LABELLING -> actionDashboardActivityToImageLabelling(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.IMAGE_ANNOTATION -> actionDashboardActivityToImageAnnotationFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.QUIZ -> actionDashboardActivityToQuiz(taskId, completed, total)
+          ScenarioType.IMAGE_DATA -> actionDashboardActivityToImageData(taskId, completed, total)
+          ScenarioType.SENTENCE_VALIDATION -> actionDashboardActivityToSentenceValidation(
+            taskId,
+            completed,
+            total
+          )
+          else -> null
+        }
+      }
+      if (action == null && BuildConfig.FLAVOR == "large") {
+        action = when (task.scenarioName) {
+          ScenarioType.SIGN_LANGUAGE_VIDEO -> DashboardFragmentDirections.actionDashboardActivityToSignVideo(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.SGN_LANG_VIDEO_VERIFICATION -> DashboardFragmentDirections.actionDashboardActivityToSignVideoVerification(
+            taskId,
+            completed,
+            total
+          )
           else -> null
         }
       }

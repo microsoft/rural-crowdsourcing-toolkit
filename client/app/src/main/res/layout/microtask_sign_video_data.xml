@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        style="@style/MicrotaskInstructionText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb"
+        tools:text="@string/speech_recording_instruction" />
+
+    <FrameLayout
+        android:id="@+id/inputFrame"
+        style="@style/MicrotaskInputFrame"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/videoPlayer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv">
+
+        <TextView
+            android:id="@+id/sentenceTv"
+            style="@style/MicrotaskInputText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="This is a sentence to be recorded" />
+
+    </FrameLayout>
+
+    <com.potyvideo.library.AndExoPlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_8sdp"
+        app:andexo_show_controller="false"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+        app:layout_constraintHeight_percent="0.4" />
+
+    <TextView
+        android:id="@+id/videoPlayerPlaceHolder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_8sdp"
+        android:background="#000"
+        android:gravity="center"
+        android:text="Video preview will appear here"
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+        app:layout_constraintHeight_percent="0.4" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_0sdp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.11"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <include
+            android:id="@+id/backBtn"
+            layout="@layout/microtask_common_back_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/recordBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/recordBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="START RECORDING"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtnCv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <include
+            android:id="@+id/nextBtnCv"
+            layout="@layout/microtask_common_next_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/recordBtn"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

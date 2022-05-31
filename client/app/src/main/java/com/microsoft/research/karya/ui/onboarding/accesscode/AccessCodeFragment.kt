@@ -2,8 +2,10 @@ package com.microsoft.research.karya.ui.onboarding.accesscode
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentAccessCodeBinding
@@ -11,14 +13,12 @@ import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.utils.SeparatorTextWatcher
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   private val binding by viewBinding(FragmentAccessCodeBinding::bind)
   private val viewModel by viewModels<AccessCodeViewModel>()
-
-  private val creationCodeLength = 8
-  private val creationCodeEtMax = creationCodeLength + (creationCodeLength - 1) / 4
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -29,31 +29,41 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
 
   private fun setupViews() {
     with(binding) {
-      appTb.setTitle(getString(R.string.s_access_code_title))
+      // TODO: Temporarily removing separator text watcher
+      // Need to fix it to work with num pad
+//      accessCodeEt.addTextChangedListener(
+//        object : SeparatorTextWatcher('-', 4) {
+//          override fun onAfterTextChanged(text: String, position: Int) {
+//            accessCodeEt.run {
+//              setText(text)
+//              setSelection(position)
+//            }
+//          }
+//        }
+//      )
 
-      creationCodeEt.addTextChangedListener(
-        object : SeparatorTextWatcher('-', 4) {
-          override fun onAfterTextChanged(text: String, position: Int) {
-            creationCodeEt.run {
-              setText(text)
-              setSelection(position)
-            }
-
-            if (creationCodeEt.length() == creationCodeEtMax) {
-              enableButton()
-            } else {
-              disableButton()
-            }
-          }
+      accessCodeEt.doAfterTextChanged {
+        if (accessCodeEt.length() > 0) {
+          numPad.enableDoneButton()
+        } else {
+          numPad.disableDoneButton()
         }
-      )
 
-      submitAccessCodeBtn.setOnClickListener {
-        val accessCode = binding.creationCodeEt.text.toString().replace("-", "")
-        viewModel.checkAccessCode(accessCode)
+        hideError()
       }
 
-      requestSoftKeyFocus(creationCodeEt)
+      numPad.setOnDoneListener { handleSubmit() }
+      numPad.disableDoneButton()
+    }
+  }
+
+  private fun handleSubmit() {
+    val accessCode = binding.accessCodeEt.text.toString().replace("-", "")
+    val decodedURL = AccessCodeDecoder.decodeURL(requireContext(), accessCode)
+    // Set the decoded URL for the app to be used
+    lifecycleScope.launch {
+      viewModel.setURL(decodedURL)
+      viewModel.checkAccessCode(accessCode)
     }
   }
 
@@ -61,7 +71,7 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
     viewModel.accessCodeUiState.observe(viewLifecycle, viewLifecycleScope) { state ->
       when (state) {
         is AccessCodeUiState.Success -> showSuccessUi(state.languageCode)
-        is AccessCodeUiState.Error -> showErrorUi(state.throwable.message!!)
+        is AccessCodeUiState.Error -> showErrorUi()
         AccessCodeUiState.Initial -> showInitialUi()
         AccessCodeUiState.Loading -> showLoadingUi()
       }
@@ -77,80 +87,56 @@ class AccessCodeFragment : Fragment(R.layout.fragment_access_code) {
   }
 
   private fun navigateToConsentFormFragment() {
-    findNavController().navigate(R.id.action_accessCodeFragment2_to_fileDownloadFragment2)
+    findNavController().navigate(R.id.action_accessCodeFragment_to_fileDownloadFragment)
   }
 
   private fun showSuccessUi(languageCode: String) {
     updateActivityLanguage(languageCode)
-
     hideLoading()
     hideError()
-    enableButton()
+    enableDoneButton()
   }
 
-  private fun showErrorUi(error: String) {
-    showError(error)
+  private fun showErrorUi() {
+    showError()
     hideLoading()
-    enableButton()
-    requestSoftKeyFocus(binding.creationCodeEt)
+    enableDoneButton()
   }
 
   private fun showInitialUi() {
     hideLoading()
-    disableButton()
+    disableDoneButton()
     hideError()
-    binding.creationCodeEt.text.clear()
+    binding.accessCodeEt.text.clear()
   }
 
   private fun showLoadingUi() {
     showLoading()
-    disableButton()
+    disableDoneButton()
   }
 
-  private fun showError(message: String) {
-    with(binding) {
-      creationCodeErrorTv.text = message
-      creationCodeStatusIv.setImageResource(0)
-      creationCodeStatusIv.setImageResource(R.drawable.ic_quit_select)
-      creationCodeStatusIv.visible()
-    }
+  private fun showError() {
+    binding.accessCodeErrorIv.visible()
   }
 
   private fun hideError() {
-    with(binding) {
-      creationCodeErrorTv.text = ""
-      creationCodeStatusIv.gone()
-    }
+    binding.accessCodeErrorIv.invisible()
   }
 
   private fun showLoading() {
-    with(binding) {
-      loadingPb.visible()
-      submitAccessCodeBtn.gone()
-      creationCodeEt.isEnabled = false
-    }
+    binding.loadingPb.visible()
   }
 
   private fun hideLoading() {
-    with(binding) {
-      loadingPb.gone()
-      submitAccessCodeBtn.visible()
-      creationCodeEt.isEnabled = true
-    }
+    binding.loadingPb.gone()
   }
 
-  private fun disableButton() {
-    with(binding) {
-      submitAccessCodeBtn.isClickable = false
-      submitAccessCodeBtn.setBackgroundResource(R.drawable.ic_next_disabled)
-    }
+  private fun disableDoneButton() {
+    binding.numPad.disableDoneButton()
   }
 
-  private fun enableButton() {
-    with(binding) {
-      submitAccessCodeBtn.isClickable = true
-      submitAccessCodeBtn.setBackgroundResource(R.drawable.ic_next_enabled)
-    }
+  private fun enableDoneButton() {
+    binding.numPad.enableDoneButton()
   }
 
   private fun updateActivityLanguage(language: String) {

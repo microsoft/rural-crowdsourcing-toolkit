@@ -27,6 +27,19 @@ constructor(
   private val _otpEffects: MutableSharedFlow<OTPEffects> = MutableSharedFlow()
   val otpEffects = _otpEffects.asSharedFlow()
 
+  private var _phoneNumber: MutableStateFlow<String> = MutableStateFlow("...")
+  var phoneNumber = _phoneNumber.asSharedFlow()
+
+  /**
+   * Get the phone number of the worker to replace in the text.
+   */
+  fun retrievePhoneNumber() {
+    viewModelScope.launch {
+      val worker = authManager.getLoggedInWorker()
+      _phoneNumber.value = worker.phoneNumber ?: "..."
+    }
+  }
+
   fun resendOTP() {
     viewModelScope.launch {
       _otpUiState.value = OTPUiState.Loading
@@ -64,13 +77,7 @@ constructor(
   }
 
   private suspend fun handleNavigation(worker: WorkerRecord) {
-    val destination =
-      when {
-        worker.profilePicturePath.isNullOrEmpty() -> Destination.TempDataFlow
-        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
-        else -> Destination.Dashboard
-      }
-
+    val destination = Destination.Dashboard
     _otpEffects.emit(OTPEffects.Navigate(destination))
   }
 }

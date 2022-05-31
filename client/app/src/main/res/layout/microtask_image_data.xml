@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageDataGridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <include
+            android:id="@+id/microtaskTb"
+            layout="@layout/microtask_common_header" />
+
+        <TextView
+            android:id="@+id/instructionTv"
+            style="@style/MicrotaskInstructionText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/microtaskTb"
+            tools:text="@string/image_data_collection_instruction" />
+
+        <GridView
+            android:id="@+id/imagesGv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/c_very_light_grey"
+            android:horizontalSpacing="@dimen/_2sdp"
+            android:numColumns="4"
+            android:verticalSpacing="@dimen/_2sdp"
+            app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+            app:layout_constraintTop_toBottomOf="@id/instructionTv" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonGroup"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_0sdp"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.13"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <include
+                android:id="@+id/backBtn"
+                layout="@layout/microtask_common_back_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/startCaptureBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <include
+                android:id="@+id/startCaptureBtn"
+                layout="@layout/microtask_common_camera_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_mic_enabled"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@+id/nextBtnCv"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/backBtn"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <include
+                android:id="@+id/nextBtnCv"
+                layout="@layout/microtask_common_next_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/startCaptureBtn"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageDataCaptureView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraCv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:keepScreenOn="true"
+            app:cameraAudio="off"
+            app:cameraEngine="camera2"
+            app:cameraFacing="back"
+            app:cameraFlash="off"
+            app:cameraHdr="off"
+            app:cameraMode="picture"
+            app:cameraPictureFormat="jpeg"
+            app:cameraPictureSizeMaxHeight="1280"
+            app:cameraWhiteBalance="auto" />
+
+        <TextView
+            android:id="@+id/imageLabelTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/c_dark_grey_trans"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/c_white"
+            android:textSize="@dimen/_50ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/takePictureBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:text="Click"
+            android:textSize="@dimen/_16ssp"
+            app:fabSize="auto"
+            app:icon="@drawable/ic_camera"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/backToGridViewBtn"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/backToGridViewBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_20sdp"
+            app:backgroundTint="@color/c_light_grey"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/takePictureBtn"
+            app:srcCompat="@drawable/ic_grid" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fullImageDisplayView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <com.jsibbold.zoomage.ZoomageView
+            android:id="@+id/fullImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            app:zoomage_restrictBounds="true" />
+
+        <TextView
+            android:id="@+id/fullImageLabelTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/c_dark_grey_trans"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_10sdp"
+            android:textColor="@color/c_white"
+            android:textSize="@dimen/_40ssp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Front Cover" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_0sdp"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/_10sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.12"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/previousImageCv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/_3sdp"
+                android:text=""
+                app:backgroundTint="@color/c_white"
+                app:icon="@drawable/ic_left"
+                app:iconSize="@dimen/_30sdp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/recaptureBtn"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/recaptureBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retake"
+                android:textSize="@dimen/_14ssp"
+                app:fabSize="auto"
+                app:icon="@drawable/ic_camera"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/closeFullImageViewBtn"
+                app:layout_constraintStart_toEndOf="@id/previousImageCv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/closeFullImageViewBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                app:backgroundTint="@color/c_white"
+                app:icon="@drawable/ic_grid"
+                app:layout_constraintBottom_toBottomOf="@id/recaptureBtn"
+                app:layout_constraintEnd_toStartOf="@id/nextImageCv"
+                app:layout_constraintStart_toEndOf="@id/recaptureBtn"
+                app:layout_constraintTop_toTopOf="@id/recaptureBtn" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/nextImageCv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/_3sdp"
+                android:text=""
+                app:backgroundTint="@color/c_white"
+                app:icon="@drawable/ic_right"
+                app:iconSize="@dimen/_30sdp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/closeFullImageViewBtn"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

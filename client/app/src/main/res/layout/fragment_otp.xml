@@ -11,97 +11,116 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_8sdp"
+        app:hideLanguage="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/otp_title" />
 
-    <TextView
-        android:id="@+id/otpPromptTv"
-        style="@style/multilineText"
-        android:layout_width="@dimen/_0sdp"
-        android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        android:text="@string/s_otp_prompt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb" />
+    <LinearLayout
+        android:id="@+id/otpPromptLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/appTb">
+
+        <TextView
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:text="OTP"
+            android:textColor="?colorPrimary"
+            android:textSize="@dimen/_24ssp" />
+
+        <TextView
+            android:id="@+id/otpPromptTv"
+            style="@style/MultilineText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:text="@string/otp_prompt" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/otpEt"
+        style="@style/EditText.Numeric"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_24sdp"
-        android:background="@drawable/blue_rounded_border"
-        android:fontFamily="monospace"
-        android:hint="@string/otp_hint"
-        android:inputType="number"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center"
+        android:hint="000000"
+        android:inputType="phone"
         android:maxLength="6"
-        android:paddingHorizontal="@dimen/_32sdp"
-        android:textSize="@dimen/_26ssp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/otpPromptTv"
-        app:layout_constraintTop_toBottomOf="@+id/otpPromptTv" />
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintEnd_toEndOf="@id/otpPromptLl"
+        app:layout_constraintStart_toStartOf="@id/otpPromptLl"
+        app:layout_constraintTop_toBottomOf="@+id/otpPromptLl" />
 
-    <FrameLayout
-        android:id="@+id/loadingContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/actionsLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/otpEt">
+
+        <Button
+            android:id="@+id/resendOTPBtn"
+            style="@style/secondaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:text="@string/resend_otp"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/changePhoneNumberBtn"
+            style="@style/secondaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:text="@string/change_phone_number"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingPb"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
-        android:layout_marginStart="@dimen/_16sdp"
-        app:layout_constraintBottom_toBottomOf="@id/otpEt"
-        app:layout_constraintStart_toEndOf="@id/otpEt"
-        app:layout_constraintTop_toTopOf="@id/otpEt"
-        app:layout_constraintHorizontal_bias="1.0">
-
-        <ImageView
-            android:id="@+id/otpNextIv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/status_check"
-            app:srcCompat="@drawable/ic_next_disabled" />
-
-        <ProgressBar
-            android:id="@+id/loadingPb"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
-    <Button
-        android:id="@+id/resendOTPBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:text="@string/s_resend_otp"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="@id/otpEt"
-        app:layout_constraintTop_toBottomOf="@id/otpEt" />
-
-    <ImageView
-        android:id="@+id/otpStatusIv"
-        android:layout_width="@dimen/_35sdp"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:contentDescription="@string/status_check"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@id/resendOTPBtn"
-        app:layout_constraintTop_toBottomOf="@id/resendOTPBtn"
-        app:srcCompat="@drawable/ic_check_grey" />
+        android:layout_marginTop="@dimen/_10sdp"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="@id/actionsLl"
+        app:layout_constraintRight_toRightOf="@id/actionsLl"
+        app:layout_constraintTop_toBottomOf="@id/actionsLl" />
 
     <TextView
         android:id="@+id/invalidOTPTv"
-        style="@style/multilineError"
+        style="@style/errorText"
         android:layout_width="@dimen/_0sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center"
+        android:text="@string/invalid_otp"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="@id/actionsLl"
+        app:layout_constraintRight_toRightOf="@id/actionsLl"
+        app:layout_constraintTop_toBottomOf="@id/actionsLl" />
+
+    <com.microsoft.research.karya.ui.views.numpad.NumPad
+        android:id="@+id/numPad"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        android:text="@string/s_invalid_otp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:minHeight="@dimen/_35sdp"
-        android:gravity="center_vertical"
-        app:layout_constraintStart_toEndOf="@id/otpStatusIv"
-        app:layout_constraintTop_toTopOf="@id/otpStatusIv" />
+        app:field="@id/otpEt"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

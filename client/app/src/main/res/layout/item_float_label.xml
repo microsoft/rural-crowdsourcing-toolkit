@@ -11,7 +11,7 @@
     app:contentPaddingBottom="@dimen/_5sdp"
     app:contentPaddingLeft="@dimen/_10sdp"
     app:contentPaddingRight="@dimen/_10sdp"
-    android:backgroundTint="@color/colorLightGrey">
+    android:backgroundTint="@color/c_light_grey">
 
         <TextView
             android:id="@+id/label"
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_16ssp"
-            android:textColor="@color/black"
+            android:textColor="@color/c_black"
             tools:text="Handwritten" />
 
 </androidx.cardview.widget.CardView>

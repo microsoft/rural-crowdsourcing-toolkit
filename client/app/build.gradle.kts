@@ -12,10 +12,10 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdkVersion(31)
   defaultConfig {
     applicationId = "com.microsoft.research.karya"
-    minSdkVersion(21)
+    minSdkVersion(24)
     targetSdkVersion(30)
     multiDexEnabled = true
     versionCode = 25
@@ -62,6 +62,16 @@ android {
     exclude("META-INF/ASL2.0")
     exclude("META-INF/*.kotlin_module")
   }
+  flavorDimensions("size")
+  productFlavors {
+    create("large") {
+      dimension = "size"
+      applicationIdSuffix = "large"
+    }
+    create("standard") {
+      dimension = "size"
+    }
+  }
 }
 
 ktfmt {
@@ -91,6 +101,7 @@ dependencies {
   implementation(Dependencies.AndroidX.legacy_support)
   implementation(Dependencies.AndroidX.multidex)
   implementation(Dependencies.AndroidX.work_runtime)
+  implementation(Dependencies.AndroidX.work_multiprocess)
 
   implementation(Dependencies.AndroidX.Lifecycle.common)
   implementation(Dependencies.AndroidX.Lifecycle.extensions)
@@ -144,6 +155,19 @@ dependencies {
   implementation("com.intuit.ssp:ssp-android:1.0.6")
   implementation("com.intuit.sdp:sdp-android:1.0.6")
 
-  // Zoomable image
-  implementation("com.jsibbold:zoomage:1.3.1")
+  // Themed button toggle group
+  implementation("nl.bryanderidder:themed-toggle-button-group:1.3.4")
+
+  // Camera view
+  implementation("com.otaliastudios:cameraview:2.7.2")
+
+  // Custom aars
+  implementation(files("libs/zoomage-debug.aar"))
+
+  // Video data collection
+  "largeImplementation" ("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
+  "largeImplementation" ("com.google.android.gms:play-services-mlkit-face-detection:16.2.0")
+  "largeImplementation" ("com.google.mlkit:face-detection:16.1.2")
+  "largeImplementation" ("com.github.fishwjy:VideoCompressor:master-SNAPSHOT")
+
 }

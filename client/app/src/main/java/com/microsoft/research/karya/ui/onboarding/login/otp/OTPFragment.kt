@@ -34,8 +34,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun setupView() {
-    // registrationActivity.current_assistant_audio = R.string.audio_otp_prompt
-    binding.appTb.setTitle(getString(R.string.s_otp_title))
+    viewModel.retrievePhoneNumber()
     binding.appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.OTP_PROMPT) }
 
     binding.resendOTPBtn.setOnClickListener {
@@ -43,7 +42,15 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
       viewModel.resendOTP()
     }
 
+    // To change phone number, just go back
+    // TODO: this may not always be true.
+    binding.changePhoneNumberBtn.setOnClickListener {
+      requireActivity().onBackPressed()
+    }
+
     binding.otpEt.doAfterTextChanged { otp ->
+      hideError()
+
       if (otp?.length == OTP_LENGTH) {
         enableNextButton()
       } else {
@@ -51,9 +58,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
       }
     }
 
-    binding.otpNextIv.setOnClickListener { viewModel.verifyOTP(binding.otpEt.text.toString()) }
-
-    requestSoftKeyFocus(binding.otpEt)
+    binding.numPad.setOnDoneListener { viewModel.verifyOTP(binding.otpEt.text.toString()) }
   }
 
   private fun observeUi() {
@@ -61,10 +66,14 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
       when (state) {
         is OTPUiState.Success -> showSuccessUi()
         // TODO: Change this to a correct mapping
-        is OTPUiState.Error -> showErrorUi(state.throwable.message!!)
+        is OTPUiState.Error -> showErrorUi(getErrorMessage(state.throwable))
         OTPUiState.Initial -> showInitialUi()
         OTPUiState.Loading -> showLoadingUi()
       }
+    }
+
+    viewModel.phoneNumber.observe(viewLifecycle, viewLifecycleScope) { phoneNumber ->
+      binding.otpPromptTv.text = getString(R.string.otp_prompt).replace("0000000000", phoneNumber)
     }
   }
 
@@ -77,42 +86,32 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun showInitialUi() {
-    with(binding) {
-      otpEt.text.clear()
-      hideError()
-      hideLoading()
-      disableNextButton()
-    }
+    binding.otpEt.text.clear()
+    hideError()
+    hideLoading()
+    disableNextButton()
   }
 
   private fun showLoadingUi() {
-    with(binding) {
-      hideError()
-      showLoading()
-      disableNextButton()
-    }
+    hideError()
+    showLoading()
+    disableNextButton()
   }
 
   private fun showSuccessUi() {
-    with(binding) {
-      hideError()
-      hideLoading()
-      enableNextButton()
-    }
+    hideError()
+    hideLoading()
+    enableNextButton()
   }
 
   private fun showErrorUi(message: String) {
-    with(binding) {
-      showError(message)
-      hideLoading()
-      enableNextButton()
-      requestSoftKeyFocus(binding.otpEt)
-    }
+    showError(message)
+    hideLoading()
+    enableNextButton()
   }
 
   private fun navigate(destination: Destination) {
     when (destination) {
-      Destination.TempDataFlow -> navigateToTempDataFlow()
       Destination.Dashboard -> navigateToDashBoard()
       else -> {
       }
@@ -120,34 +119,20 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   }
 
   private fun navigateToDashBoard() {
-    findNavController().navigate(R.id.action_global_dashboardActivity4)
-    finish()
-  }
-
-  private fun navigateToTempDataFlow() {
-    findNavController().navigate(R.id.action_OTPFragment2_to_tempDataFlow)
+    findNavController().navigate(R.id.action_global_dashboardActivity)
   }
 
   private fun enableNextButton() {
-    binding.otpNextIv.apply {
-      setImageResource(0)
-      setImageResource(R.drawable.ic_next_enabled)
-      isClickable = true
-    }
+    binding.numPad.enableDoneButton()
   }
 
   private fun disableNextButton() {
-    binding.otpNextIv.apply {
-      setImageResource(0)
-      setImageResource(R.drawable.ic_next_disabled)
-      isClickable = false
-    }
+    binding.numPad.disableDoneButton()
   }
 
   private fun showLoading() {
     with(binding) {
       loadingPb.visible()
-      otpNextIv.gone()
       otpEt.disable()
     }
   }
@@ -155,7 +140,6 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   private fun hideLoading() {
     with(binding) {
       loadingPb.gone()
-      otpNextIv.visible()
       otpEt.enable()
     }
   }
@@ -164,18 +148,10 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
     with(binding) {
       invalidOTPTv.text = message
       invalidOTPTv.visible()
-      otpStatusIv.apply {
-        visible()
-        setImageResource(0)
-        setImageResource(R.drawable.ic_quit_select)
-      }
     }
   }
 
   private fun hideError() {
-    with(binding) {
-      invalidOTPTv.gone()
-      otpStatusIv.gone()
-    }
+    binding.invalidOTPTv.gone()
   }
 }

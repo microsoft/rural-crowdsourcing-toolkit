@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.speechVerification
 
-import android.graphics.Color
 import android.media.MediaPlayer
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
@@ -16,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,18 +65,21 @@ constructor(
   private var backBtnState: ButtonState = ButtonState.DISABLED
 
   /** Verification status */
-  @StringRes
-  private var accuracyRating = R.string.rating_undefined
+  private var _accuracyRating: MutableStateFlow<Int> = MutableStateFlow(R.string.rating_undefined)
+  val accuracyRating = _accuracyRating.asStateFlow()
 
-  @StringRes
-  private var qualityRating = R.string.rating_undefined
+  private var _qualityRating: MutableStateFlow<Int> = MutableStateFlow(R.string.rating_undefined)
+  val qualityRating = _qualityRating.asStateFlow()
 
-  @StringRes
-  private var volumeRating = R.string.rating_undefined
+  private var _volumeRating: MutableStateFlow<Int> = MutableStateFlow(R.string.rating_undefined)
+  val volumeRating = _volumeRating.asStateFlow()
+
+  private var _fluencyRating: MutableStateFlow<Int> = MutableStateFlow(R.string.rating_undefined)
+  val fluencyRating = _fluencyRating.asStateFlow()
+
   private var reviewCompleted = false
 
   private lateinit var playbackProgressThread: Thread
-  private val GREEN_COLOR = Color.parseColor("#33CC33")
 
   // Defining Mutable State Flows
   private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
@@ -100,24 +103,6 @@ constructor(
   // Button State Order: PlayButton, NextButton, BackButton
   val navAndMediaBtnGroup = _navAndMediaBtnGroup.asStateFlow()
 
-  private val _accuracyGroupBtnColor: MutableStateFlow<Triple<Int, Int, Int>> =
-    MutableStateFlow(Triple(Color.BLACK, Color.BLACK, Color.BLACK))
-
-  // Color State Order: accurate, incorrect, error
-  val accuracyGroupBtnColor = _accuracyGroupBtnColor.asStateFlow()
-
-  private val _qualityGroupBtnColor: MutableStateFlow<Triple<Int, Int, Int>> =
-    MutableStateFlow(Triple(Color.BLACK, Color.BLACK, Color.BLACK))
-
-  // Color State Order: good, bad, noisy
-  val qualityGroupBtnColor = _qualityGroupBtnColor.asStateFlow()
-
-  private val _volumeGroupBtnColor: MutableStateFlow<Triple<Int, Int, Int>> =
-    MutableStateFlow(Triple(Color.BLACK, Color.BLACK, Color.BLACK))
-
-  // Color State Order: Volume High, Volume Okay, Volume Low
-  val volumeGroupBtnColor = _volumeGroupBtnColor.asStateFlow()
-
   private val _reviewEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val reviewEnabled = _reviewEnabled.asStateFlow()
 
@@ -125,9 +110,10 @@ constructor(
   val showErrorWithDialog = _showErrorWithDialog.asStateFlow()
 
   override fun setupMicrotask() {
-    handleAccuracyChange(R.string.rating_undefined)
-    handleQualityChange(R.string.rating_undefined)
-    handleVolumeChange(R.string.rating_undefined)
+    _accuracyRating.value = R.string.rating_undefined
+    _qualityRating.value = R.string.rating_undefined
+    _volumeRating.value = R.string.rating_undefined
+    _fluencyRating.value = R.string.rating_undefined
 
     _reviewEnabled.value = false
     reviewCompleted = false
@@ -276,29 +262,38 @@ constructor(
     mediaPlayer = null
 
     val accuracy =
-      when (accuracyRating) {
-        R.string.accuracy_correct -> 2
-        R.string.accuracy_errors -> 1
+      when (_accuracyRating.value) {
+        R.string.accuracy_good -> 2
+        R.string.accuracy_okay -> 1
         else -> 0
       }
 
     val quality =
-      when (qualityRating) {
+      when (_qualityRating.value) {
         R.string.quality_good -> 2
-        R.string.quality_noisy -> 1
+        R.string.quality_okay -> 1
         else -> 0
       }
 
     val volume =
-      when (volumeRating) {
-        R.string.volume_high -> 2
+      when (_volumeRating.value) {
+        R.string.volume_good -> 2
         R.string.volume_okay -> 1
         else -> 0
       }
 
+    val fluency =
+      when (_fluencyRating.value) {
+        R.string.fluency_good -> 2
+        R.string.fluency_okay -> 1
+        else -> 0
+      }
+
+
     outputData.addProperty("accuracy", accuracy)
     outputData.addProperty("quality", quality)
     outputData.addProperty("volume", volume)
+    outputData.addProperty("fluency", fluency)
 
     viewModelScope.launch {
       completeAndSaveCurrentMicrotask()
@@ -319,79 +314,33 @@ constructor(
 
   /** Handle accuracy change */
   fun handleAccuracyChange(@StringRes accuracy: Int) {
-    accuracyRating = accuracy
-    var accuracyBtnColor: Int = Color.parseColor("#000000")
-    var accuracyIncorrectBtnColor: Int = Color.parseColor("#000000")
-    var accuracyErrorsBtnColor: Int = Color.parseColor("#000000")
-
-    if (accuracy != R.string.rating_undefined) {
-      when (accuracy) {
-        R.string.accuracy_correct -> accuracyBtnColor = GREEN_COLOR
-        R.string.accuracy_incorrect -> accuracyIncorrectBtnColor = GREEN_COLOR
-        R.string.accuracy_errors -> accuracyErrorsBtnColor = GREEN_COLOR
-        else -> accuracyIncorrectBtnColor = GREEN_COLOR
-      }
-    }
-
-    _accuracyGroupBtnColor.value =
-      Triple(accuracyBtnColor, accuracyIncorrectBtnColor, accuracyErrorsBtnColor)
-
+    _accuracyRating.value = accuracy
     updateReviewStatus()
   }
 
   /** Handle quality change */
   fun handleQualityChange(@StringRes quality: Int) {
-    qualityRating = quality
-    var qualityGoodBtnColor: Int = Color.parseColor("#000000")
-    var qualityBadBtnColor: Int = Color.parseColor("#000000")
-    var qualityNoisyBtnColor: Int = Color.parseColor("#000000")
-
-
-
-    if (quality != R.string.rating_undefined) {
-      when (quality) {
-        R.string.quality_good -> qualityGoodBtnColor = GREEN_COLOR
-        R.string.quality_bad -> qualityBadBtnColor = GREEN_COLOR
-        R.string.quality_noisy -> qualityNoisyBtnColor = GREEN_COLOR
-        else -> qualityBadBtnColor = GREEN_COLOR
-      }
-    }
-
-    _qualityGroupBtnColor.value =
-      Triple(qualityGoodBtnColor, qualityBadBtnColor, qualityNoisyBtnColor)
-
+    _qualityRating.value = quality
     updateReviewStatus()
   }
 
   /** Handle volume change */
   fun handleVolumeChange(@StringRes volume: Int) {
-    volumeRating = volume
-    var volumeHighBtnColor: Int = Color.parseColor("#000000")
-    var volumeLowBtnColor: Int = Color.parseColor("#000000")
-    var volumeOkayBtnColor: Int = Color.parseColor("#000000")
+    _volumeRating.value = volume
+    updateReviewStatus()
+  }
 
-
-
-    if (volume != R.string.rating_undefined) {
-      when (volume) {
-        R.string.volume_high -> volumeHighBtnColor = GREEN_COLOR
-        R.string.volume_okay -> volumeOkayBtnColor = GREEN_COLOR
-        R.string.volume_low -> volumeLowBtnColor = GREEN_COLOR
-        else -> volumeLowBtnColor = GREEN_COLOR
-      }
-    }
-
-    _volumeGroupBtnColor.value =
-      Triple(volumeHighBtnColor, volumeOkayBtnColor, volumeLowBtnColor)
-
+  fun handleFluencyChange(@StringRes fluency: Int) {
+    _fluencyRating.value = fluency
     updateReviewStatus()
   }
 
   private fun updateReviewStatus() {
     reviewCompleted =
-      accuracyRating != R.string.rating_undefined &&
-        qualityRating != R.string.rating_undefined &&
-        volumeRating != R.string.rating_undefined
+      _accuracyRating.value != R.string.rating_undefined &&
+        _qualityRating.value != R.string.rating_undefined &&
+        _volumeRating.value != R.string.rating_undefined &&
+        _fluencyRating.value != R.string.rating_undefined
 
     if (reviewCompleted) {
       setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
@@ -421,17 +370,18 @@ constructor(
     viewModelScope.launch {
       val centiSeconds = (duration / 10) % 100
       val seconds = duration / 1000
-      _playbackSecondsTvText.value = "%d".format(seconds)
-      _playbackCentiSecondsTvText.value = "%02d".format(centiSeconds)
+      _playbackSecondsTvText.value = seconds.toString()
+      _playbackCentiSecondsTvText.value = "%02d".format(Locale.ENGLISH, centiSeconds)
     }
   }
 
   // Handle the corrupt Audio Case
   fun handleCorruptAudio() {
     // Give 2 on all reports
-    accuracyRating = R.string.accuracy_incorrect
-    volumeRating = R.string.volume_low
-    qualityRating = R.string.quality_bad
+    _accuracyRating.value = R.string.accuracy_bad
+    _volumeRating.value = R.string.volume_bad
+    _qualityRating.value = R.string.quality_bad
+    _fluencyRating.value = R.string.fluency_bad
 
     outputData.addProperty("flag", "corrupt")
 

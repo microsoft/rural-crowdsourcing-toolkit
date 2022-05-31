@@ -69,8 +69,8 @@ constructor(
 
   var limit by Delegates.notNull<Int>()
 
-  override fun setupViewModel(taskId: String, incompleteMta: Int, completedMta: Int) {
-    super.setupViewModel(taskId, incompleteMta, completedMta)
+  override fun setupViewModel(taskId: String, completed: Int, total: Int) {
+    super.setupViewModel(taskId, completed, total)
     // TODO: Move to Gson
     allowValidation = try {
       task.params.asJsonObject.get("allowValidation").asBoolean

@@ -41,12 +41,11 @@ constructor(
         }
 
       val audioFilePath = resourceManager.getAudioFilePath(workerLanguage, assistantAudio.fileName)
-      Log.d("AudioFile", audioFilePath)
       playAssistantAudio(audioFilePath, uiCue, onCompletionListener, onErrorListener)
     }
   }
 
-  fun playAssistantAudio(
+  private fun playAssistantAudio(
     audioFilePath: String,
     uiCue: () -> Unit = {},
     onCompletionListener: (player: MediaPlayer) -> Unit = {},
@@ -58,18 +57,12 @@ constructor(
 
     if (File(audioFilePath).exists()) {
       if (isAssistantAvailable()) {
-        if (assistantPlayer.isPlaying) assistantPlayer.stop()
+        stopAssistant()
 
         assistantPlayer.setOnCompletionListener(onCompletionListener)
-
         assistantPlayer.setOnErrorListener { _: MediaPlayer, _: Int, _: Int ->
           onErrorListener()
-          // returning false here indicates that we have not handled the error and
-          // onCompletionListener will be called
-          // Since we are returning false, we can do all the destruction work in onCompletion like
-          // we would have done
-          // for the success case and only specify the error handling tasks in onErrorListener.
-          return@setOnErrorListener false
+          return@setOnErrorListener true
         }
 
         uiCue()

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:animateLayoutChanges="true"
     app:layout_constraintTop_toBottomOf="@id/appTb">
 
@@ -13,77 +13,82 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_8sdp"
+        app:hideLanguage="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/phone_number_title" />
 
-    <TextView
-        android:id="@+id/phoneNumberPromptTv"
-        style="@style/multilineText"
-        android:layout_width="@dimen/_0sdp"
-        android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:text="@string/s_phone_number_prompt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb" />
+    <LinearLayout
+        android:id="@+id/phoneNumberPromptLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/appTb">
+
+        <ImageView
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_phone" />
+
+        <TextView
+            android:id="@+id/phoneNumberPromptTv"
+            style="@style/MultilineText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:text="@string/phone_number_prompt" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/phoneNumberEt"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_60sdp"
+        style="@style/EditText.Numeric"
+        android:layout_width="0dp"
         android:layout_marginTop="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
-        android:background="@drawable/blue_rounded_border"
-        android:fontFamily="monospace"
-        android:hint="@string/phone_number_hint"
+        android:gravity="center"
+        android:hint="0000000000"
         android:inputType="phone"
         android:maxLength="10"
-        android:paddingVertical="@dimen/_10sdp"
         android:paddingHorizontal="@dimen/_15sdp"
-        android:textSize="@dimen/_24ssp"
-        app:layout_constraintStart_toStartOf="@id/phoneNumberPromptTv"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberPromptTv"
-        tools:text="0123456789" />
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintEnd_toEndOf="@id/phoneNumberPromptLl"
+        app:layout_constraintStart_toStartOf="@id/phoneNumberPromptLl"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberPromptLl" />
 
-    <FrameLayout
-        android:id="@+id/loadingContainer"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginEnd="@dimen/_16sdp"
-        app:layout_constraintStart_toEndOf="@id/phoneNumberEt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/phoneNumberEt"
-        app:layout_constraintBottom_toBottomOf="@id/phoneNumberEt">
-
-        <ImageView
-            android:id="@+id/phoneNumberNextIv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/next"
-            app:srcCompat="@drawable/ic_next_disabled" />
-
-        <ProgressBar
-            android:id="@+id/loadingPb"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/loadingPb"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/phoneNumberEt" />
 
     <TextView
-        android:id="@+id/failToSendOtpTv"
-        style="@style/multilineError"
+        android:id="@+id/sendOTPErrorTv"
+        style="@style/errorText"
         android:layout_width="@dimen/_0sdp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginLeft="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_24sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        android:layout_marginRight="@dimen/_15sdp"
-        android:text="@string/s_phone_number_already_used"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/phoneNumberEt"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNumberEt" />
+        app:layout_constraintStart_toStartOf="@id/phoneNumberEt"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumberEt"
+        tools:text="@string/access_code_already_used" />
+
+    <com.microsoft.research.karya.ui.views.numpad.NumPad
+        android:id="@+id/numPad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:field="@id/phoneNumberEt"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

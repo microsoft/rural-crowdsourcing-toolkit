@@ -43,7 +43,7 @@ class TransliterationMainFragment :
   ): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     // TODO: Remove this once we have viewModel Factory
-    viewModel.setupViewModel(args.taskId, 0, 0)
+    viewModel.setupViewModel(args.taskId, args.completed, args.total)
     return view
   }
 
@@ -221,7 +221,7 @@ class TransliterationMainFragment :
     view.float_word_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
-        R.color.light_green
+        R.color.c_light_green
       )
     )
     view.removeImageView.gone()
@@ -231,7 +231,7 @@ class TransliterationMainFragment :
     view.float_word_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
-        R.color.light_red
+        R.color.c_red
       )
     )
     view.removeImageView.gone()
@@ -241,7 +241,7 @@ class TransliterationMainFragment :
     view.float_word_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
-        R.color.light_yellow
+        R.color.c_light_grey
       )
     )
     view.removeImageView.visible()

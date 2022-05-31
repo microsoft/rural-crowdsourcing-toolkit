@@ -32,16 +32,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.DataOutputStream
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.lang.Runnable
 import java.lang.Thread
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /** Audio recording parameters */
-private const val SAMPLE_RATE = 44100
 private const val AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO
-private const val AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT
 
 @HiltViewModel
 class SpeechDataMainViewModel
@@ -64,6 +65,11 @@ constructor(
   // TODO: Pass it in constructor (once we have viewModel factory)
   private val postRecordingTime: Int = 250
   private val prerecordingTime: Int = 250
+
+  // Speech data collection parameters
+  private var samplingRate: Int = 44100
+  private var audioEncoding: Int = AudioFormat.ENCODING_PCM_16BIT
+  private var compressAudio: Boolean = false
 
   /**
    * UI button states
@@ -99,7 +105,6 @@ constructor(
   }
 
   /** UI strings */
-  private lateinit var recordInstruction: String
   private var noForcedReplay: Boolean = false
 
   /** Audio recorder and media player */
@@ -108,7 +113,7 @@ constructor(
 
   /** Audio recorder config parameters */
   private val _minBufferSize =
-    AudioRecord.getMinBufferSize(SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING)
+    AudioRecord.getMinBufferSize(samplingRate, AUDIO_CHANNEL, audioEncoding)
   private val _recorderBufferSize = _minBufferSize * 4
   private val _recorderBufferBytes = _recorderBufferSize
 
@@ -168,7 +173,7 @@ constructor(
   private lateinit var scratchRecordingFileInitJob: Job
 
   /** Final recording file */
-  private val outputRecordingFileParams = Pair("", "m4a")
+  private var outputRecordingFileParams = Pair("", "wav")
   private lateinit var outputRecordingFilePath: String
   private var encodingJob: Job? = null
 
@@ -187,6 +192,42 @@ constructor(
       firstTimeActivityVisit = data[firstRunKey] ?: true
       datastore.edit { prefs -> prefs[firstRunKey] = false }
     }
+  }
+
+  /**
+   * Initialize speech data collection parameters
+   */
+  fun setupSpeechDataViewModel() {
+    compressAudio = try {
+      task.params.asJsonObject.get("compress").asBoolean
+    } catch (e: Exception) {
+      false
+    }
+
+    samplingRate = try {
+      val rate = task.params.asJsonObject.get("sampling_rate").asString
+      when (rate) {
+        "8k" -> 8000
+        "16k" -> 16000
+        "44k" -> 44100
+        else -> 44100
+      }
+    } catch (e: Exception) {
+      44100
+    }
+
+    audioEncoding = try {
+      val bitwidth = task.params.asJsonObject.get("bitwidth").asString
+      when (bitwidth) {
+        "8" -> AudioFormat.ENCODING_PCM_8BIT
+        "16" -> AudioFormat.ENCODING_PCM_16BIT
+        else -> AudioFormat.ENCODING_PCM_16BIT
+      }
+    } catch (e: Exception) {
+      AudioFormat.ENCODING_PCM_16BIT
+    }
+
+    outputRecordingFileParams = if (compressAudio) Pair("", "m4a") else Pair("", "wav")
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
@@ -209,6 +250,9 @@ constructor(
 
     /** Write wav file */
     scratchRecordingFileInitJob = CoroutineScope(Dispatchers.IO).launch { resetWavFile() }
+
+    // Reset progress bar
+    _playbackProgressPbProgress.value = 0
 
     _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
@@ -451,9 +495,6 @@ constructor(
 
     when (activityState) {
       ActivityState.INIT,
-      ActivityState.PRERECORDING,
-      ActivityState.COMPLETED_PRERECORDING,
-      ActivityState.RECORDING,
       ActivityState.RECORDED,
       ActivityState.FIRST_PLAYBACK,
       ActivityState.FIRST_PLAYBACK_PAUSED,
@@ -465,6 +506,20 @@ constructor(
       -> {
         navigateBack()
       }
+
+      ActivityState.PRERECORDING,
+      ActivityState.COMPLETED_PRERECORDING -> {
+        preRecordingJob?.cancel()
+        releaseRecorder()
+        navigateBack()
+      }
+
+      ActivityState.RECORDING -> {
+        recordingJob?.cancel()
+        releaseRecorder()
+        navigateBack()
+      }
+
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
         runBlocking {
           encodeRecording()
@@ -612,6 +667,7 @@ constructor(
       ActivityState.COMPLETED -> {
         playbackProgressThread?.join()
         setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        _playbackProgressPbProgress.value = 0
         releasePlayer()
       }
 
@@ -675,7 +731,7 @@ constructor(
       ActivityState.SIMPLE_NEXT -> {
         runBlocking {
           if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
+            preRecordingJob?.join()
           }
           moveToNextMicrotask()
           setActivityState(ActivityState.INIT)
@@ -689,7 +745,7 @@ constructor(
       ActivityState.SIMPLE_BACK -> {
         runBlocking {
           if (isPrerecordingState(previousActivityState)) {
-            preRecordingJob!!.join()
+            preRecordingJob?.join()
           }
           moveToPreviousMicrotask()
           setActivityState(ActivityState.INIT)
@@ -741,75 +797,122 @@ constructor(
     setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
     setActivityState(ActivityState.ACTIVITY_STOPPED)
 
-    runBlocking {
-      when (previousActivityState) {
-        /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
-        /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
-        ActivityState.PRERECORDING,
-        ActivityState.COMPLETED_PRERECORDING -> {
-          preRecordingJob?.join()
-          preRecordBufferConsumed[0] = 0
-          preRecordBufferConsumed[1] = 0
-          releaseRecorder()
-        }
+    when (previousActivityState) {
+      /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
+      /** If prerecording, join the prerecording job. Reset buffers and release recorder. */
+      ActivityState.PRERECORDING,
+      ActivityState.COMPLETED_PRERECORDING -> {
+        preRecordingJob?.cancel()
+        preRecordBufferConsumed[0] = 0
+        preRecordBufferConsumed[1] = 0
+        releaseRecorder()
+      }
 
-        /**
-         * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
-         * recorder.
-         */
+      /**
+       * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
+       * recorder.
+       */
 
-        /**
-         * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
-         * recorder.
-         */
-        ActivityState.RECORDING -> {
-          recordingJob?.join()
-          preRecordBufferConsumed[0] = 0
-          preRecordBufferConsumed[1] = 0
-          releaseRecorder()
-        }
+      /**
+       * If recording, join preRecordingFlushJob, recordingJob. Reset buffers and release
+       * recorder.
+       */
+      ActivityState.RECORDING -> {
+        recordingJob?.cancel()
+        preRecordBufferConsumed[0] = 0
+        preRecordBufferConsumed[1] = 0
+        releaseRecorder()
+      }
 
-        /** In recorded state, wait for the file flush job to complete */
+      /** In recorded state, wait for the file flush job to complete */
 
-        /** In recorded state, wait for the file flush job to complete */
-        ActivityState.RECORDED -> {
+      /** In recorded state, wait for the file flush job to complete */
+      ActivityState.RECORDED -> {
+        viewModelScope.launch {
           audioFileFlushJob?.join()
         }
+      }
 
-        /** If playing state, pause media player */
+      /** If playing state, pause media player */
 
-        /** If playing state, pause media player */
-        ActivityState.FIRST_PLAYBACK,
-        ActivityState.FIRST_PLAYBACK_PAUSED,
-        ActivityState.NEW_PLAYING,
-        ActivityState.NEW_PAUSED,
-        ActivityState.OLD_PLAYING,
-        ActivityState.OLD_PAUSED,
-        -> {
-          releasePlayer()
-        }
+      /** If playing state, pause media player */
+      ActivityState.FIRST_PLAYBACK,
+      ActivityState.FIRST_PLAYBACK_PAUSED,
+      ActivityState.NEW_PLAYING,
+      ActivityState.NEW_PAUSED,
+      ActivityState.OLD_PLAYING,
+      ActivityState.OLD_PAUSED,
+      -> {
+        releasePlayer()
+      }
 
-        /** In simple back and next, wait for prerecording job */
+      /** In simple back and next, wait for prerecording job */
 
-        /** In simple back and next, wait for prerecording job */
-        ActivityState.SIMPLE_NEXT,
-        ActivityState.SIMPLE_BACK -> {
-          preRecordingJob?.join()
-          releaseRecorder()
-        }
+      /** In simple back and next, wait for prerecording job */
+      ActivityState.SIMPLE_NEXT,
+      ActivityState.SIMPLE_BACK -> {
+        preRecordingJob?.cancel()
+        releaseRecorder()
+      }
 
-        /** Nothing to do states */
+      /** Nothing to do states */
 
-        /** Nothing to do states */
-        ActivityState.INIT,
-        ActivityState.COMPLETED,
-        ActivityState.ENCODING_NEXT,
-        ActivityState.ENCODING_BACK,
-        ActivityState.ASSISTANT_PLAYING,
-        ActivityState.ACTIVITY_STOPPED,
-        -> {
-          // Do nothing
-        }
+      /** Nothing to do states */
+      ActivityState.INIT,
+      ActivityState.COMPLETED,
+      ActivityState.ENCODING_NEXT,
+      ActivityState.ENCODING_BACK,
+      ActivityState.ASSISTANT_PLAYING,
+      ActivityState.ACTIVITY_STOPPED,
+      -> {
+        // Do nothing
+      }
+    }
+  }
+
+  fun resetOnResume() {
+    if (activityState != ActivityState.ACTIVITY_STOPPED)
+      return
+
+    when (previousActivityState) {
+
+      /** In initial states, just reset current microtask */
+      ActivityState.INIT,
+      ActivityState.PRERECORDING,
+      ActivityState.COMPLETED_PRERECORDING,
+      ActivityState.RECORDING,
+      ActivityState.SIMPLE_BACK,
+      ActivityState.SIMPLE_NEXT,
+      ActivityState.OLD_PAUSED,
+      ActivityState.OLD_PLAYING,
+      ActivityState.ENCODING_NEXT,
+      ActivityState.ENCODING_BACK,
+      ActivityState.ASSISTANT_PLAYING,
+      -> {
+        resetMicrotask()
+      }
+
+      /** If recorded, then move to first playback */
+      ActivityState.RECORDED,
+      ActivityState.FIRST_PLAYBACK,
+      ActivityState.FIRST_PLAYBACK_PAUSED,
+      -> {
+        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
+        setActivityState(ActivityState.FIRST_PLAYBACK)
+      }
+
+      /** In completed states, move back to completed state */
+      ActivityState.COMPLETED,
+      ActivityState.NEW_PAUSED,
+      ActivityState.NEW_PLAYING,
+      -> {
+        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setActivityState(ActivityState.COMPLETED)
+      }
+
+      /** Stopped activity is not possible */
+      ActivityState.ACTIVITY_STOPPED -> {
+        // This is not possible
       }
     }
   }
@@ -841,9 +944,9 @@ constructor(
     audioRecorder =
       AudioRecord(
         MediaRecorder.AudioSource.MIC,
-        SAMPLE_RATE,
+        samplingRate,
         AUDIO_CHANNEL,
-        AUDIO_ENCODING,
+        audioEncoding,
         _recorderBufferSize
       )
     audioRecorder!!.startRecording()
@@ -855,8 +958,8 @@ constructor(
       val milliseconds = duration ?: samplesToTime(totalRecordedBytes / 2)
       val centiSeconds = (milliseconds / 10) % 100
       val seconds = milliseconds / 1000
-      _recordSecondsTvText.value = "%d".format(seconds)
-      _recordCentiSecondsTvText.value = "%02d".format(centiSeconds)
+      _recordSecondsTvText.value = seconds.toString()
+      _recordCentiSecondsTvText.value = "%02d".format(Locale.ENGLISH, centiSeconds)
     }
   }
 
@@ -882,7 +985,12 @@ constructor(
           val consumedBytes = preRecordBufferConsumed[currentPreRecordBufferIndex]
           val remainingBytes = maxPreRecordBytes - consumedBytes
 
-          val readBytes = audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
+          val readBytes = try {
+            audioRecorder!!.read(currentBuffer, consumedBytes, remainingBytes)
+          } catch (e: Exception) {
+            break
+          }
+
           preRecordBufferConsumed[currentPreRecordBufferIndex] += readBytes
 
           if (readBytes == remainingBytes) {
@@ -914,7 +1022,12 @@ constructor(
 
         var readBytes = 0
         while (activityState == ActivityState.RECORDING || readBytes > 0) {
-          readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
+          try {
+            readBytes = audioRecorder!!.read(data, currentRecordBufferConsumed, remainingSpace)
+          } catch (e: Exception) {
+            // Exception likely caused by recording job getting cancelled
+            break
+          }
           if (readBytes > 0) {
             currentRecordBufferConsumed += readBytes
             remainingSpace -= readBytes
@@ -1025,6 +1138,9 @@ constructor(
 
   /** Write WAV file header */
   private fun writeWavFileHeader() {
+    val bitsPerSample = if (audioEncoding == AudioFormat.ENCODING_PCM_16BIT) 16 else 8
+    val bytesPerSample = bitsPerSample / 8
+
     writeString(scratchRecordingFile, "RIFF")
     writeInt(scratchRecordingFile, 0)
     writeString(scratchRecordingFile, "WAVE")
@@ -1032,10 +1148,10 @@ constructor(
     writeInt(scratchRecordingFile, 16)
     writeShort(scratchRecordingFile, 1.toShort())
     writeShort(scratchRecordingFile, 1.toShort())
-    writeInt(scratchRecordingFile, SAMPLE_RATE)
-    writeInt(scratchRecordingFile, SAMPLE_RATE * 2)
-    writeShort(scratchRecordingFile, 2.toShort())
-    writeShort(scratchRecordingFile, 16.toShort())
+    writeInt(scratchRecordingFile, samplingRate)
+    writeInt(scratchRecordingFile, samplingRate * bytesPerSample)
+    writeShort(scratchRecordingFile, bytesPerSample.toShort())
+    writeShort(scratchRecordingFile, bitsPerSample.toShort())
     writeString(scratchRecordingFile, "data")
     writeInt(scratchRecordingFile, 0)
   }
@@ -1043,19 +1159,29 @@ constructor(
   /** Encode the scratch wav recording file into a compressed main file. */
   private suspend fun encodeRecording() {
     CoroutineScope(Dispatchers.IO)
-      .launch { RawToAACEncoder().encode(scratchRecordingFilePath, outputRecordingFilePath) }
+      .launch {
+        if (compressAudio) {
+          RawToAACEncoder(samplingRate).encode(scratchRecordingFilePath, outputRecordingFilePath)
+        } else {
+          val source = FileInputStream(scratchRecordingFilePath)
+          val destination = FileOutputStream(outputRecordingFilePath)
+          source.copyTo(destination)
+          destination.close()
+          source.close()
+        }
+      }
       .join()
     addOutputFile("recording", outputRecordingFileParams)
   }
 
   /** Helper method to convert number of [samples] to time in milliseconds */
   private fun samplesToTime(samples: Int): Int {
-    return ((samples.toFloat() / SAMPLE_RATE) * 1000).toInt()
+    return ((samples.toFloat() / samplingRate) * 1000).toInt()
   }
 
   /** Helper methods to convert [time] in milliseconds to number of samples */
   private fun timeToSamples(time: Int): Int {
-    return time * SAMPLE_RATE / 1000
+    return time * samplingRate / 1000
   }
 
   /** Helper methods to write data in little endian format */

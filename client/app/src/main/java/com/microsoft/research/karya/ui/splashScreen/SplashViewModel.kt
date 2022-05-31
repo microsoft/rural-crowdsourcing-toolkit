@@ -58,7 +58,6 @@ constructor(
       when {
         !worker.isConsentProvided -> Destination.AccessCodeFlow
         worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
-        worker.yob.isNullOrEmpty() -> Destination.MandatoryDataFlow
         else -> Destination.Dashboard
       }
 

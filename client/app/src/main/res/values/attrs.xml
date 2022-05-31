@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="appLanguageTextColor" format="reference" />
-    <attr name="skillSelectionBgColor" format="reference" />
-    <attr name="skillSelectionStrokeColor" format="reference" />
-    <attr name="skillSelectionStatusBarColor" format="reference" />
-    <attr name="skillSelectionAppBarColor" format="reference" />
-    <attr name="colorAccentImageRing" format="reference" />
-    <attr name="colorSkillSelectImageRing" format="reference" />
-    <attr name="colorSkillIgnoreImageRing" format="reference" />
-    <attr name="colorToolbarDashBoard" format="reference" />
-    <attr name="colorBottomNavigationTintColor" format="reference" />
-    <attr name="colorBottomNavigationTextColor" format="reference" />
-    <attr name="colorBackgroundLightGrey" format="reference" />
+    <!-- App-specific theme attributes -->
+    <attr name="buttonPrimaryColor" format="color" />
+    <attr name="buttonContrastColor" format="color" />
 
-    <attr name="remainingTaskProgressBackgroundTintColor" format="reference" />
-    <attr name="remainingTasksProgressTintColor" format="reference" />
+    <!-- Edit text -->
+    <attr name="editTextBorder" format="color" />
 
-    <attr name="priceEarnedProgressBackgroundTintColor" format="reference" />
-    <attr name="priceEarnedTasksProgressTintColor" format="reference" />
+    <!-- Numeric key pad -->
+    <attr name="numPadBackgroundColor" format="color" />
+    <attr name="numPadTextColor" format="color" />
 
-    <attr name="tasksProgressBackgroundTintColor" format="reference" />
-    <attr name="tasksProgressTintColor" format="reference" />
+    <!-- Text views -->
+    <attr name="multiLineTextColor" format="color" />
 
-    <attr name="tasksindeterminateProgressTintColor" format="reference" />
+    <!-- Dashboard colors -->
+    <attr name="taskAvailableColor" format="color" />
+    <attr name="taskCompletedColor" format="color" />
+    <attr name="taskSubmittedColor" format="color" />
+    <attr name="taskVerifiedColor" format="color" />
 
-    <attr name="storyProgressBackgroundTintColor" format="reference" />
-    <attr name="storyProgressTintColor" format="reference" />
-    <attr name="creationCodeOutlineColor" format="reference" />
-    <attr name="card1Color" format="reference" />
-    <attr name="card2Color" format="reference" />
-    <attr name="card3Color" format="reference" />
+    <!-- Microtask instruction -->
+    <attr name="microtaskInstructionBackgroundColor" format="color" />
+    <attr name="microtaskInstructionTextColor" format="color" />
 
+    <!-- Microtask input -->
+    <attr name="microtaskInputBackgroundColor" format="color" />
+
+    <!-- Microtask input text box -->
+    <attr name="microtaskInputTextBackgroundColor" format="color" />
+    <attr name="microtaskInputTextBorderColor" format="color" />
+    <attr name="microtaskInputTextColor" format="color" />
+
+    <!-- Microtask output interaction -->
+    <attr name="microtaskOutputInteractionBackgroundColor" format="color" />
+
+    <!-- Other Styleables -->
     <declare-styleable name="OutlineTextView">
         <attr name="outlineSize" format="dimension" />
         <attr name="outlineColor" format="color|reference" />
@@ -44,8 +49,18 @@
         <attr name="elevation" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="KaryaToolbar">
+        <attr name="hideLanguage" format="boolean" />
+        <attr name="titleText" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="GenderCard">
         <attr name="title" format="string|reference" />
         <attr name="icon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="NumPad">
+        <attr name="field" format="reference" />
+        <attr name="maxLength" format="integer" />
     </declare-styleable>
 </resources>

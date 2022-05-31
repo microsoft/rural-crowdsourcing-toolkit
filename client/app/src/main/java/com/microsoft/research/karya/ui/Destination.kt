@@ -5,7 +5,5 @@ sealed class Destination {
   object AccessCodeFlow : Destination()
   object UserSelection : Destination()
   object LoginFlow : Destination()
-  object TempDataFlow : Destination()
-  object MandatoryDataFlow : Destination()
   object Dashboard : Destination()
 }

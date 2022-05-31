@@ -1,22 +1,17 @@
 <resources>
-    <string name="app_name">Karya</string>
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="language_name">EN</string>
 
-    <string name="s_access_code_title">Enter Access Code</string>
+    <!-- Errors -->
+    <string name="unknown_error">Some unknown error occurred. Please contact your coordinator.</string>
+    <string name="invalid_access_code">The access code you have entered is not valid. Please contact your coordinator.</string>
 
-    <string name="s_otp_title">Enter OTP</string>
-    <string name="s_phone_number_title">Enter Phone Number</string>
-    <string name="s_age_title">Select Age Group</string>
-    <string name="s_gender_title">Select Gender</string>
-    <string name="s_profile_pic_title">Select Profile Picture</string>
-    <string name="s_dashboard_title">Dashboard</string>
-
-    <string name="s_consent_form_title">Consent Form</string>
-    <string name="s_consent_form_agree">Agree</string>
-    <string name="s_consent_form_disagree">No. I do not want to participate</string>
-    <string name="s_consent_form_text">
+    <!-- Consent Form Page -->
+    <string name="consent_form_title">Consent Form</string>
+    <string name="consent_form_agree">Agree</string>
+    <string name="consent_form_disagree">I do not want to participate</string>
+    <string name="consent_form_text">
         <![CDATA[
-        <h5>Karya Participation Consent Form</h5>
+<h5>Karya Participation Consent Form</h5>
 <p>
   Thank you for your participation on the Karya platform. This document
   describes the goals of the platform and the various steps involved in your
@@ -49,9 +44,9 @@
     on your smartphone.
   </li>
   <li>
-    Your project coordinator will give you a “16-digit Access Code”. You need to
-    enter the code during the registration process. Each access code can be used
-    only once. Therefore, do not share the access code with anyone else.
+    Your project coordinator will give you an “Access Code”. You need to enter
+    the code during the registration process. Each access code can be used only
+    once. Therefore, do not share the access code with anyone else.
   </li>
   <li>
     The registration process may require you to sign-in with your phone number.
@@ -61,11 +56,6 @@
   <li>
     In addition, we will also collect some demographic information about you,
     e.g., your age range, gender, education level, etc.
-  </li>
-  <li>
-    The app will also ask you to choose a profile picture. This picture will
-    only be used for display in the application and will not be stored in our
-    platform.
   </li>
   <li>
     To receive tasks on our platform, the app must “sync” with our server. This
@@ -125,14 +115,13 @@
   request your permission before taking pictures and obtain your permission to
   use those pictures in our presentations or posters. Not providing consent for
   taking pictures will not disqualify you from participating in the study. For
-  additional information or concerns about how Microsoft handles your personal
-  information, please see the Microsoft Privacy Statement,
-  https://go.microsoft.com/fwlink/?LinkId=521839
+  additional information or concerns, please contact us through your project
+  coordinator.
 </p>
 <h5>Payment for Participation</h5>
 <p>
   You will be paid for all correctly completed tasks on the platform. The app or
-  your porject coordinator will also provide you feedback on how well you are
+  your project coordinator will also provide you feedback on how well you are
   performing on the platform so that you can improve your responses for future
   tasks. We will work with you and your project coordinator to identify the best
   mode of payment. We will collect and store your payment information for the
@@ -143,24 +132,23 @@
 </p>
 <h5>Dataset Collected from the Study</h5>
 <p>
-  We will use the dataset collected as part of your responses to different tasks
-  for further research and will aim to release them publicly for research
-  purposes. Most datasets will contain only text or audio data that is not
-  associated with personally identifiable information. In situations where a
-  dataset does contain personally identifiable information (e.g., video), we
-  will obtain explicit consent from you before providing such a task. If you
-  have any questions regarding how the dataset will be used, please feel free to
-  ask us through your project coordinator or using the phone number provided
-  below.
+  Depending on the source of the task, we will use the dataset collected as part
+  of your responses for the task for various purposes including releasing them
+  publicly for research purposes. For each task, we will explain to you the end
+  use of the dataset via your project coordinator. Most datasets will contain
+  only text or audio data that is not associated with personally identifiable
+  information. In situations where a dataset does contain personally
+  identifiable information (e.g., video), we will obtain explicit consent from
+  you before providing such a task. If you have any questions regarding how the
+  dataset will be used, please feel free to ask us through your project
+  coordinator or using the email address provided below.
 </p>
 <h5>Contact Information</h5>
 <p>
-  Should you have any questions concerning the project, you can contact Vivek
-  Seshadri by phone at 0000000000. Should you have any questions about your
-  rights as a research subject, please report your concern via email to
-  Microsoft Research Ethics Program Feedback: MSRStudyfeedback@microsoft.com. In
-  case you do not have access to email, you can contact your project
-  coordinator, and have her relay your concerns.
+  Should you have any questions about your participation, please contact us via
+  email at thekaryainc+questions@gmail.com. In case you do not have access to
+  email, you can contact your project coordinator, and have them relay your
+  concerns.
 </p>
 <h5>Consent</h5>
 <p>
@@ -175,50 +163,73 @@
 </p>
  ]]>
     </string>
-    <string name="s_access_code_prompt">You should have received a 16-digit access code from your
-        project coordinator. Please enter that access code below.</string>
-    <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
-    <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>
-    <string name="s_invalid_otp">You have entered an invalid OTP</string>
-    <string name="s_resend_otp">Resend OTP</string>
-    <string name="s_profile_picture_prompt">Please click your profile picture. You can skip this step if you do not want a profile picture</string>
-    <string name="s_gender_prompt">Please choose your gender. If you do not wish to state your gender, you can skip this step</string>
-    <string name="s_male">Male</string>
-    <string name="s_female">Female</string>
-    <string name="s_age_prompt">Please enter your year of birth</string>
-    <string name="s_phone_number_already_used">This access code is already registered.</string>
-    <string name="s_sync_tasks">Submit Tasks / Get New Tasks</string>
-    <string name="s_tasks_available">Tasks available</string>
-    <string name="s_tasks_completed">Tasks completed</string>
-    <string name="s_tasks_skipped">Tasks skipped</string>
-    <string name="s_tasks_submitted">Tasks submitted</string>
-    <string name="s_tasks_verified">Tasks verified</string>
+
+    <!-- Phone Number -->
+    <string name="phone_number_title">Phone Number</string>
+    <string name="phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
+    <string name="unable_to_generate_otp">We could not generate an OTP for this phone number. Please check the number or try again later.</string>
+    <string name="access_code_already_used">The access code is already registered to a different phone number. Please contact the coordinator for a new access code.</string>
+
+    <!-- OTP -->
+    <string name="otp_title">OTP</string>
+    <string name="otp_prompt">We have sent a 6-digit OTP via SMS to 0000000000. Please enter the OTP below.</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="change_phone_number">Change Phone Number</string>
+    <string name="invalid_otp">You have entered an invalid OTP.</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="sync_prompt">Submit Tasks / Get New Tasks</string>
+    <string name="tasks_available">available</string>
+    <string name="tasks_completed">completed</string>
+    <string name="tasks_submitted">submitted</string>
+    <string name="tasks_verified">verified</string>
+    <string name="sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="task_outside_time_bound">You can do this task only between _START_TIME_ and _END_TIME_.</string>
+    <string name="okay">Okay</string>
+
+    <!-- Sync -->
+    <string name="reset_assignment_warning">Some output files were missing.</string>
+    <string name="upload_file_error">Error while uploading files. Please contact your coordinator.</string>
+    <string name="send_db_error">Error while sending tasks. Please contact your coordinator.</string>
+    <string name="receive_db_error">Error while receiving tasks. Please contact your coordinator.</string>
+    <string name="download_file_error">Error while downloading files. Please contact your coordinator.</string>
+    <string name="received_verified_error">Error while receiving validations. Please contact your coordinator.</string>
+
+    <!-- Speech verification strings -->
+    <string name="speech_verification_instruction">Verify the recording below</string>
+    <string name="recording_accuracy">Accuracy</string>
+    <string name="accuracy_good">Correct</string>
+    <string name="accuracy_okay">Errors</string>
+    <string name="accuracy_bad">Incorrect</string>
+    <string name="recording_volume">Volume</string>
+    <string name="volume_good">Good</string>
+    <string name="volume_okay">Whisper</string>
+    <string name="volume_bad">Inaudible</string>
+    <string name="recording_quality">Quality</string>
+    <string name="quality_good">Good</string>
+    <string name="quality_okay">Noisy</string>
+    <string name="quality_bad">Bad</string>
+    <string name="recording_fluency">Fluency</string>
+    <string name="fluency_good">Fluent</string>
+    <string name="fluency_okay">Okay</string>
+    <string name="fluency_bad">Broken</string>
+    <string name="rating_undefined">Undefined</string>
+
+
+    <string name="app_name">Karya</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
     <!-- Transliteration strings -->
     <string name="transliteration_hint">Start Typing…</string>
     <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
     <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
 
-    <!-- Speech verification strings -->
-    <string name="speech_verification_instruction">Verify the recording below</string>
-    <string name="recording_accuracy">Accuracy</string>
-    <string name="accuracy_correct">Correct</string>
-    <string name="accuracy_errors">Errors</string>
-    <string name="accuracy_incorrect">Incorrect</string>
-    <string name="recording_volume">Volume</string>
-    <string name="volume_high">Good</string>
-    <string name="volume_okay">Whisper</string>
-    <string name="volume_low">Inaudible</string>
-    <string name="recording_quality">Quality</string>
-    <string name="quality_good">Good</string>
-    <string name="quality_noisy">Noisy</string>
-    <string name="quality_bad">Bad</string>
-    <string name="rating_undefined">Undefined</string>
-
-    <!-- Text translation strings -->
-
     <!-- Speech recording strings -->
-    <string name="speech_recording_instruction">Translate the sentence below</string>
+    <string name="speech_recording_instruction">Record the sentence below</string>
 
     <!-- Image transcription strings -->
     <string name="image_transcription_instruction">Type what you see in the image below</string>
@@ -226,24 +237,31 @@
     <!-- Image labelling string -->
     <string name="image_labelling_instruction">Label the images below</string>
 
+    <!-- Image data collection strings -->
+    <string name="image_data_collection_instruction">Take a picture of the front cover. Move to a random page. Take pictures of # continuous pages from the random page</string>
+
+    <!-- Image annotation strings -->
+    <string name="image_annotation_instruction">Annotation instruction goes here</string>
+
+    <!-- Sentence validation strings -->
+    <string name="sentence_validation_instruction">Is the sentence below correct?</string>
+    <string name="grammar_question">Is the above sentence grammatically correct?</string>
+    <string name="spelling_question">Are all the words spelt correctly in the sentence?</string>
+
+    <!-- Sign verification strings -->
+    <string name="video_good">Good</string>
+    <string name="video_average">Average</string>
+    <string name="video_poor">Poor</string>
+
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
-    <string name="creation_code_hint">0000-0000</string>
-    <string name="status_check">status</string>
-    <string name="otp_hint"> ------ </string>
-    <string name="phone_number_hint">----------</string>
     <string name="next">next</string>
     <string name="back">back</string>
-    <string name="profile_picture">profile picture</string>
-    <string name="rotate_right">rotate</string>
-
-    <string name="video_record_button">I Understand and start recording</string>
-    <string name="record_preview_message">The preview of the recording would appear here</string>
-    <string name="dialogTitle">Skip or do it later?</string>
-    <string name="dialogMessage">Do you want to skip this task or do it later? Skipped tasks cannot be attempted again.</string>
-    <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
-    <string name="s_sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
-    <string name="s_yes">Yes</string>
-    <string name="s_no">No</string>
-    <string name="input_file_does_not_exist">Input file does not exist for next assignment</string>
+    <string name="proceed_text">Proceed</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="no_annotation_box_annotation_message_text">No boxes are drawn to the screen. Do you want to proceed?</string>
+    <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
+    <string name="select_image_annotation_label_dialog_instruction">Select Label</string>
+    <string name="image_annotation_edit_label">Select new label</string>
+    <string name="image_labelling_take_picture_text">Take Picture</string>
 </resources>

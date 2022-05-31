@@ -1,0 +1,44 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Light Theme -->
+    <style name="ThemeLight" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/c_dark_green</item>
+        <item name="colorControlActivated">@color/c_dark_green</item>
+        <item name="colorSecondary">@color/c_green</item>
+
+        <!-- Edit text -->
+        <item name="editTextBackground">@color/c_white</item>
+        <item name="editTextColor">@color/c_black</item>
+        <item name="editTextBorder">@color/c_black</item>
+
+        <!-- Num pad -->
+        <item name="numPadBackgroundColor">@color/c_white</item>
+        <item name="numPadTextColor">@color/c_black</item>
+
+        <!-- Text View -->
+        <item name="multiLineTextColor">@color/c_dark_grey</item>
+        <item name="errorTextColor">@color/c_red</item>
+
+        <!-- Dashboard -->
+        <item name="taskAvailableColor">@color/c_red</item>
+        <item name="taskCompletedColor">@color/c_dark_green</item>
+        <item name="taskSubmittedColor">@color/c_dark_grey</item>
+        <item name="taskVerifiedColor">@color/c_black</item>
+
+        <!-- Microtask instruction text view -->
+        <item name="microtaskInstructionBackgroundColor">@color/c_dark_grey</item>
+        <item name="microtaskInstructionTextColor">@color/c_white</item>
+
+        <!-- Microtask input frame -->
+        <item name="microtaskInputBackgroundColor">@color/c_very_light_green</item>
+
+        <!-- Microtask input text view -->
+        <item name="microtaskInputTextBackgroundColor">@color/c_white</item>
+        <item name="microtaskInputTextBorderColor">@color/c_black</item>
+        <item name="microtaskInputTextColor">@color/c_black</item>
+
+    </style>
+
+</resources>

@@ -55,6 +55,6 @@ class FileDownloadFragment : Fragment(R.layout.fragment_file_download) {
   }
 
   private fun navigateToRegistration() {
-    findNavController().navigate(R.id.action_fileDownloadFragment2_to_consentFormFragment22)
+    findNavController().navigate(R.id.action_fileDownloadFragment_to_consentFormFragment)
   }
 }

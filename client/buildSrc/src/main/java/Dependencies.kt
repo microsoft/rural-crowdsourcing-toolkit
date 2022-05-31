@@ -34,11 +34,14 @@ object Dependencies {
 
   object AndroidX {
 
+    private const val work_version = "2.7.0-alpha05"
+
     const val appcompat = "androidx.appcompat:appcompat:1.3.0-rc01"
     const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.0-beta01"
     const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.3"
     const val legacy_support = "androidx.legacy:legacy-support-v4:1.0.0"
-    const val work_runtime = "androidx.work:work-runtime-ktx:2.7.0-alpha03"
+    const val work_runtime = "androidx.work:work-runtime-ktx:$work_version"
+    const val work_multiprocess = "androidx.work:work-multiprocess:$work_version"
     const val multidex = "androidx.multidex:multidex:2.0.1"
     const val datastorePrefs = "androidx.datastore:datastore-preferences:1.0.0-beta01"
 
@@ -65,7 +68,7 @@ object Dependencies {
     }
 
     object Room {
-      private const val version = "2.4.0-alpha01"
+      private const val version = "2.5.0-alpha01"
 
       const val roomRuntime = "androidx.room:room-runtime:$version"
       const val roomCompiler = "androidx.room:room-compiler:$version"

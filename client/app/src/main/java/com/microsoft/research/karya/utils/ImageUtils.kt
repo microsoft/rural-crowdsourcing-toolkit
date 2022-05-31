@@ -6,6 +6,8 @@ package com.microsoft.research.karya.utils
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.util.Base64
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -61,5 +63,24 @@ object ImageUtils {
           .circleCrop()
       )
       .into(view)
+  }
+
+  /**
+   * Generate bitmap for an image file from its path
+   */
+  fun bitmapFromFile(path: String): Bitmap {
+    val exifInterface = ExifInterface(path)
+    val orientation = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION)?.toInt() ?: 1
+    val rotationMatrix = Matrix()
+    rotationMatrix.postRotate(when (orientation) {
+      ExifInterface.ORIENTATION_NORMAL -> 0f
+      ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+      ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+      ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+      else -> 0f
+    })
+    val bitmap = BitmapFactory.decodeFile(path)
+    val correctedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, rotationMatrix, true)
+    return correctedBitmap
   }
 }

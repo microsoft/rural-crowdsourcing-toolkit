@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/microtaskTb"
-        layout="@layout/microtask_header" />
+        layout="@layout/microtask_common_header" />
 
     <TextView
         android:id="@+id/instructionTv"
@@ -30,6 +30,7 @@
         android:layout_marginBottom="@dimen/_10sdp"
         android:contentDescription="source image"
         app:zoomage_restrictBounds="true"
+        android:src="@color/gray"
         app:layout_constraintBottom_toTopOf="@id/labelsLayout"
         app:layout_constraintTop_toBottomOf="@id/instructionTv" />
 
@@ -63,5 +64,26 @@
         >
 
     </com.nex3z.flowlayout.FlowLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/pictureInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/sourceImageIv"
+        app:layout_constraintRight_toRightOf="@id/sourceImageIv"
+        app:layout_constraintTop_toTopOf="@id/sourceImageIv"
+        app:layout_constraintBottom_toBottomOf="@id/sourceImageIv"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera"/>
+        <Button
+            android:id="@+id/takePictureBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/image_labelling_take_picture_text" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

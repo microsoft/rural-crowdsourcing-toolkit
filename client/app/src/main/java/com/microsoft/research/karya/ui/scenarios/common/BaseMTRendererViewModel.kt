@@ -22,11 +22,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.properties.Delegates
+import java.util.*
 
 abstract class BaseMTRendererViewModel
 constructor(
@@ -39,8 +40,6 @@ constructor(
 ) : ViewModel() {
 
   private lateinit var taskId: String
-  private var incompleteAssignments by Delegates.notNull<Int>()
-  private var completedAssignments by Delegates.notNull<Int>()
 
   // Initialising containers
   val assignmentOutputContainer = MicrotaskAssignmentOutput(fileDirPath)
@@ -53,8 +52,8 @@ constructor(
   lateinit var currentMicroTask: MicroTaskRecord
   protected lateinit var currentAssignment: MicroTaskAssignmentRecord
 
-  //  protected var totalMicrotasks = incompleteMta + completedMta
-  protected var completedMicrotasks: Int = 0
+  // Microtask group id -- track this to move back to dashboard on group boundaries
+  private var groupId: String? = null
 
   // Output fields for microtask assignment
   // TODO: Maybe make them a data class?
@@ -65,16 +64,27 @@ constructor(
   private val _navigateBack: MutableSharedFlow<Boolean> = MutableSharedFlow(1)
   val navigateBack = _navigateBack.asSharedFlow()
 
+  private val _completedAssignments = MutableStateFlow<Int>(0)
+  val completedAssignments = _completedAssignments.asSharedFlow()
+
+  private val _totalAssignments = MutableStateFlow<Int>(1)
+  val totalAssignments = _totalAssignments.asSharedFlow()
+
   private val _inputFileDoesNotExist: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val inputFileDoesNotExist = _inputFileDoesNotExist.asSharedFlow()
+
+  private val _outsideTimeBound: MutableStateFlow<Triple<Boolean, String, String>> =
+    MutableStateFlow(Triple(false, "", ""))
+  val outsideTimeBound = _outsideTimeBound.asStateFlow()
+
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
 
-  open fun setupViewModel(taskId: String, incompleteMta: Int, completedMta: Int) {
+  open fun setupViewModel(taskId: String, completed: Int, total: Int) {
     this.taskId = taskId
-    this.incompleteAssignments = incompleteMta
-    this.completedAssignments = completedMta
+    _totalAssignments.value = total
+    _completedAssignments.value = completed
 
     // TODO: Shift this to init once we move to viewmodel factory
     runBlocking {
@@ -158,9 +168,13 @@ constructor(
     val logObj = JsonObject()
     logObj.add("logs", logs)
 
+    /** Delete all scratch files */
     deleteAssignmentScratchFiles()
 
-    /** Delete all scratch files */
+    // If assignment is not already completed, increase completed count by 1
+    if (currentAssignment.status == MicrotaskAssignmentStatus.ASSIGNED)
+      _completedAssignments.value = _completedAssignments.value + 1
+
     withContext(Dispatchers.IO) {
       assignmentRepository.markComplete(
         microtaskAssignmentIDs[currentAssignmentIndex],
@@ -230,11 +244,44 @@ constructor(
   /** Get the microtask record for the current assignment and setup the microtask */
   fun getAndSetupMicrotask() {
     viewModelScope.launch {
+      var taskStartTime = try {
+        task.params.asJsonObject.get("startTime").asString.trim()
+      } catch (e: Exception) {
+        null
+      }
+      var taskEndTime = try {
+        task.params.asJsonObject.get("endTime").asString.trim()
+      } catch (e: Exception) {
+        null
+      }
+      taskStartTime = if (taskStartTime == "") null else taskStartTime
+      taskEndTime = if (taskEndTime == "") null else taskEndTime
+
+      if (taskStartTime != null && taskEndTime != null) {
+        val currentTime = Calendar.getInstance()
+        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+        val minutes = currentTime.get(Calendar.MINUTE)
+        val now = "$hour:$minutes"
+
+        if (now < taskStartTime || now > taskEndTime) {
+          _outsideTimeBound.emit(Triple(true, taskStartTime, taskEndTime))
+          return@launch
+        }
+      }
+
       val assignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
 
       // Fetch the assignment and the microtask
       currentAssignment = assignmentRepository.getAssignmentById(assignmentID)
       currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
+
+      // Check if we are crossing group boundaries
+      if (groupId != null && currentMicroTask.group_id != groupId) {
+        navigateBack()
+        return@launch
+      }
+
+      groupId = currentMicroTask.group_id
 
       /** If microtask has input files, extract them */
       _inputFileDoesNotExist.value = false

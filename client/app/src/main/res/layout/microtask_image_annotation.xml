@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/image_annotation_instruction"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+
+    <com.jsibbold.zoomage.ZoomageView
+        android:id="@+id/sourceImageIv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        app:layout_constraintBottom_toTopOf="@id/labelTv"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
+        app:layout_constraintVertical_bias="0.55"
+        app:zoomage_animateOnReset="false"
+        app:zoomage_autoCenter="true"
+        app:zoomage_autoResetMode="UNDER"
+        app:zoomage_maxScale="8"
+        app:zoomage_minScale="1"
+        app:zoomage_minCropRecHeight="20"
+        app:zoomage_minCropRecWidth="20"
+        app:zoomage_restrictBounds="true"
+        app:zoomage_translatable="true"
+        app:zoomage_zoomable="true" />
+
+    <TextView
+        android:id="@+id/labelTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:background="@drawable/background_microtask_input_text"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/spinner_item_color" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/spinner_item_color"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="100dp"
+        app:layout_constraintBottom_toBottomOf="@id/labelTv"
+        app:layout_constraintLeft_toRightOf="@id/labelTv"
+        app:layout_constraintTop_toTopOf="@id/labelTv" />
+
+    <ImageView
+        android:id="@+id/lockCropRectBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        app:layout_constraintRight_toLeftOf="@id/editRectColorBtn"
+        app:layout_constraintLeft_toRightOf="@id/spinner_item_color"
+        app:layout_constraintTop_toTopOf="@id/spinner_item_color"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_item_color"
+        android:src="@drawable/ic_baseline_lock_open_24" />
+
+    <ImageView
+        android:id="@+id/editRectColorBtn"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/lockCropRectBtn"
+        app:layout_constraintTop_toTopOf="@id/spinner_item_color"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_item_color"
+        android:src="@drawable/ic_baseline_edit_24" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_0sdp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_8sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.13"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+
+        <ImageButton
+            android:id="@+id/removeBoxButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/_4sdp"
+            android:background="@drawable/ic_cross_on"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/addBoxButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <ImageButton
+            android:id="@+id/addBoxButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_add_button"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/removeBoxButton"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <include
+            android:id="@+id/nextBtn"
+            layout="@layout/microtask_common_next_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/addBoxButton"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,7 +43,7 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
   }
 
   private fun setupViews() {
-    val consentFormText = getString(R.string.s_consent_form_text)
+    val consentFormText = getString(R.string.consent_form_text)
 
     val spannedText =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -53,7 +53,6 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
       }
 
     with(binding) {
-      appTb.setTitle(getString(R.string.s_consent_form_title))
       appTb.setAssistantClickListener { assistant.playAssistantAudio(AssistantAudio.CONSENT_FORM_SUMMARY) }
 
       consentFormTv.text = spannedText
@@ -125,6 +124,6 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
   }
 
   private fun navigateToLoginFlow() {
-    findNavController().navigate(R.id.action_consentFormFragment2_to_loginFlow)
+    findNavController().navigate(R.id.action_consentFormFragment_to_loginFlow)
   }
 }

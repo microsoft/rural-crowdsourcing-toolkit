@@ -1,90 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/microtaskTb"
-        layout="@layout/microtask_header" />
+        layout="@layout/microtask_common_header" />
 
     <TextView
         android:id="@+id/instructionTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_10sdp"
+        style="@style/MicrotaskInstructionText"
         android:text="@string/speech_verification_instruction"
-        android:textColor="#BBBBBB"
-        android:textSize="@dimen/_14ssp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
-    <TextView
-        android:id="@+id/sentenceTv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/_15sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:background="@drawable/border_black"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/_20sdp"
-        android:textColor="#000000"
-        app:autoSizeMaxTextSize="@dimen/_30ssp"
-        app:autoSizeMinTextSize="@dimen/_12ssp"
-        app:autoSizeStepGranularity="@dimen/_2ssp"
-        app:autoSizeTextType="uniform"
-        app:fontFamily="sans-serif"
+    <FrameLayout
+        android:id="@+id/inputFrame"
+        style="@style/MicrotaskInputFrame"
+        app:layout_constraintBottom_toTopOf="@id/playbackProgress"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/instructionTv"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL" />
-
-    <LinearLayout
-        android:id="@+id/recordLengthLL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/playbackProgressPb">
+        app:layout_constraintTop_toBottomOf="@id/instructionTv">
 
         <TextView
-            android:id="@+id/playbackSecondsTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="@color/colorRed"
-            android:textSize="@dimen/_30ssp"
-            app:fontFamily="monospace" />
+            android:id="@+id/sentenceTv"
+            style="@style/MicrotaskInputText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="This is a sentence to be recorded" />
 
-        <TextView
-            android:id="@+id/playbackCentiSecondsTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:gravity="center"
-            android:text="00"
-            android:textColor="@color/light_red"
-            android:textSize="@dimen/_20ssp"
-            app:fontFamily="monospace" />
+    </FrameLayout>
 
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/playbackProgressPb"
-        style="?android:attr/progressBarStyleHorizontal"
+    <include
+        android:id="@+id/playbackProgress"
+        layout="@layout/microtask_common_playback_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:max="100"
-        android:progressBackgroundTint="@color/colorLightGrey2"
-        android:progressTint="@color/colorRed"
-        android:scaleY="2"
         app:layout_constraintBottom_toTopOf="@id/accuracyCl" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,52 +47,36 @@
 
         <TextView
             android:id="@+id/accuracyLbl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/RatingLabel"
             android:gravity="right"
             android:text="@string/recording_accuracy"
-            android:textSize="@dimen/_14ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/accuracyIncorrectBtn"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.22" />
 
-        <Button
-            android:id="@+id/accuracyIncorrectBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/accuracy_incorrect"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/accuracyGroup"
+            style="@style/RatingButtonGroup"
             app:layout_constraintLeft_toRightOf="@id/accuracyLbl"
-            app:layout_constraintRight_toLeftOf="@id/accuracyErrorsBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/accuracyErrorsBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/accuracy_errors"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/accuracyIncorrectBtn"
-            app:layout_constraintRight_toLeftOf="@id/accuracyCorrectBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            <Button
+                android:id="@+id/accuracyBadBtn"
+                style="@style/RatingButton"
+                android:text="@string/accuracy_bad" />
 
-        <Button
-            android:id="@+id/accuracyCorrectBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/accuracy_correct"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/accuracyErrorsBtn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            <Button
+                android:id="@+id/accuracyOkayBtn"
+                style="@style/RatingButton"
+                android:text="@string/accuracy_okay" />
+
+            <Button
+                android:id="@+id/accuracyGoodBtn"
+                style="@style/RatingButton"
+                android:text="@string/accuracy_good" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -153,52 +89,36 @@
 
         <TextView
             android:id="@+id/qualityLbl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/RatingLabel"
             android:gravity="right"
             android:text="@string/recording_quality"
-            android:textSize="@dimen/_14ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/qualityBadBtn"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.22" />
 
-        <Button
-            android:id="@+id/qualityBadBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quality_bad"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/qualityGroup"
+            style="@style/RatingButtonGroup"
             app:layout_constraintLeft_toRightOf="@id/qualityLbl"
-            app:layout_constraintRight_toLeftOf="@id/qualityNoisyBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/qualityNoisyBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quality_noisy"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/qualityBadBtn"
-            app:layout_constraintRight_toLeftOf="@id/qualityGoodBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            <Button
+                android:id="@+id/qualityBadBtn"
+                style="@style/RatingButton"
+                android:text="@string/quality_bad" />
 
-        <Button
-            android:id="@+id/qualityGoodBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/quality_good"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/qualityNoisyBtn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            <Button
+                android:id="@+id/qualityOkayBtn"
+                style="@style/RatingButton"
+                android:text="@string/quality_okay" />
+
+            <Button
+                android:id="@+id/qualityGoodBtn"
+                style="@style/RatingButton"
+                android:text="@string/quality_good" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -206,215 +126,129 @@
         android:id="@+id/volumeCl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10sdp"
-        app:layout_constraintBottom_toTopOf="@id/playBtnCl">
+        app:layout_constraintBottom_toTopOf="@id/fluencyCl">
 
         <TextView
             android:id="@+id/volumeLbl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/RatingLabel"
             android:gravity="right"
             android:text="@string/recording_volume"
-            android:textSize="@dimen/_14ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/volumeLowBtn"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.22" />
 
-        <Button
-            android:id="@+id/volumeLowBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/volume_low"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/volumeGroup"
+            style="@style/RatingButtonGroup"
             app:layout_constraintLeft_toRightOf="@id/volumeLbl"
-            app:layout_constraintRight_toLeftOf="@id/volumeOkayBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/volumeOkayBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/volume_okay"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/volumeLowBtn"
-            app:layout_constraintRight_toLeftOf="@id/volumeHighBtn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
 
-        <Button
-            android:id="@+id/volumeHighBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/volume_high"
-            android:textSize="@dimen/_9ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/volumeOkayBtn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.23" />
+            <Button
+                android:id="@+id/volumeBadBtn"
+                style="@style/RatingButton"
+                android:text="@string/volume_bad" />
+
+            <Button
+                android:id="@+id/volumeOkayBtn"
+                style="@style/RatingButton"
+                android:text="@string/volume_okay" />
+
+            <Button
+                android:id="@+id/volumeGoodBtn"
+                style="@style/RatingButton"
+                android:text="@string/volume_good" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backBtnCl"
-        android:layout_width="0dp"
+        android:id="@+id/fluencyCl"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="@id/playBtnCl"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playBtnCl"
-        app:layout_constraintWidth_percent="0.30">
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/backBtnCv"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:translationZ="@dimen/_10sdp"
-            android:visibility="invisible"
-            app:cardCornerRadius="@dimen/_25sdp"
+        <TextView
+            android:id="@+id/fluencyLbl"
+            style="@style/RatingLabel"
+            android:gravity="right"
+            android:text="@string/recording_fluency"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.75"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.6">
+            app:layout_constraintWidth_percent="0.22" />
 
-            <ImageView
-                android:id="@+id/backBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_back_enabled"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/fluencyGroup"
+            style="@style/RatingButtonGroup"
+            app:layout_constraintLeft_toRightOf="@id/fluencyLbl"
+            app:layout_constraintTop_toTopOf="parent">
 
-        </androidx.cardview.widget.CardView>
+            <Button
+                android:id="@+id/fluencyBadBtn"
+                style="@style/RatingButton"
+                android:text="@string/fluency_bad" />
+
+            <Button
+                android:id="@+id/fluencyOkayBtn"
+                style="@style/RatingButton"
+                android:text="@string/fluency_okay" />
+
+            <Button
+                android:id="@+id/fluencyGoodBtn"
+                style="@style/RatingButton"
+                android:text="@string/fluency_good" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/playBtnCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/buttonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingVertical="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/backBtnCl"
-        app:layout_constraintWidth_percent="0.40">
+        app:layout_constraintHeight_percent="0.13"
+        app:layout_constraintLeft_toLeftOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/playBtnCv"
+        <include
+            android:id="@+id/backBtn"
+            layout="@layout/microtask_common_back_button"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:translationZ="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_25sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/playBtn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/playBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_speaker_enabled"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtnCv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <include
+            android:id="@+id/nextBtnCv"
+            layout="@layout/microtask_common_next_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.5">
-
-            <ImageView
-                android:id="@+id/playBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_speaker_enabled"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
-
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintStart_toEndOf="@+id/playBtn"
+            tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/nextBtnCl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="@id/playBtnCl"
-        app:layout_constraintLeft_toRightOf="@id/playBtnCl"
-        app:layout_constraintTop_toTopOf="@id/playBtnCl"
-        app:layout_constraintWidth_percent="0.30">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/nextBtnCv"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:translationZ="@dimen/_10sdp"
-            app:cardCornerRadius="@dimen/_25sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.25"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.6">
-
-            <ImageView
-                android:id="@+id/nextBtn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_next_enabled"
-                android:contentDescription="@string/back"
-                android:soundEffectsEnabled="false" />
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/sentencePointerIv"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_60sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
-        android:background="@drawable/ic_pointer"
-        android:elevation="@dimen/_20sdp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/sentenceTv"
-        app:layout_constraintEnd_toEndOf="@id/sentenceTv" />
-
-    <ImageView
-        android:id="@+id/backPointerIv"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:background="@drawable/ic_pointer"
-        android:rotation="180"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/backBtnCl"
-        app:layout_constraintLeft_toLeftOf="@id/backBtnCl"
-        app:layout_constraintRight_toRightOf="@id/backBtnCl" />
-
-    <ImageView
-        android:id="@+id/playPointerIv"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:background="@drawable/ic_pointer"
-        android:rotation="180"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/playBtnCl"
-        app:layout_constraintLeft_toLeftOf="@id/playBtnCl"
-        app:layout_constraintRight_toRightOf="@id/playBtnCl" />
-
-    <ImageView
-        android:id="@+id/nextPointerIv"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:background="@drawable/ic_pointer"
-        android:rotation="180"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/nextBtnCl"
-        app:layout_constraintLeft_toLeftOf="@id/nextBtnCl"
-        app:layout_constraintRight_toRightOf="@id/nextBtnCl" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
