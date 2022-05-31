@@ -263,4 +263,5 @@
     <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
     <string name="select_image_annotation_label_dialog_instruction">Select Label</string>
     <string name="image_annotation_edit_label">Select new label</string>
+    <string name="image_labelling_take_picture_text">Take Picture</string>
 </resources>
