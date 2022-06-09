@@ -19,8 +19,6 @@ services:
       - karya-backend-db
       - karya-backend-redis
       # - keycloak
-    volumes:
-      - .:/usr/src/karya
     ports:
       - 5000:5000
     extra_hosts:
@@ -37,8 +35,6 @@ services:
     depends_on:
       # - karya-root
       - karya-box-db
-    volumes:
-      - .:/usr/src/karya
     ports:
       - 8000:8000
     extra_hosts:
@@ -55,8 +51,6 @@ services:
     depends_on:
       # - karya-root
       - karya-backend
-    volumes:
-      - .:/usr/src/karya
     ports:
       - 3000:3000
     env_file:
@@ -71,8 +65,6 @@ services:
       - POSTGRES_DB=karya
       - POSTGRES_USER=karya
       - POSTGRES_PASSWORD=karya
-    volumes:
-      - ./data/psql/backend:/var/lib/postgresql/data
 
   karya-box-db:
     image: postgres:14-alpine
@@ -82,8 +74,6 @@ services:
       - POSTGRES_DB=box
       - POSTGRES_USER=karya
       - POSTGRES_PASSWORD=karya
-    volumes:
-      - ./data/psql/box:/var/lib/postgresql/data
 
   karya-backend-redis:
     image: redis
