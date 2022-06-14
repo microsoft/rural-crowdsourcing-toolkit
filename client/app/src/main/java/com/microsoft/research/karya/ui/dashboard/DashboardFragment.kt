@@ -311,7 +311,20 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           else -> null
         }
       }
-      if (action != null) findNavController().navigate(action)
+      if (action != null) {
+        if (task.taskInstruction == null) {
+          findNavController().navigate(action)
+        } else {
+          val builder = AlertDialog.Builder(requireContext())
+          val message = task.taskInstruction
+          builder.setMessage(message)
+          builder.setNeutralButton(R.string.okay) { _, _ ->
+            findNavController().navigate(action)
+          }
+          val dialog = builder.create()
+          dialog.show()
+        }
+      }
     }
   }
 }

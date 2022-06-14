@@ -46,6 +46,7 @@ constructor(
         TaskInfo(
           taskInfo.taskID,
           taskInfo.taskName,
+          taskInfo.taskInstruction,
           taskInfo.scenarioName,
           taskStatus,
           taskInfo.isGradeCard
@@ -74,11 +75,17 @@ constructor(
         .onEach { taskList ->
           val tempList = mutableListOf<TaskInfo>()
           taskList.forEach { taskRecord ->
+            val taskInstruction = try {
+              taskRecord.params.asJsonObject.get("instruction").asString
+            } catch(e: Exception) {
+              null
+            }
             val taskStatus = fetchTaskStatus(taskRecord.id)
             tempList.add(
               TaskInfo(
                 taskRecord.id,
                 taskRecord.display_name,
+                taskInstruction,
                 taskRecord.scenario_name,
                 taskStatus,
                 false
