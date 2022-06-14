@@ -111,6 +111,21 @@ interface MicrotaskAssignmentDaoExtra {
   )
 
   /**
+   * Query to mark the microtask assignment with the given [id] as expired
+   */
+  @Query(
+    "UPDATE microtask_assignment SET " +
+      "status=:status, output=:output, last_updated_at=:date " +
+      "WHERE id=:id"
+  )
+  suspend fun markExpire(
+    id: String,
+    date: String,
+    output: JsonElement = JsonNull.INSTANCE,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.EXPIRED,
+  )
+
+  /**
    * Query to mark the microtask assignment with the given [id] as assigned with the given [output].
    */
   @Query(

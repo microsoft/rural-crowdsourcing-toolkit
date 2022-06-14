@@ -183,6 +183,10 @@ constructor(
     assignmentDaoExtra.markSkip(id, date)
   }
 
+  suspend fun markExpire(id: String, date: String) {
+    assignmentDaoExtra.markExpire(id, date)
+  }
+
   suspend fun markAssigned(id: String, date: String) {
     assignmentDaoExtra.markAssigned(id, date)
   }
