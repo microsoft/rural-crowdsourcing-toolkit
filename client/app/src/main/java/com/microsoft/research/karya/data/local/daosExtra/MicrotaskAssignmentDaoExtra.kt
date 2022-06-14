@@ -37,7 +37,7 @@ interface MicrotaskAssignmentDaoExtra {
   @Query(
     "SELECT count(id) FROM microtask_assignment WHERE " +
       "status=:status AND " +
-      "microtask_id in (SELECT id from microtask WHERE task_id=:taskId)"
+      "task_id=:taskId"
   )
   suspend fun getCountForTask(taskId: String, status: MicrotaskAssignmentStatus): Int
 
@@ -48,7 +48,7 @@ interface MicrotaskAssignmentDaoExtra {
   @Query(
     "SELECT id FROM microtask_assignment WHERE " +
       "status IN (:statuses) AND " +
-      "microtask_id IN (SELECT id FROM microtask WHERE task_id=:taskId) " +
+      "task_id=:taskId " +
       "ORDER BY id"
   )
   suspend fun getIDsForTask(

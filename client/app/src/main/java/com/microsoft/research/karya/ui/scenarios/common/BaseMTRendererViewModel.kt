@@ -90,11 +90,26 @@ constructor(
     runBlocking {
       task = taskRepository.getById(taskId)
       microtaskAssignmentIDs =
-        assignmentRepository.getUnsubmittedIDsForTask(
+        assignmentRepository.getIDsForTask(
           task.id,
-          includeCompleted
-        ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel
-      // factory)
+          arrayListOf(MicrotaskAssignmentStatus.ASSIGNED)
+        ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel factory)
+
+      // Get Skipped Assignments
+      microtaskAssignmentIDs = microtaskAssignmentIDs +
+        assignmentRepository.getIDsForTask(
+          task.id,
+          arrayListOf(MicrotaskAssignmentStatus.SKIPPED)
+      )
+
+      // Determine if we have to include completed assignments
+      if (includeCompleted) {
+        microtaskAssignmentIDs = microtaskAssignmentIDs +
+          assignmentRepository.getIDsForTask(
+            task.id,
+            arrayListOf(MicrotaskAssignmentStatus.COMPLETED)
+          )
+      }
 
       if (microtaskAssignmentIDs.isEmpty()) {
         navigateBack()

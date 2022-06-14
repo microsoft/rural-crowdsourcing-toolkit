@@ -8,6 +8,7 @@ import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoE
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -213,6 +214,10 @@ constructor(
 
   suspend fun getTotalCreditsEarned(worker_id: String): Float? {
     return assignmentDaoExtra.getTotalCreditsEarned(worker_id)
+  }
+
+  suspend fun getIDsForTask(task_id: String, statuses: List<MicrotaskAssignmentStatus>): List<String> {
+    return assignmentDaoExtra.getIDsForTask(task_id, statuses)
   }
 
   suspend fun getUnsubmittedIDsForTask(task_id: String, includeCompleted: Boolean): List<String> {
