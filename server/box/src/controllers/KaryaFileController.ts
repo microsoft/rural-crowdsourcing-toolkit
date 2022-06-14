@@ -16,7 +16,7 @@ import {
   MicrotaskRecord,
   KaryaFile,
 } from '@karya/core';
-import { BasicModel } from '@karya/common';
+import { BasicModel, mainLogger } from '@karya/common';
 import fs from 'fs';
 
 export type KaryaFileGetRouteState = KaryaRouteState<{
@@ -138,43 +138,38 @@ type KaryaFileSubmitMiddleware = KaryaMiddleware<KaryaFileSubmitRouteState>;
  * @param ctx Karya request context
  */
 export const verifyFile: KaryaFileSubmitMiddleware = async (ctx, next) => {
-  try {
-    const { files } = ctx.request;
-    if (!files || !files.file) {
-      HttpResponse.BadRequest(ctx, 'No file attached for upload');
-      return;
-    }
-
-    let karya_file: KaryaFile;
-    try {
-      karya_file = JSON.parse(ctx.request.body.data);
-    } catch (e) {
-      HttpResponse.BadRequest(ctx, 'Invalid JSON object');
-      return;
-    }
-
-    const file = files.file;
-    if (file instanceof Array) {
-      HttpResponse.BadRequest(ctx, 'Cannot upload multiple files in a single request');
-      return;
-    }
-
-    // Set file path
-    ctx.state.filePath = file.path;
-
-    // TODO: Compute and verify checksum
-    // TODO: Validate the input fields
-
-    // Set checksum and timestamp
-    ctx.state.karya_file = {
-      algorithm: karya_file.algorithm,
-      checksum: karya_file.checksum,
-      timestamp: karya_file.timestamp,
-    };
-  } catch (e) {
-    HttpResponse.BadRequest(ctx, 'Something went wrong');
+  const { files } = ctx.request;
+  if (!files || !files.file) {
+    HttpResponse.BadRequest(ctx, 'No file attached for upload');
     return;
   }
+
+  let karya_file: KaryaFile;
+  try {
+    karya_file = JSON.parse(ctx.request.body.data);
+  } catch (e) {
+    HttpResponse.BadRequest(ctx, 'Invalid JSON object');
+    return;
+  }
+
+  const file = files.file;
+  if (file instanceof Array) {
+    HttpResponse.BadRequest(ctx, 'Cannot upload multiple files in a single request');
+    return;
+  }
+
+  // Set file path
+  ctx.state.filePath = file.path;
+
+  // TODO: Compute and verify checksum
+  // TODO: Validate the input fields
+
+  // Set checksum and timestamp
+  ctx.state.karya_file = {
+    algorithm: karya_file.algorithm,
+    checksum: karya_file.checksum,
+    timestamp: karya_file.timestamp,
+  };
   await next();
 };
 
@@ -206,10 +201,30 @@ export const submitOutputFile: KaryaFileSubmitMiddleware = async (ctx, next) => 
     ext: 'tgz',
   };
 
+  const name = getBlobName(blobParams);
+
+  // Check if a karya file has already been uploaded
+  try {
+    const record = await BasicModel.getSingle('karya_file', { container_name: 'microtask-assignment-output', name });
+    mainLogger.warn(`File already uploaded for assignment: ${name}, ${record.id}`);
+    HttpResponse.OK(ctx, record);
+
+    // Remove the downloaded file
+    try {
+      fs.promises.unlink(ctx.state.filePath);
+    } catch (e) {
+      // Ignore if file does not exist
+    }
+
+    return;
+  } catch (e) {
+    // No record uploaded already. Proceed further
+  }
+
   ctx.state.karya_file = {
     ...ctx.state.karya_file,
     container_name: 'microtask-assignment-output',
-    name: getBlobName(blobParams),
+    name,
     creator: 'WORKER',
     creator_id: ctx.state.entity.id,
     in_box: true,
@@ -243,6 +258,9 @@ export const submitFile: KaryaFileSubmitMiddleware = async (ctx, next) => {
     const { container_name, name } = ctx.state.karya_file;
     const destination = `${process.cwd()}/${folder}/${container_name}/${name}`;
     await fs.promises.copyFile(ctx.state.filePath, destination);
+
+    // Delete the temporary file
+    await fs.promises.unlink(ctx.state.filePath);
 
     // Include box_id
     ctx.state.karya_file.box_id = ctx.state.entity.box_id;

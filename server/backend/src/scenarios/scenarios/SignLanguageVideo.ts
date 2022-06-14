@@ -34,7 +34,7 @@ async function processInputFile(
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,
-      credits: task.params.creditsPerRecording,
+      credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
     };
     return mt;
@@ -95,5 +95,10 @@ export const backendSignLanguageVideoScenario: IBackendScenarioInterface<BaseSig
    */
   async microtaskOutput(task, microtask, assignments) {
     return null;
+  },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
   },
 };

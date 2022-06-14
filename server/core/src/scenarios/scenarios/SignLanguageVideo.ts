@@ -6,12 +6,6 @@
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
 
-// Sign language video data task input parameters
-type SignLanguageVideoTaskInputParameters = {
-  instruction: string;
-  creditsPerRecording: number;
-};
-
 // Sign language video data input format
 type SignLanguageVideoMicrotaskInput = { sentence: string };
 type SignLanguageVideoMicrotaskInputFiles = {};
@@ -23,33 +17,12 @@ type SignLanguageVideoMicrotaskOutputFiles = { recording: string };
 // Base sign langauge video data scenario type
 export type BaseSignLanguageVideoScenario = BaseScenarioInterface<
   'SIGN_LANGUAGE_VIDEO',
-  SignLanguageVideoTaskInputParameters,
+  {},
   SignLanguageVideoMicrotaskInput,
   SignLanguageVideoMicrotaskInputFiles,
   SignLanguageVideoMicrotaskOutput,
   SignLanguageVideoMicrotaskOutputFiles
 >;
-
-/**
- * Task parameter input and file formats.
- */
-const task_input: BaseSignLanguageVideoScenario['task_input'] = [
-  {
-    id: 'instruction',
-    type: 'string',
-    label: 'Recording Instruction',
-    description: 'Recording instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'creditsPerRecording',
-    type: 'float',
-    label: 'Credits for Each Recording',
-    description: 'Number of credits to be given to the user for each correctly recorded sentence',
-    required: true,
-  },
-];
 
 // Task input file format for sign language video data task
 const task_input_file: BaseSignLanguageVideoScenario['task_input_file'] = {
@@ -59,7 +32,7 @@ const task_input_file: BaseSignLanguageVideoScenario['task_input_file'] = {
     JSON file containing an array of objects. Each object must have a sentence field that contains the\
     sentence prompt for the recording.\
     `,
-    schema: Joi.array().items(Joi.object({ sentence: Joi.string() }).unknown(true)),
+    schema: Joi.array().items(Joi.object({ sentence: Joi.string().required() }).unknown(true)),
   },
   tgz: { required: false },
 };
@@ -71,7 +44,7 @@ export const baseSignLanguageVideoScenario: BaseSignLanguageVideoScenario = {
   name: 'SIGN_LANGUAGE_VIDEO',
   full_name: 'Sign Language Video Collection',
   description: 'This scenario allows for collection of sign language video data from a text corpus.',
-  task_input,
+  task_input: [],
   task_input_file,
   microtask_input: Joi.object({ sentence: Joi.string().required() }),
   microtask_input_files: [],
@@ -81,4 +54,8 @@ export const baseSignLanguageVideoScenario: BaseSignLanguageVideoScenario = {
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_SUBJECTIVE',
+
+  languageString(task) {
+    return 'Sign Language';
+  },
 };

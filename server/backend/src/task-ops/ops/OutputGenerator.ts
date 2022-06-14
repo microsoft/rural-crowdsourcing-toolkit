@@ -11,8 +11,8 @@ import {
   TaskOpRecord,
   TaskRecordType,
 } from '@karya/core';
-import { BasicModel, downloadBlob, TaskOpModel } from '../../../../common/dist/Index';
-import { envGetString } from '../../../../utils/misc/dist/Index';
+import { BasicModel, downloadBlob, TaskOpModel } from '@karya/common';
+import { envGetString } from '@karya/misc-utils';
 import { backendScenarioMap } from '../../scenarios/Index';
 import { promises as fsp } from 'fs';
 import tar from 'tar';
@@ -54,12 +54,16 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
     [['last_updated_at', previousOpTime, currentOpTime]]
   )) as MicrotaskRecordType[];
 
+  // If no verified assignments or completed microtasks, return
+  if (assignments.length == 0 && microtasks.length == 0) return;
+
   // Get the task output folder
   const localFolder = envGetString('LOCAL_FOLDER');
+  const timestamp = currentOpTime.replace(/:/g, '.');
   const taskOutputBlobParameters: BlobParameters = {
     cname: 'task-output',
     task_id: task.id,
-    timestamp: currentOpTime,
+    timestamp,
     ext: 'tgz',
   };
   const taskOutputName = getBlobName(taskOutputBlobParameters);
@@ -73,13 +77,17 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
       const tgzPath = `${task_folder}/${kf.name}`;
       await downloadBlob(kf.url!, tgzPath);
       await tar.x({ C: task_folder, file: tgzPath });
+      await fsp.unlink(tgzPath);
     }
   });
 
   // Call the output generator for the scenario
   const scenarioObj = backendScenarioMap[task.scenario_name];
   // @ts-ignore <weird type error for assignments>
-  const files = await scenarioObj.generateOutput(task, assignments, microtasks, task_folder, currentOpTime);
+  const files = await scenarioObj.generateOutput(task, assignments, microtasks, task_folder, timestamp);
+
+  // If no files, return
+  if (files.length == 0) return;
 
   // Tar all the files in the task output
   const outputTgzPath = `${task_folder}/${taskOutputName}`;
@@ -88,4 +96,11 @@ export async function generateTaskOutput(ogObject: TaskOutputGeneratorObject) {
 
   // Update the task op file record
   await BasicModel.updateSingle('task_op', { id: taskOp.id }, { file_id: fileRecord.id });
+
+  // Clean up all files
+  try {
+    await fsp.rmdir(task_folder, { recursive: true });
+  } catch (e) {
+    // Ignore any exceptions here
+  }
 }

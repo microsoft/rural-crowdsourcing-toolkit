@@ -12,8 +12,17 @@ import { backendSpeechDataScenario } from './scenarios/SpeechData';
 import { backendTextTranslationScenario } from './scenarios/TextTranslation';
 import { backendSpeechVerificationScenario } from './scenarios/SpeechVerification';
 import { backendSignLanguageVideoScenario } from './scenarios/SignLanguageVideo';
-import { backendMVXliterationScenario } from './scenarios/MVXliteration';
-import { backendMVXliterationVerificationScenario } from './scenarios/MVXliterationVerification';
+import { backendXliterationDataScenario } from './scenarios/XliterationData';
+import { backendSignLanguageVideoVerificationScenario } from './scenarios/SignLanguageVideoVerification';
+import { backendImageTranscriptionScenario } from './scenarios/ImageTranscription';
+import { backendImageLabellingScenario } from './scenarios/ImageLabelling';
+import { backendQuizScenario } from './scenarios/Quiz';
+import { backendImageDataScenario } from './scenarios/ImageData';
+import { backendSentenceCorpusScenario } from './scenarios/SentenceCorpus';
+import { backendSentenceCorpusVerificationScenario } from './scenarios/SentenceCorpusVerification';
+import { backendSentenceValidationScenario } from './scenarios/SentenceValidation';
+import { backendImageAnnotationScenario } from './scenarios/ImageAnnotation';
+import { backendTextTranslationValidationScenario } from './scenarios/TextTranslationValidation';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -23,6 +32,16 @@ export const backendScenarioMap: {
   TEXT_TRANSLATION: backendTextTranslationScenario,
   SPEECH_VERIFICATION: backendSpeechVerificationScenario,
   SIGN_LANGUAGE_VIDEO: backendSignLanguageVideoScenario,
-  MV_XLITERATION: backendMVXliterationScenario,
-  MV_XLITERATION_VERIFICATION: backendMVXliterationVerificationScenario,
+  SGN_LANG_VIDEO_VERIFICATION: backendSignLanguageVideoVerificationScenario,
+  XLITERATION_DATA: backendXliterationDataScenario,
+  IMAGE_TRANSCRIPTION: backendImageTranscriptionScenario,
+  IMAGE_LABELLING: backendImageLabellingScenario,
+  QUIZ: backendQuizScenario,
+  IMAGE_DATA: backendImageDataScenario,
+  SENTENCE_CORPUS: backendSentenceCorpusScenario,
+  SENTENCE_CORPUS_VERIFICATION: backendSentenceCorpusVerificationScenario,
+  SENTENCE_VALIDATION: backendSentenceValidationScenario,
+  IMAGE_ANNOTATION: backendImageAnnotationScenario,
+  TEXT_TRANSLATION_VALIDATION: backendTextTranslationValidationScenario,
+  // TODO: Add entry for TextTranslationValdation
 };

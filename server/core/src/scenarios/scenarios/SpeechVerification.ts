@@ -5,13 +5,11 @@
 
 import { BaseScenarioInterface } from '../ScenarioInterface';
 import Joi from 'joi';
-import { LanguageCode, languageParameter } from '../../languages/Index';
+import { LanguageCode, languageMap, languageParameter } from '../../languages/Index';
 
 // Speech verification task input parameters
 type SpeechVerificationTaskInputParameters = {
   language: LanguageCode;
-  instruction: string;
-  creditsPerVerification: number;
 };
 
 // Speech verification microtask input format
@@ -19,11 +17,19 @@ type SpeechVerificationMicrotaskInput = { sentence: string };
 type SpeechVerificationMicrotaskInputFiles = { recording: string };
 
 // Speech verificaion microtask output format
-type SpeechVerificationMicrotaskOutput = {
-  accuracy: number;
-  quality: number;
-  volume: number;
-};
+type SpeechVerificationMicrotaskOutput =
+  | {
+      auto: false | undefined;
+      accuracy: number;
+      quality: number;
+      volume: number;
+      fluency?: number;
+    }
+  | {
+      auto: true;
+      score: number;
+      fraction: number;
+    };
 type SpeechVerificationMicrotaskOutputFiles = {};
 
 // Base speech verification scenario type
@@ -39,22 +45,6 @@ export type BaseSpeechVerificationScenario = BaseScenarioInterface<
 // Speech verification task inputs
 const task_input: BaseSpeechVerificationScenario['task_input'] = [
   languageParameter('language', 'Language', 'Language of the recordings and transcript'),
-
-  {
-    id: 'instruction',
-    type: 'string',
-    label: 'Verification Instruction',
-    description: 'Verification instruction to be shown to the user on the client app',
-    required: true,
-  },
-
-  {
-    id: 'creditsPerVerification',
-    type: 'float',
-    label: 'Credits for Each Verification',
-    description: 'Number of credits to be given to the user for each correct verification',
-    required: true,
-  },
 ];
 
 // Task input file format for speech verification
@@ -62,7 +52,9 @@ const task_input_file: BaseSpeechVerificationScenario['task_input_file'] = {
   json: {
     required: true,
     description: `JSON file containing an array of objects. Each object must have a sentence field that contains the sentence prompt and a recording field that contains the name of the recording file`,
-    schema: Joi.array().items(Joi.object({ sentence: Joi.string().required(), recording: Joi.string().required() })),
+    schema: Joi.array().items(
+      Joi.object({ sentence: Joi.string().required(), recording: Joi.string().required() }).unknown(true)
+    ),
   },
   tgz: {
     required: true,
@@ -89,4 +81,8 @@ export const baseSpeechVerificationScenario: BaseSpeechVerificationScenario = {
   group_assignment_order: 'EITHER',
   microtask_assignment_order: 'EITHER',
   response_type: 'MULTIPLE_SUBJECTIVE',
+
+  languageString(task) {
+    return languageMap[task.params.language].primary_name;
+  },
 };

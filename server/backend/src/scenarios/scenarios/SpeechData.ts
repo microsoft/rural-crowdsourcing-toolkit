@@ -12,7 +12,7 @@ import {
   MicrotaskRecordType,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
-import { BasicModel } from '@karya/common';
+import { BasicModel, knex } from '@karya/common';
 import { promises as fsp } from 'fs';
 
 /**
@@ -34,7 +34,7 @@ async function processInputFile(
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,
-      credits: task.params.creditsPerRecording,
+      credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
     };
     return mt;
@@ -62,18 +62,28 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
       })) as MicrotaskRecordType<'SPEECH_DATA'>;
 
       // Get the recording name
-      const recordingFile = assignment.output!.files!.recording;
+      const assFiles = assignment.output!.files!;
+      const recordingFile = assFiles.recording || Object.values(assFiles)[0];
 
       // JSON data
-      const jsonData = {
+      const jsonData: { [id: string]: any } = {
         sentence_id: mt.id,
         sentence: mt.input.data.sentence,
         worker_id: assignment.worker_id,
-        file: recordingFile,
+        recording: recordingFile,
         report: assignment.report,
         max_credits: assignment.max_credits,
         credits: assignment.credits,
+        assigned_at: assignment.created_at,
+        completed_at: assignment.completed_at,
+        submitted_at: assignment.submitted_to_box_at,
+        verified_at: assignment.verified_at,
       };
+
+      // Add logs to the output
+      if (task.params.includeLogs) {
+        jsonData.logs = assignment.logs;
+      }
 
       // Write the json data to file
       const jsonFile = `${assignment.id}.json`;
@@ -95,5 +105,28 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
    */
   async microtaskOutput(task, microtask, assignments) {
     return null;
+  },
+
+  async getTaskData(task_id) {
+    const response = await knex.raw(`
+      SELECT
+        SUM(COALESCE(output::json->'data'->>'duration', '0.0')::float) as no_of_sec
+      FROM
+        microtask_assignment
+      WHERE
+        task_id = ${task_id}
+      GROUP BY task_id
+    `);
+    if (response.rowCount == 0) {
+      const data = { no_of_sec: { name: 'Amount of Data', val: '0 s' } } as object;
+      return data;
+    } else {
+      const t = response.rows[0].no_of_sec;
+      const h = Math.floor(t / 3600).toString() + 'h ';
+      const m = Math.floor((t % 3600) / 60).toString() + 'm ';
+      const s = Math.floor((t % 3600) % 60).toString() + 's';
+      const data = { no_of_sec: { name: 'Amount of Data', val: h + m + s } } as object;
+      return data;
+    }
   },
 };

@@ -46,10 +46,11 @@ export async function handleNewlyCompletedAssignments(assignments: AssignmentRec
   await BBPromise.mapSeries(verifiedAssignments, async (assignment) => {
     const verified_at = new Date().toISOString();
     const credits = assignment.credits ?? assignment.max_credits;
+    const report = assignment.report;
     await BasicModel.updateSingle(
       'microtask_assignment',
       { id: assignment.id },
-      { status: 'VERIFIED', credits, verified_at }
+      { status: 'VERIFIED', credits, verified_at, report }
     );
   });
 
@@ -60,7 +61,7 @@ export async function handleNewlyCompletedAssignments(assignments: AssignmentRec
       status: 'VERIFIED',
     });
     // @ts-ignore
-    const output = scenarioObj.microtaskOutput(task, microtask, assignments);
+    const output = await scenarioObj.microtaskOutput(task, microtask, assignments);
     await MicrotaskModel.markComplete(microtask.id, output);
   });
 

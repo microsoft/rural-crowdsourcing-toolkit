@@ -34,7 +34,7 @@ const LocalAdminRoute = (adminProps: AdminRouteProps) => {
   } else if (cwp) {
     return <Redirect to='/unauthorized' />;
   } else {
-    return <Redirect to={{ pathname: '/signin', state: { from: adminProps.location } }} />;
+    return <Redirect to={{ pathname: '/login', state: { from: adminProps.location } }} />;
   }
 };
 
@@ -52,7 +52,7 @@ const LocalWorkProviderRoute = (wpProps: WorkProviderRouteProps) => {
   if (cwp) {
     return <Route {...rest} component={component} />;
   } else {
-    return <Redirect to={{ pathname: '/signin', state: { from: wpProps.location } }} />;
+    return <Redirect to={{ pathname: '/login', state: { from: wpProps.location } }} />;
   }
 };
 

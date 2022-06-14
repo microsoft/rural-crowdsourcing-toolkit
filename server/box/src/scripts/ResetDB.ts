@@ -6,8 +6,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { knex, setupDbConnection, BoxDbFunctions } from '@karya/common';
-import logger from '../utils/Logger';
+import { knex, setupDbConnection, BoxDbFunctions, mainLogger as logger } from '@karya/common';
 
 /** Main Script to reset the DB */
 (async () => {

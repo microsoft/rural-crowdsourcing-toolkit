@@ -18,6 +18,7 @@ export const get: KaryaMiddleware = async (ctx) => {
   const worker = ctx.state.entity;
   const assignment_type = ctx.request.query.type;
   const from = ctx.request.query.from;
+  const limit_param = ctx.request.query.limit;
 
   // Check assignment type
   if (assignment_type != 'new' && assignment_type != 'verified') {
@@ -32,36 +33,39 @@ export const get: KaryaMiddleware = async (ctx) => {
     return;
   }
 
-  try {
-    if (assignment_type == 'verified') {
-      const records = await BasicModel.getRecords(
-        'microtask_assignment',
-        { worker_id: worker.id, status: 'VERIFIED' },
-        [],
-        [['verified_at', from, null]],
-        'verified_at'
-      );
-      HttpResponse.OK(ctx, records);
-    } else {
-      // TODO: Adjust max credits
-      await assignMicrotasksForWorker(worker, 1000);
-      const assignments = await BasicModel.getRecords(
-        'microtask_assignment',
-        { worker_id: worker.id, status: 'ASSIGNED' },
-        [],
-        [['created_at', from, null]],
-        'created_at'
-      );
-      const mtIds = assignments.map((mta) => mta.microtask_id);
-      const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
-      // This can be optimized to just be distinct task_ids
-      const taskIds = microtasks.map((t) => t.task_id);
-      const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
-      HttpResponse.OK(ctx, { tasks, microtasks, assignments });
-    }
-  } catch (e) {
-    // TODO: Fix this error message
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
+  // Check limit
+  if (limit_param instanceof Array) {
+    HttpResponse.BadRequest(ctx, 'Invalid limit');
+    return;
+  }
+  const limit = limit_param ? Number.parseInt(limit_param, 10) : 1000;
+
+  if (assignment_type == 'verified') {
+    const records = await BasicModel.getRecords(
+      'microtask_assignment',
+      { worker_id: worker.id, status: 'VERIFIED' },
+      [],
+      [['verified_at', from, null]],
+      'verified_at',
+      limit
+    );
+    HttpResponse.OK(ctx, records);
+  } else {
+    // TODO: Adjust max credits
+    await assignMicrotasksForWorker(worker, 10000);
+    const assignments = await BasicModel.getRecords(
+      'microtask_assignment',
+      { worker_id: worker.id, status: 'ASSIGNED' },
+      [],
+      [['created_at', from, null]],
+      'created_at'
+    );
+    const mtIds = assignments.map((mta) => mta.microtask_id);
+    const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
+    // This can be optimized to just be distinct task_ids
+    const taskIds = microtasks.map((t) => t.task_id);
+    const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
+    HttpResponse.OK(ctx, { tasks, microtasks, assignments });
   }
 };
 
@@ -81,15 +85,47 @@ export const submit: KaryaMiddleware = async (ctx) => {
     await BBPromise.mapSeries(assignments, async (assignment) => {
       if (assignment.worker_id != worker.id) {
         // TODO: Internally log this error. User does not have access to assignment
-      } else if (assignment.status != 'COMPLETED' && assignment.status != 'SKIPPED') {
-        // TODO: Internally log this error. Can only submit completed or skipped
-        // assignments
+      } else if (assignment.status != 'COMPLETED') {
+        // TODO: Internally log this error. Can only submit completed
+        // assignments through this route
       } else {
         const { id, ...updates } = assignment;
         await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
         if (assignment.status == 'COMPLETED') {
           // TODO: Handle microtask assignment completion, by invoking policy
         }
+        ids.push(id);
+      }
+    });
+
+    HttpResponse.OK(ctx, ids);
+  } catch (e) {
+    HttpResponse.Forbidden(ctx, 'Cannot access assignments');
+  }
+};
+
+/**
+ * Submitted completed or skipped assignments to the server
+ * @param ctx Karya request context
+ */
+export const submitSkipped: KaryaMiddleware = async (ctx) => {
+  const worker = ctx.state.entity;
+  const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
+
+  // TODO: Need to validate incoming request
+
+  try {
+    const ids: string[] = [];
+    const submitted_to_box_at = new Date().toISOString();
+    await BBPromise.mapSeries(assignments, async (assignment) => {
+      if (assignment.worker_id != worker.id) {
+        // TODO: Internally log this error. User does not have access to assignment
+      } else if (assignment.status != 'SKIPPED') {
+        // TODO: Internally log this error. Can only submit completed
+        // assignments through this route
+      } else {
+        const { id, ...updates } = assignment;
+        await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
         ids.push(id);
       }
     });

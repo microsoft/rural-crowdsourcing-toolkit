@@ -6,7 +6,7 @@
  * provides an action button to generate a creation code.
  */
 
-import React, { ChangeEventHandler, FormEventHandler, Fragment } from 'react';
+import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { compose } from 'redux';
@@ -15,11 +15,14 @@ import { ColTextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { TableColumnType, TableList } from '../templates/TableList';
 
-import { AuthProviderName } from '../../db/Auth.extra';
+import { AuthProviderName } from '../auth/Auth.extra';
 import { ServerUser, ServerUserRecord } from '@karya/core';
 
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { DataProps, withData } from '../hoc/WithData';
+
+// CSS
+import '../../css/work_provider/ngWorkProviderList.css';
 
 /** Map get languages action creator to props */
 const mapDispatchToProps = (dispatch: any) => {
@@ -53,17 +56,17 @@ type ServerUserListState = {
 class ServerUserList extends React.Component<ServerUserListProps, ServerUserListState> {
   // setup creation code state
   state: ServerUserListState = {
-    ccForm: { full_name: '', email: '', phone_number: '' },
+    ccForm: { full_name: '', email: '', phone_number: '', role: undefined },
   };
 
   // clear form
   clearForm = () => {
-    const ccForm: ServerUser = { full_name: '', email: '', phone_number: '' };
+    const ccForm: ServerUser = { full_name: '', email: '', phone_number: '', role: undefined };
     this.setState({ ccForm });
   };
 
   // handle form change
-  handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     const ccForm = { ...this.state.ccForm, [e.currentTarget.id]: e.currentTarget.value };
     this.setState({ ccForm });
   };
@@ -76,11 +79,13 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
 
   // On mount, get all work providers
   componentDidMount() {
+    M.AutoInit();
     M.updateTextFields();
   }
 
   // On update, update text fields
   componentDidUpdate(prevProps: ServerUserListProps) {
+    M.AutoInit();
     if (prevProps.server_user.status === 'IN_FLIGHT' && this.props.server_user.status === 'SUCCESS') {
       this.clearForm();
     }
@@ -99,7 +104,7 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
       ) : null;
 
     const tableColumns: Array<TableColumnType<ServerUserRecord>> = [
-      { header: 'Admin', type: 'function', function: (wp) => (wp.role === 'ADMIN' ? 'Yes' : 'No') },
+      { type: 'field', field: 'role', header: 'Role' },
       { type: 'field', field: 'full_name', header: 'Name' },
       { type: 'field', field: 'email', header: 'Email' },
       { type: 'function', header: 'Registration Type', function: (wp) => AuthProviderName(wp.reg_mechanism) },
@@ -114,23 +119,22 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
       return a.role === 'ADMIN' ? -1 : 1;
     };
 
-    /** List of signed up work providers */
-    const signedUpServerUsers = server_users.filter((wp) => wp.reg_mechanism !== null).sort(sortServerUsers);
-    const createdServerUsers = server_users.filter((wp) => wp.reg_mechanism === null).sort(sortServerUsers);
+    /** Sorted list work providers */
+    const sortedServerUsers = server_users.sort(sortServerUsers);
 
     /** Creation code form */
     const { ccForm } = this.state;
     const creationCodeForm = (
       <div className='section'>
-        <form onSubmit={this.handleCCFormSubmit}>
-          <div className='row valign-wrapper'>
+        <form onSubmit={this.handleCCFormSubmit} id='cc-form'>
+          <div className='row'>
             <ColTextInput
               id='full_name'
               label='Full Name'
               required={true}
               value={ccForm.full_name ?? 'Unnamed'}
               onChange={this.handleChange}
-              width='s4'
+              width='s3'
             />
             <ColTextInput
               id='email'
@@ -140,8 +144,21 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
               onChange={this.handleChange}
               width='s4'
             />
-            <div className='col s2'>
-              <button className='btn red'>Generate Code</button>
+            <div className='col s3 input-field'>
+              <select multiple={false} id='role' onChange={this.handleChange}>
+                <option value='' disabled={true} selected={true}>
+                  User Type
+                </option>
+                <option value='WORK_PROVIDER'>WORK PROVIDER</option>
+                <option value='COORDINATOR'>COORDINATOR</option>
+              </select>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col s3'>
+              <button className='btn' id='gen-cc-btn'>
+                <i className='material-icons left'>add</i>Generate Code
+              </button>
             </div>
           </div>
         </form>
@@ -149,21 +166,19 @@ class ServerUserList extends React.Component<ServerUserListProps, ServerUserList
     );
 
     return (
-      <div className='tmar20'>
+      <div className='row main-row'>
         {errorMessageElement}
-        <Fragment>
+        <h1 className='page-title' id='wp-title'>
+          Server Users
+        </h1>
+        {this.props.server_user.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
+        <div className='basic-table' id='wp-table'>
           <TableList<ServerUserRecord>
             columns={tableColumns}
-            rows={signedUpServerUsers}
-            emptyMessage='No signed up work providers'
+            rows={sortedServerUsers}
+            emptyMessage='No work providers'
           />
-          {this.props.server_user.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
-          <TableList<ServerUserRecord>
-            columns={tableColumns}
-            rows={createdServerUsers}
-            emptyMessage='No new creation codes'
-          />
-        </Fragment>
+        </div>
       </div>
     );
   }

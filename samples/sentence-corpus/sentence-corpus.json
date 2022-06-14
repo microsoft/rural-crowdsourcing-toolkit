@@ -1,0 +1,6 @@
+[
+  { "prompt": "Agriculture weather", "limit": 3 },
+  { "prompt": "Agriculture market", "limit": 3 },
+  { "prompt": "Banking open account", "limit": 3 },
+  { "prompt": "Banking balance", "limit": 3 }
+]

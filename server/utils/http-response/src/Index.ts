@@ -63,6 +63,14 @@ export function NotFound(ctx: ExtendableContext, messages: string | string[]) {
  * Set Unavailable access response
  * @param messages List of error messages
  */
+export function InternalError(ctx: ExtendableContext, messages: string | string[]) {
+  GenericError(ctx, messages, 500, 'Internal server error');
+}
+
+/**
+ * Set Unavailable access response
+ * @param messages List of error messages
+ */
 export function Unavailable(ctx: ExtendableContext, messages: string | string[]) {
   GenericError(ctx, messages, 503, 'Resource not available');
 }

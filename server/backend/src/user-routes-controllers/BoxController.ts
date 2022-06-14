@@ -31,24 +31,14 @@ export const create: UserRouteMiddleware = async (ctx) => {
   // Update box record with access code
   box.access_code = access_code;
 
-  try {
-    const record = await BasicModel.insertRecord('box', box);
-    HttpResponse.OK(ctx, record);
-  } catch (e) {
-    // TODO: Convert this to an internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
-  }
+  const record = await BasicModel.insertRecord('box', box);
+  HttpResponse.OK(ctx, record);
 };
 
 /**
  * Get all boxes.
  */
 export const getAll: UserRouteMiddleware = async (ctx) => {
-  try {
-    const records = await BasicModel.getRecords('box', {});
-    HttpResponse.OK(ctx, records);
-  } catch (e) {
-    // TODO: Conver this to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
-  }
+  const records = await BasicModel.getRecords('box', {});
+  HttpResponse.OK(ctx, records);
 };

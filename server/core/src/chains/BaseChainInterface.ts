@@ -75,6 +75,7 @@ export type ChainGroupingType = 'WORKER' | 'MICROTASK' | 'NEITHER' | 'EITHER';
  */
 export interface BaseChainInterface<FromScenario extends ScenarioName, ToScenario extends ScenarioName> {
   name: ChainName;
+  full_name: string;
 
   // From and To scenarios
   fromScenario: FromScenario;
@@ -86,6 +87,6 @@ export interface BaseChainInterface<FromScenario extends ScenarioName, ToScenari
   // Chain delay type
   delay: ChainDelayType;
 
-  // Chain groupint type
+  // Chain grouping type
   grouping: ChainGroupingType;
 }

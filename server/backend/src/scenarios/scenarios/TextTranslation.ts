@@ -34,7 +34,7 @@ async function processInputFile(
       task_id: task.id,
       input: { data: sentence },
       deadline: task.deadline,
-      credits: task.params.creditsPerTranslation,
+      credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
     };
     return mt;
@@ -89,5 +89,10 @@ export const backendTextTranslationScenario: IBackendScenarioInterface<BaseTextT
    */
   async microtaskOutput(task, microtask, assignments) {
     return null;
+  },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
   },
 };

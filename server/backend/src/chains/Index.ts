@@ -9,6 +9,8 @@ import { Promise as BBPromise } from 'bluebird';
 import { handleNewlyCompletedAssignments } from '../task-ops/policies/Index';
 
 import { BackendChainInterface, ChainedMicrotaskRecordType, ChainedMicrotaskType } from './BackendChainInterface';
+import { sentenceCorpusValidationChain } from './chains/SentenceCorpusValidation';
+import { signLanguageVideoValidation } from './chains/SignLanguageVideoValidation';
 import { speechValidationChain } from './chains/SpeechValidation';
 import { xliterationValidationChain } from './chains/XliterationValidation';
 
@@ -16,6 +18,8 @@ import { xliterationValidationChain } from './chains/XliterationValidation';
 export const backendChainMap: { [key in ChainName]: BackendChainInterface<any, any> } = {
   SPEECH_VALIDATION: speechValidationChain,
   XLITERATION_VALIDATION: xliterationValidationChain,
+  SIGN_VIDEO_VALIDATION: signLanguageVideoValidation,
+  SENTENCE_CORPUS_VALIDATION: sentenceCorpusValidationChain,
 };
 
 /**
@@ -34,6 +38,11 @@ export async function executeForwardLink(
 
   // Get to task
   const toTask = (await BasicModel.getSingle('task', { id: link.to_task })) as TaskRecordType;
+
+  // if worker groups have to be forced
+  if (link.force_wgroup) {
+    assignments = assignments.filter((mta) => mta.wgroup === toTask.wgroup);
+  }
 
   // Get all microtasks
   const microtasks = await BBPromise.mapSeries(assignments, async (assignment) => {

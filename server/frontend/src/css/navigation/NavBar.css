@@ -3,13 +3,105 @@
  * Licensed under the MIT license.
 **/
 
-ul#nav-mobile li > a {
-  color: #000;
+ul li > a {
+  color: #6e768d;
 }
 
-@media only screen and (min-width: 992px) {
-  div#nav-container {
-    position: relative;
-    left: 150px;
-  }
+#top-nav .container {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+#top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 4.5em;
+  margin-bottom: 6%;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+
+#nav-container li:first-of-type {
+  margin-top: 1%;
+}
+
+.nav-wrapper:first-of-type {
+  box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+  z-index: 3;
+}
+
+#top-nav .nav-wrapper:last-of-type {
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+
+.btn-floating {
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  background-color: #a4d4ff;
+  box-shadow: none;
+}
+
+.btn-floating:hover,
+.btn-floating:focus {
+  background-color: #a4d4ff;
+  box-shadow: none;
+}
+
+#tab-bar {
+  background-color: #fff;
+  height: 4.1em;
+}
+
+#tabs {
+  margin: auto 0;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: center;
+  min-width: 250px;
+  width: 96%;
+  margin-left: 2%;
+}
+
+#tabs a {
+  display: inline-block;
+  text-decoration: none;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 0.96em;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  position: relative;
+  transition: all 0.4s ease;
+  height: 4em;
+}
+
+#tabs a:after {
+  content: '';
+  position: absolute;
+  height: 2px;
+  background-color: #4fc3f7;
+  width: 0;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) all;
+}
+
+#tabs a:hover {
+  color: #4fc3f7;
+  background-color: transparent;
+}
+
+#tabs a:hover::after {
+  width: 100%;
+}
+
+.active-tab {
+  color: #4fc3f7;
+}
+
+.active-tab:after {
+  width: 100% !important;
 }

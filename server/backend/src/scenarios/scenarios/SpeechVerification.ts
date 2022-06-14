@@ -42,7 +42,7 @@ async function processInputFile(
           files: { recording },
         },
         deadline: task.deadline,
-        credits: task.params.creditsPerVerification,
+        credits: task.params.creditsPerMicrotask,
         status: 'INCOMPLETE',
       };
 
@@ -94,15 +94,32 @@ export const backendSpeechVerificationScenario: IBackendScenarioInterface<BaseSp
   async microtaskOutput(task, microtask, assignments) {
     // TODO: Make the reduction function dependent on a task parameter?
 
-    const data = assignments
+    const data = assignments[0].output!.data;
+    /*
       .map((mta) => mta.output!.data)
       .reduce((value, current) => {
-        return {
-          accuracy: current.accuracy + value.accuracy,
-          quality: current.quality + value.quality,
-          volume: current.volume + value.volume,
-        };
-      });
+        if (!current.auto && !value.auto) {
+          return {
+            auto: false,
+            accuracy: current.accuracy + value.accuracy,
+            quality: current.quality + value.quality,
+            volume: current.volume + value.volume,
+          };
+        } else if (current.auto && value.auto) {
+          return {
+            auto: true,
+            fraction: value.fraction,
+            score: current.score + value.score,
+          };
+        } else {
+          return value;
+        }
+      }); */
     return { data };
+  },
+
+  async getTaskData(task_id) {
+    const ob = {} as object;
+    return ob;
   },
 };

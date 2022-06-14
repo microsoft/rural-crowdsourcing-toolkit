@@ -5,7 +5,7 @@
 // not defined anywhere else.
 
 // Server Role
-const serverRoles = ['ADMIN', 'WORK_PROVIDER'] as const;
+const serverRoles = ['ADMIN', 'WORK_PROVIDER', 'COORDINATOR'] as const;
 export type ServerRole = typeof serverRoles[number];
 
 // Gender

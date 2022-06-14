@@ -126,6 +126,16 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     }
   }
 
+  // Task table
+  if (action.store === 'task') {
+    const oldData = state.task?.data || [];
+    if (action.label === 'MARK_COMPLETE' || action.label === 'EDIT_TASK') {
+      const { response } = action;
+      const data = mergeData(oldData, response);
+      return { ...state, task: { data, last_fetched_at, status } };
+    }
+  }
+
   // Submit input files
   if (action.store === 'task_op') {
     const oldData = state.task_op?.data || [];
@@ -134,6 +144,46 @@ const storeReducer: StoreReducer = (state = initState, action) => {
       const data = mergeData(oldData, response);
       return { ...state, task_op: { data, last_fetched_at, status } };
     }
+  }
+
+  // Submit language asset
+  if (action.store === 'karya_file' && action.label === 'CREATE_LANGUAGE_ASSET') {
+    const oldData = state.karya_file?.data || [];
+    const data = mergeData(oldData, action.response);
+    return { ...state, karya_file: { data, last_fetched_at, status } };
+  }
+
+  // Get language assets
+  if (action.store === 'karya_file' && action.label === 'GET_LANGUAGE_ASSETS') {
+    return { ...state, karya_file: { data: action.response, last_fetched_at: new Date(), status } };
+  }
+
+  // Disable worker
+  if (action.store === 'worker' && action.label === 'DISABLE_WORKER') {
+    const data = state.worker?.data || [];
+    const updated = action.response;
+    const index = data.findIndex((record) => record.id === updated.id);
+    if (index >= 0) {
+      data[index].tags = updated.tags;
+      data[index].tags_updated_at = updated.tags_updated_at;
+    }
+    return { ...state, worker: { data, last_fetched_at, status } };
+  }
+
+  // Generate workers
+  if (action.store === 'worker' && action.label === 'GENERATE_WORKERS') {
+    const data = state.worker?.data || [];
+    const newWorkers = action.response;
+
+    const newCodes = newWorkers.map((w) => w.access_code).join('\n');
+    navigator.clipboard
+      .writeText(newCodes)
+      .then(() => M.toast({ html: 'Copied access codes to clipboard' }))
+      .catch(() => {});
+
+    download('access-codes.txt', newCodes);
+
+    return { ...state, worker: { data: data.concat(newWorkers), last_fetched_at, status } };
   }
 
   // All action should be covered by now
@@ -170,6 +220,22 @@ function mergeData<RecordType extends { id: string }>(
  */
 const defaultSorter = (r1: DbRecordType<DbTableName>, r2: DbRecordType<DbTableName>) =>
   r1.created_at < r2.created_at ? -1 : 1;
+
+/**
+ * Helper function to download text as file
+ */
+function download(filename: string, text: string) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
 
 // Export the reducer
 export default storeReducer;

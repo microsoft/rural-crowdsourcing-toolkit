@@ -7,7 +7,7 @@
  */
 
 // React stuff
-import React, { ChangeEventHandler, FormEventHandler, Fragment } from 'react';
+import React, { ChangeEventHandler, FormEventHandler } from 'react';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -21,9 +21,13 @@ import { TableColumnType, TableList } from '../templates/TableList';
 // DB Types
 import { Box, BoxRecord } from '@karya/core';
 
-// HoCs
 import { BackendRequestInitAction } from '../../store/apis/APIs';
+
+// HoCs
 import { DataProps, withData } from '../hoc/WithData';
+
+// CSS
+import '../../css/box/ngBoxList.css';
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any) => {
@@ -91,27 +95,31 @@ class BoxList extends React.Component<BoxListProps, BoxListState> {
 
   render() {
     const boxes = this.props.box.data;
+    console.log(boxes);
 
     // get error element
     const errorElement =
       this.props.box.status === 'FAILURE' ? <ErrorMessage message={this.props.box.messages} /> : null;
+
+    // Box registered or not
+    const boxRegistrationStatus = (b: BoxRecord) => {
+      const status = b.reg_mechanism !== null ? 'Yes' : 'No';
+      return status;
+    };
 
     // Box table columns
     const tableColumns: Array<TableColumnType<BoxRecord>> = [
       { header: 'Name', type: 'field', field: 'name' },
       { header: 'Location', type: 'field', field: 'location' },
       { header: 'Access Code', type: 'field', field: 'access_code' },
+      { header: 'Registered', type: 'function', function: boxRegistrationStatus },
     ];
-
-    // Registered boxes
-    const registeredBoxes = boxes.filter((b) => b.id_token !== null);
-    const boxCreationCodes = boxes.filter((b) => b.id_token === null);
 
     // Creation code form
     const { ccForm } = this.state;
     const creationCodeForm = (
-      <form onSubmit={this.handleCCFormSubmit}>
-        <div className='row valign-wrapper'>
+      <form onSubmit={this.handleCCFormSubmit} id='boxcode-form'>
+        <div className='row'>
           <ColTextInput
             id='name'
             label='Name of the Box'
@@ -120,25 +128,23 @@ class BoxList extends React.Component<BoxListProps, BoxListState> {
             onChange={this.handleChange}
             width='s4'
           />
-          <div className='col s3'>
-            <button className='btn red'>Generate Box Code</button>
-          </div>
+          <button className='btn' id='gen-boxcode-btn'>
+            <i className='material-icons left'>add</i>Generate Box Code
+          </button>
         </div>
       </form>
     );
 
     return (
-      <div className='tmar20'>
+      <div className='row main-row'>
         {errorElement}
-        <Fragment>
-          <TableList<BoxRecord> columns={tableColumns} rows={registeredBoxes} emptyMessage='No registered boxes' />
-          <TableList<BoxRecord>
-            columns={tableColumns}
-            rows={boxCreationCodes}
-            emptyMessage='No box creation codes'
-          />{' '}
-        </Fragment>
+        <h1 className='page-title' id='boxes-title'>
+          Boxes
+        </h1>
         {this.props.box.status === 'IN_FLIGHT' ? <ProgressBar /> : creationCodeForm}
+        <div className='basic-table' id='box-table'>
+          <TableList<BoxRecord> columns={tableColumns} rows={boxes} emptyMessage='No boxes created' />
+        </div>
       </div>
     );
   }

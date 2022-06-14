@@ -19,20 +19,20 @@ import { RootState } from '../../store/Index';
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
 /** Import templates */
-import { Submit, TextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from './Auth.extra';
 
 /** Types needed for database tables */
 import { ServerUser } from '@karya/core';
 
 /** Google login element */
 import GoogleLogin from 'react-google-login';
-import config from '../../config/Index';
 
 import '../../css/LoginRegister.css';
+
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 /** Define Router match params props */
 /** Define own props */
@@ -153,7 +153,7 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
     const { auth } = this.props;
     const locationState = this.props.location.state;
 
-    const { from } = locationState || { from: { pathname: '/wp-dashboard' } };
+    const { from } = locationState || { from: { pathname: '/task' } };
 
     /** If logged in, redirect to original location or the dashboard */
     if (auth.cwp !== null && auth.status === 'SUCCESS') {
@@ -168,95 +168,111 @@ class LoginRegister extends React.Component<SignUpProps, SignUpState> {
       auth.status === 'IN_FLIGHT' ? (
         <ProgressBar width='s12 m8' />
       ) : (
-        <div className='col s10 offset-s1 card' id='main-card'>
-          <div className='card-content'>
-            <div className='row'>
-              {/** Display any error message */}
-              {errorMessageElement}
+        <main>
+          <div id='main-container' className='container'>
+            <div className='col s10 offset-s1 m8 offset-m2 card' id='main-card'>
+              <div className='card-content'>
+                <div className='row'>
+                  {/** Display any error message */}
+                  {errorMessageElement}
 
-              <div className='col s12 m4 section' id='login-section'>
-                <span className='card-title' id='login-text'>
-                  Existing Users
-                </span>
+                  <div className='col s12 section' id='login-section'>
+                    <span className='card-title' id='login-text'>
+                      Existing Users
+                    </span>
 
-                <div id='login-btn'>
-                  <GoogleLogin
-                    clientId={config.googleOAuthClientID}
-                    buttonText='Log in with Google'
-                    onSuccess={this.onGoogleLoginSuccess}
-                    onFailure={this.onGoogleLoginFailure}
-                    cookiePolicy={'single_host_origin'}
-                  />
-                </div>
-              </div>
-
-              <div className='col s12 m1 wrapper'>
-                <div className='or-separator'>
-                  <div className='vertical-line'></div>
-                  <p id='or'>OR</p>
-                  <div className='vertical-line'></div>
-                </div>
-              </div>
-
-              <div className='col s12 m6 section' id='signup-section'>
-                <span className='card-title'>New User?</span>
-
-                <form onSubmit={this.handleFormSubmit} id='signup-form'>
-                  <p className='col s12' id='enter-code-txt'>
-                    Please enter the access code you should have received from the admin below:
-                  </p>
-
-                  <TextInput
-                    id='access_code'
-                    label='16-Character Access Code'
-                    value={wp.access_code}
-                    onChange={this.handleFormChange}
-                    required={true}
-                    width='s10 offset-s1'
-                  />
-
-                  <div id='choose-btn'>
-                    <GoogleLogin
-                      clientId={config.googleOAuthClientID}
-                      buttonText='Choose a Google account'
-                      onSuccess={this.onGoogleSignUpSuccess}
-                      onFailure={this.onGoogleLoginFailure}
-                      cookiePolicy={'single_host_origin'}
-                    />
+                    <div id='login-btn'>
+                      <GoogleLogin
+                        clientId={googleClientId}
+                        buttonText='Log in with Google'
+                        onSuccess={this.onGoogleLoginSuccess}
+                        onFailure={this.onGoogleLoginFailure}
+                        cookiePolicy={'single_host_origin'}
+                      />
+                    </div>
                   </div>
 
-                  {this.state.showProfileDetails && (
-                    <div className='row'>
-                      <div className='profile-details col s8 offset-s1'>
-                        <input
-                          type='text'
-                          id='full_name'
-                          value={wp.full_name ?? ''}
-                          onChange={this.handleFormChange}
-                          required={true}
-                          disabled={true}
-                        />
+                  <div className='col s12 wrapper'>
+                    <div className='or-separator'>
+                      <div className='vertical-line'></div>
+                      <p id='or'>OR</p>
+                      <div className='vertical-line'></div>
+                    </div>
+                  </div>
 
-                        <input
-                          type='text'
-                          id='email'
-                          value={wp.email ?? ''}
-                          onChange={this.handleFormChange}
-                          required={true}
-                          disabled={true}
+                  <div className='col s12 section' id='signup-section'>
+                    <span className='card-title'>New User?</span>
+
+                    <form onSubmit={this.handleFormSubmit} id='signup-form'>
+                      <p className='col s12' id='enter-code-txt'>
+                        Please enter the access code you should have received from the admin below:
+                      </p>
+
+                      <div className='row' id='access-code-div'>
+                        <div className='col s10 m8 input-field'>
+                          <input
+                            type='text'
+                            id='access_code'
+                            value={wp.access_code}
+                            onChange={this.handleFormChange}
+                            required={true}
+                          />
+                          <label htmlFor='access_code'>16-Character Access Code</label>
+                        </div>
+                      </div>
+
+                      <div id='choose-btn'>
+                        <GoogleLogin
+                          clientId={googleClientId}
+                          buttonText='Choose a Google account'
+                          onSuccess={this.onGoogleSignUpSuccess}
+                          onFailure={this.onGoogleLoginFailure}
+                          cookiePolicy={'single_host_origin'}
                         />
                       </div>
-                    </div>
-                  )}
 
-                  <div id='register-btn'>
-                    <Submit submitString='Register!' submitColor='red' disabled={!this.state.showProfileDetails} />
+                      {this.state.showProfileDetails && (
+                        <div className='row'>
+                          <div className='profile-details col s10 l8'>
+                            <input
+                              type='text'
+                              id='full_name'
+                              value={wp.full_name ?? ''}
+                              onChange={this.handleFormChange}
+                              required={true}
+                              disabled={true}
+                            />
+
+                            <input
+                              type='text'
+                              id='email'
+                              value={wp.email ?? ''}
+                              onChange={this.handleFormChange}
+                              required={true}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div id='register-btn-div'>
+                        <div className='input-field'>
+                          <button
+                            className='btn waves-effect waves-light'
+                            id='register-btn'
+                            disabled={!this.state.showProfileDetails}
+                          >
+                            Register <i className='material-icons right'>send</i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       );
 
     return Form;

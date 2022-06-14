@@ -10,7 +10,7 @@ import { Promise as BBPromise } from 'bluebird';
 import FormData from 'form-data';
 import { promises as fsp } from 'fs';
 import { AxiosInstance } from 'axios';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 
 /**
  * Upload all karya files to the server
@@ -52,9 +52,20 @@ export async function uploadKaryaFilesToServer(box: BoxRecord, axiosLocal: Axios
 
     // Upload file
     try {
-      await axiosLocal.put<KaryaFileRecord>('/karya_file', form, { headers: form.getHeaders() });
+      await axiosLocal.put<KaryaFileRecord>('/karya_file', form, {
+        headers: form.getHeaders(),
+        maxBodyLength: 100000000,
+        maxContentLength: 100000000,
+      });
       await BasicModel.updateSingle('karya_file', { id: file.id }, { in_server: true });
-    } catch (e) {
+    } catch (e: any) {
+      // TODO: Temporary hack to handle a failed upload
+      // Marking the file as not present in the box
+      await BasicModel.updateSingle(
+        'karya_file',
+        { id: file.id },
+        { in_box: false, extras: { failed: true, message: e.message } }
+      );
       failedUpload.push(file.id);
     }
   });
@@ -87,7 +98,10 @@ export async function sendNewWorkers(box: BoxRecord, axiosLocal: AxiosInstance) 
 
     type NewWorkerResponse = Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[];
 
-    const response = await axiosLocal.put<NewWorkerResponse>('/new_workers', workers);
+    const response = await axiosLocal.put<NewWorkerResponse>('/new_workers', workers, {
+      maxBodyLength: 100000000,
+      maxContentLength: 100000000,
+    });
     const workerResponse = response.data;
 
     await BBPromise.mapSeries(workerResponse, async (worker) => {
@@ -118,7 +132,10 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
 
     type NewWorkerResponse = Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[];
 
-    const response = await axiosLocal.put<NewWorkerResponse>('/workers', workers);
+    const response = await axiosLocal.put<NewWorkerResponse>('/workers', workers, {
+      maxBodyLength: 100000000,
+      maxContentLength: 100000000,
+    });
     const workerResponse = response.data;
 
     await BBPromise.mapSeries(workerResponse, async (worker) => {
@@ -134,6 +151,7 @@ export async function sendUpdatedWorkers(box: BoxRecord, axiosLocal: AxiosInstan
  */
 export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   try {
+    cronLogger.info(`Sending new assignments to server`);
     // Get all task assignments for the box
     const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
     const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -156,11 +174,15 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
       let batch: MicrotaskAssignmentRecord[];
       do {
         batch = assignments.slice(batch_id * batch_size, (batch_id + 1) * batch_size);
-        const response = await axiosLocal.put<SendNewAssignmentsResponse>(`/task/${task.id}/new_assignments`, batch);
+        const response = await axiosLocal.put<SendNewAssignmentsResponse>(`/task/${task.id}/new_assignments`, batch, {
+          maxBodyLength: 100000000,
+          maxContentLength: 100000000,
+        });
         const updates = response.data;
         await BBPromise.mapSeries(updates, async ({ id, sent_to_server_at }) => {
           await BasicModel.updateSingle('microtask_assignment', { id }, { sent_to_server_at });
         });
+        batch_id = batch_id + 1;
       } while (batch.length >= batch_size);
     });
   } catch (e) {
@@ -173,6 +195,7 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
  */
 export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
   try {
+    cronLogger.info(`Sending completed assignments to server`);
     // Get all task assignments for the box
     const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
     const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -183,12 +206,11 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
     const batch_size = 1000;
     // For each task send all newly created assignments in batches
     await BBPromise.mapSeries(tasks, async (task) => {
-      const assignments = await knex<MicrotaskAssignmentRecord>('microtask_assignment').where({
-        box_id: box.id,
-        task_id: task.id,
-        status: 'COMPLETED',
-        submitted_to_server_at: null,
-      });
+      const assignments = await BasicModel.getRecords(
+        'microtask_assignment',
+        { box_id: box.id, task_id: task.id, submitted_to_server_at: null },
+        [['status', ['COMPLETED', 'SKIPPED', 'EXPIRED']]]
+      );
 
       let batch_id = 0;
       let batch: MicrotaskAssignmentRecord[];
@@ -196,18 +218,38 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
         batch = assignments.slice(batch_id * batch_size, (batch_id + 1) * batch_size);
         const response = await axiosLocal.put<SendNewAssignmentsResponse>(
           `/task/${task.id}/completed_assignments`,
-          batch
+          batch,
+          {
+            maxBodyLength: 100000000,
+            maxContentLength: 100000000,
+          }
         );
         const updates = response.data;
         await BBPromise.mapSeries(updates, async ({ id, submitted_to_server_at }) => {
           await BasicModel.updateSingle('microtask_assignment', { id }, { submitted_to_server_at });
         });
+        batch_id = batch_id + 1;
       } while (batch.length >= batch_size);
 
       // Send request to invoke the completion handler
-      await axiosLocal.post<{}>(`/task/${task.id}/links`, {});
+      if (assignments.some((mta) => mta.status === 'COMPLETED')) {
+        await axiosLocal.post<{}>(`/task/${task.id}/links`, {});
+      }
     });
   } catch (e) {
     cronLogger.error('Unknown error while sending assignments');
+  }
+}
+
+/**
+ * Refresh the mat views for all boxes
+ */
+export async function refreshMatViews(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Refreshing all mat views`);
+  // Refreshing mat fiews
+  try {
+    await axiosLocal.put('/refresh-all-matviews');
+  } catch (e) {
+    cronLogger.error('Failed to refresh mat views');
   }
 }

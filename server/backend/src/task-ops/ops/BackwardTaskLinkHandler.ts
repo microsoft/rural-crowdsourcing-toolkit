@@ -39,10 +39,12 @@ export async function executeBackwardTaskLinks(btlObject: BackwardTaskLinkHandle
   // Group microtasks based on link id
   const linkMap: { [id: string]: ChainedMicrotaskRecordType[] } = {};
   microtasks.forEach((mt) => {
-    const linkId = mt.input.chain.linkId;
-    if (linkId) {
-      if (linkId in linkMap) linkMap[linkId].push(mt);
-      else linkMap[linkId] = [mt];
+    if (mt.input.chain) {
+      const linkId = mt.input.chain.linkId;
+      if (linkId) {
+        if (linkId in linkMap) linkMap[linkId].push(mt);
+        else linkMap[linkId] = [mt];
+      }
     }
   });
 

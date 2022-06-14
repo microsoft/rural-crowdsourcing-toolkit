@@ -8,10 +8,16 @@ dotenv.config();
 
 import cron from 'node-cron';
 import { syncBoxWithServer } from './SyncWithServer';
-import { BasicModel, setupDbConnection } from '@karya/common';
+import { BasicModel, setupDbConnection, karyaLogger, Logger } from '@karya/common';
 import { envGetString } from '@karya/misc-utils';
-import { cronLogger } from '../utils/Logger';
 import { Promise as BBPromise } from 'bluebird';
+
+// Cron logger
+export const cronLogger: Logger = karyaLogger({
+  name: 'cron',
+  logToConsole: true,
+  consoleLogLevel: 'info',
+});
 
 // Get cron interval from the environment
 const cronInterval = envGetString('CRON_INTERVAL');
@@ -49,6 +55,4 @@ const cronJob = async () => {
 // Schedule the cron job
 cron.schedule(cronInterval, cronJob);
 
-cronJob()
-  .then(() => console.log('Test successful'))
-  .catch((e) => console.log(e));
+cronJob().catch((e) => console.log(e));

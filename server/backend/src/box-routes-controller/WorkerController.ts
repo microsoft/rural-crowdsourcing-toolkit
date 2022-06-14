@@ -19,29 +19,24 @@ export const newWorkers: BoxRouteMiddleware = async (ctx) => {
   const response: Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[] = [];
   const sent_to_server_at = new Date().toISOString();
 
-  try {
-    await BBPromise.mapSeries(workers, async (worker) => {
+  await BBPromise.mapSeries(workers, async (worker) => {
+    try {
+      await BasicModel.insertRecord('worker', { ...worker, sent_to_server_at });
+      response.push({ id: worker.id, sent_to_server_at });
+    } catch (e) {
+      // Record with ID already exists
       try {
-        await BasicModel.insertRecord('worker', { ...worker, sent_to_server_at });
-        response.push({ id: worker.id, sent_to_server_at });
+        const current = await BasicModel.getSingle('worker', { id: worker.id });
+        response.push({ id: current.id, sent_to_server_at: current.sent_to_server_at });
       } catch (e) {
-        // Record with ID already exists
-        try {
-          const current = await BasicModel.getSingle('worker', { id: worker.id });
-          response.push({ id: current.id, sent_to_server_at: current.sent_to_server_at });
-        } catch (e) {
-          failedIds.push(worker.id);
-        }
+        failedIds.push(worker.id);
       }
-    });
+    }
+  });
 
-    // TODO: Handle failed IDs
+  // TODO: Handle failed IDs
 
-    HttpResponse.OK(ctx, response);
-  } catch (e) {
-    // TODO: convert to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while adding new workers');
-  }
+  HttpResponse.OK(ctx, response);
 };
 
 /**
@@ -54,28 +49,23 @@ export const updateWorkers: BoxRouteMiddleware = async (ctx) => {
   const response: Pick<WorkerRecord, 'id' | 'sent_to_server_at'>[] = [];
   const sent_to_server_at = new Date().toISOString();
 
-  try {
-    await BBPromise.mapSeries(workers, async (worker) => {
-      try {
-        const { year_of_birth, gender, full_name, language } = worker;
-        await BasicModel.updateSingle(
-          'worker',
-          { id: worker.id },
-          { year_of_birth, gender, full_name, language, sent_to_server_at }
-        );
-        response.push({ id: worker.id, sent_to_server_at });
-      } catch (e) {
-        failedIds.push(worker.id);
-      }
-    });
+  await BBPromise.mapSeries(workers, async (worker) => {
+    try {
+      const { phone_number, reg_mechanism, year_of_birth, gender, full_name, language } = worker;
+      await BasicModel.updateSingle(
+        'worker',
+        { id: worker.id },
+        { phone_number, reg_mechanism, year_of_birth, gender, full_name, language, sent_to_server_at }
+      );
+      response.push({ id: worker.id, sent_to_server_at });
+    } catch (e) {
+      failedIds.push(worker.id);
+    }
+  });
 
-    // TODO: Handle failed IDs
+  // TODO: Handle failed IDs
 
-    HttpResponse.OK(ctx, response);
-  } catch (e) {
-    // TODO: convert to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while adding new workers');
-  }
+  HttpResponse.OK(ctx, response);
 };
 
 /**
@@ -85,20 +75,12 @@ export const get: BoxRouteMiddleware = async (ctx) => {
   let from = ctx.query.from || new Date(0).toISOString();
   if (from instanceof Array) from = from[0];
 
-  try {
-    const workers = await BasicModel.getRecords(
-      'worker',
-      { box_id: ctx.state.entity.id },
-      [],
-      [['tags_updated_at', from, null]],
-      'tags_updated_at'
-    );
-    const response = workers.map((w) => {
-      return { id: w.id, tags: w.tags, tags_updated_at: w.tags_updated_at };
-    });
-    HttpResponse.OK(ctx, response);
-  } catch (e) {
-    // TODO convert this to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured while fetching workers');
-  }
+  const workers = await BasicModel.getRecords(
+    'worker',
+    { box_id: ctx.state.entity.id },
+    [],
+    [['tags_updated_at', from, null]],
+    'tags_updated_at'
+  );
+  HttpResponse.OK(ctx, workers);
 };

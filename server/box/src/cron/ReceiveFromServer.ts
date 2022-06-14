@@ -3,7 +3,7 @@
 //
 // Receive files and information from the server
 
-import { BasicModel, knex } from '@karya/common';
+import { BasicModel, knex, WorkerModel } from '@karya/common';
 import {
   BoxRecord,
   KaryaFileRecord,
@@ -17,25 +17,55 @@ import {
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import axios, { AxiosInstance } from 'axios';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
 
+export async function getLanguageAssets(axiosLocal: AxiosInstance) {
+  cronLogger.info('Fetching language assets');
+
+  // Get latest updated time for language assets
+  const response = await knex<KaryaFileRecord>('karya_file')
+    .where({ container_name: 'language-assets' })
+    .max('last_updated_at');
+  const latest_update_time = response[0].max || new Date(0).toISOString();
+
+  let languageAssets: KaryaFileRecord[];
+  try {
+    const response = await axiosLocal.get<KaryaFileRecord[]>('/language_assets', {
+      params: { from: latest_update_time },
+    });
+    languageAssets = response.data;
+  } catch (e) {
+    cronLogger.error('Error while fetching language assets');
+    return;
+  }
+
+  // Update language asset information in the box
+  try {
+    await BBPromise.mapSeries(languageAssets, async (asset) => {
+      await BasicModel.upsertRecord('karya_file', asset);
+    });
+  } catch (e) {
+    cronLogger.error('Error while updating language assets');
+    return;
+  }
+}
+
 /**
  * Get all workers whose tags have been updated
+ *
+ * Look for disabled workers. Their assignments have to be marked as expired.
  */
 export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   // Get the latest time tags were updated
   const response = await knex<WorkerRecord>('worker').max('tags_updated_at');
   const latest_tag_updated_time = response[0].max || new Date(0).toISOString();
 
-  // Response type for get updated workes query
-  type UpdatedWorkerRespnse = Pick<WorkerRecord, 'id' | 'tags' | 'tags_updated_at'>[];
-
   // Get updated workers
-  let updatedWorkerData: UpdatedWorkerRespnse;
+  let updatedWorkerData: WorkerRecord[];
   try {
-    const response = await axiosLocal.get<UpdatedWorkerRespnse>('/workers', {
+    const response = await axiosLocal.get<WorkerRecord[]>('/workers', {
       params: { from: latest_tag_updated_time },
     });
     updatedWorkerData = response.data;
@@ -48,7 +78,21 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   try {
     await BBPromise.mapSeries(updatedWorkerData, async (worker) => {
       const { id, tags, tags_updated_at } = worker;
-      await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+      try {
+        await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+      } catch (e) {
+        await BasicModel.upsertRecord('worker', worker);
+      }
+
+      // If the worker is disabled, mark all their 'ASSIGNED'
+      // assignments as EXPIRED
+      if (WorkerModel.isDisabled(worker)) {
+        await BasicModel.updateRecords(
+          'microtask_assignment',
+          { worker_id: id, status: 'ASSIGNED' },
+          { status: 'EXPIRED' }
+        );
+      }
     });
   } catch (e) {
     cronLogger.error(`Failed to update tag information about workers`);
@@ -108,6 +152,7 @@ export async function getTaskAssignments(box: BoxRecord, axiosLocal: AxiosInstan
  * Get new microtasks for incomplete task assignments
  */
 export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting new microtasks for tasks`);
   // Get incomplete task assignments
   const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
   const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -167,7 +212,6 @@ export async function getMicrotasks(box: BoxRecord, axiosLocal: AxiosInstance) {
 
       responseLength = granularity == 'GROUP' ? groups.length : microtasks.length;
     }
-    cronLogger.info(`Received microtasks for task ${task.id}`);
   });
 }
 
@@ -261,6 +305,7 @@ async function downloadKaryaFile(url: string, filepath: string) {
  * Get verified assignments for all tasks
  */
 export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting verified assignments for tasks`);
   // Get incomplete task assignments
   const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
   const task_ids = task_assignments.map((ta) => ta.task_id);
@@ -276,8 +321,17 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
 
     while (responseLength >= limit) {
       let verifiedAssignments: MicrotaskAssignmentRecord[];
-      const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment').max('verified_at');
-      const latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
+      let latest_verified = new Date(0).toISOString();
+      try {
+        const latest_verified_response = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+          .where('task_id', task.id)
+          .max('verified_at');
+        latest_verified = latest_verified_response[0].max || new Date(0).toISOString();
+      } catch (e) {
+        cronLogger.error('Failed to get response from db for latest verified');
+        cronLogger.error(JSON.stringify(e));
+        return;
+      }
 
       // Send request to get microtasks
       try {
@@ -302,6 +356,5 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
 
       responseLength = verifiedAssignments.length;
     }
-    cronLogger.info(`Received verified assignments for task ${task.id}`);
   });
 }

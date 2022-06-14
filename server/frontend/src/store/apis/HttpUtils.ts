@@ -6,12 +6,11 @@
  */
 
 import axios, { AxiosError } from 'axios';
-import config from '../../config/Index';
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from '../../components/auth/Auth.extra';
 import { ErrorBody } from './HttpResponseTypes';
 
 /** Set axios base server URL prefix from config */
-const { url } = config.backend;
+const url = process.env.REACT_APP_SERVER_URL || '';
 axios.defaults.baseURL = `${url}/api_user`;
 
 /** Send credentials with all requests */

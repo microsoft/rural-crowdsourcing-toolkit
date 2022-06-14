@@ -9,9 +9,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Promise as BBPromise } from 'bluebird';
-import { knex, setupDbConnection, ServerDbFunctions } from '@karya/common';
+import { knex, setupDbConnection, ServerDbFunctions, mainLogger as logger } from '@karya/common';
 import { bootstrapAuth } from './AuthBootstrap';
-import logger from '../utils/Logger';
+import { createAllMatViews } from '../models/MatViewModel';
 
 /**
  * Function to recreate all tables in the database
@@ -55,4 +55,6 @@ let scriptSequence = ['recreate-tables', 'auth-bootstrap'];
         break;
     }
   });
+
+  await createAllMatViews();
 })().finally(() => knex.destroy());

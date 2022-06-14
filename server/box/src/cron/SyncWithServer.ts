@@ -5,9 +5,10 @@
 
 import { BoxRecord } from '@karya/core';
 import { axios } from './HttpUtils';
-import { cronLogger } from '../utils/Logger';
+import { cronLogger } from './Cron';
 import { BasicModel, PhoneOTPConfig, setOTPConfig } from '@karya/common';
 import {
+  refreshMatViews,
   sendCompletedAssignments,
   sendNewAssignments,
   sendNewWorkers,
@@ -21,6 +22,7 @@ import {
   downloadPendingKaryaFiles,
   getUpdatedWorkers,
   getVerifiedAssignments,
+  getLanguageAssets,
 } from './ReceiveFromServer';
 
 /**
@@ -30,7 +32,7 @@ export async function syncBoxWithServer(box: BoxRecord) {
   cronLogger.info(`Syncing box ${box.id} with server`);
 
   // set request header
-  const headers = { 'karya-id-token': box.id_token };
+  const headers = { 'karya-id-token': box.id_token as string };
 
   // Renew ID token
   let newBoxRecord: BoxRecord;
@@ -48,12 +50,13 @@ export async function syncBoxWithServer(box: BoxRecord) {
   try {
     const { id, id_token } = newBoxRecord;
     await BasicModel.updateSingle('box', { id }, { id_token });
-    headers['karya-id-token'] = id_token;
+    headers['karya-id-token'] = id_token as string;
   } catch (e) {
     cronLogger.warn('Failed to update box with renewed ID token. Continuing with old token');
   }
 
   // Set axios default header
+  // @ts-ignore
   axios.defaults.headers = headers;
 
   // Check if OTP service is available
@@ -83,6 +86,9 @@ export async function syncBoxWithServer(box: BoxRecord) {
   await sendNewAssignments(box, axios);
   await sendCompletedAssignments(box, axios);
 
+  // Get language assets
+  await getLanguageAssets(axios);
+
   // Get workers with updated tag information
   await getUpdatedWorkers(axios);
 
@@ -100,4 +106,10 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Get verified assignments
   await getVerifiedAssignments(box, axios);
+
+  // Refresh mat views
+  await refreshMatViews(axios);
+
+  // Log for successful completion of sync
+  cronLogger.info(`Completed sync for box ${box.id}`);
 }

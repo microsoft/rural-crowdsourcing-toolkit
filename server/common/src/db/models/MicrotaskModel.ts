@@ -21,6 +21,7 @@ export async function getAssignableMicrotasks(
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
   const maxAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('task_id', task.id)
     .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
     .groupBy('microtask_id')
     .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
@@ -30,14 +31,22 @@ export async function getAssignableMicrotasks(
     .where('worker_id', worker.id)
     .pluck('microtask_id');
 
+  const unassignableMicrotasks = new Set(await workerAssignedMicrotasks.union(maxAssignedMicrotasks));
+
   const microtasks = await knex<MicrotaskRecord>('microtask')
     .where('task_id', task.id)
     .where('status', 'not in', ['COMPLETED'])
-    .where('id', 'not in', knex.raw('?', [maxAssignedMicrotasks]))
-    .where('id', 'not in', knex.raw('?', [workerAssignedMicrotasks]))
     .select();
 
-  return microtasks;
+  return microtasks.filter((mt) => !unassignableMicrotasks.has(mt.id));
+}
+
+export async function getAssignedCount(worker_id: string, task_id: string) {
+  const assignedCount = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('worker_id', worker_id)
+    .where('task_id', task_id)
+    .count();
+  return assignedCount[0].count as number;
 }
 
 /**
@@ -94,4 +103,42 @@ export async function matchingResponseCount(microtask_id: string): Promise<numbe
     [microtask_id]
   );
   return count.rows[0].max;
+}
+
+/**
+ * Get all microtask info for a task. Include summary of assignments
+ */
+export async function microtasksWithAssignmentSummary(task_id: string): Promise<any[]> {
+  const response = await knex.raw(`
+  SELECT id, task_id, assigned, completed, verified, cost FROM microtask_summary
+  WHERE
+    task_id = ${task_id}
+  `);
+
+  return response.rows.map((row: any) => {
+    const { assigned, completed, verified, cost, ...rest } = row;
+    const extras = { assigned, completed, verified, cost };
+    return { ...rest, extras };
+  });
+}
+
+/**
+ * Get summary of assignment status for all microtasks of a given task.
+ */
+export async function microtasksSummary(task_id: string) {
+  const response = await knex.raw(`
+      SELECT
+        microtask_id,
+        COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
+        COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
+        COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
+        COALESCE(SUM(credits), 0) as cost
+      FROM
+        microtask_assignment
+      WHERE
+        task_id = ${task_id}
+      GROUP BY microtask_id
+  `);
+
+  return response.rows;
 }

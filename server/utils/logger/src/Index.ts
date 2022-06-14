@@ -20,7 +20,7 @@ import DailyRotateFile = require('winston-daily-rotate-file');
  * @property onArchive - Callback on a log archive
  */
 
-type LoggerConfig = {
+export type LoggerConfig = {
   name: string;
   folder?: string;
   datePattern?: string;

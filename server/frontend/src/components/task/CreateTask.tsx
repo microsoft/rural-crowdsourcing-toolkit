@@ -7,8 +7,8 @@
  */
 
 // React stuff
-import React, { ChangeEventHandler, FormEventHandler } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import React, { ChangeEventHandler, FormEventHandler, KeyboardEventHandler } from 'react';
+import { RouteComponentProps, Link } from 'react-router-dom';
 
 // Redux stuff
 import { connect, ConnectedProps } from 'react-redux';
@@ -16,31 +16,39 @@ import { RootState } from '../../store/Index';
 
 // Store types and actions
 import { Task } from '@karya/core';
-import { BaseScenarioInterface, scenarioMap, ScenarioName } from '@karya/core';
-import { languageMap, LanguageCode } from '@karya/core';
+import { policyMap, policyList, PolicyName } from '@karya/core';
+import { BaseScenarioInterface, scenarioMap, ScenarioName, coreScenarioParameters } from '@karya/core';
 
 // HTML Helpers
-import { ColTextInput, SubmitOrCancel } from '../templates/FormInputs';
+import { ColTextInput } from '../templates/FormInputs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 import { ParameterSection } from '../templates/ParameterRenderer';
 
 // Hoc
 import { BackendRequestInitAction } from '../../store/apis/APIs';
 
+// CSS
+import '../../css/task/ngCreateTask.css';
+
 // Create router props
-type RouterProps = RouteComponentProps<{}>;
+type RouteParams = { id?: string };
+type RouterProps = RouteComponentProps<RouteParams>;
 
 // Load state to props
-const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state: RootState, ownProps: RouterProps) => {
+  const task_id = ownProps.match.params.id;
   const { data, ...request } = state.all.task;
   return {
-    task: data,
     request,
+    auth: state.all.auth,
+    task_id,
   };
 };
 
 // Map dispatch to props
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: any, ownProps: RouterProps) => {
+  const id = ownProps.match.params.id;
+  const task_id = id ? id : '';
   return {
     createTask: (task: Task) => {
       const action: BackendRequestInitAction = {
@@ -48,6 +56,17 @@ const mapDispatchToProps = (dispatch: any) => {
         store: 'task',
         label: 'CREATE',
         request: task,
+      };
+      dispatch(action);
+    },
+
+    editTask: (task: Task) => {
+      const action: BackendRequestInitAction = {
+        type: 'BR_INIT',
+        store: 'task',
+        label: 'EDIT_TASK',
+        request: task,
+        task_id,
       };
       dispatch(action);
     },
@@ -59,27 +78,35 @@ const reduxConnector = connect(mapStateToProps, mapDispatchToProps);
 const connector = reduxConnector;
 
 // component prop type
-type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector>;
+type CreateTaskProps = RouterProps & ConnectedProps<typeof reduxConnector> & { task?: Task };
 
 // component state
 type CreateTaskState = {
   task: Task;
-  params: { [id: string]: string | boolean };
-  itags: string;
-  scenario?: BaseScenarioInterface<ScenarioName, any, object, any, object, any>;
-  language_code?: LanguageCode;
+  params: { [id: string]: string | number | boolean | string[] };
+  itags: Array<string>;
+  scenario?: BaseScenarioInterface<any, object, any, object, any, object>;
+  policy?: PolicyName;
+  tags_input: string;
+  tags_input_isActive: boolean;
 };
 
 class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
+  // Initial state
   state: CreateTaskState = {
     task: {
       name: '',
       description: '',
       display_name: '',
     },
-    itags: '',
+    itags: [],
     params: {},
+    tags_input: '',
+    tags_input_isActive: false,
   };
+
+  // Ref to enable auto-scrolling to the form on scenario selection
+  formRef = React.createRef<HTMLDivElement>();
 
   // reset task data
   resetTask = () => {
@@ -95,6 +122,23 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
   componentDidMount() {
     M.updateTextFields();
     M.AutoInit();
+    if (this.props.location.state) {
+      const task_props = this.props.location.state as Task;
+      const task: Task = {
+        name: task_props.name,
+        description: task_props.description,
+        display_name: task_props.display_name,
+      };
+      const itags = task_props.itags ? task_props.itags.itags : [];
+      const params = task_props.params ? task_props.params : {};
+      const policy = task_props.policy;
+      const scenario = scenarioMap[task_props.scenario_name as ScenarioName];
+      task.assignment_batch_size = task_props.assignment_batch_size;
+      task.assignment_granularity = task_props.assignment_granularity;
+      task.group_assignment_order = task_props.group_assignment_order;
+      task.microtask_assignment_order = task_props.microtask_assignment_order;
+      this.setState({ task, itags, params, policy, scenario });
+    }
   }
 
   // On update, update materialize fields
@@ -107,28 +151,33 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     }
   }
 
-  // Handle change in scenario or language
-  handleScenarioChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+  // Handle change in scenario
+  handleScenarioChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const scenario_name = e.currentTarget.value as ScenarioName;
     const scenario = scenarioMap[scenario_name];
     this.setState({ scenario });
     const task: Task = {
-      name: '',
-      description: '',
-      display_name: '',
+      name: this.state.task.name,
+      description: this.state.task.description,
+      display_name: this.state.task.display_name,
       scenario_name,
       assignment_granularity: scenario.assignment_granularity,
       group_assignment_order: scenario.group_assignment_order,
       microtask_assignment_order: scenario.microtask_assignment_order,
     };
     this.setState({ task });
-  };
+    const policy = undefined;
+    this.setState({ policy });
 
-  // Handle language change
-  handleLanguageChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const language_code = e.currentTarget.value as LanguageCode;
-    const task: Task = { ...this.state.task, display_name: '' };
-    this.setState({ language_code, task });
+    // Scroll to task creation form automatically
+    setTimeout(() => {
+      if (this.formRef.current) {
+        window.scrollTo({
+          top: this.formRef.current.offsetTop,
+          behavior: 'smooth',
+        });
+      }
+    }, 400);
   };
 
   // Handle input change
@@ -137,9 +186,36 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     this.setState({ task });
   };
 
-  // Handle param input change
+  // Handle tag input change
   handleTagsChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    this.setState({ itags: e.currentTarget.value });
+    this.setState({ tags_input: e.currentTarget.value });
+    if (e.currentTarget.value !== '') {
+      this.setState({ tags_input_isActive: true });
+    } else {
+      this.setState({ tags_input_isActive: false });
+    }
+  };
+
+  // Handle key down event during tag input
+  handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (['Enter', ','].includes(e.key)) {
+      e.preventDefault();
+      var tag = this.state.tags_input.trim();
+      if (tag) {
+        this.setState({
+          itags: [...this.state.itags, tag],
+          tags_input: '',
+          tags_input_isActive: false,
+        });
+      }
+    }
+  };
+
+  // Handle tag deletion
+  handleTagDelete = (tag_deleted: string) => {
+    this.setState({
+      itags: this.state.itags.filter((tag) => tag !== tag_deleted),
+    });
   };
 
   // Handle param input change
@@ -154,76 +230,107 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
     this.setState({ params });
   };
 
+  // Handle list parameter change
+  handleParamListChange = (id: string, newData: string[]) => {
+    const params = { ...this.state.params, [id]: newData };
+    this.setState({ params });
+  };
+
+  // Handle policy change
+  handlePolicyChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const policy = e.currentTarget.value as PolicyName;
+    this.setState({ policy, params: {} });
+  };
+
   // Handle form submission
   handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     const task: Task = { ...this.state.task };
     task.scenario_name = this.state.scenario?.name;
     task.params = this.state.params;
-    task.itags = { itags: this.state.itags.split(',') };
-    this.props.createTask(task);
+    task.itags = { itags: this.state.itags };
+    task.policy = this.state.policy;
+    const batch_size = task.assignment_batch_size;
+    task.assignment_batch_size = batch_size ? Number.parseInt(batch_size.toString(), 10) : null;
+    const task_id = this.props.task_id;
+    if (task_id) {
+      task.id = task_id;
+      this.props.editTask(task);
+    } else {
+      this.props.createTask(task);
+    }
   };
 
   render() {
+    const { auth } = this.props;
+    const task_id_props = this.props.task_id;
+    const task_props = this.props.location.state as Task;
+
     // Generate error with task creation
     const createErrorElement =
       this.props.request.status === 'FAILURE' ? <ErrorMessage message={this.props.request.messages} /> : null;
 
-    // Scenarios drop down
+    // Scenario cards
     const scenarios = Object.values(scenarioMap);
     const { scenario } = this.state;
-    const scenario_name = scenario ? scenario.name : 'null';
-    const scenarioDropDown = (
-      <div>
-        <select id='scenario_id' value={scenario_name} onChange={this.handleScenarioChange}>
-          <option value='null' disabled={true}>
-            Select a Scenario
-          </option>
+    const scenarioCards = task_props ? (
+      <h2 className='col s10' id='select-txt'>
+        Scenario:<span>{scenario?.full_name}</span>
+      </h2>
+    ) : (
+      <>
+        <h2 className='col s10' id='select-txt'>
+          Select a Scenario
+        </h2>
+        <div className='scenarios'>
           {scenarios.map((s) => (
-            <option value={s.name} key={s.name}>
-              {s.full_name}
-            </option>
+            <label className='col s11 m5 l4' key={s.name}>
+              <input type='radio' name='scenario_id' value={s.name} onChange={this.handleScenarioChange} />
+              <div className='scenario-card'>
+                <span className='scenario-name'>{s.full_name}</span>
+                <p className='description'>{s.description}</p>
+              </div>
+            </label>
           ))}
-        </select>
-      </div>
-    );
-
-    // languages drop down
-    const languages = Object.values(languageMap);
-    const language_code = this.state.language_code ?? 'null';
-    const languageDropDown = (
-      <div>
-        <select id='language_code' value={language_code} onChange={this.handleLanguageChange}>
-          <option value='null' disabled={true}>
-            Select a Language
-          </option>
-          {languages.map((l) => (
-            <option value={l.code} key={l.code}>
-              {`${l.name} (${l.primary_name})`}
-            </option>
-          ))}
-        </select>
-      </div>
+        </div>
+      </>
     );
 
     // task creation form
     let taskForm = null;
-    if (scenario !== undefined && language_code !== 'null') {
-      // get parameters from the
+    if (scenario !== undefined) {
+      // get parameters
       const params = scenario.task_input;
       const { assignment_granularity, group_assignment_order, microtask_assignment_order } = scenario;
-
       const { task } = this.state;
+      const policy = this.state.policy || 0;
+      const policies = policyList[scenario.response_type];
+
+      // Policy params section
+      let policyParamsSection = null;
+      if (policy !== 0) {
+        const policyObj = policyMap[policy];
+        policyParamsSection = (
+          <ParameterSection
+            params={policyObj.params}
+            data={this.state.params}
+            onChange={this.handleParamInputChange}
+            onBooleanChange={this.handleParamBooleanChange}
+            onStringListChange={this.handleParamListChange}
+          />
+        );
+      }
+
       taskForm = (
-        <div>
+        <div id='task-form' ref={this.formRef}>
           {/** Basic task information */}
           <div className='section'>
-            <h5 className='red-text'>Basic Task Information</h5>
+            <h2 className='form-heading'>Basic Task Information</h2>
             <div className='row'>
               <ColTextInput
                 id='name'
                 label='Task name in English'
-                width='s4'
+                width='s10 m8 l5'
                 value={task.name}
                 onChange={this.handleInputChange}
                 required={true}
@@ -233,25 +340,39 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
               <ColTextInput
                 id='display_name'
                 label={`Display Name (to be shown in the app)`}
-                width='s4'
+                width='s10 m8 l5'
                 value={task.display_name}
                 onChange={this.handleInputChange}
                 required={true}
               />
             </div>
+
             <div className='row'>
-              <ColTextInput
-                id='tags'
-                label={`List of task tags (comma seperated)`}
-                width='s4'
-                value={this.state.itags}
-                onChange={this.handleTagsChange}
-                required={true}
-              />
+              <div className='col s10 m8 l5'>
+                <div className='input-field' id='tags'>
+                  <input
+                    id='tags_input'
+                    value={this.state.tags_input}
+                    onChange={this.handleTagsChange}
+                    onKeyDown={this.handleKeyDown}
+                  />
+                  <label className={this.state.tags_input_isActive ? 'active_input' : ''} htmlFor='tags_input'>
+                    Enter tags
+                  </label>
+                  {this.state.itags.map((tag) => (
+                    <div key={tag} className='chip'>
+                      {tag}
+                      <i className='material-icons' onClick={() => this.handleTagDelete(tag)}>
+                        close
+                      </i>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className='row'>
-              <div className='col s8 input-field'>
+              <div className='col s11 m7 input-field' id='description-div'>
                 <label htmlFor='description'>Task Description</label>
                 <textarea
                   id='description'
@@ -264,24 +385,70 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
             </div>
           </div>
 
-          {/** Task parameter */}
+          {/** Policy and policy params */}
           <div className='section'>
-            <h5 className='red-text'>Task Parameters</h5>
+            <div className='row'>
+              <h2 className='form-heading'>Policy Parameters</h2>
+              <div className='col s10 m8 l6'>
+                <select id='policy_id' value={policy} onChange={this.handlePolicyChange}>
+                  <option value={0} disabled={true}>
+                    Select a Policy
+                  </option>
+                  {policies.map((p) => (
+                    <option value={p.name} key={p.name}>
+                      {p.full_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {/** Policy parameter section */}
+            {policyParamsSection}
+          </div>
+
+          {/** Core parameters */}
+          <div className='section'>
+            <h2 className='form-heading'>Core Microtask Parameters</h2>
             <ParameterSection
-              params={params}
+              params={coreScenarioParameters}
               data={this.state.params}
               onChange={this.handleParamInputChange}
               onBooleanChange={this.handleParamBooleanChange}
+              onStringListChange={this.handleParamListChange}
             />
+            <div className='row'>
+              <ColTextInput
+                id='assignment_batch_size'
+                label={`Assignment Batch Size`}
+                width='s10 m8 l5'
+                value={task.assignment_batch_size?.toString() ?? ''}
+                onChange={this.handleInputChange}
+                required={true}
+              />
+            </div>
           </div>
+
+          {/** Task parameter */}
+          {params.length > 0 ? (
+            <div className='section'>
+              <h2 className='form-heading'>Task Specific Parameters</h2>
+              <ParameterSection
+                params={params}
+                data={this.state.params}
+                onChange={this.handleParamInputChange}
+                onBooleanChange={this.handleParamBooleanChange}
+                onStringListChange={this.handleParamListChange}
+              />
+            </div>
+          ) : null}
 
           {/** Assignment parameters */}
           {[assignment_granularity, group_assignment_order, microtask_assignment_order].includes('EITHER') ? (
             <div className='section'>
-              <h5 className='red-text'>Assignment Parameters</h5>
+              <h2 className='form-heading'>Assignment Parameters</h2>
               {assignment_granularity === 'EITHER' ? (
                 <div className='row'>
-                  <div className='col s4'>
+                  <div className='col s12 m9 l7'>
                     <select
                       id='assignment_granularity'
                       value={task.assignment_granularity}
@@ -299,7 +466,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
               ) : null}
               {group_assignment_order === 'EITHER' && assignment_granularity !== 'MICROTASK' ? (
                 <div className='row'>
-                  <div className='col s4'>
+                  <div className='col s12 m9 l7'>
                     <select
                       id='group_assignment_order'
                       value={task.group_assignment_order}
@@ -317,7 +484,7 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
               ) : null}
               {microtask_assignment_order === 'EITHER' ? (
                 <div className='row'>
-                  <div className='col s4'>
+                  <div className='col s12 m9 l7'>
                     <select
                       id='microtask_assignment_order'
                       value={task.microtask_assignment_order}
@@ -340,22 +507,43 @@ class CreateTask extends React.Component<CreateTaskProps, CreateTaskState> {
           {this.props.request.status === 'IN_FLIGHT' ? (
             <ProgressBar />
           ) : (
-            <SubmitOrCancel submitString='Submit Task' cancelAction='link' cancelLink='/task' />
+            <div className='row'>
+              <div className='input-field'>
+                <button className='btn waves-effect waves-light' id='submit-task-btn'>
+                  Submit Task
+                </button>
+                <Link to='/task'>
+                  <button className='btn cancel-btn'>Cancel</button>
+                </Link>
+              </div>
+            </div>
           )}
         </div>
       );
     }
 
     return (
-      <div className='white z-depth-1 lpad20'>
+      <div className='white lpad20 main'>
         {createErrorElement}
+
+        {/** Breadcrumbs for navigation shown only if person is work provider */}
+        {auth.cwp !== null && auth.cwp.role === 'WORK_PROVIDER' ? (
+          <nav id='breadcrumbs-nav'>
+            <div className='nav-wrapper' id='nav-wrapper'>
+              <div className='col s12'>
+                <Link to='/task' className='breadcrumb'>
+                  Tasks
+                </Link>
+                <p className='breadcrumb'>{task_id_props ? 'Edit Task' : 'Create Task'}</p>
+              </div>
+            </div>
+          </nav>
+        ) : null}
+
         <form onSubmit={this.handleSubmit}>
           <div className='section'>
-            <h5 className='red-text'>Scenario and Language Information</h5>
-            <div className='row'>
-              <div className='col s4'>{scenarioDropDown}</div>
-              <div className='col s4 offset-s1'>{languageDropDown}</div>
-            </div>
+            <h1 className='page-title'>{task_id_props ? 'Edit Task' : 'Create Task'}</h1>
+            <div className='row'>{scenarioCards}</div>
           </div>
           {taskForm}
         </form>

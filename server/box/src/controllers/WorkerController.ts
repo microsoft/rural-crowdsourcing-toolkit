@@ -70,6 +70,7 @@ export const update: KaryaMiddleware = async (ctx) => {
 
   // Get updates from the request body
   const updates: Worker = ctx.request.body;
+  updates.profile_updated_at = new Date().toISOString();
 
   if (action == 'register') {
     const { year_of_birth, gender } = updates;
@@ -80,13 +81,8 @@ export const update: KaryaMiddleware = async (ctx) => {
   }
 
   // TODO: check if only the updatable properties are updated
-  try {
-    const updatedRecord = await BasicModel.updateSingle('worker', { id: ctx.state.entity.id }, updates);
-    HttpResponse.OK(ctx, updatedRecord);
-  } catch (e) {
-    // TODO: Convert this to internal server user
-    HttpResponse.BadRequest(ctx, 'Something went wrong');
-  }
+  const updatedRecord = await BasicModel.updateSingle('worker', { id: ctx.state.entity.id }, updates);
+  HttpResponse.OK(ctx, updatedRecord);
 };
 
 /**
@@ -94,18 +90,21 @@ export const update: KaryaMiddleware = async (ctx) => {
  */
 export const registerWorker: KaryaMiddleware = async (ctx) => {
   // extract relevant fields from worker.
-  try {
-    const record = await BasicModel.updateSingle(
-      'worker',
-      { id: ctx.state.entity.id },
-      { reg_mechanism: 'phone-otp', registered_at: new Date().toISOString() }
-    );
-    const id_token = ctx.state.entity.id_token;
-    ctx.state.entity = { ...record, id_token };
-  } catch (e) {
-    // TODO: convert this to internal server error
-    HttpResponse.BadRequest(ctx, 'Unknown error occured');
-    return;
-  }
+  const now = new Date().toISOString();
+  const record = await BasicModel.updateSingle(
+    'worker',
+    { id: ctx.state.entity.id },
+    { reg_mechanism: 'phone-otp', registered_at: now, profile_updated_at: now }
+  );
+  const id_token = ctx.state.entity.id_token;
+  ctx.state.entity = { ...record, id_token };
+
   HttpResponse.OK(ctx, ctx.state.entity);
+};
+
+/**
+ * Send the generated token as HTTP response
+ */
+export const sendGeneratedIdToken: KaryaMiddleware = async (ctx) => {
+  HttpResponse.OK(ctx, { id_token: ctx.state.entity.id_token });
 };

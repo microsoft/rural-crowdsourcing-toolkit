@@ -20,11 +20,12 @@ import { BackendRequestInitAction } from '../../store/apis/APIs';
 import { ErrorMessage, ProgressBar } from '../templates/Status';
 
 /** Types needed */
-import { AuthHeader } from '../../db/Auth.extra';
+import { AuthHeader } from './Auth.extra';
 
 /** Google login element */
 import GoogleLogin from 'react-google-login';
-import config from '../../config/Index';
+
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 /** Define Router match params props */
 /** Define own props */
@@ -107,7 +108,7 @@ class SignIn extends React.Component<SignInProps> {
                 <span className='card-title'>Sign In with Microsoft/Google</span>
                 <div className='section'>
                   <GoogleLogin
-                    clientId={config.googleOAuthClientID}
+                    clientId={googleClientId}
                     buttonText='Sign in with Google'
                     onSuccess={this.onGoogleLoginSuccess}
                     onFailure={this.onGoogleLoginFailure}

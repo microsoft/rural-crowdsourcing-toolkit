@@ -5,8 +5,7 @@
 
 body {
   margin: 0;
-  background: #ccc;
-  font-family: 'Segoe UI', 'Open Sans', sans-serif;
+  background: #f0f4f7;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -15,19 +14,9 @@ body {
 @media only screen and (min-width: 992px) {
   div#main-container {
     position: relative;
-    left: 150px;
   }
 }
 
 div#main-container {
   margin-top: 20px;
-}
-
-div#logo {
-  height: 64px;
-  line-height: 64px;
-  padding-left: 20px;
-  font-family: 'Abel';
-  font-size: 20pt;
-  font-weight: bold;
 }

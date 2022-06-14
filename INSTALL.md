@@ -1,7 +1,7 @@
 # Platform Installation Instructions
 
 In this document, we will describe a basic setup and installation of the
-platform. You can setup and try out the platform on a single machine and a
+platform. You can setup and try out the platform using a single machine and a
 smartphone.
 
 ## Prerequisites
@@ -19,42 +19,78 @@ backend server.
 4. **Google OpenID Client ID** - This is needed for authenticating work
    providers and admins with the server.
 5. **OTP Provider** - If you need to send OTP for authentication. The codebase
-   currently used 2factor.in APIs.
+   currently uses 2factor.in APIs.
+6. **Keycloak** - Karya uses Keycloak for role management at server side. You can download it from [here](https://www.keycloak.org/downloads) (Download the distribution provided by WildFly).
+
+## Common Server Setup
+
+---
+
+We have converted the codebase into a monorepo to enable effective sharing of
+modules between different server components. We currently use `lerna` to manage
+dependencies and compilation.
+
+### 1. Install `lerna` and other necessary packages.
+
+`# > npm install`
+
+### 2. Setup all the modules and their dependencies.
+
+`# > npx lerna bootstrap`
+
+This step must be run whenever there is an update to any of the package.json
+files.
+
+### 3. Compile the server modules
+
+`# > npx lerna run compile`
+
+You can also use the following command to clean build.
+
+`# > npx lerna run build`
+
+## Keycloak setup
+
+### 1. Start the Keycloak server
+
+After downloading and unpacking the ZIP | tar.gz from the keycloack official website (link mentioned in Prerequisites), run standalone.sh inside the bin folder under the root Keycloak folder. Make sure you have JAVA installed.
+
+`# keycloak-16.1.0> bin/standalone.sh`
+
+### 2. Creating the admin account
+
+1. Before you can use Keycloak, you need to create an admin account which you use to log in to the Keycloak admin console.
+
+2. Open http://localhost:8080/auth in your web browser. The welcome page opens, confirming that the server is running.
+3. Enter a username and password to create an initial admin user.
+
+### 3. Update `.env` file in backend
+
+Paste the username and password in KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD in .env file for the backend server. (More on how to setup `.env` file in following section)
 
 ## Server Backend
 
 ---
 
-### 1. Install the necessary npm packages.
+### 1. Setup the config
 
-`# backend> npm install`
+Create a postgres database for the backend server. Copy the `.sample.env` file
+in the backend folder to `.env`. Fill out all the fields in the `.env` file.
 
-### 2. Setup the config file
-
-Create a database for the backend server. Update the config file
-`config/Local.ts` with the database, blobstore, and google client ID
-information. You can update the other config parameters as well. Ensure that
-`config/Index.ts` points to the right config. You can create your own additional
-config files.
-
-### 3. Compile the package
-
-`# backend> npx tsc`
-
-### 4. Reset the database
+### 2. Reset the database
 
 `# backend> node dist/scripts/ResetDB.js`
 
-This command resets the database, initializes some tables with sample values,
-and also bootstraps authentication. Any one who wants to sign up on the platform
-(admin / work provider) needs an access code. This script sets up a admin record
-and spits out the access code for the admin to sign up.
+This command resets the database and bootstraps authentication. Any one who
+wants to sign up on the platform (admin / work provider) needs an access code.
+This script sets up a admin record and spits out the access code for the admin
+to sign up.
 
-### 5. Start the redis-server
+### 3. Start the redis-server
 
-`# > redis-server`
+`# > sudo service redis-server start`
 
-### 6. Start the server
+### 4. Start the server
 
 `# backend> node dist/Server.js`
 
@@ -62,39 +98,26 @@ and spits out the access code for the admin to sign up.
 
 ---
 
-### 1. Install the necessary npm packages.
+### 1. Setup the config file
 
-`# frontend> npm install`
+Copy the `.sample.env` file to `.env` and fill out the fields.
 
-### 2. Setup the config file
-
-Set up the config file to match the server parameters (port, oauth client ID.)
-
-### 3. Run the frontend server
+### 2. Run the frontend server
 
 `# frontend> npm start`
 
-### 4. Sign up admin user
+### 3. Sign up admin user
 
 Open the frontend server URL on a browser. Sign up using the admin access code
 that you received from the backend `ResetDB.js` script.
 
-### 5. Setup English language support
-
-Go to the "Language Support" tag, and add support for English by uploading the
-`backend/scripts/English-string-resources.json` file. Update language support
-status for English by clicking on the button.
-
-You can add new languages and also add support for new languages through this
-interface.
-
-### 6. Generate access codes for work provider (optional)
+### 4. Generate access codes for work provider (optional)
 
 Click on the "Work Providers" tab and generate an access code for a work
 provider. This step is optional for the test setup as you can do all activities
 as an admin.
 
-### 7. Create a new box
+### 5. Create a new box
 
 Click on the "Box" tab and generate an access code for a new box.
 
@@ -102,52 +125,42 @@ Click on the "Box" tab and generate an access code for a new box.
 
 ---
 
-### 1. Install the necessary npm packages.
+### 1. Setup the config file
 
-`# box> npm install`
+Copy the `.sample.env` file to `.env` and fill out the fields. If for the test
+setup the box and the server are running on the same machine, then the box
+database name should be different from the server database name.
 
-### 2. Setup the config file
+### 2. Setup box-specific config
 
-Setup the config file `config/Local.ts`. If for the test setup the box and the server are running
-on the same machine, then the box database name should be different from the
-server database name.
+Copy the `.sample.box` file to another file (say `.box`) and fill out the
+details of the box.
 
-### 3. Update the box details
-
-Open `config/BoxInfo.ts` and update the details of the box. For creation_code,
-use the access code generated in Step 6 of the frontend setup.
-
-### 4. Compile the package
-
-`# box> npx tsc`
-
-### 5. Reset the database
+### 3. Reset the database
 
 `# box> node dist/scripts/ResetDB.js`
 
-### 6. Register the box
+### 4. Register the box
 
-`# box> node dist/scripts/RegisterBox.js`
+`# box> node dist/scripts/RegisterBox.js .box`
 
-This step will also update the box_id.ts with the ID of the box obtained from
-the server. Therefore, you need to recompile the package once.
+The argument to this script should be the filepath to the box-specific config
+file.
 
-`# box> npx tsc`
-
-### 7. Start the box server
+### 5. Start the box server
 
 `# box> node dist/Server.js`
 
-### 8. Start the cron job for periodic interaction with the main server
+### 6. Start the cron job for periodic interaction with the main server
 
 `# box> node dist/cron/Cron.js`
 
 ### 9. Generate access codes for workers
 
-`# box> node dist/scripts/GenerateCCs.js <n>`
+`# box> node dist/scripts/GenerateWorkerCodes.js -h`
 
-The above script will generate `n` access codes to be used by workers when they
-register on the platform.
+This script will generate access codes for workers. The above command will list
+the command line argument to the script.
 
 ## Create Your First Task
 
@@ -163,25 +176,13 @@ On the "Tasks" tab, click "Create Task". Choose the "Speech Data Collection"
 scenario. Choose "English" language. Fill out some test details for the name and
 description. Use the following information for the remaining fields and Submit Task.
 
-Instruction: "Please record yourself speaking out this sentence"
+### 3. Add input files
 
-Sentence File: Upload the file `backend/sample/speech-data-sample-english.json`.
+Go to the task detail page of the newly created task. Under input files, you can
+add a new input file for this task. You can use the sample task json file in the
+`samples` folder.
 
-Number of Recordings: 10
-
-Credits per Recording: 1
-
-Include Verification: False
-
-### 3. Validate the task
-
-Go to task details from the "Tasks" tab and validate the newly submitted task.
-
-### 4. Approve the task (must be done as admin)
-
-Go to task details from the "Tasks" tab and approve the validated task.
-
-### 5. Assign task to box (must be done as admin)
+### 4. Assign task to box (must be done as admin)
 
 Go to "Task Assignment" and assign the newly created task to the box.
 
@@ -201,5 +202,3 @@ address of your box. For local testing, it should just be the IP address (with
 port number) of the your box.
 
 ### 2. Build and install the apk on your phone/emulator
-
-### 3. Register with the app choosing English as the language

@@ -10,9 +10,16 @@ import {
   WorkerRecord,
   PolicyName,
   TaskRecord,
+  TaskRecordType,
 } from '@karya/core';
-import { BasicModel, MicrotaskModel, MicrotaskGroupModel } from '@karya/common';
+import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
+
+// Create an assignment logger
+const assignmentLogger = karyaLogger({ name: 'assignments' });
+
+// Current assignment map for workers
+const assigning: { [id: string]: boolean } = {};
 
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments
@@ -20,9 +27,17 @@ import { localPolicyMap } from './policies/Index';
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
 export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
+  // Check if we are currently assigning anything to these workers
+  if (assigning[worker.id]) return;
+  assigning[worker.id] = true;
+
+  // If worker is disabled, return
+  if (WorkerModel.isDisabled(worker)) return;
+
   // Check if the worker has incomplete assignments. If so, return
   const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
   if (hasCurrentAssignments) {
+    assigning[worker.id] = false;
     return;
   }
 
@@ -30,17 +45,24 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
   let tasksAssigned = false;
 
   // get all available tasks i.e. all of which are in assigned state
-  const taskAssignments = await BasicModel.getRecords('task_assignment', {
-    box_id: worker.box_id,
-    status: 'ASSIGNED',
-  });
+  const taskAssignments = await BasicModel.getRecords(
+    'task_assignment',
+    {
+      box_id: worker.box_id,
+      status: 'ASSIGNED',
+    },
+    [],
+    [],
+    'task_id'
+  );
 
   // iterate over all tasks to see which all can user perform
   await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
     if (tasksAssigned) return;
 
     // Get task for the assignment
-    const task = await BasicModel.getSingle('task', { id: taskAssignment.task_id });
+    const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
+    if (task.status == 'COMPLETED') return;
 
     // check if the task is assignable to the worker
     if (!assignable(task, worker)) return;
@@ -51,12 +73,17 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const chosenMicrotaskGroups: MicrotaskGroupRecord[] = [];
     let chosenMicrotasks: MicrotaskRecord[] = [];
 
+    // TODO: Hack
+    const batchSize = task.assignment_batch_size ?? 1000;
+
     if (task.assignment_granularity === 'GROUP') {
       // Get all assignable microtask groups
-      const assignableGroups = await policy.assignableMicrotaskGroups(worker, task, taskAssignment.params);
+      let assignableGroups = await policy.assignableMicrotaskGroups(worker, task, taskAssignment.params);
 
       // Reorder the groups based on assignment order
       reorder(assignableGroups, task.group_assignment_order);
+
+      assignableGroups = assignableGroups.slice(0, batchSize);
 
       // Identify the prefix that fits within max credits
       for (const group of assignableGroups) {
@@ -82,11 +109,34 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         chosenMicrotasks = chosenMicrotasks.concat(microtasks);
       });
     } else if (task.assignment_granularity === 'MICROTASK') {
+      // check if there is a max limit on microtasks
+      const microtaskLimit = task.params.maxMicrotasksPerUser;
+      let assignLimit = 1000;
+      let assignedCount = -1;
+      if (microtaskLimit > 0) {
+        assignedCount = await MicrotaskModel.getAssignedCount(worker.id, task.id);
+        assignLimit = microtaskLimit - assignedCount;
+        if (assignLimit < 0) assignLimit = 0;
+      }
+
       // get all assignable microtasks
-      const assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
+      let assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
 
       // reorder according to task spec
       reorder(assignableMicrotasks, task.microtask_assignment_order);
+
+      assignLimit = assignLimit < batchSize ? assignLimit : batchSize;
+      assignableMicrotasks = assignableMicrotasks.slice(0, assignLimit);
+
+      assignmentLogger.info({
+        worker_id: worker.id,
+        task_id: task.id,
+        batch_size: batchSize,
+        limit: microtaskLimit,
+        previous: assignedCount,
+        current: assignLimit,
+        actual: assignableMicrotasks.length,
+      });
 
       // Identify prefix that fits within max credits
       for (const microtask of assignableMicrotasks) {
@@ -121,11 +171,14 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         task_id: task.id,
         microtask_id: microtask.id,
         worker_id: worker.id,
+        wgroup: worker.wgroup,
         max_credits: microtask.credits,
         status: 'ASSIGNED',
       });
     });
   });
+
+  assigning[worker.id] = false;
 }
 
 /**
@@ -180,7 +233,11 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
  * @param worker Worker record
  */
 function assignable(task: TaskRecord, worker: WorkerRecord): boolean {
-  const workerTags = worker.tags.tags;
-  const taskTags = task.itags.itags;
+  let workerTags = worker.tags.tags;
+  if (worker.wgroup) workerTags.push(worker.wgroup);
+
+  let taskTags = task.itags.itags;
+  if (task.wgroup) taskTags.push(task.wgroup);
+
   return taskTags.every((tag) => workerTags.includes(tag));
 }

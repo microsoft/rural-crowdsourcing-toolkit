@@ -106,7 +106,9 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['year_of_birth', ['string', 4], 'not unique', 'nullable', 'mutable'],
         ['gender', ['string', 16, 'Gender'], 'not unique', 'nullable', 'mutable'],
         ['language', ['string', 8, 'LanguageCode'], 'not unique', 'nullable', 'mutable'],
+        ['profile', ['object'], 'not unique', 'nullable', 'mutable'],
         ['profile_updated_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'mutable'],
+        ['wgroup', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['tags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['tags_updated_at', ['timestamp', 'now'], 'not unique', 'not nullable', 'mutable'],
         ['sent_to_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
@@ -139,6 +141,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['params', ['template', 'ParamsType'], 'not unique', 'not nullable', 'mutable'],
         ['itags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
         ['otags', ['stringarray'], 'not unique', 'not nullable', 'mutable'],
+        ['wgroup', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         [
           'assignment_granularity',
@@ -206,6 +209,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['from_task', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
         ['to_task', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
         ['blocking', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
+        ['force_wgroup', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
         ['delay', ['boolean', false], 'not unique', 'not nullable', 'mutable'],
         ['grouping', ['string', 16, 'ChainGroupingType'], 'not unique', 'not nullable', 'mutable'],
         ['params', ['kv'], 'not unique', 'nullable', 'mutable'],
@@ -238,6 +242,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['microtask_id', ['>', 'microtask'], 'not unique', 'not nullable', 'not mutable'],
         ['task_id', ['>', 'task'], 'not unique', 'not nullable', 'not mutable'],
         ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
+        ['wgroup', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['sent_to_server_at', ['timestamp', 'eon'], 'not unique', 'not nullable', 'mutable'],
         ['deadline', ['timestamp'], 'not unique', 'nullable', 'mutable'],
         ['status', ['string', 16, 'MicrotaskAssignmentStatus'], 'not unique', 'not nullable', 'mutable'],
@@ -264,6 +269,9 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
 const computeIdFunction = `CREATE OR REPLACE FUNCTION compute_id()
   RETURNS TRIGGER AS $$
   BEGIN
+  IF NEW.id IS NOT NULL THEN
+  RETURN NEW;
+  END IF;
   IF NEW.box_id IS NULL THEN
   NEW.id = 0;
   ELSE
