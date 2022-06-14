@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.scenarios.signVideo
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +25,21 @@ import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
 import kotlinx.android.synthetic.main.microtask_sign_video_data.*
 
+private const val testVideo: String ="""<iframe
+width="100%"
+height="100%"
+src="https://www.youtube.com/embed/1QQrcTik1qo"
+title="YouTube video player"
+frameborder="0"
+allowfullscreen
+></iframe>"""
+
 @AndroidEntryPoint
 class SignVideoMainFragment : BaseMTRendererFragment(R.layout.microtask_sign_video_data) {
   override val viewModel: SignVideoMainViewModel by viewModels()
   val args: SignVideoMainFragmentArgs by navArgs()
+
+  private var displayPlaceHolder: Boolean = true
 
   private val recordVideoLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -110,9 +122,11 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.microtask_sign_vid
       viewLifecycleScope
     ) { visible ->
       if (visible) {
+        displayPlaceHolder = false
         showVideoPlayer()
       } else {
-        hideVideoPlayer()
+        displayPlaceHolder = true
+        showTextPlaceHolder()
       }
     }
 
@@ -128,12 +142,26 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.microtask_sign_vid
 
   private fun showVideoPlayer() {
     videoPlayer.visible()
+    hintVideoPlayer.invisible()
     videoPlayerPlaceHolder.invisible()
+    closeHintVideoBtn.invisible()
+    showHintVideoBtn.visible()
   }
 
-  private fun hideVideoPlayer() {
+  private fun showTextPlaceHolder() {
     videoPlayer.invisible()
+    hintVideoPlayer.invisible()
     videoPlayerPlaceHolder.visible()
+    closeHintVideoBtn.invisible()
+    showHintVideoBtn.visible()
+  }
+
+  private fun showHintVideoPlayer() {
+    videoPlayer.invisible()
+    hintVideoPlayer.visible()
+    videoPlayerPlaceHolder.invisible()
+    closeHintVideoBtn.visible()
+    showHintVideoBtn.invisible()
   }
 
   override fun onCreateView(
@@ -165,6 +193,27 @@ class SignVideoMainFragment : BaseMTRendererFragment(R.layout.microtask_sign_vid
     }
     nextBtnCv.setOnClickListener { viewModel.handleNextClick() }
     backBtnCv.setOnClickListener { viewModel.handleBackClick() }
+
+    showHintVideoBtn.setOnClickListener {
+      showHintVideoBtn.invisible()
+      closeHintVideoBtn.visible()
+      showHintVideoPlayer()
+    }
+
+    closeHintVideoBtn.setOnClickListener {
+      closeHintVideoBtn.invisible()
+      showHintVideoBtn.visible()
+      if (displayPlaceHolder) showTextPlaceHolder() else showVideoPlayer()
+    }
+
+    val displayMetrics = DisplayMetrics()
+    requireActivity().windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+    val width = displayMetrics.widthPixels
+
+    hintVideoPlayer.settings.javaScriptEnabled = true
+    hintVideoPlayer.settings.loadWithOverviewMode = true
+    hintVideoPlayer.settings.useWideViewPort = true
+    hintVideoPlayer.loadData(testVideo, "text/html", null)
   }
 }
 

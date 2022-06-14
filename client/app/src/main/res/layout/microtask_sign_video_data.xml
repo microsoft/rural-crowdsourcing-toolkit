@@ -19,9 +19,9 @@
     <FrameLayout
         android:id="@+id/inputFrame"
         style="@style/MicrotaskInputFrame"
-        android:layout_height="0dp"
         android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/videoPlayer"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/showHintVideoBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv">
 
@@ -34,8 +34,36 @@
 
     </FrameLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/showHintVideoBtn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/_5sdp"
+        android:text="Show Hint Video"
+        app:layout_constraintBottom_toTopOf="@id/videoPlayerPlaceHolder" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/closeHintVideoBtn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/_5sdp"
+        android:text="Close Hint Video"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/videoPlayerPlaceHolder" />
+
     <com.potyvideo.library.AndExoPlayerView
         android:id="@+id/videoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_8sdp"
+        app:andexo_show_controller="false"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup"
+        app:layout_constraintHeight_percent="0.4" />
+
+    <WebView
+        android:id="@+id/hintVideoPlayer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/_8sdp"
