@@ -105,10 +105,10 @@ export const submit: KaryaMiddleware = async (ctx) => {
 };
 
 /**
- * Submitted completed or skipped assignments to the server
+ * Submitted skipped and expired assignments to the server
  * @param ctx Karya request context
  */
-export const submitSkipped: KaryaMiddleware = async (ctx) => {
+export const submitSkippedExpired: KaryaMiddleware = async (ctx) => {
   const worker = ctx.state.entity;
   const assignments: MicrotaskAssignmentRecord[] = ctx.request.body;
 
@@ -120,8 +120,8 @@ export const submitSkipped: KaryaMiddleware = async (ctx) => {
     await BBPromise.mapSeries(assignments, async (assignment) => {
       if (assignment.worker_id != worker.id) {
         // TODO: Internally log this error. User does not have access to assignment
-      } else if (assignment.status != 'SKIPPED') {
-        // TODO: Internally log this error. Can only submit completed
+      } else if (assignment.status != 'SKIPPED' && assignment.status != 'EXPIRED') {
+        // TODO: Internally log this error. Can only submit skipped or expired
         // assignments through this route
       } else {
         const { id, ...updates } = assignment;
