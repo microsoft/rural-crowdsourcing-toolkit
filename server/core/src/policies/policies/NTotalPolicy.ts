@@ -9,6 +9,7 @@ import { BasePolicyInterface } from '../PolicyInterface';
 
 export type NTotalPolicyParams = {
   n: number;
+  maxMicrotasksPerUser: number;
 };
 
 export const nTotalBasePolicy: BasePolicyInterface<'N_TOTAL', NTotalPolicyParams> = {
@@ -22,6 +23,14 @@ export const nTotalBasePolicy: BasePolicyInterface<'N_TOTAL', NTotalPolicyParams
       type: 'int',
       label: 'Total number of responses',
       description: 'Number of completed responses before which a microtask is deemed complete',
+      required: true,
+    },
+
+    {
+      id: 'maxMicrotasksPerUser',
+      type: 'int',
+      label: 'Max Microtasks per User (0 for no limit)',
+      description: 'Maximum number of microtasks per user',
       required: true,
     },
   ],
