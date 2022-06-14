@@ -57,8 +57,8 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
     // check if there is a deadline that is provided
     const taskDeadline = params.deadline;
-    if (taskDeadline && taskDeadline != '') {
-      params.deadline = new Date(taskDeadline).toISOString();
+    if (taskDeadline) {
+      params.deadline = taskDeadline == '' ? null : new Date(taskDeadline).toISOString();
     }
 
     // update params
