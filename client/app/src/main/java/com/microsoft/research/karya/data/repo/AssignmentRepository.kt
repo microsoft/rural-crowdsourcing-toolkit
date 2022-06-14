@@ -212,8 +212,10 @@ constructor(
     return assignmentDao.getNewVerifiedAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }
 
-  suspend fun getTotalCreditsEarned(worker_id: String): Float? {
-    return assignmentDaoExtra.getTotalCreditsEarned(worker_id)
+  suspend fun getTotalCreditsEarned(worker_id: String): Float {
+    val baseCredits = assignmentDaoExtra.getTotalBaseCreditsEarned(worker_id)
+    val bonusCredits = assignmentDaoExtra.getTotalCreditsEarned(worker_id)
+    return (baseCredits ?: 0.0f) + (bonusCredits ?: 0.0f)
   }
 
   suspend fun getIDsForTask(task_id: String, statuses: List<MicrotaskAssignmentStatus>): List<String> {

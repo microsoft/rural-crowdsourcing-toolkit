@@ -163,4 +163,10 @@ interface MicrotaskAssignmentDaoExtra {
     worker_id: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
   ): Float?
+
+  @Query("SELECT SUM(max_base_credits) FROM microtask_assignment WHERE worker_id=:worker_id AND status IN (:statuses)")
+  suspend fun getTotalBaseCreditsEarned(
+    worker_id: String,
+    statuses: List<MicrotaskAssignmentStatus> = arrayListOf(MicrotaskAssignmentStatus.SUBMITTED, MicrotaskAssignmentStatus.VERIFIED)
+  ): Float?
 }

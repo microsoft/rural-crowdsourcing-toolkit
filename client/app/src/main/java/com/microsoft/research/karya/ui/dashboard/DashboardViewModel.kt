@@ -126,7 +126,7 @@ constructor(
         }
 
       taskInfoList = updatedList
-      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
+      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id)
       _dashboardUiState.value =
         DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
     }
