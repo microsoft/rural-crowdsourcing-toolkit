@@ -127,6 +127,7 @@ export const scenarioMap: {
 // Core scenario parameters
 type CoreScenarioParamsType = {
   instruction: string;
+  baseCreditsPerMicrotask: number;
   creditsPerMicrotask: number;
   startTime?: string;
   endTime?: string;
@@ -144,10 +145,18 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
   },
 
   {
+    id: 'baseCreditsPerMicrotask',
+    type: 'float',
+    label: 'Base Credits per Microtask',
+    description: 'Number of credits given to a user upon successfully submitting a microtask',
+    required: true,
+  },
+
+  {
     id: 'creditsPerMicrotask',
     type: 'float',
-    label: 'Credits per Microtask',
-    description: 'Number of credits to be given to a user for successfully completing each microtask of this task',
+    label: 'Additional Credits per Microtask',
+    description: 'Number of additional credits to be given to a user upon successful validation of a microtask',
     required: true,
   },
 

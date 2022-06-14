@@ -175,6 +175,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         worker_id: worker.id,
         deadline: microtask.deadline,
         wgroup: worker.wgroup,
+        max_base_credits: microtask.base_credits,
         max_credits: microtask.credits,
         status: 'ASSIGNED',
       });

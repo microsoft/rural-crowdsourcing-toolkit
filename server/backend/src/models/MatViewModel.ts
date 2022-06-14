@@ -52,7 +52,7 @@ export async function createWorkerSummaryMV() {
         COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
         COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
         COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
-        COALESCE(SUM(credits), 0) as earned,
+        COALESCE(SUM(base_credits + credits), 0) as earned,
         MIN(created_at) as earliest,
         MAX(completed_at) as latest
       FROM
