@@ -158,6 +158,9 @@ constructor(
   /** Recording config and state */
   private val maxPreRecordBytes = timeToSamples(prerecordingTime) * 2
 
+  /** Microtask config */
+  private var skippingAllowed: Boolean = false
+
   private var preRecordBuffer: Array<ByteArray>
   var preRecordBufferConsumed: Array<Int> = Array(2) { 0 }
   private var currentPreRecordBufferIndex = 0
@@ -267,7 +270,10 @@ constructor(
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
     totalRecordedBytes = 0
 
-    if (firstTimeActivityVisit) {
+    /** Get microtask config */
+    skippingAllowed = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("skippingAllowed").asBoolean
+
+      if (firstTimeActivityVisit) {
       firstTimeActivityVisit = false
       onAssistantClick()
     } else {
@@ -437,8 +443,14 @@ constructor(
         setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
         setActivityState(ActivityState.ENCODING_NEXT)
       }
+      ActivityState.PRERECORDING -> {
+        // User wants to skip the microtask
+        runBlocking {
+          skipAndSaveCurrentMicrotask()
+          setActivityState(ActivityState.SIMPLE_NEXT)
+        }
+      }
       ActivityState.INIT,
-      ActivityState.PRERECORDING,
       ActivityState.RECORDING,
       ActivityState.RECORDED,
       ActivityState.FIRST_PLAYBACK,
@@ -585,6 +597,10 @@ constructor(
 
     if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
+      // Enable next button if skipping allowed
+      if (skippingAllowed) {
+        setButtonStates(ENABLED, ENABLED, DISABLED, ENABLED)
+      }
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()
     } else {
