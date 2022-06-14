@@ -137,6 +137,9 @@ constructor(
   private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
 
+  private val _microTaskInstruction: MutableStateFlow<String> = MutableStateFlow("")
+  val microTaskInstruction = _microTaskInstruction.asStateFlow()
+
   private val _sentenceTvText: MutableStateFlow<String> = MutableStateFlow("")
   val sentenceTvText = _sentenceTvText.asStateFlow()
 
@@ -254,6 +257,11 @@ constructor(
 
     // Reset progress bar
     _playbackProgressPbProgress.value = 0
+
+    // Set microtask instruction
+    _microTaskInstruction.value =
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction").toString()
+    totalRecordedBytes = 0
 
     _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()

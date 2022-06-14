@@ -113,6 +113,13 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
       )
     }
 
+    // Set microtask instruction if available
+    viewModel.microTaskInstruction.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
+      if (!text.isNullOrEmpty()) {
+        instructionTv.text = text
+      }
+    }
+
     viewModel.sentenceTvText.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { text ->
       sentenceTv.text = text
     }
