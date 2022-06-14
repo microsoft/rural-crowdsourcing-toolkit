@@ -127,8 +127,8 @@ export const scenarioMap: {
 // Core scenario parameters
 type CoreScenarioParamsType = {
   instruction: string;
+  baseCreditsPerMicrotask: number;
   creditsPerMicrotask: number;
-  maxMicrotasksPerUser: number;
   startTime?: string;
   endTime?: string;
   deadline?: string;
@@ -145,18 +145,18 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
   },
 
   {
-    id: 'creditsPerMicrotask',
+    id: 'baseCreditsPerMicrotask',
     type: 'float',
-    label: 'Credits per Microtask',
-    description: 'Number of credits to be given to a user for successfully completing each microtask of this task',
+    label: 'Base Credits per Microtask',
+    description: 'Number of credits given to a user upon successfully submitting a microtask',
     required: true,
   },
 
   {
-    id: 'maxMicrotasksPerUser',
-    type: 'int',
-    label: 'Max Microtasks per User (0 for no limit)',
-    description: 'Maximum number of microtasks per user',
+    id: 'creditsPerMicrotask',
+    type: 'float',
+    label: 'Additional Credits per Microtask',
+    description: 'Number of additional credits to be given to a user upon successful validation of a microtask',
     required: true,
   },
 

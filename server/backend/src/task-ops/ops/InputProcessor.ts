@@ -83,6 +83,7 @@ export async function processInputFile(
     await BBPromise.mapSeries(microtasks, async (microtask) => {
       const mtRecord = await BasicModel.insertRecord('microtask', {
         ...microtask,
+        base_credits: task.params.baseCreditsPerMicrotask,
         deadline: task.params.deadline,
         group_id,
       });

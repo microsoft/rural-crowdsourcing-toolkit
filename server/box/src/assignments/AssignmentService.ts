@@ -110,7 +110,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       });
     } else if (task.assignment_granularity === 'MICROTASK') {
       // check if there is a max limit on microtasks
-      const microtaskLimit = task.params.maxMicrotasksPerUser;
+      // TODO: below line is a hack. Will likely get fixed when we move to more
+      // consistent policyhandling
+      const microtaskLimit = (taskAssignment.params.maxMicrotasksPerUser as number) || 0;
       let assignLimit = 1000;
       let assignedCount = -1;
       if (microtaskLimit > 0) {
@@ -173,6 +175,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         worker_id: worker.id,
         deadline: microtask.deadline,
         wgroup: worker.wgroup,
+        max_base_credits: microtask.base_credits,
         max_credits: microtask.credits,
         status: 'ASSIGNED',
       });
