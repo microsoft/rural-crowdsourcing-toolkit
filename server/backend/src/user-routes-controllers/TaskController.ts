@@ -13,7 +13,6 @@ import {
   TaskRecordType,
   policyMap,
   coreScenarioParameters,
-  ScenarioName,
 } from '@karya/core';
 import { joiSchema } from '@karya/parameter-specs';
 import { BasicModel, MicrotaskModel, TaskModel, TaskOpModel, WorkerModel, getBlobSASURL } from '@karya/common';
@@ -25,7 +24,6 @@ import { inputProcessorQ, outputGeneratorQ } from '../task-ops/Index';
 import { csvToJson } from '../scenarios/Common';
 import { Promise as BBPromise } from 'bluebird';
 import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
-import { backendScenarioMap } from '../scenarios/Index';
 
 // Task route state for routes dealing with a specific task
 type TaskState = { task: TaskRecordType };
@@ -55,6 +53,12 @@ export const create: UserRouteMiddleware = async (ctx) => {
     if (paramsError) {
       HttpResponse.BadRequest(ctx, 'Invalid task parameters');
       return;
+    }
+
+    // check if there is a deadline that is provided
+    const taskDeadline = params.deadline;
+    if (taskDeadline && taskDeadline != '') {
+      params.deadline = new Date(taskDeadline).toISOString();
     }
 
     // update params

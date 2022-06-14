@@ -81,7 +81,11 @@ export async function processInputFile(
 
     // extract microtasks and create them
     await BBPromise.mapSeries(microtasks, async (microtask) => {
-      const mtRecord = await BasicModel.insertRecord('microtask', { ...microtask, group_id });
+      const mtRecord = await BasicModel.insertRecord('microtask', {
+        ...microtask,
+        deadline: task.params.deadline,
+        group_id,
+      });
 
       // create and upload microtask input files if necessary
       if (mtRecord.input.files) {

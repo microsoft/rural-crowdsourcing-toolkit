@@ -131,6 +131,7 @@ type CoreScenarioParamsType = {
   maxMicrotasksPerUser: number;
   startTime?: string;
   endTime?: string;
+  deadline?: string;
 };
 
 export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
@@ -172,6 +173,14 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
     type: 'time',
     label: 'End Time (24h format. leave empty for none)',
     description: 'Strict end time for tasks on each day',
+    required: false,
+  },
+
+  {
+    id: 'deadline',
+    type: 'date',
+    label: 'Deadline date: YYYY-DD-MM format',
+    description: 'Strict date for completion of tasks',
     required: false,
   },
 ];
