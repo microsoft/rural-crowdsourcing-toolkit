@@ -271,7 +271,11 @@ constructor(
     totalRecordedBytes = 0
 
     /** Get microtask config */
-    skippingAllowed = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("skippingAllowed").asBoolean
+    try{
+      skippingAllowed = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("skippingAllowed").asBoolean
+    } catch (e: Error) {
+      skippingAllowed = false
+    }
 
       if (firstTimeActivityVisit) {
       firstTimeActivityVisit = false
