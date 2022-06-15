@@ -281,8 +281,8 @@ constructor(
       currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
 
       // Check if the current microtask is expired
-      if ((currentMicroTask.deadline).isNullOrEmpty()
-        && (currentMicroTask.deadline)!!.toInt() < (System.currentTimeMillis())/1000) {
+      if (!(currentMicroTask.deadline).isNullOrEmpty()
+        && (currentMicroTask.deadline!!) < DateUtils.getCurrentDate()) {
         // Mark the microtask as expired
         expireAndSaveCurrentMicrotask()
         moveToNextMicrotask()
