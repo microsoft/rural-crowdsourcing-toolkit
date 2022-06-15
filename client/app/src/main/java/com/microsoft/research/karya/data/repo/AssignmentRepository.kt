@@ -10,6 +10,7 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
+import com.microsoft.research.karya.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -234,5 +235,9 @@ constructor(
     return assignmentDaoExtra.getLocalVerifiedAssignments(task_id)
   }
 
+  suspend fun updateExpired(worker_id: String) {
+    val currentTime = DateUtils.getCurrentDate()
+    assignmentDaoExtra.updateExpired(worker_id, currentTime)
+  }
 
 }

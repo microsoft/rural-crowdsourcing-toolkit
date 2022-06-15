@@ -61,6 +61,14 @@ class DashboardSyncWorker(
   }
 
   private suspend fun syncWithServer() {
+    // Update expired assignments before syncing
+    try {
+      val worker = authManager.getLoggedInWorker()
+      assignmentRepository.updateExpired(worker.id)
+    } catch(e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
+    }
+
     // Upload all files
     try {
       uploadOutputFiles()
