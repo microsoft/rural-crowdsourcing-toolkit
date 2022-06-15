@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.speechData
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
@@ -158,6 +160,26 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
     ) { play ->
       if (play) {
         playRecordPrompt()
+      }
+    }
+
+    viewModel.skipTaskAlertTrigger.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { showAlert ->
+      if (showAlert) {
+        val builder = AlertDialog.Builder(requireContext())
+        val message = getString(R.string.skip_task_warning)
+        builder.setMessage(message)
+        builder.setPositiveButton(R.string.yes) { _, _ ->
+          viewModel.skipMicrotask()
+        }
+        builder.setNegativeButton(R.string.no) { _, _ ->
+          viewModel.setSkipTaskAlertTrigger(false)
+          viewModel.moveToPrerecording()
+        }
+        val dialog = builder.create()
+        dialog.show()
       }
     }
   }
