@@ -137,6 +137,9 @@ constructor(
   private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
 
+  private val _skipTaskAlertTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val skipTaskAlertTrigger = _skipTaskAlertTrigger.asStateFlow()
+
   private val _microTaskInstruction: MutableStateFlow<String> = MutableStateFlow("")
   val microTaskInstruction = _microTaskInstruction.asStateFlow()
 
@@ -449,10 +452,7 @@ constructor(
       }
       ActivityState.PRERECORDING -> {
         // User wants to skip the microtask
-        runBlocking {
-          skipAndSaveCurrentMicrotask()
-          setActivityState(ActivityState.SIMPLE_NEXT)
-        }
+        setSkipTaskAlertTrigger(true)
       }
       ActivityState.INIT,
       ActivityState.RECORDING,
@@ -592,6 +592,18 @@ constructor(
 
   private fun playRecordPrompt() {
     _playRecordPromptTrigger.value = true
+  }
+
+  fun setSkipTaskAlertTrigger(value: Boolean) {
+    _skipTaskAlertTrigger.value = value
+  }
+
+  fun skipMicrotask() {
+    runBlocking {
+      skipAndSaveCurrentMicrotask()
+      setActivityState(ActivityState.SIMPLE_NEXT)
+      setSkipTaskAlertTrigger(false)
+    }
   }
 
   /** Move from init to pre-recording */
