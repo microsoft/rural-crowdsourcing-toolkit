@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.dashboard
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.ItemTaskBinding
 import com.microsoft.research.karya.utils.extensions.gone
@@ -72,6 +73,17 @@ class TaskListAdapter(
         // Set views
         completedTasksPb.max = assigned + completed
         completedTasksPb.progress = completed
+
+        // Set speech data report
+        val report = taskInfo.speechDataReport
+        if (taskInfo.scenarioName == ScenarioType.SPEECH_DATA && report != null) {
+          scoreGroup.visible()
+          accuracyScore.rating = report.accuracy
+          volumeScore.rating = report.volume
+          qualityScore.rating = report.quality
+        } else {
+          scoreGroup.gone()
+        }
 
         // Task click listener
         taskLl.setOnClickListener { dashboardItemClick(taskInfo) }

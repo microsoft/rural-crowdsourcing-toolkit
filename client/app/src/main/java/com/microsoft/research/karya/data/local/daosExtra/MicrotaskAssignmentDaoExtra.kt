@@ -185,4 +185,11 @@ interface MicrotaskAssignmentDaoExtra {
     currentTime: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.EXPIRED
   )
+
+  @Query("SELECT report FROM microtask_assignment WHERE worker_id=:worker_id and task_id=:task_id and status=:status")
+  suspend fun getReportsForTask(
+    worker_id: String,
+    task_id: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+  ): List<JsonElement>
 }

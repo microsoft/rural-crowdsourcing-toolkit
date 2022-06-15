@@ -214,6 +214,7 @@
     <string name="volume_okay">Whisper</string>
     <string name="volume_bad">Inaudible</string>
     <string name="recording_quality">Quality</string>
+    <string name="recording_noise">Noise</string>
     <string name="quality_good">Good</string>
     <string name="quality_okay">Noisy</string>
     <string name="quality_bad">Bad</string>

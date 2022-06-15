@@ -12,4 +12,6 @@ data class TaskInfo(
   val scenarioName: ScenarioType,
   val taskStatus: TaskStatus,
   val isGradeCard: Boolean,
+  // Hack
+  val speechDataReport: SpeechDataReport?
 )
