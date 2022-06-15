@@ -253,7 +253,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   }
 
   fun onDashboardItemClick(task: TaskInfo) {
-    if (!task.isGradeCard && task.taskStatus.assignedMicrotasks > 0) {
+    if (!task.isGradeCard && (task.taskStatus.assignedMicrotasks + task.taskStatus.skippedMicrotasks) > 0) {
       val taskId = task.taskID
       val status = task.taskStatus
       val completed =

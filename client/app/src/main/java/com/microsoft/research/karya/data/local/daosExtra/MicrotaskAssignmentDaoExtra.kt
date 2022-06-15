@@ -34,6 +34,11 @@ interface MicrotaskAssignmentDaoExtra {
     return getAssignmentsByStatus(MicrotaskAssignmentStatus.SKIPPED)
   }
 
+  /** Get list of expired microtask assignments */
+  suspend fun getLocalExpiredAssignments(): List<MicroTaskAssignmentRecord> {
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.EXPIRED)
+  }
+
   @Query(
     "SELECT count(id) FROM microtask_assignment WHERE " +
       "status=:status AND " +

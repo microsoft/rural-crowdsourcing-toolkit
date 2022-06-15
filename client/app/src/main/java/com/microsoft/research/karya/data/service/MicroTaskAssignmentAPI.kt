@@ -16,7 +16,7 @@ interface MicroTaskAssignmentAPI {
     @Body updates: List<MicroTaskAssignmentRecord>,
   ): Response<List<String>>
 
-  @PUT("/skipped_assignments")
+  @PUT("/skipped_expired_assignments")
   suspend fun submitSkippedAssignments(
     @Header("karya-id-token") idToken: String,
     @Body ids: List<MicroTaskAssignmentRecord>

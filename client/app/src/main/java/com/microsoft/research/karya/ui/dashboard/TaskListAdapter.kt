@@ -54,8 +54,9 @@ class TaskListAdapter(
       val submitted = status.submittedMicrotasks + verified
       val completed = status.completedMicrotasks + submitted
       val assigned = status.assignedMicrotasks
+      val skipped = status.skippedMicrotasks
 
-      val clickable = assigned > 0
+      val clickable = (assigned + skipped) > 0
 
       with(binding) {
         // Set text

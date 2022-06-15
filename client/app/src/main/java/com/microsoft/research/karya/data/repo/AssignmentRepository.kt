@@ -204,6 +204,10 @@ constructor(
     return assignmentDaoExtra.getLocalSkippedAssignments()
   }
 
+  suspend fun getLocalExpiredAssignments(): List<MicroTaskAssignmentRecord> {
+    return assignmentDaoExtra.getLocalExpiredAssignments()
+  }
+
   suspend fun getNewAssignmentsFromTime(worker_id: String): String {
     return assignmentDao.getNewAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }

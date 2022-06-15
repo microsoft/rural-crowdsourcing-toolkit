@@ -159,7 +159,7 @@ constructor(
   private val maxPreRecordBytes = timeToSamples(prerecordingTime) * 2
 
   /** Microtask config */
-  private var skippingAllowed: Boolean = false
+  private var allowSkipping: Boolean = false
 
   private var preRecordBuffer: Array<ByteArray>
   var preRecordBufferConsumed: Array<Int> = Array(2) { 0 }
@@ -272,9 +272,9 @@ constructor(
 
     /** Get microtask config */
     try{
-      skippingAllowed = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("skippingAllowed").asBoolean
+      allowSkipping = task.params.asJsonObject.get("allowSkipping").asBoolean
     } catch (e: Error) {
-      skippingAllowed = false
+      allowSkipping = false
     }
 
       if (firstTimeActivityVisit) {
@@ -602,7 +602,7 @@ constructor(
     if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       // Enable next button if skipping allowed
-      if (skippingAllowed) {
+      if (allowSkipping) {
         setButtonStates(ENABLED, ENABLED, DISABLED, ENABLED)
       }
       setActivityState(ActivityState.PRERECORDING)

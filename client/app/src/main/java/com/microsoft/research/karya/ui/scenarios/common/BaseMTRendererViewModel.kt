@@ -119,7 +119,8 @@ constructor(
       while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1) {
         val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
         val microtaskAssignment = assignmentRepository.getAssignmentById(microtaskAssignmentID)
-        if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
+        if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED ||
+          microtaskAssignment.status == MicrotaskAssignmentStatus.SKIPPED) {
           break
         }
         currentAssignmentIndex++

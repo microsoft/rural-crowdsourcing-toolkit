@@ -185,7 +185,8 @@ class DashboardSyncWorker(
       }
 
     // Get skipped assignments from the database
-    val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
+    var skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
+    skippedAssignments = skippedAssignments + assignmentRepository.getLocalExpiredAssignments()
     // Submit the skipped assignments
     assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .submitSkippedAssignments(worker.idToken, skippedAssignments)
