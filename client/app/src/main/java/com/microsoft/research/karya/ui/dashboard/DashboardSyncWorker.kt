@@ -190,11 +190,7 @@ class DashboardSyncWorker(
     // Submit the skipped assignments
     assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .submitSkippedAssignments(worker.idToken, skippedAssignments)
-      .collect { assignmentIds ->
-        assignmentRepository.markMicrotaskAssignmentsSubmitted(
-          assignmentIds
-        )
-      }
+      .collect {}
   }
 
   /**
