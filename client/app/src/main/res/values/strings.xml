@@ -184,6 +184,10 @@
     <string name="tasks_completed">completed</string>
     <string name="tasks_submitted">submitted</string>
     <string name="tasks_verified">verified</string>
+    <string name="tasks_skipped">skipped</string>
+    <string name="tasks_expired">expired</string>
+
+
     <string name="sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

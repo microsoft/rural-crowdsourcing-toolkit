@@ -19,6 +19,8 @@
     <attr name="taskCompletedColor" format="color" />
     <attr name="taskSubmittedColor" format="color" />
     <attr name="taskVerifiedColor" format="color" />
+    <attr name="taskSkippedColor" format="color" />
+    <attr name="taskExpiredColor" format="color" />
 
     <!-- Microtask instruction -->
     <attr name="microtaskInstructionBackgroundColor" format="color" />

@@ -55,6 +55,7 @@ class TaskListAdapter(
       val completed = status.completedMicrotasks + submitted
       val assigned = status.assignedMicrotasks
       val skipped = status.skippedMicrotasks
+      val expired = status.expiredMicrotasks
 
       val clickable = (assigned + skipped) > 0
 
@@ -65,6 +66,8 @@ class TaskListAdapter(
         numCompletedTv.text = completed.toString()
         numSubmittedTv.text = submitted.toString()
         numVerifiedTv.text = verified.toString()
+        numSkippedTv.text = skipped.toString()
+        numExpiredTv.text = expired.toString()
 
         // Set views
         completedTasksPb.max = assigned + completed
