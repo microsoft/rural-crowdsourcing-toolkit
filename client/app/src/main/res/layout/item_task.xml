@@ -96,6 +96,30 @@
                 android:paddingVertical="@dimen/_5sdp">
 
                 <TextView
+                    android:id="@+id/numSkippedTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?taskSkippedColor"
+                    android:textSize="@dimen/_14ssp"
+                    tools:text="9" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:text="@string/tasks_skipped"
+                    android:textColor="?taskSkippedColor"
+                    android:textSize="@dimen/_14ssp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/_5sdp">
+
+                <TextView
                     android:id="@+id/numCompletedTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -157,30 +181,6 @@
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:text="@string/tasks_verified"
                     android:textColor="?taskVerifiedColor"
-                    android:textSize="@dimen/_14ssp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingVertical="@dimen/_5sdp">
-
-                <TextView
-                    android:id="@+id/numSkippedTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?taskSkippedColor"
-                    android:textSize="@dimen/_14ssp"
-                    tools:text="9" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_5sdp"
-                    android:text="@string/tasks_skipped"
-                    android:textColor="?taskSkippedColor"
                     android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
