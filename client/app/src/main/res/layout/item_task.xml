@@ -302,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:paddingRight="@dimen/_20sdp"
-                    android:text="@string/recording_noise"
+                    android:text="@string/recording_quality"
                     android:textSize="@dimen/_16ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
