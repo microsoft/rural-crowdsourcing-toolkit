@@ -93,7 +93,7 @@ export const submit: KaryaMiddleware = async (ctx) => {
         await BasicModel.updateSingle(
           'microtask_assignment',
           { id },
-          { ...updates, submitted_to_box_at, base_credits: assignment.max_base_credits }
+          { ...updates, submitted_to_box_at, base_credits: assignment.max_base_credits, submitted_to_server_at: null }
         );
         if (assignment.status == 'COMPLETED') {
           // TODO: Handle microtask assignment completion, by invoking policy
