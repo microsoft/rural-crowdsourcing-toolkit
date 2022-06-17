@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonElement
+import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
 import com.microsoft.research.karya.data.local.daos.TaskDao
@@ -9,7 +10,9 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.modelsExtra.SpeechDataReport
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
+import com.microsoft.research.karya.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -204,6 +207,10 @@ constructor(
     return assignmentDaoExtra.getLocalSkippedAssignments()
   }
 
+  suspend fun getLocalExpiredAssignments(): List<MicroTaskAssignmentRecord> {
+    return assignmentDaoExtra.getLocalExpiredAssignments()
+  }
+
   suspend fun getNewAssignmentsFromTime(worker_id: String): String {
     return assignmentDao.getNewAssignmentsFromTime(worker_id) ?: INITIAL_TIME
   }
@@ -230,5 +237,35 @@ constructor(
     return assignmentDaoExtra.getLocalVerifiedAssignments(task_id)
   }
 
+  suspend fun updateExpired(worker_id: String) {
+    val currentTime = DateUtils.getCurrentDate()
+    assignmentDaoExtra.updateExpired(worker_id, currentTime)
+  }
 
+  suspend fun getSpeechReportSummary(worker_id: String, task_id: String): SpeechDataReport? {
+    val reports = assignmentDaoExtra.getReportsForTask(worker_id, task_id)
+    val reportSummary: SpeechDataReport = SpeechDataReport(0.0f, 0.0f, 0.0f)
+    var count = 0
+    for (report in reports) {
+      try {
+        val reportObj = report.asJsonObject
+        if (reportObj.has("accuracy")) {
+          val accuracy = reportObj.get("accuracy").asFloat
+          val quality = reportObj.get("quality").asFloat
+          val volume = reportObj.get("volume").asFloat
+          reportSummary.accuracy += accuracy
+          reportSummary.quality += quality
+          reportSummary.volume += volume
+          count += 1
+        }
+      } catch(e: Exception) {}
+    }
+    if (count > 0) {
+      reportSummary.accuracy /= (count * 2.0f / 5)
+      reportSummary.quality /= (count * 2.0f / 5)
+      reportSummary.volume /= (count * 2.0f / 5)
+      return reportSummary
+    }
+    return null
+  }
 }

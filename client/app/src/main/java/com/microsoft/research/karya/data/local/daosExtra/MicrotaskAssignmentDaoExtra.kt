@@ -34,6 +34,11 @@ interface MicrotaskAssignmentDaoExtra {
     return getAssignmentsByStatus(MicrotaskAssignmentStatus.SKIPPED)
   }
 
+  /** Get list of expired microtask assignments */
+  suspend fun getLocalExpiredAssignments(): List<MicroTaskAssignmentRecord> {
+    return getAssignmentsByStatus(MicrotaskAssignmentStatus.EXPIRED)
+  }
+
   @Query(
     "SELECT count(id) FROM microtask_assignment WHERE " +
       "status=:status AND " +
@@ -167,6 +172,24 @@ interface MicrotaskAssignmentDaoExtra {
   @Query("SELECT SUM(max_base_credits) FROM microtask_assignment WHERE worker_id=:worker_id AND status IN (:statuses)")
   suspend fun getTotalBaseCreditsEarned(
     worker_id: String,
-    statuses: List<MicrotaskAssignmentStatus> = arrayListOf(MicrotaskAssignmentStatus.SUBMITTED, MicrotaskAssignmentStatus.VERIFIED)
+    statuses: List<MicrotaskAssignmentStatus> = arrayListOf(
+      MicrotaskAssignmentStatus.SUBMITTED,
+      MicrotaskAssignmentStatus.VERIFIED
+    )
   ): Float?
+
+  /** Update all expired tasks **/
+  @Query("UPDATE microtask_assignment SET status=:status WHERE worker_id=:worker_id AND deadline < :currentTime")
+  suspend fun updateExpired(
+    worker_id: String,
+    currentTime: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.EXPIRED
+  )
+
+  @Query("SELECT report FROM microtask_assignment WHERE worker_id=:worker_id and task_id=:task_id and status=:status")
+  suspend fun getReportsForTask(
+    worker_id: String,
+    task_id: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+  ): List<JsonElement>
 }

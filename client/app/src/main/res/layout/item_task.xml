@@ -54,8 +54,8 @@
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="@dimen/_1sdp"
-            android:layout_marginBottom="@dimen/_5sdp"
             android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/background_divider"
             android:scaleType="fitXY" />
 
@@ -85,6 +85,30 @@
                     android:layout_marginLeft="@dimen/_5sdp"
                     android:text="@string/tasks_available"
                     android:textColor="?taskAvailableColor"
+                    android:textSize="@dimen/_14ssp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/_5sdp">
+
+                <TextView
+                    android:id="@+id/numSkippedTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?taskSkippedColor"
+                    android:textSize="@dimen/_14ssp"
+                    tools:text="9" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:text="@string/tasks_skipped"
+                    android:textColor="?taskSkippedColor"
                     android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
@@ -160,7 +184,143 @@
                     android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/_5sdp">
+
+                <TextView
+                    android:id="@+id/numExpiredTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?taskExpiredColor"
+                    android:textSize="@dimen/_14ssp"
+                    tools:text="9" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:text="@string/tasks_expired"
+                    android:textColor="?taskExpiredColor"
+                    android:textSize="@dimen/_14ssp" />
+            </LinearLayout>
+
         </GridLayout>
+
+        <LinearLayout
+            android:id="@+id/scoreGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/background_divider"
+                android:scaleType="fitXY" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:id="@+id/accuracyLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:text="@string/recording_accuracy"
+                    android:textSize="@dimen/_16ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.5" />
+
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/accuracyScore"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/accuracyLabel"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:mrb_progressTint="@color/c_dark_grey"
+                    app:mrb_secondaryProgressTint="@color/c_dark_grey" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:id="@+id/volumeLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:text="@string/recording_volume"
+                    android:textSize="@dimen/_16ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.5" />
+
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/volumeScore"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/volumeLabel"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:mrb_progressTint="@color/c_dark_grey"
+                    app:mrb_secondaryProgressTint="@color/c_dark_grey" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_20sdp">
+
+                <TextView
+                    android:id="@+id/qualityLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:text="@string/recording_quality"
+                    android:textSize="@dimen/_16ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.5" />
+
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/qualityScore"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_20sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/qualityLabel"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:mrb_progressTint="@color/c_dark_grey"
+                    app:mrb_secondaryProgressTint="@color/c_dark_grey" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

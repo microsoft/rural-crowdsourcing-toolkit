@@ -119,7 +119,8 @@ constructor(
       while (currentAssignmentIndex < microtaskAssignmentIDs.size - 1) {
         val microtaskAssignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
         val microtaskAssignment = assignmentRepository.getAssignmentById(microtaskAssignmentID)
-        if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED) {
+        if (microtaskAssignment.status == MicrotaskAssignmentStatus.ASSIGNED ||
+          microtaskAssignment.status == MicrotaskAssignmentStatus.SKIPPED) {
           break
         }
         currentAssignmentIndex++
@@ -280,8 +281,8 @@ constructor(
       currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
 
       // Check if the current microtask is expired
-      if ((currentMicroTask.deadline).isNullOrEmpty()
-        && (currentMicroTask.deadline)!!.toInt() < (System.currentTimeMillis())/1000) {
+      if (!(currentMicroTask.deadline).isNullOrEmpty()
+        && (currentMicroTask.deadline!!) < DateUtils.getCurrentDate()) {
         // Mark the microtask as expired
         expireAndSaveCurrentMicrotask()
         moveToNextMicrotask()

@@ -61,6 +61,14 @@ class DashboardSyncWorker(
   }
 
   private suspend fun syncWithServer() {
+    // Update expired assignments before syncing
+    try {
+      val worker = authManager.getLoggedInWorker()
+      assignmentRepository.updateExpired(worker.id)
+    } catch(e: Exception) {
+      FirebaseCrashlytics.getInstance().recordException(e)
+    }
+
     // Upload all files
     try {
       uploadOutputFiles()
@@ -185,15 +193,12 @@ class DashboardSyncWorker(
       }
 
     // Get skipped assignments from the database
-    val skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
+    var skippedAssignments = assignmentRepository.getLocalSkippedAssignments()
+    skippedAssignments = skippedAssignments + assignmentRepository.getLocalExpiredAssignments()
     // Submit the skipped assignments
     assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .submitSkippedAssignments(worker.idToken, skippedAssignments)
-      .collect { assignmentIds ->
-        assignmentRepository.markMicrotaskAssignmentsSubmitted(
-          assignmentIds
-        )
-      }
+      .collect {}
   }
 
   /**

@@ -137,6 +137,9 @@ constructor(
   private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
 
+  private val _skipTaskAlertTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val skipTaskAlertTrigger = _skipTaskAlertTrigger.asStateFlow()
+
   private val _microTaskInstruction: MutableStateFlow<String> = MutableStateFlow("")
   val microTaskInstruction = _microTaskInstruction.asStateFlow()
 
@@ -159,7 +162,7 @@ constructor(
   private val maxPreRecordBytes = timeToSamples(prerecordingTime) * 2
 
   /** Microtask config */
-  private var skippingAllowed: Boolean = false
+  private var allowSkipping: Boolean = false
 
   private var preRecordBuffer: Array<ByteArray>
   var preRecordBufferConsumed: Array<Int> = Array(2) { 0 }
@@ -271,7 +274,11 @@ constructor(
     totalRecordedBytes = 0
 
     /** Get microtask config */
-    skippingAllowed = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("skippingAllowed").asBoolean
+    try{
+      allowSkipping = task.params.asJsonObject.get("allowSkipping").asBoolean
+    } catch (e: Error) {
+      allowSkipping = false
+    }
 
       if (firstTimeActivityVisit) {
       firstTimeActivityVisit = false
@@ -445,10 +452,7 @@ constructor(
       }
       ActivityState.PRERECORDING -> {
         // User wants to skip the microtask
-        runBlocking {
-          skipAndSaveCurrentMicrotask()
-          setActivityState(ActivityState.SIMPLE_NEXT)
-        }
+        setSkipTaskAlertTrigger(true)
       }
       ActivityState.INIT,
       ActivityState.RECORDING,
@@ -590,6 +594,18 @@ constructor(
     _playRecordPromptTrigger.value = true
   }
 
+  fun setSkipTaskAlertTrigger(value: Boolean) {
+    _skipTaskAlertTrigger.value = value
+  }
+
+  fun skipMicrotask() {
+    runBlocking {
+      skipAndSaveCurrentMicrotask()
+      setActivityState(ActivityState.SIMPLE_NEXT)
+      setSkipTaskAlertTrigger(false)
+    }
+  }
+
   /** Move from init to pre-recording */
   fun moveToPrerecording() {
     preRecordBufferConsumed[0] = 0
@@ -598,7 +614,7 @@ constructor(
     if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
       // Enable next button if skipping allowed
-      if (skippingAllowed) {
+      if (allowSkipping) {
         setButtonStates(ENABLED, ENABLED, DISABLED, ENABLED)
       }
       setActivityState(ActivityState.PRERECORDING)

@@ -26,6 +26,8 @@
         <item name="taskCompletedColor">@color/c_dark_green</item>
         <item name="taskSubmittedColor">@color/c_dark_grey</item>
         <item name="taskVerifiedColor">@color/c_black</item>
+        <item name="taskSkippedColor">@color/c_red</item>
+        <item name="taskExpiredColor">@color/c_light_grey</item>
 
         <!-- Microtask instruction text view -->
         <item name="microtaskInstructionBackgroundColor">@color/c_dark_grey</item>

@@ -6,4 +6,5 @@ data class TaskStatus(
   val submittedMicrotasks: Int,
   val verifiedMicrotasks: Int,
   val skippedMicrotasks: Int,
+  val expiredMicrotasks: Int,
 )

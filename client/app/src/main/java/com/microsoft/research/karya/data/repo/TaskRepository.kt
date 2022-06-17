@@ -30,8 +30,9 @@ constructor(
     val verified =
       microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.VERIFIED)
     val skipped = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.SKIPPED)
+    val expired = microTaskAssignmentDao.getCountForTask(taskId, MicrotaskAssignmentStatus.EXPIRED)
 
-    return TaskStatus(available, completed, submitted, verified, skipped)
+    return TaskStatus(available, completed, submitted, verified, skipped, expired)
   }
 
 }
