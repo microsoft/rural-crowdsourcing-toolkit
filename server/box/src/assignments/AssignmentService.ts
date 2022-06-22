@@ -53,7 +53,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     },
     [],
     [],
-    'task_id'
+    'id'
   );
 
   // iterate over all tasks to see which all can user perform
