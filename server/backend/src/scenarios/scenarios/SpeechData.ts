@@ -81,9 +81,7 @@ export const backendSpeechDataScenario: IBackendScenarioInterface<BaseSpeechData
       };
 
       // Add logs to the output
-      if (task.params.includeLogs) {
-        jsonData.logs = assignment.logs;
-      }
+      jsonData.logs = assignment.logs;
 
       // Write the json data to file
       const jsonFile = `${assignment.id}.json`;
