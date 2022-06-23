@@ -157,6 +157,23 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       tasksAssigned = true;
     }
 
+    // MIT Study specific hack
+    // Compute deadline days based on tags
+    const itags = task.itags.itags;
+    const deaddays = itags.includes('week1')
+      ? 7
+      : itags.includes('week2')
+      ? 14
+      : itags.includes('week3')
+      ? 21
+      : itags.includes('week4')
+      ? 28
+      : 35;
+
+    const registeredTime = new Date(worker.registered_at);
+    const deadlineTime = new Date(registeredTime.setDate(registeredTime.getDate() + deaddays));
+    const deadline = deadlineTime.toISOString();
+
     // Assign all microtask groups and microtasks to the user
     await BBPromise.mapSeries(chosenMicrotaskGroups, async (group) => {
       await BasicModel.insertRecord('microtask_group_assignment', {
@@ -173,7 +190,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         task_id: task.id,
         microtask_id: microtask.id,
         worker_id: worker.id,
-        deadline: microtask.deadline,
+        deadline,
         wgroup: worker.wgroup,
         max_base_credits: microtask.base_credits,
         base_credits: 0.0,
