@@ -35,7 +35,7 @@ export async function getAssignableMicrotasks(
 
   const microtasks = await knex<MicrotaskRecord>('microtask')
     .where('task_id', task.id)
-    .where('status', 'not in', ['COMPLETED'])
+    .where('status', 'in', ['INCOMPLETE'])
     .select();
 
   return microtasks.filter((mt) => !unassignableMicrotasks.has(mt.id));
