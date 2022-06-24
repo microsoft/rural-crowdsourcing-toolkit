@@ -9,10 +9,11 @@ import { executeBackwardTaskLinks, BackwardTaskLinkHandlerObject } from './ops/B
 import Bull, { QueueOptions } from 'bull';
 import { generateTaskOutput, TaskOutputGeneratorObject } from './ops/OutputGenerator';
 import { processInputFile, TaskInputProcessorObject } from './ops/InputProcessor';
+import { envGetString } from '@karya/misc-utils';
 
 const REDIS_CONNECTION: QueueOptions = {
   redis: {
-    host: 'karya-backend-redis',
+    host: envGetString('REDIS_URL', 'localhost'),
     port: 6379,
   },
 };
