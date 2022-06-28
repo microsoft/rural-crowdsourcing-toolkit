@@ -28,18 +28,39 @@ const assigning: { [id: string]: boolean } = {};
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
 export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
+  assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment' });
+
   // Check if we are currently assigning anything to these workers
-  if (assigning[worker.id]) return;
+  if (assigning[worker.id]) {
+    assignmentLogger.info({ worker_id: worker.id, message: 'Already assigning' });
+    return;
+  }
   assigning[worker.id] = true;
 
   try {
     // If worker is disabled, return
-    if (WorkerModel.isDisabled(worker)) return;
+    if (WorkerModel.isDisabled(worker)) {
+      assigning[worker.id] = false;
+      assignmentLogger.info({ worker_id: worker.id, message: 'Worker disabled' });
+      return;
+    }
+
+    // Determine worker week
+    const regTime = new Date(worker.registered_at).getTime();
+    const currentTime = Date.now();
+    const diffMilli = currentTime - regTime;
+    const diffWeeks = diffMilli / 1000 / 3600 / 24 / 7;
+    const weekId = (diffWeeks + 1).toFixed();
+    const weekTag = `week${weekId}`;
+    worker.tags.tags.push(weekTag);
+
+    assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
 
     // Check if the worker has incomplete assignments. If so, return
     const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
     if (hasCurrentAssignments) {
       assigning[worker.id] = false;
+      assignmentLogger.info({ worker_id: worker.id, message: 'Worker has assignments' });
       return;
     }
 
@@ -194,10 +215,11 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       });
     });
 
+    assignmentLogger.info({ worker_id: worker.id, message: 'Assignment completed' });
     assigning[worker.id] = false;
   } catch (e) {
     assigning[worker.id] = false;
-    throw e;
+    assignmentLogger.info({ worker_id: worker.id, message: 'Exception in assignment service' });
   }
 }
 
