@@ -37,7 +37,9 @@ export async function createWorkerSummaryMV() {
     'worker_summary',
     `SELECT
       w.*,
-      COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
+      COALESCE((mta.assigned + mta.completed + mta.verified + mta.skipped + mta.expired)::int, 0) as assigned,
+      COALESCE((mta.skipped)::int, 0) as skipped,
+      COALESCE((mta.expired)::int, 0) as expired,
       COALESCE((mta.completed + mta.verified)::int, 0) as completed,
       COALESCE((mta.verified)::int, 0) as verified,
       COALESCE((mta.earned)::int, 0) as earned,
@@ -52,7 +54,9 @@ export async function createWorkerSummaryMV() {
         COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
         COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
         COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
-        COALESCE(SUM(base_credits + credits), 0) as earned,
+        COALESCE(SUM((status='SKIPPED')::int), 0) as skipped,
+        COALESCE(SUM((status='EXPIRED')::int), 0) as expired,
+        SUM(COALESCE(base_credits,0.0) + COALESCE(credits, 0.0)) as earned,
         MIN(created_at) as earliest,
         MAX(completed_at) as latest
       FROM
@@ -74,7 +78,9 @@ export async function createWorkerTaskSummaryMV() {
     `SELECT
       w.*,
       mta.task_id,
-      COALESCE((mta.assigned + mta.completed + mta.verified)::int, 0) as assigned,
+      COALESCE((mta.assigned + mta.completed + mta.verified + mta.skipped + mta.expired)::int, 0) as assigned,
+      COALESCE((mta.skipped)::int, 0) as skipped,
+      COALESCE((mta.expired)::int, 0) as expired,
       COALESCE((mta.completed + mta.verified)::int, 0) as completed,
       COALESCE((mta.verified)::int, 0) as verified,
       COALESCE((mta.earned)::int, 0) as earned
@@ -88,7 +94,9 @@ export async function createWorkerTaskSummaryMV() {
         COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
         COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
         COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
-        COALESCE(SUM(credits), 0) as earned
+        COALESCE(SUM((status='SKIPPED')::int), 0) as skipped,
+        COALESCE(SUM((status='EXPIRED')::int), 0) as expired,
+        SUM(COALESCE(base_credits,0.0) + COALESCE(credits, 0.0)) as earned
       FROM
         microtask_assignment
       GROUP BY (worker_id, task_id)
@@ -123,7 +131,7 @@ export async function createTaskSummaryMV() {
           COALESCE(SUM((status='ASSIGNED' OR status='COMPLETED' OR status='VERIFIED')::int), 0) as assigned,
           COALESCE(SUM((status='COMPLETED' OR status='VERIFIED')::int), 0) as completed,
           COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
-          COALESCE(SUM(credits), 0) as cost
+          SUM(COALESCE(base_credits,0.0) + COALESCE(credits, 0.0)) as cost
         FROM
           microtask_assignment
         GROUP BY task_id
@@ -168,7 +176,7 @@ export async function createMicrotaskSummaryMV() {
           COALESCE(SUM((status='ASSIGNED')::int), 0) as assigned,
           COALESCE(SUM((status='COMPLETED')::int), 0) as completed,
           COALESCE(SUM((status='VERIFIED')::int), 0) as verified,
-          COALESCE(SUM(credits), 0) as cost
+          SUM(COALESCE(base_credits,0.0) + COALESCE(credits, 0.0)) as cost
         FROM
           microtask_assignment
         GROUP BY (microtask_id, task_id)

@@ -12,8 +12,8 @@ export async function workersSummary(force_refresh: boolean): Promise<any[]> {
   const response = await knex.raw(`SELECT * FROM worker_summary`);
 
   return response.rows.map((row: any) => {
-    const { assigned, completed, verified, earned, earliest, latest, ...rest } = row;
-    const extras = { assigned, completed, verified, earned, earliest, latest };
+    const { assigned, skipped, expired, completed, verified, earned, earliest, latest, ...rest } = row;
+    const extras = { assigned, skipped, expired, completed, verified, earned, earliest, latest };
     return { ...rest, extras };
   });
 }

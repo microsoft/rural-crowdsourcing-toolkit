@@ -218,7 +218,14 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
 
   // Render component
   render() {
-    type Extras = { assigned: number; completed: number; verified: number; earned: number };
+    type Extras = {
+      assigned: number;
+      skipped: number;
+      expired: number;
+      completed: number;
+      verified: number;
+      earned: number;
+    };
     var workers = this.props.workers_data as (WorkerRecord & { extras: Extras })[];
     const tasks = this.props.task.data.filter((t) => t.status !== 'COMPLETED');
     const { task_filter } = this.state;
@@ -305,6 +312,8 @@ class WorkerOverview extends React.Component<WorkerOverviewProps, WorkerOverview
       graph_display.assigned
         ? { type: 'function', header: 'Assigned', function: (w) => w.extras.assigned.toString() }
         : null,
+      { type: 'function', header: 'Skipped', function: (w) => w.extras.skipped.toString() },
+      { type: 'function', header: 'Expired', function: (w) => w.extras.expired.toString() },
       graph_display.completed
         ? { type: 'function', header: 'Completed', function: (w) => w.extras.completed.toString() }
         : null,
