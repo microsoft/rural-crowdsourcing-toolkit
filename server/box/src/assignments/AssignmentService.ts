@@ -12,7 +12,14 @@ import {
   TaskRecord,
   TaskRecordType,
 } from '@karya/core';
-import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
+import {
+  BasicModel,
+  MicrotaskModel,
+  MicrotaskGroupModel,
+  MicrotaskAssignmentModel,
+  karyaLogger,
+  WorkerModel,
+} from '@karya/common';
 import { localPolicyMap } from './policies/Index';
 
 // Create an assignment logger
@@ -59,6 +66,14 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
   if (hasCurrentAssignments) {
     assigning[worker.id] = false;
     assignmentLogger.info({ worker_id: worker.id, message: 'Worker has assignments' });
+    return;
+  }
+
+  // Check if the worker has incorrectly expired tasks
+  const flag = await MicrotaskAssignmentModel.reassignIncorrectlyExpiredAssignments(worker);
+  if (flag) {
+    assigning[worker.id] = false;
+    assignmentLogger.info({ worker_id: worker.id, message: 'Worker has incorrectly expired assignments' });
     return;
   }
 

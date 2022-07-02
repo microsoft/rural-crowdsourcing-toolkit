@@ -12,6 +12,7 @@ export * as BoxDbFunctions from './auto/BoxTableFunctions';
 export * as BasicModel from './models/BasicModel';
 export * as MicrotaskModel from './models/MicrotaskModel';
 export * as MicrotaskGroupModel from './models/MicrotaskGroupModel';
+export * as MicrotaskAssignmentModel from './models/MicrotaskAssignmentModel';
 export * as TaskOpModel from './models/TaskOpModel';
 export * as TaskModel from './models/TaskModel';
 export * as WorkerModel from './models/WorkerModel';
