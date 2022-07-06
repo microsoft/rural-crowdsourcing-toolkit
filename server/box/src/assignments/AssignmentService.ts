@@ -49,8 +49,8 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const regTime = new Date(worker.registered_at).getTime();
     const currentTime = Date.now();
     const diffMilli = currentTime - regTime;
-    const diffWeeks = diffMilli / 1000 / 3600 / 24 / 7;
-    const weekId = (diffWeeks + 1).toFixed();
+    const diffWeeks = Math.floor(diffMilli / 1000 / 3600 / 24 / 7);
+    const weekId = diffWeeks + 1;
     const weekTag = `week${weekId}`;
     worker.tags.tags.push(weekTag);
 
