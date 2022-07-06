@@ -77,6 +77,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     }
 
     editRectColorBtn.setOnClickListener {
+      // If no rectangle in focus, return
       if ((sourceImageIv.focusedCropRectangleId).isNullOrEmpty()) {
         return@setOnClickListener
       }
@@ -125,6 +126,10 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 
     // Set Listener to lock a crop box
     lockCropRectBtn.setOnClickListener {
+      // If no rectangle in focus, return
+      if ((sourceImageIv.focusedCropRectangleId).isNullOrEmpty()) {
+        return@setOnClickListener
+      }
       val isLocked = sourceImageIv.lockOrUnlockCropRectangle(sourceImageIv.focusedCropRectangleId)
       // Change the image wrt the state of lock
       if (isLocked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
