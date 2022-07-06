@@ -170,6 +170,11 @@ const storeReducer: StoreReducer = (state = initState, action) => {
     return { ...state, worker: { data, last_fetched_at, status } };
   }
 
+  // Worker task summary
+  if (action.store === 'worker' && action.label === 'GET_WORKER_TASK') {
+    return { ...state, worker: { data: action.response, last_fetched_at: new Date(), status } };
+  }
+
   // Generate workers
   if (action.store === 'worker' && action.label === 'GENERATE_WORKERS') {
     const data = state.worker?.data || [];

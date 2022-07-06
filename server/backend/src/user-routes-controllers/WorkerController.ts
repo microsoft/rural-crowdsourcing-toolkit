@@ -28,6 +28,19 @@ export const getWorkersSummary: WorkerRouteMiddleware = async (ctx) => {
 };
 
 /**
+ * Get summary info for all workers
+ */
+export const getWorkerTaskSummary: WorkerRouteMiddleware = async (ctx) => {
+  try {
+    const records = await WorkerModel.allWorkerTaskSummary();
+    HttpResponse.OK(ctx, records);
+  } catch (e) {
+    // TODO: Convert this to an internal server error
+    HttpResponse.BadRequest(ctx, 'Unknown error');
+  }
+};
+
+/**
  * Mark a worker as disabled
  */
 export const markDisabled: WorkerRouteMiddleware = async (ctx) => {

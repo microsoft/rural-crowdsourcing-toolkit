@@ -89,6 +89,11 @@ class NavBar extends React.Component<NavBarProps> {
                           </NavLink>
                         </li>
                         <li>
+                          <NavLink activeClassName='active-tab' to='/reports'>
+                            Reports
+                          </NavLink>
+                        </li>
+                        <li>
                           <NavLink activeClassName='active-tab' to='/lang-assets'>
                             Language Assets
                           </NavLink>

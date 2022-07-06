@@ -10,4 +10,5 @@ export default {
   MARK_TASK_COMPLETE: [['ADMIN'], ['WORK_PROVIDER']],
   DISABLE_WORKER: [['ADMIN']],
   GENERATE_WORKERS: [['ADMIN']],
+  GET_WORKER_TASK: [['ADMIN']],
 };

@@ -268,6 +268,14 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   TaskController.getWorkersTaskSummary
 );
 
+// Get summary of workers for a particular task
+userRouter.get<TaskController.TaskRouteState, {}>(
+  'GET_WORKER_TASK',
+  '/worker_task_summary',
+  Middlewares.needIdToken,
+  WorkerController.getWorkerTaskSummary
+);
+
 // Disable a worker
 userRouter.put<WorkerController.WorkerRouteState, {}>(
   'DISABLE_WORKER',

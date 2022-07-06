@@ -38,6 +38,14 @@ export async function workersTaskSummary(task_id: string, force_refresh: boolean
   });
 }
 
+/**
+ * Get summary info of workers for a particular task
+ */
+export async function allWorkerTaskSummary(): Promise<any[]> {
+  const response = await knex.raw(`SELECT * FROM worker_task_summary`);
+  return response.rows;
+}
+
 /** Code to handle worker disabling */
 const disabledTag = '_DISABLED_';
 

@@ -29,6 +29,7 @@ import WorkProviderList from './components/work_provider/WorkProviderList';
 
 /** worker components */
 import WorkerOverview from './components/worker/WorkerOverview';
+import WorkerReports from './components/reports/WorkerReports';
 
 /** box components */
 import ngBoxList from './components/box/BoxList';
@@ -69,6 +70,7 @@ const Routes = (
 
             {/** Worker routes */}
             <AdminRoute exact path='/worker' component={WorkerOverview} />
+            <AdminRoute exact path='/reports' component={WorkerReports} />
 
             {/** Box routes */}
             <AdminRoute exact path='/box' component={ngBoxList} />
