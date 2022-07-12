@@ -13,6 +13,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jsibbold.zoomage.dataClass.Polygon
+import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.observe
@@ -34,7 +36,8 @@ private val colors = listOf(
 class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_annotation) {
   override val viewModel: ImageAnnotationViewModel by viewModels()
   private val args: ImageAnnotationFragmentArgs by navArgs()
-  private var cropCoors: HashMap<String, RectF>? = null
+  private var rectangleCropCoors: HashMap<String, RectF>? = null
+  private var polygonCropCoors: HashMap<String, Polygon>? = null
 
   // Array of Pair to hold label names and corresponding colors
   lateinit var labelDetailArray: Array<Pair<String, Int>>
@@ -77,16 +80,15 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     }
 
     editRectColorBtn.setOnClickListener {
-      // If no rectangle in focus, return
-      if ((sourceImageIv.focusedCropRectangleId).isNullOrEmpty()) {
+      // If no crop object in focus, return
+      if ((sourceImageIv.focusedCropObjectId).isNullOrEmpty()) {
         return@setOnClickListener
       }
       var alertDialog: AlertDialog? = null
       val onLabelItemClickListener = object : OnLabelItemClickListener {
         override fun onClick(labelView: View, position: Int) {
-
-          sourceImageIv.setCropRectColor(
-            sourceImageIv.focusedCropRectangleId,
+          sourceImageIv.setCropObjectColor(
+            sourceImageIv.focusedCropObjectId,
             (colors[position])
           )
           alertDialog!!.dismiss()
@@ -99,14 +101,19 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       alertDialog!!.show()
     }
 
-    // Set listeners to add box
+    // Set listeners to add crop object
     addBoxButton.setOnClickListener {
       var alertDialog: AlertDialog? = null
       val onLabelItemClickListener = object : OnLabelItemClickListener {
         override fun onClick(labelView: View, position: Int) {
           // attach random UUID with the selected box type
           val key = labels[position] + "_" + UUID.randomUUID().toString();
-          sourceImageIv.addCropRectangle(key, colors[position])
+          if (viewModel.annotationType == CropObjectType.RECTANGLE) {
+            sourceImageIv.addCropRectangle(key, colors[position])
+          } else {
+            sourceImageIv.addCropPolygon(key, colors[position], viewModel.numberOfSides)
+          }
+
           alertDialog!!.dismiss()
         }
       }
@@ -122,53 +129,77 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 //      sourceImageIv.addCropRectangle(key, (colors[boxSpinner.selectedItemPosition]))
     }
     // Set Listeners to remove box
-    removeBoxButton.setOnClickListener { sourceImageIv.removeCropRectangle(sourceImageIv.focusedCropRectangleId) }
+    removeBoxButton.setOnClickListener { sourceImageIv.removeCropObject(sourceImageIv.focusedCropObjectId) }
 
     // Set Listener to lock a crop box
-    lockCropRectBtn.setOnClickListener {
+    lockCropBtn.setOnClickListener {
       // If no rectangle in focus, return
-      if ((sourceImageIv.focusedCropRectangleId).isNullOrEmpty()) {
+      if ((sourceImageIv.focusedCropObjectId).isNullOrEmpty()) {
         return@setOnClickListener
       }
-      val isLocked = sourceImageIv.lockOrUnlockCropRectangle(sourceImageIv.focusedCropRectangleId)
+      val isLocked = sourceImageIv.lockOrUnlockCropObject(sourceImageIv.focusedCropObjectId)
       // Change the image wrt the state of lock
-      if (isLocked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
-      else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+      if (isLocked) lockCropBtn.setImageResource(R.drawable.ic_outline_lock_24);
+      else lockCropBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
     }
 
+    // Setting listener for rectangle crop
     sourceImageIv.setOnCropRectangleClickListener { rectFData ->
-      if (rectFData.locked) lockCropRectBtn.setImageResource(R.drawable.ic_outline_lock_24);
-      else lockCropRectBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+      if (rectFData.locked) lockCropBtn.setImageResource(R.drawable.ic_outline_lock_24);
+      else lockCropBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
       spinner_item_color.setCardBackgroundColor(rectFData.color)
       labelTv.text = labels[colors.indexOf(rectFData.color)]
+    }
+
+    // Setting listener for polygon crop
+    sourceImageIv.setOnCropPolygonClickListener { polygonData ->
+      if (polygonData.locked) lockCropBtn.setImageResource(R.drawable.ic_outline_lock_24);
+      else lockCropBtn.setImageResource(R.drawable.ic_baseline_lock_open_24);
+      spinner_item_color.setCardBackgroundColor(polygonData.color)
+      labelTv.text = labels[colors.indexOf(polygonData.color)]
     }
   }
 
   override fun onPause() {
     super.onPause()
-    cropCoors = sourceImageIv.coordinatesForCropBoxes
+    rectangleCropCoors = sourceImageIv.coordinatesForRectCropBoxes
+    polygonCropCoors = sourceImageIv.coordinatesForPolygonCropBoxes
   }
 
   override fun onResume() {
     super.onResume()
-    if (sourceImageIv.coordinatesForCropBoxes.isEmpty() && cropCoors != null) {
-      for (id in cropCoors!!.keys) {
+    // Check if we need to redraw rectangle crop objects on canvas
+    if (sourceImageIv.coordinatesForRectCropBoxes.isEmpty() &&
+      rectangleCropCoors != null) {
+      for (id in rectangleCropCoors!!.keys) {
         val label = id.split("_")[0]
         val position = labels.indexOf(label)
-        sourceImageIv.addCropRectangle(id, colors[position], cropCoors!![id])
+        sourceImageIv.addCropRectangle(id, colors[position], rectangleCropCoors!![id])
+      }
+    }
+
+    // Check if we need to redraw polygon crop objects on canvas
+    if (sourceImageIv.coordinatesForPolygonCropBoxes.isEmpty() &&
+      polygonCropCoors != null) {
+      for (id in polygonCropCoors!!.keys) {
+        val label = id.split("_")[0]
+        val position = labels.indexOf(label)
+        sourceImageIv.addCropPolygon(id, colors[position], polygonCropCoors!![id])
       }
     }
   }
 
   private fun handleNextClick() {
 
-    val cropCoors = sourceImageIv.coordinatesForCropBoxes
-    if (cropCoors.isEmpty()) {
+    val rectangleCoors = sourceImageIv.coordinatesForRectCropBoxes
+    val polygonCoors = sourceImageIv.coordinatesForPolygonCropBoxes
+    if (rectangleCoors.isEmpty() && polygonCoors.isEmpty()) {
       // Display an alert box warning the user of no annotation boxes
       showNoBoxAlertBox()
       return
     }
-    viewModel.setBoxCoors(cropCoors)
+    viewModel.setRectangleCoors(rectangleCoors)
+    viewModel.setPolygonCoors(polygonCoors)
     viewModel.handleNextCLick()
   }
 
@@ -206,9 +237,9 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       //TODO: Put an else condition to put a placeholder image
 
       // Clear the existing boxes
-      val ids = sourceImageIv.allCropRectangleIds
+      val ids = sourceImageIv.allCropRectangleIds + sourceImageIv.allCropPolygonIds
       for (id in ids) {
-        sourceImageIv.removeCropRectangle(id)
+        sourceImageIv.removeCropObject(id)
       }
     }
   }
