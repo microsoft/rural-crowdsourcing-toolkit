@@ -13,14 +13,14 @@
         tools:text="Sudoku"
         android:padding="@dimen/_8sdp"
         android:textSize="@dimen/_16sdp"
-        android:textColor="@color/black" />
+        android:textColor="@color/c_black" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/image_annotation_label_color_cv"
         android:layout_width="@dimen/_28sdp"
         android:layout_height="@dimen/_28sdp"
         android:layout_marginHorizontal="@dimen/_8sdp"
-        app:cardBackgroundColor="@color/black"
+        app:cardBackgroundColor="@color/c_black"
         app:cardCornerRadius="100dp"
         app:layout_constraintBottom_toBottomOf="@id/image_annotation_label_tv"
         app:layout_constraintRight_toRightOf="parent"
