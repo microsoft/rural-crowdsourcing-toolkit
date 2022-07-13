@@ -121,6 +121,14 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
       .filter((t) => t.itags.itags.includes(week) && t.itags.itags.includes(region))
       .map((t) => t.id);
 
+    const weekRegionMap: { [id: string]: { week: string; region: string } } = {};
+    this.props.task.data.forEach((t) => {
+      weekRegionMap[t.id] = {
+        week: t.itags.itags.filter((tag) => tag.startsWith('week'))[0],
+        region: t.itags.itags.filter((tag) => tag.startsWith('region'))[0],
+      };
+    });
+
     const filtered_workers = workers.filter((w) => task_ids.includes(w.task_id));
     const merged_workers: { [id: string]: typeof workers[0] } = {};
 
@@ -134,7 +142,7 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
         cw.expired += w.expired;
         cw.earned += w.earned;
       } else {
-        merged_workers[w.id] = w;
+        merged_workers[w.id] = { ...w };
       }
     });
 
@@ -152,7 +160,32 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
     });
     const currentDate = new Date().toISOString().replace(/:/g, '.');
     const exportFileName = `${region}.${week}.${currentDate}.csv`;
-    console.log(data);
+
+    const allData = workers
+      .map((w) => {
+        return {
+          id: `I${w.id}`,
+          access_code: `A${w.access_code}`,
+          task_id: w.task_id,
+          ...weekRegionMap[w.task_id],
+          assigned: w.assigned,
+          skipped: w.skipped,
+          expired: w.expired,
+          completed: w.completed,
+          verified: w.verified,
+          earned: w.earned,
+        };
+      })
+      .sort((a, b) => {
+        return a.id === b.id
+          ? Number.parseInt(a.task_id, 10) < Number.parseInt(b.task_id, 10)
+            ? -1
+            : 1
+          : a.id < b.id
+          ? -1
+          : 1;
+      });
+    const allDataFileName = `report.${currentDate}.all.csv`;
 
     const weekDropdown = (
       <select id='week' value={week} onChange={this.handleWeekChange}>
@@ -181,6 +214,11 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
         <div className='row'>
           <CSVLink data={data} filename={exportFileName} className='btn' id='download-btn'>
             <i className='material-icons left'>download</i>Download data
+          </CSVLink>
+        </div>
+        <div className='row'>
+          <CSVLink data={allData} filename={allDataFileName} className='btn' id='download-btn'>
+            <i className='material-icons left'>download</i>Download All Data
           </CSVLink>
         </div>
       </>
