@@ -29,9 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_8sdp"
         android:paddingVertical="@dimen/_10sdp"
-        android:textSize="@dimen/_24ssp"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/nextBtn"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
         tools:text="HOWDY" />
 
@@ -43,9 +43,8 @@
         android:background="@drawable/ic_next_enabled"
         android:contentDescription="@string/back"
         android:soundEffectsEnabled="false"
-        app:layout_constraintBottom_toBottomOf="@id/contextTv"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/contextTv" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
     <EditText
@@ -55,12 +54,7 @@
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:background="@drawable/background_microtask_input_text"
-        android:completionThreshold="1"
-        android:digits="@string/alphanumericString"
-        android:dropDownHeight="wrap_content"
         android:hint="@string/transliteration_hint"
-        android:inputType="number"
-        android:maxLines="1"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:scrollbars="vertical"
@@ -85,45 +79,15 @@
         app:layout_constraintTop_toBottomOf="@id/sentenceEt"
         tools:text="THIS IS AN ERROR MESSAGE" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/userVariantScrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sentenceRv"
         android:layout_width="@dimen/_0sdp"
-        android:layout_height="wrap_content"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintHeight_max="@dimen/_350sdp"
+        android:layout_height="0dp"
         android:layout_marginVertical="@dimen/_8sdp"
         app:layout_constraintLeft_toLeftOf="@id/sentenceEt"
         app:layout_constraintRight_toRightOf="@id/addBtn"
-        app:layout_constraintTop_toBottomOf="@id/errorTv">
-
-        <com.nex3z.flowlayout.FlowLayout
-            android:id="@+id/userVariantLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            app:flChildSpacing="@dimen/_8sdp"
-            app:flRowSpacing="@dimen/_8sdp" />
-
-    </androidx.core.widget.NestedScrollView>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="@dimen/_0sdp"
-        android:layout_height="@dimen/_0sdp"
-        android:layout_marginVertical="@dimen/_8sdp"
-        android:paddingBottom="@dimen/_8sdp"
-        app:layout_constraintLeft_toLeftOf="@id/userVariantScrollView"
-        app:layout_constraintRight_toRightOf="@id/userVariantScrollView"
-        app:layout_constraintTop_toBottomOf="@id/userVariantScrollView"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.nex3z.flowlayout.FlowLayout
-            android:id="@+id/verifyFlowLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:flChildSpacing="@dimen/_8sdp"
-            app:flRowSpacing="@dimen/_8sdp" />
-
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toBottomOf="@id/errorTv"
+        app:layout_constraintBottom_toTopOf="@id/nextBtn"/>
 
 
     <ImageButton
