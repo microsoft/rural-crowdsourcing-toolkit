@@ -61,6 +61,9 @@ constructor(
     } catch (e: Exception) {
       999999
     }
+
+    // Reset sentence list
+    _sentences.value = ArrayList()
   }
 
   /** Handle next button click */
@@ -90,7 +93,7 @@ constructor(
 
   fun addSentence(sentence: String) {
     val temp = ArrayList(_sentences.value)
-    temp.add(sentence)
+    temp.add(0, sentence)
     _sentences.value = temp
   }
 

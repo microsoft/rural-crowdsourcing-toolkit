@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.microtask_sentence_corpus.nextBtn
 
 @AndroidEntryPoint
 class SentenceCorpusFragment :
-  BaseMTRendererFragment(R.layout.microtask_transliteration) {
+  BaseMTRendererFragment(R.layout.microtask_sentence_corpus) {
   override val viewModel: SentenceCorpusViewModel by viewModels()
   val args: SentenceCorpusFragmentArgs by navArgs()
 
@@ -80,6 +80,7 @@ class SentenceCorpusFragment :
     }
 
     viewModel.addSentence(sentence)
+    sentenceEt.text.clear()
   }
 
   private fun showError(error: String) {
@@ -101,7 +102,10 @@ class SentenceCorpusFragment :
     viewModel.contextText.observe(
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
-    ) { text -> contextTv.text = text }
+    ) {
+        text -> contextTv.text = text
+
+    }
 
     viewModel.sentences.observe(
       viewLifecycleOwner.lifecycle,

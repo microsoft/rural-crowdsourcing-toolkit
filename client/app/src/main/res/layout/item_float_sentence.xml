@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:backgroundTint="@color/c_light_grey"
+    android:layout_margin="@dimen/_4sdp"
     app:cardCornerRadius="@dimen/_16sdp"
     app:cardElevation="@dimen/_0sdp">
 
@@ -16,7 +17,7 @@
         android:paddingVertical="4dp">
 
         <TextView
-            android:id="@+id/sentenceTv"
+            android:id="@+id/floatSentenceTv"
             android:layout_weight="3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,17 +27,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/removeImageView"
+            app:layout_constraintRight_toLeftOf="@id/removeSentenceImageView"
             tools:text="THIS IS A TEST SENTENCE WHICH IS VERY LARGE" />
 
         <ImageView
-            android:id="@+id/removeImageView"
+            android:id="@+id/removeSentenceImageView"
             android:layout_marginLeft="@dimen/_4sdp"
             android:layout_width="@dimen/_16sdp"
             android:layout_height="@dimen/_16sdp"
-            app:layout_constraintTop_toTopOf="@id/sentenceTv"
-            app:layout_constraintBottom_toBottomOf="@id/sentenceTv"
-            app:layout_constraintLeft_toRightOf="@id/sentenceTv"
+            app:layout_constraintTop_toTopOf="@id/floatSentenceTv"
+            app:layout_constraintBottom_toBottomOf="@id/floatSentenceTv"
+            app:layout_constraintLeft_toRightOf="@id/floatSentenceTv"
             app:layout_constraintRight_toRightOf="parent"
             android:src="@drawable/ic_cross_on" />
     </androidx.constraintlayout.widget.ConstraintLayout>
