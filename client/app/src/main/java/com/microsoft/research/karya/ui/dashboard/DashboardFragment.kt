@@ -293,6 +293,11 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             completed,
             total
           )
+          ScenarioType.SPEECH_TRANSCRIPTION -> actionDashboardActivityToSpeechTranscriptionFragment(
+            taskId,
+            completed,
+            total
+          )
           else -> null
         }
       }

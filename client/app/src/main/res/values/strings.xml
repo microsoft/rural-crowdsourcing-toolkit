@@ -260,4 +260,6 @@
     <string name="next">next</string>
     <string name="back">back</string>
     <string name="skip_task_warning">Are you sure, you want to skip the task?</string>
+    <string name="no_transcription_error_msg">Please enter the transcription</string>
+    <string name="speech_transcription_instruction">Transcribe the audio below</string>
 </resources>
