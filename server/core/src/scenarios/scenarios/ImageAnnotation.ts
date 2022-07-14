@@ -45,7 +45,13 @@ export const baseImageAnnotationScenario: BaseImageAnnotationScenario = {
     json: {
       required: true,
       description: `JSON file containing an array of objects. Each object must have an image key with the name of the image file, annotationType key with type of annotation object (RECTANGLE or POLYGON) and numberOfSides key for the number of sides`,
-      schema: Joi.array().items(Joi.object({ image: Joi.string().required() }).unknown(true)),
+      schema: Joi.array().items(
+        Joi.object({
+          image: Joi.string().required(),
+          annotationType: Joi.string().required(),
+          numberOfSides: Joi.number().required(),
+        }).unknown(true)
+      ),
     },
     tgz: {
       required: true,
