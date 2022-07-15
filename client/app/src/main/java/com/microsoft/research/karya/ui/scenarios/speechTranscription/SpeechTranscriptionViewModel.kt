@@ -176,7 +176,7 @@ constructor(
 
       /** Subsequent play back */
       ActivityState.PLAYBACK -> {
-        setButtonStates(ButtonState.ENABLED, ButtonState.ACTIVE, nextBtnState)
+        setButtonStates(ButtonState.ENABLED, ButtonState.ACTIVE, ButtonState.ENABLED)
         mediaPlayer!!.start()
         updatePlaybackProgress(ActivityState.PLAYBACK)
       }
