@@ -265,9 +265,11 @@ constructor(
     _playbackProgressPbProgress.value = 0
 
     // Set microtask instruction
-    _microTaskInstruction.value =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction").toString()
-    totalRecordedBytes = 0
+    if (currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction") != null) {
+      _microTaskInstruction.value =
+        currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction").toString()
+      totalRecordedBytes = 0
+    }
 
     _sentenceTvText.value =
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
@@ -276,7 +278,7 @@ constructor(
     /** Get microtask config */
     try{
       allowSkipping = task.params.asJsonObject.get("allowSkipping").asBoolean
-    } catch (e: Error) {
+    } catch (e: Exception) {
       allowSkipping = false
     }
 

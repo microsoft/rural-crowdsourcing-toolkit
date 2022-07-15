@@ -79,7 +79,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         val wordButton = Button(context)
         wordButton.text = word
         wordButton.setOnClickListener {
-          transcriptionEt.setText(transcriptionEt.text.toString() + word)
+          transcriptionEt.setText(transcriptionEt.text.toString() + " " + word)
           transcriptionEt.setSelection(transcriptionEt.length())//placing cursor at the end of the text
         }
         assistanceFl.addView(wordButton)
@@ -132,7 +132,6 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     val alertDialogBuilder = AlertDialog.Builder(requireContext())
     alertDialogBuilder.setMessage(msg)
     alertDialogBuilder.setNeutralButton("Ok") { _, _ ->
-      viewModel.handleCorruptAudio()
     }
     val alertDialog = alertDialogBuilder.create()
     alertDialog.setCancelable(false)
