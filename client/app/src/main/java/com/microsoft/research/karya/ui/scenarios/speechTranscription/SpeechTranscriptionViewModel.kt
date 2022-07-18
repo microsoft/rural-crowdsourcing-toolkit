@@ -117,6 +117,7 @@ constructor(
     } catch (exception: Exception) {
       // Alert dialog
       showErrorWithDialogBox("Audio file is corrupt")
+      handleCorruptAudio()
       return
     }
 
@@ -183,7 +184,7 @@ constructor(
 
       /** Pause subsequent play back */
       ActivityState.PLAYBACK_PAUSED -> {
-        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, nextBtnState)
+        setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
         mediaPlayer!!.pause()
       }
 
