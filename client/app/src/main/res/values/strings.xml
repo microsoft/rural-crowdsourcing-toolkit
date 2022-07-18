@@ -271,4 +271,33 @@
     <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
     <string name="select_image_annotation_label_dialog_instruction">Select Label</string>
     <string name="image_annotation_edit_label">Select new label</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="rotate_right">rotate</string>
+
+    <string name="submit">Submit</string>
+    <string name="name">Name</string>
+    <string name="account_number">Account Number</string>
+    <string name="ifsc_code">IFSC Code</string>
+    <string name="re_enter_account_number">Re-enter Account Number</string>
+    <string name="upi_id">UPI ID</string>
+    <string name="re_enter_upi_id">Re-enter UPI ID</string>
+    <string name="payment_registration_description">Congratulations! You have earned ₹%.2f. Please select a method to receive the amount</string>
+    <string name="verification_request_processing">We are processing your request. Once successful, we will send you ₹2 amount to your account for verification. Please try again after some time.</string>
+    <string name="verification_request_processed">To verify your account, we have sent you ₹2. If you received the amount, please confirm by clicking the button below.</string>
+    <string name="verification_loading">Checking account status, please wait.</string>
+    <string name="rs_float">₹%.2f</string>
+    <string name="balance">Balance</string>
+    <string name="transferred">Transferred</string>
+    <string name="last_payment_details">Last Payment Details</string>
+    <string name="amount_rs_2f">Amount: ₹%.2f</string>
+    <string name="utr_s">UTR: %s</string>
+    <string name="date_s">Date: %s</string>
+    <string name="status_s">Status: %s</string>
+    <string name="all_transactions">All Transactions</string>
+    <string name="account_details">Account Details</string>
+    <string name="name_s">Name: %s</string>
+    <string name="id_s">ID: %s</string>
+    <string name="ifsc_s">IFSC: %s</string>
+    <string name="update_account_details">Update Account Details</string>
+    <string name="no_internet">No internet available</string>
 </resources>

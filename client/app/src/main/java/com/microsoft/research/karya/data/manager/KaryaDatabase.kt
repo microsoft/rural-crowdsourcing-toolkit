@@ -4,6 +4,7 @@
 package com.microsoft.research.karya.data.manager
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -16,17 +17,16 @@ import com.microsoft.research.karya.data.model.karya.*
 
 @Database(
   entities =
-  [
-    WorkerRecord::class,
-    KaryaFileRecord::class,
-    TaskRecord::class,
-    MicroTaskRecord::class,
-    MicroTaskAssignmentRecord::class,
-  ],
-  version = 1,
-  //  autoMigrations = [
-  //    AutoMigration (from = 1, to = 2)
-  //  ]
+    [
+      WorkerRecord::class,
+      KaryaFileRecord::class,
+      TaskRecord::class,
+      MicroTaskRecord::class,
+      MicroTaskAssignmentRecord::class,
+      PaymentAccountRecord::class],
+  version = 2,
+  autoMigrations = [AutoMigration(from = 1, to = 2)],
+  exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class KaryaDatabase : RoomDatabase() {
@@ -38,6 +38,7 @@ abstract class KaryaDatabase : RoomDatabase() {
   abstract fun microtaskAssignmentDaoExtra(): MicrotaskAssignmentDaoExtra
   abstract fun microtaskDaoExtra(): MicrotaskDaoExtra
   abstract fun karyaFileDao(): KaryaFileDao
+  abstract fun paymentAccountDao(): PaymentAccountDao
 
   companion object {
     private var INSTANCE: KaryaDatabase? = null
@@ -45,9 +46,7 @@ abstract class KaryaDatabase : RoomDatabase() {
     fun getInstance(context: Context): KaryaDatabase? {
       if (INSTANCE == null) {
         synchronized(KaryaDatabase::class) {
-          INSTANCE =
-            Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db")
-              .build()
+          INSTANCE = Room.databaseBuilder(context.applicationContext, KaryaDatabase::class.java, "karya.db").build()
         }
       }
       return INSTANCE

@@ -14,12 +14,12 @@ import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import java.io.File
+import kotlin.properties.Delegates
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import kotlin.properties.Delegates
 
 abstract class BaseFeedbackRendererViewModel
 constructor(
@@ -74,8 +74,8 @@ constructor(
   }
 
   /**
-   * Setup microtask after updating [currentAssignmentIndex]. Called at the end of [onResume], and
-   * navigating to next or previous tasks
+   * Setup microtask after updating [currentAssignmentIndex]. Called at the end of [onResume], and navigating to next or
+   * previous tasks
    */
   protected abstract fun setupMicrotask()
 
@@ -100,10 +100,7 @@ constructor(
     }
   }
 
-  /**
-   * Move to previous microtask and setup. Returns false if there is no previous microtask. Else
-   * true
-   */
+  /** Move to previous microtask and setup. Returns false if there is no previous microtask. Else true */
   protected fun moveToPreviousMicrotask() {
     viewModelScope.launch { deleteOutputFiles() }
     if (hasPreviousMicrotask()) {
@@ -116,14 +113,15 @@ constructor(
 
   private fun deleteOutputFiles() {
     val directory = assignmentOutputContainer.getDirectory()
-    val assignmentOutputFiles = try {
-      val outputFilesDict = currentAssignment.output.asJsonObject.getAsJsonObject("files")
-      val outputFiles = arrayListOf<String>()
-      outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
-      outputFiles
-    } catch (e: Exception) {
-      arrayListOf<String>()
-    }
+    val assignmentOutputFiles =
+      try {
+        val outputFilesDict = currentAssignment.output.asJsonObject.getAsJsonObject("files")
+        val outputFiles = arrayListOf<String>()
+        outputFilesDict.keySet().forEach { k -> outputFiles.add(outputFilesDict.get(k).asString) }
+        outputFiles
+      } catch (e: Exception) {
+        arrayListOf<String>()
+      }
     assignmentOutputFiles.forEach {
       val filePath = "$directory/$it"
       if (File(filePath).exists()) File(filePath).delete()
@@ -143,17 +141,13 @@ constructor(
       var inputFileDoesNotExist = false
       if (currentMicroTask.input_file_id != null) {
         val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
-        val microtaskInputDirectory =
-          microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
+        val microtaskInputDirectory = microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
 
         if (!File(microtaskTarBallPath).exists()) {
           inputFileDoesNotExist = true
           // TODO: Create a MutableLiveData to inform the UI about an alertbox
         } else {
-          FileUtils.extractGZippedTarBallIntoDirectory(
-            microtaskTarBallPath,
-            microtaskInputDirectory
-          )
+          FileUtils.extractGZippedTarBallIntoDirectory(microtaskTarBallPath, microtaskInputDirectory)
         }
       }
 
@@ -180,9 +174,9 @@ constructor(
   }
 
   /**
-   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a
-   * file identifier and extension. The file name is usually the current assignmentID appended with
-   * the identifier. The full file name is unique for a unique [params] pair.
+   * Get the unique file name of the output for current assignment. [params] is a pair of strings: a file identifier and
+   * extension. The file name is usually the current assignmentID appended with the identifier. The full file name is
+   * unique for a unique [params] pair.
    */
   private fun getAssignmentFileName(params: Pair<String, String>): String {
     val identifier = params.first

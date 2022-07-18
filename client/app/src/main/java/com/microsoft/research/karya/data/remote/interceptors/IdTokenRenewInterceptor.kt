@@ -32,12 +32,10 @@ class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManage
 
     // If it has been 7 days since issuing the token, refresh
     if (current > body.exp) {
-      ioScope.launch {
-        authManager.expireSession()
-      }
+      ioScope.launch { authManager.expireSession() }
       // Send the response back since the session is expired
       return Response.Builder()
-        .code(600) //Simply put whatever value you want to designate to aborted request.
+        .code(600) // Simply put whatever value you want to designate to aborted request.
         .protocol(Protocol.HTTP_2)
         .body("".toResponseBody("text/html; charset=utf-8".toMediaType()))
         .message("Cancel Request Interceptor: Id token expired")
@@ -46,24 +44,16 @@ class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManage
     }
 
     if (current - body.iat > DAY7_IN_SECONDS) {
-      val authRequest = request.newBuilder()
-        .url("${baseUrl}/renew_id_token")
-        .get()
-        .build()
+      val authRequest = request.newBuilder().url("${baseUrl}/renew_id_token").get().build()
       val tokenRefreshResponse = chain.proceed(authRequest)
       if (tokenRefreshResponse.isSuccessful) {
         val responseRaw = tokenRefreshResponse.body!!.string()
         val responseJson = JSONObject(responseRaw)
         val newIdToken = responseJson.getString("id_token")
 
-        runBlocking {
-          authRepository.renewIdToken(workerId, newIdToken)
-        }
+        runBlocking { authRepository.renewIdToken(workerId, newIdToken) }
         return chain.proceed(
-          requestBuilder
-            .removeHeader(ID_TOKEN_HEADER)
-            .addHeader(ID_TOKEN_HEADER, newIdToken)
-            .build()
+          requestBuilder.removeHeader(ID_TOKEN_HEADER).addHeader(ID_TOKEN_HEADER, newIdToken).build()
         )
       }
     }
@@ -71,13 +61,10 @@ class IdTokenRenewInterceptor(val authRepository: AuthRepository, val authManage
     return chain.proceed(requestBuilder.build())
   }
 
-  /**
-   * Get payload from a [idToken]
-   */
+  /** Get payload from a [idToken] */
   private fun getPayload(idToken: String): IDToken {
     val fields = idToken.split(".")
     val bodyString = Base64.decode(fields[1], Base64.URL_SAFE).toString(Charsets.UTF_8)
     return Gson().fromJson(bodyString, IDToken::class.java)
   }
-
 }

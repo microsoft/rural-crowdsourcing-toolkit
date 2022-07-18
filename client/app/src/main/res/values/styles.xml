@@ -74,6 +74,16 @@
         <item name="autoSizeTextType">uniform</item>
     </style>
 
+    <style name="KaryaPaymentsButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textColor">@color/mtrl_text_btn_text_color_selector</item>
+        <item name="android:paddingLeft">@dimen/mtrl_btn_text_btn_padding_left</item>
+        <item name="android:paddingRight">@dimen/mtrl_btn_text_btn_padding_right</item>
+        <item name="iconTint">@color/mtrl_text_btn_text_color_selector</item>
+        <item name="iconPadding">@dimen/mtrl_btn_text_btn_icon_padding</item>
+        <item name="rippleColor">@color/mtrl_btn_text_btn_ripple_color</item>
+        <item name="backgroundTint">@drawable/karya_payments_button_bg_selector</item>
+    </style>
+
     <!-- Microtask Output Edit Text -->
     <style name="MicrotaskOutputEditText">
         <item name="android:background">@drawable/background_microtask_output_edit_text</item>

@@ -7,7 +7,7 @@ plugins {
   id("com.google.firebase.crashlytics")
   id("dagger.hilt.android.plugin")
   id("androidx.navigation.safeargs.kotlin")
-  id("com.ncorti.ktfmt.gradle") version "0.5.0"
+  id("com.ncorti.ktfmt.gradle") version "0.7.0"
   id("com.github.ben-manes.versions") version "0.38.0"
 }
 
@@ -40,6 +40,11 @@ android {
   }
   kotlinOptions {
     jvmTarget = "1.8"
+    kapt {
+      arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+      }
+    }
   }
   lintOptions {
     isAbortOnError = false
@@ -125,6 +130,7 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
   implementation(Dependencies.AndroidX.Navigation.uiKtx)
+  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
 
   kapt(Dependencies.AndroidX.Room.roomCompiler)
 

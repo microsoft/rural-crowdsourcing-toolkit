@@ -15,11 +15,11 @@ import com.microsoft.research.karya.ui.scenarios.transliteration.Transliteration
 import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationViewModel.WordVerificationStatus.NEW
 import com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationViewModel.WordVerificationStatus.UNKNOWN
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.properties.Delegates
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.properties.Delegates
 
 @HiltViewModel
 class TransliterationViewModel
@@ -30,20 +30,18 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(
-  assignmentRepository,
-  taskRepository,
-  microTaskRepository,
-  fileDirPath,
-  authManager
-) {
+) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
 
   enum class WordOrigin {
-    HUMAN, MACHINE
+    HUMAN,
+    MACHINE
   }
 
   enum class WordVerificationStatus {
-    UNKNOWN, NEW, VALID, INVALID
+    UNKNOWN,
+    NEW,
+    VALID,
+    INVALID
   }
 
   data class WordDetail(
@@ -59,12 +57,10 @@ constructor(
   var mlFeedback: Boolean = false
   var variantLimitTask: Int = 0
 
-  private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
-    MutableLiveData(mutableMapOf())
+  private val _outputVariants: MutableLiveData<MutableMap<String, WordDetail>> = MutableLiveData(mutableMapOf())
   val outputVariants: LiveData<MutableMap<String, WordDetail>> = _outputVariants
 
-  private val _inputVariants: MutableLiveData<MutableMap<String, WordDetail>> =
-    MutableLiveData(mutableMapOf())
+  private val _inputVariants: MutableLiveData<MutableMap<String, WordDetail>> = MutableLiveData(mutableMapOf())
   val inputVariants: LiveData<MutableMap<String, WordDetail>> = _inputVariants
 
   var limit by Delegates.notNull<Int>()
@@ -72,52 +68,54 @@ constructor(
   override fun setupViewModel(taskId: String, completed: Int, total: Int) {
     super.setupViewModel(taskId, completed, total)
     // TODO: Move to Gson
-    allowValidation = try {
-      task.params.asJsonObject.get("allowValidation").asBoolean
-    } catch (e: Exception) {
-      false
-    }
-    mlFeedback = try {
-      task.params.asJsonObject.get("mlFeedback").asBoolean
-    } catch (e: Exception) {
-      false
-    }
-    variantLimitTask = try {
-      task.params.asJsonObject.get("limit").asInt
-    } catch (e: Exception) {
-      2
-    }
+    allowValidation =
+      try {
+        task.params.asJsonObject.get("allowValidation").asBoolean
+      } catch (e: Exception) {
+        false
+      }
+    mlFeedback =
+      try {
+        task.params.asJsonObject.get("mlFeedback").asBoolean
+      } catch (e: Exception) {
+        false
+      }
+    variantLimitTask =
+      try {
+        task.params.asJsonObject.get("limit").asInt
+      } catch (e: Exception) {
+        2
+      }
   }
 
   override fun setupMicrotask() {
     // TODO: Move to Gson
-    sourceLanguage = LanguageType.valueOf(task.params.asJsonObject.get("language").asString);
+    sourceLanguage = LanguageType.valueOf(task.params.asJsonObject.get("language").asString)
     sourceWord = currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("word").asString
     _wordTvText.value = sourceWord
 
-    limit = try {
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
-    } catch (e: Exception) {
-      variantLimitTask
-    }
+    limit =
+      try {
+        currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
+      } catch (e: Exception) {
+        variantLimitTask
+      }
 
-    val variantsJsonObject = try {
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
-    } catch (e: Exception) {
-      JsonObject()
-    }
+    val variantsJsonObject =
+      try {
+        currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("variants").asJsonObject
+      } catch (e: Exception) {
+        JsonObject()
+      }
     val temp = mutableMapOf<String, WordDetail>()
 
     for (word in variantsJsonObject.keySet()) {
       val detail = variantsJsonObject.getAsJsonObject(word)
-      val wordDetail = WordDetail(
-        WordOrigin.valueOf(
-          detail.get("origin").asString
-        ),
-        WordVerificationStatus.valueOf(
-          detail.get("status").asString
+      val wordDetail =
+        WordDetail(
+          WordOrigin.valueOf(detail.get("origin").asString),
+          WordVerificationStatus.valueOf(detail.get("status").asString)
         )
-      )
       temp[word] = wordDetail
     }
 
@@ -146,10 +144,8 @@ constructor(
     for ((word, wordDetail) in _inputVariants.value!!) {
       val wordObject = JsonObject()
       wordObject.addProperty("origin", wordDetail.origin.name)
-      if (allowValidation)
-        wordObject.addProperty("status", WordVerificationStatus.VALID.name)
-      else
-        wordObject.addProperty("status", UNKNOWN.name)
+      if (allowValidation) wordObject.addProperty("status", WordVerificationStatus.VALID.name)
+      else wordObject.addProperty("status", UNKNOWN.name)
       variants.add(word, wordObject)
     }
 
@@ -190,5 +186,4 @@ constructor(
     }
     return temp
   }
-
 }

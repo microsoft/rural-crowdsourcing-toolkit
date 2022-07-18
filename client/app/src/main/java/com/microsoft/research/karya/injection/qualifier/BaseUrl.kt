@@ -2,6 +2,4 @@ package com.microsoft.research.karya.injection.qualifier
 
 import javax.inject.Qualifier
 
-@Qualifier
-@Retention
-annotation class BaseUrl
+@Qualifier @Retention annotation class BaseUrl

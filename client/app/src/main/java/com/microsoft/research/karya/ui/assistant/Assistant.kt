@@ -8,10 +8,10 @@ import com.microsoft.research.karya.data.manager.ResourceManager
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class Assistant
 @AssistedInject
@@ -98,6 +98,5 @@ constructor(
     }
   }
 
-  private fun isAssistantAvailable(): Boolean =
-    lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)
+  private fun isAssistantAvailable(): Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)
 }

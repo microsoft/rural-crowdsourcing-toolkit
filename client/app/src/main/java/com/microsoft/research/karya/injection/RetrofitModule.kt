@@ -10,6 +10,7 @@ import com.microsoft.research.karya.data.repo.AuthRepository
 import com.microsoft.research.karya.data.service.KaryaFileAPI
 import com.microsoft.research.karya.data.service.LanguageAPI
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
+import com.microsoft.research.karya.data.service.PaymentAPI
 import com.microsoft.research.karya.data.service.WorkerAPI
 import com.microsoft.research.karya.injection.qualifier.BaseUrl
 import com.microsoft.research.karya.injection.qualifier.KaryaOkHttpClient
@@ -19,6 +20,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -89,6 +91,7 @@ class RetrofitModule {
     return OkHttpClient.Builder()
       .connectTimeout(10, TimeUnit.MINUTES)
       .readTimeout(10, TimeUnit.MINUTES)
+      .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(idTokenRenewInterceptor)
       .addInterceptor(versionInterceptor)
       .addInterceptor(hostSelectionInterceptor)
@@ -128,5 +131,11 @@ class RetrofitModule {
   @Reusable
   fun provideKaryaFileAPIService(retrofit: Retrofit): KaryaFileAPI {
     return retrofit.create(KaryaFileAPI::class.java)
+  }
+
+  @Provides
+  @Reusable
+  fun providePaymentAPIService(retrofit: Retrofit): PaymentAPI {
+    return retrofit.create(PaymentAPI::class.java)
   }
 }

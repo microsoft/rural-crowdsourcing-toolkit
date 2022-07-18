@@ -46,12 +46,12 @@ fun Fragment.hideKeyboard() {
   val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
   val view = requireActivity().currentFocus ?: View(requireContext())
   imm.hideSoftInputFromWindow(view.windowToken, 0)
+  view.clearFocus()
 }
 
 fun Fragment.finish() = requireActivity().finish()
 
-fun Context.getDirectory(directoryName: String): String =
-  getDir(directoryName, Context.MODE_PRIVATE).path
+fun Context.getDirectory(directoryName: String): String = getDir(directoryName, Context.MODE_PRIVATE).path
 
 fun Context.isNetworkAvailable(): Boolean {
   val connectivityManager = getSystemService<ConnectivityManager>()

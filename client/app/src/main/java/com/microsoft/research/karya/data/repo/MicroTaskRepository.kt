@@ -7,10 +7,7 @@ import javax.inject.Inject
 
 class MicroTaskRepository
 @Inject
-constructor(
-  private val microTaskDao: MicroTaskDao,
-  private val microtaskDaoExtra: MicrotaskDaoExtra
-) {
+constructor(private val microTaskDao: MicroTaskDao, private val microtaskDaoExtra: MicrotaskDaoExtra) {
 
   suspend fun getSubmittedMicrotasksWithInputFiles(): List<String> {
     return microtaskDaoExtra.getSubmittedMicrotasksWithInputFiles()

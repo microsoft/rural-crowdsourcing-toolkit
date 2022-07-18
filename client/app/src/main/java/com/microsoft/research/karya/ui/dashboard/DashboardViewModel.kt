@@ -6,8 +6,11 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
+import com.microsoft.research.karya.data.remote.response.WorkerBalanceResponse
 import com.microsoft.research.karya.data.repo.AssignmentRepository
+import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
+import com.microsoft.research.karya.ui.payment.PaymentFlowNavigation
 import com.microsoft.research.karya.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +25,7 @@ constructor(
   private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
   private val authManager: AuthManager,
+  private val paymentRepository: PaymentRepository,
 ) : ViewModel() {
 
   private var taskInfoList = listOf<TaskInfo>()
@@ -34,8 +38,10 @@ constructor(
     MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
   val dashboardUiState = _dashboardUiState.asStateFlow()
 
-  private val _progress: MutableStateFlow<Int> =
-    MutableStateFlow(0)
+  private val _navigationFlow = MutableSharedFlow<DashboardNavigation>()
+  val navigationFlow = _navigationFlow.asSharedFlow()
+
+  private val _progress: MutableStateFlow<Int> = MutableStateFlow(0)
   val progress = _progress.asStateFlow()
 
   suspend fun refreshList() {
@@ -153,4 +159,17 @@ constructor(
     _progress.value = i
   }
 
+  fun navigatePayment() {
+    viewModelScope.launch {
+      val workerId = authManager.getLoggedInWorker().id
+      val status = paymentRepository.getPaymentRecordStatus(workerId)
+      when (status.getNavigationDestination()) {
+        PaymentFlowNavigation.DASHBOARD -> _navigationFlow.emit(DashboardNavigation.PAYMENT_DASHBOARD)
+        PaymentFlowNavigation.FAILURE -> _navigationFlow.emit(DashboardNavigation.PAYMENT_FAILURE)
+        PaymentFlowNavigation.REGISTRATION -> _navigationFlow.emit(DashboardNavigation.PAYMENT_REGISTRATION)
+        PaymentFlowNavigation.VERIFICATION -> _navigationFlow.emit(DashboardNavigation.PAYMENT_VERIFICATION)
+        else -> {}
+      }
+    }
+  }
 }

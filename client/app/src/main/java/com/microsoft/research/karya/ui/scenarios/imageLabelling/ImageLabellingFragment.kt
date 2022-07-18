@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.requestSoftKeyFocus
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.item_float_label.view.*
@@ -26,11 +25,7 @@ class ImageLabellingFragment : BaseMTRendererFragment(R.layout.microtask_image_l
 
   private val labelMap: MutableMap<String, View> = mutableMapOf()
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = super.onCreateView(inflater, container, savedInstanceState)
     viewModel.setupViewModel(args.taskId, args.completed, args.total)
     return view
@@ -41,31 +36,31 @@ class ImageLabellingFragment : BaseMTRendererFragment(R.layout.microtask_image_l
     setupObservers()
 
     // Set microtask instruction
-    val instruction = try {
-      viewModel.task.params.asJsonObject.get("instruction").asString
-    } catch (e: Exception) {
-      getString(R.string.image_labelling_instruction)
-    }
+    val instruction =
+      try {
+        viewModel.task.params.asJsonObject.get("instruction").asString
+      } catch (e: Exception) {
+        getString(R.string.image_labelling_instruction)
+      }
     instructionTv.text = instruction
 
     // Set next button click handler
     nextBtn.setOnClickListener { handleNextClick() }
 
     // Set up label views
-    val labels = try {
-      viewModel.task.params.asJsonObject.get("labels").asJsonArray.map { it.asString }
-    } catch (e: Exception) {
-      arrayListOf()
-    }
+    val labels =
+      try {
+        viewModel.task.params.asJsonObject.get("labels").asJsonArray.map { it.asString }
+      } catch (e: Exception) {
+        arrayListOf()
+      }
 
     labels.forEach {
       val label = it
       val labelView = layoutInflater.inflate(R.layout.item_float_label, null)
       labelView.label.text = label
 
-      labelView.setOnClickListener {
-        viewModel.flipState(label)
-      }
+      labelView.setOnClickListener { viewModel.flipState(label) }
       labelsLayout.addView(labelView)
 
       labelMap[label] = labelView

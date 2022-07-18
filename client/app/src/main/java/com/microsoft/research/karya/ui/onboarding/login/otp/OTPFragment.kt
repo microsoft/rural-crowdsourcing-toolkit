@@ -113,8 +113,7 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
   private fun navigate(destination: Destination) {
     when (destination) {
       Destination.Dashboard -> navigateToDashBoard()
-      else -> {
-      }
+      else -> {}
     }
   }
 

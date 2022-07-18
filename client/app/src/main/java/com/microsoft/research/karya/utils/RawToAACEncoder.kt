@@ -30,10 +30,7 @@ class RawToAACEncoder(
     val mux = MediaMuxer(outputFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
 
     var outputFormat = MediaFormat.createAudioFormat(OutputMimeType, SamplingRate, 1)
-    outputFormat.setInteger(
-      MediaFormat.KEY_AAC_PROFILE,
-      MediaCodecInfo.CodecProfileLevel.AACObjectLC
-    )
+    outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC)
     outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, OutputBitRate)
 
     val codec = MediaCodec.createEncoderByType(OutputMimeType)

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/text_transliteration_desc"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <TextView
+        android:id="@+id/sourceTextTv"
+        style="@style/TextTvStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:textSize="@dimen/_24ssp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
+        tools:text="HOWDY" />
+
+    <TextView
+        android:id="@+id/targetTextTv"
+        style="@style/TextTvStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:textSize="@dimen/_24ssp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sourceTextTv"
+        tools:text="HOWDY" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        app:layout_constraintLeft_toLeftOf="@id/targetTextTv"
+        app:layout_constraintRight_toRightOf="@id/targetTextTv"
+        app:layout_constraintTop_toBottomOf="@id/targetTextTv"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_translation_score_text"
+                android:textSize="@dimen/_16sdp"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/scoreTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:text="10"
+                android:textSize="@dimen/_16sdp"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/scoreSeekbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_10sdp"
+            android:max="100"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/nextBtn"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_8sdp"
+        android:background="@drawable/ic_next_enabled"
+        android:contentDescription="@string/back"
+        android:soundEffectsEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+
+
+    <!--    <TextView-->
+<!--        android:id="@+id/errorTv"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginVertical="@dimen/_8sdp"-->
+<!--        android:textColor="@color/colorRed"-->
+<!--        android:textSize="@dimen/_12ssp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"-->
+<!--        app:layout_constraintRight_toRightOf="@id/addBtn"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/textTransliteration"-->
+<!--        tools:text="THIS IS AN ERROR MESSAGE" />-->
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

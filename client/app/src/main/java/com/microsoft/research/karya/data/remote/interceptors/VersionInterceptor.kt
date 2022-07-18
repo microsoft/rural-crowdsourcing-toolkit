@@ -5,11 +5,6 @@ import okhttp3.Response
 
 class VersionInterceptor() : Interceptor {
   override fun intercept(chain: Interceptor.Chain): Response {
-    return chain.proceed(
-      chain.request()
-        .newBuilder()
-        .addHeader("client-version-number", "5")
-        .build()
-    )
+    return chain.proceed(chain.request().newBuilder().addHeader("client-version-number", "5").build())
   }
 }

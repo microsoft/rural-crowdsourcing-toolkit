@@ -7,17 +7,12 @@ import kotlinx.coroutines.flow.*
 
 @Suppress("USELESS_CAST")
 fun <T> Flow<T>.mapToResult(): Flow<Result> {
-  return map { response -> (Result.Success(response) as Result) }.onStart { emit(Result.Loading) }
-    .catch { exception ->
-      emit(Result.Error(exception))
-    }
+  return map { response -> (Result.Success(response) as Result) }.onStart { emit(Result.Loading) }.catch { exception ->
+    emit(Result.Error(exception))
+  }
 }
 
-fun <T> Flow<T>.observe(
-  lifecycle: Lifecycle,
-  lifecycleScope: LifecycleCoroutineScope,
-  observer: (T) -> Unit
-) {
+fun <T> Flow<T>.observe(lifecycle: Lifecycle, lifecycleScope: LifecycleCoroutineScope, observer: (T) -> Unit) {
   flowWithLifecycle(lifecycle).onEach { observer(it) }.launchIn(lifecycleScope)
 }
 
@@ -45,13 +40,8 @@ fun <T> SavedStateHandle.getStateFlow(
 
     scope.launch {
       mutableStateFlow.also { flow ->
-        flow.onCompletion {
-          withContext(Dispatchers.Main.immediate) {
-            liveData.removeObserver(
-              observer
-            )
-          }
-        }.collect { value ->
+        flow.onCompletion { withContext(Dispatchers.Main.immediate) { liveData.removeObserver(observer) } }.collect {
+          value ->
           withContext(Dispatchers.Main.immediate) {
             if (liveData.value != value) {
               liveData.value = value
@@ -63,3 +53,15 @@ fun <T> SavedStateHandle.getStateFlow(
 
     mutableStateFlow
   }
+
+fun <T> Flow<T>.throttleFirst(windowDuration: Long): Flow<T> = flow {
+  var lastEmissionTime = 0L
+  collect { upstream ->
+    val currentTime = System.currentTimeMillis()
+    val mayEmit = currentTime - lastEmissionTime > windowDuration
+    if (mayEmit) {
+      lastEmissionTime = currentTime
+      emit(upstream)
+    }
+  }
+}

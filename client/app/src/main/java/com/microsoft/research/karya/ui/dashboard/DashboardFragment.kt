@@ -63,8 +63,18 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       }
     }
 
-    viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
-      binding.syncProgressBar.progress = i
+    viewModel.progress.observe(lifecycle, lifecycleScope) { i -> binding.syncProgressBar.progress = i }
+
+    viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
+      val resId =
+        when (navigation) {
+          DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
+          DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
+          DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
+          DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
+        }
+
+      findNavController().navigate(resId)
     }
 
     WorkManager.getInstance(requireContext())
@@ -107,8 +117,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             viewModel.refreshList()
           }
         }
-      })
-
+      )
   }
 
   override fun onSessionExpired() {

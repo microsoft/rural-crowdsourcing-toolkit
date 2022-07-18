@@ -25,13 +25,14 @@ class WorkerFactoryModule {
     @FilesDir fileDirPath: String,
     authManager: AuthManager,
   ): SyncDelegatingWorkerFactory {
-    val workerFactory = SyncDelegatingWorkerFactory(
-      assignmentRepository,
-      karyaFileRepository,
-      microTaskRepository,
-      fileDirPath,
-      authManager
-    )
+    val workerFactory =
+      SyncDelegatingWorkerFactory(
+        assignmentRepository,
+        karyaFileRepository,
+        microTaskRepository,
+        fileDirPath,
+        authManager
+      )
 
     return workerFactory
   }

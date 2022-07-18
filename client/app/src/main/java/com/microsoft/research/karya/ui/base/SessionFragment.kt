@@ -15,19 +15,17 @@ abstract class SessionFragment : BaseFragment {
   constructor() : super()
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
-  @Inject
-  lateinit var authManager: AuthManager
+  @Inject lateinit var authManager: AuthManager
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    authManager.currAuthStatus.observe(viewLifecycleOwner, { authStatus ->
-      if (authStatus == AUTH_STATUS.UNAUTHENTICATED) {
-        onSessionExpired()
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    authManager.currAuthStatus.observe(
+      viewLifecycleOwner,
+      { authStatus ->
+        if (authStatus == AUTH_STATUS.UNAUTHENTICATED) {
+          onSessionExpired()
+        }
       }
-    })
+    )
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
