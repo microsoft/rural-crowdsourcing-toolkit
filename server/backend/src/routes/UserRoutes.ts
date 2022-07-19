@@ -17,6 +17,7 @@ import * as TaskAssignmentController from '../user-routes-controllers/TaskAssign
 import * as TaskLinkController from '../user-routes-controllers/TaskLinkController';
 import * as WorkerController from '../user-routes-controllers/WorkerController';
 import * as LanguageController from '../user-routes-controllers/LanguageController';
+import * as PaymentsController from '../user-routes-controllers/PaymentsController';
 import { tokenAuthoriser } from '../utils/auth/tokenAuthoriser/Index';
 
 // Default state for all routes
@@ -311,6 +312,51 @@ userRouter.get(
   // @ts-ignore
   Middlewares.needIdToken,
   LanguageController.getLangAssets
+);
+
+/**
+ * Payments related routes
+ */
+
+// Process bulk payment requests
+userRouter.post(
+  '/payments/transactions/bulk_payments',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  BodyParser(),
+  PaymentsController.processBulkPayments
+);
+
+// Get Bulk transaction records
+userRouter.get(
+  '/payments/transactions/bulk_payments',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.getBulkTransactionRecords
+);
+
+// Get Payments Account
+userRouter.get(
+  '/payments/account',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.getPaymentsAccount
+);
+
+// Get list of eligible worker ids and their respective amount for payment
+userRouter.get(
+  '/payments/worker/eligible',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.calculateEligibleWorkers
+);
+
+// Get transaction record
+userRouter.get(
+  '/payments/transactions',
+  Middlewares.needIdToken,
+  Middlewares.onlyAdmin,
+  PaymentsController.getTransactionRecords
 );
 
 export { userRouter };
