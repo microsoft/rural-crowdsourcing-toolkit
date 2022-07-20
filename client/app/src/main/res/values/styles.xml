@@ -43,9 +43,9 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">@dimen/_15sdp</item>
         <item name="android:paddingRight">@dimen/_15sdp</item>
-        <item name="android:paddingTop">@dimen/_15sdp</item>
-        <item name="android:paddingBottom">@dimen/_15sdp</item>
-        <item name="android:textSize">@dimen/_14ssp</item>
+        <item name="android:paddingTop">@dimen/_10sdp</item>
+        <item name="android:paddingBottom">@dimen/_10sdp</item>
+        <item name="android:textSize">@dimen/_12ssp</item>
     </style>
 
     <!-- Microtask Input Frame -->
