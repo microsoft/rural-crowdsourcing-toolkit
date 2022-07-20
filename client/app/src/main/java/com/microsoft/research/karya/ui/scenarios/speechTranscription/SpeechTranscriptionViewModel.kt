@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
@@ -151,11 +152,14 @@ constructor(
       _transcriptionText.value = transcript
     }
 
-    // Setup assist words
-    _assistWords.value = try {
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").asString.split(" ")
-    } catch (e: Exception) {
-      arrayListOf()
+    // If task is completed, then update transcript with users output
+    if (currentAssignment.status == MicrotaskAssignmentStatus.COMPLETED) {
+      val outputTranscript = try {
+        currentAssignment.output.asJsonObject.get("data").asJsonObject.get("transcription").asString
+      } catch (e: Exception) {
+        ""
+      }
+      _transcriptionText.value = outputTranscript
     }
   }
 
