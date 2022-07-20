@@ -84,7 +84,12 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         }
         assistanceFl.addView(wordButton)
       }
+    }
 
+    viewModel.transcriptionText.observe(
+      viewLifecycleOwner.lifecycle, viewLifecycleScope
+    ) { text ->
+      transcriptionEt.setText(text)
     }
 
     viewModel.playbackSecondsTvText.observe(
@@ -124,8 +129,6 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         showErrorDialog(msg)
       }
     }
-
-
   }
 
   private fun showErrorDialog(msg: String) {

@@ -121,6 +121,36 @@ constructor(
       return
     }
 
+    val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
+
+    // Bag of word assistance
+    val bagOfWordsAssist = try {
+      if (inputData.has("bow-assist")) {
+        inputData.get("bow-assist").asBoolean
+      } else {
+        false
+      }
+    } catch (e:Exception) {
+      false
+    }
+
+    // Initial transcript
+    val transcript = try {
+      if (inputData.has("sentence")) {
+        inputData.get("sentence").asString
+      } else {
+        ""
+      }
+    } catch (e: Exception) {
+      ""
+    }
+
+    if (bagOfWordsAssist) {
+      _assistWords.value = transcript.split(" ")
+    } else {
+      _transcriptionText.value = transcript
+    }
+
     // Setup assist words
     _assistWords.value = try {
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").asString.split(" ")
