@@ -62,14 +62,11 @@ android {
     exclude("META-INF/ASL2.0")
     exclude("META-INF/*.kotlin_module")
   }
-  flavorDimensions("size", "study")
+  flavorDimensions("size")
   productFlavors {
     create ("mit") {
-      dimension = "study"
+      dimension = "size"
       applicationIdSuffix = "mit2022"
-    }
-    create ("default") {
-      dimension = "study"
     }
     create("large") {
       dimension = "size"
