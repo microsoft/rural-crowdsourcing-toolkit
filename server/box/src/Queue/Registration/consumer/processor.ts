@@ -18,10 +18,11 @@ export default async (job: Job<RegistrationQJobData>) => {
 
     accountRecord = await BasicModel.getSingle('payments_account', { id: job.data.account_record_id });
     // set request header
-    const headers = { 'karya-id-token': box.id_token };
-    qAxios.defaults.headers = headers;
+    const headers = { 'karya-id-token': box.id_token! };
     // send the post request
-    const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord);
+    const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord, {
+      headers: headers,
+    });
     await BasicModel.updateSingle('payments_account', { id: job.data.account_record_id }, { ...response.data });
   } catch (e: any) {
     // TODO: Handle error for the case where accountRecord cannot be fetched from database

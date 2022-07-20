@@ -13,12 +13,15 @@ export default async (job: Job<VerifyAccountQJobData>) => {
   const relativeUrl = `api_box/payments/accounts/${jobData.accountId}/verify`;
   // set request header
   const box = (await BasicModel.getRecords('box', {}))[0];
-  const headers = { 'karya-id-token': box.id_token };
-  qAxios.defaults.headers = headers;
+  const headers = { 'karya-id-token': box.id_token! };
   // Make the request
-  const response = await qAxios.put<PaymentsAccountRecord>(relativeUrl, {
-    workerId: jobData.workerId,
-    confirm: jobData.confirm,
-  });
+  const response = await qAxios.put<PaymentsAccountRecord>(
+    relativeUrl,
+    {
+      workerId: jobData.workerId,
+      confirm: jobData.confirm,
+    },
+    { headers: headers }
+  );
   BasicModel.updateSingle('payments_account', { id: jobData.accountId }, { ...response.data });
 };
