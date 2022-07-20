@@ -86,24 +86,28 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   try {
     await BBPromise.mapSeries(updatedWorkerData, async (worker) => {
       const { id, tags, tags_updated_at, payments_active, payments_meta, selected_account } = worker;
-      await BasicModel.updateSingle(
-        'worker',
-        { id },
-        { tags, tags_updated_at, payments_active, payments_meta, selected_account }
-      );
+      try {
+        await BasicModel.updateSingle(
+          'worker',
+          { id },
+          { tags, tags_updated_at, payments_active, payments_meta, selected_account }
+        );
+      } catch (e) {
+        await BasicModel.upsertRecord('worker', worker);
+      }
+
+      // If the worker is disabled, mark all their 'ASSIGNED'
+      // assignments as EXPIRED
+      if (WorkerModel.isDisabled(worker)) {
+        await BasicModel.updateRecords(
+          'microtask_assignment',
+          { worker_id: id, status: 'ASSIGNED' },
+          { status: 'EXPIRED' }
+        );
+      }
     });
   } catch (e) {
-    await BasicModel.upsertRecord('worker', worker);
-  }
-
-  // If the worker is disabled, mark all their 'ASSIGNED'
-  // assignments as EXPIRED
-  if (WorkerModel.isDisabled(worker)) {
-    await BasicModel.updateRecords(
-      'microtask_assignment',
-      { worker_id: id, status: 'ASSIGNED' },
-      { status: 'EXPIRED' }
-    );
+    cronLogger.error(`Failed to update tag information about workers`);
   }
 }
 
