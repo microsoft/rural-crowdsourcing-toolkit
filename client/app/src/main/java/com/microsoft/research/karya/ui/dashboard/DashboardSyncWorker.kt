@@ -1,6 +1,10 @@
 package com.microsoft.research.karya.ui.dashboard
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
@@ -11,16 +15,22 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
+import com.microsoft.research.karya.data.remote.response.WorkerBalanceResponse
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
+import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
+import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.getBlobPath
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.single
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -39,6 +49,8 @@ class DashboardSyncWorker(
   private val assignmentRepository: AssignmentRepository,
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
+  private val paymentRepository: PaymentRepository,
+  private val datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   private val authManager: AuthManager,
 ) : CoroutineWorker(appContext, workerParams) {
@@ -214,6 +226,17 @@ class DashboardSyncWorker(
     assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
       .getNewAssignments(worker.idToken, from)
       .collect()
+
+    // Get Worker Balance
+    val paymentResponse = paymentRepository
+      .getWorkerBalance(worker.idToken, worker.id)
+      .catch {
+        warningMsg = "Cannot update payment information"
+      }
+      .single()
+    // Update worker balance data
+    val workerBalanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
+    datastore.edit { prefs -> prefs[workerBalanceKey] = paymentResponse.workerBalance }
   }
 
   /**

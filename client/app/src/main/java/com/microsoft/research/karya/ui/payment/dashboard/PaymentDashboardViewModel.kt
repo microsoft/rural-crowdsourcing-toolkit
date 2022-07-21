@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 
 @HiltViewModel
 class PaymentDashboardViewModel
@@ -48,16 +49,16 @@ constructor(private val authManager: AuthManager, private val paymentRepository:
 
       val combinedFlow =
         combine(currentAccountFlow, balanceFlow, transactionsFlow) {
-          paymentInfoResponse,
-          workerBalanceResponse,
-          transactions ->
+            paymentInfoResponse,
+            workerBalanceResponse,
+            transactions ->
           val transaction = transactions.first()
 
-          val ifsc = paymentInfoResponse.meta!!.account.ifsc ?: ""
+          val ifsc = paymentInfoResponse.meta?.account?.ifsc ?: ""
           val idPrefix = if (ifsc.isEmpty()) "xxxxxx@xx" else "XXXXXXXXXXXX"
           val userAccountDetail =
             UserAccountDetail(
-              name = paymentInfoResponse.meta.name,
+              name = paymentInfoResponse.meta!!.name,
               id = idPrefix + paymentInfoResponse.meta.account.id,
               ifsc = ifsc,
             )

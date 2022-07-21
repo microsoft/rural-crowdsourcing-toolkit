@@ -18,6 +18,13 @@ constructor(private val paymentAPI: PaymentAPI, private val paymentAccountDao: P
 
   suspend fun updatePaymentRecord(workerId: String, paymentInfoResponse: PaymentInfoResponse) =
     withContext(Dispatchers.IO) {
+
+      val ifsc = try {
+        paymentInfoResponse.meta!!.account.ifsc!!
+      } catch(e: Exception) {
+        ""
+      }
+
       val paymentAccountRecord =
         PaymentAccountRecord(
           workerId = workerId,
@@ -25,8 +32,8 @@ constructor(private val paymentAPI: PaymentAPI, private val paymentAccountDao: P
           accountType = paymentInfoResponse.accountType,
           failure_reason = "",
           status = AccountRecordStatus.valueOf(paymentInfoResponse.status),
-          ifsc = paymentInfoResponse.meta!!.account.ifsc ?: "",
-          name = paymentInfoResponse.meta.name
+          ifsc = ifsc,
+          name = paymentInfoResponse.meta!!.name
         )
 
       paymentAccountDao.insertForUpsert(paymentAccountRecord)

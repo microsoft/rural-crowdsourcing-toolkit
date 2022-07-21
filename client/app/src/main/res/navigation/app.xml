@@ -3,121 +3,89 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav_graph"
-    app:startDestination="@id/splashScreenFragment2">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
-        android:id="@+id/splashScreenFragment2"
+        android:id="@+id/splashScreenFragment"
         android:name="com.microsoft.research.karya.ui.splashScreen.SplashScreenFragment"
         android:label="SplashScreenFragment"
         tools:layout="@layout/fragment_splash_screen">
         <action
-            android:id="@+id/action_splashScreenFragment2_to_accessCodeFragment2"
+            android:id="@+id/action_splashScreenFragment_to_accessCodeFragment"
             app:destination="@id/accessCodeFlow" />
         <action
-            android:id="@+id/action_splashScreenFragment2_to_consentFormFragment2"
+            android:id="@+id/action_splashScreenFragment_to_consentFormFragment"
             app:destination="@id/accessCodeFlow" />
         <action
-            android:id="@+id/action_splashScreenFragment2_to_fileDownloadFragment2"
+            android:id="@+id/action_splashScreenFragment_to_fileDownloadFragment"
             app:destination="@id/accessCodeFlow"
-            app:popUpTo="@id/splashScreenFragment2"
+            app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_splashScreenFragment2_to_tempDataFlow"
-            app:destination="@id/tempDataFlow"
-            app:popUpTo="@id/splashScreenFragment2"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_splashScreenFragment2_to_mandatoryDataFlow"
-            app:destination="@id/mandatoryDataFlow"
-            app:popUpTo="@id/splashScreenFragment2"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_splashScreenFragment2_to_loginFlow2"
+            android:id="@+id/action_splashScreenFragment_to_loginFlow"
             app:destination="@id/loginFlow"
-            app:popUpTo="@id/splashScreenFragment2"
+            app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <navigation
         android:id="@+id/loginFlow"
-        app:startDestination="@id/phoneNumberFragment2">
+        app:startDestination="@id/phoneNumberFragment">
         <fragment
-            android:id="@+id/phoneNumberFragment2"
+            android:id="@+id/phoneNumberFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.login.phone.PhoneNumberFragment"
             android:label="PhoneNumberFragment"
             tools:layout="@layout/fragment_phone_number">
             <action
-                android:id="@+id/action_phoneNumberFragment2_to_OTPFragment2"
-                app:destination="@id/OTPFragment2" />
+                android:id="@+id/action_phoneNumberFragment_to_OTPFragment"
+                app:destination="@id/OTPFragment" />
         </fragment>
         <fragment
-            android:id="@+id/OTPFragment2"
+            android:id="@+id/OTPFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.login.otp.OTPFragment"
             android:label="OTPFragment"
             tools:layout="@layout/fragment_otp">
             <action
-                android:id="@+id/action_OTPFragment2_to_tempDataFlow"
-                app:destination="@id/tempDataFlow" />
-        </fragment>
-    </navigation>
-    <navigation
-        android:id="@+id/tempDataFlow"
-        app:startDestination="@id/profileFragment">
-        <fragment
-            android:id="@+id/profileFragment"
-            android:name="com.microsoft.research.karya.ui.onboarding.profile.ProfileFragment"
-            android:label="ProfileFragment">
-            <action
-                android:id="@+id/action_profileFragment_to_mandatoryDataFlow"
-                app:destination="@id/mandatoryDataFlow" />
-        </fragment>
-    </navigation>
-    <navigation
-        android:id="@+id/mandatoryDataFlow"
-        app:startDestination="@id/selectGenderFragment2">
-        <fragment
-            android:id="@+id/selectAgeGroupFragment2"
-            android:name="com.microsoft.research.karya.ui.onboarding.age.SelectAgeGroupFragment"
-            android:label="SelectAgeGroupFragment" />
-        <fragment
-            android:id="@+id/selectGenderFragment2"
-            android:name="com.microsoft.research.karya.ui.onboarding.gender.SelectGenderFragment"
-            android:label="SelectGenderFragment">
-            <action
-                android:id="@+id/action_selectGenderFragment2_to_selectAgeGroupFragment2"
-                app:destination="@id/selectAgeGroupFragment2" />
+                android:id="@+id/action_OTPFragment_to_DashboardActivity"
+                app:destination="@id/dashboardActivity" />
         </fragment>
     </navigation>
     <navigation
         android:id="@+id/accessCodeFlow"
-        app:startDestination="@id/accessCodeFragment2">
+        app:startDestination="@id/accessCodeFragment">
         <fragment
-            android:id="@+id/fileDownloadFragment2"
+            android:id="@+id/fileDownloadFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.fileDownload.FileDownloadFragment"
             android:label="FileDownloadFragment"
             tools:layout="@layout/fragment_file_download">
             <action
-                android:id="@+id/action_fileDownloadFragment2_to_consentFormFragment22"
-                app:destination="@id/consentFormFragment2"
-                app:popUpTo="@id/accessCodeFragment2"
-                app:popUpToInclusive="false" />
+                android:id="@+id/action_fileDownloadFragment_to_consentFormFragment"
+                app:destination="@id/consentFormFragment"
+                app:popUpTo="@id/fileDownloadFragment"
+                app:popUpToInclusive="true" />
         </fragment>
         <fragment
-            android:id="@+id/consentFormFragment2"
+            android:id="@+id/consentFormFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.consentForm.ConsentFormFragment"
             android:label="ConsentFormFragment"
             tools:layout="@layout/fragment_consent_form">
             <action
-                android:id="@+id/action_consentFormFragment2_to_loginFlow"
-                app:destination="@id/loginFlow" />
+                android:id="@+id/action_consentFormFragment_to_loginFlow"
+                app:destination="@id/loginFlow"
+                app:popUpTo="@id/consentFormFragment"
+                app:popUpToInclusive="true"
+                />
         </fragment>
         <fragment
-            android:id="@+id/accessCodeFragment2"
+            android:id="@+id/accessCodeFragment"
             android:name="com.microsoft.research.karya.ui.onboarding.accesscode.AccessCodeFragment"
             android:label="AccessCodeFragment"
             tools:layout="@layout/fragment_access_code">
             <action
-                android:id="@+id/action_accessCodeFragment2_to_fileDownloadFragment2"
-                app:destination="@id/fileDownloadFragment2" />
+                android:id="@+id/action_accessCodeFragment_to_fileDownloadFragment"
+                app:destination="@id/fileDownloadFragment"
+                app:popUpTo="@id/accessCodeFragment"
+                app:popUpToInclusive="true"
+                />
         </fragment>
     </navigation>
     <fragment
@@ -126,8 +94,8 @@
         android:label="activity_dashboard"
         tools:layout="@layout/fragment_dashboard">
         <action
-            android:id="@+id/action_dashboardActivity_to_speechDataMainFragment2"
-            app:destination="@id/speechDataMainFragment2">
+            android:id="@+id/action_dashboardActivity_to_speechDataMainFragment"
+            app:destination="@id/speechDataMainFragment">
             <argument android:name="taskId" />
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
@@ -225,14 +193,9 @@
         <action
             android:id="@+id/action_dashboardActivity_to_paymentDashboardFragment"
             app:destination="@id/paymentDashboardFragment" />
-        <action
-            android:id="@+id/action_dashboardActivity_to_textTranslationValidationMainFragment"
-            app:destination="@id/textTranslationValidationMainFragment">
-            <argument android:name="taskId" />
-        </action>
     </fragment>
     <action
-        android:id="@+id/action_global_dashboardActivity4"
+        android:id="@+id/action_global_dashboardActivity"
         app:destination="@id/dashboardActivity"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
@@ -244,19 +207,16 @@
     <action
         android:id="@+id/action_global_loginFlow"
         app:destination="@id/loginFlow" />
-    <action
-        android:id="@+id/action_global_tempDataFlow"
-        app:destination="@id/tempDataFlow" />
     <fragment
-        android:id="@+id/speechDataMainFragment2"
+        android:id="@+id/speechDataMainFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragment"
         android:label="SpeechDataMainFragment"
         tools:layout="@layout/microtask_speech_data">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
-            android:id="@+id/action_speechDataMainFragment2_to_dashboardActivity"
+            android:id="@+id/action_speechDataMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity"
             app:popUpTo="@id/dashboardActivity" />
     </fragment>
@@ -264,9 +224,9 @@
         android:id="@+id/universalTransliterationMainFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.transliteration.TransliterationMainFragment"
         android:label="UniversalTransliterationMainFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_universalTransliterationMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -275,9 +235,9 @@
         android:id="@+id/speechVerificationFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationFragment"
         android:label="SpeechVerificationFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_speechVerificationFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -285,10 +245,10 @@
     <fragment
         android:id="@+id/imageTranscriptionFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.imageTranscription.ImageTranscriptionFragment"
-        android:label="imageTrnascriptionFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        android:label="imageTranscriptionFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_imageTranscriptionFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -297,9 +257,9 @@
         android:id="@+id/imageLabellingFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.ImageLabellingFragment"
         android:label="imageLabellingFragment">
-        <argument
-            android:name="taskId"
-            app:argType="string" />
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
@@ -390,18 +350,6 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_sentenceCorpusFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/textTranslationValidationMainFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.textTranslationValidation.TextTranslationValidationMainFragment"
-        android:label="TextTranslationValidationMainFragment"
-        tools:layout="@layout/microtask_text_translation_validation" >
-        <argument
-            android:name="taskId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_textTranslationValidationMainFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
     <fragment

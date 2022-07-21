@@ -46,7 +46,6 @@
             android:layout_height="@dimen/_128sdp"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_16sdp"
-            android:background="@drawable/border_black"
             android:cropToPadding="true"
             android:padding="@dimen/_8sdp"
             android:scaleType="centerInside"
@@ -59,7 +58,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_8sdp"
             android:text="Bank"
-            android:textColor="@color/black" />
+            android:textColor="@color/c_black" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -82,7 +81,6 @@
             android:layout_height="@dimen/_128sdp"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_16sdp"
-            android:background="@drawable/border_black"
             android:cropToPadding="true"
             android:padding="@dimen/_8sdp"
             android:scaleType="centerInside"
@@ -95,7 +93,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_8sdp"
             android:text="UPI"
-            android:textColor="@color/black" />
+            android:textColor="@color/c_black" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,10 @@
 package com.microsoft.research.karya.ui.dashboard
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -11,6 +16,7 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.ui.payment.PaymentFlowNavigation
+import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +32,7 @@ constructor(
   private val assignmentRepository: AssignmentRepository,
   private val authManager: AuthManager,
   private val paymentRepository: PaymentRepository,
+  private val datastore: DataStore<Preferences>
 ) : ViewModel() {
 
   private var taskInfoList = listOf<TaskInfo>()
@@ -68,9 +75,14 @@ constructor(
     }
     taskInfoList = tempList.sortedWith(taskInfoComparator)
 
-    val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
-    _dashboardUiState.value =
-      DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
+    val balanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
+    val data = datastore.data.first()
+    val workerBalance: Float = data[balanceKey] ?: 0f
+    val success =
+      DashboardUiState.Success(
+        DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), workerBalance)
+      )
+    _dashboardUiState.value = success
   }
 
   /**
@@ -113,10 +125,13 @@ constructor(
           }
           taskInfoList = tempList
 
-          val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?: 0.0f
+//          val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?
+          val balanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
+          val data = datastore.data.first()
+          val workerBalance: Float = data[balanceKey] ?: 0f
           val success =
             DashboardUiState.Success(
-              DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), totalCreditsEarned)
+              DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), workerBalance)
             )
           _dashboardUiState.value = success
         }
@@ -127,28 +142,6 @@ constructor(
 
   fun setLoading() {
     _dashboardUiState.value = DashboardUiState.Loading
-  }
-
-  fun updateTaskStatus(taskId: String) {
-    viewModelScope.launch {
-      val worker = authManager.getLoggedInWorker()
-
-      val taskStatus = fetchTaskStatus(taskId)
-
-      val updatedList =
-        taskInfoList.map { taskInfo ->
-          if (taskInfo.taskID == taskId) {
-            taskInfo.copy(taskStatus = taskStatus)
-          } else {
-            taskInfo
-          }
-        }
-
-      taskInfoList = updatedList
-      val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id)
-      _dashboardUiState.value =
-        DashboardUiState.Success(DashboardStateSuccess(taskInfoList, totalCreditsEarned))
-    }
   }
 
   private suspend fun fetchTaskStatus(taskId: String): TaskStatus {

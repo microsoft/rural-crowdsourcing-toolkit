@@ -282,7 +282,7 @@
     <string name="upi_id">UPI ID</string>
     <string name="re_enter_upi_id">Re-enter UPI ID</string>
     <string name="payment_registration_description">Congratulations! You have earned ₹%.2f. Please select a method to receive the amount</string>
-    <string name="verification_request_processing">We are processing your request. Once successful, we will send you ₹2 amount to your account for verification. Please try again after some time.</string>
+    <string name="verification_request_processing">We are processing your request. Please try again after some time.</string>
     <string name="verification_request_processed">To verify your account, we have sent you ₹2. If you received the amount, please confirm by clicking the button below.</string>
     <string name="verification_loading">Checking account status, please wait.</string>
     <string name="rs_float">₹%.2f</string>

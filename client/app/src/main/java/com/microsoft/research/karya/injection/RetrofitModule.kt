@@ -20,7 +20,6 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -91,7 +90,6 @@ class RetrofitModule {
     return OkHttpClient.Builder()
       .connectTimeout(10, TimeUnit.MINUTES)
       .readTimeout(10, TimeUnit.MINUTES)
-      .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(idTokenRenewInterceptor)
       .addInterceptor(versionInterceptor)
       .addInterceptor(hostSelectionInterceptor)

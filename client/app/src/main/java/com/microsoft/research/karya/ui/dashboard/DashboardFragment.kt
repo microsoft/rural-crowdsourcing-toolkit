@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -79,7 +80,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
     WorkManager.getInstance(requireContext())
       .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
-      .observe(viewLifecycleOwner, { workInfos ->
+      .observe(viewLifecycleOwner) { workInfos ->
         if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
         val workInfo = workInfos[0] // Picking the first workInfo
         if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
@@ -117,7 +118,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             viewModel.refreshList()
           }
         }
-      )
+      }
   }
 
   override fun onSessionExpired() {
@@ -172,9 +173,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
       // Show total credits if it is greater than 0
-      if (totalCreditsEarned > 0.0f) {
+      if (workerBalance > 0.0f) {
         binding.rupeesEarnedCl.visible()
-        binding.rupeesEarnedTv.text = "%.2f".format(Locale.ENGLISH, totalCreditsEarned)
+        binding.rupeesEarnedTv.text = "%.2f".format(Locale.ENGLISH, workerBalance)
+        if (workerBalance > 2.0f) {
+          binding.rupeesEarnedCl.setOnClickListener { viewModel.navigatePayment() }
+        } else {
+          binding.rupeesEarnedCl.setOnClickListener {
+            Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
+          }
+        }
       } else {
         binding.rupeesEarnedCl.gone()
       }
