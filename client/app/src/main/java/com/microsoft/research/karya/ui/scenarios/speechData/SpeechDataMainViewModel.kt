@@ -265,22 +265,25 @@ constructor(
     // Reset progress bar
     _playbackProgressPbProgress.value = 0
 
+    // Get input data
+    val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
+
     // Set microtask instruction
-    if (currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction") != null) {
-      _microTaskInstruction.value =
-        currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction").toString()
-      totalRecordedBytes = 0
+    if (inputData.has("instruction")) {
+      _microTaskInstruction.value = inputData.get("instruction").asString
     }
 
-    _sentenceTvText.value =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    // Set sentence
+    val sentence = if (inputData.has("display_sentence")) inputData.get("display_sentence") else inputData.get("sentence")
+    _sentenceTvText.value = sentence.asString
+
     totalRecordedBytes = 0
 
     /** Get microtask config */
-    try{
-      allowSkipping = task.params.asJsonObject.get("allowSkipping").asBoolean
+    allowSkipping = try {
+      task.params.asJsonObject.get("allowSkipping").asBoolean
     } catch (e: Exception) {
-      allowSkipping = false
+      false
     }
 
       if (firstTimeActivityVisit) {
