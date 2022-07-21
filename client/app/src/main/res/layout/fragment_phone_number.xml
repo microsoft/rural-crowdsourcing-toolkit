@@ -20,13 +20,40 @@
         app:titleText="@string/phone_number_title" />
 
     <LinearLayout
+        android:id="@+id/accessCodeLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/appTb">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10ssp"
+            android:textColor="@color/c_light_grey"
+            android:text="@string/access_code"/>
+
+        <TextView
+            android:id="@+id/accessCodeTv"
+            android:textSize="@dimen/_10ssp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_light_grey"
+            android:layout_marginStart="@dimen/_10sdp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/phoneNumberPromptLl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/appTb">
+        app:layout_constraintTop_toBottomOf="@id/accessCodeLl">
 
         <ImageView
             android:layout_width="@dimen/_50sdp"
