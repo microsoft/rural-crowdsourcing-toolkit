@@ -179,10 +179,11 @@ interface MicrotaskAssignmentDaoExtra {
   ): Float?
 
   /** Update all expired tasks **/
-  @Query("UPDATE microtask_assignment SET status=:status WHERE worker_id=:worker_id AND deadline < :currentTime")
+  @Query("UPDATE microtask_assignment SET status=:status WHERE worker_id=:worker_id AND status in (:currentStatus) AND deadline < :currentTime")
   suspend fun updateExpired(
     worker_id: String,
     currentTime: String,
+    currentStatus: List<MicrotaskAssignmentStatus> = arrayListOf(MicrotaskAssignmentStatus.ASSIGNED, MicrotaskAssignmentStatus.SKIPPED),
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.EXPIRED
   )
 
