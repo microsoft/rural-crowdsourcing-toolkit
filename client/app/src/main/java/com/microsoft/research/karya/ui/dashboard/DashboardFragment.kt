@@ -63,6 +63,35 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       }
     }
 
+    viewModel.workerAccessCode.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { code ->
+      binding.accessCodeTv.text = code
+    }
+
+    // Work for center user
+    viewModel.workFromCenterUser.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { wfc ->
+      if (wfc) {
+        if (!viewModel.userInCenter.value) {
+          binding.wfcEnterCodeLL.visible()
+          binding.revokeWFCAuthorizationBtn.gone()
+        } else {
+          binding.wfcEnterCodeLL.gone()
+          binding.revokeWFCAuthorizationBtn.visible()
+        }
+      }
+    }
+
+    viewModel.userInCenter.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { uIC ->
+      if (viewModel.workFromCenterUser.value) {
+        if (!uIC) {
+          binding.wfcEnterCodeLL.visible()
+          binding.revokeWFCAuthorizationBtn.gone()
+        } else {
+          binding.wfcEnterCodeLL.gone()
+          binding.revokeWFCAuthorizationBtn.visible()
+        }
+      }
+    }
+
     viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
       binding.syncProgressBar.progress = i
     }
@@ -141,6 +170,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       }
 
       binding.syncCv.setOnClickListener { syncWithServer() }
+
+      binding.submitCenterCodeBtn.setOnClickListener {
+        viewModel.authorizeWorkFromCenterUser(binding.centerCode.text.toString())
+        binding.centerCode.text.clear()
+      }
+
+      binding.revokeWFCAuthorizationBtn.setOnClickListener {
+        viewModel.revokeWFCAuthorization()
+        binding.centerCode.text.clear()
+      }
 
       loadProfilePic()
     }
@@ -327,6 +366,15 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         }
       }
       if (action != null) {
+        // Check if user is in center
+        if (viewModel.workFromCenterUser.value) {
+          viewModel.checkWorkFromCenterUserAuth()
+          if (!viewModel.userInCenter.value) {
+            binding.centerCode.requestFocus()
+            return
+          }
+        }
+
         if (task.taskInstruction == null) {
           findNavController().navigate(action)
         } else {

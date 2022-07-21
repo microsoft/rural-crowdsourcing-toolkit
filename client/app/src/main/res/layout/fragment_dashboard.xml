@@ -14,10 +14,84 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/_8sdp"
-        app:titleText="@string/dashboard_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/dashboard_title" />
+
+    <FrameLayout
+        android:id="@+id/workFromCenterLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/appTb">
+
+        <LinearLayout
+            android:id="@+id/wfcEnterCodeLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/centerCode"
+                style="@style/EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:hint="Enter Center Code"
+                android:paddingVertical="@dimen/_8sdp"
+                android:textSize="@dimen/_14ssp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitCenterCodeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_next_key"
+                app:iconGravity="textEnd" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/revokeWFCAuthorizationBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/c_light_grey"
+            android:text="Revoke Authorization"
+            android:textColor="@color/c_black"
+            android:textSize="@dimen/_10ssp"
+            android:visibility="gone"
+            app:iconGravity="textEnd" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/accessCodeLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/workFromCenterLL">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/access_code"
+            android:textColor="@color/c_light_grey"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/accessCodeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textColor="@color/c_light_grey"
+            android:textSize="@dimen/_10ssp" />
+
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/syncCv"
@@ -32,7 +106,7 @@
         app:cardCornerRadius="@dimen/_5sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appTb">
+        app:layout_constraintTop_toBottomOf="@id/accessCodeLl">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,12 +119,12 @@
                 android:id="@+id/syncPromptTv"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_20sdp"
+                android:gravity="center"
+                android:text="@string/sync_prompt"
                 app:autoSizeMaxTextSize="@dimen/_30ssp"
                 app:autoSizeMinTextSize="@dimen/_12ssp"
                 app:autoSizeStepGranularity="@dimen/_2ssp"
-                app:autoSizeTextType="uniform"
-                android:gravity="center"
-                android:text="@string/sync_prompt" />
+                app:autoSizeTextType="uniform" />
 
             <ProgressBar
                 android:id="@+id/syncProgressBar"
@@ -69,9 +143,9 @@
                 style="@style/errorText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="This is an error message"
                 android:textAlignment="center"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:text="This is an error message" />
 
         </LinearLayout>
 
@@ -83,9 +157,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_10sdp"
+        android:background="@color/c_very_light_grey"
+        android:clipToPadding="false"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_5sdp"
-        android:clipToPadding="false"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -94,7 +169,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/syncCv"
         app:layout_constraintVertical_bias="0"
-        android:background="@color/c_very_light_grey"
         tools:itemCount="2"
         tools:listitem="@layout/item_task" />
 
@@ -132,8 +206,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:textSize="@dimen/_24ssp"
                 android:textColor="@color/c_black"
+                android:textSize="@dimen/_24ssp"
                 tools:text="100.00" />
 
         </LinearLayout>

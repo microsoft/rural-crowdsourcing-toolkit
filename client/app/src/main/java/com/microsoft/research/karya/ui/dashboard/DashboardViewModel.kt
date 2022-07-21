@@ -8,12 +8,18 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
+import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.math.BigInteger
+import java.security.MessageDigest
+import java.util.*
 import javax.inject.Inject
+
+private const val WFC_CODE_SEED="93848374"
 
 @HiltViewModel
 class DashboardViewModel
@@ -37,6 +43,56 @@ constructor(
   private val _progress: MutableStateFlow<Int> =
     MutableStateFlow(0)
   val progress = _progress.asStateFlow()
+
+  private val _workerAccessCode: MutableStateFlow<String> = MutableStateFlow("")
+  val workerAccessCode = _workerAccessCode.asStateFlow()
+
+  // Work from center user
+  private val _workFromCenterUser: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val workFromCenterUser = _workFromCenterUser.asStateFlow()
+  private val _userInCenter: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val userInCenter = _userInCenter.asStateFlow()
+  var centerAuthExpirationTime: Long = 0
+
+  init {
+    viewModelScope.launch {
+      val worker = authManager.getLoggedInWorker()
+      _workerAccessCode.value = worker.accessCode
+
+      if (worker.params != null) {
+        val tags = worker.params.asJsonObject.getAsJsonArray("tags")
+        for (tag in tags) {
+          if (tag.asString == "_wfc_") {
+            _workFromCenterUser.value = true
+          }
+        }
+      }
+    }
+  }
+
+  fun authorizeWorkFromCenterUser(code: String) {
+    val today = DateUtils.getCurrentDate().substring(0,10)
+    val message = WFC_CODE_SEED + today + "\n"
+    val md5Encoder = MessageDigest.getInstance("MD5")
+    md5Encoder.update(message.toByteArray(), 0, message.length)
+    val hash = BigInteger(1, md5Encoder.digest()).toString(16).substring(0,6)
+    if (code == hash) {
+      _userInCenter.value = true
+      // TODO: hour offset is hard coded
+      centerAuthExpirationTime = Date().time + 2 * 60 * 60 * 1000
+    }
+  }
+
+  fun revokeWFCAuthorization() {
+    _userInCenter.value = false
+  }
+
+  fun checkWorkFromCenterUserAuth() {
+    val currentTime = Date().time
+    if (currentTime > centerAuthExpirationTime) {
+      _userInCenter.value = false
+    }
+  }
 
   suspend fun refreshList() {
     val worker = authManager.getLoggedInWorker()
