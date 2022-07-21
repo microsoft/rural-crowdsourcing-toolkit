@@ -26,9 +26,9 @@ constructor(
 
   private var taskInfoList = listOf<TaskInfo>()
   private val taskInfoComparator =
-    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.assignedMicrotasks }.thenBy { taskInfo ->
-      taskInfo.taskID
-    }
+    compareByDescending<TaskInfo> { taskInfo -> taskInfo.taskStatus.assignedMicrotasks }
+      .thenByDescending { taskInfo -> taskInfo.taskStatus.skippedMicrotasks }
+      .thenBy { taskInfo -> taskInfo.taskID }
 
   private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
     MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
@@ -84,7 +84,7 @@ constructor(
           taskList.forEach { taskRecord ->
             val taskInstruction = try {
               taskRecord.params.asJsonObject.get("instruction").asString
-            } catch(e: Exception) {
+            } catch (e: Exception) {
               null
             }
             val taskStatus = fetchTaskStatus(taskRecord.id)
