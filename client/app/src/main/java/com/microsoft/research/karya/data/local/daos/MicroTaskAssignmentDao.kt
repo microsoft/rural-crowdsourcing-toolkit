@@ -43,13 +43,13 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
   }
 
   // TODO: Take into account the
-  @Query("SELECT MAX(created_at) FROM microtask_assignment WHERE status != :status AND worker_id == :worker_id")
+  @Query("SELECT MAX(created_at) FROM microtask_assignment WHERE status == :status AND worker_id == :worker_id")
   suspend fun getNewAssignmentsFromTime(
     worker_id: String,
-    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.ASSIGNED
   ): String?
 
-  @Query("SELECT MAX(created_at) FROM microtask_assignment WHERE status == :status AND worker_id == :worker_id")
+  @Query("SELECT MAX(verified_at) FROM microtask_assignment WHERE status == :status AND worker_id == :worker_id")
   suspend fun getNewVerifiedAssignmentsFromTime(
     worker_id: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
