@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.speechData
 
+import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
@@ -983,6 +984,7 @@ constructor(
   }
 
   /** Initialize [audioRecorder] */
+  @SuppressLint("MissingPermission")
   private fun initializeAndStartRecorder() {
     audioRecorder =
       AudioRecord(
