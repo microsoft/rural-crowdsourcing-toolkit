@@ -11,8 +11,6 @@ import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQPayload } from '../../Transaction/Types';
 
-const RAZORPAY_PAYOUTS_RELATIVE_URL = 'payouts';
-
 // Setting up Db Connection
 setupDbConnection();
 
@@ -45,6 +43,8 @@ export default async (job: Job<BulkTransactionQJobData>) => {
       }
       // Create the transaction task payload
       // TODO @enhancement: Change the idempotency key to a random number
+      // TODO: @enhancement: Change the hard coded strings to enums
+      const transactionMode = currentActiveAccount.account_type === 'bank_account' ? 'IMPS' : 'UPI';
       const transactionPayload: TransactionQPayload = {
         bulk_id: bulkTransactionRecord.id,
         boxId: currentActiveAccount.box_id,
@@ -53,7 +53,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
         currency: 'INR',
         fundId: currentActiveAccount.fund_id!,
         idempotencyKey: currentActiveAccount.hash + bulkTransactionRecord.id,
-        mode: 'IMPS',
+        mode: transactionMode,
         purpose: 'BULK_PAYMENT',
         workerId: transactionRequest.workerId,
       };
