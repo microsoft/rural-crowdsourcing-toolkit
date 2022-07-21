@@ -1,88 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.gridlayout.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:columnCount="3"
-    android:rowCount="4"
+    app:columnCount="3"
+    app:rowCount="4"
     tools:ignore="HardcodedText,ContentDescription">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key1"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="1" />
+        android:text="1"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key2"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="2" />
+        android:text="2"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key3"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="3" />
+        android:text="3"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key4"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="4" />
+        android:text="4"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key5"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="5" />
+        android:text="5"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key6"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="6" />
+        android:text="6"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key7"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="7" />
+        android:text="7"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key8"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="8" />
+        android:text="8"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key9"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="9" />
+        android:text="9"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/keyDelete"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
         android:text=""
         app:icon="@drawable/ic_backspace_key"
         app:iconGravity="textStart"
-        app:iconTint="?numPadTextColor" />
+        app:iconTint="?numPadTextColor"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/key0"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
-        android:text="0" />
+        android:text="0"
+        app:layout_columnWeight="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/keyDone"
         style="@style/numericKey"
-        android:layout_columnWeight="1"
         app:icon="@drawable/ic_next_key"
         app:iconGravity="textEnd"
-        app:iconTint="?colorPrimary" />
+        app:iconTint="?colorPrimary"
+        app:layout_columnWeight="1" />
 
-</GridLayout>
+</androidx.gridlayout.widget.GridLayout>
