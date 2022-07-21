@@ -289,16 +289,50 @@ constructor(
         return@launch
       }
 
-      var taskStartTime = try {
-        task.params.asJsonObject.get("startTime").asString.trim()
-      } catch (e: Exception) {
+      // Check if the worker has a start-end constraints
+      val worker = authManager.getLoggedInWorker()
+      val tcTag = try {
+        if (worker.params != null) {
+          val tags = worker.params.asJsonObject.getAsJsonArray("tags")
+          var tag: String? = null
+          for (tagJ in tags) {
+            if (tagJ.asString.startsWith("_tc_")) {
+              tag = tagJ.asString.substring(4)
+            }
+          }
+          tag
+        } else {
+          null
+        }
+      } catch(e: Exception) {
         null
       }
-      var taskEndTime = try {
-        task.params.asJsonObject.get("endTime").asString.trim()
-      } catch (e: Exception) {
+
+      var taskStartTime = if (tcTag != null) {
+        tcTag.split("-")[0]
+      } else {
         null
       }
+
+      var taskEndTime = if (tcTag != null) {
+        tcTag.split("-")[1]
+      } else {
+        null
+      }
+
+      val taskParams = task.params.asJsonObject
+
+      taskStartTime = if (taskParams.has("startTime")) {
+        taskParams.get("startTime").asString.trim()
+      } else {
+        taskStartTime
+      }
+      taskEndTime = if (taskParams.has("endTime")) {
+        taskParams.get("endTime").asString.trim()
+      } else {
+        taskEndTime
+      }
+
       taskStartTime = if (taskStartTime == "") null else taskStartTime
       taskEndTime = if (taskEndTime == "") null else taskEndTime
 
