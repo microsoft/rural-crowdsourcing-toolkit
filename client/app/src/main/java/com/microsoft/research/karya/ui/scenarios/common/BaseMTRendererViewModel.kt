@@ -306,7 +306,7 @@ constructor(
         val currentTime = Calendar.getInstance()
         val hour = currentTime.get(Calendar.HOUR_OF_DAY)
         val minutes = currentTime.get(Calendar.MINUTE)
-        val now = "$hour:$minutes"
+        val now = String.format(Locale.US, "%02d:%02d", hour, minutes)
 
         if (now < taskStartTime || now > taskEndTime) {
           _outsideTimeBound.emit(Triple(true, taskStartTime, taskEndTime))
