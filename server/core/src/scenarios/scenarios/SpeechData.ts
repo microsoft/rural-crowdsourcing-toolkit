@@ -120,7 +120,10 @@ const task_input_file: BaseSpeechDataScenario['task_input_file'] = {
     `,
     schema: Joi.array().items(Joi.object({ sentence: Joi.string() }).unknown(true)),
   },
-  tgz: { required: false },
+  tgz: {
+    required: true,
+    description: `Optional audio files for hints. Upload empty tarball if no hints`,
+  },
 };
 
 /**
