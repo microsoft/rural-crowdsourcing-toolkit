@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import android.util.Log
 
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 
@@ -98,6 +99,10 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       viewModel.progress.observe(lifecycle, lifecycleScope) { i -> binding.syncProgressBar.progress = i }
 
       viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
+        // Return if payments is not enabled in current config
+        if (!BuildConfig.PAYMENTS_ENABLED) {
+          return@observe
+        }
         val resId =
           when (navigation) {
             DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment

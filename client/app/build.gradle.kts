@@ -22,6 +22,8 @@ android {
     versionName = "1"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
+    // Build config field to enable or disable payments
+    buildConfigField("boolean", "PAYMENTS_ENABLED", "false")
   }
   buildTypes {
     named("release") {
@@ -79,6 +81,7 @@ android {
     }
     create("standard") {
       dimension = "size"
+      buildConfigField("boolean", "PAYMENTS_ENABLED", "true")
     }
   }
 }
