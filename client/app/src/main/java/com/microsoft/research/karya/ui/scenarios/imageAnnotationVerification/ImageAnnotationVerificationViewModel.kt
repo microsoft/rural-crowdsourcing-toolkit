@@ -4,6 +4,7 @@ import android.graphics.PointF
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -117,6 +118,10 @@ constructor(
       completeAndSaveCurrentMicrotask()
       moveToNextMicrotask()
     }
+  }
+
+  fun handleBackClick() {
+    moveToPreviousMicrotask()
   }
 
   /**

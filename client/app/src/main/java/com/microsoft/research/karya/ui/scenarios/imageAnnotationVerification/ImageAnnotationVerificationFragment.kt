@@ -56,7 +56,7 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
     nextBtn.setOnClickListener { handleNextClick() }
 
     // Set back button click handler
-    backBtn.setOnClickListener { /* TODO: Hit back button click listener */ }
+    backBtn.setOnClickListener { viewModel.handleBackClick() }
 
     // Set listeners for btn group
     scoreToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
