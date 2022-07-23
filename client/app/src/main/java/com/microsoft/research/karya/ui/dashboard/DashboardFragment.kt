@@ -286,9 +286,24 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             completed,
             total
           )
+          ScenarioType.IMAGE_ANNOTATION -> actionDashboardActivityToImageAnnotationFragment(
+            taskId,
+            completed,
+            total
+          )
           ScenarioType.QUIZ -> actionDashboardActivityToQuiz(taskId, completed, total)
           ScenarioType.IMAGE_DATA -> actionDashboardActivityToImageData(taskId, completed, total)
           ScenarioType.SENTENCE_VALIDATION -> actionDashboardActivityToSentenceValidation(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.SPEECH_TRANSCRIPTION -> actionDashboardActivityToSpeechTranscriptionFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.SENTENCE_CORPUS -> actionDashboardActivityToSentenceCorpusFragment(
             taskId,
             completed,
             total

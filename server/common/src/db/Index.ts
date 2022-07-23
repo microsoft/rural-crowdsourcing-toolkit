@@ -15,3 +15,4 @@ export * as MicrotaskGroupModel from './models/MicrotaskGroupModel';
 export * as TaskOpModel from './models/TaskOpModel';
 export * as TaskModel from './models/TaskModel';
 export * as WorkerModel from './models/WorkerModel';
+export * as PaymentsAccountModel from './models/PaymentsAccountModel';

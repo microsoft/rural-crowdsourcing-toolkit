@@ -163,6 +163,27 @@
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
         </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_speechTranscriptionFragment"
+            app:destination="@id/speechTranscriptionFragment" >
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageAnnotationFragment"
+            app:destination="@id/imageAnnotationFragment" >
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_sentenceCorpusFragment"
+            app:destination="@id/sentenceCorpusFragment" >
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity"
@@ -287,6 +308,39 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_signVideoVerificationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/speechTranscriptionFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.speechTranscription.SpeechTranscriptionFragment"
+        android:label="SpeechTranscriptionFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_speechTranscriptionFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageAnnotationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageAnnotation.ImageAnnotationFragment"
+        android:label="ImageAnnotationFragment" >
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_imageAnnotationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/sentenceCorpusFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.sentenceCorpus.SentenceCorpusFragment"
+        android:label="SentenceCorpusFragment" >
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_sentenceCorpusFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

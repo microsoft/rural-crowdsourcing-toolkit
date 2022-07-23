@@ -94,7 +94,7 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <include
-            android:id="@+id/backBtnCv"
+            android:id="@+id/backBtn"
             layout="@layout/microtask_common_back_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -110,7 +110,7 @@
             android:text="START RECORDING"
             app:layout_constraintEnd_toStartOf="@+id/nextBtnCv"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/backBtnCv"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
             tools:layout_editor_absoluteY="0dp" />
 
         <include

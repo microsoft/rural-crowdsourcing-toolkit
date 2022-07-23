@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        style="@style/MicrotaskInstructionText"
+        android:text="@string/speech_transcription_instruction"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <ImageButton
+        android:id="@+id/playBtn"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        android:background="@drawable/ic_speaker_enabled"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/playbackProgress"
+        app:layout_constraintTop_toTopOf="@id/playbackProgress"
+        app:layout_constraintBottom_toBottomOf="@id/playbackProgress"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <include
+        android:id="@+id/playbackProgress"
+        layout="@layout/microtask_common_playback_progress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_marginRight="@dimen/_8sdp"
+        app:layout_constraintLeft_toRightOf="@id/playBtn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
+        />
+
+    <EditText
+        android:id="@+id/transcriptionEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_microtask_input_text"
+        android:dropDownHeight="wrap_content"
+        android:hint="@string/transliteration_hint"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
+        android:textColor="#000000"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintTop_toBottomOf="@id/playbackProgress" />
+
+    <com.nex3z.flowlayout.FlowLayout
+        android:id="@+id/assistanceFl"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="@id/transcriptionEt"
+        app:layout_constraintRight_toRightOf="@id/transcriptionEt"
+        app:layout_constraintTop_toBottomOf="@+id/transcriptionEt"
+        app:flChildSpacing="@dimen/_8sdp"
+        app:flRowSpacing="@dimen/_8sdp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.13"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <include
+            android:id="@+id/backBtnCv"
+            layout="@layout/microtask_common_back_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <include
+            android:id="@+id/nextBtnCv"
+            layout="@layout/microtask_common_next_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            tools:layout_editor_absoluteY="0dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
