@@ -56,7 +56,7 @@
         android:backgroundTint="@color/c_light_grey"
         android:textColor="@color/c_black"
         android:text="Play Hint Audio"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
     <LinearLayout
