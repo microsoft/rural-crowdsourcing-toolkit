@@ -129,9 +129,11 @@ type CoreScenarioParamsType = {
   instruction: string;
   baseCreditsPerMicrotask: number;
   creditsPerMicrotask: number;
+  allowSkipping: boolean;
   startTime?: string;
   endTime?: string;
   deadline?: string;
+  includeLogs: boolean;
 };
 
 export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
@@ -161,6 +163,14 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
   },
 
   {
+    id: 'allowSkipping',
+    label: 'Allow users to skip sentences',
+    description: 'Allow users to skip recording sentences',
+    required: false,
+    type: 'boolean',
+  },
+
+  {
     id: 'startTime',
     type: 'time',
     label: 'Start Time (24h format. leave empty for none)',
@@ -182,6 +192,14 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
     label: 'Deadline date: YYYY-DD-MM format',
     description: 'Strict date for completion of tasks',
     required: false,
+  },
+
+  {
+    id: 'includeLogs',
+    label: 'Include logs in output',
+    description: 'Include detailed work logs in output',
+    required: false,
+    type: 'boolean',
   },
 ];
 
