@@ -180,6 +180,7 @@ constructor(
    */
   protected suspend fun completeAndSaveCurrentMicrotask() {
 
+    log("marking microtask complete")
     val output = buildOutputJsonObject()
     val logObj = JsonObject()
     logObj.add("logs", logs)
@@ -252,6 +253,7 @@ constructor(
     if (hasNextMicrotask()) {
       currentAssignmentIndex++
       getAndSetupMicrotask()
+      log("moved to next microtask")
     } else {
       navigateBack()
     }
@@ -265,6 +267,7 @@ constructor(
     if (hasPreviousMicrotask()) {
       currentAssignmentIndex--
       getAndSetupMicrotask()
+      log("moved to previous microtask")
     } else {
       navigateBack()
     }
@@ -397,6 +400,7 @@ constructor(
         }
 
       setupMicrotask()
+      log("microtask setup complete")
     }
   }
 
