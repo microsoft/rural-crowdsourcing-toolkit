@@ -20,7 +20,8 @@
     <FrameLayout
         android:id="@+id/inputFrame"
         style="@style/MicrotaskInputFrame"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"
+        android:layout_marginVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/hintAudioBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv">
 
@@ -45,15 +46,41 @@
         app:layout_constraintBottom_toBottomOf="@id/inputFrame"
         app:layout_constraintEnd_toEndOf="@id/inputFrame" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/hintAudioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/c_light_grey"
+        android:textColor="@color/c_black"
+        android:text="Play Hint Audio"
+        android:visibility="gone"
+        />
+
     <LinearLayout
         android:id="@+id/recordLengthLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_20sdp"
+        android:layout_marginVertical="@dimen/_15sdp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/playbackProgressPb"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroup"
         app:layout_constraintTop_toBottomOf="@id/inputFrame">
+
+        <ProgressBar
+            android:id="@+id/playbackProgressPb"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progressBackgroundTint="@color/c_light_grey"
+            android:progressTint="@color/c_red"
+            android:scaleY="1.5" />
 
         <TextView
             android:id="@+id/recordSecondsTv"
@@ -61,31 +88,21 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/c_red"
-            android:textSize="@dimen/_40ssp" />
+            android:textSize="@dimen/_28ssp"
+            tools:text="0" />
 
         <TextView
             android:id="@+id/recordCentiSecondsTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
             android:gravity="center"
             android:textColor="@color/c_red"
-            android:textSize="@dimen/_26ssp" />
+            android:textSize="@dimen/_20ssp"
+            tools:text="00" />
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/playbackProgressPb"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
-        android:max="100"
-        android:progressBackgroundTint="@color/c_light_grey"
-        android:progressTint="@color/c_red"
-        android:scaleY="2"
-        app:layout_constraintBottom_toTopOf="@id/buttonGroup" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

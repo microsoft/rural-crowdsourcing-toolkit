@@ -67,14 +67,11 @@ android {
     exclude("META-INF/ASL2.0")
     exclude("META-INF/*.kotlin_module")
   }
-  flavorDimensions("size", "study")
+  flavorDimensions("size")
   productFlavors {
     create ("mit") {
-      dimension = "study"
+      dimension = "size"
       applicationIdSuffix = "mit2022"
-    }
-    create ("default") {
-      dimension = "study"
     }
     create("large") {
       dimension = "size"
@@ -178,6 +175,9 @@ dependencies {
   implementation("me.zhanghai.android.materialratingbar:library:1.3.1")
   // Custom aars
   implementation(files("libs/zoomage-debug.aar"))
+
+  // Grid layout for lower API levels
+  implementation ("androidx.gridlayout:gridlayout:1.0.0")
 
   // Video data collection
   "largeImplementation" ("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")

@@ -63,6 +63,10 @@ class PhoneNumberFragment : BaseFragment(R.layout.fragment_phone_number) {
         PhoneNumberUiState.Success -> showSuccessUi()
       }
     }
+
+    viewModel.workerAccessCode.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { code ->
+      binding.accessCodeTv.text = code
+    }
   }
 
   private fun observeEffects() {

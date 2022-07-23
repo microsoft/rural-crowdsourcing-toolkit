@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
+import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.LanguageType
 import com.microsoft.research.karya.databinding.AppToolbarBinding
@@ -50,6 +51,8 @@ class KaryaToolbar : Toolbar {
     binding.languageName.setOnClickListener {
       showUpdateLanguageDialog(context)
     }
+
+    binding.versionCode.text = BuildConfig.VERSION_CODE.toString()
   }
 
   override fun onFinishInflate() {

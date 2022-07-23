@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
@@ -121,11 +122,44 @@ constructor(
       return
     }
 
-    // Setup assist words
-    _assistWords.value = try {
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").asString.split(" ")
+    val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
+
+    // Bag of word assistance
+    val bagOfWordsAssist = try {
+      if (inputData.has("bow-assist")) {
+        inputData.get("bow-assist").asBoolean
+      } else {
+        false
+      }
+    } catch (e:Exception) {
+      false
+    }
+
+    // Initial transcript
+    val transcript = try {
+      if (inputData.has("sentence")) {
+        inputData.get("sentence").asString
+      } else {
+        ""
+      }
     } catch (e: Exception) {
-      arrayListOf()
+      ""
+    }
+
+    if (bagOfWordsAssist) {
+      _assistWords.value = transcript.split(" ")
+    } else {
+      _transcriptionText.value = transcript
+    }
+
+    // If task is completed, then update transcript with users output
+    if (currentAssignment.status == MicrotaskAssignmentStatus.COMPLETED) {
+      val outputTranscript = try {
+        currentAssignment.output.asJsonObject.get("data").asJsonObject.get("transcription").asString
+      } catch (e: Exception) {
+        ""
+      }
+      _transcriptionText.value = outputTranscript
     }
   }
 

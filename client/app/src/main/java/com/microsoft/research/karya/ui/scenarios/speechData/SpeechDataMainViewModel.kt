@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.speechData
 
+import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaPlayer
@@ -102,6 +103,7 @@ constructor(
     SIMPLE_NEXT,
     ASSISTANT_PLAYING,
     ACTIVITY_STOPPED,
+    PLAYING_HINT_AUDIO
   }
 
   /** UI strings */
@@ -110,6 +112,7 @@ constructor(
   /** Audio recorder and media player */
   private var audioRecorder: AudioRecord? = null
   private var mediaPlayer: MediaPlayer? = null
+  private var hintAudioPlayer: MediaPlayer? = null
 
   /** Audio recorder config parameters */
   private val _minBufferSize =
@@ -133,6 +136,12 @@ constructor(
 
   private val _backBtnState: MutableStateFlow<ButtonState> = MutableStateFlow(DISABLED)
   val backBtnState = _backBtnState.asStateFlow()
+
+  private val _playHintBtnState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val playHintBtnState = _playHintBtnState.asStateFlow()
+
+  private val _hintAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val hintAvailable = _hintAvailable.asStateFlow()
 
   private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
@@ -186,6 +195,8 @@ constructor(
   private var outputRecordingFileParams = Pair("", "wav")
   private lateinit var outputRecordingFilePath: String
   private var encodingJob: Job? = null
+
+  private lateinit var hintFileName: String
 
   /** Playback progress thread */
   private var playbackProgressThread: Thread? = null
@@ -241,11 +252,18 @@ constructor(
   }
 
   /** Shortcut to set and flush all four button states (in sequence) */
-  private fun setButtonStates(b: ButtonState, r: ButtonState, p: ButtonState, n: ButtonState) {
+  private fun setButtonStates(
+    b: ButtonState,
+    r: ButtonState,
+    p: ButtonState,
+    n: ButtonState,
+    h: Boolean
+  ) {
     _backBtnState.value = b
     _recordBtnState.value = r
     _playBtnState.value = p
     _nextBtnState.value = n
+    _playHintBtnState.value = h
   }
 
   override fun setupMicrotask() {
@@ -264,25 +282,40 @@ constructor(
     // Reset progress bar
     _playbackProgressPbProgress.value = 0
 
+    // Get input data
+    val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
+
     // Set microtask instruction
-    if (currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction") != null) {
-      _microTaskInstruction.value =
-        currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("instruction").toString()
-      totalRecordedBytes = 0
+    if (inputData.has("instruction")) {
+      _microTaskInstruction.value = inputData.get("instruction").asString
     }
 
-    _sentenceTvText.value =
-      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("sentence").toString()
+    // Set sentence
+    val sentence =
+      if (inputData.has("display_sentence")) inputData.get("display_sentence") else inputData.get("sentence")
+    _sentenceTvText.value = sentence.asString
+
     totalRecordedBytes = 0
 
     /** Get microtask config */
-    try{
-      allowSkipping = task.params.asJsonObject.get("allowSkipping").asBoolean
+    allowSkipping = try {
+      task.params.asJsonObject.get("allowSkipping").asBoolean
     } catch (e: Exception) {
-      allowSkipping = false
+      false
     }
 
-      if (firstTimeActivityVisit) {
+    // Check if there is hint audio available
+    if (currentMicroTask.input.asJsonObject.has("files")) {
+      val inputFiles = currentMicroTask.input.asJsonObject.getAsJsonObject("files")
+      if (inputFiles.has("hint")) {
+        hintFileName = inputFiles.get("hint").asString
+        _hintAvailable.value = true
+      } else {
+        _hintAvailable.value = false
+      }
+    }
+
+    if (firstTimeActivityVisit) {
       firstTimeActivityVisit = false
       onAssistantClick()
     } else {
@@ -307,13 +340,13 @@ constructor(
        */
       ActivityState.PRERECORDING,
       ActivityState.COMPLETED_PRERECORDING -> {
-        setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED)
+        setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED, false)
         setActivityState(ActivityState.RECORDING)
       }
 
       /** COMPLETED: Just reset wav file and restart recording */
       ActivityState.COMPLETED -> {
-        setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED)
+        setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED, false)
 
         scratchRecordingFileInitJob = viewModelScope.launch(Dispatchers.IO) { resetWavFile() }
 
@@ -327,7 +360,7 @@ constructor(
       ActivityState.NEW_PLAYING,
       ActivityState.NEW_PAUSED,
       -> {
-        setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED)
+        setButtonStates(DISABLED, ACTIVE, DISABLED, DISABLED, false)
 
         releasePlayer()
         scratchRecordingFileInitJob = viewModelScope.launch(Dispatchers.IO) { resetWavFile() }
@@ -336,7 +369,7 @@ constructor(
 
       /** RECORDING: Set target button states. Move to recorded state */
       ActivityState.RECORDING -> {
-        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
         setActivityState(ActivityState.RECORDED)
       }
 
@@ -354,6 +387,7 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.ASSISTANT_PLAYING,
       ActivityState.ACTIVITY_STOPPED,
+      ActivityState.PLAYING_HINT_AUDIO,
       -> {
         // throw Exception("Record button should not be clicked in '$activityState' state")
       }
@@ -372,49 +406,49 @@ constructor(
     when (activityState) {
       /** If coming from first play back, just move to pause */
       ActivityState.FIRST_PLAYBACK -> {
-        setButtonStates(DISABLED, DISABLED, ENABLED, DISABLED)
+        setButtonStates(DISABLED, DISABLED, ENABLED, DISABLED, false)
         setActivityState(ActivityState.FIRST_PLAYBACK_PAUSED)
       }
 
       /** If coming from first playback paused, resume player */
       ActivityState.FIRST_PLAYBACK_PAUSED -> {
-        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
+        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED, false)
         setActivityState(ActivityState.FIRST_PLAYBACK)
       }
 
       /** If coming from completed, play the scratch wav file */
       ActivityState.COMPLETED -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED, false)
         setActivityState(ActivityState.NEW_PLAYING)
       }
 
       /** on NEW_PLAYING, move to NEW_PAUSED */
       ActivityState.NEW_PLAYING -> {
-        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, false)
         setActivityState(ActivityState.NEW_PAUSED)
       }
 
       /** on NEW_PAUSED, move to NEW_PLAYING */
       ActivityState.NEW_PAUSED -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED, false)
         setActivityState(ActivityState.NEW_PLAYING)
       }
 
       /** COMPLETED_PRERECORDING: Move to old playing */
       ActivityState.COMPLETED_PRERECORDING -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED, false)
         setActivityState(ActivityState.OLD_PLAYING)
       }
 
       /** OLD_PLAYING: Move to old paused */
       ActivityState.OLD_PLAYING -> {
-        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, false)
         setActivityState(ActivityState.OLD_PAUSED)
       }
 
       /** OLD_PAUSED: Move to old playing */
       ActivityState.OLD_PAUSED -> {
-        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ACTIVE, ENABLED, false)
         setActivityState(ActivityState.OLD_PLAYING)
       }
       ActivityState.INIT,
@@ -427,6 +461,7 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.ASSISTANT_PLAYING,
       ActivityState.ACTIVITY_STOPPED,
+      ActivityState.PLAYING_HINT_AUDIO
       -> {
         // throw Exception("Play button should not be clicked in '$activityState' state")
       }
@@ -442,14 +477,14 @@ constructor(
     log(message)
 
     /** Disable all buttons when NEXT is clicked */
-    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
 
     when (activityState) {
       ActivityState.COMPLETED_PRERECORDING, ActivityState.OLD_PLAYING, ActivityState.OLD_PAUSED -> {
         setActivityState(ActivityState.SIMPLE_NEXT)
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
-        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
         setActivityState(ActivityState.ENCODING_NEXT)
       }
       ActivityState.PRERECORDING -> {
@@ -467,6 +502,7 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
       ActivityState.ACTIVITY_STOPPED,
+      ActivityState.PLAYING_HINT_AUDIO,
       -> {
         // throw Exception("Next button should not be clicked in '$activityState' state")
       }
@@ -482,7 +518,7 @@ constructor(
     log(message)
 
     /** Disable all buttons when NEXT is clicked */
-    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
 
     when (activityState) {
       ActivityState.PRERECORDING,
@@ -493,7 +529,7 @@ constructor(
         setActivityState(ActivityState.SIMPLE_BACK)
       }
       ActivityState.COMPLETED, ActivityState.NEW_PLAYING, ActivityState.NEW_PAUSED -> {
-        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
         setActivityState(ActivityState.ENCODING_BACK)
       }
       ActivityState.INIT,
@@ -507,10 +543,23 @@ constructor(
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
       ActivityState.ACTIVITY_STOPPED,
+      ActivityState.PLAYING_HINT_AUDIO
       -> {
         // throw Exception("Back button should not be clicked in '$activityState' state")
       }
     }
+  }
+
+  fun handleHintAudioBtnClick() {
+    // Log the click
+    val message = JsonObject()
+    message.addProperty("type", "o")
+    message.addProperty("button", "HINT")
+    log(message)
+
+    /** Disable all buttons when NEXT is clicked */
+    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
+    setActivityState(ActivityState.PLAYING_HINT_AUDIO)
   }
 
   fun onBackPressed() {
@@ -530,6 +579,7 @@ constructor(
       ActivityState.SIMPLE_NEXT,
       ActivityState.SIMPLE_BACK,
       ActivityState.ASSISTANT_PLAYING,
+      ActivityState.PLAYING_HINT_AUDIO,
       -> {
         navigateBack()
       }
@@ -583,7 +633,7 @@ constructor(
           preRecordBufferConsumed[0] = 0
           preRecordBufferConsumed[1] = 0
           releaseRecorder()
-          setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+          setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
           playRecordPrompt()
         }
       }
@@ -614,15 +664,15 @@ constructor(
     preRecordBufferConsumed[1] = 0
 
     if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
-      setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED)
+      setButtonStates(ENABLED, ENABLED, DISABLED, DISABLED, true)
       // Enable next button if skipping allowed
       if (allowSkipping) {
-        setButtonStates(ENABLED, ENABLED, DISABLED, ENABLED)
+        setButtonStates(ENABLED, ENABLED, DISABLED, ENABLED, true)
       }
       setActivityState(ActivityState.PRERECORDING)
       resetRecordingLength()
     } else {
-      setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+      setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, false)
 
       val mPlayer = MediaPlayer()
       mPlayer.setDataSource(outputRecordingFilePath)
@@ -709,7 +759,7 @@ constructor(
       /** COMPLETED: release the media player */
       ActivityState.COMPLETED -> {
         playbackProgressThread?.join()
-        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, true)
         _playbackProgressPbProgress.value = 0
         releasePlayer()
       }
@@ -724,7 +774,7 @@ constructor(
         } else if (previousActivityState == ActivityState.COMPLETED) {
           initializePlayer()
           mediaPlayer!!.setOnCompletionListener {
-            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, true)
             setActivityState(ActivityState.COMPLETED)
           }
           playFile(scratchRecordingFilePath)
@@ -749,12 +799,7 @@ constructor(
           initializePlayer()
           mediaPlayer!!.setOnCompletionListener {
             _playbackProgressPbProgress.value = _playbackProgressPbMax.value
-            setButtonStates(
-              ButtonState.ENABLED,
-              ButtonState.ENABLED,
-              ButtonState.ENABLED,
-              ButtonState.ENABLED
-            )
+            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, true)
             setActivityState(ActivityState.COMPLETED_PRERECORDING)
           }
           playFile(outputRecordingFilePath)
@@ -824,6 +869,30 @@ constructor(
           setActivityState(ActivityState.INIT)
         }
       }
+
+      ActivityState.PLAYING_HINT_AUDIO -> {
+        setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
+        viewModelScope.launch {
+          if (isPrerecordingState(previousActivityState)) {
+            preRecordingJob?.join()
+          }
+        }
+        hintAudioPlayer = MediaPlayer()
+        val hintFilePath =
+          microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id, hintFileName)
+        hintAudioPlayer!!.setDataSource(hintFilePath)
+        hintAudioPlayer!!.prepare()
+        hintAudioPlayer!!.setOnCompletionListener {
+          it.release()
+          if (previousActivityState == ActivityState.COMPLETED) {
+            setActivityState(ActivityState.COMPLETED)
+          } else {
+            resetMicrotask()
+          }
+        }
+        hintAudioPlayer!!.start()
+      }
+
       ActivityState.ASSISTANT_PLAYING -> {
         /** This is a dummy state to trigger events before assistant can be played */
       }
@@ -837,7 +906,7 @@ constructor(
   }
 
   fun cleanupOnStop() {
-    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED)
+    setButtonStates(DISABLED, DISABLED, DISABLED, DISABLED, false)
     setActivityState(ActivityState.ACTIVITY_STOPPED)
 
     when (previousActivityState) {
@@ -898,6 +967,10 @@ constructor(
         releaseRecorder()
       }
 
+      ActivityState.PLAYING_HINT_AUDIO -> {
+        // TODO: What to do here?
+      }
+
       /** Nothing to do states */
 
       /** Nothing to do states */
@@ -931,6 +1004,7 @@ constructor(
       ActivityState.ENCODING_NEXT,
       ActivityState.ENCODING_BACK,
       ActivityState.ASSISTANT_PLAYING,
+      ActivityState.PLAYING_HINT_AUDIO,
       -> {
         resetMicrotask()
       }
@@ -940,7 +1014,7 @@ constructor(
       ActivityState.FIRST_PLAYBACK,
       ActivityState.FIRST_PLAYBACK_PAUSED,
       -> {
-        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
+        setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED, false)
         setActivityState(ActivityState.FIRST_PLAYBACK)
       }
 
@@ -949,7 +1023,7 @@ constructor(
       ActivityState.NEW_PAUSED,
       ActivityState.NEW_PLAYING,
       -> {
-        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+        setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, true)
         setActivityState(ActivityState.COMPLETED)
       }
 
@@ -983,6 +1057,7 @@ constructor(
   }
 
   /** Initialize [audioRecorder] */
+  @SuppressLint("MissingPermission")
   private fun initializeAndStartRecorder() {
     audioRecorder =
       AudioRecord(
@@ -1169,10 +1244,10 @@ constructor(
         audioFileFlushJob!!.join()
         if (activityState == ActivityState.RECORDED) {
           if (noForcedReplay) {
-            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED)
+            setButtonStates(ENABLED, ENABLED, ENABLED, ENABLED, true)
             setActivityState(ActivityState.COMPLETED)
           } else {
-            setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED)
+            setButtonStates(DISABLED, DISABLED, ACTIVE, DISABLED, false)
             setActivityState(ActivityState.FIRST_PLAYBACK)
           }
         }

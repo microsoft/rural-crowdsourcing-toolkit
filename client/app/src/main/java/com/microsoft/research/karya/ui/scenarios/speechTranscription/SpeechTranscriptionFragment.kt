@@ -56,9 +56,20 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
       if (transcriptionEt.text.isNullOrEmpty()) {
         showErrorDialog(getString(R.string.no_transcription_error_msg))
         return@setOnClickListener
+      } else {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Review the transcription.")
+        alertDialogBuilder.setMessage(transcriptionEt.text.toString())
+        alertDialogBuilder.setPositiveButton(R.string.yes) { _, _ ->
+          viewModel.setTranscriptionText(transcriptionEt.text.toString())
+          viewModel.handleNextClick()
+        }
+        alertDialogBuilder.setNegativeButton(R.string.no) { _, _ -> }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.setCancelable(true)
+        alertDialog.setCanceledOnTouchOutside(true)
+        alertDialog.show()
       }
-      viewModel.setTranscriptionText(transcriptionEt.text.toString())
-      viewModel.handleNextClick()
     }
   }
 
@@ -84,7 +95,12 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         }
         assistanceFl.addView(wordButton)
       }
+    }
 
+    viewModel.transcriptionText.observe(
+      viewLifecycleOwner.lifecycle, viewLifecycleScope
+    ) { text ->
+      transcriptionEt.setText(text)
     }
 
     viewModel.playbackSecondsTvText.observe(
@@ -124,8 +140,6 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         showErrorDialog(msg)
       }
     }
-
-
   }
 
   private fun showErrorDialog(msg: String) {
