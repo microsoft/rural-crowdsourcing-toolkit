@@ -111,7 +111,11 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
           }
 
-        findNavController().navigate(resId)
+        try {
+          findNavController().navigate(resId)
+        } catch (e:Exception) {
+          Log.e("DASHBOARD_NAV_ERROR", e.toString())
+        }
       }
 
       WorkManager.getInstance(requireContext())
