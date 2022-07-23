@@ -59,13 +59,17 @@ constructor(
       val worker = authManager.getLoggedInWorker()
       _workerAccessCode.value = worker.accessCode
 
-      if (worker.params != null) {
-        val tags = worker.params.asJsonObject.getAsJsonArray("tags")
-        for (tag in tags) {
-          if (tag.asString == "_wfc_") {
-            _workFromCenterUser.value = true
+      try {
+        if (worker.params != null && !worker.params.isJsonNull) {
+          val tags = worker.params.asJsonObject.getAsJsonArray("tags")
+          for (tag in tags) {
+            if (tag.asString == "_wfc_") {
+              _workFromCenterUser.value = true
+            }
           }
         }
+      } catch (e: Exception) {
+        _workFromCenterUser.value = false
       }
     }
   }
