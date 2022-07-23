@@ -61,6 +61,7 @@ class AccessCodeDecoder {
       environment: Int?,
       embeddingMechanism: Int?
     ): String {
+      return "https://karyaboxtest.eastus.cloudapp.azure.com"
       return when (version) {
         VERSION_1 -> {
           if (boxType == PHYSICAL) PHYSICAL_BOX_URL

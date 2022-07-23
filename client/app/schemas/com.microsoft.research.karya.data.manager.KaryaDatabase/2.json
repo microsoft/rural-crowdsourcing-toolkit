@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e68ccc5e03d79ddc87ff57fc84cec6ff",
+    "identityHash": "8eba4aeed9fdc86b68da8ab7254e6137",
     "entities": [
       {
         "tableName": "worker",
@@ -100,10 +100,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -198,10 +198,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -290,10 +290,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -364,17 +364,17 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "microtask_assignment",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `local_id` TEXT NOT NULL, `box_id` TEXT NOT NULL, `microtask_id` TEXT NOT NULL, `task_id` TEXT NOT NULL, `worker_id` TEXT NOT NULL, `deadline` TEXT, `status` TEXT NOT NULL, `completed_at` TEXT, `output` TEXT NOT NULL, `output_file_id` TEXT, `logs` TEXT NOT NULL, `credits` REAL, `verified_at` TEXT, `report` TEXT NOT NULL, `created_at` TEXT NOT NULL, `last_updated_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `local_id` TEXT NOT NULL, `box_id` TEXT NOT NULL, `microtask_id` TEXT NOT NULL, `task_id` TEXT NOT NULL, `worker_id` TEXT NOT NULL, `deadline` TEXT, `status` TEXT NOT NULL, `completed_at` TEXT, `output` TEXT NOT NULL, `output_file_id` TEXT, `logs` TEXT NOT NULL, `max_base_credits` REAL, `base_credits` REAL, `credits` REAL, `verified_at` TEXT, `report` TEXT NOT NULL, `created_at` TEXT NOT NULL, `last_updated_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -449,6 +449,18 @@
             "notNull": true
           },
           {
+            "fieldPath": "max_base_credits",
+            "columnName": "max_base_credits",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "base_credits",
+            "columnName": "base_credits",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
             "fieldPath": "credits",
             "columnName": "credits",
             "affinity": "REAL",
@@ -480,10 +492,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -536,10 +548,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "workerId"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -548,7 +560,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e68ccc5e03d79ddc87ff57fc84cec6ff')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8eba4aeed9fdc86b68da8ab7254e6137')"
     ]
   }
 }

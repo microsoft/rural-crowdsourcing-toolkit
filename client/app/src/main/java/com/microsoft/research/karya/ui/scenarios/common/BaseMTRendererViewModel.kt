@@ -151,7 +151,7 @@ constructor(
     logs.add(logObj)
   }
 
-  /** Add a string message to the log */
+  /** Add a Json object to the log */
   protected fun log(obj: JsonObject) {
     val logObj = JsonObject()
     val currentTime = DateUtils.getCurrentDate()

@@ -301,4 +301,9 @@
     <string name="ifsc_s">IFSC: %s</string>
     <string name="update_account_details">Update Account Details</string>
     <string name="no_internet">No internet available</string>
+    <string name="image_annotation_verification_instruction">Verification instruction goes here</string>
+    <string name="img_annotation_verification_good">good</string>
+    <string name="img_annotation_verification_ok">ok</string>
+    <string name="img_annotation_verification_bad">bad</string>
+    <string name="no_image_validation_score_selected">Please select a score for the annotation</string>
 </resources>

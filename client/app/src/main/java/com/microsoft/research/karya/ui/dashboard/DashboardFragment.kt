@@ -95,61 +95,62 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
     viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
       binding.syncProgressBar.progress = i
-    viewModel.progress.observe(lifecycle, lifecycleScope) { i -> binding.syncProgressBar.progress = i }
+      viewModel.progress.observe(lifecycle, lifecycleScope) { i -> binding.syncProgressBar.progress = i }
 
-    viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
-      val resId =
-        when (navigation) {
-          DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
-          DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
-          DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
-          DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
-        }
-
-      findNavController().navigate(resId)
-    }
-
-    WorkManager.getInstance(requireContext())
-      .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
-      .observe(viewLifecycleOwner) { workInfos ->
-        if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
-        val workInfo = workInfos[0] // Picking the first workInfo
-        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-          lifecycleScope.launch {
-            val warningMsg = workInfo.outputData.getString("warningMsg")
-            if (warningMsg != null) { // Check if there are any warning messages set by Workmanager
-              showErrorUi(Throwable(warningMsg), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.WARNING)
-            }
-            viewModel.setProgress(100)
-            viewModel.refreshList()
+      viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
+        val resId =
+          when (navigation) {
+            DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
+            DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
+            DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
+            DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
           }
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
-          viewModel.setProgress(0)
-          viewModel.setLoading()
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
-          // Check if the current work's state is "successfully finished"
-          val progress: Int = workInfo.progress.getInt("progress", 0)
-          viewModel.setProgress(progress)
-          viewModel.setLoading()
-          // refresh the UI to show microtasks
-          if (progress == 100)
-            viewLifecycleScope.launch {
+
+        findNavController().navigate(resId)
+      }
+
+      WorkManager.getInstance(requireContext())
+        .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
+        .observe(viewLifecycleOwner) { workInfos ->
+          if (workInfos.size == 0) return@observe // Return if the workInfo List is empty
+          val workInfo = workInfos[0] // Picking the first workInfo
+          if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+            lifecycleScope.launch {
+              val warningMsg = workInfo.outputData.getString("warningMsg")
+              if (warningMsg != null) { // Check if there are any warning messages set by Workmanager
+                showErrorUi(Throwable(warningMsg), ERROR_TYPE.SYNC_ERROR, ERROR_LVL.WARNING)
+              }
+              viewModel.setProgress(100)
               viewModel.refreshList()
             }
-        }
-        if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
-          lifecycleScope.launch {
-            showErrorUi(
-              Throwable(workInfo.outputData.getString("errorMsg")),
-              ERROR_TYPE.SYNC_ERROR,
-              ERROR_LVL.ERROR
-            )
-            viewModel.refreshList()
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
+            viewModel.setProgress(0)
+            viewModel.setLoading()
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.RUNNING) {
+            // Check if the current work's state is "successfully finished"
+            val progress: Int = workInfo.progress.getInt("progress", 0)
+            viewModel.setProgress(progress)
+            viewModel.setLoading()
+            // refresh the UI to show microtasks
+            if (progress == 100)
+              viewLifecycleScope.launch {
+                viewModel.refreshList()
+              }
+          }
+          if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
+            lifecycleScope.launch {
+              showErrorUi(
+                Throwable(workInfo.outputData.getString("errorMsg")),
+                ERROR_TYPE.SYNC_ERROR,
+                ERROR_LVL.ERROR
+              )
+              viewModel.refreshList()
+            }
           }
         }
-      }
+    }
   }
 
   override fun onSessionExpired() {
@@ -362,6 +363,11 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             total
           )
           ScenarioType.SENTENCE_CORPUS -> actionDashboardActivityToSentenceCorpusFragment(
+            taskId,
+            completed,
+            total
+          )
+          ScenarioType.IMAGE_ANNOTATION_VERIFICATION -> actionDashboardActivityToImageAnnotationVerificationFragment(
             taskId,
             completed,
             total

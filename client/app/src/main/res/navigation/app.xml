@@ -185,6 +185,13 @@
             <argument android:name="total" app:argType="integer" />
         </action>
         <action
+            android:id="@+id/action_dashboardActivity_to_imageAnnotationVerificationFragment"
+            app:destination="@id/imageAnnotationVerificationFragment" >
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
+        <action
             android:id="@+id/action_dashboardActivity_to_paymentRegistrationFragment"
             app:destination="@id/paymentRegistrationFragment" />
         <action
@@ -350,6 +357,17 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_sentenceCorpusFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageAnnotationVerificationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageAnnotationVerification.ImageAnnotationVerificationFragment"
+        android:label="ImageAnnotationVerificationFragment" >
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_imageAnnotationVerificationFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
     <fragment

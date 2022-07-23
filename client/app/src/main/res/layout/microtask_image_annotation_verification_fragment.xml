@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/microtaskTb"
+        layout="@layout/microtask_common_header" />
+
+    <TextView
+        android:id="@+id/instructionTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/image_annotation_verification_instruction"
+        android:textColor="#606060"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_arrow_back_ios_24"
+        android:paddingLeft="@dimen/_8sdp"
+        app:layout_constraintTop_toTopOf="@id/imgAVscoreCl"
+        app:layout_constraintBottom_toBottomOf="@id/imgAVscoreCl"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/nextBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:padding="@dimen/_4sdp"
+        app:layout_constraintTop_toTopOf="@id/imgAVscoreCl"
+        app:layout_constraintBottom_toBottomOf="@id/imgAVscoreCl"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+
+    <com.jsibbold.zoomage.ZoomageView
+        android:id="@+id/sourceImageIv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        app:layout_constraintBottom_toTopOf="@id/imgAVscoreCl"
+        app:layout_constraintTop_toBottomOf="@id/instructionTv"
+        app:layout_constraintVertical_bias="0.55"
+        app:zoomage_animateOnReset="false"
+        app:zoomage_autoCenter="true"
+        app:zoomage_autoResetMode="UNDER"
+        app:zoomage_maxScale="8"
+        app:zoomage_minScale="1"
+        app:zoomage_minCropRecHeight="20"
+        app:zoomage_minCropRecWidth="20"
+        app:zoomage_restrictBounds="true"
+        app:zoomage_translatable="true"
+        app:zoomage_zoomable="true" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imgAVscoreCl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/backBtn"
+        app:layout_constraintRight_toLeftOf="@id/nextBtn"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/scoreToggleGroup"
+            style="@style/RatingButtonGroup"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/scoreGoodBtn"
+                style="@style/RatingButton"
+                android:text="@string/img_annotation_verification_good" />
+
+            <Button
+                android:id="@+id/scoreOKBtn"
+                style="@style/RatingButton"
+                android:text="@string/img_annotation_verification_ok" />
+
+            <Button
+                android:id="@+id/scoreBadBtn"
+                style="@style/RatingButton"
+                android:text="@string/img_annotation_verification_bad" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
