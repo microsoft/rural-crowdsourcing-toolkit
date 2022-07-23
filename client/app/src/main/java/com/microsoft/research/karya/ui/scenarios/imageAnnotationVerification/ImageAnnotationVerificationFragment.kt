@@ -21,16 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.*
 import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.backBtn
 import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.instructionTv
-import java.util.*
 import kotlin.collections.HashMap
-
-
-private val colors = listOf(
-  Color.parseColor("#4DD0E1"),
-  Color.parseColor("#EEFF41"),
-  Color.parseColor("#7E57C2"),
-  Color.parseColor("#F44336")
-)
 
 @AndroidEntryPoint
 class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.microtask_image_annotation_verification_fragment) {
@@ -38,10 +29,6 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
   private val args: ImageAnnotationVerificationFragmentArgs by navArgs()
   private var rectangleCropCoors: HashMap<String, RectF>? = null
   private var polygonCropCoors: HashMap<String, Polygon>? = null
-
-  // Array of Pair to hold label names and corresponding colors
-  lateinit var labelDetailArray: Array<Pair<String, Int>>
-  lateinit var labels: List<String>
 
   override fun onCreateView(
     inflater: LayoutInflater,
