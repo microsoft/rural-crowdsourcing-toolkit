@@ -20,7 +20,8 @@
     <FrameLayout
         android:id="@+id/inputFrame"
         style="@style/MicrotaskInputFrame"
-        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"
+        android:layout_marginVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/hintAudioBtn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv">
 
@@ -44,6 +45,19 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/inputFrame"
         app:layout_constraintEnd_toEndOf="@id/inputFrame" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/hintAudioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/recordLengthLL"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:backgroundTint="@color/c_light_grey"
+        android:textColor="@color/c_black"
+        android:text="Play Hint Audio"
+        android:visibility="visible"
+        />
 
     <LinearLayout
         android:id="@+id/recordLengthLL"
