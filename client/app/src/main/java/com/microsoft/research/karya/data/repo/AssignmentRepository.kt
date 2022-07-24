@@ -303,7 +303,7 @@ constructor(
     return finalReport
   }
 
-  suspend fun getAssignmentReportSummary(worker_id: String): Map<String, JsonObject> {
+  suspend fun getTaskReportSummary(worker_id: String): Map<String, JsonObject> {
     val assignmentReports = assignmentDaoExtra.getAssignmentReports(worker_id)
     var taskReports: MutableMap<String, MutableList<JsonObject>> = mutableMapOf()
 
@@ -329,9 +329,9 @@ constructor(
         ScenarioType.SPEECH_DATA ->
           reduceTaskReports(reports, arrayListOf("accuracy", "volume", "quality"), 2.5f)
         ScenarioType.IMAGE_ANNOTATION ->
-          reduceTaskReports(reports, arrayListOf("fraction"), 5f)
+          reduceTaskReports(reports, arrayListOf("accuracy"), 5f)
         ScenarioType.SENTENCE_CORPUS ->
-          reduceTaskReports(reports, arrayListOf("relevance", "correctness"), 5f)
+          reduceTaskReports(reports, arrayListOf("accuracy"), 5f)
         ScenarioType.SPEECH_TRANSCRIPTION ->
           reduceTaskReports(reports, arrayListOf("accuracy"), 5f)
         else -> JsonObject()

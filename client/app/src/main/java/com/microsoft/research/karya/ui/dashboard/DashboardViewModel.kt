@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
@@ -114,13 +115,14 @@ constructor(
   suspend fun refreshList() {
     val worker = authManager.getLoggedInWorker()
     val tempList = mutableListOf<TaskInfo>()
+
+    // Get task report summary
+    val taskSummary = assignmentRepository.getTaskReportSummary(worker.id)
+
     taskInfoList.forEach { taskInfo ->
-      val taskStatus = fetchTaskStatus(taskInfo.taskID)
-      val speechReport = if (taskInfo.scenarioName == ScenarioType.SPEECH_DATA) {
-        assignmentRepository.getSpeechReportSummary(worker.id, taskInfo.taskID)
-      } else {
-        null
-      }
+      val taskId = taskInfo.taskID
+      val taskStatus = fetchTaskStatus(taskId)
+      val summary = if (taskSummary.containsKey(taskId)) taskSummary[taskId] else null
       tempList.add(
         TaskInfo(
           taskInfo.taskID,
@@ -129,7 +131,7 @@ constructor(
           taskInfo.scenarioName,
           taskStatus,
           taskInfo.isGradeCard,
-          speechReport
+          summary
         )
       )
     }
@@ -158,6 +160,10 @@ constructor(
         .getAllTasksFlow()
         .flowOn(Dispatchers.IO)
         .onEach { taskList ->
+
+          // Get task report summary
+          val taskSummary = assignmentRepository.getTaskReportSummary(worker.id)
+
           val tempList = mutableListOf<TaskInfo>()
           taskList.forEach { taskRecord ->
             val taskInstruction = try {
@@ -165,12 +171,10 @@ constructor(
             } catch (e: Exception) {
               null
             }
-            val taskStatus = fetchTaskStatus(taskRecord.id)
-            val speechReport = if (taskRecord.scenario_name == ScenarioType.SPEECH_DATA) {
-              assignmentRepository.getSpeechReportSummary(worker.id, taskRecord.id)
-            } else {
-              null
-            }
+            val taskId = taskRecord.id
+            val taskStatus = fetchTaskStatus(taskId)
+            val summary = if (taskSummary.containsKey(taskId)) taskSummary[taskId] else null
+
             tempList.add(
               TaskInfo(
                 taskRecord.id,
@@ -179,7 +183,7 @@ constructor(
                 taskRecord.scenario_name,
                 taskStatus,
                 false,
-                speechReport
+                summary
               )
             )
           }
