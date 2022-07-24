@@ -21,7 +21,7 @@ export const imageAnnotationValidation: BackendChainInterface<'IMAGE_ANNOTATION'
           data: assignment.output!.data,
           files: { image: microtask.input.files!.image },
         },
-        input_file_id: assignment.output_file_id,
+        input_file_id: microtask.input_file_id,
         deadline: toTask.deadline,
         base_credits: toTask.params.baseCreditsPerMicrotask,
         credits: toTask.params.creditsPerMicrotask,
