@@ -63,6 +63,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         alertDialogBuilder.setPositiveButton(R.string.yes) { _, _ ->
           viewModel.setTranscriptionText(transcriptionEt.text.toString())
           viewModel.handleNextClick()
+          transcriptionEt.text.clear()
         }
         alertDialogBuilder.setNegativeButton(R.string.no) { _, _ -> }
         val alertDialog = alertDialogBuilder.create()
