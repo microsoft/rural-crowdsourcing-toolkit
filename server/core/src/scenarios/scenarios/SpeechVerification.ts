@@ -10,6 +10,7 @@ import { LanguageCode, languageMap, languageParameter } from '../../languages/In
 // Speech verification task input parameters
 type SpeechVerificationTaskInputParameters = {
   language: LanguageCode;
+  onlyAccuracy: boolean;
 };
 
 // Speech verification microtask input format
@@ -44,6 +45,14 @@ export type BaseSpeechVerificationScenario = BaseScenarioInterface<
 
 // Speech verification task inputs
 const task_input: BaseSpeechVerificationScenario['task_input'] = [
+  {
+    id: 'onlyAccuracy',
+    type: 'boolean',
+    label: 'Check only for accuracy',
+    description: 'Check only the accuracy of the sentence against the recording',
+    required: false,
+  },
+
   languageParameter('language', 'Language', 'Language of the recordings and transcript'),
 ];
 
