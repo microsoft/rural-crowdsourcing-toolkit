@@ -3,7 +3,6 @@ package com.microsoft.research.karya.ui.dashboard
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.ItemTaskBinding
 import com.microsoft.research.karya.utils.extensions.gone

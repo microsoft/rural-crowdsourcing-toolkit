@@ -381,6 +381,11 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             completed,
             total
           )
+          ScenarioType.SENTENCE_CORPUS_VERIFICATION -> actionDashboardActivityToSentenceCorpusVerificationFragment(
+            taskId,
+            completed,
+            total
+          )
           else -> null
         }
       }
