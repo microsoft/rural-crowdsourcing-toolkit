@@ -76,6 +76,7 @@
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/scoreToggleGroup"
             style="@style/RatingButtonGroup"
+            android:layout_marginStart="@dimen/_0sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
