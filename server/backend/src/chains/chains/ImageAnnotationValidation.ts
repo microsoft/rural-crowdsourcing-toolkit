@@ -44,7 +44,7 @@ export const imageAnnotationValidation: BackendChainInterface<'IMAGE_ANNOTATION'
       const scores: number[] = ratings.map((r) => (r == 'GOOD' ? 1 : r == 'OKAY' ? 0.5 : 0));
       const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
       assignment.credits = toTask.params.creditsPerMicrotask * avgScore;
-      assignment.report = report;
+      assignment.report = { ...report, accuracy: avgScore };
       return assignment;
     });
     return verificationUpdates;

@@ -37,8 +37,12 @@ export const sentenceCorpusValidationChain: BackendChainInterface<'SENTENCE_CORP
     const verificationUpdates = microtasks.map((microtask, i) => {
       const assignment = assignments[i];
       const report = microtask.output!.data;
-      const score = Object.values(report.sentences).filter((s) => s.status == 'VALID').length;
-      assignment.report = report;
+      const ratings = Object.values(report.sentences);
+      const score = ratings
+        .map((s) => (s.status == 'VALID' ? (1 as number) : s.status == 'ERRORS' ? 0.5 : 0))
+        .reduce((a, b) => a + b, 0);
+      const accuracy = score / ratings.length;
+      assignment.report = { ...report, accuracy };
       assignment.credits = score * fromTask.params.creditsPerMicrotask;
       return assignment;
     });
