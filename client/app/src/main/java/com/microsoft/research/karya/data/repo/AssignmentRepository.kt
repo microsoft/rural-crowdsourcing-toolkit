@@ -1,6 +1,8 @@
 package com.microsoft.research.karya.data.repo
 
+import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.microsoft.research.karya.data.local.daos.MicroTaskAssignmentDao
 import com.microsoft.research.karya.data.local.daos.MicroTaskDao
@@ -10,6 +12,7 @@ import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.MicroTaskRecord
 import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.SpeechDataReport
 import com.microsoft.research.karya.data.service.MicroTaskAssignmentAPI
 import com.microsoft.research.karya.utils.DateUtils
@@ -267,5 +270,76 @@ constructor(
       return reportSummary
     }
     return null
+  }
+
+  private fun reduceTaskReports(reports: List<JsonObject>, keys: List<String>, scale: Float = 1.0f): JsonObject {
+    val summary: MutableMap<String, Float> = mutableMapOf()
+    val count: MutableMap<String, Int> = mutableMapOf()
+    keys.forEach { key ->
+      summary[key] = 0.0f
+      count[key] = 0
+    }
+
+    reports.forEach { report ->
+      keys.forEach { key ->
+        try {
+          if (report.has(key)) {
+            summary[key] = summary[key]!! + report.get(key).asFloat
+            count[key] = count[key]!! + 1
+          }
+        } catch (e: Exception) {}
+      }
+    }
+
+    val finalReport = JsonObject()
+    keys.forEach { key ->
+      val keyCount = count[key]!!
+      if (keyCount > 0) {
+        val keySummary = summary[key]!! * scale / keyCount
+        finalReport.addProperty(key, keySummary)
+      }
+    }
+
+    return finalReport
+  }
+
+  suspend fun getAssignmentReportSummary(worker_id: String): Map<String, JsonObject> {
+    val assignmentReports = assignmentDaoExtra.getAssignmentReports(worker_id)
+    var taskReports: MutableMap<String, MutableList<JsonObject>> = mutableMapOf()
+
+    assignmentReports.forEach { ar ->
+      if (!taskReports.containsKey(ar.task_id)) {
+        taskReports[ar.task_id] = mutableListOf()
+      }
+      if (ar.report != null && !ar.report.isJsonNull) {
+        try {
+          taskReports[ar.task_id]!!.add(ar.report.asJsonObject)
+        } catch (e: Exception) {}
+      }
+    }
+
+    var taskSummary: MutableMap<String, JsonObject> = mutableMapOf()
+    taskReports.forEach { it ->
+      val task_id = it.key
+      val reports = it.value
+
+      val scenarioName = taskDao.getById(task_id).scenario_name
+
+      val summary = when (scenarioName) {
+        ScenarioType.SPEECH_DATA ->
+          reduceTaskReports(reports, arrayListOf("accuracy", "volume", "quality"), 2.5f)
+        ScenarioType.IMAGE_ANNOTATION ->
+          reduceTaskReports(reports, arrayListOf("fraction"), 5f)
+        ScenarioType.SENTENCE_CORPUS ->
+          reduceTaskReports(reports, arrayListOf("relevance", "correctness"), 5f)
+        ScenarioType.SPEECH_TRANSCRIPTION ->
+          reduceTaskReports(reports, arrayListOf("accuracy"), 5f)
+        else -> JsonObject()
+      }
+
+      taskSummary[task_id] = summary
+    }
+
+    return taskSummary.toMap()
   }
 }

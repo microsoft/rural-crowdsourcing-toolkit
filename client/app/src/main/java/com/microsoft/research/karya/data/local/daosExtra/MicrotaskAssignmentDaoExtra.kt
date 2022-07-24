@@ -9,6 +9,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
+import com.microsoft.research.karya.data.model.karya.modelsExtra.AssignmentReport
 
 @Dao
 interface MicrotaskAssignmentDaoExtra {
@@ -193,4 +194,10 @@ interface MicrotaskAssignmentDaoExtra {
     task_id: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
   ): List<JsonElement>
+
+  @Query("SELECT task_id, report FROM microtask_assignment WHERE worker_id=:worker_id and status=:status")
+  suspend fun getAssignmentReports(
+    worker_id: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+  ): List<AssignmentReport>
 }
