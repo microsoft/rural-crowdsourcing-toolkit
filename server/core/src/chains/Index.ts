@@ -12,6 +12,7 @@ import { BaseChainInterface } from './BaseChainInterface';
 import { baseImageAnnotationValidation } from './chains/ImageAnnotationValidation';
 import { baseSentenceCorpusValidationChain } from './chains/SentenceCorpusValidation';
 import { baseSignLanguageVideoValidation } from './chains/SignLanguageVideoValidation';
+import { baseSpeechTranscriptionValidationChain } from './chains/SpeechTranscriptionValidation';
 import { baseSpeechValidationChain } from './chains/SpeechValidation';
 import { baseXliterationValidationChain } from './chains/XliterationValidation';
 
@@ -21,6 +22,7 @@ export * from './chains/SignLanguageVideoValidation';
 export * from './chains/XliterationValidation';
 export * from './chains/SentenceCorpusValidation';
 export * from './chains/ImageAnnotationValidation';
+export * from './chains/SpeechTranscriptionValidation';
 
 // List of chains
 export const chainNames = [
@@ -29,6 +31,7 @@ export const chainNames = [
   'SIGN_VIDEO_VALIDATION',
   'SENTENCE_CORPUS_VALIDATION',
   'IMAGE_ANNOTATION_VALIDATION',
+  'SPEECH_TRANSCRIPTION_VALIDATION',
 ] as const;
 export type ChainName = typeof chainNames[number];
 
@@ -52,4 +55,5 @@ export const baseChainMap: { [key in ChainName]: BaseChainInterface<ScenarioName
   SIGN_VIDEO_VALIDATION: baseSignLanguageVideoValidation,
   SENTENCE_CORPUS_VALIDATION: baseSentenceCorpusValidationChain,
   IMAGE_ANNOTATION_VALIDATION: baseImageAnnotationValidation,
+  SPEECH_TRANSCRIPTION_VALIDATION: baseSpeechTranscriptionValidationChain,
 };
