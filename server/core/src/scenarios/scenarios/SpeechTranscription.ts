@@ -10,6 +10,7 @@ import { LanguageCode, languageMap, languageParameter } from '../../languages/In
 // Speech transcription task input parameters
 type SpeechTranscriptionTaskInputParameters = {
   language: LanguageCode;
+  onlyAccuracy: boolean;
 };
 
 // Speech Transcription microtask input format
@@ -32,6 +33,14 @@ export type BaseSpeechTranscriptionScenario = BaseScenarioInterface<
 
 // Speech transcription task inputs
 const task_input: BaseSpeechTranscriptionScenario['task_input'] = [
+  {
+    id: 'onlyAccuracy',
+    type: 'boolean',
+    label: 'Check only for accuracy',
+    description: 'Check only the accuracy of the sentence against the recording',
+    required: false,
+  },
+
   languageParameter('language', 'Language', 'Language of the recordings and transcript'),
 ];
 
