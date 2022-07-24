@@ -3,6 +3,7 @@
 
 package com.microsoft.research.karya.data.model.karya.modelsExtra
 
+import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 
 data class TaskInfo(
@@ -12,6 +13,5 @@ data class TaskInfo(
   val scenarioName: ScenarioType,
   val taskStatus: TaskStatus,
   val isGradeCard: Boolean,
-  // Hack
-  val speechDataReport: SpeechDataReport?
+  val reportSummary: JsonObject?,
 )

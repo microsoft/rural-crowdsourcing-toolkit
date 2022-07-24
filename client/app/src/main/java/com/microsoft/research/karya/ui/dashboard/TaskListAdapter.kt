@@ -75,14 +75,31 @@ class TaskListAdapter(
         completedTasksPb.progress = completed
 
         // Set speech data report
-        val report = taskInfo.speechDataReport
-        if (taskInfo.scenarioName == ScenarioType.SPEECH_DATA && report != null) {
-          scoreGroup.visible()
-          accuracyScore.rating = report.accuracy
-          volumeScore.rating = report.volume
-          qualityScore.rating = report.quality
-        } else {
+        val report = taskInfo.reportSummary
+        if (report == null) {
           scoreGroup.gone()
+        } else {
+          scoreGroup.visible()
+          if (report.has("accuracy")) {
+            accuracyFeedbackCl.visible()
+            accuracyScore.rating = report.get("accuracy").asFloat
+          } else {
+            accuracyFeedbackCl.gone()
+          }
+
+          if (report.has("volume")) {
+            volumeFeedbackCl.visible()
+            volumeScore.rating = report.get("volume").asFloat
+          } else {
+            volumeFeedbackCl.gone()
+          }
+
+          if (report.has("quality")) {
+            qualityFeedbackCl.visible()
+            qualityScore.rating = report.get("quality").asFloat
+          } else {
+            qualityFeedbackCl.gone()
+          }
         }
 
         // Task click listener
