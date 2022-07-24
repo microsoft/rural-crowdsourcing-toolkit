@@ -1,10 +1,11 @@
 package com.microsoft.research.karya.ui.scenarios.imageAnnotationVerification
 
 import android.graphics.PointF
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -14,9 +15,11 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,15 +38,12 @@ constructor(
   fileDirPath,
   authManager
 ) {
-
-  final val NO_SCORE_SELECTED = -1
-
   // Image to be shown
   private val _imageFilePath: MutableStateFlow<String> = MutableStateFlow("")
   val imageFilePath = _imageFilePath.asStateFlow()
 
   // Labelled Polygon coordinates
-  private val _polygonCoors: MutableStateFlow<ArrayList<PointF>> = MutableStateFlow(ArrayList())
+  private val _polygonCoors: MutableStateFlow<Array<PointF>> = MutableStateFlow(arrayOf())
   val polygonCoors = _polygonCoors.asStateFlow()
 
   // score
@@ -82,24 +82,6 @@ constructor(
       // Since default shape is rectangle
       4
     }
-
-    val coorsJsonArray = try {
-      currentMicroTask.input.asJsonObject.getAsJsonObject("annotations").getAsJsonArray("page")
-    } catch (e: Exception) {
-      JsonArray()
-    }
-
-    val coors = ArrayList<PointF>()
-
-    for (ele: JsonElement in coorsJsonArray) {
-      val x = ele.asJsonArray.get(0).asFloat
-      val y = ele.asJsonArray.get(1).asFloat
-      coors.add(PointF(x, y))
-    }
-    _polygonCoors.value = coors
-
-    // Reset validation score
-    _validationScore.value = R.string.rating_undefined
   }
 
   /**
@@ -129,6 +111,31 @@ constructor(
    */
   fun handleScoreChange(resId: Int) {
     _validationScore.value = resId
+  }
+
+  fun setCoordinatesForBox() {
+    val annotations = try {
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").getAsJsonObject("annotations")
+    } catch (e: Exception) {
+      JsonObject()
+    }
+
+    // taking first label for now TODO: Generalise for all labels
+    val label = annotations.keySet().elementAt(0)
+    // Get coordinates with respect to a label for the first crop object
+    val coorsJsonArray = annotations.getAsJsonArray(label).get(0).asJsonArray
+    val coors = Array<PointF>(coorsJsonArray.size()) { PointF(0F, 0F)}
+
+    for (i in coors.indices) {
+      val ele = coorsJsonArray.get(i)
+      val x = ele.asJsonArray.get(0).asFloat
+      val y = ele.asJsonArray.get(1).asFloat
+      coors[i] = PointF(x, y)
+    }
+    _polygonCoors.value = coors
+
+    // Reset validation score
+    _validationScore.value = R.string.rating_undefined
   }
 
 }

@@ -376,7 +376,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             completed,
             total
           )
-          ScenarioType.IMAGE_ANNOTATION_VERIFICATION -> actionDashboardActivityToImageAnnotationVerificationFragment(
+          ScenarioType.IMAGE_ANNOTATION_VALIDATION -> actionDashboardActivityToImageAnnotationVerificationFragment(
             taskId,
             completed,
             total

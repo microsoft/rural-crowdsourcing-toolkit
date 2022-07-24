@@ -3,12 +3,12 @@ package com.microsoft.research.karya.ui.scenarios.imageAnnotationVerification
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -19,9 +19,7 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.*
-import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.backBtn
-import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.instructionTv
-import kotlin.collections.HashMap
+
 
 @AndroidEntryPoint
 class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.microtask_image_annotation_verification_fragment) {
@@ -77,9 +75,9 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
   }
 
   private fun handleNextClick() {
-
-    if (viewModel.validationScore.value == R.string.rating_undefined) {
-      Toast.makeText(requireContext(), getString(R.string.no_image_validation_score_selected), Toast.LENGTH_LONG)
+    if (getString(viewModel.validationScore.value) == getString(R.string.rating_undefined)) {
+      Toast.makeText(requireContext(), getString(R.string.no_image_validation_score_selected), Toast.LENGTH_LONG).show()
+      return
     }
     viewModel.handleNextCLick()
   }
@@ -90,6 +88,8 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
       if (path.isNotEmpty()) {
         val image: Bitmap = BitmapFactory.decodeFile(path)
         sourceImageIv.setImageBitmap(image)
+      } else {
+        return@observe
       }
       //TODO: Put an else condition to put a placeholder image
 
@@ -98,11 +98,36 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
       for (id in ids) {
         sourceImageIv.removeCropObject(id)
       }
+      // Clear the checks on group toggle button
+      scoreToggleGroup.clearChecked()
+
+      // Set listener to add crop object after the image is loaded
+      sourceImageIv.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+          return try {
+            viewModel.setCoordinatesForBox()
+            // Note that returning "true" is important or else the drawing pass will be canceled
+            true
+          } finally {
+            // Remove listener as further notifications are not needed
+            sourceImageIv.viewTreeObserver.removeOnPreDrawListener(this)
+          }
+        }
+      })
+
     }
 
-    viewModel.polygonCoors.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { coorsArrayList ->
-      val polygon = Polygon(coorsArrayList.toArray() as Array<out PointF>?)
-      sourceImageIv.addCropPolygon(System.currentTimeMillis().toString(), Color.parseColor("#000000"), polygon)
+    viewModel.polygonCoors.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { coors ->
+      // Return is coordinates are empty
+      if (coors.isEmpty()) {
+        return@observe
+      }
+      val polygon = Polygon(coors)
+      val id = System.currentTimeMillis().toString()
+      sourceImageIv.addCropPolygon(id, Color.parseColor("#000000"), polygon)
+      if (!sourceImageIv.lockOrUnlockCropObject(id)) {
+        sourceImageIv.lockOrUnlockCropObject(id)
+      }
     }
 
     viewModel.validationScore.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { id ->
