@@ -125,7 +125,7 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
       }
       val polygon = Polygon(coors)
       val id = System.currentTimeMillis().toString()
-      sourceImageIv.addCropPolygon(id, Color.parseColor("#000000"), polygon, CropObjectStatus.INACTIVE)
+      sourceImageIv.addCropPolygon(id, Color.parseColor("#FF0000"), polygon, CropObjectStatus.INACTIVE)
       if (!sourceImageIv.lockOrUnlockCropObject(id)) {
         sourceImageIv.lockOrUnlockCropObject(id)
       }
