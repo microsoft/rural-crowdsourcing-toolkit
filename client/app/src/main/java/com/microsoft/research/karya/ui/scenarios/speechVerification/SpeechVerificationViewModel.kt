@@ -64,6 +64,10 @@ constructor(
   private var nextBtnState: ButtonState = ButtonState.DISABLED
   private var backBtnState: ButtonState = ButtonState.DISABLED
 
+  // Rate only accuracy
+  private var _rateOnlyAccuracy: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val rateOnlyAccuracy = _rateOnlyAccuracy.asStateFlow()
+
   /** Verification status */
   private var _accuracyRating: MutableStateFlow<Int> = MutableStateFlow(R.string.rating_undefined)
   val accuracyRating = _accuracyRating.asStateFlow()
@@ -110,6 +114,13 @@ constructor(
   val showErrorWithDialog = _showErrorWithDialog.asStateFlow()
 
   override fun setupMicrotask() {
+    // Check if only accuracy has to be rated
+    _rateOnlyAccuracy.value = try {
+      task.params.asJsonObject.get("onlyAccuracy").asBoolean
+    } catch (e: Exception) {
+      false
+    }
+
     _accuracyRating.value = R.string.rating_undefined
     _qualityRating.value = R.string.rating_undefined
     _volumeRating.value = R.string.rating_undefined
@@ -337,10 +348,11 @@ constructor(
 
   private fun updateReviewStatus() {
     reviewCompleted =
-      _accuracyRating.value != R.string.rating_undefined &&
-        _qualityRating.value != R.string.rating_undefined &&
-        _volumeRating.value != R.string.rating_undefined &&
-        _fluencyRating.value != R.string.rating_undefined
+      (_rateOnlyAccuracy.value && _accuracyRating.value != R.string.rating_undefined) || (
+        _accuracyRating.value != R.string.rating_undefined &&
+          _qualityRating.value != R.string.rating_undefined &&
+          _volumeRating.value != R.string.rating_undefined &&
+          _fluencyRating.value != R.string.rating_undefined)
 
     if (reviewCompleted) {
       setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)

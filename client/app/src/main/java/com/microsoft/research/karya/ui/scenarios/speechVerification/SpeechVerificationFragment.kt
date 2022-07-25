@@ -11,10 +11,7 @@ import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainFragmentArgs
 import com.microsoft.research.karya.ui.scenarios.speechVerification.SpeechVerificationViewModel.ButtonState
-import com.microsoft.research.karya.utils.extensions.disable
-import com.microsoft.research.karya.utils.extensions.enable
-import com.microsoft.research.karya.utils.extensions.observe
-import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
+import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
@@ -124,6 +121,18 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       viewLifecycleOwner.lifecycle, viewLifecycleScope
     ) { states ->
       flushButtonStates(states.first, states.second, states.third)
+    }
+
+    viewModel.rateOnlyAccuracy.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { rateOnlyAccuracy ->
+      if (rateOnlyAccuracy) {
+        qualityCl.invisible()
+        volumeCl.invisible()
+        fluencyCl.invisible()
+      } else {
+        qualityCl.visible()
+        volumeCl.visible()
+        fluencyCl.visible()
+      }
     }
 
     viewModel.accuracyRating.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { value ->
