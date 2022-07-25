@@ -2,12 +2,13 @@ package com.microsoft.research.karya.ui.scenarios.speechTranscription
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.button.MaterialButton
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.speechTranscription.SpeechTranscriptionViewModel.ButtonState
@@ -88,7 +89,8 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         return@observe
       }
       for (word in words) {
-        val wordButton = Button(context)
+        val wordButton = MaterialButton(requireContext())
+        wordButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, R.dimen._14ssp.toFloat())
         wordButton.text = word
         wordButton.setOnClickListener {
           transcriptionEt.setText(transcriptionEt.text.toString() + " " + word)
