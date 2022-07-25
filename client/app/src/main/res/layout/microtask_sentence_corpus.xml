@@ -11,15 +11,13 @@
 
     <TextView
         android:id="@+id/instructionTv"
+        style="@style/MicrotaskInstructionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         android:gravity="center"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:text="@string/text_transliteration_desc"
-        android:textColor="#606060"
-        android:textSize="@dimen/_14ssp"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
     <TextView
@@ -27,6 +25,8 @@
         style="@style/MicrotaskInputText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:textSize="@dimen/_16ssp"
@@ -84,21 +84,20 @@
         android:layout_width="@dimen/_0sdp"
         android:layout_height="0dp"
         android:layout_marginVertical="@dimen/_8sdp"
+        app:layout_constraintBottom_toTopOf="@id/nextBtn"
         app:layout_constraintLeft_toLeftOf="@id/sentenceEt"
         app:layout_constraintRight_toRightOf="@id/addBtn"
-        app:layout_constraintTop_toBottomOf="@id/errorTv"
-        app:layout_constraintBottom_toTopOf="@id/nextBtn"/>
+        app:layout_constraintTop_toBottomOf="@id/errorTv" />
 
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addBtn"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_margin="@dimen/_8sdp"
-        android:background="@drawable/ic_add_button"
         android:contentDescription="@string/next"
+        android:src="@drawable/ic_check"
         app:layout_constraintBottom_toBottomOf="@id/sentenceEt"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/sentenceEt" />
