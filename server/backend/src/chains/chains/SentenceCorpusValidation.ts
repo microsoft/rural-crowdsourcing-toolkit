@@ -22,6 +22,7 @@ export const sentenceCorpusValidationChain: BackendChainInterface<'SENTENCE_CORP
         },
         deadline: toTask.deadline,
         credits: toTask.params.creditsPerMicrotask,
+        base_credits: toTask.params.baseCreditsPerMicrotask,
         status: 'INCOMPLETE',
       };
       return chainedMicrotask;

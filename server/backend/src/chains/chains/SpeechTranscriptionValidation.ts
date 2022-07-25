@@ -25,11 +25,12 @@ export const speechTranscriptionValidationChain: BackendChainInterface<
       const chainedMicrotask: MicrotaskType<'SPEECH_VERIFICATION'> = {
         task_id: toTask.id,
         input: {
-          data: { sentence: microtask.input.data.sentence },
+          data: { sentence: assignment.output!.data.transcription },
           files: { recording },
         },
         input_file_id: microtask.input_file_id,
         deadline: toTask.deadline,
+        base_credits: toTask.params.baseCreditsPerMicrotask,
         credits: toTask.params.creditsPerMicrotask,
         status: 'INCOMPLETE',
       };
