@@ -21,16 +21,13 @@ class SentenceAdapter(private val dataSet: ArrayList<String>, private val onScor
   class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val sentenceTv: TextView = view.findViewById(R.id.floatSentenceTv)
     val toggleGroup: MaterialButtonToggleGroup = view.findViewById(R.id.scoreToggleGroup)
-    val validButton: Button = view.findViewById(R.id.scoreValidBtn)
-    val errorButton: Button = view.findViewById(R.id.scoreErrorBtn)
-    val invalidButton: Button = view.findViewById(R.id.scoreInvalidBtn)
   }
 
   // Create new views (invoked by the layout manager)
   override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
     // Create a new view, which defines the UI of the list item
     val view = LayoutInflater.from(viewGroup.context)
-      .inflate(R.layout.item_float_sentence, viewGroup, false)
+      .inflate(R.layout.item_float_sentence_verification, viewGroup, false)
 
     return ViewHolder(view)
   }

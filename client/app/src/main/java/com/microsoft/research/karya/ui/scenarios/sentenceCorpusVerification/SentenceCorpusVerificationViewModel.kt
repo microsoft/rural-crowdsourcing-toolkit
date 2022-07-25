@@ -46,7 +46,7 @@ constructor(
 
     val sentences = HashMap<String, String?>()
     for(ele in sentencesJsonObject.entrySet()) {
-      sentences[ele.key] = ele.value.asString
+      sentences[ele.key] = ele.value.asJsonObject.get("status").asString
     }
     _sentences.value = sentences
   }

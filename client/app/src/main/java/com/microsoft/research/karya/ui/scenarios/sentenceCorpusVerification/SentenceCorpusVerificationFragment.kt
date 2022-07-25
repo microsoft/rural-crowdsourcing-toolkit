@@ -14,8 +14,6 @@ import com.microsoft.research.karya.ui.scenarios.transliteration.validator.Valid
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.instructionTv
-import kotlinx.android.synthetic.main.microtask_image_annotation_verification_fragment.nextBtn
 import kotlinx.android.synthetic.main.microtask_sentence_corpus_verification.*
 
 @AndroidEntryPoint
