@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jsibbold.zoomage.dataClass.Polygon
+import com.jsibbold.zoomage.enums.CropObjectStatus
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
@@ -103,30 +104,33 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 
     // Set listeners to add crop object
     addBoxButton.setOnClickListener {
-      var alertDialog: AlertDialog? = null
-      val onLabelItemClickListener = object : OnLabelItemClickListener {
-        override fun onClick(labelView: View, position: Int) {
-          // attach random UUID with the selected box type
-          val key = labels[position] + "_" + UUID.randomUUID().toString();
-          if (viewModel.annotationType == CropObjectType.RECTANGLE) {
-            sourceImageIv.addCropRectangle(key, colors[position])
-          } else {
-            sourceImageIv.addCropPolygon(key, colors[position], viewModel.numberOfSides)
-          }
-
-          alertDialog!!.dismiss()
-        }
+      // TODO: Remove this code, temporary change for stanford study
+      val key = labels[0] + "_" + UUID.randomUUID().toString();
+      if (viewModel.annotationType == CropObjectType.RECTANGLE) {
+        sourceImageIv.addCropRectangle(key, colors[0])
+      } else {
+        sourceImageIv.addCropPolygon(key, colors[0], viewModel.numberOfSides, CropObjectStatus.ACTIVE)
       }
-      alertDialog = buildLabelListDialogBox(
-        getString(R.string.select_image_annotation_label_dialog_instruction),
-        onLabelItemClickListener
-      )
-      alertDialog!!.show()
+//      var alertDialog: AlertDialog? = null
+//      val onLabelItemClickListener = object : OnLabelItemClickListener {
+//        override fun onClick(labelView: View, position: Int) {
+//          // attach random UUID with the selected box type
+//          val key = labels[position] + "_" + UUID.randomUUID().toString();
+//          if (viewModel.annotationType == CropObjectType.RECTANGLE) {
+//            sourceImageIv.addCropRectangle(key, colors[position])
+//          } else {
+//            sourceImageIv.addCropPolygon(key, colors[position], viewModel.numberOfSides)
+//          }
+//
+//          alertDialog!!.dismiss()
+//        }
+//      }
+//      alertDialog = buildLabelListDialogBox(
+//        getString(R.string.select_image_annotation_label_dialog_instruction),
+//        onLabelItemClickListener
+//      )
+//      alertDialog!!.show()
 
-//      val selectedId = boxSpinner.selectedItemId
-//      // attach random UUID with the selected box type
-//      val key = labels[selectedId.toInt()] + "_" + UUID.randomUUID().toString();
-//      sourceImageIv.addCropRectangle(key, (colors[boxSpinner.selectedItemPosition]))
     }
     // Set Listeners to remove box
     removeBoxButton.setOnClickListener { sourceImageIv.removeCropObject(sourceImageIv.focusedCropObjectId) }
@@ -184,7 +188,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       for (id in polygonCropCoors!!.keys) {
         val label = id.split("_")[0]
         val position = labels.indexOf(label)
-        sourceImageIv.addCropPolygon(id, colors[position], polygonCropCoors!![id])
+        sourceImageIv.addCropPolygon(id, colors[position], polygonCropCoors!![id], CropObjectStatus.ACTIVE)
       }
     }
   }

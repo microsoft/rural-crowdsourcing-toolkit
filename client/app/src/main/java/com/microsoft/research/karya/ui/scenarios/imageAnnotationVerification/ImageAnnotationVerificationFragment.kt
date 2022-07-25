@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.jsibbold.zoomage.dataClass.Polygon
+import com.jsibbold.zoomage.enums.CropObjectStatus
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.observe
@@ -124,7 +125,7 @@ class ImageAnnotationVerificationFragment : BaseMTRendererFragment(R.layout.micr
       }
       val polygon = Polygon(coors)
       val id = System.currentTimeMillis().toString()
-      sourceImageIv.addCropPolygon(id, Color.parseColor("#000000"), polygon)
+      sourceImageIv.addCropPolygon(id, Color.parseColor("#FF0000"), polygon, CropObjectStatus.INACTIVE)
       if (!sourceImageIv.lockOrUnlockCropObject(id)) {
         sourceImageIv.lockOrUnlockCropObject(id)
       }

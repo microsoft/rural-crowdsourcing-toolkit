@@ -44,6 +44,7 @@
         app:zoomage_zoomable="true" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/labelTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
         app:layout_constraintRight_toLeftOf="@id/spinner_item_color" />
 
     <androidx.cardview.widget.CardView
+        android:visibility="gone"
         android:id="@+id/spinner_item_color"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
@@ -69,6 +71,7 @@
         app:layout_constraintTop_toTopOf="@id/labelTv" />
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/lockCropBtn"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="0dp"
@@ -80,6 +83,7 @@
         android:src="@drawable/ic_baseline_lock_open_24" />
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/editRectColorBtn"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="0dp"
@@ -103,6 +107,7 @@
 
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/removeBoxButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
