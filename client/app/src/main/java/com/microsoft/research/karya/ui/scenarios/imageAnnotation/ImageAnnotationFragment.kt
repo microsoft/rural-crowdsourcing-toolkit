@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jsibbold.zoomage.dataClass.Polygon
+import com.jsibbold.zoomage.enums.CropObjectStatus
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
@@ -108,7 +109,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       if (viewModel.annotationType == CropObjectType.RECTANGLE) {
         sourceImageIv.addCropRectangle(key, colors[0])
       } else {
-        sourceImageIv.addCropPolygon(key, colors[0], viewModel.numberOfSides)
+        sourceImageIv.addCropPolygon(key, colors[0], viewModel.numberOfSides, CropObjectStatus.ACTIVE)
       }
 //      var alertDialog: AlertDialog? = null
 //      val onLabelItemClickListener = object : OnLabelItemClickListener {
@@ -187,7 +188,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       for (id in polygonCropCoors!!.keys) {
         val label = id.split("_")[0]
         val position = labels.indexOf(label)
-        sourceImageIv.addCropPolygon(id, colors[position], polygonCropCoors!![id])
+        sourceImageIv.addCropPolygon(id, colors[position], polygonCropCoors!![id], CropObjectStatus.ACTIVE)
       }
     }
   }
