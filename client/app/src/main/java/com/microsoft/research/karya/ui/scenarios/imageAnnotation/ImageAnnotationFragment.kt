@@ -105,6 +105,11 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     // Set listeners to add crop object
     addBoxButton.setOnClickListener {
       // TODO: Remove this code, temporary change for stanford study
+      // Allow for addition of only one polygon
+      if (sourceImageIv.coordinatesForPolygonCropBoxes.size > 0) {
+        return@setOnClickListener
+      }
+      // TODO: Remove this code, temporary change for stanford study
       val key = labels[0] + "_" + UUID.randomUUID().toString();
       if (viewModel.annotationType == CropObjectType.RECTANGLE) {
         sourceImageIv.addCropRectangle(key, colors[0])
