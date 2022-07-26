@@ -96,6 +96,7 @@ class SentenceCorpusFragment :
     }
     errorTv.gone()
     viewModel.handleNextClick()
+    sentenceEt.text.clear()
   }
 
   private fun setupObservers() {

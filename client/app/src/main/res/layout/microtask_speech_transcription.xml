@@ -64,7 +64,7 @@
             android:scrollbars="vertical"
             android:scrollHorizontally="false"
             android:textColor="#000000"
-            android:textSize="@dimen/_14ssp"
+            android:textSize="@dimen/_16ssp"
             app:layout_constraintTop_toBottomOf="@id/playbackProgress" />
 
         <com.nex3z.flowlayout.FlowLayout
