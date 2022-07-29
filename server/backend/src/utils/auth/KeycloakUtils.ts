@@ -101,3 +101,31 @@ export const createUser = async (user: ServerUserRecord) => {
   const userQueryResponse = await keycloakAxios.get(`${RELATIVE_REALM_URL}/users`, { params: { username: user.id } });
   return userQueryResponse.data[0].id;
 };
+
+/**
+ * Given a list of keycloak user ids, this method deletes those users from keycloak database.
+ * @param userIds List of keycloak user ids to remove from Keycloak
+ */
+export const removeUsers = async (userIds: string[]) => {
+  await Promise.all(
+    userIds.map(async (userId: string) => {
+      // Delete the keycloak entry of user if it exists
+      if (userId) {
+        await keycloakAxios.delete(`${RELATIVE_REALM_URL}/users/${userId}`);
+      }
+    })
+  );
+};
+
+/**
+ * Remove all users except keycloak admin present in keycloak
+ */
+export const removeAllUsers = async () => {
+  const usersQueryResponse = await keycloakAxios.get(`${RELATIVE_REALM_URL}/users`);
+  const userIds = usersQueryResponse.data.map((user: { username: string; id: string }) => {
+    if (user.username != 'admin') {
+      return user.id;
+    }
+  });
+  await removeUsers(userIds);
+};

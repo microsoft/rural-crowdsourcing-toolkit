@@ -9,9 +9,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Promise as BBPromise } from 'bluebird';
-import { knex, setupDbConnection, ServerDbFunctions, mainLogger as logger } from '@karya/common';
+import { knex, setupDbConnection, ServerDbFunctions, mainLogger as logger, BasicModel } from '@karya/common';
 import { bootstrapAuth } from './AuthBootstrap';
 import { createAllMatViews } from '../models/MatViewModel';
+import * as KeycloakUtils from '../utils/auth/KeycloakUtils';
 
 /**
  * Function to recreate all tables in the database
@@ -43,6 +44,10 @@ let scriptSequence = ['recreate-tables', 'auth-bootstrap'];
   }
 
   setupDbConnection();
+
+  // Remove server users from keycloak
+  const allServerUsers = await BasicModel.getRecords('server_user', {});
+  await KeycloakUtils.removeAllUsers();
 
   await BBPromise.mapSeries(scriptSequence, async (action) => {
     switch (action) {
