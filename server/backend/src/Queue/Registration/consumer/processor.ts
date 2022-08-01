@@ -107,7 +107,7 @@ export default async (job: Job<RegistrationQJobData>) => {
     BasicModel.updateSingle(
       'payments_account',
       { id: accountRecord.id },
-      { status: AccountTaskStatus.FAILED, meta: { meta: updatedMeta } }
+      { status: AccountTaskStatus.FAILED, meta: updatedMeta }
     );
   }
 };
@@ -175,7 +175,6 @@ const createFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: s
     };
   }
 
-  console.log(fundAccountRequestBody);
   // 2. Make the request to Razorpay
   let response: AxiosResponse<FundAccountResponse>;
   try {
