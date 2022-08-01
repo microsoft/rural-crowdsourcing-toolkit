@@ -52,15 +52,16 @@ bulkTransactionQConsumer.on('completed', (job) => {
 
 // Handling errors
 bulkTransactionQConsumer.on('failed', async (job: Job<BulkTransactionQJobData>, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error} and data: ${job.data}`);
+  QLogger.error(`Failed job ${job.id} with error: ${error.message} and data: ${job.data}`);
   const bulkTransactionRecord = job.data.bulkTransactionRecord;
+  // Update the status and save the error in the database
   const updatedBulkTransactionRecord = await BasicModel.updateSingle(
     'bulk_payments_transaction',
     { id: bulkTransactionRecord.id },
     {
       status: BulkTransactionTaskStatus.FAILED,
       meta: {
-        source: 'Something went wron at Bulk Transaction Queue',
+        source: 'Bulk Transaction Queue Processor',
         failure_reason: error.message,
       },
     }

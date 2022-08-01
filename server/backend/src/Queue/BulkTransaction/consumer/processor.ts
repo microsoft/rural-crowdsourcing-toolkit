@@ -63,9 +63,14 @@ export default async (job: Job<BulkTransactionQJobData>) => {
         transactionPayload
       );
     } catch (e: any) {
-      console.log('BULK_TRANSACTION_QUEUE: ', e.message);
+      // TODO: LOG ERROR HERE
       failedForWorkerIds.push(transactionRequest.workerId);
     }
+  }
+
+  // Check if all transactions failed
+  if (failedForWorkerIds.length == bulkTransactionRequest.length) {
+    throw new Error('Every Transaction in bulk request failed');
   }
 
   // Check if only some transactions were able to succeed
