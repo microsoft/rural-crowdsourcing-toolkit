@@ -1,6 +1,6 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common';
 import { AccountTaskStatus } from '@karya/core';
-import { Queue } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { verifyAccountQConsumer } from './consumer/verifyAccountQConsumer';
 import { Qconfig, VerifyAccountQJobData, VerifyAccountQPayload, VerifyAccountQResult } from './Types';
 
@@ -34,8 +34,7 @@ export class VerifyAccountQWrapper extends QueueWrapper<Queue> {
     // TODO: Make a single object Job with payload and jobname
     let addedJob = await this.queue.add(jobName, {
       confirm: payload.confirm,
-      accountId: payload.accountId,
-      workerId: payload.workerId,
+      accountRecord: updatedAccountRecord,
     });
 
     return { jobId: addedJob.id!, updatedAccountRecord };
@@ -47,14 +46,9 @@ export class VerifyAccountQWrapper extends QueueWrapper<Queue> {
 
 // Defining success and failure cases for the consumer working on Queue
 verifyAccountQConsumer.on('completed', (job) => {
-  QLogger.info(`Completed job ${job.id} successfully`);
+  QLogger.info(`Completed job ${job.id} successfully with record id: ${job.data.accountRecord.id}`);
 });
 
-verifyAccountQConsumer.on('failed', async (job, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error}`);
-  const record = await BasicModel.updateSingle(
-    'payments_account',
-    { id: job.data.accountId },
-    { status: AccountTaskStatus.CONFIRMATION_FAILED }
-  );
+verifyAccountQConsumer.on('failed', async (job: Job<VerifyAccountQJobData>, error) => {
+  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
 });

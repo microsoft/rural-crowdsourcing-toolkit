@@ -8,7 +8,10 @@ export interface VerifyAccountQPayload extends Payload {
   accountId: string;
 }
 
-export type VerifyAccountQJobData = VerifyAccountQPayload;
+export type VerifyAccountQJobData = {
+  confirm: boolean;
+  accountRecord: PaymentsAccountRecord;
+};
 
 export type Qconfig = {
   qname: string;
