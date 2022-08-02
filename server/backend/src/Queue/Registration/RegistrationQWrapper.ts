@@ -1,6 +1,6 @@
 import { BasicModel, karyaLogger, Logger, QResult, QueueWrapper } from '@karya/common';
 import { AccountTaskStatus } from '@karya/core';
-import { Queue } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { registrationQConsumer } from './consumer/registrationQConsumer';
 import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResult } from './Types';
 
@@ -51,6 +51,23 @@ registrationQConsumer.on('completed', (job) => {
   QLogger.info(`Completed job ${job.id} successfully`);
 });
 
-registrationQConsumer.on('failed', (job, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error}`);
+registrationQConsumer.on('failed', async (job: Job<RegistrationQJobData>, error) => {
+  QLogger.error(`Failed job ${job.id} with ${error} and record id ${job.data.accountRecord.id}`);
+
+  const accountRecord = job.data.accountRecord;
+  const meta = accountRecord.meta;
+  // Update the status and save the error in the database
+  const updatedAccountRecord = await BasicModel.updateSingle(
+    'payments_account',
+    { id: accountRecord.id },
+    {
+      status: AccountTaskStatus.FAILED,
+      meta: {
+        ...meta,
+        failure_server: 'server',
+        failure_source: 'Account Registration Queue Processor',
+        failure_reason: error.message,
+      },
+    }
+  );
 });
