@@ -56,6 +56,7 @@ bulkTransactionQConsumer.on('failed', async (job: Job<BulkTransactionQJobData>, 
     `Failed job ${job.id} with error: ${error.message} and record id: ${job.data.bulkTransactionRecord.id}`
   );
   const bulkTransactionRecord = job.data.bulkTransactionRecord;
+  const meta = bulkTransactionRecord.meta;
   // Update the status and save the error in the database
   const updatedBulkTransactionRecord = await BasicModel.updateSingle(
     'bulk_payments_transaction',
@@ -63,7 +64,9 @@ bulkTransactionQConsumer.on('failed', async (job: Job<BulkTransactionQJobData>, 
     {
       status: BulkTransactionTaskStatus.FAILED,
       meta: {
-        source: 'Bulk Transaction Queue Processor',
+        ...meta,
+        failure_server: 'server',
+        failure_source: 'Bulk Transaction Queue Processor',
         failure_reason: error.message,
       },
     }
