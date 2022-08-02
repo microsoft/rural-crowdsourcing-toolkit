@@ -47,28 +47,12 @@ export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
 
 // Defining success and failure cases for the consumer working on Queue
 bulkTransactionQConsumer.on('completed', (job) => {
-  QLogger.info(`Completed job ${job.id} successfully`);
+  QLogger.info(`Completed job ${job.id} successfully with record id: ${job.data.bulkTransactionRecord.id}`);
 });
 
 // Handling errors
 bulkTransactionQConsumer.on('failed', async (job: Job<BulkTransactionQJobData>, error) => {
   QLogger.error(
     `Failed job ${job.id} with error: ${error.message} and record id: ${job.data.bulkTransactionRecord.id}`
-  );
-  const bulkTransactionRecord = job.data.bulkTransactionRecord;
-  const meta = bulkTransactionRecord.meta;
-  // Update the status and save the error in the database
-  const updatedBulkTransactionRecord = await BasicModel.updateSingle(
-    'bulk_payments_transaction',
-    { id: bulkTransactionRecord.id },
-    {
-      status: BulkTransactionTaskStatus.FAILED,
-      meta: {
-        ...meta,
-        failure_server: 'server',
-        failure_source: 'Bulk Transaction Queue Processor',
-        failure_reason: error.message,
-      },
-    }
   );
 });

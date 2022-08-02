@@ -48,26 +48,9 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
 
 // Defining success and failure cases for the consumer working on Queue
 registrationQConsumer.on('completed', (job) => {
-  QLogger.info(`Completed job ${job.id} successfully`);
+  QLogger.info(`Completed job ${job.id} successfully with record id: ${job.data.accountRecord.id}`);
 });
 
 registrationQConsumer.on('failed', async (job: Job<RegistrationQJobData>, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error} and record id ${job.data.accountRecord.id}`);
-
-  const accountRecord = job.data.accountRecord;
-  const meta = accountRecord.meta;
-  // Update the status and save the error in the database
-  const updatedAccountRecord = await BasicModel.updateSingle(
-    'payments_account',
-    { id: accountRecord.id },
-    {
-      status: AccountTaskStatus.FAILED,
-      meta: {
-        ...meta,
-        failure_server: 'server',
-        failure_source: 'Account Registration Queue Processor',
-        failure_reason: error.message,
-      },
-    }
-  );
+  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
 });

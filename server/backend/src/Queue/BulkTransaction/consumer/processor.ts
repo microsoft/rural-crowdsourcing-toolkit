@@ -15,6 +15,15 @@ import { TransactionQPayload } from '../../Transaction/Types';
 setupDbConnection();
 
 export default async (job: Job<BulkTransactionQJobData>) => {
+  try {
+    await processJob(job);
+  } catch (error) {
+    await cleanUpOnError(error, job);
+    throw error;
+  }
+};
+
+const processJob = async (job: Job<BulkTransactionQJobData>) => {
   const bulkTransactionRecord: BulkPaymentsTransactionRecord = job.data.bulkTransactionRecord;
   // Update the status of bulk transaction record
   const updatedBulkTransactionRecord = await BasicModel.updateSingle(
@@ -94,4 +103,23 @@ export default async (job: Job<BulkTransactionQJobData>) => {
       }
     );
   }
+};
+
+const cleanUpOnError = async (error: any, job: Job<BulkTransactionQJobData>) => {
+  const bulkTransactionRecord = job.data.bulkTransactionRecord;
+  const meta = bulkTransactionRecord.meta;
+  // Update the status and save the error in the database
+  const updatedBulkTransactionRecord = await BasicModel.updateSingle(
+    'bulk_payments_transaction',
+    { id: bulkTransactionRecord.id },
+    {
+      status: BulkTransactionTaskStatus.FAILED,
+      meta: {
+        ...meta,
+        failure_server: 'server',
+        failure_source: 'Bulk Transaction Queue Processor',
+        failure_reason: error.message,
+      },
+    }
+  );
 };

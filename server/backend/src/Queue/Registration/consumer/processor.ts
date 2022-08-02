@@ -24,6 +24,15 @@ const RAZORPAY_FUND_ACCOUNT_RELATIVE_URL = 'fund_accounts';
 setupDbConnection();
 
 export default async (job: Job<RegistrationQJobData>) => {
+  try {
+    await processJob(job);
+  } catch (error) {
+    await cleanUpOnError(error, job);
+    throw error;
+  }
+};
+
+const processJob = async (job: Job<RegistrationQJobData>) => {
   // Get the box record
   // TODO @enhancement: Maybe cache the id_token rather than calling the database every time
   const accountRecord: PaymentsAccountRecord = job.data.accountRecord;
@@ -165,4 +174,23 @@ const createFundsId = async (accountRecord: PaymentsAccountRecord, contactsId: s
   }
   // 4. Return the fund account id
   return response.data.id;
+};
+
+const cleanUpOnError = async (error: any, job: Job<RegistrationQJobData>) => {
+  const accountRecord = job.data.accountRecord;
+  const meta = accountRecord.meta;
+  // Update the status and save the error in the database
+  const updatedAccountRecord = await BasicModel.updateSingle(
+    'payments_account',
+    { id: accountRecord.id },
+    {
+      status: AccountTaskStatus.FAILED,
+      meta: {
+        ...meta,
+        failure_server: 'server',
+        failure_source: 'Account Registration Queue Processor',
+        failure_reason: error.message,
+      },
+    }
+  );
 };
