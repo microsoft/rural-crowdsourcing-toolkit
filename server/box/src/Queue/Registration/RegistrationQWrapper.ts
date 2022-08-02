@@ -1,6 +1,6 @@
 import { BasicModel, karyaLogger, Logger, QResult, QueueWrapper } from '@karya/common';
 import { AccountTaskStatus } from '@karya/core';
-import { Queue } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { registrationQConsumer } from './consumer/registrationQConsumer';
 import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResult } from './Types';
 
@@ -44,7 +44,7 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
     });
 
     // TODO: Make a single object Job with payload and jobname
-    let addedJob = await this.queue.add(jobName, { account_record_id: createdAccountRecord.id });
+    let addedJob = await this.queue.add(jobName, { accountRecord: createdAccountRecord });
 
     return { jobId: addedJob.id!, createdAccountRecord };
   }
@@ -53,11 +53,11 @@ export class RegistrationQWrapper extends QueueWrapper<Queue> {
   }
 }
 
-// Defining success and failure cases for the consumer working on Queue
+/// Defining success and failure cases for the consumer working on Queue
 registrationQConsumer.on('completed', (job) => {
-  QLogger.info(`Completed job ${job.id} successfully`);
+  QLogger.info(`Completed job ${job.id} successfully with record id: ${job.data.accountRecord.id}`);
 });
 
-registrationQConsumer.on('failed', (job, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error}`);
+registrationQConsumer.on('failed', async (job: Job<RegistrationQJobData>, error) => {
+  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
 });

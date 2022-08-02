@@ -10,39 +10,44 @@ const SERVER_ADD_ACCOUNT_RELATIVE_URL = 'api_box/payments/accounts';
 setupDbConnection();
 
 export default async (job: Job<RegistrationQJobData>) => {
-  // Get the box record
-  // TODO: Maybe cache the id_token rather than calling the database every time
-  let accountRecord: PaymentsAccountRecord;
   try {
-    const box = (await BasicModel.getRecords('box', {}))[0];
-
-    accountRecord = await BasicModel.getSingle('payments_account', { id: job.data.account_record_id });
-    // set request header
-    const headers = { 'karya-id-token': box.id_token! };
-    // send the post request
-    const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord, {
-      headers: headers,
-    });
-    await BasicModel.updateSingle('payments_account', { id: job.data.account_record_id }, { ...response.data });
-  } catch (e: any) {
-    // TODO: Handle error for the case where accountRecord cannot be fetched from database
-    // Possible Handling: Move the job to failed stage and keep retrying
-    // sending the account record for registration
-
-    // TODO: Log the error here
-    console.log(e);
-    const accountsId = job.data.account_record_id;
-
-    const updatedAccountRecord = await BasicModel.getSingle('payments_account', { id: accountsId });
-    // @ts-ignore adding property to meta field
-    const updatedMeta = updatedAccountRecord.meta;
-    const reason = `Failure inside Registration Account Queue Processor at box | ${e.message}`;
-    // @ts-ignore
-    updatedMeta['failure_reason'] = reason;
-    await BasicModel.updateSingle(
-      'payments_account',
-      { id: accountsId },
-      { status: AccountTaskStatus.FAILED, meta: { meta: updatedMeta } }
-    );
+    await processJob(job);
+  } catch (error) {
+    await cleanUpOnError(error, job);
+    throw error;
   }
+};
+
+const processJob = async (job: Job<RegistrationQJobData>) => {
+  const box = (await BasicModel.getRecords('box', {}))[0];
+
+  const accountRecord = job.data.accountRecord;
+  // set request header
+  const headers = { 'karya-id-token': box.id_token! };
+  // send the post request
+  const response = await qAxios.post<PaymentsAccountRecord>(SERVER_ADD_ACCOUNT_RELATIVE_URL, accountRecord, {
+    headers: headers,
+  });
+  await BasicModel.updateSingle('payments_account', { id: accountRecord.id }, { ...response.data });
+};
+
+const cleanUpOnError = async (error: any, job: Job<RegistrationQJobData>) => {
+  // Possible Handling: Move the job to failed stage and keep retrying
+  // sending the account record for registration
+
+  const accountRecord = job.data.accountRecord;
+  const meta = accountRecord.meta;
+  await BasicModel.updateSingle(
+    'payments_account',
+    { id: accountRecord.id },
+    {
+      status: AccountTaskStatus.FAILED,
+      meta: {
+        ...meta,
+        failure_server: 'box',
+        failure_source: 'Registration Account Queue',
+        failure_reason: error.message,
+      },
+    }
+  );
 };

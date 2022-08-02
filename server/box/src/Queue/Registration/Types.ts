@@ -15,7 +15,7 @@ export interface RegistrationQPayload extends Payload {
 }
 
 export type RegistrationQJobData = {
-  account_record_id: string;
+  accountRecord: PaymentsAccountRecord;
 };
 
 export type Qconfig = {
