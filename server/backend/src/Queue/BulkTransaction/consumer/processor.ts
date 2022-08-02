@@ -70,7 +70,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
 
   // Check if all transactions failed
   if (failedForWorkerIds.length == bulkTransactionRequest.length) {
-    throw new Error('Every Transaction in bulk request failed');
+    throw new Error('Every transaction in bulk request failed');
   }
 
   // Check if only some transactions were able to succeed
