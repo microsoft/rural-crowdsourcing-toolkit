@@ -6,7 +6,6 @@ import {
   InsufficientBalanceError,
   RazorPayRequestError,
   AccountTaskStatus,
-  ErrorMeta,
   TransactionStatus,
 } from '@karya/core';
 import { Job } from 'bullmq';
@@ -130,18 +129,15 @@ const cleanUpOnError = async (error: any, job: Job<TransactionQJobData>) => {
     transactionRequestSucess = false;
   }
 
-  const transactionRecord = job.data.transactionRecord as PaymentsTransactionRecord;
-  const errorMeta: ErrorMeta = {
-    name: error.name,
-    message: error.message,
-    source: 'server_transaction_queue',
-  };
+  const transactionRecord = job.data.transactionRecord;
 
   // Update the transaction record with failure message
   // TODO: @Enhancement: Make a central error object pattern
   const updatedTransactionMeta = {
     ...transactionRecord.meta,
-    error: errorMeta,
+    failure_server: 'server',
+    failure_source: 'Transaction Queue Processor',
+    failure_reason: error.message,
   };
   const updatedStatus = transactionRequestSucess
     ? TransactionStatus.FAILED_AFTER_TRANSACTION
@@ -160,7 +156,9 @@ const cleanUpOnError = async (error: any, job: Job<TransactionQJobData>) => {
     // Update the account record with failure message
     const updatedAccountMeta = {
       ...accountRecord.meta,
-      error: errorMeta,
+      failure_server: 'server',
+      failure_source: 'Transaction Queue Processor',
+      failure_reason: error.message,
     };
 
     await BasicModel.updateSingle(

@@ -44,10 +44,10 @@ export class TransactionQWrapper extends BullMqWrapper<TransactionQJobData> {
 
 // Logging events on consumer
 transactionQConsumer.on('completed', (job) => {
-  QLogger.info(`Completed job ${job.id} successfully, trans`);
+  QLogger.info(`Completed job ${job.id} successfully with record id: ${job.data.transactionRecord.id}`);
 });
 
 // Handling Failure events
 transactionQConsumer.on('failed', async (job: Job<TransactionQJobData>, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error}`);
+  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.transactionRecord.id}`);
 });
