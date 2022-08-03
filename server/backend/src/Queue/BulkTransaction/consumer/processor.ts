@@ -7,9 +7,10 @@ import {
   BulkTransactionTaskStatus,
   TransactionRequest,
 } from '@karya/core';
-import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQPayload } from '../../Transaction/Types';
+import { QLogger } from '../Utils';
+import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 
 // Setting up Db Connection
 setupDbConnection();
@@ -72,7 +73,9 @@ const processJob = async (job: Job<BulkTransactionQJobData>) => {
         transactionPayload
       );
     } catch (e: any) {
-      // TODO: LOG ERROR HERE
+      QLogger.error(
+        `Bulk Transaction Id ${bulkTransactionRecord.id}: Error creating transaction task for workerId: ${transactionRequest.workerId} with error ${e.message}`
+      );
       failedForWorkerIds.push(transactionRequest.workerId);
     }
   }

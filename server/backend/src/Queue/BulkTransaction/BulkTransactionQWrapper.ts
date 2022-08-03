@@ -3,12 +3,7 @@ import { BulkTransactionTaskStatus } from '@karya/core';
 import { Job, Queue } from 'bullmq';
 import { bulkTransactionQConsumer } from './consumer/bulkTransactionQConsumer';
 import { Qconfig, BulkTransactionQJobData, BulkTransactionQPayload, BulkTransactionQResult } from './Types';
-
-const QLogger: Logger = karyaLogger({
-  name: 'BulkTransactionQBackend',
-  logToConsole: true,
-  consoleLogLevel: 'info',
-});
+import { QLogger } from './Utils';
 
 export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
   constructor(config: Qconfig) {

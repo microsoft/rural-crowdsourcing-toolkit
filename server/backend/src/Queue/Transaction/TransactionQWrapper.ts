@@ -3,12 +3,7 @@ import { TransactionStatus } from '@karya/core';
 import { TransactionQJobData, TransactionQPayload, TransactionQResult } from './Types';
 import { transactionQConsumer } from './consumer/transactionQConsumer';
 import { Job } from 'bullmq';
-
-export const QLogger: Logger = karyaLogger({
-  name: 'TransactionQBackend',
-  logToConsole: true,
-  consoleLogLevel: 'info',
-});
+import { QLogger } from './Utils';
 
 export class TransactionQWrapper extends BullMqWrapper<TransactionQJobData> {
   onStart(): void {

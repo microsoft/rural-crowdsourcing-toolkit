@@ -3,12 +3,7 @@ import { AccountTaskStatus } from '@karya/core';
 import { Job, Queue } from 'bullmq';
 import { registrationQConsumer } from './consumer/registrationQConsumer';
 import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResult } from './Types';
-
-const QLogger: Logger = karyaLogger({
-  name: 'RegistrationQBackend',
-  logToConsole: true,
-  consoleLogLevel: 'info',
-});
+import { QLogger } from './Utils';
 
 export class RegistrationQWrapper extends QueueWrapper<Queue> {
   constructor(config: { [key: string]: any } & Qconfig) {

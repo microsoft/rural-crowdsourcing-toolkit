@@ -1,14 +1,9 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common';
 import { AccountTaskStatus } from '@karya/core';
 import { Job, Queue } from 'bullmq';
+import { QLogger } from './Utils';
 import { verifyAccountQConsumer } from './consumer/verifyAccountQConsumer';
 import { Qconfig, VerifyAccountQJobData, VerifyAccountQPayload, VerifyAccountQResult } from './Types';
-
-const QLogger: Logger = karyaLogger({
-  name: 'VerifyAccountQBox',
-  logToConsole: true,
-  consoleLogLevel: 'info',
-});
 
 export class VerifyAccountQWrapper extends QueueWrapper<Queue> {
   constructor(config: { [key: string]: any } & Qconfig) {
