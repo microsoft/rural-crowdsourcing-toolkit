@@ -92,7 +92,7 @@ constructor(
     if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       return
     }
-    val annotations = currentMicroTask.output.asJsonObject.getAsJsonObject("annotations")
+    val annotations = currentAssignment.output.asJsonObject.getAsJsonObject("annotations")
     // taking first label for now TODO: Generalise for all labels
     val label = annotations.keySet().elementAt(0)
     // Get coordinates with respect to a label for the first crop object

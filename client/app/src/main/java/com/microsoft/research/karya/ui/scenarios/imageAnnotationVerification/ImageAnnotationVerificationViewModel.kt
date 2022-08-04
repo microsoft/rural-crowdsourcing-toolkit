@@ -9,6 +9,7 @@ import com.google.gson.JsonParser
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
@@ -81,6 +82,22 @@ constructor(
     } catch (e: Exception) {
       // Since default shape is rectangle
       4
+    }
+
+    if (currentAssignment.status == MicrotaskAssignmentStatus.COMPLETED) {
+      renderOutputData()
+    }
+
+  }
+
+  private fun renderOutputData() {
+    val outputData = currentAssignment.output.asJsonObject
+    val score = outputData.get("score").asInt
+
+    when(score) {
+        1 -> _validationScore.value = R.string.img_annotation_verification_ok
+        2 -> _validationScore.value = R.string.img_annotation_verification_good
+        else -> _validationScore.value = R.string.img_annotation_verification_bad
     }
   }
 
