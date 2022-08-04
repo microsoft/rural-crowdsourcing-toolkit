@@ -113,6 +113,7 @@ constructor(
     _validationScore.value = resId
   }
 
+//  TODO: Generalise this method as it only works for single polygon crop object
   fun setCoordinatesForBox() {
     val annotations = try {
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").getAsJsonObject("annotations")

@@ -36,7 +36,7 @@ constructor(
   var microTaskRepository: MicroTaskRepository,
   var fileDirPath: String,
   var authManager: AuthManager,
-  val includeCompleted: Boolean = false
+  val includeCompleted: Boolean = true
 ) : ViewModel() {
 
   private lateinit var taskId: String

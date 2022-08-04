@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -167,6 +168,20 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       spinner_item_color.setCardBackgroundColor(polygonData.color)
       labelTv.text = labels[colors.indexOf(polygonData.color)]
     }
+
+    // Set listener to add crop object after the image is loaded
+    sourceImageIv.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+      override fun onPreDraw(): Boolean {
+        return try {
+          viewModel.renderOutputData()
+          // Note that returning "true" is important or else the drawing pass will be canceled
+          true
+        } finally {
+          // Remove listener as further notifications are not needed
+          sourceImageIv.viewTreeObserver.removeOnPreDrawListener(this)
+        }
+      }
+    })
   }
 
   override fun onPause() {
