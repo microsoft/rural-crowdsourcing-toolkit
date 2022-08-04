@@ -1,5 +1,4 @@
 import { WorkerRecord } from '@karya/core';
-import { where } from 'underscore';
 import { knex } from '../Client';
 import { BasicModel } from '../Index';
 

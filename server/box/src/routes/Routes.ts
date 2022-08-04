@@ -86,6 +86,12 @@ router.put(
   BodyParser({ jsonLimit: '20mb' }),
   AssignmentController.submitSkippedExpired
 );
+router.put(
+  '/skipped_assignments',
+  needIdToken,
+  BodyParser({ jsonLimit: '20mb' }),
+  AssignmentController.submitSkippedExpired
+);
 router.get('/assignments', needIdToken, AssignmentController.get);
 
 // Token Routes

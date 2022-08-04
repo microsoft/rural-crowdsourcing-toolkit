@@ -33,6 +33,10 @@ import {
   BaseTextTranslationValidationScenario,
 } from './scenarios/TextTranslationValidation';
 import { BaseSpeechTranscriptionScenario, baseSpeechTranscriptionScenario } from './scenarios/SpeechTranscription';
+import {
+  baseImageAnnotationValidationScenario,
+  BaseImageAnnotationValidationScenario,
+} from './scenarios/ImageAnnotationValidation';
 
 export * from './ScenarioInterface';
 export * from './scenarios/SpeechData';
@@ -51,6 +55,7 @@ export * from './scenarios/SentenceValidation';
 export * from './scenarios/ImageAnnotation';
 export * from './scenarios/TextTranslationValidation';
 export * from './scenarios/SpeechTranscription';
+export * from './scenarios/ImageAnnotationValidation';
 
 // List of scenario names
 export const scenarioNames = [
@@ -70,6 +75,7 @@ export const scenarioNames = [
   'IMAGE_ANNOTATION',
   'TEXT_TRANSLATION_VALIDATION',
   'SPEECH_TRANSCRIPTION',
+  'IMAGE_ANNOTATION_VALIDATION',
 ] as const;
 export type ScenarioName = typeof scenarioNames[number];
 
@@ -106,6 +112,8 @@ export type ScenarioType<SN extends ScenarioName> = SN extends 'SPEECH_DATA'
   ? BaseTextTranslationValidationScenario
   : SN extends 'SPEECH_TRANSCRIPTION'
   ? BaseSpeechTranscriptionScenario
+  : SN extends 'IMAGE_ANNOTATION_VALIDATION'
+  ? BaseImageAnnotationValidationScenario
   : never;
 
 // Scenario name to instance map
@@ -128,6 +136,7 @@ export const scenarioMap: {
   IMAGE_ANNOTATION: baseImageAnnotationScenario,
   TEXT_TRANSLATION_VALIDATION: baseTextTranslationValidationScenario,
   SPEECH_TRANSCRIPTION: baseSpeechTranscriptionScenario,
+  IMAGE_ANNOTATION_VALIDATION: baseImageAnnotationValidationScenario,
 };
 
 // Core scenario parameters
@@ -135,9 +144,11 @@ type CoreScenarioParamsType = {
   instruction: string;
   baseCreditsPerMicrotask: number;
   creditsPerMicrotask: number;
+  allowSkipping: boolean;
   startTime?: string;
   endTime?: string;
   deadline?: string;
+  includeLogs: boolean;
 };
 
 export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
@@ -167,6 +178,14 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
   },
 
   {
+    id: 'allowSkipping',
+    label: 'Allow users to skip sentences',
+    description: 'Allow users to skip recording sentences',
+    required: false,
+    type: 'boolean',
+  },
+
+  {
     id: 'startTime',
     type: 'time',
     label: 'Start Time (24h format. leave empty for none)',
@@ -188,6 +207,14 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
     label: 'Deadline date: YYYY-DD-MM format',
     description: 'Strict date for completion of tasks',
     required: false,
+  },
+
+  {
+    id: 'includeLogs',
+    label: 'Include logs in output',
+    description: 'Include detailed work logs in output',
+    required: false,
+    type: 'boolean',
   },
 ];
 
