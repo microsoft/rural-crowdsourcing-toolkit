@@ -91,7 +91,7 @@ constructor(
   }
 
   private fun renderOutputData() {
-    val outputData = currentAssignment.output.asJsonObject
+    val outputData = currentAssignment.output.asJsonObject.getAsJsonObject("data")
     val score = outputData.get("score").asInt
 
     when(score) {

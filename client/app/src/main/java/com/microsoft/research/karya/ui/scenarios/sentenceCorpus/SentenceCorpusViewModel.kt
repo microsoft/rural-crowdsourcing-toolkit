@@ -64,8 +64,8 @@ constructor(
   }
 
   private fun renderOutputData() {
-    val outputData = currentAssignment.output.asJsonObject
-    val sentences = outputData.getAsJsonObject("data").getAsJsonObject("sentences")
+    val outputData = currentAssignment.output.asJsonObject.getAsJsonObject("data")
+    val sentences = outputData.getAsJsonObject("sentences")
 
     for (sentence in sentences.keySet()) {
       addSentence(sentence)
