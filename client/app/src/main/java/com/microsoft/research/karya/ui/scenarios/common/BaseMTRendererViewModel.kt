@@ -89,8 +89,17 @@ constructor(
     // TODO: Shift this to init once we move to viewmodel factory
     runBlocking {
       task = taskRepository.getById(taskId)
+
+      // Determine if we have to include completed assignments
+      if (includeCompleted) {
+        microtaskAssignmentIDs = assignmentRepository.getIDsForTask(
+            task.id,
+            arrayListOf(MicrotaskAssignmentStatus.COMPLETED)
+          )
+      }
+
       microtaskAssignmentIDs =
-        assignmentRepository.getIDsForTask(
+        microtaskAssignmentIDs + assignmentRepository.getIDsForTask(
           task.id,
           arrayListOf(MicrotaskAssignmentStatus.ASSIGNED)
         ) // TODO: Generalise the includeCompleted parameter (Can be done when we have viewModel factory)
@@ -101,15 +110,6 @@ constructor(
           task.id,
           arrayListOf(MicrotaskAssignmentStatus.SKIPPED)
       )
-
-      // Determine if we have to include completed assignments
-      if (includeCompleted) {
-        microtaskAssignmentIDs = microtaskAssignmentIDs +
-          assignmentRepository.getIDsForTask(
-            task.id,
-            arrayListOf(MicrotaskAssignmentStatus.COMPLETED)
-          )
-      }
 
       if (microtaskAssignmentIDs.isEmpty()) {
         navigateBack()
