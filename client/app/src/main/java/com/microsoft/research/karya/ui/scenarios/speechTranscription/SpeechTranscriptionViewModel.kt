@@ -297,6 +297,11 @@ constructor(
     }
   }
 
+  /** Handle back button click */
+  internal fun handleBackClick() {
+    moveToPreviousMicrotask()
+  }
+
   /** Set button states */
   private fun setButtonStates(
     backState: ButtonState,

@@ -73,6 +73,8 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         alertDialog.show()
       }
     }
+
+    backBtnCv.setOnClickListener { viewModel.handleBackClick() }
   }
 
   private fun setupObservers() {
