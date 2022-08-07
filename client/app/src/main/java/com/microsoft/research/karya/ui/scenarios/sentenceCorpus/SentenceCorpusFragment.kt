@@ -54,6 +54,8 @@ class SentenceCorpusFragment :
 
     nextBtn.setOnClickListener { onNextClick() }
 
+    backBtn.setOnClickListener { viewModel.handleBackClick() }
+
     Validator.init()
   }
 
