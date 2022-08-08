@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.data.service
 
+import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import okhttp3.ResponseBody
@@ -53,7 +54,6 @@ interface WorkerAPI {
   @PUT("/worker")
   suspend fun updateWorker(
     @Header("karya-id-token") idToken: String,
-    @Body worker: WorkerRecord,
-    @Query("action") action: String,
+    @Body profile: JsonObject,
   ): Response<WorkerRecord>
 }

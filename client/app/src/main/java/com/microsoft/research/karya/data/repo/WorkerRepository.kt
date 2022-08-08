@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.data.repo
 
+import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.exceptions.*
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
@@ -139,11 +140,11 @@ class WorkerRepository @Inject constructor(
     }
   }
 
-  fun updateWorker(
+  fun updateWorkerProfile(
     idToken: String,
-    worker: WorkerRecord,
+    profile: JsonObject,
   ) = flow {
-    val response = workerAPI.updateWorker(idToken, worker, "update")
+    val response = workerAPI.updateWorker(idToken, profile)
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

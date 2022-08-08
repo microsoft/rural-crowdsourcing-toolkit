@@ -46,9 +46,8 @@ constructor(
       profile.addProperty("gender", profileData.gender.toString())
       profile.addProperty("yob", profileData.yob)
 
-      val updatedWorker = worker.copy(profile = profile)
       // Send the profile to server
-      workerRepository.updateWorker(worker.idToken!!, updatedWorker)
+      workerRepository.updateWorkerProfile(worker.idToken!!, profile)
         .onEach { worker ->
           workerRepository.upsertWorker(worker)
           _profileUiState.value = ProfileUiState.Success
