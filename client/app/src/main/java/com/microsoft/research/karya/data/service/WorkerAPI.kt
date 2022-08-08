@@ -54,5 +54,6 @@ interface WorkerAPI {
   suspend fun updateWorker(
     @Header("karya-id-token") idToken: String,
     @Body worker: WorkerRecord,
+    @Query("action") action: String,
   ): Response<WorkerRecord>
 }

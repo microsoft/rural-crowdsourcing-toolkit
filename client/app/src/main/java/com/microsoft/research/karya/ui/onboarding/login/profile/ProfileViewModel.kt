@@ -3,13 +3,16 @@
 package com.microsoft.research.karya.ui.onboarding.login.profile
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
+import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ProfileViewModel
@@ -27,28 +30,35 @@ constructor(
 
   var profileData: ProfileData = ProfileData(null, null, null)
 
-  suspend fun handleNextClick() {
-    // If either of the fields are empty
-    if (profileData.name.isNullOrEmpty() ||
+  fun handleNextClick() {
+    viewModelScope.launch {
+      _profileUiState.value = ProfileUiState.Loading
+      // If either of the fields are empty
+      if (profileData.name.isNullOrEmpty() ||
         profileData.gender == null ||
         profileData.yob.isNullOrEmpty()) {
-      _profileUiState.value = ProfileUiState.Error(Throwable())
-      return
-    }
-    val worker = authManager.getLoggedInWorker()
-    val profile = JsonObject()
-    profile.addProperty("name", profileData.name)
-    profile.addProperty("gender", profileData.gender.toString())
-    profile.addProperty("yob", profileData.yob)
-    // Send the profile to server
-    workerRepository.updateWorker(worker.idToken!!, worker)
-      .onEach { worker ->
-        workerRepository.upsertWorker(worker)
-        _profileUiState.value = ProfileUiState.Success
-        handleNavigation()
+        _profileUiState.value = ProfileUiState.Error(Throwable())
+        return@launch
       }
-      .catch { throwable -> _profileUiState.value = ProfileUiState.Error(throwable) }
-      .collect()
+      val worker = authManager.getLoggedInWorker()
+      val profile = JsonObject()
+      profile.addProperty("name", profileData.name)
+      profile.addProperty("gender", profileData.gender.toString())
+      profile.addProperty("yob", profileData.yob)
+
+      val updatedWorker = worker.copy(profile = profile)
+      // Send the profile to server
+      workerRepository.updateWorker(worker.idToken!!, updatedWorker)
+        .onEach { worker ->
+          workerRepository.upsertWorker(worker)
+          _profileUiState.value = ProfileUiState.Success
+          handleNavigation()
+        }
+        .catch {
+            throwable -> _profileUiState.value = ProfileUiState.Error(throwable)
+        }
+        .collect()
+    }
   }
 
   private suspend fun handleNavigation() {

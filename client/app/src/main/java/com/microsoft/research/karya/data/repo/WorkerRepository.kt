@@ -143,7 +143,7 @@ class WorkerRepository @Inject constructor(
     idToken: String,
     worker: WorkerRecord,
   ) = flow {
-    val response = workerAPI.updateWorker(idToken, worker)
+    val response = workerAPI.updateWorker(idToken, worker, "update")
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

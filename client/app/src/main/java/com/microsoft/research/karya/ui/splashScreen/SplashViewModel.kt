@@ -54,10 +54,15 @@ constructor(
     val worker = getLoggedInWorker()
     _splashEffects.emit(SplashEffects.UpdateLanguage(worker.language))
 
+    val workerProfilePresent = worker.profile != null
+
+
+
     val destination =
       when {
         !worker.isConsentProvided -> Destination.AccessCodeFlow
         worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
+        workerProfilePresent -> Destination.ProfileFragment
         else -> Destination.Dashboard
       }
 

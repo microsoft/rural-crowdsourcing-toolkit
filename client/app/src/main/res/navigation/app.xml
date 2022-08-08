@@ -26,6 +26,11 @@
             app:destination="@id/loginFlow"
             app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <navigation
         android:id="@+id/loginFlow"
@@ -47,15 +52,6 @@
             <action
                 android:id="@+id/action_OTPFragment_to_profileFragment"
                 app:destination="@id/profileFragment" />
-        </fragment>
-        <fragment
-            android:id="@+id/profileFragment"
-            android:name="com.microsoft.research.karya.ui.onboarding.login.profile.ProfileFragment"
-            android:label="ProfileFragment"
-            tools:layout="@layout/user_profile">
-            <action
-                android:id="@+id/action_ProfileFragment_to_DashboardActivity"
-                app:destination="@id/dashboardActivity" />
         </fragment>
     </navigation>
     <navigation
@@ -227,6 +223,15 @@
         app:popExitAnim="@anim/nav_default_pop_exit_anim"
         app:popUpTo="@id/app_nav_graph"
         app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.microsoft.research.karya.ui.onboarding.login.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/user_profile">
+        <action
+            android:id="@+id/action_ProfileFragment_to_DashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
     <action
         android:id="@+id/action_global_loginFlow"
         app:destination="@id/loginFlow" />

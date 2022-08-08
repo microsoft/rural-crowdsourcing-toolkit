@@ -6,4 +6,5 @@ sealed class Destination {
   object UserSelection : Destination()
   object LoginFlow : Destination()
   object Dashboard : Destination()
+  object ProfileFragment : Destination()
 }

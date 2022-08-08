@@ -26,6 +26,22 @@ class ProfileFragment : BaseFragment(R.layout.user_profile) {
   }
 
   private fun setupView() {
+    binding.nextBtn.setOnClickListener {
+      setProfileData()
+      viewModel.handleNextClick()
+    }
+  }
+
+  private fun setProfileData() {
+    viewModel.profileData = ProfileData(
+      nameInputEt.text.toString(),
+      when (genderRg.checkedRadioButtonId)  {
+        R.id.femaleRb -> Gender.FEMALE
+        R.id.maleRb -> Gender.MALE
+        else -> null
+      },
+      yobInputEt.text.toString()
+    )
   }
 
   private fun observeUi() {
