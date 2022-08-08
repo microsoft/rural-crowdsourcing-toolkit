@@ -45,7 +45,16 @@
             android:label="OTPFragment"
             tools:layout="@layout/fragment_otp">
             <action
-                android:id="@+id/action_OTPFragment_to_DashboardActivity"
+                android:id="@+id/action_OTPFragment_to_profileFragment"
+                app:destination="@id/profileFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/profileFragment"
+            android:name="com.microsoft.research.karya.ui.onboarding.login.profile.ProfileFragment"
+            android:label="ProfileFragment"
+            tools:layout="@layout/user_profile">
+            <action
+                android:id="@+id/action_ProfileFragment_to_DashboardActivity"
                 app:destination="@id/dashboardActivity" />
         </fragment>
     </navigation>

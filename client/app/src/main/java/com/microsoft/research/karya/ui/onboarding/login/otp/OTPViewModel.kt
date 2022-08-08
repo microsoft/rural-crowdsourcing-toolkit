@@ -69,15 +69,10 @@ constructor(
         .onEach { worker ->
           authManager.startSession(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
-          handleNavigation(worker)
+          _otpEffects.emit(OTPEffects.Navigate)
         }
         .catch { throwable -> _otpUiState.value = OTPUiState.Error(throwable) }
         .collect()
     }
-  }
-
-  private suspend fun handleNavigation(worker: WorkerRecord) {
-    val destination = Destination.Dashboard
-    _otpEffects.emit(OTPEffects.Navigate(destination))
   }
 }

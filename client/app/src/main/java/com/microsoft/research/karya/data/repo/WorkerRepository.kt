@@ -120,10 +120,9 @@ class WorkerRepository @Inject constructor(
 
   fun updateWorker(
     idToken: String,
-    accessCode: String,
     registerOrUpdateWorkerRequest: RegisterOrUpdateWorkerRequest,
   ) = flow {
-    val response = workerAPI.updateWorker(idToken, registerOrUpdateWorkerRequest, "register")
+    val response = workerAPI.updateWorker(idToken, registerOrUpdateWorkerRequest, "update")
     val workerRecord = response.body()
 
     if (!response.isSuccessful) {

@@ -309,4 +309,10 @@
     <string name="sentence_corpus_verification_valid">VALID</string>
     <string name="sentence_corpus_verification_errors">ERRORS</string>
     <string name="sentence_corpus_verification_invalid">INVALID</string>
+    <string name="profile_name_label">Name</string>
+    <string name="profile_gender_label">Gender</string>
+    <string name="profile_yob_label">Year Of Birth</string>
+    <string name="profile_missing_field_error_msg">Please fill all the fields</string>
+    <string name="profile_gender_male_label">Male</string>
+    <string name="profile_gender_female_label">Female</string>
 </resources>

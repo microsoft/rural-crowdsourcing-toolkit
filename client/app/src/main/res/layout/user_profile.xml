@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_8sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profilePictureCv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_microtask_input_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_50sdp"
+        app:cardCornerRadius="99999dp">
+        <ImageView
+            android:id="@+id/profilePictureIv"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:src="@drawable/ic_perm_identity" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/nameLabelTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:text="@string/profile_name_label"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintTop_toBottomOf="@id/profilePictureCv" />
+
+    <EditText
+        android:id="@+id/nameInputEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_microtask_input_text"
+        android:height="@dimen/_32sdp"
+        app:layout_constraintTop_toBottomOf="@id/nameLabelTv"
+        android:layout_marginTop="@dimen/_4sdp" />
+
+    <TextView
+        android:id="@+id/genderLabelTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_28sdp"
+        android:text="@string/profile_gender_label"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintTop_toBottomOf="@id/nameInputEt" />
+    <RadioGroup
+        android:id="@+id/genderRg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginHorizontal="@dimen/_40sdp"
+        app:layout_constraintTop_toBottomOf="@id/genderLabelTv"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/maleRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/_20ssp"
+            android:text="@string/profile_gender_male_label"/>
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/femaleRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/_20ssp"
+            android:text="@string/profile_gender_female_label"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/yobLabelTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:text="@string/profile_yob_label"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintTop_toBottomOf="@id/genderRg" />
+
+    <EditText
+        android:id="@+id/yobInputEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_microtask_input_text"
+        android:height="@dimen/_32sdp"
+        app:layout_constraintTop_toBottomOf="@id/yobLabelTv"
+        android:layout_marginTop="@dimen/_4sdp" />
+
+    <TextView
+        android:id="@+id/missingFieldTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintTop_toBottomOf="@id/yobInputEt"
+        android:textSize="@dimen/_16sdp"
+        android:textColor="#FF0000"
+        android:visibility="invisible"
+        android:text="@string/profile_missing_field_error_msg" />
+
+
+    <ImageButton
+        android:id="@+id/nextBtn"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_8sdp"
+        android:background="@drawable/ic_next_enabled"
+        android:contentDescription="@string/next"
+        android:soundEffectsEnabled="false"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/loadingPb"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_8sdp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
