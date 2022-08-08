@@ -5,7 +5,7 @@
 
 import { KaryaMiddleware } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel } from '@karya/common';
+import { BasicModel, WorkerModel } from '@karya/common';
 import { Worker } from '@karya/core';
 
 /**
@@ -56,32 +56,22 @@ export const get: KaryaMiddleware = async (ctx) => {
 };
 
 /**
- * Update the worker information.
+ * Update the profile for the worker.
  * @param ctx Karya request context
  */
 export const update: KaryaMiddleware = async (ctx) => {
-  const action = ctx.request.query['action'];
-
-  // action should be either register or update
-  if (action != 'register' && action != 'update') {
-    HttpResponse.BadRequest(ctx, 'Missing or invalid action parameter');
-    return;
-  }
-
   // Get updates from the request body
-  const updates: Worker = ctx.request.body;
-  updates.profile_updated_at = new Date().toISOString();
+  const profile: Object = ctx.request.body;
 
-  if (action == 'register') {
-    const { year_of_birth, gender } = updates;
-    if (!year_of_birth || !gender) {
-      HttpResponse.BadRequest(ctx, 'Missing year of birth or gender with registration request');
-      return;
+  const updatedRecord = await BasicModel.updateSingle(
+    'worker',
+    { id: ctx.state.entity.id },
+    {
+      profile: profile,
+      profile_updated_at: new Date().toISOString(),
     }
-  }
+  );
 
-  // TODO: check if only the updatable properties are updated
-  const updatedRecord = await BasicModel.updateSingle('worker', { id: ctx.state.entity.id }, updates);
   HttpResponse.OK(ctx, updatedRecord);
 };
 
