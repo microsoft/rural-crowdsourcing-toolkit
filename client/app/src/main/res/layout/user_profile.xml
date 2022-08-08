@@ -37,7 +37,7 @@
         android:id="@+id/nameInputEt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_microtask_input_text"
+        style="@style/EditText"
         android:height="@dimen/_32sdp"
         app:layout_constraintTop_toBottomOf="@id/nameLabelTv"
         android:layout_marginTop="@dimen/_4sdp" />
@@ -67,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/_20ssp"
+            android:textSize="@dimen/_16ssp"
             android:text="@string/profile_gender_male_label"/>
 
         <com.google.android.material.radiobutton.MaterialRadioButton
@@ -75,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/_20ssp"
+            android:textSize="@dimen/_16ssp"
             android:text="@string/profile_gender_female_label"/>
     </RadioGroup>
 
@@ -94,7 +94,7 @@
         android:id="@+id/yobInputEt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_microtask_input_text"
+        style="@style/EditText.Numeric"
         android:height="@dimen/_32sdp"
         app:layout_constraintTop_toBottomOf="@id/yobLabelTv"
         android:layout_marginTop="@dimen/_4sdp" />
