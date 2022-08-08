@@ -26,6 +26,7 @@ class ProfileFragment : BaseFragment(R.layout.user_profile) {
   }
 
   private fun setupView() {
+    viewModel.getWorkerProfile()
     binding.nextBtn.setOnClickListener {
       setProfileData()
       viewModel.handleNextClick()
@@ -82,18 +83,36 @@ class ProfileFragment : BaseFragment(R.layout.user_profile) {
     hideError()
     hideLoading()
     showNextButton()
+    enableInputFields()
   }
 
   private fun showLoadingUi() {
+    disableInputFields()
     hideError()
     hideNextButton()
     showLoading()
+    disableInputFields()
   }
 
   private fun showSuccessUi() {
     hideNextButton()
     hideError()
     hideLoading()
+    disableInputFields()
+  }
+
+  private fun disableInputFields() {
+    binding.nameInputEt.disable()
+    binding.maleRb.isClickable = false
+    binding.femaleRb.isClickable = false
+    binding.yobInputEt.disable()
+  }
+
+  private fun enableInputFields() {
+    binding.nameInputEt.enable()
+    binding.maleRb.isClickable = true
+    binding.femaleRb.isClickable = true
+    binding.yobInputEt.enable()
   }
 
   private fun hideLoading() {
