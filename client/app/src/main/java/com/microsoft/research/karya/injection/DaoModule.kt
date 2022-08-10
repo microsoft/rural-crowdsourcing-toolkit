@@ -4,6 +4,7 @@ import com.microsoft.research.karya.data.local.daos.*
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskAssignmentDaoExtra
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.manager.KaryaDatabase
+import com.microsoft.research.karya.data.model.karya.LeaderboardRecord
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -60,5 +61,11 @@ class DaoModule {
   @Reusable
   fun providePaymentAccountDao(karyaDatabase: KaryaDatabase): PaymentAccountDao {
     return karyaDatabase.paymentAccountDao()
+  }
+
+  @Provides
+  @Reusable
+  fun provideLeaderboardDao(karyaDatabase: KaryaDatabase): LeaderboardDao {
+    return karyaDatabase.leaderboardDao()
   }
 }

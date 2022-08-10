@@ -2,6 +2,7 @@ package com.microsoft.research.karya.data.repo
 
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.exceptions.*
+import com.microsoft.research.karya.data.local.daos.LeaderboardDao
 import com.microsoft.research.karya.data.local.daos.WorkerDao
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 class WorkerRepository @Inject constructor(
   private val workerAPI: WorkerAPI,
-  private val workerDao: WorkerDao
+  private val workerDao: WorkerDao,
+  private val leaderboardDao: LeaderboardDao
 ) {
 
   fun getOTP(
@@ -183,4 +185,6 @@ class WorkerRepository @Inject constructor(
     withContext(Dispatchers.IO) {
       workerDao.updateLanguage(id, lang)
     }
+
+  suspend fun getAllLeaderBoardRecords() = leaderboardDao.getAllLeaderboardRecords()
 }
