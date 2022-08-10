@@ -100,7 +100,7 @@ export const sendGeneratedIdToken: KaryaMiddleware = async (ctx) => {
 };
 
 /**
- * Get leaderboard corresponding to a worker
+ * Returns 10 workers with most XP points and one additional leaderboard entry for the worker requesting leaderboard
  */
 export const getLeaderboard: KaryaMiddleware = async (ctx) => {
   const workerId = ctx.state.entity.id;
@@ -109,10 +109,11 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
   const records = await WorkerModel.getLeaderboardRecords(worker);
 
   const topRecords = records.slice(0, 10);
-  const workerLeaderboardrecord = records.find((record) => record.id === workerId);
+  const workerLeaderboardrecord = records.find((record) => record.id === workerId)!;
+  // Add worker leaderboard record to the leaderboard
+  topRecords.push(workerLeaderboardrecord);
 
   HttpResponse.OK(ctx, {
     leaderboard: topRecords,
-    worker_leaderboard_record: workerLeaderboardrecord,
   });
 };

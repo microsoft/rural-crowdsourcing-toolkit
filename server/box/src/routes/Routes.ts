@@ -31,6 +31,8 @@ const router = new Router<KaryaDefaultState>();
 // Worker get and update routes
 router.get('/worker', WorkerController.get);
 router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
+//Get leaderboard corresponding to a worker
+router.get('/worker/leaderboard', needIdToken, WorkerController.getLeaderboard);
 
 // OTP routes
 router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, OTPHandler.generate);
