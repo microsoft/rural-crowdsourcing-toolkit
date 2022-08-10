@@ -4,6 +4,8 @@ import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.exceptions.*
 import com.microsoft.research.karya.data.local.daos.LeaderboardDao
 import com.microsoft.research.karya.data.local.daos.WorkerDao
+import com.microsoft.research.karya.data.model.karya.LeaderboardRecord
+import com.microsoft.research.karya.data.model.karya.TaskRecord
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import com.microsoft.research.karya.data.service.WorkerAPI
@@ -187,4 +189,32 @@ class WorkerRepository @Inject constructor(
     }
 
   suspend fun getAllLeaderBoardRecords() = leaderboardDao.getAllLeaderboardRecords()
+
+  /**
+   * The flow updates leaderboard by fetching it from network
+   */
+  fun updateLeaderboard(
+    idToken: String
+  ) = flow {
+    val response = workerAPI.getLeaderBoard(idToken)
+    val leaderboardRecords = response.body()
+
+    if (!response.isSuccessful) {
+      throw when (response.code()) {
+        401 -> InvalidAccessCodeException()
+        else -> KaryaException()
+      }
+    }
+
+    if (leaderboardRecords != null) {
+      saveLeaderboard(leaderboardRecords)
+      emit(leaderboardRecords)
+    } else {
+      error("Request failed, response body was null")
+    }
+  }
+
+  private suspend fun saveLeaderboard(records: List<LeaderboardRecord>) {
+    leaderboardDao.upsert(records)
+  }
 }
