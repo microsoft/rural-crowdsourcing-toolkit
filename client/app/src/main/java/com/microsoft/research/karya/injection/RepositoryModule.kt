@@ -1,9 +1,6 @@
 package com.microsoft.research.karya.injection
 
-import com.microsoft.research.karya.data.local.daos.KaryaFileDao
-import com.microsoft.research.karya.data.local.daos.MicroTaskDao
-import com.microsoft.research.karya.data.local.daos.PaymentAccountDao
-import com.microsoft.research.karya.data.local.daos.WorkerDao
+import com.microsoft.research.karya.data.local.daos.*
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.repo.*
 import com.microsoft.research.karya.data.service.LanguageAPI
@@ -36,8 +33,8 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao): WorkerRepository {
-    return WorkerRepository(workerAPI, workerDao)
+  fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao, leaderboardDao: LeaderboardDao): WorkerRepository {
+    return WorkerRepository(workerAPI, workerDao, leaderboardDao)
   }
 
   @Provides

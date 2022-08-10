@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class LeaderboardRecord(
   @PrimaryKey val workerId: String,
   val name: String,
-  val XP: String,
-  val rank: String,
+  val XP: Int,
+  val rank: Int,
 )

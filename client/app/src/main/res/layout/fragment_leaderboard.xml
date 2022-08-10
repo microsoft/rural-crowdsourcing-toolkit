@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashBoardConstraint"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context=".ui.leaderboard.LeaderboardFragment">
+
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
+        android:id="@+id/appTb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/leaderboard_title" />
+
+    <TextView
+        android:id="@+id/emptyLeaderboardTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/background_microtask_input_text"
+        android:gravity="center"
+        android:lineHeight="@dimen/_30ssp"
+        android:padding="@dimen/_10sdp"
+        android:text="@string/leaderboard_empty"
+        android:textColor="@color/c_red"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintTop_toBottomOf="@id/appTb" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/leaderboardRv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="?colorPrimaryLight"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/emptyLeaderboardTv"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_leaderboard_entry" />
+
+    <include
+        android:id="@+id/backBtn"
+        layout="@layout/microtask_common_back_button"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_margin="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

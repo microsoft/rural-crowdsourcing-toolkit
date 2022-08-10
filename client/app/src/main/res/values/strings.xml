@@ -188,6 +188,11 @@
     <string name="tasks_skipped">skipped</string>
     <string name="tasks_expired">expired</string>
 
+    <!-- Leaderboard -->
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="leaderboard_points">points</string>
+    <string name="leaderboard_empty">There is no one on the leaderboard now. Complete tasks and be the first to get on the leaderboard!</string>
+
 
     <string name="sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
     <string name="yes">Yes</string>

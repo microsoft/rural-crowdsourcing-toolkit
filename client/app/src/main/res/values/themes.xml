@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/c_dark_green</item>
         <item name="colorControlActivated">@color/c_dark_green</item>
         <item name="colorSecondary">@color/c_green</item>
+        <item name="colorPrimaryLight">@color/c_very_light_green</item>
 
         <!-- Edit text -->
         <item name="editTextBackground">@color/c_white</item>
