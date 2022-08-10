@@ -120,3 +120,17 @@ SELECT tw.*, t3.amount FROM
     return filtered;
   }, []);
 }
+
+/**
+ * Function to query leaderboard records from leaderboard mat view
+ * @param worker WorkerRecord to determine the worker group of the leaderboard
+ * @param limit Limit of the workers in leaderboard
+ * @returns List of WorkerRecords with their XP
+ */
+export async function getLeaderboardRecords(
+  worker: WorkerRecord
+): Promise<(WorkerRecord & { XP: Number; rank: Number })[]> {
+  const leaderboardRecords = await knex.raw(`SELECT *, RANK() OVER (ORDER BY XP DESC) as rank FROM leaderboard WHERE 
+    wgroup = ${worker.wgroup}`);
+  return leaderboardRecords.records;
+}

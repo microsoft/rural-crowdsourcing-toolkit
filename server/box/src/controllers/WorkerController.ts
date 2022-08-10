@@ -98,3 +98,21 @@ export const registerWorker: KaryaMiddleware = async (ctx) => {
 export const sendGeneratedIdToken: KaryaMiddleware = async (ctx) => {
   HttpResponse.OK(ctx, { id_token: ctx.state.entity.id_token });
 };
+
+/**
+ * Get leaderboard corresponding to a worker
+ */
+export const getLeaderboard: KaryaMiddleware = async (ctx) => {
+  const workerId = ctx.state.entity.id;
+  const worker = await BasicModel.getSingle('worker', { id: workerId });
+
+  const records = await WorkerModel.getLeaderboardRecords(worker);
+
+  const topRecords = records.slice(0, 10);
+  const workerLeaderboardrecord = records.find((record) => record.id === workerId);
+
+  HttpResponse.OK(ctx, {
+    leaderboard: topRecords,
+    worker_leaderboard_record: workerLeaderboardrecord,
+  });
+};
