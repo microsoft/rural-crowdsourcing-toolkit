@@ -340,6 +340,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_20sdp"
+                            android:isIndicator="true"
                             app:mrb_progressTint="@color/c_dark_grey"
                             app:mrb_secondaryProgressTint="@color/c_dark_grey" />
 
@@ -365,6 +366,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_20sdp"
+                            android:isIndicator="true"
                             app:mrb_progressTint="@color/c_dark_grey"
                             app:mrb_secondaryProgressTint="@color/c_dark_grey" />
 
@@ -390,6 +392,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_20sdp"
+                            android:isIndicator="true"
                             app:mrb_progressTint="@color/c_dark_grey"
                             app:mrb_secondaryProgressTint="@color/c_dark_grey" />
 
@@ -416,6 +419,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginLeft="@dimen/_20sdp"
+                            android:isIndicator="true"
                             app:mrb_progressTint="@color/c_dark_grey"
                             app:mrb_secondaryProgressTint="@color/c_dark_grey" />
 
