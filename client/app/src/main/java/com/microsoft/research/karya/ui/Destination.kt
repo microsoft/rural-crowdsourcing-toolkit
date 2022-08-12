@@ -5,6 +5,6 @@ sealed class Destination {
   object AccessCodeFlow : Destination()
   object UserSelection : Destination()
   object LoginFlow : Destination()
-  object Dashboard : Destination()
+  object HomeScreen : Destination()
   object ProfileFragment : Destination()
 }
