@@ -36,7 +36,7 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
     with(binding) {
       // Move to profile on name click
       nameCv.setOnClickListener {
-        val action = HomeScreenFragmentDirections.actionHomeScreenToProfile()
+        val action = HomeScreenFragmentDirections.actionHomeScreenToLeaderboard()
         findNavController().navigate(action)
       }
 
