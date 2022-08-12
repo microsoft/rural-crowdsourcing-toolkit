@@ -113,7 +113,5 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
   // Add worker leaderboard record to the leaderboard
   topRecords.push(workerLeaderboardrecord);
 
-  HttpResponse.OK(ctx, {
-    leaderboard: topRecords,
-  });
+  HttpResponse.OK(ctx, topRecords);
 };

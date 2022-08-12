@@ -35,6 +35,7 @@ export async function createLeaderboardMV() {
     'leaderboard',
     `SELECT 
     worker.*,
+    profile->'name' as name,
     COALESCE(points.XP:: float, 0) as XP
     FROM
       worker
@@ -42,7 +43,7 @@ export async function createLeaderboardMV() {
       (
         SELECT
           worker_id,
-          COUNT(*) * 2 + SUM(COALESCE((report->>'accuracy')::float, 0)) as XP
+          COUNT(*) * 2 + SUM(COALESCE((report->>'accuracy')::int, 0)) as XP
         FROM
           microtask_assignment
         WHERE 
