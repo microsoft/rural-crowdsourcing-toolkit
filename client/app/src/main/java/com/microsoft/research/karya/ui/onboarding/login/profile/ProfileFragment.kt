@@ -5,17 +5,16 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
-import com.microsoft.research.karya.databinding.UserProfileBinding
+import com.microsoft.research.karya.databinding.FragmentProfileBinding
 import com.microsoft.research.karya.ui.Destination
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.user_profile.*
 
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
-  private val binding by viewBinding(UserProfileBinding::bind)
+  private val binding by viewBinding(FragmentProfileBinding::bind)
   private val viewModel by viewModels<ProfileViewModel>()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,13 +34,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
   private fun setProfileData() {
     viewModel.profileData = ProfileData(
-      nameInputEt.text.toString(),
-      when (genderRg.checkedRadioButtonId)  {
-        R.id.femaleRb -> Gender.FEMALE
-        R.id.maleRb -> Gender.MALE
-        else -> null
-      },
-      yobInputEt.text.toString()
+        binding.nameInputEt.text.toString(),
+        when (binding.genderRg.checkedRadioButtonId) {
+          R.id.femaleRb -> Gender.FEMALE
+          R.id.maleRb -> Gender.MALE
+          else -> null
+        },
+        binding.yobInputEt.text.toString()
     )
   }
 

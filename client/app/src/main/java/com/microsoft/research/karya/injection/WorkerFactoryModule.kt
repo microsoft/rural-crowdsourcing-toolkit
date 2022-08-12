@@ -4,10 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.SyncDelegatingWorkerFactory
-import com.microsoft.research.karya.data.repo.AssignmentRepository
-import com.microsoft.research.karya.data.repo.KaryaFileRepository
-import com.microsoft.research.karya.data.repo.MicroTaskRepository
-import com.microsoft.research.karya.data.repo.PaymentRepository
+import com.microsoft.research.karya.data.repo.*
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import dagger.Module
 import dagger.Provides
@@ -26,21 +23,20 @@ class WorkerFactoryModule {
     karyaFileRepository: KaryaFileRepository,
     microTaskRepository: MicroTaskRepository,
     paymentRepository: PaymentRepository,
+    workerRepository: WorkerRepository,
     datastore: DataStore<Preferences>,
     @FilesDir fileDirPath: String,
     authManager: AuthManager,
   ): SyncDelegatingWorkerFactory {
-    val workerFactory =
-      SyncDelegatingWorkerFactory(
-        assignmentRepository,
-        karyaFileRepository,
-        microTaskRepository,
-        paymentRepository,
-        datastore,
-        fileDirPath,
-        authManager
-      )
-
-    return workerFactory
+    return SyncDelegatingWorkerFactory(
+      assignmentRepository,
+      karyaFileRepository,
+      microTaskRepository,
+      paymentRepository,
+      workerRepository,
+      datastore,
+      fileDirPath,
+      authManager
+    )
   }
 }
