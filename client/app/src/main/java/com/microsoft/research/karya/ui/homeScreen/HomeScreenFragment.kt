@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentHomeScreenBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
@@ -52,6 +51,14 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
     // XP points
     viewModel.points.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { points ->
       binding.pointsTv.text = points.toString()
+    }
+    // Set name of the user
+    viewModel.name.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { name ->
+      binding.nameTv.text = name
+    }
+    // Set phone number of the user
+    viewModel.phoneNumber.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { phoneNumber ->
+      binding.phoneNumberTv.text = phoneNumber
     }
 
     // Task summary
