@@ -41,20 +41,21 @@ constructor(
     viewModelScope.launch {
       val worker = authManager.getLoggedInWorker()
       // Check if profile is null
-      if (worker.profile == null) {
+      if (worker.profile?.isJsonNull != false) {
         _profileUiState.value = ProfileUiState.Initial(ProfileData(null, null, null))
-      }
-      val name = worker.profile!!.asJsonObject.get("name").asString
-      val genderString = worker.profile!!.asJsonObject.get("gender").asString
-      val gender = if (genderString == "MALE") Gender.MALE else Gender.FEMALE
-      val yob = worker.profile!!.asJsonObject.get("yob").asString
-      _profileUiState.value = ProfileUiState.Initial(
-        ProfileData(
-          name,
-          gender,
-          yob
+      } else {
+        val name = worker.profile!!.asJsonObject.get("name").asString
+        val genderString = worker.profile!!.asJsonObject.get("gender").asString
+        val gender = if (genderString == "MALE") Gender.MALE else Gender.FEMALE
+        val yob = worker.profile!!.asJsonObject.get("yob").asString
+        _profileUiState.value = ProfileUiState.Initial(
+          ProfileData(
+            name,
+            gender,
+            yob
+          )
         )
-      )
+      }
     }
   }
 

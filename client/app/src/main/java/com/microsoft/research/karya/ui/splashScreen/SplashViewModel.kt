@@ -2,6 +2,7 @@ package com.microsoft.research.karya.ui.splashScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.WorkerRepository
@@ -55,7 +56,7 @@ constructor(
     _splashEffects.emit(SplashEffects.UpdateLanguage(worker.language))
 
     // TODO: @Anurag should the below line be JsonNull?
-    val workerProfilePresent = worker.profile != null
+    val workerProfilePresent = !(worker.profile?.isJsonNull ?: false)
 
     val destination =
       when {
