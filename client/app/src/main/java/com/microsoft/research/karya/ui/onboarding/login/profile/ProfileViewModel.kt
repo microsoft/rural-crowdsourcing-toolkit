@@ -77,8 +77,8 @@ constructor(
 
       // Send the profile to server
       workerRepository.updateWorkerProfile(worker.idToken!!, profile)
-        .onEach { worker ->
-          workerRepository.upsertWorker(worker)
+        .onEach { workerResponse ->
+          workerRepository.upsertWorker(worker.copy(profile=workerResponse.profile))
           _profileUiState.value = ProfileUiState.Success
           handleNavigation()
         }
