@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.user_profile.*
 
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment(R.layout.user_profile) {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
   private val binding by viewBinding(UserProfileBinding::bind)
   private val viewModel by viewModels<ProfileViewModel>()

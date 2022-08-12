@@ -310,7 +310,7 @@
         android:id="@+id/profileFragment"
         android:name="com.microsoft.research.karya.ui.onboarding.login.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/user_profile">
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profile_to_homeScreen"
             app:destination="@id/homeScreenFragment" />
