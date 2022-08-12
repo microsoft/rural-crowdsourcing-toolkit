@@ -34,6 +34,7 @@ export async function createLeaderboardMV() {
   await createMatView(
     'leaderboard',
     `SELECT 
+    worker.*,
     COALESCE(points.XP:: float, 0) as XP
     FROM
       worker
