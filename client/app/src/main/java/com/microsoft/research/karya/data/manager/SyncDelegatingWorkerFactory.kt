@@ -7,6 +7,7 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
+import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ constructor(
   karyaFileRepository: KaryaFileRepository,
   microTaskRepository: MicroTaskRepository,
   paymentRepository: PaymentRepository,
+  workerRepository: WorkerRepository,
   datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   authManager: AuthManager,
@@ -27,6 +29,7 @@ constructor(
       karyaFileRepository,
       microTaskRepository,
       paymentRepository,
+      workerRepository,
       datastore,
       fileDirPath,
       authManager))

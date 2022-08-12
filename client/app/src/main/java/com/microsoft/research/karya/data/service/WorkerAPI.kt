@@ -1,6 +1,7 @@
 package com.microsoft.research.karya.data.service
 
 import com.google.gson.JsonObject
+import com.microsoft.research.karya.data.model.karya.LeaderboardRecord
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
 import okhttp3.ResponseBody
@@ -56,4 +57,9 @@ interface WorkerAPI {
     @Header("karya-id-token") idToken: String,
     @Body profile: JsonObject,
   ): Response<WorkerRecord>
+
+  @GET("/worker/leaderboard")
+  suspend fun getLeaderBoard(
+    @Header("karya-id-token") idToken: String,
+  ): Response<List<LeaderboardRecord>>
 }

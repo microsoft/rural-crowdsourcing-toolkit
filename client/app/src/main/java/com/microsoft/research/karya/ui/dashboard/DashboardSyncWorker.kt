@@ -20,6 +20,7 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
+import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
@@ -50,6 +51,7 @@ class DashboardSyncWorker(
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
   private val paymentRepository: PaymentRepository,
+  private val workerRepository: WorkerRepository,
   private val datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   private val authManager: AuthManager,
@@ -237,6 +239,10 @@ class DashboardSyncWorker(
     // Update worker balance data
     val workerBalanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
     datastore.edit { prefs -> prefs[workerBalanceKey] = paymentResponse.workerBalance }
+    // Get Leaderboard data
+    workerRepository
+      .updateLeaderboard(worker.idToken)
+      .collect()
   }
 
   /**

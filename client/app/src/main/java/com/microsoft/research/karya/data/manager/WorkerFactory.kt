@@ -10,6 +10,7 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
+import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.dashboard.DashboardSyncWorker
 
@@ -18,6 +19,7 @@ class WorkerFactory(
   private val karyaFileRepository: KaryaFileRepository,
   private val microTaskRepository: MicroTaskRepository,
   private val paymentRepository: PaymentRepository,
+  private val workerRepository: WorkerRepository,
   private val datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   private val authManager: AuthManager,
@@ -38,6 +40,7 @@ class WorkerFactory(
           karyaFileRepository,
           microTaskRepository,
           paymentRepository,
+          workerRepository,
           datastore,
           fileDirPath,
           authManager
