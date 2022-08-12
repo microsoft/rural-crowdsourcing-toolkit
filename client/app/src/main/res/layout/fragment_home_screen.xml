@@ -119,7 +119,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
-                    android:clickable="true"
                     android:focusable="true"
                     android:orientation="vertical"
                     android:paddingTop="@dimen/_10sdp"
