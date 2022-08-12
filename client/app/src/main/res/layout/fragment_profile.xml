@@ -1,114 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/_8sdp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/profilePictureCv"
-        android:layout_width="wrap_content"
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
+        android:id="@+id/appTb"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_microtask_input_text"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/_50sdp"
-        app:cardCornerRadius="99999dp">
-        <ImageView
+        app:titleText="@string/profile_screen_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/appTb">
+
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePictureIv"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
-            android:src="@drawable/ic_perm_identity" />
-    </androidx.cardview.widget.CardView>
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_perm_identity"
+            app:civ_circle_background_color="@color/c_white" />
 
-    <TextView
-        android:id="@+id/nameLabelTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:text="@string/profile_name_label"
-        android:textAlignment="center"
-        android:textColor="#000"
-        android:textSize="@dimen/_20ssp"
-        app:layout_constraintTop_toBottomOf="@id/profilePictureCv" />
-
-    <EditText
-        android:id="@+id/nameInputEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/EditText"
-        android:height="@dimen/_32sdp"
-        app:layout_constraintTop_toBottomOf="@id/nameLabelTv"
-        android:layout_marginTop="@dimen/_4sdp" />
-
-    <TextView
-        android:id="@+id/genderLabelTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_28sdp"
-        android:text="@string/profile_gender_label"
-        android:textAlignment="center"
-        android:textColor="#000"
-        android:textSize="@dimen/_20ssp"
-        app:layout_constraintTop_toBottomOf="@id/nameInputEt" />
-    <RadioGroup
-        android:id="@+id/genderRg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:layout_marginHorizontal="@dimen/_40sdp"
-        app:layout_constraintTop_toBottomOf="@id/genderLabelTv"
-        android:weightSum="2"
-        android:orientation="horizontal">
-
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/maleRb"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/_16ssp"
-            android:text="@string/profile_gender_male_label"/>
+            android:orientation="vertical">
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
-            android:id="@+id/femaleRb"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/nameLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:text="@string/profile_name_label"
+                android:textAlignment="center"
+                android:textColor="?colorPrimary"
+                android:textSize="@dimen/_20ssp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameInputEt"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:height="@dimen/_32sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="@dimen/_16ssp"
-            android:text="@string/profile_gender_female_label"/>
-    </RadioGroup>
+            android:layout_marginTop="@dimen/_20sdp"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/yobLabelTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:text="@string/profile_yob_label"
-        android:textAlignment="center"
-        android:textColor="#000"
-        android:textSize="@dimen/_20ssp"
-        app:layout_constraintTop_toBottomOf="@id/genderRg" />
 
-    <EditText
-        android:id="@+id/yobInputEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/EditText.Numeric"
-        android:height="@dimen/_32sdp"
-        app:layout_constraintTop_toBottomOf="@id/yobLabelTv"
-        android:layout_marginTop="@dimen/_4sdp" />
+            <TextView
+                android:id="@+id/genderLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/profile_gender_label"
+                android:textColor="?colorPrimary"
+                android:textSize="@dimen/_20ssp"
+                app:layout_constraintTop_toBottomOf="@id/nameInputEt" />
 
-    <TextView
-        android:id="@+id/missingFieldTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
-        app:layout_constraintTop_toBottomOf="@id/yobInputEt"
-        android:textSize="@dimen/_16sdp"
-        android:textColor="#FF0000"
-        android:visibility="invisible"
-        android:text="@string/profile_missing_field_error_msg" />
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/genderRg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:singleSelection="true"
+                android:layout_marginHorizontal="@dimen/_40sdp">
+
+                <Button
+                    android:id="@+id/maleRb"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_gender_male_label" />
+
+                <Button
+                    android:id="@+id/femaleRb"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_gender_female_label" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/yobLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/profile_yob_label"
+                android:textColor="?colorPrimary"
+                android:textSize="@dimen/_20ssp"
+                app:layout_constraintTop_toBottomOf="@id/genderRg" />
+
+            <EditText
+                android:id="@+id/yobInputEt"
+                style="@style/EditText.Numeric"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_weight="1"
+                android:height="@dimen/_32sdp" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/loadingPb"
@@ -116,18 +134,28 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_margin="@dimen/_8sdp"
         android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/submitProfileBtn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submitProfileBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit_profile"
+        android:layout_margin="@dimen/_20sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <ImageButton
-        android:id="@+id/nextBtn"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_margin="@dimen/_8sdp"
-        android:background="@drawable/ic_next_enabled"
-        android:contentDescription="@string/next"
-        android:soundEffectsEnabled="false"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/backToHomeScreen"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/c_white"
+        android:text="@string/back_to_home"
+        android:layout_margin="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

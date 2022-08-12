@@ -42,7 +42,7 @@ constructor(
       val worker = authManager.getLoggedInWorker()
       // Check if profile is null
       if (worker.profile?.isJsonNull != false) {
-        _profileUiState.value = ProfileUiState.Initial(ProfileData(null, null, null))
+        _profileUiState.value = ProfileUiState.Empty
       } else {
         val name = worker.profile!!.asJsonObject.get("name").asString
         val genderString = worker.profile!!.asJsonObject.get("gender").asString

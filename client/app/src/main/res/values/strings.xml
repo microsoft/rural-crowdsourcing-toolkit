@@ -191,6 +191,10 @@
     <string name="earned_total_label">Total Earned</string>
     <string name="paid_total_label">Total Paid</string>
 
+    <!-- Profile Screen -->
+    <string name="profile_screen_title">Your Profile</string>
+    <string name="submit_profile">Submit Profile</string>
+    <string name="back_to_home">Back to Home</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Dashboard</string>
