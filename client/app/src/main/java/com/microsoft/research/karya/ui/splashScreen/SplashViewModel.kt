@@ -62,7 +62,7 @@ constructor(
       when {
         !worker.isConsentProvided -> Destination.AccessCodeFlow
         worker.idToken.isNullOrEmpty() -> Destination.LoginFlow
-        workerProfilePresent -> Destination.ProfileFragment
+        !workerProfilePresent -> Destination.ProfileFragment
         else -> Destination.HomeScreen
       }
 
