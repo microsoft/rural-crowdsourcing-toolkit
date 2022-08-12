@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "leaderboard")
 data class LeaderboardRecord(
-  @PrimaryKey val workerId: String,
+  @PrimaryKey val id: String,
   val name: String,
-  val XP: Int,
+  val xp: Int,
   val rank: Int,
 )

@@ -10,7 +10,7 @@ interface LeaderboardDao : BasicDao<LeaderboardRecord> {
   @Query("SELECT * FROM leaderboard")
   suspend fun getAllLeaderboardRecords(): List<LeaderboardRecord>
 
-  @Query("SELECT XP FROM leaderboard WHERE workerId=:worker_id")
+  @Query("SELECT XP FROM leaderboard WHERE id=:worker_id")
   suspend fun getXPPoints(worker_id: String): Int?
 
   /** Upsert a list of [records] in the table */

@@ -16,7 +16,7 @@ class LeaderboardListAdapter(private var leaderboardItems: List<LeaderboardRecor
         with(binding) {
           rankTv.text = leaderboardItem.rank.toString()
           nameTv.text = leaderboardItem.name
-          pointsTv.text = leaderboardItem.XP.toString()
+          pointsTv.text = leaderboardItem.xp.toString()
         }
       }
     }
