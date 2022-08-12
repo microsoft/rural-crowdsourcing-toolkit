@@ -187,4 +187,8 @@ class WorkerRepository @Inject constructor(
     }
 
   suspend fun getAllLeaderBoardRecords() = leaderboardDao.getAllLeaderboardRecords()
+
+  suspend fun getXPPoints(worker_id: String): Int? = withContext(Dispatchers.IO) {
+    return@withContext leaderboardDao.getXPPoints(worker_id)
+  }
 }

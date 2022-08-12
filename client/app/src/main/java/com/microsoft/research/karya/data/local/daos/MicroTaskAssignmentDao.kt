@@ -27,6 +27,9 @@ interface MicroTaskAssignmentDao : BasicDao<MicroTaskAssignmentRecord> {
   )
   suspend fun getCountForTask(taskId: String, status: MicrotaskAssignmentStatus): Int
 
+  @Query("SELECT COUNT(id) FROM microtask_assignment WHERE status=:status")
+  suspend fun getCountByStatus(status: MicrotaskAssignmentStatus): Int
+
   /** Upsert a [record] in the table */
   @Transaction
   suspend fun upsert(record: MicroTaskAssignmentRecord) {

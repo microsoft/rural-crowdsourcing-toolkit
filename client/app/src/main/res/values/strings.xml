@@ -178,6 +178,20 @@
     <string name="change_phone_number">Change Phone Number</string>
     <string name="invalid_otp">You have entered an invalid OTP.</string>
 
+    <!-- Home Screen -->
+    <string name="home_screen_title">Home Screen</string>
+    <string name="task_summary_label">Task Summary</string>
+    <string name="performance_label">Performance</string>
+    <string name="recording_task_label">Recording</string>
+    <string name="typing_task_label">Typing</string>
+    <string name="image_task_label">Image Annotation</string>
+    <string name="transcription_task_label">Transcription</string>
+    <string name="earning_label">Earnings</string>
+    <string name="earned_week_label">Last Week</string>
+    <string name="earned_total_label">Total Earned</string>
+    <string name="paid_total_label">Total Paid</string>
+
+
     <!-- Dashboard -->
     <string name="dashboard_title">Dashboard</string>
     <string name="sync_prompt">Submit Tasks / Get New Tasks</string>

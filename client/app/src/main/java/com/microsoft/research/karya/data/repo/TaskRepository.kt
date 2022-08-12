@@ -30,4 +30,16 @@ constructor(
 
     return TaskStatus(available, completed, submitted, verified, skipped, expired)
   }
+
+  suspend fun getTaskSummary(): TaskStatus {
+    val available = microTaskAssignmentDao.getCountByStatus(MicrotaskAssignmentStatus.ASSIGNED)
+    val completed = microTaskAssignmentDao.getCountByStatus(MicrotaskAssignmentStatus.COMPLETED)
+    val submitted = microTaskAssignmentDao.getCountByStatus(MicrotaskAssignmentStatus.SUBMITTED)
+    val verified = microTaskAssignmentDao.getCountByStatus(MicrotaskAssignmentStatus.VERIFIED)
+    val skipped = microTaskAssignmentDao.getCountByStatus(MicrotaskAssignmentStatus.SKIPPED)
+    val expired = microTaskAssignmentDao.getCountByStatus(MicrotaskAssignmentStatus.EXPIRED)
+
+    return TaskStatus(available, completed, submitted, verified, skipped, expired)
+  }
+
 }
