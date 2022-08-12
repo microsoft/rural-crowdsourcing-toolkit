@@ -125,13 +125,13 @@ class ProfileFragment : BaseFragment(R.layout.user_profile) {
 
   private fun navigate(destination: Destination) {
     when (destination) {
-      Destination.Dashboard -> navigateToDashBoard()
+      Destination.HomeScreen -> navigateToHomeScreen()
       else -> {}
     }
   }
 
-  private fun navigateToDashBoard() {
-    findNavController().navigate(R.id.action_global_dashboardActivity)
+  private fun navigateToHomeScreen() {
+    findNavController().navigate(R.id.action_profile_to_homeScreen)
   }
 
   private fun showError(message: String) {

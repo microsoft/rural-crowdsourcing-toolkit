@@ -89,7 +89,7 @@ constructor(
   }
 
   private suspend fun handleNavigation() {
-    val destination = Destination.Dashboard
+    val destination = Destination.HomeScreen
     _profileEffects.emit(ProfileEffects.Navigate(destination))
   }
 }
