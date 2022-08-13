@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?colorPrimary"
-                    android:textSize="@dimen/_30ssp"
+                    android:textSize="@dimen/_24ssp"
                     tools:text="Meena" />
 
                 <TextView
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:textColor="@color/c_dark_grey"
-                    android:textSize="@dimen/_20ssp"
+                    android:textSize="@dimen/_18ssp"
                     tools:text="9999999999" />
 
             </LinearLayout>
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/_5sdp"
-                    android:textSize="@dimen/_24ssp"
+                    android:textSize="@dimen/_20ssp"
                     android:textStyle="bold"
                     tools:text="2083" />
 
@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/leaderboard_points"
-                    android:textSize="@dimen/_24ssp"
+                    android:textSize="@dimen/_18ssp"
                     tools:text="points" />
 
             </LinearLayout>
