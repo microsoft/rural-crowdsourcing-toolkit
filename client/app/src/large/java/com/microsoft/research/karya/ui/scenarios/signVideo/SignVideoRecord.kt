@@ -20,7 +20,7 @@ import com.otaliastudios.cameraview.controls.Audio
 import com.otaliastudios.cameraview.controls.Facing
 import com.otaliastudios.cameraview.controls.Mode
 import com.vincent.videocompressor.VideoCompress
-import kotlinx.android.synthetic.main.fragment_sign_video_record.*
+import kotlinx.android.synthetic.large.fragment_sign_video_record.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
