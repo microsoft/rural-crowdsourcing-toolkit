@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
+import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.EarningStatus
+import com.microsoft.research.karya.data.model.karya.modelsExtra.PerformanceSummary
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
@@ -53,6 +55,12 @@ constructor(
   )
   val taskSummary = _taskSummary.asStateFlow()
 
+  // Performance summary
+  private var _performanceSummary = MutableStateFlow(
+    PerformanceSummary(0.0f, 0.0f, 0.0f, 0.0f)
+  )
+  val performanceSummary = _performanceSummary.asStateFlow()
+
   // Earnings summary
   private var _earningStatus = MutableStateFlow(EarningStatus(0, 0, 0))
   val earningStatus = _earningStatus.asStateFlow()
@@ -61,6 +69,7 @@ constructor(
     refreshWorker()
     refreshXPPoints()
     refreshTaskSummary()
+    refreshPerformanceSummary()
     refreshEarningSummary()
   }
 
@@ -99,6 +108,41 @@ constructor(
   fun refreshTaskSummary() {
     viewModelScope.launch {
       _taskSummary.value = taskRepository.getTaskSummary()
+    }
+  }
+
+  fun refreshPerformanceSummary() {
+    viewModelScope.launch {
+      val w = authManager.getLoggedInWorker()
+      val scenarioSummary = assignmentRepository.getScenarioReportSummary(w.id)
+
+      val recordingAccuracy = try {
+        scenarioSummary[ScenarioType.SPEECH_DATA]!!.get("accuracy").asFloat
+      } catch (e: Exception) {
+        0.0f
+      }
+      val transcriptionAccuracy = try {
+        scenarioSummary[ScenarioType.SPEECH_TRANSCRIPTION]!!.get("accuracy").asFloat
+      } catch (e: Exception) {
+        0.0f
+      }
+      val typingAccuracy = try {
+        scenarioSummary[ScenarioType.SENTENCE_CORPUS]!!.get("accuracy").asFloat
+      } catch (e: Exception) {
+        0.0f
+      }
+      val imageAnnotationAccuracy = try {
+        scenarioSummary[ScenarioType.IMAGE_ANNOTATION]!!.get("accuracy").asFloat
+      } catch (e: Exception) {
+        0.0f
+      }
+
+      _performanceSummary.value = PerformanceSummary(
+        recordingAccuracy,
+        transcriptionAccuracy,
+        typingAccuracy,
+        imageAnnotationAccuracy
+      )
     }
   }
 

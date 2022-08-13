@@ -10,6 +10,7 @@ import com.google.gson.JsonNull
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.model.karya.enums.MicrotaskAssignmentStatus
 import com.microsoft.research.karya.data.model.karya.modelsExtra.AssignmentReport
+import com.microsoft.research.karya.data.model.karya.modelsExtra.ScenarioReport
 
 @Dao
 interface MicrotaskAssignmentDaoExtra {
@@ -200,4 +201,10 @@ interface MicrotaskAssignmentDaoExtra {
     worker_id: String,
     status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
   ): List<AssignmentReport>
+
+  @Query("SELECT task.scenario_name, microtask_assignment.report FROM microtask_assignment LEFT JOIN task ON microtask_assignment.task_id = task.id WHERE microtask_assignment.status=:status AND microtask_assignment.worker_id=:worker_id")
+  suspend fun getScenarioReports(
+    worker_id: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+  ): List<ScenarioReport>
 }

@@ -343,4 +343,40 @@ constructor(
 
     return taskSummary.toMap()
   }
+
+
+  suspend fun getScenarioReportSummary(worker_id: String): Map<ScenarioType, JsonObject> {
+    val assignmentReports = assignmentDaoExtra.getScenarioReports(worker_id)
+    var scenarioReports: MutableMap<ScenarioType, MutableList<JsonObject>> = mutableMapOf()
+    scenarioReports[ScenarioType.SPEECH_DATA] = mutableListOf()
+    scenarioReports[ScenarioType.SPEECH_TRANSCRIPTION] = mutableListOf()
+    scenarioReports[ScenarioType.SENTENCE_CORPUS] = mutableListOf()
+    scenarioReports[ScenarioType.IMAGE_ANNOTATION] = mutableListOf()
+
+    assignmentReports.forEach { ar ->
+      if (scenarioReports.containsKey(ar.scenario_name)) {
+        if (ar.report != null && !ar.report.isJsonNull) {
+          try {
+            scenarioReports[ar.scenario_name]!!.add(ar.report.asJsonObject)
+          } catch (e: Exception) {}
+        }
+      }
+    }
+
+    var scenarioSummary: MutableMap<ScenarioType, JsonObject> = mutableMapOf()
+    arrayListOf(
+      ScenarioType.SPEECH_DATA,
+      ScenarioType.SPEECH_TRANSCRIPTION,
+      ScenarioType.SENTENCE_CORPUS,
+      ScenarioType.IMAGE_ANNOTATION
+    ).forEach { scenario ->
+      try {
+        val reports = scenarioReports[scenario] ?: mutableListOf()
+        val summary = reduceTaskReports(reports, arrayListOf("accuracy"), 5.0f)
+        scenarioSummary[scenario] = summary
+      } catch (e: Exception) {}
+
+    }
+    return scenarioSummary.toMap()
+  }
 }

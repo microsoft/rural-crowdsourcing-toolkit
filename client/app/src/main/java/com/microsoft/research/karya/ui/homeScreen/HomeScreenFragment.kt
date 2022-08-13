@@ -28,6 +28,7 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
     super.onResume()
     viewModel.refreshXPPoints()
     viewModel.refreshTaskSummary()
+    viewModel.refreshPerformanceSummary()
     viewModel.refreshEarningSummary()
   }
 
@@ -70,6 +71,16 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
         numVerifiedTv.text = status.verifiedMicrotasks.toString()
         numSkippedTv.text = status.skippedMicrotasks.toString()
         numExpiredTv.text = status.expiredMicrotasks.toString()
+      }
+    }
+
+    // Performance summary
+    viewModel.performanceSummary.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { perf ->
+      with(binding) {
+        recordingScore.rating = perf.recordingAccuracy
+        transcriptionScore.rating = perf.transcriptionAccuracy
+        typingScore.rating = perf.typingAccuracy
+        imageTaskScore.rating = perf.imageAnnotationAccuracy
       }
     }
 
