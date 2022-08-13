@@ -79,7 +79,10 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
 
   private fun observeEffects() {
     viewModel.otpEffects.observe(viewLifecycle, viewLifecycleScope) { effect ->
-      navigateToProfileFragment()
+      when (effect) {
+        OTPEffects.NavigateToProfile -> navigateToProfileFragment()
+        OTPEffects.NavigateToHomeScreen -> navigateToHomeScreen()
+      }
     }
   }
 
@@ -110,6 +113,10 @@ class OTPFragment : BaseFragment(R.layout.fragment_otp) {
 
   private fun navigateToProfileFragment() {
     findNavController().navigate(R.id.action_OTPFragment_to_profileFragment)
+  }
+
+  private fun navigateToHomeScreen() {
+    findNavController().navigate(R.id.action_OTP_to_homeScreen)
   }
 
   private fun enableNextButton() {

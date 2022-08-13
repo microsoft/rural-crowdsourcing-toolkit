@@ -69,7 +69,11 @@ constructor(
         .onEach { worker ->
           authManager.startSession(worker.copy(isConsentProvided = true))
           _otpUiState.value = OTPUiState.Success
-          _otpEffects.emit(OTPEffects.Navigate)
+          if (worker.profile != null && !worker.profile.isJsonNull) {
+            _otpEffects.emit(OTPEffects.NavigateToHomeScreen)
+          } else {
+            _otpEffects.emit(OTPEffects.NavigateToProfile)
+          }
         }
         .catch { throwable -> _otpUiState.value = OTPUiState.Error(throwable) }
         .collect()
