@@ -71,7 +71,7 @@ constructor(
 
     if (assignmentResponse != null) {
       saveTasks(assignmentResponse.tasks)
-      saveMicroTasks(assignmentResponse.microTasks)
+      saveMicroTaskAssignments(assignmentResponse.assignments)
       emit(assignmentResponse)
     } else {
       error("Request failed, response body was null")
