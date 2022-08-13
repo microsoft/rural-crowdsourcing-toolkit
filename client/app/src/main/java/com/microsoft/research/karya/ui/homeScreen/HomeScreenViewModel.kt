@@ -1,5 +1,8 @@
 package com.microsoft.research.karya.ui.homeScreen
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -12,9 +15,11 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.data.repo.WorkerRepository
+import com.microsoft.research.karya.utils.PreferenceKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +31,7 @@ constructor(
   private val assignmentRepository: AssignmentRepository,
   private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
-  private val paymentRepository: PaymentRepository
+  private val datastore: DataStore<Preferences>
 ) : ViewModel() {
 
   private lateinit var worker: WorkerRecord
@@ -62,7 +67,7 @@ constructor(
   val performanceSummary = _performanceSummary.asStateFlow()
 
   // Earnings summary
-  private var _earningStatus = MutableStateFlow(EarningStatus(0, 0, 0))
+  private var _earningStatus = MutableStateFlow(EarningStatus(0.0f, 0.0f, 0.0f))
   val earningStatus = _earningStatus.asStateFlow()
 
   init {
@@ -148,7 +153,16 @@ constructor(
 
   fun refreshEarningSummary() {
     viewModelScope.launch {
-      _earningStatus.value = EarningStatus(0, 0, 0)
+      val w = authManager.getLoggedInWorker()
+      val balanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
+      val data = datastore.data.first()
+      val workerBalance: Float = data[balanceKey] ?: 0f
+      val earnedLastWeek = assignmentRepository.getWeekCreditsEarned(w.id)
+      val totalEarned = assignmentRepository.getTotalCreditsEarned(w.id)
+      // TODO: This is a hack. Paid should be total of processed payments
+      val paid = totalEarned - workerBalance
+
+      _earningStatus.value = EarningStatus(earnedLastWeek, totalEarned, paid)
     }
   }
 }

@@ -180,6 +180,24 @@ interface MicrotaskAssignmentDaoExtra {
     )
   ): Float?
 
+  /** Query to get the total amount earned so far */
+  @Query("SELECT SUM(credits) FROM microtask_assignment WHERE status=:status AND worker_id=:worker_id AND completed_at > :from")
+  suspend fun getWeekCreditsEarned(
+    worker_id: String,
+    from: String,
+    status: MicrotaskAssignmentStatus = MicrotaskAssignmentStatus.VERIFIED
+  ): Float?
+
+  @Query("SELECT SUM(max_base_credits) FROM microtask_assignment WHERE worker_id=:worker_id AND status IN (:statuses) AND completed_at > :from")
+  suspend fun getWeekBaseCreditsEarned(
+    worker_id: String,
+    from: String,
+    statuses: List<MicrotaskAssignmentStatus> = arrayListOf(
+      MicrotaskAssignmentStatus.SUBMITTED,
+      MicrotaskAssignmentStatus.VERIFIED
+    )
+  ): Float?
+
   /** Update all expired tasks **/
   @Query("UPDATE microtask_assignment SET status=:status WHERE worker_id=:worker_id AND status in (:currentStatus) AND deadline < :currentTime")
   suspend fun updateExpired(

@@ -229,6 +229,13 @@ constructor(
     return (baseCredits ?: 0.0f) + (bonusCredits ?: 0.0f)
   }
 
+  suspend fun getWeekCreditsEarned(worker_id: String): Float {
+    val lastWeekTimeString = DateUtils.getCurrentDate(-7)
+    val baseCredits = assignmentDaoExtra.getWeekBaseCreditsEarned(worker_id, lastWeekTimeString)
+    val bonusCredits = assignmentDaoExtra.getWeekCreditsEarned(worker_id, lastWeekTimeString)
+    return (baseCredits ?: 0.0f) + (bonusCredits ?: 0.0f)
+  }
+
   suspend fun getIDsForTask(task_id: String, statuses: List<MicrotaskAssignmentStatus>): List<String> {
     return assignmentDaoExtra.getIDsForTask(task_id, statuses)
   }
