@@ -1,6 +1,6 @@
-package com.microsoft.research.karya.ui.dashboard
+package com.microsoft.research.karya.ui.homeScreen
 
-enum class DashboardNavigation {
+enum class HomeScreenNavigation {
   PAYMENT_REGISTRATION,
   PAYMENT_VERIFICATION,
   PAYMENT_DASHBOARD,

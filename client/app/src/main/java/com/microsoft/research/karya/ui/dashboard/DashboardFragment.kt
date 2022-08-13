@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -23,8 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
-import android.util.Log
 
 private const val UNIQUE_SYNC_WORK_NAME = "syncWork"
 
@@ -97,26 +94,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     viewModel.progress.observe(lifecycle, lifecycleScope) { i ->
       binding.syncProgressBar.progress = i
       viewModel.progress.observe(lifecycle, lifecycleScope) { i -> binding.syncProgressBar.progress = i }
-
-      viewModel.navigationFlow.observe(viewLifecycle, viewLifecycleScope) { navigation ->
-        // Return if payments is not enabled in current config
-        if (!BuildConfig.PAYMENTS_ENABLED) {
-          return@observe
-        }
-        val resId =
-          when (navigation) {
-            DashboardNavigation.PAYMENT_REGISTRATION -> R.id.action_dashboardActivity_to_paymentRegistrationFragment
-            DashboardNavigation.PAYMENT_VERIFICATION -> R.id.action_dashboardActivity_to_paymentVerificationFragment
-            DashboardNavigation.PAYMENT_DASHBOARD -> R.id.action_dashboardActivity_to_paymentDashboardFragment
-            DashboardNavigation.PAYMENT_FAILURE -> R.id.action_global_paymentFailureFragment
-          }
-
-        try {
-          findNavController().navigate(resId)
-        } catch (e:Exception) {
-          Log.e("DASHBOARD_NAV_ERROR", e.toString())
-        }
-      }
 
       WorkManager.getInstance(requireContext())
         .getWorkInfosForUniqueWorkLiveData(UNIQUE_SYNC_WORK_NAME)
@@ -223,20 +200,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
-      // Show total credits if it is greater than 0
-      if (workerBalance > 0.0f) {
-        binding.rupeesEarnedCl.visible()
-        binding.rupeesEarnedTv.text = "%.2f".format(Locale.ENGLISH, workerBalance)
-        if (workerBalance > 2.0f) {
-          binding.rupeesEarnedCl.setOnClickListener { viewModel.navigatePayment() }
-        } else {
-          binding.rupeesEarnedCl.setOnClickListener {
-            Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
-          }
-        }
-      } else {
-        binding.rupeesEarnedCl.gone()
-      }
     }
 
     // Show a dialog box to sync with server if completed tasks and internet available

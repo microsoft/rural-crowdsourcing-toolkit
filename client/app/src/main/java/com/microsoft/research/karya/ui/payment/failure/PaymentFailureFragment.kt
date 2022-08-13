@@ -46,7 +46,7 @@ class PaymentFailureFragment : Fragment(R.layout.fragment_payment_failure) {
   private fun render(paymentVerificationModel: PaymentFailureModel) {}
 
   private fun navigateToDashboard() {
-    findNavController().navigate(R.id.action_paymentFailureFragment_to_dashboardActivity)
+    findNavController().navigate(R.id.action_paymentFailureFragment_to_homeScreen)
   }
 
   private fun navigateToRegistration() {

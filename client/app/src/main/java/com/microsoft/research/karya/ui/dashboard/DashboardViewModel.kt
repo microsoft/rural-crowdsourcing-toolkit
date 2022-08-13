@@ -2,22 +2,13 @@ package com.microsoft.research.karya.ui.dashboard
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
-import com.microsoft.research.karya.data.remote.response.WorkerBalanceResponse
 import com.microsoft.research.karya.data.repo.AssignmentRepository
-import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
-import com.microsoft.research.karya.ui.payment.PaymentFlowNavigation
-import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +29,6 @@ constructor(
   private val taskRepository: TaskRepository,
   private val assignmentRepository: AssignmentRepository,
   private val authManager: AuthManager,
-  private val paymentRepository: PaymentRepository,
   private val datastore: DataStore<Preferences>
 ) : ViewModel() {
 
@@ -49,11 +39,8 @@ constructor(
       .thenBy { taskInfo -> taskInfo.taskID }
 
   private val _dashboardUiState: MutableStateFlow<DashboardUiState> =
-    MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList(), 0.0f)))
+    MutableStateFlow(DashboardUiState.Success(DashboardStateSuccess(emptyList())))
   val dashboardUiState = _dashboardUiState.asStateFlow()
-
-  private val _navigationFlow = MutableSharedFlow<DashboardNavigation>()
-  val navigationFlow = _navigationFlow.asSharedFlow()
 
   private val _progress: MutableStateFlow<Int> = MutableStateFlow(0)
   val progress = _progress.asStateFlow()
@@ -137,12 +124,9 @@ constructor(
     }
     taskInfoList = tempList.sortedWith(taskInfoComparator)
 
-    val balanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
-    val data = datastore.data.first()
-    val workerBalance: Float = data[balanceKey] ?: 0f
     val success =
       DashboardUiState.Success(
-        DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), workerBalance)
+        DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator))
       )
     _dashboardUiState.value = success
   }
@@ -189,13 +173,9 @@ constructor(
           }
           taskInfoList = tempList
 
-//          val totalCreditsEarned = assignmentRepository.getTotalCreditsEarned(worker.id) ?
-          val balanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
-          val data = datastore.data.first()
-          val workerBalance: Float = data[balanceKey] ?: 0f
           val success =
             DashboardUiState.Success(
-              DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator), workerBalance)
+              DashboardStateSuccess(taskInfoList.sortedWith(taskInfoComparator))
             )
           _dashboardUiState.value = success
         }
@@ -214,19 +194,5 @@ constructor(
 
   fun setProgress(i: Int) {
     _progress.value = i
-  }
-
-  fun navigatePayment() {
-    viewModelScope.launch {
-      val workerId = authManager.getLoggedInWorker().id
-      val status = paymentRepository.getPaymentRecordStatus(workerId)
-      when (status.getNavigationDestination()) {
-        PaymentFlowNavigation.DASHBOARD -> _navigationFlow.emit(DashboardNavigation.PAYMENT_DASHBOARD)
-        PaymentFlowNavigation.FAILURE -> _navigationFlow.emit(DashboardNavigation.PAYMENT_FAILURE)
-        PaymentFlowNavigation.REGISTRATION -> _navigationFlow.emit(DashboardNavigation.PAYMENT_REGISTRATION)
-        PaymentFlowNavigation.VERIFICATION -> _navigationFlow.emit(DashboardNavigation.PAYMENT_VERIFICATION)
-        else -> {}
-      }
-    }
   }
 }

@@ -114,6 +114,15 @@
         <action
             android:id="@+id/action_homeScreen_to_leaderboard"
             app:destination="@id/leaderboardFragment" />
+        <action
+            android:id="@+id/action_homeScreen_to_paymentRegistration"
+            app:destination="@id/paymentRegistrationFragment" />
+        <action
+            android:id="@+id/action_homeScreen_to_paymentVerificationFragment"
+            app:destination="@id/paymentVerificationFragment" />
+        <action
+            android:id="@+id/action_homeScreen_to_paymentDashboardFragment"
+            app:destination="@id/paymentDashboardFragment" />
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -290,15 +299,6 @@
                 android:name="total"
                 app:argType="integer" />
         </action>
-        <action
-            android:id="@+id/action_dashboardActivity_to_paymentRegistrationFragment"
-            app:destination="@id/paymentRegistrationFragment" />
-        <action
-            android:id="@+id/action_dashboardActivity_to_paymentVerificationFragment"
-            app:destination="@id/paymentVerificationFragment" />
-        <action
-            android:id="@+id/action_dashboardActivity_to_paymentDashboardFragment"
-            app:destination="@id/paymentDashboardFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_dashboardActivity"
@@ -633,8 +633,8 @@
             android:id="@+id/action_paymentFailureFragment_to_paymentRegistrationFragment"
             app:destination="@id/paymentRegistrationFragment" />
         <action
-            android:id="@+id/action_paymentFailureFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity" />
+            android:id="@+id/action_paymentFailureFragment_to_homeScreen"
+            app:destination="@id/homeScreenFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_paymentFailureFragment"

@@ -1,10 +1,13 @@
 package com.microsoft.research.karya.ui.homeScreen
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentHomeScreenBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
@@ -44,6 +47,17 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
       taskSummaryCv.setOnClickListener {
         val action = HomeScreenFragmentDirections.actionHomeScreenToDashboard()
         findNavController().navigate(action)
+      }
+
+      // Move to payments flow on earning card click
+      earningCv.setOnClickListener {
+        val workerBalance = viewModel.earningStatus.value.earnedTotal
+        // Navigate only if worker balance is greater than 2 rs.
+        if (workerBalance > 2.0f) {
+          viewModel.navigatePayment()
+        } else {
+          Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
+        }
       }
     }
   }
@@ -90,6 +104,27 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
         earningWeekTv.text = status.earnedWeek.toString()
         earningTotalTv.text = status.earnedTotal.toString()
         paidTotalTv.text = status.paidTotal.toString()
+      }
+    }
+
+    // Payments navigation flow
+    viewModel.navigationFlow.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { navigation ->
+      // Return if payments is not enabled in current config
+      if (!BuildConfig.PAYMENTS_ENABLED) {
+        return@observe
+      }
+      val action =
+        when (navigation) {
+          HomeScreenNavigation.PAYMENT_REGISTRATION -> HomeScreenFragmentDirections.actionHomeScreenToPaymentRegistration()
+          HomeScreenNavigation.PAYMENT_VERIFICATION -> HomeScreenFragmentDirections.actionHomeScreenToPaymentVerificationFragment()
+          HomeScreenNavigation.PAYMENT_DASHBOARD -> HomeScreenFragmentDirections.actionHomeScreenToPaymentDashboardFragment()
+          HomeScreenNavigation.PAYMENT_FAILURE -> HomeScreenFragmentDirections.actionGlobalPaymentFailureFragment()
+        }
+
+      try {
+        findNavController().navigate(action)
+      } catch (e:Exception) {
+        Log.e("DASHBOARD_NAV_ERROR", e.toString())
       }
     }
   }

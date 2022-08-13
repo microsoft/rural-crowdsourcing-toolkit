@@ -15,9 +15,12 @@ import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.data.repo.WorkerRepository
+import com.microsoft.research.karya.ui.payment.PaymentFlowNavigation
 import com.microsoft.research.karya.utils.PreferenceKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -31,6 +34,7 @@ constructor(
   private val assignmentRepository: AssignmentRepository,
   private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
+  private val paymentRepository: PaymentRepository,
   private val datastore: DataStore<Preferences>
 ) : ViewModel() {
 
@@ -46,6 +50,10 @@ constructor(
   // XP points
   private var _points = MutableStateFlow(0)
   val points = _points.asStateFlow()
+
+  // Navigation flow for payments
+  private val _navigationFlow = MutableSharedFlow<HomeScreenNavigation>()
+  val navigationFlow = _navigationFlow.asSharedFlow()
 
   // Task summary
   private var _taskSummary = MutableStateFlow(
@@ -163,6 +171,20 @@ constructor(
       val paid = totalEarned - workerBalance
 
       _earningStatus.value = EarningStatus(earnedLastWeek, totalEarned, paid)
+    }
+  }
+
+  fun navigatePayment() {
+    viewModelScope.launch {
+      val workerId = authManager.getLoggedInWorker().id
+      val status = paymentRepository.getPaymentRecordStatus(workerId)
+      when (status.getNavigationDestination()) {
+        PaymentFlowNavigation.DASHBOARD -> _navigationFlow.emit(HomeScreenNavigation.PAYMENT_DASHBOARD)
+        PaymentFlowNavigation.FAILURE -> _navigationFlow.emit(HomeScreenNavigation.PAYMENT_FAILURE)
+        PaymentFlowNavigation.REGISTRATION -> _navigationFlow.emit(HomeScreenNavigation.PAYMENT_REGISTRATION)
+        PaymentFlowNavigation.VERIFICATION -> _navigationFlow.emit(HomeScreenNavigation.PAYMENT_VERIFICATION)
+        else -> {}
+      }
     }
   }
 }
