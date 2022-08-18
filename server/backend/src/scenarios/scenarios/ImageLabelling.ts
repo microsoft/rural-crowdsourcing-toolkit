@@ -22,10 +22,14 @@ export const backendImageLabellingScenario: IBackendScenarioInterface<BaseImageL
     const microtasks = await BBPromise.mapSeries(images, async ({ image, ...rest }) => {
       const filePath = `${task_folder}/${image}`;
       try {
-        await fsp.access(filePath);
+        let files = {};
+        if (task.params.imageByUsers == 'server') {
+          await fsp.access(filePath);
+          files = { image };
+        }
         const microtask: MicrotaskType<'IMAGE_TRANSCRIPTION'> = {
           task_id: task.id,
-          input: { data: rest, files: { image } },
+          input: { data: rest, ...files },
           deadline: task.deadline,
           credits: task.params.creditsPerMicrotask,
           status: 'INCOMPLETE',
