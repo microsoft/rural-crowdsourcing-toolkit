@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.gridlayout.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:columnCount="1"
     android:padding="@dimen/_10sdp"
+    app:columnCount="1"
     tools:ignore="HardcodedText">
 
     <Button
@@ -15,16 +16,16 @@
     <Button
         android:id="@+id/languageHindi"
         style="@style/LanguageUpdateButton"
-        android:text="हिन्दी" />
+        android:text="हिन्दी (Hindi)" />
 
     <Button
-        android:id="@+id/languageBengali"
+        android:id="@+id/languageMarathi"
         style="@style/LanguageUpdateButton"
-        android:text="বাংলা" />
+        android:text="मराठी (Marathi)" />
 
     <Button
-        android:id="@+id/languageMalayalam"
+        android:id="@+id/languageUrdu"
         style="@style/LanguageUpdateButton"
-        android:text="മലയാളം" />
+        android:text="اُردُو (Urdu)" />
 
-</GridLayout>
+</androidx.gridlayout.widget.GridLayout>
