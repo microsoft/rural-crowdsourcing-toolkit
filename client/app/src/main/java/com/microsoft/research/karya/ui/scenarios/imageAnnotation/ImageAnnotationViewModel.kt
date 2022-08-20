@@ -89,7 +89,7 @@ constructor(
    * TODO: Generalise this method as it only works for single polygon crop object
    */
   fun renderOutputData() {
-    if (currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
+    if (!isCurrentAssignmentInitialized() || currentAssignment.status != MicrotaskAssignmentStatus.COMPLETED) {
       return
     }
     val outputData = currentAssignment.output.asJsonObject.getAsJsonObject("data")

@@ -77,6 +77,10 @@ constructor(
     MutableStateFlow(Triple(false, "", ""))
   val outsideTimeBound = _outsideTimeBound.asStateFlow()
 
+  protected fun isCurrentAssignmentInitialized(): Boolean {
+    return this::currentAssignment.isInitialized
+  }
+
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
