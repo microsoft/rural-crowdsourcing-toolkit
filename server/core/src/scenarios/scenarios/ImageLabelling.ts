@@ -11,6 +11,7 @@ import { BaseScenarioInterface } from '../ScenarioInterface';
 type ImageLabellingTaskInputParameters = {
   language: LanguageCode;
   labels: string[];
+  single: boolean;
   training: boolean;
   imageByUsers: string;
 };
@@ -44,6 +45,14 @@ export const baseImageLabellingScenario: BaseImageLabellingScenario = {
       label: 'Label List',
       description: 'List of labels to be attached to the images',
       required: true,
+    },
+
+    {
+      id: 'single',
+      type: 'boolean',
+      label: 'Select only a single label',
+      description: 'Allow users to select only a single label',
+      required: false,
     },
 
     {
