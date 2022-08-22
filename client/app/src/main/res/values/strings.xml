@@ -181,6 +181,7 @@
     <!-- Home Screen -->
     <string name="home_screen_title">Home Screen</string>
     <string name="task_summary_label">Task Summary</string>
+    <string name="click_to_do_tasks">Click Here To Do Tasks!</string>
     <string name="performance_label">Performance</string>
     <string name="recording_task_label">Recording</string>
     <string name="typing_task_label">Typing</string>

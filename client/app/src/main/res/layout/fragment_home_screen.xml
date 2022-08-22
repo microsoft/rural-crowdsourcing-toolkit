@@ -312,6 +312,14 @@
 
                     </androidx.gridlayout.widget.GridLayout>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:text="@string/click_to_do_tasks"
+                        android:textSize="@dimen/_16ssp"
+                        android:gravity="center"/>
+
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
