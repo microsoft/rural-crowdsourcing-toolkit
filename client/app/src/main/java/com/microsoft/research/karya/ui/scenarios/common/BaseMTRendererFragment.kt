@@ -117,4 +117,35 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
       }
     }
   }
+
+  fun skipTask(showAlertBox: Boolean, title: String, msg: String) {
+
+    if (!showAlertBox) {
+      viewModel.skipTask()
+      return
+    }
+
+    val alertDialog: AlertDialog? = activity?.let {
+      val builder = AlertDialog.Builder(it)
+      builder.apply {
+        setPositiveButton(
+          getString(R.string.okay)
+        ) { _, _ ->
+          viewModel.skipTask()
+        }
+        setNegativeButton(
+          getString(R.string.cancel_text)
+        ) { _, _ ->
+          // User cancelled the dialog
+        }
+      }
+
+      builder.setMessage(msg)
+        .setTitle(title)
+      // Create the AlertDialog
+      builder.create()
+    }
+    alertDialog!!.show()
+  }
+
 }

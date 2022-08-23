@@ -448,4 +448,20 @@ constructor(
   protected fun resetMicrotask() {
     getAndSetupMicrotask()
   }
+
+  /**
+   * Skip the microtask
+   */
+  fun skipTask() {
+    // log the state transition
+    val message = JsonObject()
+    message.addProperty("type", "o")
+    message.addProperty("button", "SKIPPED")
+    log(message)
+
+    viewModelScope.launch {
+      skipAndSaveCurrentMicrotask()
+      moveToNextMicrotask()
+    }
+  }
 }
