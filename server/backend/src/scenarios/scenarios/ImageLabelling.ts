@@ -25,7 +25,7 @@ export const backendImageLabellingScenario: IBackendScenarioInterface<BaseImageL
         let files = {};
         if (task.params.imageByUsers == 'server') {
           await fsp.access(filePath);
-          files = { image };
+          files = { files: { image } };
         }
         const microtask: MicrotaskType<'IMAGE_TRANSCRIPTION'> = {
           task_id: task.id,
