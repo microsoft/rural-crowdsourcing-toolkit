@@ -198,7 +198,7 @@
     <string name="back_to_home">Back to Home</string>
 
     <!-- Dashboard -->
-    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_title">Task List</string>
     <string name="sync_prompt">Submit Tasks / Get New Tasks</string>
     <string name="tasks_available">available</string>
     <string name="tasks_completed">completed</string>
@@ -287,7 +287,7 @@
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
     <string name="back">back</string>
-    <string name="skip_task_warning">Are you sure, you want to skip the task?</string>
+    <string name="skip_task_warning">Are you sure you want to skip the task?</string>
     <string name="no_transcription_error_msg">Please enter the transcription</string>
     <string name="speech_transcription_instruction">Transcribe the audio below</string>
     <string name="proceed_text">Proceed</string>
