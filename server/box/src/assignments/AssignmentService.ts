@@ -11,6 +11,7 @@ import {
   PolicyName,
   TaskRecord,
   TaskRecordType,
+  ScenarioName,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
@@ -57,16 +58,24 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       'task_id'
     );
 
+    // Per-scenario assignment status
+    const scenarioAssigned: Map<ScenarioName, boolean> = new Map();
+    const scenarios: ScenarioName[] = ['SPEECH_DATA', 'SPEECH_TRANSCRIPTION', 'IMAGE_ANNOTATION', 'SENTENCE_CORPUS'];
+    await BBPromise.mapSeries(scenarios, async (scenario) => {
+      scenarioAssigned.set(scenario, await MicrotaskModel.hasIncompleteMicrotasksForScenario(worker.id, scenario));
+    });
+
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
-      if (tasksAssigned) return;
-
       // Get task for the assignment
       const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
       if (task.status == 'COMPLETED') return;
 
       // check if the task is assignable to the worker
       if (!assignable(task, worker)) return;
+
+      // If tasks of this scenario have already been assigned to the worker, return
+      if (scenarioAssigned.get(task.scenario_name)) return;
 
       const policy_name = taskAssignment.policy;
       const policy = localPolicyMap[policy_name];
@@ -155,6 +164,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       }
 
       if (chosenMicrotasks.length > 0) {
+        scenarioAssigned.set(task.scenario_name, true);
         tasksAssigned = true;
       }
 

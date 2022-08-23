@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { MicrotaskAssignmentRecord, MicrotaskRecord, TaskRecord, WorkerRecord } from '@karya/core';
+import { MicrotaskAssignmentRecord, MicrotaskRecord, ScenarioName, TaskRecord, WorkerRecord } from '@karya/core';
 import { knex } from '../Client';
 import { updateSingle } from './BasicModel';
 
@@ -71,6 +71,18 @@ export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolea
     .whereIn('status', ['ASSIGNED'])
     .select();
   return incompleteMicrotasks.length > 0;
+}
+
+export async function hasIncompleteMicrotasksForScenario(worker_id: string, scenario: ScenarioName) {
+  const result = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .leftJoin('task', 'microtask_assignment.task_id', 'task.id')
+    .where({
+      'microtask_assignment.worker_id': worker_id,
+      'microtask_assignment.status': 'ASSIGNED',
+      'task.scenario_name': scenario,
+    })
+    .count();
+  return result[0].count > 0;
 }
 
 /**
