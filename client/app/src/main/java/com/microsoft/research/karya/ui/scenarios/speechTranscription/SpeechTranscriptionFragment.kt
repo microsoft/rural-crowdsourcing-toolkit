@@ -55,7 +55,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     nextBtnCv.setOnClickListener {
       // Check if user has entered the text
       if (transcriptionEt.text.isNullOrEmpty()) {
-        showErrorDialog(getString(R.string.no_transcription_error_msg))
+        skipTask(true, "", getString(R.string.skip_task_warning))
         return@setOnClickListener
       } else {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())

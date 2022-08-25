@@ -23,6 +23,7 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -219,37 +220,12 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     val polygonCoors = sourceImageIv.coordinatesForPolygonCropBoxes
     if (rectangleCoors.isEmpty() && polygonCoors.isEmpty()) {
       // Display an alert box warning the user of no annotation boxes
-      showNoBoxAlertBox()
+      skipTask(true, getString(R.string.no_annotation_box_dialog_title_text), getString(R.string.skip_task_warning))
       return
     }
     viewModel.setRectangleCoors(rectangleCoors)
     viewModel.setPolygonCoors(polygonCoors)
     viewModel.handleNextCLick()
-  }
-
-  private fun showNoBoxAlertBox() {
-
-    val alertDialog: AlertDialog? = activity?.let {
-      val builder = AlertDialog.Builder(it)
-      builder.apply {
-        setPositiveButton(
-          getString(R.string.proceed_text)
-        ) { _, _ ->
-          viewModel.handleNextCLick()
-        }
-        setNegativeButton(
-          getString(R.string.cancel_text)
-        ) { _, _ ->
-          // User cancelled the dialog
-        }
-      }
-
-      builder.setMessage(getString(R.string.no_annotation_box_annotation_message_text))
-        .setTitle(getString(R.string.no_annotation_box_dialog_title_text))
-      // Create the AlertDialog
-      builder.create()
-    }
-    alertDialog!!.show()
   }
 
   private fun setupObservers() {

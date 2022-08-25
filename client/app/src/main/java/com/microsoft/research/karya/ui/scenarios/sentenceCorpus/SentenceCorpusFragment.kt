@@ -93,7 +93,7 @@ class SentenceCorpusFragment :
   private fun onNextClick() {
     val sentences = viewModel.sentences.value
     if (sentences.size == 0) {
-      showError("Please enter at least one sentence")
+      skipTask(true, "", getString(R.string.skip_task_warning))
       return
     }
     errorTv.gone()
