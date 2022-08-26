@@ -108,6 +108,11 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
 
   const records = await WorkerModel.getLeaderboardRecords(worker);
 
+  // If empty response return empty list
+  if (records.length == 0) {
+    return HttpResponse.OK(ctx, [])
+  }
+
   const topRecords = records.slice(0, 10);
   const workerLeaderboardrecord = records.find((record) => record.id === workerId)!;
   // Add worker leaderboard record to the leaderboard
