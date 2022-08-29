@@ -16,16 +16,28 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/toolbarBackBtn"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:backgroundTint="@color/c_white"
+            android:src="@drawable/ic_left"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/karyaLogo"
             android:layout_width="@dimen/_36sdp"
             android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_8sdp"
             android:clickable="true"
             android:contentDescription="@string/karya_logo"
             android:focusable="true"
             android:src="@drawable/karya_logo"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/toolbarBackBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -90,13 +102,13 @@
             android:id="@+id/versionCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_4sdp"
+            android:textColor="@color/c_dark_grey"
+            android:textSize="@dimen/_10ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textSize="@dimen/_10ssp"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:textColor="@color/c_dark_grey"
-            tools:text="63"/>
+            tools:text="63" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

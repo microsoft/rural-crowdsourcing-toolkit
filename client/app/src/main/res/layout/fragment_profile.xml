@@ -16,6 +16,7 @@
         app:titleText="@string/profile_screen_title" />
 
     <LinearLayout
+        android:id="@+id/formLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
@@ -23,35 +24,29 @@
         android:paddingHorizontal="@dimen/_20sdp"
         app:layout_constraintTop_toBottomOf="@id/appTb">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profilePictureIv"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="@dimen/_120sdp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_perm_identity"
-            app:civ_circle_background_color="@color/c_white" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/nameLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/_20sdp"
                 android:text="@string/profile_name_label"
-                android:textAlignment="center"
                 android:textColor="?colorPrimary"
                 android:textSize="@dimen/_20ssp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameInputEt"
                 style="@style/EditText"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:height="@dimen/_32sdp" />
         </LinearLayout>
 
@@ -126,6 +121,16 @@
                 android:height="@dimen/_32sdp" />
 
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/submitProfileBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:text="@string/submit_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
     </LinearLayout>
 
     <ProgressBar
@@ -134,28 +139,8 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_margin="@dimen/_8sdp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/submitProfileBtn"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/submitProfileBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_20sdp"
-        android:text="@string/submit_profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/backToHomeScreen"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_20sdp"
-        android:backgroundTint="@color/c_white"
-        android:text="@string/back_to_home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/formLL" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
