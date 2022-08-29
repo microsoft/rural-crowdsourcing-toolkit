@@ -31,7 +31,9 @@
         android:text="@string/leaderboard_empty"
         android:textColor="@color/c_red"
         android:textSize="@dimen/_20ssp"
-        app:layout_constraintTop_toBottomOf="@id/appTb" />
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/leaderboardRv"
@@ -51,15 +53,5 @@
         app:layout_constraintTop_toBottomOf="@id/emptyLeaderboardTv"
         tools:itemCount="2"
         tools:listitem="@layout/item_leaderboard_entry" />
-
-    <include
-        android:id="@+id/backBtn"
-        layout="@layout/microtask_common_back_button"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_margin="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

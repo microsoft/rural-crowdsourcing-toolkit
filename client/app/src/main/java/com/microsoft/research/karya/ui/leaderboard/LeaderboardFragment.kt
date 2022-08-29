@@ -13,6 +13,7 @@ import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.app_toolbar.*
 
 @AndroidEntryPoint
 class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard) {
@@ -26,12 +27,11 @@ class LeaderboardFragment : Fragment(R.layout.fragment_leaderboard) {
   }
 
   private fun setupViews() {
-    with(binding) {
-      leaderboardRv.adapter = LeaderboardListAdapter(emptyList())
-      backBtn.backBtnCv.setOnClickListener {
-        findNavController().popBackStack()
-      }
+    toolbarBackBtn.visible()
+    toolbarBackBtn.setOnClickListener {
+      findNavController().popBackStack()
     }
+    binding.leaderboardRv.adapter = LeaderboardListAdapter(emptyList())
   }
 
   private fun observeUiState() {
