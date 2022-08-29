@@ -56,10 +56,14 @@
             tools:layout="@layout/fragment_otp">
             <action
                 android:id="@+id/action_OTPFragment_to_profileFragment"
-                app:destination="@id/profileFragment" />
+                app:destination="@id/profileFragment"
+                app:popUpTo="@id/phoneNumberFragment"
+                app:popUpToInclusive="true" />
             <action
                 android:id="@+id/action_OTP_to_homeScreen"
-                app:destination="@id/homeScreenFragment" />
+                app:destination="@id/homeScreenFragment"
+                app:popUpTo="@id/phoneNumberFragment"
+                app:popUpToInclusive="true" />
 
         </fragment>
     </navigation>
