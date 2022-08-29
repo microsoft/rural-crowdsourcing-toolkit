@@ -19,6 +19,7 @@ import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.base.SessionFragment
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -162,6 +163,12 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
 
   private fun setupViews() {
 
+    toolbarBackBtn.visible()
+
+    toolbarBackBtn.setOnClickListener {
+      findNavController().popBackStack()
+    }
+
     with(binding) {
       tasksRv.apply {
         adapter = TaskListAdapter(emptyList(), ::onDashboardItemClick)
@@ -200,6 +207,11 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     binding.syncCv.enable()
     data.apply {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
+    }
+
+    // Sync with server if taskList is empty
+    if (data.taskInfoData.isEmpty()) {
+      syncWithServer()
     }
 
     // Show a dialog box to sync with server if completed tasks and internet available
