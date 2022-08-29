@@ -93,6 +93,7 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
   // Get SAS tokens for the karya files
   karya_files.forEach((kf) => {
     // Microtask input files should have been uploaded to the blob store
+    kf.in_box = false;
     kf.url = getBlobSASURL(kf.url!, 'r');
   });
 
