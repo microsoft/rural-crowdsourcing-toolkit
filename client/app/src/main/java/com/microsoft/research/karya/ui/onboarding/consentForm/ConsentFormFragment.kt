@@ -57,7 +57,6 @@ class ConsentFormFragment : BaseFragment(R.layout.fragment_consent_form) {
       consentFormTv.movementMethod = ScrollingMovementMethod()
 
       agreeBtn.setOnClickListener { viewModel.updateConsentFormStatus(true) }
-
       disagreeBtn.setOnClickListener { requireActivity().finish() }
     }
   }
