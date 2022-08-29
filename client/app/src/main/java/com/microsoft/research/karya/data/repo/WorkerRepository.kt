@@ -219,6 +219,7 @@ class WorkerRepository @Inject constructor(
   }
 
   private suspend fun saveLeaderboard(records: List<LeaderboardRecord>) {
+    leaderboardDao.deleteAllRecords()
     leaderboardDao.upsert(records)
   }
 }

@@ -19,4 +19,7 @@ interface LeaderboardDao : BasicDao<LeaderboardRecord> {
     insertForUpsert(records)
     updateForUpsert(records)
   }
+
+  @Query("DELETE FROM leaderboard")
+  suspend fun deleteAllRecords()
 }
