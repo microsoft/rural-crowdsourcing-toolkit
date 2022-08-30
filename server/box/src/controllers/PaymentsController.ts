@@ -218,3 +218,14 @@ export const getWorkerBalance: KaryaMiddleware = async (ctx, next) => {
   const totalSpent = await WorkerModel.getTotalSpent(workerId);
   return HttpResponse.OK(ctx, { worker_balance: workerBalance, total_spent: totalSpent });
 };
+
+/**
+ * Get all the worker status
+ */
+export const getWorkerEarningStatus: KaryaMiddleware = async (ctx, next) => {
+  const worker_id = ctx.state.entity.id;
+  const total_earned = await WorkerModel.getTotalEarned(worker_id);
+  const week_earned = await WorkerModel.getWeekEarned(worker_id);
+  const total_paid = await WorkerModel.getTotalSpent(worker_id);
+  return HttpResponse.OK(ctx, { total_earned, week_earned, total_paid });
+};

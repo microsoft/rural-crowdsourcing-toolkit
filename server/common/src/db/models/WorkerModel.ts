@@ -98,6 +98,24 @@ export async function getTotalSpent(worker_id: string): Promise<number> {
   return spent ? spent : 0;
 }
 
+export async function getTotalEarned(worker_id: string): Promise<number> {
+  const response = await knex.raw(
+    `SELECT SUM(credits + base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id}`
+  );
+  const earned = response.rows[0].total;
+  return earned ?? 0;
+}
+
+export async function getWeekEarned(worker_id: string): Promise<number> {
+  const current = new Date().getTime();
+  const lastWeek = new Date(current - 7 * 24 * 3600 * 1000).toISOString();
+  const response = await knex.raw(
+    `SELECT SUM(credits + base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id} AND completed_at > '${lastWeek}'`
+  );
+  const earned = response.rows[0].total;
+  return earned ?? 0;
+}
+
 /**
  *
  * @returns eligible workers who can get paid with respective amount

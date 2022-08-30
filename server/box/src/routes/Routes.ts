@@ -107,5 +107,6 @@ router.get('/payments/transaction', PaymentsController.getTransactionRecords);
 
 // Get Balance for a worker
 router.get('/payments/worker/:id/balance', PaymentsController.getWorkerBalance);
+router.get('/payments/worker/earnings', PaymentsController.getWorkerEarningStatus);
 
 export default router;
