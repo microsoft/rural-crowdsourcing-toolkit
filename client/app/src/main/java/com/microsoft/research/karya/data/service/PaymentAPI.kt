@@ -4,7 +4,7 @@ import com.microsoft.research.karya.data.remote.request.PaymentAccountRequest
 import com.microsoft.research.karya.data.remote.request.PaymentVerifyRequest
 import com.microsoft.research.karya.data.remote.response.PaymentInfoResponse
 import com.microsoft.research.karya.data.remote.response.PaymentTransactionResponse
-import com.microsoft.research.karya.data.remote.response.WorkerBalanceResponse
+import com.microsoft.research.karya.data.remote.response.WorkerEarningsResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,9 +39,8 @@ interface PaymentAPI {
     @Header("karya-id-token") idToken: String,
   ): Response<PaymentInfoResponse>
 
-  @GET("/payments/worker/{id}/balance")
-  suspend fun getWorkerBalance(
+  @GET("/payments/worker/earnings")
+  suspend fun getWorkerEarnings(
     @Header("karya-id-token") idToken: String,
-    @Path("id") workerId: String,
-  ): Response<WorkerBalanceResponse>
+  ): Response<WorkerEarningsResponse>
 }

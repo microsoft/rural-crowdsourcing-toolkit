@@ -15,7 +15,6 @@ import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.model.karya.ChecksumAlgorithm
 import com.microsoft.research.karya.data.model.karya.MicroTaskAssignmentRecord
 import com.microsoft.research.karya.data.remote.request.UploadFileRequest
-import com.microsoft.research.karya.data.remote.response.WorkerBalanceResponse
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.KaryaFileRepository
 import com.microsoft.research.karya.data.repo.MicroTaskRepository
@@ -30,7 +29,6 @@ import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.single
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -231,14 +229,18 @@ class DashboardSyncWorker(
 
     // Get Worker Balance
     val paymentResponse = paymentRepository
-      .getWorkerBalance(worker.idToken, worker.id)
+      .getWorkerEarnings(worker.idToken)
       .catch {
         warningMsg = "Cannot update payment information"
       }
       .single()
     // Update worker balance data
-    val workerBalanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
-    datastore.edit { prefs -> prefs[workerBalanceKey] = paymentResponse.workerBalance }
+    val weekEarned = floatPreferencesKey(PreferenceKeys.WEEK_EARNED)
+    val totalPaid = floatPreferencesKey(PreferenceKeys.TOTAL_PAID)
+    val totalEarned = floatPreferencesKey(PreferenceKeys.TOTAL_EARNED)
+    datastore.edit { prefs -> prefs[weekEarned] = paymentResponse.weekEarned }
+    datastore.edit { prefs -> prefs[totalPaid] = paymentResponse.totalPaid }
+    datastore.edit { prefs -> prefs[totalEarned] = paymentResponse.totalEarned }
     // Get Leaderboard data
     workerRepository
       .updateLeaderboard(worker.idToken)

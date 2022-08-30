@@ -161,16 +161,15 @@ constructor(
 
   fun refreshEarningSummary() {
     viewModelScope.launch {
-      val w = authManager.getLoggedInWorker()
-      val balanceKey = floatPreferencesKey(PreferenceKeys.WORKER_BALANCE)
+      val weekEarnedKey = floatPreferencesKey(PreferenceKeys.WEEK_EARNED)
+      val totalEarnedKey = floatPreferencesKey(PreferenceKeys.TOTAL_EARNED)
+      val totalPaidKey = floatPreferencesKey(PreferenceKeys.TOTAL_PAID)
       val data = datastore.data.first()
-      val workerBalance: Float = data[balanceKey] ?: 0f
-      val earnedLastWeek = assignmentRepository.getWeekCreditsEarned(w.id)
-      val totalEarned = assignmentRepository.getTotalCreditsEarned(w.id)
-      // TODO: This is a hack. Paid should be total of processed payments
-      val paid = totalEarned - workerBalance
+      val weekEarned: Float = data[weekEarnedKey] ?: 0f
+      val totalEarned: Float = data[totalEarnedKey] ?: 0f
+      val totalPaid: Float = data[totalPaidKey] ?: 0f
 
-      _earningStatus.value = EarningStatus(earnedLastWeek, totalEarned, paid)
+      _earningStatus.value = EarningStatus(weekEarned, totalEarned, totalPaid)
     }
   }
 

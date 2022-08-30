@@ -9,7 +9,9 @@ object PreferenceKeys {
   const val WORKER_ID = "worker_id"
   const val SPEECH_DATA_ACTIVITY_VISITED = "speech_data_activity_visited"
   const val WORKER_PAYMENT_STATUS = "worker_payment_status"
-  const val WORKER_BALANCE = "worker_balance"
+  const val WEEK_EARNED = "week_earned"
+  const val TOTAL_PAID = "total_paid"
+  const val TOTAL_EARNED = "total_earned"
   const val WORKER_ACCOUNT_ID = "worker_account_id"
   const val BASE_URL = "base_url"
 }

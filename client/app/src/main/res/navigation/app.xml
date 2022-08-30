@@ -606,7 +606,7 @@
         <action
             android:id="@+id/action_paymentDetailBankFragment_to_paymentVerificationFragment"
             app:destination="@id/paymentVerificationFragment"
-            app:popUpTo="@id/dashboardActivity" />
+            app:popUpTo="@id/homeScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/paymentDetailUPIFragment"
@@ -616,7 +616,7 @@
         <action
             android:id="@+id/action_paymentDetailUPIFragment_to_paymentVerificationFragment"
             app:destination="@id/paymentVerificationFragment"
-            app:popUpTo="@id/dashboardActivity" />
+            app:popUpTo="@id/homeScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/paymentVerificationFragment"
@@ -626,7 +626,7 @@
         <action
             android:id="@+id/action_paymentVerificationFragment_to_paymentDashboardFragment"
             app:destination="@id/paymentDashboardFragment"
-            app:popUpTo="@id/dashboardActivity" />
+            app:popUpTo="@id/homeScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/paymentFailureFragment"

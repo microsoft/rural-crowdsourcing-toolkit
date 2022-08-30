@@ -129,16 +129,12 @@ constructor(private val paymentAPI: PaymentAPI, private val paymentAccountDao: P
     }
   }
 
-  fun getWorkerBalance(idToken: String, workerId: String) = flow {
+  fun getWorkerEarnings(idToken: String) = flow {
     if (idToken.isEmpty()) {
       error("Either Access Code or ID Token is required")
     }
 
-    if (workerId.isEmpty()) {
-      error("Worker account id is required")
-    }
-
-    val response = paymentAPI.getWorkerBalance(idToken, workerId)
+    val response = paymentAPI.getWorkerEarnings(idToken)
     val verifyResponse = response.body()
 
     if (!response.isSuccessful) {
