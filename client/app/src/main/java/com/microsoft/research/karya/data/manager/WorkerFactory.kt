@@ -20,7 +20,6 @@ class WorkerFactory(
   private val microTaskRepository: MicroTaskRepository,
   private val paymentRepository: PaymentRepository,
   private val workerRepository: WorkerRepository,
-  private val datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   private val authManager: AuthManager,
 ) : WorkerFactory() {
@@ -41,7 +40,6 @@ class WorkerFactory(
           microTaskRepository,
           paymentRepository,
           workerRepository,
-          datastore,
           fileDirPath,
           authManager
         )

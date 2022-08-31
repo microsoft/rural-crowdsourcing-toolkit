@@ -3,7 +3,6 @@ package com.microsoft.research.karya.ui.payment.registration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
-import com.microsoft.research.karya.data.remote.response.WorkerEarningsResponse
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.PaymentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,10 +23,8 @@ constructor(private val authManager: AuthManager, private val paymentRepository:
       val worker = authManager.getLoggedInWorker()
       val workerBalanceResponse =
         paymentRepository
-          .getWorkerEarnings(worker.idToken!!)
-          .catch { WorkerEarningsResponse(0.0f, 0.0f, 0.0f) }
-          .single()
-      _uiStateFlow.update { it.copy(amountEarned = workerBalanceResponse.weekEarned) }
+          .getWorkerEarnings()
+      _uiStateFlow.update { it.copy(amountEarned = workerBalanceResponse.totalEarned) }
     }
   }
 

@@ -1,7 +1,5 @@
 package com.microsoft.research.karya.injection
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.SyncDelegatingWorkerFactory
 import com.microsoft.research.karya.data.repo.*
@@ -24,7 +22,6 @@ class WorkerFactoryModule {
     microTaskRepository: MicroTaskRepository,
     paymentRepository: PaymentRepository,
     workerRepository: WorkerRepository,
-    datastore: DataStore<Preferences>,
     @FilesDir fileDirPath: String,
     authManager: AuthManager,
   ): SyncDelegatingWorkerFactory {
@@ -34,7 +31,6 @@ class WorkerFactoryModule {
       microTaskRepository,
       paymentRepository,
       workerRepository,
-      datastore,
       fileDirPath,
       authManager
     )

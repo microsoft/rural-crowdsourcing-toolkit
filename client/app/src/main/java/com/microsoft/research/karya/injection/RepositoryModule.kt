@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.injection
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.microsoft.research.karya.data.local.daos.*
 import com.microsoft.research.karya.data.local.daosExtra.MicrotaskDaoExtra
 import com.microsoft.research.karya.data.repo.*
@@ -51,7 +53,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesPaymentRepository(paymentAPI: PaymentAPI, paymentAccountDao: PaymentAccountDao): PaymentRepository {
-    return PaymentRepository(paymentAPI, paymentAccountDao)
+  fun providesPaymentRepository(paymentAPI: PaymentAPI, paymentAccountDao: PaymentAccountDao, datastore: DataStore<Preferences>): PaymentRepository {
+    return PaymentRepository(paymentAPI, paymentAccountDao, datastore)
   }
 }

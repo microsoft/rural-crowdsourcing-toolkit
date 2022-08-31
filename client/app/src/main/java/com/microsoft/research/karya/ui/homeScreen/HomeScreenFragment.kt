@@ -13,7 +13,9 @@ import com.microsoft.research.karya.databinding.FragmentHomeScreenBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
@@ -32,7 +34,7 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
     viewModel.refreshXPPoints()
     viewModel.refreshTaskSummary()
     viewModel.refreshPerformanceSummary()
-    viewModel.refreshEarningSummary()
+    viewModel.setEarningSummary()
   }
 
   private fun setupViews() {
@@ -57,8 +59,9 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
 
       // Move to payments flow on earning card click
       earningCv.setOnClickListener {
-        val workerBalance = viewModel.earningStatus.value.earnedTotal
-        // Navigate only if worker balance is greater than 2 rs.
+        viewModel.setEarningSummary()
+        val workerBalance = viewModel.earningStatus.value.totalEarned
+        // Navigate only if worker total earning is greater than 2 rs.
         if (workerBalance > 2.0f) {
           viewModel.navigatePayment()
         } else {
@@ -107,9 +110,9 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
     // Earnings summary
     viewModel.earningStatus.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { status ->
       with(binding) {
-        earningWeekTv.text = status.earnedWeek.toString()
-        earningTotalTv.text = status.earnedTotal.toString()
-        paidTotalTv.text = status.paidTotal.toString()
+        earningWeekTv.text = status.weekEarned.toString()
+        earningTotalTv.text = status.totalEarned.toString()
+        paidTotalTv.text = status.totalPaid.toString()
       }
     }
 

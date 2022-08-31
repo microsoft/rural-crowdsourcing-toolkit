@@ -44,13 +44,13 @@ constructor(private val authManager: AuthManager, private val paymentRepository:
           }
 
       val currentAccountFlow = paymentRepository.getCurrentAccount(idToken)
-      val balanceFlow = paymentRepository.getWorkerEarnings(idToken)
+      val balanceFlow = paymentRepository.refreshWorkerEarnings(idToken)
       val transactionsFlow = paymentRepository.getTransactions(idToken, worker.id)
 
       val combinedFlow =
         combine(currentAccountFlow, balanceFlow, transactionsFlow) {
             paymentInfoResponse,
-            workerBalanceResponse,
+            earningStatus,
             transactions ->
           val transaction = transactions.first()
 
@@ -76,8 +76,8 @@ constructor(private val authManager: AuthManager, private val paymentRepository:
             )
 
           PaymentDashboardModel(
-            balance = workerBalanceResponse.weekEarned,
-            transferred = workerBalanceResponse.totalPaid,
+            balance = earningStatus.totalEarned - earningStatus.totalPaid,
+            transferred = earningStatus.totalPaid,
             userAccountDetail = userAccountDetail,
             userTransactionDetail = userTransactionDetail,
             isLoading = false,

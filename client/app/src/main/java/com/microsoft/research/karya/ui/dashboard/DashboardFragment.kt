@@ -209,9 +209,12 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
     }
 
-    // Sync with server if taskList is empty
-    if (data.taskInfoData.isEmpty()) {
-      syncWithServer()
+    // Check if worker is initialised in viewmodel
+    if (viewModel.workerAccessCode.value.isNotEmpty()) {
+      // Sync if no tasks are present
+      if (data.taskInfoData.isEmpty()) {
+        syncWithServer()
+      }
     }
 
     // Show a dialog box to sync with server if completed tasks and internet available

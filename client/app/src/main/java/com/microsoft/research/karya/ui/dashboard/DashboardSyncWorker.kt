@@ -1,10 +1,6 @@
 package com.microsoft.research.karya.ui.dashboard
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
@@ -25,15 +21,13 @@ import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
-import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.getBlobPath
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.single
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.lang.Error
 
 private const val MAX_UPLOAD_PROGRESS = 25
 private const val MAX_SEND_DB_UPDATES_PROGRESS = 40
@@ -50,7 +44,6 @@ class DashboardSyncWorker(
   private val microTaskRepository: MicroTaskRepository,
   private val paymentRepository: PaymentRepository,
   private val workerRepository: WorkerRepository,
-  private val datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   private val authManager: AuthManager,
 ) : CoroutineWorker(appContext, workerParams) {
@@ -228,19 +221,12 @@ class DashboardSyncWorker(
       .collect()
 
     // Get Worker Balance
-    val paymentResponse = paymentRepository
-      .getWorkerEarnings(worker.idToken)
-      .catch {
-        warningMsg = "Cannot update payment information"
-      }
-      .single()
-    // Update worker balance data
-    val weekEarned = floatPreferencesKey(PreferenceKeys.WEEK_EARNED)
-    val totalPaid = floatPreferencesKey(PreferenceKeys.TOTAL_PAID)
-    val totalEarned = floatPreferencesKey(PreferenceKeys.TOTAL_EARNED)
-    datastore.edit { prefs -> prefs[weekEarned] = paymentResponse.weekEarned }
-    datastore.edit { prefs -> prefs[totalPaid] = paymentResponse.totalPaid }
-    datastore.edit { prefs -> prefs[totalEarned] = paymentResponse.totalEarned }
+    try {
+        paymentRepository.refreshWorkerEarnings(worker.idToken).collect()
+    } catch (e: Error) {
+      FirebaseCrashlytics.getInstance().recordException(e)
+      warningMsg = "Cannot update payment information"
+    }
     // Get Leaderboard data
     workerRepository
       .updateLeaderboard(worker.idToken)

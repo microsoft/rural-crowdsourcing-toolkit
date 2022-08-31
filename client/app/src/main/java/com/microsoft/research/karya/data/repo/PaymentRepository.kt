@@ -1,27 +1,38 @@
 package com.microsoft.research.karya.data.repo
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import com.microsoft.research.karya.data.local.daos.PaymentAccountDao
 import com.microsoft.research.karya.data.model.karya.PaymentAccountRecord
 import com.microsoft.research.karya.data.model.karya.enums.AccountRecordStatus
+import com.microsoft.research.karya.data.model.karya.modelsExtra.EarningStatus
 import com.microsoft.research.karya.data.remote.request.PaymentAccountRequest
 import com.microsoft.research.karya.data.remote.request.PaymentVerifyRequest
 import com.microsoft.research.karya.data.remote.response.PaymentInfoResponse
 import com.microsoft.research.karya.data.service.PaymentAPI
+import com.microsoft.research.karya.utils.PreferenceKeys
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class PaymentRepository
 @Inject
-constructor(private val paymentAPI: PaymentAPI, private val paymentAccountDao: PaymentAccountDao) {
+constructor(
+  private val paymentAPI: PaymentAPI,
+  private val paymentAccountDao: PaymentAccountDao,
+  private val datastore: DataStore<Preferences>,
+) {
 
   suspend fun updatePaymentRecord(workerId: String, paymentInfoResponse: PaymentInfoResponse) =
     withContext(Dispatchers.IO) {
 
       val ifsc = try {
         paymentInfoResponse.meta!!.account.ifsc!!
-      } catch(e: Exception) {
+      } catch (e: Exception) {
         ""
       }
 
@@ -129,23 +140,43 @@ constructor(private val paymentAPI: PaymentAPI, private val paymentAccountDao: P
     }
   }
 
-  fun getWorkerEarnings(idToken: String) = flow {
+  suspend fun refreshWorkerEarnings(idToken: String) = flow {
     if (idToken.isEmpty()) {
       error("Either Access Code or ID Token is required")
     }
 
     val response = paymentAPI.getWorkerEarnings(idToken)
-    val verifyResponse = response.body()
+    val earningsResponse = response.body()
 
     if (!response.isSuccessful) {
       error("Failed to add account")
     }
 
-    if (verifyResponse != null) {
-      emit(verifyResponse)
+    if (earningsResponse != null) {
+      val weekEarned = floatPreferencesKey(PreferenceKeys.WEEK_EARNED)
+      val totalPaid = floatPreferencesKey(PreferenceKeys.TOTAL_PAID)
+      val totalEarned = floatPreferencesKey(PreferenceKeys.TOTAL_EARNED)
+      datastore.edit { prefs -> prefs[weekEarned] = earningsResponse.weekEarned }
+      datastore.edit { prefs -> prefs[totalPaid] = earningsResponse.totalPaid }
+      datastore.edit { prefs -> prefs[totalEarned] = earningsResponse.totalEarned }
+      with (earningsResponse) {
+        emit(EarningStatus(this.weekEarned, this.totalEarned, this.totalPaid))
+      }
     } else {
       error("Failed to add account")
     }
+  }
+
+  suspend fun getWorkerEarnings(): EarningStatus {
+    val weekEarnedKey = floatPreferencesKey(PreferenceKeys.WEEK_EARNED)
+    val totalEarnedKey = floatPreferencesKey(PreferenceKeys.TOTAL_EARNED)
+    val totalPaidKey = floatPreferencesKey(PreferenceKeys.TOTAL_PAID)
+    val data = datastore.data.first()
+    val weekEarned: Float = data[weekEarnedKey] ?: 0f
+    val totalEarned: Float = data[totalEarnedKey] ?: 0f
+    val totalPaid: Float = data[totalPaidKey] ?: 0f
+
+    return EarningStatus(weekEarned, totalEarned, totalPaid)
   }
 
   suspend fun getPaymentRecordStatus(workerId: String) =

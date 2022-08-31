@@ -19,7 +19,6 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   paymentRepository: PaymentRepository,
   workerRepository: WorkerRepository,
-  datastore: DataStore<Preferences>,
   @FilesDir private val fileDirPath: String,
   authManager: AuthManager,
 ) : DelegatingWorkerFactory() {
@@ -30,7 +29,6 @@ constructor(
       microTaskRepository,
       paymentRepository,
       workerRepository,
-      datastore,
       fileDirPath,
       authManager))
     // Add here other factories that you may need in your application

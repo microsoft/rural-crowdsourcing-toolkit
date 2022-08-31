@@ -2,7 +2,6 @@ package com.microsoft.research.karya.ui.homeScreen
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -16,13 +15,12 @@ import com.microsoft.research.karya.data.repo.PaymentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.payment.PaymentFlowNavigation
-import com.microsoft.research.karya.utils.PreferenceKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -83,7 +81,7 @@ constructor(
     refreshXPPoints()
     refreshTaskSummary()
     refreshPerformanceSummary()
-    refreshEarningSummary()
+    setEarningSummary()
   }
 
   private fun refreshWorker() {
@@ -159,17 +157,9 @@ constructor(
     }
   }
 
-  fun refreshEarningSummary() {
+  fun setEarningSummary() {
     viewModelScope.launch {
-      val weekEarnedKey = floatPreferencesKey(PreferenceKeys.WEEK_EARNED)
-      val totalEarnedKey = floatPreferencesKey(PreferenceKeys.TOTAL_EARNED)
-      val totalPaidKey = floatPreferencesKey(PreferenceKeys.TOTAL_PAID)
-      val data = datastore.data.first()
-      val weekEarned: Float = data[weekEarnedKey] ?: 0f
-      val totalEarned: Float = data[totalEarnedKey] ?: 0f
-      val totalPaid: Float = data[totalPaidKey] ?: 0f
-
-      _earningStatus.value = EarningStatus(weekEarned, totalEarned, totalPaid)
+      _earningStatus.value = paymentRepository.getWorkerEarnings()
     }
   }
 
