@@ -228,6 +228,11 @@
     <string name="download_file_error">Error while downloading files. Please contact your coordinator.</string>
     <string name="received_verified_error">Error while receiving validations. Please contact your coordinator.</string>
 
+    <!-- Payment screens -->
+    <string name="payment_dashboard_title">Payment Dashboard</string>
+    <string name="payment_mode">Payment Mode</string>
+    <string name="account_id_label">Account ID</string>
+
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
     <string name="recording_accuracy">Accuracy</string>

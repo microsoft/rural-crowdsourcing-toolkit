@@ -1,313 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
+        android:id="@+id/appTb"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/payment_dashboard_title" />
 
-        <com.microsoft.research.karya.ui.views.KaryaToolbar
-            android:id="@+id/appTb"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?colorPrimaryLight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb">
+
+        <LinearLayout
+            android:id="@+id/paymentsLl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/_8sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:paddingTop="@dimen/_20sdp">
 
-        <TextView
-            android:id="@+id/balanceTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:text="@string/balance"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appTb" />
-
-        <!--    <TextView
-                android:id="@+id/nextPaymentTv"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="Next Payment"
-                android:textSize="@dimen/_18sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/balanceAmountTv" />-->
-
-        <!--    <TextView
-                android:id="@+id/nextPaymentDateTv"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:text="₹ %.2f"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nextPaymentTv"
-                tools:text="24/01/2022" />-->
-
-        <TextView
-            android:id="@+id/balanceAmountTv"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:text="@string/rs_float"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/balanceTv"
-            tools:text="₹100.0" />
-
-        <TextView
-            android:id="@+id/transferredTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:text="@string/transferred"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/balanceAmountTv" />
-
-        <TextView
-            android:id="@+id/transferredAmountTv"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:text="@string/rs_float"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/transferredTv"
-            tools:text="₹100.0" />
-
-        <!--    <TextView
-                android:id="@+id/previousPaymentTv"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="Previous Payment"
-                android:textSize="@dimen/_18sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/transferredAmountTv" />
-
-            <TextView
-                android:id="@+id/previousPaymentDateTv"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:text="₹ %.2f"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/previousPaymentTv"
-                tools:text="24/01/2022" />-->
-
-        <TextView
-            android:id="@+id/lastPaymentTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:text="@string/last_payment_details"
-            android:textSize="@dimen/_18sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/transferredAmountTv" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/transactionCv"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_160sdp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            app:cardCornerRadius="@dimen/_16sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lastPaymentTv">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/amountTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
+                <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:text="@string/amount_rs_2f"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/utrTv"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="spread_inside" />
+                    android:layout_weight="1"
+                    app:cardCornerRadius="@dimen/_8sdp">
 
-                <TextView
-                    android:id="@+id/utrTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/transferred"
+                            android:textSize="@dimen/_16ssp" />
+
+                        <TextView
+                            android:id="@+id/transferredAmountTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/rs_float"
+                            android:textSize="@dimen/_24ssp"
+                            tools:text="100" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/utr_s"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/dateTv"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/amountTv" />
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="@dimen/_8sdp">
 
-                <TextView
-                    android:id="@+id/dateTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/date_s"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/statusTv"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/utrTv" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_5sdp">
 
-                <TextView
-                    android:id="@+id/statusTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/status_s"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/transactionsButton"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dateTv" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/balance"
+                            android:textSize="@dimen/_16ssp" />
 
-                <Button
-                    android:id="@+id/transactionsButton"
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:text="@string/all_transactions"
-                    android:background="#EEE"
-                    android:textSize="@dimen/_16sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/statusTv" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/balanceAmountTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/rs_float"
+                            android:textSize="@dimen/_24ssp"
+                            tools:text="100" />
 
-        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
-        <TextView
-            android:id="@+id/accountDetailTv"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:text="@string/account_details"
-            android:textSize="@dimen/_18sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/transactionCv" />
+                </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/accountDetailCv"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/_160sdp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:layout_marginBottom="@dimen/_4sdp"
-            app:cardCornerRadius="@dimen/_16sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/accountDetailTv"
-            app:layout_constraintBottom_toBottomOf="parent">
+            </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <include
+                android:id="@+id/latestTransactionCv"
+                layout="@layout/item_transaction_card"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_marginTop="@dimen/_20sdp"
+                />
 
-                <TextView
-                    android:id="@+id/nameTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:text="@string/name_s"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/accountIdTv"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="spread_inside" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/transactionsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/all_transactions" />
 
-                <TextView
-                    android:id="@+id/accountIdTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/id_s"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/ifscTv"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/nameTv" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                app:cardCornerRadius="@dimen/_10sdp">
 
-                <TextView
-                    android:id="@+id/ifscTv"
-                    style="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:text="@string/ifsc_s"
-                    android:textSize="@dimen/_15sdp"
-                    app:layout_constraintBottom_toTopOf="@id/updateAccountButton"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/accountIdTv" />
-
-
-                <Button
-                    android:id="@+id/updateAccountButton"
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:background="#EEE"
-                    android:text="@string/update_account_details"
-                    android:textSize="@dimen/_16sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ifscTv" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10sdp">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appTb" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account_details" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                    <TextView
+                        android:id="@+id/nameTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:textColor="?colorPrimary"
+                        android:textSize="@dimen/_24ssp"
+                        tools:text="Vivek Seshadri" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/payment_mode"
+                            android:textSize="@dimen/_14ssp" />
+
+                        <TextView
+                            android:id="@+id/paymentModeTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:textColor="@color/c_black"
+                            android:textSize="@dimen/_18ssp"
+                            tools:text="UPI" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="@string/account_id_label"
+                            android:textSize="@dimen/_14ssp" />
+
+                        <TextView
+                            android:id="@+id/accountIdTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:textColor="@color/c_black"
+                            android:textSize="@dimen/_14ssp"
+                            tools:text="XXXXX@XXlbl" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/updateAccountButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/update_account_details" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,8 +15,13 @@ data class PaymentDashboardModel(
         transferred = 0.0f,
         isLoading = false,
         errorMessage = "",
-        userAccountDetail = UserAccountDetail(name = "", id = "", ifsc = ""),
-        userTransactionDetail = UserTransactionDetail(amount = 0.0f, utr = "", date = "", status = "")
+        userAccountDetail = UserAccountDetail(name = "", id = "", accountType = "", ifsc = ""),
+        userTransactionDetail = UserTransactionDetail(
+          amount = 0.0f,
+          utr = "",
+          date = "",
+          status = ""
+        )
       )
   }
 }

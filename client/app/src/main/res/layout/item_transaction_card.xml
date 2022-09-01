@@ -1,77 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transactionCv"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_140sdp"
-    android:layout_marginHorizontal="@dimen/_16sdp"
-    android:layout_marginVertical="@dimen/_8sdp"
-    app:cardCornerRadius="@dimen/_16sdp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/lastPaymentTv">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_10sdp"
+    app:cardCornerRadius="@dimen/_10sdp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/transactionSuccessIv"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:src="@drawable/ic_success"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/transactionFailureIv"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:src="@drawable/ic_failure"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/transactionPendingIv"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_pending"
+                android:visibility="invisible" />
+
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/amountTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="match_parent"
+            android:id="@+id/transactionValueTv"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:text="@string/amount_rs_2f"
-            android:textSize="@dimen/_15sdp"
-            app:layout_constraintBottom_toTopOf="@id/utrTv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="@dimen/_15sdp"
+            android:text="@string/rs_float"
+            android:textSize="@dimen/_24ssp"
+            tools:text="100"
+            />
 
-        <TextView
-            android:id="@+id/utrTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="@string/utr_s"
-            android:textSize="@dimen/_15sdp"
-            app:layout_constraintBottom_toTopOf="@id/dateTv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/amountTv" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/dateTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="@string/date_s"
-            android:textSize="@dimen/_15sdp"
-            app:layout_constraintBottom_toTopOf="@id/statusTv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/utrTv" />
+            <TextView
+                android:id="@+id/dateTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_16ssp"
+                tools:text="20-08-2022" />
 
-        <TextView
-            android:id="@+id/statusTv"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:layout_marginBottom="@dimen/_8sdp"
-            android:text="@string/status_s"
-            android:textSize="@dimen/_15sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dateTv" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/referenceTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_12ssp"
+                tools:text="UTR92018302083"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
