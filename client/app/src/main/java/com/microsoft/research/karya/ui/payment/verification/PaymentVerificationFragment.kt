@@ -55,7 +55,7 @@ class PaymentVerificationFragment : Fragment(R.layout.fragment_payment_verificat
       with(binding) {
         failureBtn.gone()
         successBtn.gone()
-        description.text = getString(R.string.verification_loading)
+        paymentVerificationStatusTv.text = getString(R.string.verification_loading)
         progressBar.visible()
       }
     } else {
@@ -63,14 +63,14 @@ class PaymentVerificationFragment : Fragment(R.layout.fragment_payment_verificat
         with(binding) {
           failureBtn.visible()
           successBtn.visible()
-          description.text = getString(R.string.verification_request_processed)
+          paymentVerificationStatusTv.text = getString(R.string.verification_request_processed)
           progressBar.gone()
         }
       } else {
         with(binding) {
           failureBtn.gone()
           successBtn.gone()
-          description.text = getString(R.string.verification_request_processing)
+          paymentVerificationStatusTv.text = getString(R.string.verification_request_processing)
           progressBar.gone()
         }
       }

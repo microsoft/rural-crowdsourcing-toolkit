@@ -237,8 +237,16 @@
     <string name="bank_account_label">Bank Account Number</string>
     <string name="upi_label">UPI ID</string>
 
+    <string name="payment_registration_description">Do you want to get paid via your bank account or your UPI ID?</string>
     <string name="bank_account_details_title">Bank Account Details</string>
     <string name="upi_details_title">UPI Details</string>
+
+    <string name="payment_info_verification_title">Account Verification</string>
+    <string name="verification_request_processing">We are checking your payment information. Please check again in a few hours. If you still see this message one day after submitting your payment information, contact your coordinator.</string>
+    <string name="verification_request_processed">To verify your payment information, we have sent you ₹2. Please confirm if you have received the amount by clicking the appropriate button.</string>
+    <string name="verification_loading">Checking the status of your payment verification. Please wait.</string>
+    <string name="received_verification_amount">Yes. I have received ₹2 in my account</string>
+    <string name="not_received_verification_amount">No. I have not received ₹2 in my account</string>
 
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
@@ -318,10 +326,6 @@
     <string name="re_enter_account_number">Re-enter Account Number</string>
     <string name="upi_id">UPI ID</string>
     <string name="re_enter_upi_id">Re-enter UPI ID</string>
-    <string name="payment_registration_description">Do you want to get paid via your bank account or your UPI ID?</string>
-    <string name="verification_request_processing">We are processing your request. Please try again after some time.</string>
-    <string name="verification_request_processed">To verify your account, we have sent you ₹2. If you received the amount, please confirm by clicking the button below.</string>
-    <string name="verification_loading">Checking account status, please wait.</string>
     <string name="rs_float">₹%.2f</string>
     <string name="balance">Balance</string>
     <string name="transferred">Transferred</string>
