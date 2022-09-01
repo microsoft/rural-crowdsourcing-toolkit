@@ -232,6 +232,8 @@
     <string name="payment_dashboard_title">Payment Dashboard</string>
     <string name="payment_mode">Payment Mode</string>
     <string name="account_id_label">Account ID</string>
+
+    <string name="payment_registration_title">Payment Registration</string>
     <string name="bank_account_label">Bank Account Number</string>
     <string name="upi_label">UPI ID</string>
 
