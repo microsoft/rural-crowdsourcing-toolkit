@@ -237,6 +237,9 @@
     <string name="bank_account_label">Bank Account Number</string>
     <string name="upi_label">UPI ID</string>
 
+    <string name="bank_account_details_title">Bank Account Details</string>
+    <string name="upi_details_title">UPI Details</string>
+
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
     <string name="recording_accuracy">Accuracy</string>
