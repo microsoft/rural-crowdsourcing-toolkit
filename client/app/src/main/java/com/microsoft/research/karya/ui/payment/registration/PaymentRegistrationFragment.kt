@@ -25,12 +25,12 @@ class PaymentRegistrationFragment : Fragment(R.layout.fragment_payment_registrat
   }
 
   private fun setupListeners() {
-    binding.bankLL.setOnClickListener {
+    binding.backAccountCv.setOnClickListener {
       viewModel.selectPaymentMethod(PaymentMethod.BANK_ACCOUNT)
       navigateToDetails(PaymentMethod.BANK_ACCOUNT)
     }
 
-    binding.upiLL.setOnClickListener {
+    binding.upiIdCv.setOnClickListener {
       viewModel.selectPaymentMethod(PaymentMethod.UPI)
       navigateToDetails(PaymentMethod.UPI)
     }
@@ -54,8 +54,7 @@ class PaymentRegistrationFragment : Fragment(R.layout.fragment_payment_registrat
       }
     }
 
-    binding.description.text =
-      getString(R.string.payment_registration_description, paymentRegistrationModel.amountEarned)
+    binding.balanceAmountTv.text = getString(R.string.rs_float, paymentRegistrationModel.amountEarned)
   }
 
   private fun navigateToDetails(paymentMethod: PaymentMethod) {

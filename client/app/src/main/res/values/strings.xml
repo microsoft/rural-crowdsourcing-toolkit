@@ -232,6 +232,8 @@
     <string name="payment_dashboard_title">Payment Dashboard</string>
     <string name="payment_mode">Payment Mode</string>
     <string name="account_id_label">Account ID</string>
+    <string name="bank_account_label">Bank Account Number</string>
+    <string name="upi_label">UPI ID</string>
 
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">Verify the recording below</string>
@@ -311,7 +313,7 @@
     <string name="re_enter_account_number">Re-enter Account Number</string>
     <string name="upi_id">UPI ID</string>
     <string name="re_enter_upi_id">Re-enter UPI ID</string>
-    <string name="payment_registration_description">Congratulations! You have earned ₹%.2f. Please select a method to receive the amount</string>
+    <string name="payment_registration_description">Do you want to get paid via your bank account or your UPI ID?</string>
     <string name="verification_request_processing">We are processing your request. Please try again after some time.</string>
     <string name="verification_request_processed">To verify your account, we have sent you ₹2. If you received the amount, please confirm by clicking the button below.</string>
     <string name="verification_loading">Checking account status, please wait.</string>
