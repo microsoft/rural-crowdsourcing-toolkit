@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.*
 import com.microsoft.research.karya.utils.extensions.*
+import com.microsoft.research.karya.utils.spotlight.SpotlightBuilderWrapper
+import com.microsoft.research.karya.utils.spotlight.TargetData
+import com.takusemba.spotlight.shape.Circle
+import com.takusemba.spotlight.shape.RoundedRectangle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
@@ -66,6 +69,110 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
     nextBtnCv.setOnClickListener { viewModel.handleNextClick() }
     backBtn.setOnClickListener { viewModel.handleBackClick() }
     hintAudioBtn.setOnClickListener { viewModel.handleHintAudioBtnClick() }
+  }
+
+  private fun setupSpotLight() {
+
+    val targetsDataList = ArrayList<TargetData>()
+    targetsDataList.add(
+      TargetData(
+        sentenceTv,
+        RoundedRectangle(sentenceTv.height.toFloat() + 20, sentenceTv.width.toFloat() + 20, 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.RECORD_SENTENCE,
+      )
+    )
+    targetsDataList.add(
+      TargetData(
+        recordBtn,
+        Circle(((recordBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.RECORD_ACTION,
+        uiCue = {
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_active)
+        }
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        recordBtn,
+        Circle(((recordBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.STOP_ACTION,
+        uiCue = {
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+        }
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        playBtn,
+        Circle(((playBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.LISTEN_ACTION,
+        uiCue = {
+          playBtn.setBackgroundResource(R.drawable.ic_speaker_active)
+        },
+        onCompletionListener = {
+          playBtn.setBackgroundResource(R.drawable.ic_speaker_disabled)
+        },
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        recordBtn,
+        Circle(((recordBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.RERECORD_ACTION,
+        uiCue = {
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_enabled)
+        },
+        onCompletionListener = {
+          recordBtn.setBackgroundResource(R.drawable.ic_mic_disabled)
+        },
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        nextBtnCv,
+        Circle(((nextBtnCv.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.NEXT_ACTION,
+        uiCue = {
+          nextBtnCv.nextIv.setBackgroundResource(R.drawable.ic_next_enabled)
+        },
+        onCompletionListener = {
+          nextBtnCv.nextIv.setBackgroundResource(R.drawable.ic_next_disabled)
+        },
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        backBtn,
+        Circle(((backBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.PREVIOUS_ACTION,
+        uiCue = {
+          backBtn.backIv.setBackgroundResource(R.drawable.ic_back_enabled)
+        },
+        onCompletionListener = {
+          backBtn.backIv.setBackgroundResource(R.drawable.ic_back_disabled)
+        },
+      )
+    )
+
+    val builderWrapper = SpotlightBuilderWrapper(this, targetsDataList, onCompletionListener = {
+      viewModel.moveToPrerecording()
+    })
+
+    builderWrapper.start()
+
   }
 
   private fun setupObservers() {
@@ -177,7 +284,7 @@ class SpeechDataMainFragment : BaseMTRendererFragment(R.layout.microtask_speech_
       viewLifecycleScope
     ) { play ->
       if (play) {
-        playRecordPrompt()
+        setupSpotLight()
       }
     }
 

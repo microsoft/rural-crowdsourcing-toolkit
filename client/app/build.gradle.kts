@@ -185,6 +185,9 @@ dependencies {
   // Grid layout for lower API levels
   implementation ("androidx.gridlayout:gridlayout:1.0.0")
 
+  // Splotlight
+  implementation("com.github.takusemba:spotlight:2.0.5")
+
   // Video data collection
   "largeImplementation" ("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")
   "largeImplementation" ("com.google.android.gms:play-services-mlkit-face-detection:16.2.0")

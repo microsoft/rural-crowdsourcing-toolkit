@@ -1,7 +1,6 @@
 package com.microsoft.research.karya.ui.assistant
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.*
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.manager.ResourceManager
