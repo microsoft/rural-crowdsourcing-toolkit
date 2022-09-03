@@ -38,7 +38,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/successBtn"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_80sdp"
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_32sdp"
@@ -47,7 +47,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/failureBtn"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_80sdp"
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_8sdp"
