@@ -84,6 +84,7 @@
             android:layout_height="0dp"
             app:flChildSpacing="@dimen/_8sdp"
             app:flRowSpacing="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_15sdp"
             app:layout_constraintLeft_toLeftOf="@id/transcriptionEt"
             app:layout_constraintRight_toRightOf="@id/transcriptionEt"
             app:layout_constraintTop_toBottomOf="@+id/transcriptionEt" />

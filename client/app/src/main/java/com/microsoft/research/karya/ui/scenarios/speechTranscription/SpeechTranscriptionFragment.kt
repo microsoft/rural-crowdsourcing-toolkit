@@ -99,8 +99,6 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
       }
       for (word in words) {
         val wordButton = Button(requireContext())
-        wordButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, R.dimen._14ssp.toFloat())
-        wordButton.setTextColor(resources.getColor(R.color.c_black))
         wordButton.text = word
         wordButton.setOnClickListener {
           transcriptionEt.setText(transcriptionEt.text.toString() + " " + word)
