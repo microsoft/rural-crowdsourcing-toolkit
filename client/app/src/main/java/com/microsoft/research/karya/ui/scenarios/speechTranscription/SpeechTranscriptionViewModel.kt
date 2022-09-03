@@ -55,9 +55,6 @@ constructor(
     ACTIVITY_STOPPED
   }
 
-  /** Media player */
-  private var mediaPlayer: MediaPlayer? = null
-
   /** UI State */
   private var activityState: ActivityState = ActivityState.INIT
   private var previousActivityState: ActivityState = ActivityState.INIT
@@ -65,7 +62,12 @@ constructor(
   private var nextBtnState: ButtonState = ButtonState.DISABLED
   private var backBtnState: ButtonState = ButtonState.DISABLED
 
-  private lateinit var playbackProgressThread: Thread
+  // Media player
+  private val mediaPlayer = MediaPlayer()
+
+  // Recording file path
+  private val _recordingFilePath = MutableStateFlow("")
+  val recordingFilePath = _recordingFilePath.asStateFlow()
 
   // Defining Mutable State Flows
   private val _transcriptionText: MutableStateFlow<String> = MutableStateFlow("")
@@ -101,23 +103,15 @@ constructor(
     val recordingFile =
       microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id, recordingFileName)
 
-    /** setup media player */
-    mediaPlayer = MediaPlayer()
-    mediaPlayer!!.setOnCompletionListener {
-      setActivityState(ActivityState.REVIEW_ENABLED)
-    }
-    mediaPlayer!!.setDataSource(recordingFile)
-
     try {
-      mediaPlayer!!.prepare()
-      resetRecordingLength(mediaPlayer!!.duration)
-      _playbackProgressPbMax.value = mediaPlayer!!.duration
-      _playbackProgress.value = 0
+      // Check with media player to see if it is valid file
+      mediaPlayer.setDataSource(recordingFile)
+      mediaPlayer.prepare()
 
-      setActivityState(ActivityState.WAIT_FOR_PLAY)
-    } catch (exception: Exception) {
-      // Alert dialog
-      showErrorWithDialogBox("Audio file is corrupt")
+      // Set andexo player recording file if valid file
+      _recordingFilePath.value = recordingFile
+    } catch (e: Exception) {
+      showErrorWithDialogBox("Corrupt audio file")
       handleCorruptAudio()
       return
     }
@@ -161,6 +155,8 @@ constructor(
       }
       _transcriptionText.value = outputTranscript
     }
+
+    setActivityState(ActivityState.REVIEW_ENABLED)
   }
 
   private fun showErrorWithDialogBox(msg: String) {
@@ -193,33 +189,29 @@ constructor(
       /** Start the first play back */
       ActivityState.FIRST_PLAYBACK -> {
         setButtonStates(ButtonState.ENABLED, ButtonState.ACTIVE, ButtonState.DISABLED)
-        mediaPlayer!!.start()
         updatePlaybackProgress(ActivityState.FIRST_PLAYBACK)
       }
 
       /** Pause first play back */
       ActivityState.FIRST_PLAYBACK_PAUSED -> {
         setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.DISABLED)
-        mediaPlayer!!.pause()
       }
 
       /** Enable the review stage */
       ActivityState.REVIEW_ENABLED -> {
-        playbackProgressThread.join()
+        // playbackProgressThread.join()
         setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
       }
 
       /** Subsequent play back */
       ActivityState.PLAYBACK -> {
         setButtonStates(ButtonState.ENABLED, ButtonState.ACTIVE, ButtonState.ENABLED)
-        mediaPlayer!!.start()
         updatePlaybackProgress(ActivityState.PLAYBACK)
       }
 
       /** Pause subsequent play back */
       ActivityState.PLAYBACK_PAUSED -> {
         setButtonStates(ButtonState.ENABLED, ButtonState.ENABLED, ButtonState.ENABLED)
-        mediaPlayer!!.pause()
       }
 
       /** Activity stopped */
@@ -279,13 +271,6 @@ constructor(
     /** Disable all buttons */
     setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
 
-    if (activityState == ActivityState.PLAYBACK) {
-      mediaPlayer!!.stop()
-    }
-    mediaPlayer!!.release()
-    mediaPlayer = null
-
-
     outputData.addProperty("transcription", _transcriptionText.value)
 
     viewModelScope.launch {
@@ -313,20 +298,6 @@ constructor(
 
   /** Update the progress bar for the player as long as the activity is in the specific state. */
   private fun updatePlaybackProgress(state: ActivityState) {
-    val runnable = Runnable {
-      while (state == activityState) {
-        val currentPosition =
-          try {
-            mediaPlayer?.currentPosition
-          } catch (e: Exception) {
-            null
-          }
-        _playbackProgress.value = currentPosition ?: _playbackProgress.value
-        Thread.sleep(100)
-      }
-    }
-    playbackProgressThread = Thread(runnable)
-    playbackProgressThread.start()
   }
 
   /** Reset recording length */
@@ -340,8 +311,9 @@ constructor(
   }
 
   // Handle the corrupt Audio Case
-  fun handleCorruptAudio() {
+  fun handleCorruptAudio(msg: String? = "") {
     outputData.addProperty("flag", "corrupt")
+    outputData.addProperty("message", msg)
 
     // Move to next task
     handleNextClick()
