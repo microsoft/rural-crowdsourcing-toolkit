@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.exceptions.KaryaException
@@ -14,9 +16,11 @@ import com.microsoft.research.karya.data.repo.WorkerRepository
 import com.microsoft.research.karya.ui.assistant.Assistant
 import com.microsoft.research.karya.ui.assistant.AssistantFactory
 import com.microsoft.research.karya.ui.views.KaryaToolbar
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.finish
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
