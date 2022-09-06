@@ -419,7 +419,8 @@ abstract class BaseMTRendererViewModel(
 
       // First visit logic
       viewModelScope.launch {
-        val firstRunKey = booleanPreferencesKey(this.javaClass.name)
+        val scenarioName = "${task.scenario_name.name}"
+        val firstRunKey = booleanPreferencesKey(scenarioName)
 
         val data = datastore.data.first()
         firstTimeActivityVisit = data[firstRunKey] ?: true
