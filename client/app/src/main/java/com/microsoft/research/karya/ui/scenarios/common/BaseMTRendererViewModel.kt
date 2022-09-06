@@ -423,10 +423,9 @@ abstract class BaseMTRendererViewModel(
 
         val data = datastore.data.first()
         firstTimeActivityVisit = data[firstRunKey] ?: true
-//        if (firstTimeActivityVisit) {
-//          onFirstTimeVisit()
-//        }
-        onFirstTimeVisit()
+        if (firstTimeActivityVisit) {
+          onFirstTimeVisit()
+        }
         datastore.edit { prefs -> prefs[firstRunKey] = false }
         firstTimeActivityVisit = false
       }
