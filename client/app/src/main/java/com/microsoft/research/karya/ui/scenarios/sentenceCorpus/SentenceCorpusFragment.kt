@@ -164,11 +164,13 @@ class SentenceCorpusFragment :
 
   private fun setupSpotLight() {
 
+    val spotlightPadding = 20
+
     val targetsDataList = ArrayList<TargetData>()
     targetsDataList.add(
       TargetData(
         contextTv,
-        RoundedRectangle(contextTv.measuredHeight.toFloat(), contextTv.measuredWidth.toFloat(), 5F),
+        RoundedRectangle(contextTv.measuredHeight.toFloat() + spotlightPadding, contextTv.measuredWidth.toFloat() + spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.SENTENCE_CORPUS_CONTEXT_TV,
       )
@@ -177,7 +179,7 @@ class SentenceCorpusFragment :
     targetsDataList.add(
       TargetData(
         sentenceEt,
-        RoundedRectangle(sentenceEt.height.toFloat(), sentenceEt.width.toFloat(), 5F),
+        RoundedRectangle(sentenceEt.height.toFloat() + spotlightPadding, sentenceEt.width.toFloat() + spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.SENTENCE_CORPUS_EDIT_TEXT,
       )
@@ -186,7 +188,7 @@ class SentenceCorpusFragment :
     targetsDataList.add(
       TargetData(
         addBtn,
-        Circle(((addBtn.height) / 2).toFloat()),
+        Circle(((addBtn.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.SENTENCE_CORPUS_ADD_BUTTON,
       )
@@ -195,7 +197,7 @@ class SentenceCorpusFragment :
     targetsDataList.add(
       TargetData(
         nextBtn,
-        Circle(((nextBtn.height) / 2).toFloat()),
+        Circle(((nextBtn.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.SENTENCE_CORPUS_NEXT_BUTTON,
       )
@@ -204,7 +206,7 @@ class SentenceCorpusFragment :
     targetsDataList.add(
       TargetData(
         backBtn,
-        Circle(((nextBtn.height) / 2).toFloat()),
+        Circle(((nextBtn.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.SENTENCE_CORPUS_BACK_BUTTON,
       )

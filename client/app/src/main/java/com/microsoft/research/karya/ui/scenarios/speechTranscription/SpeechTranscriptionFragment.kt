@@ -235,11 +235,13 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
   }
   private fun setupSpotLight() {
 
+    val spotlightPadding = 20
+
     val targetsDataList = ArrayList<TargetData>()
     targetsDataList.add(
       TargetData(
         audioPlayer,
-        RoundedRectangle(audioPlayer.measuredHeight.toFloat(), audioPlayer.measuredWidth.toFloat(), 5F),
+        RoundedRectangle(audioPlayer.measuredHeight.toFloat() + spotlightPadding, audioPlayer.measuredWidth.toFloat() + spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.SPEECH_TRANSCRIPTION_AUDIO_PLAYER,
       )
@@ -248,7 +250,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     targetsDataList.add(
       TargetData(
         transcriptionEt,
-        RoundedRectangle(transcriptionEt.height.toFloat(), transcriptionEt.width.toFloat(), 5F),
+        RoundedRectangle(transcriptionEt.height.toFloat() + spotlightPadding, transcriptionEt.width.toFloat() + spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.SPEECH_TRANSCRIPTION_EDIT_TEXT,
       )
@@ -257,7 +259,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     targetsDataList.add(
       TargetData(
         assistanceFl,
-        RoundedRectangle(assistanceFl.height.toFloat(), assistanceFl.width.toFloat(), 5F),
+        RoundedRectangle(assistanceFl.height.toFloat() + spotlightPadding, assistanceFl.width.toFloat() + spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.SPEECH_TRANSCRIPTION_ASSISTANCE_LAYOUT,
       )
@@ -266,7 +268,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     targetsDataList.add(
       TargetData(
         nextBtnCv,
-        Circle(((nextBtnCv.height) / 2).toFloat()),
+        Circle(((nextBtnCv.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.SPEECH_TRANSCRIPTION_NEXT_BUTTON,
       )
@@ -275,7 +277,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     targetsDataList.add(
       TargetData(
         backBtnCv,
-        Circle(((backBtnCv.height) / 2).toFloat()),
+        Circle(((backBtnCv.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.SPEECH_TRANSCRIPTION_BACK_BUTTON,
       )

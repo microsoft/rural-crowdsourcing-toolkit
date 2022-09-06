@@ -243,11 +243,13 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 
   private fun setupSpotLight() {
 
+    val spotlightPadding = 20
+
     val targetsDataList = ArrayList<TargetData>()
     targetsDataList.add(
       TargetData(
         sourceImageIv,
-        RoundedRectangle(sourceImageIv.height.toFloat(), sourceImageIv.width.toFloat(), 5F),
+        RoundedRectangle(sourceImageIv.height.toFloat()+spotlightPadding, sourceImageIv.width.toFloat()+spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
       )
@@ -255,7 +257,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     targetsDataList.add(
       TargetData(
         addBoxButton,
-        Circle(((addBoxButton.height) / 2).toFloat()),
+        Circle(((addBoxButton.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.IMAGE_ANNOTATION_ADD_BUTTON,
       )
@@ -263,7 +265,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     targetsDataList.add(
       TargetData(
         sourceImageIv,
-        RoundedRectangle(sourceImageIv.height.toFloat(), sourceImageIv.width.toFloat(), 5F),
+        RoundedRectangle(sourceImageIv.height.toFloat() + spotlightPadding, sourceImageIv.width.toFloat() + spotlightPadding, 5F),
         R.layout.spotlight_target_temp,
         AssistantAudio.IMAGE_ANNOTATION_RESHAPE,
         uiCue = {
@@ -275,7 +277,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     targetsDataList.add(
       TargetData(
         nextBtn,
-        Circle(((nextBtn.height) / 2).toFloat()),
+        Circle(((nextBtn.height + spotlightPadding) / 2).toFloat()),
         R.layout.spotlight_target_temp,
         AssistantAudio.IMAGE_ANNOTATION_NEXT_BUTTON,
       )
