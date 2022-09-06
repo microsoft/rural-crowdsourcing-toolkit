@@ -306,6 +306,7 @@
     <!-- Image alt texts -->
     <string name="karya_logo">Project Karya Logo</string>
     <string name="next">next</string>
+    <string name="replay">replay</string>
     <string name="back">back</string>
     <string name="skip_task_warning">Are you sure you want to skip the task?</string>
     <string name="no_transcription_error_msg">Please enter the transcription</string>
