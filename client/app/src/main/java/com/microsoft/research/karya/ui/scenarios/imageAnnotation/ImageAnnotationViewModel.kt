@@ -2,6 +2,8 @@ package com.microsoft.research.karya.ui.scenarios.imageAnnotation
 
 import android.graphics.PointF
 import android.graphics.RectF
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -29,12 +31,14 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
+  datastore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
   microTaskRepository,
   fileDirPath,
-  authManager
+  authManager,
+  datastore
 ) {
 
   // Image to be shown
@@ -53,6 +57,10 @@ constructor(
   var annotationType = CropObjectType.RECTANGLE;
   // Number of sides
   var numberOfSides = 4;
+
+  // Trigger Spotlight
+  private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
   /**
    * Setup image annotation microtask
    */
@@ -82,6 +90,18 @@ constructor(
       // Since default shape is rectangle
       4
     }
+  }
+
+  override fun onFirstTimeVisit() {
+    onAssistantClick()
+  }
+
+  private fun onAssistantClick() {
+    playRecordPrompt()
+  }
+
+  private fun playRecordPrompt() {
+    _playRecordPromptTrigger.value = true
   }
 
   /**

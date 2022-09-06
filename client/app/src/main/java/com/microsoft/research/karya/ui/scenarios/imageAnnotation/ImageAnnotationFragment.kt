@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,12 +19,16 @@ import com.jsibbold.zoomage.dataClass.Polygon
 import com.jsibbold.zoomage.enums.CropObjectStatus
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
+import com.microsoft.research.karya.utils.spotlight.SpotlightBuilderWrapper
+import com.microsoft.research.karya.utils.spotlight.TargetData
+import com.takusemba.spotlight.shape.Circle
+import com.takusemba.spotlight.shape.RoundedRectangle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -105,40 +110,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     }
 
     // Set listeners to add crop object
-    addBoxButton.setOnClickListener {
-      // TODO: Remove this code, temporary change for stanford study
-      // Allow for addition of only one polygon
-      if (sourceImageIv.coordinatesForPolygonCropBoxes.size > 0) {
-        return@setOnClickListener
-      }
-      // TODO: Remove this code, temporary change for stanford study
-      val key = labels[0] + "_" + UUID.randomUUID().toString();
-      if (viewModel.annotationType == CropObjectType.RECTANGLE) {
-        sourceImageIv.addCropRectangle(key, colors[0])
-      } else {
-        sourceImageIv.addCropPolygon(key, colors[0], viewModel.numberOfSides, CropObjectStatus.ACTIVE)
-      }
-//      var alertDialog: AlertDialog? = null
-//      val onLabelItemClickListener = object : OnLabelItemClickListener {
-//        override fun onClick(labelView: View, position: Int) {
-//          // attach random UUID with the selected box type
-//          val key = labels[position] + "_" + UUID.randomUUID().toString();
-//          if (viewModel.annotationType == CropObjectType.RECTANGLE) {
-//            sourceImageIv.addCropRectangle(key, colors[position])
-//          } else {
-//            sourceImageIv.addCropPolygon(key, colors[position], viewModel.numberOfSides)
-//          }
-//
-//          alertDialog!!.dismiss()
-//        }
-//      }
-//      alertDialog = buildLabelListDialogBox(
-//        getString(R.string.select_image_annotation_label_dialog_instruction),
-//        onLabelItemClickListener
-//      )
-//      alertDialog!!.show()
-
-    }
+    addBoxButton.setOnClickListener { handleAddBoxClick() }
     // Set Listeners to remove box
     removeBoxButton.setOnClickListener { sourceImageIv.removeCropObject(sourceImageIv.focusedCropObjectId) }
 
@@ -183,6 +155,21 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
         }
       }
     })
+  }
+
+  private fun handleAddBoxClick() {
+    // TODO: Remove this code, temporary change for stanford study
+    // Allow for addition of only one polygon
+    if (sourceImageIv.coordinatesForPolygonCropBoxes.size > 0) {
+      return
+    }
+    // TODO: Remove this code, temporary change for stanford study
+    val key = labels[0] + "_" + UUID.randomUUID().toString();
+    if (viewModel.annotationType == CropObjectType.RECTANGLE) {
+      sourceImageIv.addCropRectangle(key, colors[0])
+    } else {
+      sourceImageIv.addCropPolygon(key, colors[0], viewModel.numberOfSides, CropObjectStatus.ACTIVE)
+    }
   }
 
   override fun onPause() {
@@ -242,6 +229,67 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
         sourceImageIv.removeCropObject(id)
       }
     }
+
+    viewModel.playRecordPromptTrigger.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { play ->
+      if (play) {
+        setupSpotLight()
+      }
+    }
+
+  }
+
+  private fun setupSpotLight() {
+
+    val targetsDataList = ArrayList<TargetData>()
+    targetsDataList.add(
+      TargetData(
+        sourceImageIv,
+        RoundedRectangle(sourceImageIv.height.toFloat(), sourceImageIv.width.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+      )
+    )
+    targetsDataList.add(
+      TargetData(
+        addBoxButton,
+        Circle(((addBoxButton.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ADD_BUTTON,
+      )
+    )
+    targetsDataList.add(
+      TargetData(
+        sourceImageIv,
+        RoundedRectangle(sourceImageIv.height.toFloat(), sourceImageIv.width.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.STOP_ACTION,
+        uiCue = {
+          handleAddBoxClick()
+        }
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        nextBtn,
+        Circle(((nextBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.NEXT_ACTION,
+      )
+    )
+
+    val builderWrapper = SpotlightBuilderWrapper(this, targetsDataList, onCompletionListener = {
+      if (sourceImageIv == null) return@SpotlightBuilderWrapper
+      sourceImageIv.allCropPolygonIds.forEach { id ->
+        sourceImageIv.removeCropObject(id)
+      }
+    })
+
+    builderWrapper.start()
+
   }
 
   private fun buildLabelListDialogBox(title: String, onLabelItemClickListener: OnLabelItemClickListener): AlertDialog? {
