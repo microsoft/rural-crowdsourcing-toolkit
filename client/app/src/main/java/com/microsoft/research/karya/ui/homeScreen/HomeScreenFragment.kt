@@ -11,9 +11,11 @@ import com.microsoft.research.karya.BuildConfig
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.databinding.FragmentHomeScreenBinding
 import com.microsoft.research.karya.ui.base.BaseFragment
+import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewBinding
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
+import com.microsoft.research.karya.utils.extensions.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -88,12 +90,21 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
     // Task summary
     viewModel.taskSummary.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { status ->
       with(binding) {
-        numIncompleteTv.text = status.assignedMicrotasks.toString()
-        numCompletedTv.text = status.completedMicrotasks.toString()
-        numSubmittedTv.text = status.submittedMicrotasks.toString()
-        numVerifiedTv.text = status.verifiedMicrotasks.toString()
-        numSkippedTv.text = status.skippedMicrotasks.toString()
-        numExpiredTv.text = status.expiredMicrotasks.toString()
+        val total = with(status) {
+          assignedMicrotasks + completedMicrotasks + submittedMicrotasks + verifiedMicrotasks + skippedMicrotasks + expiredMicrotasks
+        }
+
+        if (total > 0) {
+          taskStatsGl.visible()
+          numIncompleteTv.text = status.assignedMicrotasks.toString()
+          numCompletedTv.text = status.completedMicrotasks.toString()
+          numSubmittedTv.text = status.submittedMicrotasks.toString()
+          numVerifiedTv.text = status.verifiedMicrotasks.toString()
+          numSkippedTv.text = status.skippedMicrotasks.toString()
+          numExpiredTv.text = status.expiredMicrotasks.toString()
+        } else {
+          taskStatsGl.gone()
+        }
       }
     }
 
