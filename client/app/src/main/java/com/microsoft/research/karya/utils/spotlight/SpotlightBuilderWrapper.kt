@@ -46,7 +46,7 @@ class SpotlightBuilderWrapper(
 
       fun playAssistantAudio(uiCue: () -> Unit, onCompletionListener: (player: MediaPlayer) -> Unit = {}) {
         fragment.assistant.playAssistantAudio(
-          AssistantAudio.PROFILE_PICTURE_PROMPT,
+          targetsData.audio,
           uiCue = {
             nextBtn.disable()
             replayBtn.disable()
