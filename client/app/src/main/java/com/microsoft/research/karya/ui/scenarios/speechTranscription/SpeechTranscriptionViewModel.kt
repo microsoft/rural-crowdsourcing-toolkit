@@ -101,6 +101,10 @@ constructor(
   private val _showErrorWithDialog: MutableStateFlow<String> = MutableStateFlow("")
   val showErrorWithDialog = _showErrorWithDialog.asStateFlow()
 
+  // Trigger Spotlight
+  private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
+
   override fun setupMicrotask() {
     val recordingFileName =
       currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("recording").asString
@@ -161,6 +165,19 @@ constructor(
     }
 
     setActivityState(ActivityState.REVIEW_ENABLED)
+  }
+
+  override fun onFirstTimeVisit() {
+    super.onFirstTimeVisit()
+    onAssistantClick()
+  }
+
+  private fun playRecordPrompt() {
+    _playRecordPromptTrigger.value = true
+  }
+
+  private fun onAssistantClick() {
+    playRecordPrompt()
   }
 
   private fun showErrorWithDialogBox(msg: String) {

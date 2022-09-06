@@ -10,16 +10,24 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.transliteration.validator.Validator
 import com.microsoft.research.karya.utils.extensions.gone
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import com.microsoft.research.karya.utils.extensions.visible
+import com.microsoft.research.karya.utils.spotlight.SpotlightBuilderWrapper
+import com.microsoft.research.karya.utils.spotlight.TargetData
+import com.takusemba.spotlight.shape.Circle
+import com.takusemba.spotlight.shape.RoundedRectangle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_sentence_corpus.*
 import kotlinx.android.synthetic.main.microtask_sentence_corpus.instructionTv
 import kotlinx.android.synthetic.main.microtask_sentence_corpus.nextBtn
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 @AndroidEntryPoint
 class SentenceCorpusFragment :
@@ -105,9 +113,8 @@ class SentenceCorpusFragment :
     viewModel.contextText.observe(
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
-    ) {
-        text -> contextTv.text = text
-
+    ) { text ->
+      contextTv.text = text
     }
 
     viewModel.sentences.observe(
@@ -122,8 +129,25 @@ class SentenceCorpusFragment :
       val adapter = SentenceAdapter(sentences, onRemoveItemClickListener)
       sentenceRv.layoutManager = LinearLayoutManager(requireActivity())
       sentenceRv.adapter = adapter
+    }
+    // Trigger Spotlight
+    viewModel.playRecordPromptTrigger.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { play ->
+      if (play) {
+        viewLifecycleScope.launch {
+          // THIS IS A HACK TO WAIT FOR THE VIEWS TO SETUP
+          // SO THAT WE CAN GET ACTUAL HEIGHT AND WIDTH OF
+          // VIEWS FOR THE TARGETS IN SPOTLIGHT. PLEASE FIND
+          // AN ALTERNATIVE TO WAIT FOR THE VIEWS TO SETUP AND
+          // THEN CALL SETUP VIEWS
+          delay(1000)
+          setupSpotLight()
+        }
       }
     }
+  }
 
   fun EditText.onSubmit(func: () -> Unit) {
     setOnEditorActionListener { _, actionId, _ ->
@@ -138,7 +162,61 @@ class SentenceCorpusFragment :
     }
   }
 
+  private fun setupSpotLight() {
+
+    val targetsDataList = ArrayList<TargetData>()
+    targetsDataList.add(
+      TargetData(
+        contextTv,
+        RoundedRectangle(contextTv.measuredHeight.toFloat(), contextTv.measuredWidth.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        sentenceEt,
+        RoundedRectangle(sentenceEt.height.toFloat(), sentenceEt.width.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        addBtn,
+        Circle(((addBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ADD_BUTTON,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        nextBtn,
+        Circle(((nextBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.NEXT_ACTION,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        backBtn,
+        Circle(((nextBtn.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.NEXT_ACTION,
+      )
+    )
+
+    val builderWrapper = SpotlightBuilderWrapper(this, targetsDataList)
+
+    builderWrapper.start()
+
   }
+
+}
 
 
 

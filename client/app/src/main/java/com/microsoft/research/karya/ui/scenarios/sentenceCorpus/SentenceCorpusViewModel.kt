@@ -42,6 +42,10 @@ constructor(
   private val _sentences: MutableStateFlow<ArrayList<String>> = MutableStateFlow(ArrayList())
   val sentences = _sentences.asStateFlow()
 
+  // Trigger Spotlight
+  private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
+  val playRecordPromptTrigger = _playRecordPromptTrigger.asStateFlow()
+
   var limit by Delegates.notNull<Int>()
 
   override fun setupViewModel(taskId: String, completed: Int, total: Int) {
@@ -65,6 +69,19 @@ constructor(
     if (currentAssignment.status == MicrotaskAssignmentStatus.COMPLETED) {
       renderOutputData()
     }
+  }
+
+  override fun onFirstTimeVisit() {
+    super.onFirstTimeVisit()
+    onAssistantClick()
+  }
+
+  private fun playRecordPrompt() {
+    _playRecordPromptTrigger.value = true
+  }
+
+  private fun onAssistantClick() {
+    playRecordPrompt()
   }
 
   private fun renderOutputData() {

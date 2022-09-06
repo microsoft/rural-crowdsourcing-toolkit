@@ -10,11 +10,16 @@ import android.widget.Button
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.microsoft.research.karya.R
+import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.speechTranscription.SpeechTranscriptionViewModel.ButtonState
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
+import com.microsoft.research.karya.utils.spotlight.SpotlightBuilderWrapper
+import com.microsoft.research.karya.utils.spotlight.TargetData
 import com.potyvideo.library.globalInterfaces.AndExoPlayerListener
+import com.takusemba.spotlight.shape.Circle
+import com.takusemba.spotlight.shape.RoundedRectangle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
@@ -24,6 +29,9 @@ import kotlinx.android.synthetic.main.microtask_speech_transcription.backBtnCv
 import kotlinx.android.synthetic.main.microtask_speech_transcription.instructionTv
 import kotlinx.android.synthetic.main.microtask_speech_transcription.nextBtnCv
 import kotlinx.android.synthetic.main.microtask_speech_transcription.playBtn
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 @AndroidEntryPoint
 class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_speech_transcription) {
@@ -160,6 +168,24 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         showErrorDialog(msg)
       }
     }
+
+    // Trigger Spotlight
+    viewModel.playRecordPromptTrigger.observe(
+      viewLifecycleOwner.lifecycle,
+      viewLifecycleScope
+    ) { play ->
+      if (play) {
+        viewLifecycleScope.launch {
+          // THIS IS A HACK TO WAIT FOR THE VIEWS TO SETUP
+          // SO THAT WE CAN GET ACTUAL HEIGHT AND WIDTH OF
+          // VIEWS FOR THE TARGETS IN SPOTLIGHT. PLEASE FIND
+          // AN ALTERNATIVE TO WAIT FOR THE VIEWS TO SETUP AND
+          // THEN CALL SETUP VIEWS
+          delay(1000)
+          setupSpotLight()
+        }
+      }
+    }
   }
 
   private fun showErrorDialog(msg: String) {
@@ -207,5 +233,59 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
       }
     )
   }
+  private fun setupSpotLight() {
+
+    val targetsDataList = ArrayList<TargetData>()
+    targetsDataList.add(
+      TargetData(
+        audioPlayer,
+        RoundedRectangle(audioPlayer.measuredHeight.toFloat(), audioPlayer.measuredWidth.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        transcriptionEt,
+        RoundedRectangle(transcriptionEt.height.toFloat(), transcriptionEt.width.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        assistanceFl,
+        RoundedRectangle(assistanceFl.height.toFloat(), assistanceFl.width.toFloat(), 5F),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        nextBtnCv,
+        Circle(((nextBtnCv.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.NEXT_ACTION,
+      )
+    )
+
+    targetsDataList.add(
+      TargetData(
+        backBtnCv,
+        Circle(((backBtnCv.height) / 2).toFloat()),
+        R.layout.spotlight_target_temp,
+        AssistantAudio.NEXT_ACTION,
+      )
+    )
+
+    val builderWrapper = SpotlightBuilderWrapper(this, targetsDataList)
+
+    builderWrapper.start()
+
+  }
+
 
 }
