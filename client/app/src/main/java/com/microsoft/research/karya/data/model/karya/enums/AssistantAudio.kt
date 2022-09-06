@@ -17,5 +17,7 @@ enum class AssistantAudio(val fileName: String) {
   // IMAGE ANNOTATION
   IMAGE_ANNOTATION_ZOOMAGE_VIEW("image_annotation_audio_zoomage_view.m4a"),
   IMAGE_ANNOTATION_ADD_BUTTON("image_annotation_add_button_view.m4a"),
+  IMAGE_ANNOTATION_RESHAPE("image_annotation_add_button_view.m4a"),
+  IMAGE_ANNOTATION_NEXT_BUTTON("image_annotation_add_button_view.m4a"),
 
 }

@@ -265,7 +265,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
         sourceImageIv,
         RoundedRectangle(sourceImageIv.height.toFloat(), sourceImageIv.width.toFloat(), 5F),
         R.layout.spotlight_target_temp,
-        AssistantAudio.STOP_ACTION,
+        AssistantAudio.IMAGE_ANNOTATION_RESHAPE,
         uiCue = {
           handleAddBoxClick()
         }
@@ -277,7 +277,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
         nextBtn,
         Circle(((nextBtn.height) / 2).toFloat()),
         R.layout.spotlight_target_temp,
-        AssistantAudio.NEXT_ACTION,
+        AssistantAudio.IMAGE_ANNOTATION_NEXT_BUTTON,
       )
     )
 
