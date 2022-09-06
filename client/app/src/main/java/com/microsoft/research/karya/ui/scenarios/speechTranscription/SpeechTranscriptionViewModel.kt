@@ -131,10 +131,10 @@ constructor(
       if (inputData.has("bow-assist")) {
         inputData.get("bow-assist").asBoolean
       } else {
-        false
+        true
       }
     } catch (e:Exception) {
-      false
+      true
     }
 
     // Initial transcript
