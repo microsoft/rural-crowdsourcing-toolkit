@@ -241,7 +241,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         audioPlayer,
         RoundedRectangle(audioPlayer.measuredHeight.toFloat(), audioPlayer.measuredWidth.toFloat(), 5F),
         R.layout.spotlight_target_temp,
-        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+        AssistantAudio.SPEECH_TRANSCRIPTION_AUDIO_PLAYER,
       )
     )
 
@@ -250,7 +250,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         transcriptionEt,
         RoundedRectangle(transcriptionEt.height.toFloat(), transcriptionEt.width.toFloat(), 5F),
         R.layout.spotlight_target_temp,
-        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+        AssistantAudio.SPEECH_TRANSCRIPTION_EDIT_TEXT,
       )
     )
 
@@ -259,7 +259,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         assistanceFl,
         RoundedRectangle(assistanceFl.height.toFloat(), assistanceFl.width.toFloat(), 5F),
         R.layout.spotlight_target_temp,
-        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+        AssistantAudio.SPEECH_TRANSCRIPTION_ASSISTANCE_LAYOUT,
       )
     )
 
@@ -268,7 +268,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         nextBtnCv,
         Circle(((nextBtnCv.height) / 2).toFloat()),
         R.layout.spotlight_target_temp,
-        AssistantAudio.NEXT_ACTION,
+        AssistantAudio.SPEECH_TRANSCRIPTION_NEXT_BUTTON,
       )
     )
 
@@ -277,7 +277,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
         backBtnCv,
         Circle(((backBtnCv.height) / 2).toFloat()),
         R.layout.spotlight_target_temp,
-        AssistantAudio.NEXT_ACTION,
+        AssistantAudio.SPEECH_TRANSCRIPTION_BACK_BUTTON,
       )
     )
 

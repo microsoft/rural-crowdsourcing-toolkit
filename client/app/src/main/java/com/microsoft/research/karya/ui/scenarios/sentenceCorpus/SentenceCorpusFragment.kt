@@ -170,7 +170,7 @@ class SentenceCorpusFragment :
         contextTv,
         RoundedRectangle(contextTv.measuredHeight.toFloat(), contextTv.measuredWidth.toFloat(), 5F),
         R.layout.spotlight_target_temp,
-        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+        AssistantAudio.SENTENCE_CORPUS_CONTEXT_TV,
       )
     )
 
@@ -179,7 +179,7 @@ class SentenceCorpusFragment :
         sentenceEt,
         RoundedRectangle(sentenceEt.height.toFloat(), sentenceEt.width.toFloat(), 5F),
         R.layout.spotlight_target_temp,
-        AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
+        AssistantAudio.SENTENCE_CORPUS_EDIT_TEXT,
       )
     )
 
@@ -188,7 +188,7 @@ class SentenceCorpusFragment :
         addBtn,
         Circle(((addBtn.height) / 2).toFloat()),
         R.layout.spotlight_target_temp,
-        AssistantAudio.IMAGE_ANNOTATION_ADD_BUTTON,
+        AssistantAudio.SENTENCE_CORPUS_ADD_BUTTON,
       )
     )
 
@@ -197,7 +197,7 @@ class SentenceCorpusFragment :
         nextBtn,
         Circle(((nextBtn.height) / 2).toFloat()),
         R.layout.spotlight_target_temp,
-        AssistantAudio.NEXT_ACTION,
+        AssistantAudio.SENTENCE_CORPUS_NEXT_BUTTON,
       )
     )
 
@@ -206,7 +206,7 @@ class SentenceCorpusFragment :
         backBtn,
         Circle(((nextBtn.height) / 2).toFloat()),
         R.layout.spotlight_target_temp,
-        AssistantAudio.NEXT_ACTION,
+        AssistantAudio.SENTENCE_CORPUS_BACK_BUTTON,
       )
     )
 
