@@ -14,4 +14,8 @@ enum class AssistantAudio(val fileName: String) {
   RECORD_SENTENCE("audio_record_sentence.m4a"),
   RERECORD_ACTION("audio_rerecord_action.m4a"),
   STOP_ACTION("audio_stop_action.m4a"),
+  // IMAGE ANNOTATION
+  IMAGE_ANNOTATION_ZOOMAGE_VIEW("image_annotation_audio_zoomage_view.m4a"),
+  IMAGE_ANNOTATION_ADD_BUTTON("image_annotation_add_button_view.m4a"),
+
 }

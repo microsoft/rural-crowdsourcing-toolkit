@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.quiz
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -23,12 +25,14 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
+  dataStore: DataStore<Preferences>
 ): BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
   microTaskRepository,
   fileDirPath,
-  authManager
+  authManager,
+  dataStore
 ) {
 
   // UI Elements controlled by the view model

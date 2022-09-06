@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.imageTranscription
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
@@ -22,7 +24,15 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+  dataStore: DataStore<Preferences>
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager,
+  dataStore
+) {
 
   // Image to be shown
   private val _imageFilePath: MutableStateFlow<String> = MutableStateFlow("")

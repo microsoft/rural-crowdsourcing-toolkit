@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.imageData
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
 import com.microsoft.research.karya.data.repo.AssignmentRepository
@@ -22,12 +24,14 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
+  dataStore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
   microTaskRepository,
   fileDirPath,
-  authManager
+  authManager,
+  dataStore
 ) {
   private var imageId = 0
 

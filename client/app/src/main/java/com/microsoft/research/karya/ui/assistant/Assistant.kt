@@ -74,6 +74,7 @@ constructor(
         }
       }
     } else {
+      uiCue()
       onErrorListener()
     }
   }

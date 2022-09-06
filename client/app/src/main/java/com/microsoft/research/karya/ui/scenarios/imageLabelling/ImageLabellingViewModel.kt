@@ -1,6 +1,8 @@
 package com.microsoft.research.karya.ui.scenarios.imageLabelling
 
 import android.service.autofill.Validators.not
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -24,7 +26,15 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+  dataStore: DataStore<Preferences>
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager,
+  dataStore
+) {
 
   // Image to be shown
   private val _imageFilePath: MutableStateFlow<String> = MutableStateFlow("")

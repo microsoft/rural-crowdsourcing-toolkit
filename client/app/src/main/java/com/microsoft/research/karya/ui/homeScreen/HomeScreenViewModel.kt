@@ -33,7 +33,6 @@ constructor(
   private val authManager: AuthManager,
   private val workerRepository: WorkerRepository,
   private val paymentRepository: PaymentRepository,
-  private val datastore: DataStore<Preferences>
 ) : ViewModel() {
 
   private lateinit var worker: WorkerRecord

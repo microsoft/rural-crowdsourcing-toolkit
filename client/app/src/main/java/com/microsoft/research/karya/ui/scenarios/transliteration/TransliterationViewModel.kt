@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.ui.scenarios.transliteration
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -30,7 +32,15 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-) : BaseMTRendererViewModel(assignmentRepository, taskRepository, microTaskRepository, fileDirPath, authManager) {
+  dataStore: DataStore<Preferences>
+) : BaseMTRendererViewModel(
+  assignmentRepository,
+  taskRepository,
+  microTaskRepository,
+  fileDirPath,
+  authManager,
+  dataStore
+) {
 
   enum class WordOrigin {
     HUMAN,

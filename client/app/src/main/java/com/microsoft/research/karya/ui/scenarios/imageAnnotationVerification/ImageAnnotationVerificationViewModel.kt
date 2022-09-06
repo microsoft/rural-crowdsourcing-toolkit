@@ -1,11 +1,10 @@
 package com.microsoft.research.karya.ui.scenarios.imageAnnotationVerification
 
 import android.graphics.PointF
-import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.viewModelScope
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.jsibbold.zoomage.enums.CropObjectType
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -16,11 +15,9 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,12 +29,14 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
+  dataStore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
   microTaskRepository,
   fileDirPath,
-  authManager
+  authManager,
+  dataStore
 ) {
   // Image to be shown
   private val _imageFilePath: MutableStateFlow<String> = MutableStateFlow("")

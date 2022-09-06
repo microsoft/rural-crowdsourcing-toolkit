@@ -7,8 +7,6 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -19,7 +17,6 @@ import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.injection.qualifier.FilesDir
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererViewModel
 import com.microsoft.research.karya.ui.scenarios.speechData.SpeechDataMainViewModel.ButtonState.*
-import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.RawToAACEncoder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.android.synthetic.main.microtask_speech_data.*
@@ -29,7 +26,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.DataOutputStream
@@ -54,13 +50,14 @@ constructor(
   microTaskRepository: MicroTaskRepository,
   @FilesDir fileDirPath: String,
   authManager: AuthManager,
-  private val datastore: DataStore<Preferences>
+  datastore: DataStore<Preferences>
 ) : BaseMTRendererViewModel(
   assignmentRepository,
   taskRepository,
   microTaskRepository,
   fileDirPath,
-  authManager
+  authManager,
+  datastore
 ) {
 
   // TODO: Pass it in constructor (once we have viewModel factory)
@@ -201,18 +198,9 @@ constructor(
   /** Playback progress thread */
   private var playbackProgressThread: Thread? = null
 
-  private var firstTimeActivityVisit: Boolean = true
-
   init {
     /** setup [preRecordBuffer] */
     preRecordBuffer = Array(2) { ByteArray(maxPreRecordBytes) }
-
-    runBlocking {
-      val firstRunKey = booleanPreferencesKey(PreferenceKeys.SPEECH_DATA_ACTIVITY_VISITED)
-      val data = datastore.data.first()
-      firstTimeActivityVisit = data[firstRunKey] ?: true
-      datastore.edit { prefs -> prefs[firstRunKey] = false }
-    }
   }
 
   /**
@@ -315,12 +303,13 @@ constructor(
       }
     }
 
-    if (firstTimeActivityVisit) {
-      firstTimeActivityVisit = false
-      onAssistantClick()
-    } else {
+    if (!firstTimeActivityVisit) {
       moveToPrerecording()
     }
+  }
+
+  override fun onFirstTimeVisit() {
+    onAssistantClick()
   }
 
   /** Handle record button click */
