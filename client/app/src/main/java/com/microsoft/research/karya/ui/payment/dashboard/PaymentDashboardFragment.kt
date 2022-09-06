@@ -60,6 +60,11 @@ class PaymentDashboardFragment : Fragment(R.layout.fragment_payment_dashboard) {
     with(binding) {
       nameTv.text = userAccountDetail.name
       accountIdTv.text = userAccountDetail.id
+      paymentModeTv.text = when (userAccountDetail.accountType) {
+        "vpa" -> getString(R.string.upi_label)
+        "bank_account" -> getString(R.string.bank_account_label)
+        else -> "---"
+      }
     }
   }
 

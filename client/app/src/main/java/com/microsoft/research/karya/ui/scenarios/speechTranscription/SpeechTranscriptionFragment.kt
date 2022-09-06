@@ -14,6 +14,7 @@ import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
 import com.microsoft.research.karya.ui.scenarios.speechTranscription.SpeechTranscriptionViewModel.ButtonState
 import com.microsoft.research.karya.utils.extensions.observe
 import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
+import com.potyvideo.library.globalInterfaces.AndExoPlayerListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
@@ -75,6 +76,12 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
     }
 
     backBtnCv.setOnClickListener { viewModel.handleBackClick() }
+
+    audioPlayer.setAndExoPlayerListener(object : AndExoPlayerListener {
+      override fun onExoPlayerError(errorMessage: String?) {
+        viewModel.handleCorruptAudio(errorMessage)
+      }
+    })
   }
 
   private fun setupObservers() {
@@ -92,14 +99,21 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
       }
       for (word in words) {
         val wordButton = Button(requireContext())
-        wordButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, R.dimen._14ssp.toFloat())
-        wordButton.setTextColor(resources.getColor(R.color.c_black))
         wordButton.text = word
         wordButton.setOnClickListener {
           transcriptionEt.setText(transcriptionEt.text.toString() + " " + word)
           transcriptionEt.setSelection(transcriptionEt.length())//placing cursor at the end of the text
         }
         assistanceFl.addView(wordButton)
+      }
+    }
+
+    viewModel.recordingFilePath.observe(
+      viewLifecycleOwner.lifecycle, viewLifecycleScope
+    ) { path ->
+      if (path.isNotEmpty()) {
+        audioPlayer.setSource(path)
+        audioPlayer.pausePlayer()
       }
     }
 

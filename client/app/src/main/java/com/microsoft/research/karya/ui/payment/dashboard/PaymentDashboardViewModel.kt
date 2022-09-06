@@ -62,7 +62,7 @@ constructor(
             UserAccountDetail(
               name = paymentInfoResponse.meta!!.name,
               id = idPrefix + paymentInfoResponse.meta.account.id,
-              accountType = "",
+              accountType = paymentInfoResponse.accountType,
               ifsc = ifsc,
             )
           val parsedDateFormat =

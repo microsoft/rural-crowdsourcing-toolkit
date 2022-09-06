@@ -108,7 +108,7 @@ constructor(
           paymentRepository.updatePaymentRecord(worker.id, paymentInfoResponse)
           when (paymentInfoResponse.status) {
             "CONFIRMATION_RECEIVED" -> {
-              _uiStateFlow.update { it.copy(isLoading = false, requestProcessed = false) }
+              navigateSuccess()
             }
             "CONFIRMATION_FAILED" -> {
               navigateFailure()

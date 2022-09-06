@@ -21,10 +21,9 @@ constructor(private val authManager: AuthManager, private val paymentRepository:
   init {
     viewModelScope.launch {
       val worker = authManager.getLoggedInWorker()
-      val workerBalanceResponse =
-        paymentRepository
-          .getWorkerEarnings()
-      _uiStateFlow.update { it.copy(amountEarned = workerBalanceResponse.totalEarned) }
+      val workerBalanceResponse = paymentRepository.getWorkerEarnings()
+      val balance = workerBalanceResponse.totalEarned - workerBalanceResponse.totalPaid
+      _uiStateFlow.update { it.copy(amountEarned = balance) }
     }
   }
 
