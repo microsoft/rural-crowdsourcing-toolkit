@@ -235,7 +235,7 @@
 
     <string name="payment_registration_title">Payment Registration</string>
     <string name="bank_account_label">Bank Account Number</string>
-    <string name="upi_label">UPI ID</string>
+    <string name="upi_label">UPI</string>
 
     <string name="payment_registration_description">Do you want to get paid via your bank account or your UPI ID?</string>
     <string name="bank_account_details_title">Bank Account Details</string>
