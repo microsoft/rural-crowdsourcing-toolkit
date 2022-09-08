@@ -149,6 +149,6 @@ export async function getLeaderboardRecords(
   worker: WorkerRecord
 ): Promise<(WorkerRecord & { XP: Number; rank: Number })[]> {
   const leaderboardRecords = await knex.raw(`SELECT *, RANK() OVER (ORDER BY XP DESC) as rank FROM leaderboard WHERE 
-    wgroup = ${worker.wgroup}`);
+    wgroup = '${worker.wgroup}'`);
   return leaderboardRecords.rows;
 }
