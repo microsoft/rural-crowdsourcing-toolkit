@@ -2,6 +2,8 @@ package com.microsoft.research.karya.ui.dashboard
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.research.karya.data.manager.AuthManager
@@ -10,6 +12,7 @@ import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskStatus
 import com.microsoft.research.karya.data.repo.AssignmentRepository
 import com.microsoft.research.karya.data.repo.TaskRepository
 import com.microsoft.research.karya.utils.DateUtils
+import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

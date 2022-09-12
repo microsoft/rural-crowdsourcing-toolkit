@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -17,10 +19,12 @@ import com.microsoft.research.karya.data.model.karya.enums.ScenarioType
 import com.microsoft.research.karya.data.model.karya.modelsExtra.TaskInfo
 import com.microsoft.research.karya.databinding.FragmentDashboardBinding
 import com.microsoft.research.karya.ui.base.SessionFragment
+import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -48,6 +52,20 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     setupViews()
     setupWorkRequests()
     observeUi()
+    // Check if dashboard is visited the first time
+    viewLifecycleScope.launch {
+      val firstRunKey = booleanPreferencesKey(PreferenceKeys.IS_FIRST_DASHBOARD_VISIT)
+      val datastore = requireContext().dataStore
+      val data = datastore.data.first()
+      val isFirstTime = data[firstRunKey] ?: true
+      if (isFirstTime) onFirstTimeVisit()
+      datastore.edit { prefs -> prefs[firstRunKey] = false }
+    }
+  }
+
+  // Function is invoked when the fragment is run for the first time
+  private fun onFirstTimeVisit() {
+    syncWithServer()
   }
 
   private fun observeUi() {

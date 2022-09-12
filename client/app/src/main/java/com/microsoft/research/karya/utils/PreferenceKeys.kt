@@ -3,7 +3,7 @@ package com.microsoft.research.karya.utils
 object PreferenceKeys {
   const val APP_LANGUAGE = "app_language"
   const val ID_TOKEN_KEY = "id_token_key"
-  const val IS_FIRST_RUN = "is_first_run"
+  const val IS_FIRST_DASHBOARD_VISIT = "is_first_dashboard_visit"
   const val IS_FIRST_FETCH = "is_first_fetch"
   const val WORKER_ACCESS_CODE = "worker_access_code"
   const val WORKER_ID = "worker_id"
