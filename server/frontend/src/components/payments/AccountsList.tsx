@@ -17,6 +17,7 @@ import { DataProps, withData } from '../hoc/WithData';
 
 // CSS
 import { PaymentsAccountRecord } from '@karya/core';
+import { CSVLink } from 'react-csv';
 
 // Create the connector
 const connector = withData('payments_account');
@@ -71,7 +72,11 @@ class AccountsList extends React.Component<AccountsListProps> {
 
     return (
       <div>
-        <h1 className='page-title'>Accountss History</h1>
+        <h1 className='page-title'>Accounts History</h1>
+        <CSVLink data={data} filename='accountsData' className='btn' id='download-btn'>
+          <i className='material-icons left'>download</i>Download data
+        </CSVLink>
+        <br />
         <a href='#' onClick={this.handleTableCollapseClick}>
           {collapseTableText}
         </a>
