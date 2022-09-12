@@ -17,6 +17,7 @@ import { DataProps, withData } from '../hoc/WithData';
 
 // CSS
 import { BulkPaymentsTransactionRecord } from '@karya/core';
+import { CSVLink } from 'react-csv';
 
 // Create the connector
 const connector = withData('bulk_payments_transaction');
@@ -57,6 +58,9 @@ class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryL
       <div>
         {errorElement}
         {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar />}
+        <CSVLink data={data} filename='bulkTransactionHistoryData' className='btn' id='download-btn'>
+          <i className='material-icons left'>download</i>Download data
+        </CSVLink>
         <div className='basic-table'>
           <TableList<BulkTransactionTableRecord>
             columns={tableColumns}
