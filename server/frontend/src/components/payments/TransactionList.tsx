@@ -42,13 +42,15 @@ class TransactionList extends React.Component<TransactionListProps> {
   };
 
   render() {
-    const data: TransactionTableRecord[] = this.props.payments_transaction.data.map((item) => {
-      return {
-        ...item,
-        created_at: new Date(item.created_at).toDateString(),
-        failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
-      };
-    });
+    const data: TransactionTableRecord[] = this.props.payments_transaction.data
+      .map((item) => {
+        return {
+          ...item,
+          created_at: new Date(item.created_at).toDateString(),
+          failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
+        };
+      })
+      .reverse();
 
     const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table';
 
