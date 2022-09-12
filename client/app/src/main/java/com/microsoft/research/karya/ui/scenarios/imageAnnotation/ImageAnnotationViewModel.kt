@@ -223,4 +223,11 @@ constructor(
     return annotationsH;
   }
 
+  fun handleBackClick() {
+    viewModelScope.launch {
+      moveToPreviousMicrotask()
+      renderOutputData()
+    }
+  }
+
 }

@@ -46,6 +46,7 @@ abstract class BaseMTRendererViewModel(
 ) : ViewModel() {
 
   private lateinit var taskId: String
+
   // Is the fragment visited the first time?
   var firstTimeActivityVisit: Boolean = true
     private set
@@ -108,9 +109,9 @@ abstract class BaseMTRendererViewModel(
       // Determine if we have to include completed assignments
       if (includeCompleted) {
         microtaskAssignmentIDs = assignmentRepository.getIDsForTask(
-            task.id,
-            arrayListOf(MicrotaskAssignmentStatus.COMPLETED)
-          )
+          task.id,
+          arrayListOf(MicrotaskAssignmentStatus.COMPLETED)
+        )
       }
 
       microtaskAssignmentIDs =
@@ -124,7 +125,7 @@ abstract class BaseMTRendererViewModel(
         assignmentRepository.getIDsForTask(
           task.id,
           arrayListOf(MicrotaskAssignmentStatus.SKIPPED)
-      )
+        )
 
       if (microtaskAssignmentIDs.isEmpty()) {
         navigateBack()
@@ -264,7 +265,7 @@ abstract class BaseMTRendererViewModel(
   }
 
   /** Move to next microtask and setup. Returns false if there is no next microtask. Else true. */
-  protected fun moveToNextMicrotask() {
+  protected suspend fun moveToNextMicrotask() {
     if (hasNextMicrotask()) {
       currentAssignmentIndex++
       getAndSetupMicrotask()
@@ -278,7 +279,7 @@ abstract class BaseMTRendererViewModel(
    * Move to previous microtask and setup. Returns false if there is no previous microtask. Else
    * true
    */
-  protected fun moveToPreviousMicrotask() {
+  protected suspend fun moveToPreviousMicrotask() {
     if (hasPreviousMicrotask()) {
       currentAssignmentIndex--
       getAndSetupMicrotask()
@@ -289,147 +290,145 @@ abstract class BaseMTRendererViewModel(
   }
 
   /** Get the microtask record for the current assignment and setup the microtask */
-  fun getAndSetupMicrotask() {
-    viewModelScope.launch {
+  suspend fun getAndSetupMicrotask() {
 
-      val assignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
+    val assignmentID = microtaskAssignmentIDs[currentAssignmentIndex]
 
-      // Fetch the assignment and the microtask
-      currentAssignment = assignmentRepository.getAssignmentById(assignmentID)
-      currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
+    // Fetch the assignment and the microtask
+    currentAssignment = assignmentRepository.getAssignmentById(assignmentID)
+    currentMicroTask = microTaskRepository.getById(currentAssignment.microtask_id)
 
-      // Check if the current assignment is expired
-      if (!(currentAssignment.deadline).isNullOrEmpty()
-        && (currentAssignment.deadline!!) < DateUtils.getCurrentDate()) {
-        // Mark the microtask as expired
-        expireAndSaveCurrentMicrotask()
-        moveToNextMicrotask()
-        return@launch
-      }
+    // Check if the current assignment is expired
+    if (!(currentAssignment.deadline).isNullOrEmpty()
+      && (currentAssignment.deadline!!) < DateUtils.getCurrentDate()) {
+      // Mark the microtask as expired
+      expireAndSaveCurrentMicrotask()
+      moveToNextMicrotask()
+      return
+    }
 
-      // Check if the worker has a start-end constraints
-      val worker = authManager.getLoggedInWorker()
-      val tcTag = try {
-        if (worker.params != null) {
-          val tags = worker.params.asJsonObject.getAsJsonArray("tags")
-          var tag: String? = null
-          for (tagJ in tags) {
-            if (tagJ.asString.startsWith("_tc_")) {
-              tag = tagJ.asString.substring(4)
-            }
+    // Check if the worker has a start-end constraints
+    val worker = authManager.getLoggedInWorker()
+    val tcTag = try {
+      if (worker.params != null) {
+        val tags = worker.params.asJsonObject.getAsJsonArray("tags")
+        var tag: String? = null
+        for (tagJ in tags) {
+          if (tagJ.asString.startsWith("_tc_")) {
+            tag = tagJ.asString.substring(4)
           }
-          tag
-        } else {
-          null
         }
-      } catch(e: Exception) {
-        null
-      }
-
-      var taskStartTime = if (tcTag != null) {
-        tcTag.split("-")[0]
+        tag
       } else {
         null
       }
+    } catch (e: Exception) {
+      null
+    }
 
-      var taskEndTime = if (tcTag != null) {
-        tcTag.split("-")[1]
+    var taskStartTime = if (tcTag != null) {
+      tcTag.split("-")[0]
+    } else {
+      null
+    }
+
+    var taskEndTime = if (tcTag != null) {
+      tcTag.split("-")[1]
+    } else {
+      null
+    }
+
+    val taskParams = task.params.asJsonObject
+
+    taskStartTime = if (taskParams.has("startTime")) {
+      taskParams.get("startTime").asString.trim()
+    } else {
+      taskStartTime
+    }
+    taskEndTime = if (taskParams.has("endTime")) {
+      taskParams.get("endTime").asString.trim()
+    } else {
+      taskEndTime
+    }
+
+    taskStartTime = if (taskStartTime == "") null else taskStartTime
+    taskEndTime = if (taskEndTime == "") null else taskEndTime
+
+    if (taskStartTime != null && taskEndTime != null) {
+      val currentTime = Calendar.getInstance()
+      val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+      val minutes = currentTime.get(Calendar.MINUTE)
+      val now = String.format(Locale.US, "%02d:%02d", hour, minutes)
+
+      if (now < taskStartTime || now > taskEndTime) {
+        _outsideTimeBound.emit(Triple(true, taskStartTime, taskEndTime))
+        return
+      }
+    }
+
+    // Check if we are crossing group boundaries
+    if (groupId != null && currentMicroTask.group_id != groupId) {
+      navigateBack()
+      return
+    }
+
+    groupId = currentMicroTask.group_id
+
+    /** If microtask has input files, extract them */
+    _inputFileDoesNotExist.value = false
+    if (currentMicroTask.input_file_id != null) {
+      val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
+      val microtaskInputDirectory =
+        microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
+
+      if (!File(microtaskTarBallPath).exists()) {
+        _inputFileDoesNotExist.value = true
       } else {
-        null
+        FileUtils.extractGZippedTarBallIntoDirectory(
+          microtaskTarBallPath,
+          microtaskInputDirectory
+        )
       }
+    }
 
-      val taskParams = task.params.asJsonObject
+    if (_inputFileDoesNotExist.value) return
 
-      taskStartTime = if (taskParams.has("startTime")) {
-        taskParams.get("startTime").asString.trim()
+    outputData =
+      if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("data")) {
+        currentAssignment.output.asJsonObject.getAsJsonObject("data")
       } else {
-        taskStartTime
+        JsonObject()
       }
-      taskEndTime = if (taskParams.has("endTime")) {
-        taskParams.get("endTime").asString.trim()
+
+    outputFiles =
+      if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("files")) {
+        currentAssignment.output.asJsonObject.getAsJsonObject("files")
       } else {
-        taskEndTime
+        JsonObject()
       }
 
-      taskStartTime = if (taskStartTime == "") null else taskStartTime
-      taskEndTime = if (taskEndTime == "") null else taskEndTime
-
-      if (taskStartTime != null && taskEndTime != null) {
-        val currentTime = Calendar.getInstance()
-        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
-        val minutes = currentTime.get(Calendar.MINUTE)
-        val now = String.format(Locale.US, "%02d:%02d", hour, minutes)
-
-        if (now < taskStartTime || now > taskEndTime) {
-          _outsideTimeBound.emit(Triple(true, taskStartTime, taskEndTime))
-          return@launch
-        }
+    logs =
+      if (!currentAssignment.logs.isJsonNull && currentAssignment.logs.asJsonObject.has("logs")) {
+        currentAssignment.logs.asJsonObject.getAsJsonArray("logs")
+      } else {
+        JsonArray()
       }
 
-      // Check if we are crossing group boundaries
-      if (groupId != null && currentMicroTask.group_id != groupId) {
-        navigateBack()
-        return@launch
+    setupMicrotask()
+    log("microtask setup complete")
+
+    // First visit logic
+    viewModelScope.launch {
+      val scenarioName = "${task.scenario_name.name}"
+      val firstRunKey = booleanPreferencesKey(scenarioName)
+
+      val data = datastore.data.first()
+      firstTimeActivityVisit = data[firstRunKey] ?: true
+      if (firstTimeActivityVisit) {
+        onFirstTimeVisit()
       }
-
-      groupId = currentMicroTask.group_id
-
-      /** If microtask has input files, extract them */
-      _inputFileDoesNotExist.value = false
-      if (currentMicroTask.input_file_id != null) {
-        val microtaskTarBallPath = microtaskInputContainer.getBlobPath(currentMicroTask.id)
-        val microtaskInputDirectory =
-          microtaskInputContainer.getMicrotaskInputDirectory(currentMicroTask.id)
-
-        if (!File(microtaskTarBallPath).exists()) {
-          _inputFileDoesNotExist.value = true
-        } else {
-          FileUtils.extractGZippedTarBallIntoDirectory(
-            microtaskTarBallPath,
-            microtaskInputDirectory
-          )
-        }
-      }
-
-      if (_inputFileDoesNotExist.value) return@launch
-
-      outputData =
-        if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("data")) {
-          currentAssignment.output.asJsonObject.getAsJsonObject("data")
-        } else {
-          JsonObject()
-        }
-
-      outputFiles =
-        if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("files")) {
-          currentAssignment.output.asJsonObject.getAsJsonObject("files")
-        } else {
-          JsonObject()
-        }
-
-      logs =
-        if (!currentAssignment.logs.isJsonNull && currentAssignment.logs.asJsonObject.has("logs")) {
-          currentAssignment.logs.asJsonObject.getAsJsonArray("logs")
-        } else {
-          JsonArray()
-        }
-
-      setupMicrotask()
-      log("microtask setup complete")
-
-      // First visit logic
-      viewModelScope.launch {
-        val scenarioName = "${task.scenario_name.name}"
-        val firstRunKey = booleanPreferencesKey(scenarioName)
-
-        val data = datastore.data.first()
-        firstTimeActivityVisit = data[firstRunKey] ?: true
-        if (firstTimeActivityVisit) {
-          onFirstTimeVisit()
-        }
-        datastore.edit { prefs -> prefs[firstRunKey] = false }
-        firstTimeActivityVisit = false
-      }
+      datastore.edit { prefs -> prefs[firstRunKey] = false }
+      firstTimeActivityVisit = false
     }
   }
 
@@ -470,7 +469,7 @@ abstract class BaseMTRendererViewModel(
   }
 
   /** Reset existing microtask. Useful on activity restart. */
-  protected fun resetMicrotask() {
+  protected suspend fun resetMicrotask() {
     getAndSetupMicrotask()
   }
 

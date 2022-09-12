@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +28,7 @@ import com.takusemba.spotlight.shape.Circle
 import com.takusemba.spotlight.shape.RoundedRectangle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -76,6 +76,9 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     // Set next button click handler
     nextBtn.setOnClickListener { handleNextClick() }
 
+    // Set back button click handler
+    backBtn.setOnClickListener { viewModel.handleBackClick() }
+
     // Get labels
     labels = try {
       viewModel.task.params.asJsonObject.get("labels").asJsonArray.map { it.asString }
@@ -111,9 +114,6 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 
     // Set listeners to add crop object
     addBoxButton.setOnClickListener { handleAddBoxClick() }
-    // Set Listeners to remove box
-    removeBoxButton.setOnClickListener { sourceImageIv.removeCropObject(sourceImageIv.focusedCropObjectId) }
-
     // Set Listener to lock a crop box
     lockCropBtn.setOnClickListener {
       // If no rectangle in focus, return

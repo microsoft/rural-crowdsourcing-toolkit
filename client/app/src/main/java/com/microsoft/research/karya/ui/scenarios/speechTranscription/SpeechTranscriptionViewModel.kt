@@ -305,7 +305,9 @@ constructor(
 
   /** Handle back button click */
   internal fun handleBackClick() {
-    moveToPreviousMicrotask()
+    viewModelScope.launch {
+      moveToPreviousMicrotask()
+    }
   }
 
   /** Set button states */
