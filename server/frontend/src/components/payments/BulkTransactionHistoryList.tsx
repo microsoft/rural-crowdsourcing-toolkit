@@ -47,13 +47,15 @@ class BulkTransactionHistoryList extends React.Component<
   };
 
   render() {
-    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data.map((item) => {
-      return {
-        ...item,
-        created_at: new Date(item.created_at).toDateString(),
-        failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds as string) : null,
-      };
-    });
+    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data
+      .map((item) => {
+        return {
+          ...item,
+          created_at: new Date(item.created_at).toDateString(),
+          failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds as string) : null,
+        };
+      })
+      .reverse();
     console.log(data);
 
     // get error element
