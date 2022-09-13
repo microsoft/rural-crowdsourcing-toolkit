@@ -53,6 +53,7 @@ export async function createLeaderboardMV() {
         GROUP BY worker_id
       ) as points
     ON worker.id = points.worker_id
+    WHERE worker.profile IS NOT NULL
       `,
     'wgroup'
   );
