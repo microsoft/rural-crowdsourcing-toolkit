@@ -18,6 +18,7 @@ import { DataProps, withData } from '../hoc/WithData';
 // CSS
 import { PaymentsAccountRecord } from '@karya/core';
 import { CSVLink } from 'react-csv';
+import Pagination from 'react-js-pagination';
 
 // Create the connector
 const connector = withData('payments_account');
@@ -25,14 +26,24 @@ const connector = withData('payments_account');
 // Box list props
 type AccountsListProps = DataProps<typeof connector>;
 
+type AccountsListState = {
+  tableCollapsed: boolean;
+  accounts_table: {
+    total_rows_per_page: number;
+    current_page: number;
+  };
+};
+
 type AccountsTableRecord = PaymentsAccountRecord & { failure_reason: string | null };
 
 // Box list component
-class AccountsList extends React.Component<AccountsListProps> {
-  state: {
-    tableCollapsed: boolean;
-  } = {
+class AccountsList extends React.Component<AccountsListProps, AccountsListState> {
+  state: AccountsListState = {
     tableCollapsed: false,
+    accounts_table: {
+      total_rows_per_page: 10,
+      current_page: 1,
+    },
   };
 
   handleTableCollapseClick = () => {
@@ -88,8 +99,25 @@ class AccountsList extends React.Component<AccountsListProps> {
           <div className='basic-table'>
             <TableList<AccountsTableRecord>
               columns={tableColumns}
-              rows={data}
+              rows={data.slice(
+                (this.state.accounts_table.current_page - 1) * this.state.accounts_table.total_rows_per_page,
+                this.state.accounts_table.current_page * this.state.accounts_table.total_rows_per_page,
+              )}
               emptyMessage='No account has been created'
+            />
+            <Pagination
+              activePage={this.state.accounts_table.current_page}
+              itemsCountPerPage={this.state.accounts_table.total_rows_per_page}
+              totalItemsCount={data.length}
+              pageRangeDisplayed={5}
+              onChange={(pageNo) =>
+                this.setState((prevState) => ({
+                  accounts_table: {
+                    ...prevState.accounts_table,
+                    current_page: pageNo,
+                  },
+                }))
+              }
             />
           </div>
         )}
