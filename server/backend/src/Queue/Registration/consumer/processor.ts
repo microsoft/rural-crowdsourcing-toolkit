@@ -16,6 +16,7 @@ import { RegistrationQJobData } from '../Types';
 import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 import { TransactionQPayload } from '../../Transaction/Types';
+import { ErrorLogger } from '../Utils';
 
 const RAZORPAY_CONTACTS_RELATIVE_URL = 'contacts';
 const RAZORPAY_FUND_ACCOUNT_RELATIVE_URL = 'fund_accounts';
@@ -26,7 +27,10 @@ setupDbConnection();
 export default async (job: Job<RegistrationQJobData>) => {
   try {
     await processJob(job);
-  } catch (error) {
+  } catch (error: any) {
+    ErrorLogger.error(
+      `Registration Id ${job.data.accountRecord.id}: Error Stack: ${error.stack}`
+    );
     await cleanUpOnError(error, job);
     throw error;
   }

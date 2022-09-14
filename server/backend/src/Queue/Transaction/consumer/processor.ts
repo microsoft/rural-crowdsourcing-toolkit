@@ -12,6 +12,7 @@ import { Job } from 'bullmq';
 import { AxiosResponse } from 'axios';
 import { razorPayAxios } from '../../HttpUtils';
 import { TransactionQJobData } from '../Types';
+import { ErrorLogger } from '../Utils';
 
 const RAZORPAY_PAYOUTS_RELATIVE_URL = 'payouts';
 
@@ -21,7 +22,10 @@ setupDbConnection();
 export default async (job: Job<TransactionQJobData>) => {
   try {
     await processJob(job);
-  } catch (error) {
+  } catch (error: any) {
+    ErrorLogger.error(
+      `Transaction Id ${job.data.transactionRecord.id}: Error Stack: ${error.stack}`
+    );
     await cleanUpOnError(error, job);
     throw error;
   }

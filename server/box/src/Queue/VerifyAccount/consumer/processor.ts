@@ -3,6 +3,7 @@ import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core';
 import { Job } from 'bullmq';
 import { qAxios } from '../../HttpUtils';
 import { VerifyAccountQJobData } from '../Types';
+import { ErrorLogger } from '../Utils';
 
 // Setting up Db Connection
 setupDbConnection();
@@ -10,7 +11,10 @@ setupDbConnection();
 export default async (job: Job<VerifyAccountQJobData>) => {
   try {
     await processJob(job);
-  } catch (error) {
+  } catch (error: any) {
+    ErrorLogger.error(
+      `Account Record Id ${job.data.accountRecord.id}: Error Stack: ${error.stack}`
+    );
     await cleanUpOnError(error, job);
     throw error;
   }

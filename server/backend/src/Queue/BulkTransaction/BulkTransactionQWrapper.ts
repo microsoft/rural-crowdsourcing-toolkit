@@ -3,7 +3,7 @@ import { BulkTransactionTaskStatus } from '@karya/core';
 import { Job, Queue } from 'bullmq';
 import { bulkTransactionQConsumer } from './consumer/bulkTransactionQConsumer';
 import { Qconfig, BulkTransactionQJobData, BulkTransactionQPayload, BulkTransactionQResult } from './Types';
-import { QLogger } from './Utils';
+import { ErrorLogger, QLogger } from './Utils';
 
 export class BulkTransactionQWrapper extends QueueWrapper<Queue> {
   constructor(config: Qconfig) {
@@ -47,7 +47,7 @@ bulkTransactionQConsumer.on('completed', (job) => {
 
 // Handling errors
 bulkTransactionQConsumer.on('failed', async (job: Job<BulkTransactionQJobData>, error) => {
-  QLogger.error(
+  ErrorLogger.error(
     `Failed job ${job.id} with error: ${error.message} and record id: ${job.data.bulkTransactionRecord.id}`
   );
 });

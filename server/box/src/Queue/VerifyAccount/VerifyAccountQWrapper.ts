@@ -1,7 +1,7 @@
 import { BasicModel, karyaLogger, Logger, QueueWrapper } from '@karya/common';
 import { AccountTaskStatus } from '@karya/core';
 import { Job, Queue } from 'bullmq';
-import { QLogger } from './Utils';
+import { ErrorLogger, QLogger } from './Utils';
 import { verifyAccountQConsumer } from './consumer/verifyAccountQConsumer';
 import { Qconfig, VerifyAccountQJobData, VerifyAccountQPayload, VerifyAccountQResult } from './Types';
 
@@ -45,5 +45,5 @@ verifyAccountQConsumer.on('completed', (job) => {
 });
 
 verifyAccountQConsumer.on('failed', async (job: Job<VerifyAccountQJobData>, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
+  ErrorLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
 });

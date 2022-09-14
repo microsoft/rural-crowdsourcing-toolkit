@@ -9,7 +9,7 @@ import {
 } from '@karya/core';
 import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQPayload } from '../../Transaction/Types';
-import { QLogger } from '../Utils';
+import { ErrorLogger } from '../Utils';
 import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 
 // Setting up Db Connection
@@ -18,7 +18,10 @@ setupDbConnection();
 export default async (job: Job<BulkTransactionQJobData>) => {
   try {
     await processJob(job);
-  } catch (error) {
+  } catch (error: any) {
+    ErrorLogger.error(
+      `Bulk Transaction Id ${job.data.bulkTransactionRecord.id}: Stack : ${error.stack}`
+    );
     await cleanUpOnError(error, job);
     throw error;
   }
@@ -73,7 +76,7 @@ const processJob = async (job: Job<BulkTransactionQJobData>) => {
         transactionPayload
       );
     } catch (e: any) {
-      QLogger.error(
+      ErrorLogger.error(
         `Bulk Transaction Id ${bulkTransactionRecord.id}: Error creating transaction task for workerId: ${transactionRequest.workerId} with error ${e.message}`
       );
       failedForWorkerIds.push(transactionRequest.workerId);

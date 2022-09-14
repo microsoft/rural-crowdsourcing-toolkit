@@ -3,7 +3,7 @@ import { TransactionStatus } from '@karya/core';
 import { TransactionQJobData, TransactionQPayload, TransactionQResult } from './Types';
 import { transactionQConsumer } from './consumer/transactionQConsumer';
 import { Job } from 'bullmq';
-import { QLogger } from './Utils';
+import { ErrorLogger, QLogger } from './Utils';
 
 export class TransactionQWrapper extends BullMqWrapper<TransactionQJobData> {
   onStart(): void {
@@ -44,5 +44,5 @@ transactionQConsumer.on('completed', (job) => {
 
 // Handling Failure events
 transactionQConsumer.on('failed', async (job: Job<TransactionQJobData>, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.transactionRecord.id}`);
+  ErrorLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.transactionRecord.id}`);
 });

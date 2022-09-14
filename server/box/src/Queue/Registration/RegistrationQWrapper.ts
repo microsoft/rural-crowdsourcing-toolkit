@@ -3,7 +3,7 @@ import { AccountTaskStatus } from '@karya/core';
 import { Job, Queue } from 'bullmq';
 import { registrationQConsumer } from './consumer/registrationQConsumer';
 import { Qconfig, RegistrationQJobData, RegistrationQPayload, RegistrationQResult } from './Types';
-import { QLogger } from './Utils';
+import { ErrorLogger, QLogger } from './Utils';
 
 export class RegistrationQWrapper extends QueueWrapper<Queue> {
   constructor(config: { [key: string]: any } & Qconfig) {
@@ -54,5 +54,5 @@ registrationQConsumer.on('completed', (job) => {
 });
 
 registrationQConsumer.on('failed', async (job: Job<RegistrationQJobData>, error) => {
-  QLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
+  ErrorLogger.error(`Failed job ${job.id} with ${error} and record id: ${job.data.accountRecord.id}`);
 });

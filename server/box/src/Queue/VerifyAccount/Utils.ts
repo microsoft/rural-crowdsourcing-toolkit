@@ -5,3 +5,9 @@ export const QLogger: Logger = karyaLogger({
   logToConsole: true,
   consoleLogLevel: 'info',
 });
+
+export const ErrorLogger: Logger = karyaLogger({
+  name: 'VerifyAccountQBoxError',
+  logToConsole: true,
+  consoleLogLevel: 'error',
+});
