@@ -32,6 +32,7 @@ export const languageCodes = [
   'ISL',
   'NRI',
   'BRX',
+  'TXO',
 ] as const;
 export type LanguageCode = typeof languageCodes[number];
 
@@ -225,6 +226,13 @@ export const languageMap: { [key in LanguageCode]: LanguageInterface } = {
   NRI: {
     name: 'Chokri',
     primary_name: 'Chokri',
+    basic_support: false,
+    assistant_support: false,
+  },
+
+  TXO: {
+    name: 'Toto',
+    primary_name: 'তোতো',
     basic_support: false,
     assistant_support: false,
   },
