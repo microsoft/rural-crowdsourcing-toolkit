@@ -9,6 +9,8 @@ import { BaseScenarioInterface } from '../ScenarioInterface';
 // Image transcription task input parameters
 type ImageAnnotationTaskInputParameters = {
   labels: string[];
+  rememberAnnotationState: boolean;
+  moveAnnotation: boolean;
 };
 
 // Image transcription microtask input/output format
@@ -38,6 +40,20 @@ export const baseImageAnnotationScenario: BaseImageAnnotationScenario = {
       label: 'Label List',
       description: 'List of labels to be attached to the images',
       required: true,
+    },
+    {
+      id: 'rememberAnnotationState',
+      type: 'boolean',
+      label: 'Remember Annotation State',
+      description: 'Remember the state of the previous annotation',
+      required: false,
+    },
+    {
+      id: 'moveAnnotation',
+      type: 'boolean',
+      label: 'Move Annotations',
+      description: 'Allow movement of annotations relative to the figure',
+      required: false,
     },
   ],
 
