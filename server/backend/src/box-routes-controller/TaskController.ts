@@ -168,7 +168,7 @@ export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
 
   const verified = await BasicModel.getRecords(
     'microtask_assignment',
-    { task_id: task.id, status: 'VERIFIED' },
+    { task_id: task.id, status: 'VERIFIED', box_id: ctx.state.entity.id },
     [],
     [['verified_at', from, null]],
     'verified_at',
