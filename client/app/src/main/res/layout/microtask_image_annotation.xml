@@ -105,11 +105,14 @@
         app:layout_constraintHeight_percent="0.13"
         app:layout_constraintLeft_toLeftOf="parent">
 
-        <include
-            android:id="@+id/backBtn"
-            layout="@layout/microtask_common_back_button"
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/removeBoxButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/_4sdp"
+            android:background="@drawable/ic_cross_on"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/addBoxButton"
             app:layout_constraintHorizontal_bias="0.5"
@@ -122,9 +125,9 @@
             android:layout_height="match_parent"
             android:background="@drawable/ic_add_button"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@id/nextBtn"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtn"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/backBtn"
+            app:layout_constraintStart_toEndOf="@+id/removeBoxButton"
             tools:layout_editor_absoluteY="0dp" />
 
         <include
@@ -135,7 +138,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/addBoxButton"
+            app:layout_constraintStart_toEndOf="@+id/addBoxButton"
             tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

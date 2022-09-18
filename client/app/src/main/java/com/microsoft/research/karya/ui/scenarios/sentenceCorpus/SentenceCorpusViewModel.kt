@@ -120,9 +120,7 @@ constructor(
 
   /** Handle next button click */
   fun handleBackClick() {
-    viewModelScope.launch {
-      moveToPreviousMicrotask()
-    }
+    moveToPreviousMicrotask()
   }
 
   fun addSentence(sentence: String) {

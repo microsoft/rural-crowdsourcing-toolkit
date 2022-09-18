@@ -876,9 +876,7 @@ constructor(
           if (previousActivityState == ActivityState.COMPLETED) {
             setActivityState(ActivityState.COMPLETED)
           } else {
-            viewModelScope.launch {
-              resetMicrotask()
-            }
+            resetMicrotask()
           }
         }
         hintAudioPlayer!!.start()
@@ -997,9 +995,7 @@ constructor(
       ActivityState.ASSISTANT_PLAYING,
       ActivityState.PLAYING_HINT_AUDIO,
       -> {
-        viewModelScope.launch {
-          resetMicrotask()
-        }
+        resetMicrotask()
       }
 
       /** If recorded, then move to first playback */
