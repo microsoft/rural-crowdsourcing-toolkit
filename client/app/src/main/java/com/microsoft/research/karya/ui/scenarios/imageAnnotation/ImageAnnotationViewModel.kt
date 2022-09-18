@@ -1,5 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.imageAnnotation
 
+import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.datastore.core.DataStore
@@ -57,6 +58,10 @@ constructor(
   var annotationType = CropObjectType.RECTANGLE;
   // Number of sides
   var numberOfSides = 4;
+  // Do we need to remember state of annotation
+  var rememberAnnotationState = false;
+  // Current Image Matrix
+  var imageMatrix: Matrix? = null
 
   // Trigger Spotlight
   private val _playRecordPromptTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -89,6 +94,13 @@ constructor(
     } catch (e: Exception) {
       // Since default shape is rectangle
       4
+    }
+
+    // Remember state?
+    rememberAnnotationState = try {
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("rememberAnnotationState").asBoolean
+    } catch (e: Exception) {
+      true
     }
   }
 

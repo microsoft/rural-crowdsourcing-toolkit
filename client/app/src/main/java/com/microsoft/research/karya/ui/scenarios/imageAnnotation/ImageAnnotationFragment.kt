@@ -4,10 +4,12 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.PointF
+import android.graphics.Matrix
 import android.graphics.RectF
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -29,8 +31,9 @@ import com.takusemba.spotlight.shape.Circle
 import com.takusemba.spotlight.shape.RoundedRectangle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.microtask_image_annotation.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.HashMap
 
 
 private val colors = listOf(
@@ -210,6 +213,9 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       skipTask(true, getString(R.string.no_annotation_box_dialog_title_text), getString(R.string.skip_task_warning))
       return
     }
+
+    viewModel.imageMatrix = Matrix(sourceImageIv.imageMatrix)
+
     viewModel.setRectangleCoors(rectangleCoors)
     viewModel.setPolygonCoors(polygonCoors)
     viewModel.handleNextCLick()
@@ -223,12 +229,39 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       }
       //TODO: Put an else condition to put a placeholder image
 
+      if (viewModel.rememberAnnotationState) {
+        return@observe
+      }
+
       // Clear the existing boxes
       val ids = sourceImageIv.allCropRectangleIds + sourceImageIv.allCropPolygonIds
       for (id in ids) {
         sourceImageIv.removeCropObject(id)
       }
     }
+
+    sourceImageIv.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+      override fun onLayoutChange(p0: View?, p1: Int, p2: Int, p3: Int, p4: Int, p5: Int, p6: Int, p7: Int, p8: Int) {
+        if (viewModel.rememberAnnotationState && viewModel.imageMatrix != null) {
+          sourceImageIv.animateScaleAndTranslationToMatrix(viewModel.imageMatrix, 0)
+
+          viewLifecycleScope.launch {
+            delay(10)
+            sourceImageIv.dispatchTouchEvent(
+              MotionEvent.obtain(
+                SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(),
+                MotionEvent.ACTION_DOWN,
+                0F,
+                0F,
+                0
+              )
+            )
+          }
+
+        }
+      }
+    })
 
     viewModel.playRecordPromptTrigger.observe(
       viewLifecycleOwner.lifecycle,
@@ -249,7 +282,11 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     targetsDataList.add(
       TargetData(
         sourceImageIv,
-        RoundedRectangle(sourceImageIv.height.toFloat()+spotlightPadding, sourceImageIv.width.toFloat()+spotlightPadding, 5F),
+        RoundedRectangle(
+          sourceImageIv.height.toFloat() + spotlightPadding,
+          sourceImageIv.width.toFloat() + spotlightPadding,
+          5F
+        ),
         R.layout.spotlight_target_temp,
         AssistantAudio.IMAGE_ANNOTATION_ZOOMAGE_VIEW,
       )
@@ -265,7 +302,11 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     targetsDataList.add(
       TargetData(
         sourceImageIv,
-        RoundedRectangle(sourceImageIv.height.toFloat() + spotlightPadding, sourceImageIv.width.toFloat() + spotlightPadding, 5F),
+        RoundedRectangle(
+          sourceImageIv.height.toFloat() + spotlightPadding,
+          sourceImageIv.width.toFloat() + spotlightPadding,
+          5F
+        ),
         R.layout.spotlight_target_temp,
         AssistantAudio.IMAGE_ANNOTATION_RESHAPE,
         uiCue = {
