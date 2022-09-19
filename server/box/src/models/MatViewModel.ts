@@ -22,7 +22,7 @@ export async function createAllMatViews() {
 export async function createMatView(name: string, definition: string, index: string) {
   await knex.raw(`DROP MATERIALIZED VIEW IF EXISTS ${name} CASCADE;
     CREATE MATERIALIZED VIEW ${name} AS ${definition};
-    CREATE UNIQUE INDEX ON ${name} (${index});
+    CREATE INDEX ON ${name} (${index});
     `);
 }
 
