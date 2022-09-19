@@ -1,7 +1,16 @@
 {
   "directs": [
     "https://karyaboxtest.eastus.cloudapp.azure.com",
-    "https://karyatestbox.westcentralus.cloudapp.azure.com"
+    "https://karyabox001.eastus.cloudapp.azure.com",
+    "https://ai4bkaryabox001.eastus.cloudapp.azure.com",
+    "https://karyabox002.eastus.cloudapp.azure.com",
+    "https://karyabox003.eastus.cloudapp.azure.com",
+    "https://karyabox004.eastus.cloudapp.azure.com",
+    "https://karyabox005.eastus.cloudapp.azure.com",
+    "https://karyabox006.eastus.cloudapp.azure.com",
+    "https://karyabox007.eastus.cloudapp.azure.com",
+    "https://karyabox008.eastus.cloudapp.azure.com",
+    "https://karyabox009.eastus.cloudapp.azure.com"
   ],
   "templates": []
 }

@@ -28,17 +28,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/_8sdp"
-        android:layout_marginHorizontal="@dimen/_15sdp"
         app:layout_constraintBottom_toTopOf="@id/labelTv"
         app:layout_constraintTop_toBottomOf="@id/instructionTv"
         app:layout_constraintVertical_bias="0.55"
         app:zoomage_animateOnReset="false"
         app:zoomage_autoCenter="true"
         app:zoomage_autoResetMode="UNDER"
-        app:zoomage_maxScale="8"
+        app:zoomage_maxScale="100"
         app:zoomage_minScale="1"
-        app:zoomage_minCropRecHeight="20"
-        app:zoomage_minCropRecWidth="20"
+        app:zoomage_minCropRecHeight="5"
+        app:zoomage_minCropRecWidth="5"
         app:zoomage_restrictBounds="true"
         app:zoomage_translatable="true"
         app:zoomage_zoomable="true" />
@@ -107,7 +106,6 @@
 
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/removeBoxButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"

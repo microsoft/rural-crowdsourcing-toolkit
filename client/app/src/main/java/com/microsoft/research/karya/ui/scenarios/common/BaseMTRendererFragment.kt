@@ -7,12 +7,14 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.base.BaseFragment
 import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.extensions.observe
 import kotlinx.android.synthetic.main.microtask_common_header.*
+import kotlinx.coroutines.launch
 
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
   BaseFragment(contentLayoutId) {
@@ -132,6 +134,12 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
           getString(R.string.okay)
         ) { _, _ ->
           viewModel.skipTask()
+        }
+        setNeutralButton("No Label") { _, _ ->
+          viewModel.viewModelScope.launch {
+            viewModel.completeAndSaveCurrentMicrotask()
+            viewModel.moveToNextMicrotask()
+          }
         }
         setNegativeButton(
           getString(R.string.cancel_text)
