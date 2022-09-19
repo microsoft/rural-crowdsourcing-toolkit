@@ -88,6 +88,8 @@ abstract class BaseMTRendererViewModel(
 
   open fun onFirstTimeVisit() {}
 
+  open fun onSubsequentVisit() {}
+
   protected fun isCurrentAssignmentInitialized(): Boolean {
     return this::currentAssignment.isInitialized
   }
@@ -426,6 +428,8 @@ abstract class BaseMTRendererViewModel(
         firstTimeActivityVisit = data[firstRunKey] ?: true
         if (firstTimeActivityVisit) {
           onFirstTimeVisit()
+        } else {
+          onSubsequentVisit()
         }
         datastore.edit { prefs -> prefs[firstRunKey] = false }
         firstTimeActivityVisit = false
