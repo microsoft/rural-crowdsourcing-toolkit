@@ -64,7 +64,7 @@ export const baseVideoAnnotationScenario: BaseVideoAnnotationScenario = {
       schema: Joi.array().items(
         Joi.array().items(
           Joi.object({
-            Video: Joi.string().required(),
+            image: Joi.string().required(),
             annotationType: Joi.string().required(),
             numberOfSides: Joi.number().required(),
           }).unknown(true)
