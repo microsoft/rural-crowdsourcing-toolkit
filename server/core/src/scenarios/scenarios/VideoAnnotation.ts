@@ -62,11 +62,13 @@ export const baseVideoAnnotationScenario: BaseVideoAnnotationScenario = {
       required: true,
       description: `JSON file containing an array of objects. Each object must have an Video key with the name of the Video file, annotationType key with type of annotation object (RECTANGLE or POLYGON) and numberOfSides key for the number of sides`,
       schema: Joi.array().items(
-        Joi.object({
-          Video: Joi.string().required(),
-          annotationType: Joi.string().required(),
-          numberOfSides: Joi.number().required(),
-        }).unknown(true)
+        Joi.array().items(
+          Joi.object({
+            Video: Joi.string().required(),
+            annotationType: Joi.string().required(),
+            numberOfSides: Joi.number().required(),
+          }).unknown(true)
+        )
       ),
     },
     tgz: {
