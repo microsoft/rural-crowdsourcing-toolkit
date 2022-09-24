@@ -342,7 +342,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             completed,
             total
           )
-          ScenarioType.IMAGE_ANNOTATION -> actionDashboardActivityToImageAnnotationFragment(
+          ScenarioType.IMAGE_ANNOTATION, ScenarioType.VIDEO_ANNOTATION -> actionDashboardActivityToImageAnnotationFragment(
             taskId,
             completed,
             total
