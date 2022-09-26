@@ -193,7 +193,7 @@ abstract class BaseMTRendererViewModel(
    * Mark the current microtask as complete with the [outputData], [outputFiles], and [logs]
    * attached to the current assignment's output field. Delete all scratch files.
    */
-  protected suspend fun completeAndSaveCurrentMicrotask() {
+  suspend fun completeAndSaveCurrentMicrotask() {
 
     log("marking microtask complete")
     val output = buildOutputJsonObject()
@@ -264,7 +264,7 @@ abstract class BaseMTRendererViewModel(
   }
 
   /** Move to next microtask and setup. Returns false if there is no next microtask. Else true. */
-  protected fun moveToNextMicrotask() {
+  fun moveToNextMicrotask() {
     if (hasNextMicrotask()) {
       currentAssignmentIndex++
       getAndSetupMicrotask()
