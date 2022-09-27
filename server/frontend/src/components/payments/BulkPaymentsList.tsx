@@ -27,6 +27,7 @@ import '../../css/box/ngBoxList.css';
 import { PaymentEligibleWorkerRecord } from '../../data/Views';
 import { BulkPaymentsTransactionRequest } from '../../data/Index';
 import { Button } from 'react-materialize';
+import { ColTextInput } from '../templates/FormInputs';
 
 // Map dispatch to props
 const mapDispatchToProps = (dispatch: any) => {
@@ -56,6 +57,7 @@ type BulkPaymentsListState = {
     [key: string]: boolean;
   };
   all_workers_selected: boolean;
+  worker_id_input: string;
 };
 
 // Box list component
@@ -63,17 +65,37 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
   state: BulkPaymentsListState = {
     workers_eligible: {},
     all_workers_selected: true,
+    worker_id_input: '',
   };
 
   // Initialize materialize fields
   componentDidMount() {
+    M.updateTextFields();
     M.AutoInit();
   }
 
   // On update, update materialize fields
   componentDidUpdate() {
+    M.updateTextFields();
     M.AutoInit();
   }
+
+  handleWorkersEligibleIsEmpty = () => {
+    const workers_eligible_initial = Object.fromEntries(
+      this.props.payments_eligible_worker.data.map((worker) => {
+        return [worker.id, true];
+      }),
+    );
+    if (Object.values(this.state.workers_eligible).length === 0) {
+      // eslint-disable-next-line react/no-direct-mutation-state
+      this.state.workers_eligible = workers_eligible_initial;
+    }
+  };
+
+  // Handle input change
+  handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.setState({ ...this.state, [e.currentTarget.id]: e.currentTarget.value });
+  };
 
   // Handle boolean input change
   handleBooleanChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -118,10 +140,17 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
   render() {
     const workers = this.props.payments_eligible_worker.data;
     const totalAmount = workers.reduce((acc, item) => item.amount + acc, 0);
-    const workers_eligible_initial = Object.fromEntries(workers.map((worker) => [worker.id, true]));
-    const workers_eligible =
-      Object.values(this.state.workers_eligible).length === 0 ? workers_eligible_initial : this.state.workers_eligible;
-    const all_workers_selected = this.state.all_workers_selected;
+
+    this.handleWorkersEligibleIsEmpty();
+
+    const { all_workers_selected } = this.state;
+    const { worker_id_input } = this.state;
+
+    // Filtering workers by worker ID
+    var workers_filtered = workers;
+    if (worker_id_input !== undefined && worker_id_input !== '') {
+      workers_filtered = workers.filter((w) => w.id.startsWith(worker_id_input));
+    }
 
     // get error element
     const errorElement =
@@ -142,7 +171,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
                 type='checkbox'
                 className='filled-in'
                 id={id}
-                checked={workers_eligible[id]}
+                checked={this.state.workers_eligible[id]}
                 onChange={this.handleBooleanChange}
               />
               <span></span>
@@ -164,6 +193,16 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         {this.props.payments_eligible_worker.status === 'IN_FLIGHT' && <ProgressBar />}
         <br />
         <b className='table-headline'>{workers.length ? `Total Amount: ₹${totalAmount}` : undefined}</b>
+        <div className='row' id='worker-id-search-row'>
+          <ColTextInput
+            id='worker_id_input'
+            value={this.state.worker_id_input}
+            onChange={this.handleInputChange}
+            label='Search by worker ID'
+            width='s10 m8 l4'
+            required={false}
+          />
+        </div>
         <div className='basic-table' id='payments-eligible-worker-table'>
           <div className='row' id='select-all-row'>
             <label htmlFor='select-all-checkbox'>
@@ -179,7 +218,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
           </div>
           <TableList<PaymentEligibleWorkerRecord>
             columns={tableColumns}
-            rows={workers}
+            rows={workers_filtered}
             emptyMessage='No worker pending for payment'
           />
         </div>
