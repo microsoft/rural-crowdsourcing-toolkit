@@ -14,5 +14,21 @@
 
 .table-headline {
   font-size: 1.2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1rem
+}
+
+#payments-eligible-worker-table .tablelist-container {
+  margin-top: -5rem !important;
+}
+
+#payments-eligible-worker-table td:nth-child(2),
+#payments-eligible-worker-table td:nth-child(3) {
+  font-size: 1.05em;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+}
+
+#select-all-row span {
+  margin-left: 1rem;
+  margin-top: 2rem;
 }
