@@ -50,7 +50,8 @@ const dataConnector = withData('payments_eligible_worker');
 const connector = compose(dataConnector, reduxConnector);
 
 // Box list props
-type BulkPaymentsListProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector>;
+type BulkPaymentsListProps = DataProps<typeof dataConnector> &
+  ConnectedProps<typeof reduxConnector> & { postClick: () => void };
 
 type BulkPaymentsListState = {
   workers_eligible: {
@@ -122,6 +123,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
   handleMakePaymentBtnClick = () => {
     const requestBody = this.createBulkPaymentsRequestBody();
     this.props.createBulkTransaction(requestBody);
+    this.props.postClick();
   };
 
   createBulkPaymentsRequestBody = () => {
