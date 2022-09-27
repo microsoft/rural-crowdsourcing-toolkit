@@ -275,7 +275,8 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
   }
 
   private fun setupSpotLight() {
-
+/*
+// Disabling spotlight for video annotation
     val spotlightPadding = 20
 
     val targetsDataList = ArrayList<TargetData>()
@@ -332,7 +333,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     })
 
     builderWrapper.start()
-
+*/
   }
 
   private fun buildLabelListDialogBox(title: String, onLabelItemClickListener: OnLabelItemClickListener): AlertDialog? {
