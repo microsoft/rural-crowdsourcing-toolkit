@@ -56,7 +56,6 @@ class BulkTransactionHistoryList extends React.Component<
         };
       })
       .reverse();
-    console.log(data);
 
     // get error element
     const errorElement =
