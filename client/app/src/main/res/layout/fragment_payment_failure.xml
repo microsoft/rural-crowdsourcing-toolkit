@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_16sdp"
-        android:text="We were not able to register your account with the given details."
+        android:text="@string/payment_registration_failure_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appTb" />
@@ -32,7 +32,7 @@
         android:layout_height="@dimen/_80sdp"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_32sdp"
-        android:text="Register account again"
+        android:text="@string/register_account_again"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/description" />
@@ -43,7 +43,7 @@
         android:layout_height="@dimen/_80sdp"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_8sdp"
-        android:text="contact project coordinator"
+        android:text="@string/payment_contact_project_coordinator_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/registerButton" />

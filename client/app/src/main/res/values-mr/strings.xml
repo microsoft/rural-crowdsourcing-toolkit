@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="language_name">हिन्दी</string>
+    <string name="language_name">मराठी</string>
 
     <!-- Errors -->
     <string name="unknown_error">कुछ अज्ञात त्रुटि हुई। कृपया अपने समन्वयक से संपर्क करें।</string>
-    <string name="invalid_access_code">आपके द्वारा दर्ज किया गया एक्सेस कोड मान्य नहीं है। कृपया हमारे रानी हेल्पलाइन नंबर- 8591345837 पर संपर्क करें</string>
+    <string name="invalid_access_code">तुम्ही टाईप केलेला प्रवेश कोड अमान्य आहे. कृपया आमच्या राणी हेल्पलाइन नंबर- 8591345837 वर संपर्क साधा.</string>
 
     <!-- Consent Form Page -->
     <string name="consent_form_title">सहमति पत्र</string>
     <string name="consent_form_agree">इस बात से सहमत</string>
-    <string name="consent_form_disagree">मैं भाग नहीं लेना चाहता</string>
+    <string name="consent_form_disagree">मला भाग घ्यायचा नाही</string>
     <string name="consent_form_text">
         <![CDATA[
 <h5>कार्य भागीदारी सहमति प्रपत्र</h5>
@@ -167,77 +167,77 @@
 
     <!-- Phone Number -->
     <string name="phone_number_title"> फ़ोन नंबर</string>
-    <string name="phone_number_prompt">रानी ऐप का उपयोग करने के लिए, आपको अपने फोन नंबर का उपयोग करके हमारे ऍप्लिकेशन के साथ रेजिस्टर करना होगा। कृपया अपना फ़ोन नंबर नीचे दर्ज करें।</string>
-    <string name="unable_to_generate_otp">हम इस फ़ोन नंबर के लिए एक ओटीपी जनरेट नहीं कर सके. कृपया नंबर जांचें या बाद में पुन: प्रयास करें।</string>
-    <string name="access_code_already_used">एक्सेस कोड पहले से ही किसी अलग फ़ोन नंबर पर दर्ज है। नए एक्सेस कोड के लिए कृपया हमारे रानी हेल्पलाइन नंबर- 8591345837 पर संपर्क करें।</string>
+    <string name="phone_number_prompt">रानी  ऐप वापरण्यासाठी, तुम्हाला तुमचा फोन नंबर वापरून आमच्या ऍप्लिकेशन वर रेजिस्टर करणे आवश्यक आहे. कृपया खाली तुमचा फोन नंबर टाका.</string>
+    <string name="unable_to_generate_otp">आम्ही या फोन नंबरसाठी OTP जनरेट करू शकलो नाही. कृपया नंबर तपासा किंवा नंतर पुन्हा प्रयत्न करा.</string>
+    <string name="access_code_already_used">प्रवेश कोड आधीपासून वेगळ्या फोन नंबरवर रजिस्टर्ड आहे. नवीन प्रवेश कोडसाठी कृपया आमच्या राणी हेल्पलाइन नंबर- 8591345837 वर आमच्याशी संपर्क साधा.</string>
 
     <!-- OTP -->
     <string name="otp_title">ओटीपी</string>
-    <string name="otp_prompt">हमने 0000000000 पर एसएमएस के माध्यम से 6 अंकों का ओटीपी भेजा है। कृपया नीचे ओटीपी दर्ज करें।</string>
-    <string name="resend_otp">ओटीपी फिर से भेजें</string>
-    <string name="change_phone_number">फ़ोन नंबर बदलें</string>
-    <string name="invalid_otp">आपने एक अमान्य ओटीपी दर्ज किया है।</string>
+    <string name="otp_prompt">आम्ही 0000000000 वर SMS द्वारे 6-अंकी OTP पाठवला आहे. कृपया खाली OTP Type करा.</string>
+    <string name="resend_otp">OTP पुन्हा पाठवा.</string>
+    <string name="change_phone_number">फोन नंबर बदला</string>
+    <string name="invalid_otp">तुम्ही चुकीचा OTP टाकला आहे</string>
 
     <!-- Profile Screen -->
-    <string name="profile_screen_title">आपकी प्रोफ़ाइल</string>
-    <string name="submit_profile">प्रोफाइल जमा करें</string>
+    <string name="profile_screen_title">तुमचे प्रोफाइल</string>
+    <string name="submit_profile">प्रोफाइल सबमिट करा</string>
     <string name="back_to_home">होम पेज</string>
 
     <!-- Home Screen -->
     <string name="home_screen_title">Home Screen</string>
     <string name="task_summary_label">Task Summary</string>
-    <string name="click_to_do_tasks">कार्य करने के लिए यहां क्लिक करें</string>
-    <string name="performance_label">परफॉर्मेंस</string>
-    <string name="recording_task_label">रिकॉर्ड</string>
+    <string name="click_to_do_tasks">कार्य  करण्यासाठी येथे क्लिक करा</string>
+    <string name="performance_label">कामगिरी</string>
+    <string name="recording_task_label">रेकॉर्डिंग</string>
     <string name="typing_task_label">टाइपिंग</string>
     <string name="image_task_label">इमेज एनोटेशन</string>
     <string name="transcription_task_label">प्रतिलिपि</string>
     <string name="earning_label">कमाई</string>
-    <string name="earned_week_label">पिछला सप्ताह</string>
-    <string name="earned_total_label">कुल कमाई</string>
-    <string name="paid_total_label">कुल भुगतान </string>
+    <string name="earned_week_label">गेल्या आठवड्यात</string>
+    <string name="earned_total_label">एकूण कमाई</string>
+    <string name="paid_total_label">एकूण दिलेली रक्कम</string>
 
     <!-- Dashboard -->
-    <string name="dashboard_title">टास्क सूची</string>
-    <string name="sync_prompt">कार्य सबमिट करें / नए कार्य प्राप्त करें</string>
+    <string name="dashboard_title">टास्क यादी</string>
+    <string name="sync_prompt">कार्ये सबमिट करा / नवीन कार्ये मिळवा</string>
     <string name="tasks_available">उपलब्ध</string>
-    <string name="tasks_completed">पूरा हुआ</string>
-    <string name="tasks_submitted">प्रस्तुत</string>
+    <string name="tasks_completed">पूर्ण झाले</string>
+    <string name="tasks_submitted">सादर केलेत</string>
     <string name="tasks_verified">वेरिफाईड</string>
-    <string name="sync_prompt_message">आपने ऐसे कार्य पूरे कर लिए हैं जिन्हें सर्वर पर सबमिट किया जा सकता है। क्या आप अभी टास्क सबमिट करना चाहते हैं?</string>
-    <string name="yes">हां</string>
-    <string name="no">ना</string>
+    <string name="sync_prompt_message">तुम्ही सर्व्हरवर सबमिट करता येणारी कार्ये पूर्ण केली आहेत. तर आता तुम्हाला तुमचे काम सबमिट करायचे आहे का?</string>
+    <string name="yes">होय</string>
+    <string name="no">नहीं</string>
 
     <!-- Sync -->
-    <string name="reset_assignment_warning">कुछ आउटपुट फ़ाइलें गायब थीं।</string>
-    <string name="upload_file_error">फ़ाइलें अपलोड करते समय त्रुटि. कृपया अपने समन्वयक से संपर्क करें।</string>
-    <string name="send_db_error">कार्य भेजते समय त्रुटि। कृपया अपने समन्वयक से संपर्क करें।</string>
-    <string name="receive_db_error">कार्य प्राप्त करते समय त्रुटि। कृपया अपने समन्वयक से संपर्क करें।</string>
-    <string name="download_file_error">कार्य प्राप्त करते समय त्रुटि। कृपया अपने समन्वयक से संपर्क करें।.</string>
-    <string name="received_verified_error">सत्यापन प्राप्त करते समय त्रुटि। कृपया अपने समन्वयक से संपर्क करें।</string>
+    <string name="reset_assignment_warning">काही आउटपुट फाइल्स उपलब्ध नाही आहेत.</string>
+    <string name="upload_file_error">फाइल अपलोड करताना त्रुटी. कृपया तुमच्या समन्वयकाशी संपर्क साधा.</string>
+    <string name="send_db_error">फाइल अपलोड करताना त्रुटी. कृपया तुमच्या समन्वयकाशी संपर्क साधा.</string>
+    <string name="receive_db_error">फाइल अपलोड करताना त्रुटी. कृपया तुमच्या समन्वयकाशी संपर्क साधा.</string>
+    <string name="download_file_error">फाइल अपलोड करताना त्रुटी. कृपया तुमच्या समन्वयकाशी संपर्क साधा.</string>
+    <string name="received_verified_error">फाइल अपलोड करताना त्रुटी. कृपया तुमच्या समन्वयकाशी संपर्क साधा.</string>
 
     <!-- Payment screens -->
 
 
-    <string name="payment_transferred">भुगतान</string>
+    <string name="payment_transferred">पेमेंट</string>
     <string name="rs_float">₹%.2f</string>
-    <string name="balance">शेष</string>
-    <string name="all_transactions">सभी लेन - देन</string>
-    <string name="account_details">खाता विवरण</string>
+    <string name="balance">शिल्लक</string>
+    <string name="all_transactions">सर्व व्यवहार</string>
+    <string name="account_details">खाते तपशील</string>
     <string name="payment_dashboard_title">Payment Dashboard</string>
     <string name="payment_mode">Payment Mode</string>
     <string name="account_id_label">Account ID</string>
-    <string name="update_account_details">खाता विवरण अपडेट करें</string>
+    <string name="update_account_details">खाते तपशील उपडेट करा</string>
 
 
-    <string name="payment_account_holder_name_hint">Name</string>
+    <string name="payment_account_holder_name_hint">नाव</string>
     <string name="ifsc_code_hint">आईएफएससी कोड</string>
-    <string name="account_number_hint">खाता क्रमांक</string>
-    <string name="re_enter_account_number">खाता क्रमांक दोबारा एंटर करें</string>
-    <string name="payment_registration_submit">जमा करें</string>
+    <string name="account_number_hint">खाते क्रमांक</string>
+    <string name="re_enter_account_number">खाते क्रमांक पुन्हा एंटर कराr</string>
+    <string name="payment_registration_submit">सबमिट</string>
 
     <string name="payment_registration_upi_hint">यूपीआई आईडी</string>
-    <string name="re_enter_upi_id">UPI आईडी फिर से डालें</string>
+    <string name="re_enter_upi_id">यूपीआय आयडी पुन्हा एंटर करा</string>
 
     <string name="payment_registration_failure_message">We were not able to register your account with the given details.</string>
     <string name="register_account_again">Register account again</string>
@@ -259,7 +259,7 @@
     <string name="not_received_verification_amount">No. I have not received ₹2 in my account</string>
 
     <!-- Speech verification strings -->
-    <string name="speech_verification_instruction">नीचे रिकॉर्डिंग सत्यापित करें</string>
+    <string name="speech_verification_instruction">खालील वाक्य रेकॉर्ड करां</string>
     <string name="recording_accuracy">शुद्धता</string>
     <string name="accuracy_good">सही</string>
     <string name="accuracy_okay">त्रुटियाँ</string>
@@ -277,7 +277,7 @@
     <string name="fluency_okay">ठीक</string>
     <string name="fluency_bad">टूटी हुई</string>
     <string name="rating_undefined">अपरिभाषित</string>
-    <string name="corrupt_audio_file_message">ऑडियो फ़ाइल खराब है</string>
+    <string name="corrupt_audio_file_message">ऑडिओ फाइल खराब आहे</string>
 
 
     <string name="app_name">कार्या</string>
@@ -298,40 +298,40 @@
     <string name="image_labelling_instruction">नीचे दी गई छवियों को लेबल करें</string>
 
     <!-- Image annotation strings -->
-    <string name="image_annotation_instruction">बॉक्स के अंदर पुस्तक पृष्ठ को ठीक करें</string>
+    <string name="image_annotation_instruction">बॉक्समधील पुस्तकाचे पान निश्चित करा</string>
 
     <!-- Image alt texts -->
     <string name="karya_logo">परियोजना कार्य लोगो</string>
-    <string name="next">अगला</string>
-    <string name="back">पीछे</string>
+    <string name="next">पुढे</string>
+    <string name="back">मागे</string>
     <string name="task_outside_time_bound">आप यह कार्य केवल _START_TIME_ और _END_TIME_ के बीच ही कर सकते हैं।</string>
     <string name="okay">ठीक</string>
     <string name="grammar_question">क्या इस वाक्य का व्याकरण (ग्रामर) ठीक है?</string>
     <string name="spelling_question">क्या इस वाक्य में सभी शब्दों की वर्तनी (स्पेलिंग) सही है?</string>
-    <string name="skip_task_warning">क्या आप वाकई टास्क छोड़ना चाहते हैं?</string>
-    <string name="proceed_text">आगे बढे</string>
-    <string name="cancel_text">रद्द करे</string>
-    <string name="no_annotation_box_dialog_title_text">कोई बॉक्स नहीं खींचा</string>
-    <string name="no_annotation_box_annotation_message_text">स्क्रीन पर कोई बॉक्स नहीं आखा गया है। क्या आप आगे बढ़ना चाहते हैं?</string>
-    <string name="select_image_annotation_label_dialog_instruction">लेबल चुनें</string>
-    <string name="image_annotation_edit_label">नया लेबल चुनें</string>
+    <string name="skip_task_warning">तुम्हाला खात्री आहे की तुम्ही हे टास्क स्किप करू इच्छिता?</string>
+    <string name="proceed_text">पुढे जा</string>
+    <string name="cancel_text">रद्द करा</string>
+    <string name="no_annotation_box_dialog_title_text">बॉक्स काढलेला नाही</string>
+    <string name="no_annotation_box_annotation_message_text">स्क्रीनवर कोणतेही बॉक्स काढलेले नाहीत. तुम्हाला पुढे जायचे आहे का</string>
+    <string name="select_image_annotation_label_dialog_instruction">लेबल निवडा</string>
+    <string name="image_annotation_edit_label">नवीन लेबल निवडा</string>
     <string name="profile_picture">प्रोफ़ाइल फोटो</string>
-    <string name="rotate_right">घुमाएँ</string>
+    <string name="rotate_right">फिरवा </string>
 
-    <string name="no_internet">इंटरनेट उपलब्ध नहीं</string>
-    <string name="image_annotation_verification_instruction">Verification instruction goes here</string>
-    <string name="img_annotation_verification_good">good</string>
-    <string name="img_annotation_verification_ok">ok</string>
-    <string name="img_annotation_verification_bad">bad</string>
-    <string name="no_image_validation_score_selected">Please select a score for the annotation</string>
-    <string name="sentence_corpus_verification_valid">VALID</string>
-    <string name="sentence_corpus_verification_errors">ERRORS</string>
-    <string name="sentence_corpus_verification_invalid">INVALID</string>
-    <string name="profile_name_label">नाम</string>
+    <string name="no_internet">इंटरनेट उपलब्ध नाहीं</string>
+    <string name="image_annotation_verification_instruction"> instruction goes here</string>
+    <string name="img_annotation_verification_good"></string>
+    <string name="img_annotation_verification_ok"></string>
+    <string name="img_annotation_verification_bad"></string>
+    <string name="no_image_validation_score_selected"> select a score for the annotation</string>
+    <string name="sentence_corpus_verification_valid"></string>
+    <string name="sentence_corpus_verification_errors"></string>
+    <string name="sentence_corpus_verification_invalid"></string>
+    <string name="profile_name_label">नाव</string>
     <string name="profile_gender_label">लिंग</string>
-    <string name="profile_yob_label">जन्म का साल</string>
-    <string name="profile_missing_field_error_msg">कृपया सभी फ़ील्ड भरें</string>
+    <string name="profile_yob_label">जन्मवर्ष</string>
+    <string name="profile_missing_field_error_msg">कृपया सर्व फील्ड भरा</string>
     <string name="profile_gender_male_label">पुरुष</string>
-    <string name="profile_gender_female_label">महिला</string>
+    <string name="profile_gender_female_label">स्त्री</string>
 </resources>
 

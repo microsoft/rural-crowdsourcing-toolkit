@@ -29,8 +29,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nameEt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/name" />
+            android:layout_height="match_parent"
+            android:hint="@string/payment_account_holder_name_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -47,7 +47,7 @@
             android:id="@+id/upiIdEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/upi_id" />
+            android:hint="@string/payment_registration_upi_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_32sdp"
-        android:text="@string/submit"
+        android:text="@string/payment_registration_submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upiIdRepeatTil" />
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_32sdp"
-        android:text="@string/submit"
+        android:text="@string/payment_registration_submit"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

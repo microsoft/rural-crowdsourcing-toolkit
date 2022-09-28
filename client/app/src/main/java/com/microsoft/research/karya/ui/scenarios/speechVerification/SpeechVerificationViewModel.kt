@@ -114,7 +114,7 @@ constructor(
   private val _reviewEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val reviewEnabled = _reviewEnabled.asStateFlow()
 
-  private val _showErrorWithDialog: MutableStateFlow<String> = MutableStateFlow("")
+  private val _showErrorWithDialog: MutableStateFlow<Int> = MutableStateFlow(0)
   val showErrorWithDialog = _showErrorWithDialog.asStateFlow()
 
   override fun setupMicrotask() {
@@ -156,12 +156,12 @@ constructor(
       setActivityState(ActivityState.WAIT_FOR_PLAY)
     } catch (exception: Exception) {
       // Alert dialog
-      showErrorWithDialogBox("Audio file is corrupt")
+      showErrorWithDialogBox(R.string.corrupt_audio_file_message)
     }
   }
 
-  private fun showErrorWithDialogBox(msg: String) {
-    _showErrorWithDialog.value = msg
+  private fun showErrorWithDialogBox(stringId: Int) {
+    _showErrorWithDialog.value = stringId
   }
 
   /** Set activity state */

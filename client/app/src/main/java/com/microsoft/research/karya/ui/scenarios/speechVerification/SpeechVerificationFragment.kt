@@ -183,9 +183,9 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
 
     viewModel.showErrorWithDialog.observe(
       viewLifecycleOwner.lifecycle, viewLifecycleScope
-    ) { msg ->
-      if (msg.isNotEmpty()) {
-        showErrorDialog(msg)
+    ) { id ->
+      if (id != 0) {
+        showErrorDialog(requireContext().getString(id))
       }
     }
 

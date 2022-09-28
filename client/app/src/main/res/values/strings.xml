@@ -229,9 +229,31 @@
     <string name="received_verified_error">Error while receiving validations. Please contact your coordinator.</string>
 
     <!-- Payment screens -->
+
+
+    <string name="payment_transferred">Transferred</string>
+    <string name="rs_float">₹%.2f</string>
+    <string name="balance">Balance</string>
+    <string name="all_transactions">All Transactions</string>
+    <string name="account_details">Account Details</string>
     <string name="payment_dashboard_title">Payment Dashboard</string>
     <string name="payment_mode">Payment Mode</string>
     <string name="account_id_label">Account ID</string>
+    <string name="update_account_details">Update Account Details</string>
+
+
+    <string name="payment_account_holder_name_hint">Name</string>
+    <string name="ifsc_code_hint">IFSC Code</string>
+    <string name="account_number_hint">Account Number</string>
+    <string name="re_enter_account_number">Re-enter Account Number</string>
+    <string name="payment_registration_submit">Submit</string>
+
+    <string name="payment_registration_upi_hint">UPI ID</string>
+    <string name="re_enter_upi_id">Re-enter UPI ID</string>
+
+    <string name="payment_registration_failure_message">We were not able to register your account with the given details.</string>
+    <string name="register_account_again">Register account again</string>
+    <string name="payment_contact_project_coordinator_message">contact project coordinator</string>
 
     <string name="payment_registration_title">Payment Registration</string>
     <string name="bank_account_label">Bank Account Number</string>
@@ -268,7 +290,7 @@
     <string name="fluency_okay">Okay</string>
     <string name="fluency_bad">Broken</string>
     <string name="rating_undefined">Undefined</string>
-
+    <string name="corrupt_audio_file_message">Audio file is corrupt</string>
 
     <string name="app_name">Karya</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -313,34 +335,13 @@
     <string name="speech_transcription_instruction">Transcribe the audio below</string>
     <string name="proceed_text">Proceed</string>
     <string name="cancel_text">Cancel</string>
-    <string name="no_annotation_box_annotation_message_text">No boxes are drawn to the screen. Do you want to proceed?</string>
     <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
+    <string name="no_annotation_box_annotation_message_text">No boxes are drawn to the screen. Do you want to proceed?</string>
     <string name="select_image_annotation_label_dialog_instruction">Select Label</string>
     <string name="image_annotation_edit_label">Select new label</string>
     <string name="profile_picture">profile picture</string>
     <string name="rotate_right">rotate</string>
 
-    <string name="submit">Submit</string>
-    <string name="name">Name</string>
-    <string name="account_number">Account Number</string>
-    <string name="ifsc_code">IFSC Code</string>
-    <string name="re_enter_account_number">Re-enter Account Number</string>
-    <string name="upi_id">UPI ID</string>
-    <string name="re_enter_upi_id">Re-enter UPI ID</string>
-    <string name="rs_float">₹%.2f</string>
-    <string name="balance">Balance</string>
-    <string name="transferred">Transferred</string>
-    <string name="last_payment_details">Last Payment Details</string>
-    <string name="amount_rs_2f">Amount: ₹%.2f</string>
-    <string name="utr_s">UTR: %s</string>
-    <string name="date_s">Date: %s</string>
-    <string name="status_s">Status: %s</string>
-    <string name="all_transactions">All Transactions</string>
-    <string name="account_details">Account Details</string>
-    <string name="name_s">Name: %s</string>
-    <string name="id_s">ID: %s</string>
-    <string name="ifsc_s">IFSC: %s</string>
-    <string name="update_account_details">Update Account Details</string>
     <string name="no_internet">No internet available</string>
     <string name="image_annotation_verification_instruction">Verification instruction goes here</string>
     <string name="img_annotation_verification_good">good</string>
