@@ -184,8 +184,8 @@
     <string name="back_to_home">होम पेज</string>
 
     <!-- Home Screen -->
-    <string name="home_screen_title">Home Screen</string>
-    <string name="task_summary_label">Task Summary</string>
+    <string name="home_screen_title">होम स्क्रीन</string>
+    <string name="task_summary_label">कार्य सारांश</string>
     <string name="click_to_do_tasks">कार्य करने के लिए यहां क्लिक करें</string>
     <string name="performance_label">परफॉर्मेंस</string>
     <string name="recording_task_label">रिकॉर्ड</string>
@@ -224,9 +224,9 @@
     <string name="balance">शेष</string>
     <string name="all_transactions">सभी लेन - देन</string>
     <string name="account_details">खाता विवरण</string>
-    <string name="payment_dashboard_title">Payment Dashboard</string>
-    <string name="payment_mode">Payment Mode</string>
-    <string name="account_id_label">Account ID</string>
+    <string name="payment_dashboard_title">भुगतान डैशबोर्ड</string>
+    <string name="payment_mode">पेमेंट मोड</string>
+    <string name="account_id_label">खाता आईडी</string>
     <string name="update_account_details">खाता विवरण अपडेट करें</string>
 
 
@@ -239,24 +239,24 @@
     <string name="payment_registration_upi_hint">यूपीआई आईडी</string>
     <string name="re_enter_upi_id">UPI आईडी फिर से डालें</string>
 
-    <string name="payment_registration_failure_message">We were not able to register your account with the given details.</string>
-    <string name="register_account_again">Register account again</string>
-    <string name="payment_contact_project_coordinator_message">contact project coordinator</string>
+    <string name="payment_registration_failure_message">हम दिए गए विवरण के साथ आपका खाता पंजीकृत करने में सक्षम नहीं थे।</string>
+    <string name="register_account_again">खाता फिर से पंजीकृत करें</string>
+    <string name="payment_contact_project_coordinator_message">संपर्क परियोजना समन्वयक</string>
 
-    <string name="payment_registration_title">Payment Registration</string>
-    <string name="bank_account_label">Bank Account Number</string>
+    <string name="payment_registration_title">भुगतान पंजीकरण</string>
+    <string name="bank_account_label">बैंक खाता संख्या</string>
     <string name="upi_label">यूपीआई</string>
 
-    <string name="payment_registration_description">Do you want to get paid via your bank account or your UPI ID?</string>
-    <string name="bank_account_details_title">Bank Account Details</string>
-    <string name="upi_details_title">UPI Details</string>
+    <string name="payment_registration_description">क्या आप अपने बैंक खाते या अपनी यूपीआई आईडी के माध्यम से भुगतान प्राप्त करना चाहते हैं?</string>
+    <string name="bank_account_details_title">बैंक के खाते का विवरण</string>
+    <string name="upi_details_title">यूपीआई विवरण</string>
 
-    <string name="payment_info_verification_title">Account Verification</string>
-    <string name="verification_request_processing">We are checking your payment information. Please check again in a few hours. If you still see this message one day after submitting your payment information, contact your coordinator.</string>
-    <string name="verification_request_processed">To verify your payment information, we have sent you ₹2. Please confirm if you have received the amount by clicking the appropriate button.</string>
-    <string name="verification_loading">Checking the status of your payment verification. Please wait.</string>
-    <string name="received_verification_amount">Yes. I have received ₹2 in my account</string>
-    <string name="not_received_verification_amount">No. I have not received ₹2 in my account</string>
+    <string name="payment_info_verification_title">खाता सत्यापन</string>
+    <string name="verification_request_processing">हम आपकी भुगतान जानकारी की जांच कर रहे हैं। कृपया कुछ घंटों में फिर से जांचें। यदि आप अपनी भुगतान जानकारी सबमिट करने के एक दिन बाद भी यह संदेश देखते हैं, तो अपने समन्वयक से संपर्क करें।</string>
+    <string name="verification_request_processed">आपकी भुगतान जानकारी सत्यापित करने के लिए, हमने आपको ₹2 भेजे हैं। कृपया पुष्टि करें कि क्या आपको उपयुक्त बटन पर क्लिक करके राशि प्राप्त हुई है।</string>
+    <string name="verification_loading">आपके भुगतान सत्यापन की स्थिति की जाँच करना। कृपया प्रतीक्षा करें।</string>
+    <string name="received_verification_amount">हाँ। मुझे मेरे खाते में ₹2 मिले हैं</string>
+    <string name="not_received_verification_amount">नहीं। मुझे अपने खाते में ₹2 प्राप्त नहीं हुए हैं</string>
 
     <!-- Speech verification strings -->
     <string name="speech_verification_instruction">नीचे रिकॉर्डिंग सत्यापित करें</string>
