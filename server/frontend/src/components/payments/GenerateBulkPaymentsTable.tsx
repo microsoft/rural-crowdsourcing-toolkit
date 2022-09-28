@@ -65,7 +65,7 @@ class GenerateBulkPaymentsTable extends React.Component {
           this.state.visibleEntity === 'workerList' ? (
             <div className='worker-list-section'>
               {/*// @ts-ignore */}
-              <BulkPaymentsList />
+              <BulkPaymentsList postClick={this.handleHistoryBtnClick} />
             </div>
           ) : this.state.visibleEntity === 'history' ? (
             // @ts-ignore

@@ -17,6 +17,8 @@ import { DataProps, withData } from '../hoc/WithData';
 
 // CSS
 import { BulkPaymentsTransactionRecord } from '@karya/core';
+import { CSVLink } from 'react-csv';
+import Pagination from 'react-js-pagination';
 
 // Create the connector
 const connector = withData('bulk_payments_transaction');
@@ -25,16 +27,35 @@ const connector = withData('bulk_payments_transaction');
 type BulkTransactionHistoryListProps = DataProps<typeof connector>;
 type BulkTransactionTableRecord = BulkPaymentsTransactionRecord & { failedForWorkerIds: string | null };
 
+type BulkTransactionHistoryListState = {
+  bulk_transaction_history_table: {
+    total_rows_per_page: number;
+    current_page: number;
+  };
+};
+
 // Box list component
-class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryListProps> {
+class BulkTransactionHistoryList extends React.Component<
+  BulkTransactionHistoryListProps,
+  BulkTransactionHistoryListState
+> {
+  state: BulkTransactionHistoryListState = {
+    bulk_transaction_history_table: {
+      total_rows_per_page: 10,
+      current_page: 1,
+    },
+  };
+
   render() {
-    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data.map((item) => {
-      return {
-        ...item,
-        created_at: new Date(item.created_at).toDateString(),
-        failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds as string) : null,
-      };
-    });
+    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data
+      .map((item) => {
+        return {
+          ...item,
+          created_at: new Date(item.created_at).toDateString(),
+          failedForWorkerIds: item.meta ? ((item.meta as any).failedForWorkerIds as string) : null,
+        };
+      })
+      .reverse();
     console.log(data);
 
     // get error element
@@ -57,11 +78,33 @@ class BulkTransactionHistoryList extends React.Component<BulkTransactionHistoryL
       <div>
         {errorElement}
         {this.props.bulk_payments_transaction.status === 'IN_FLIGHT' && <ProgressBar />}
+        <CSVLink data={data} filename='bulkTransactionHistoryData' className='btn' id='download-btn'>
+          <i className='material-icons left'>download</i>Download data
+        </CSVLink>
         <div className='basic-table'>
           <TableList<BulkTransactionTableRecord>
             columns={tableColumns}
-            rows={data}
+            rows={data.slice(
+              (this.state.bulk_transaction_history_table.current_page - 1) *
+                this.state.bulk_transaction_history_table.total_rows_per_page,
+              this.state.bulk_transaction_history_table.current_page *
+                this.state.bulk_transaction_history_table.total_rows_per_page,
+            )}
             emptyMessage='No bulk transaction has been made'
+          />
+          <Pagination
+            activePage={this.state.bulk_transaction_history_table.current_page}
+            itemsCountPerPage={this.state.bulk_transaction_history_table.total_rows_per_page}
+            totalItemsCount={data.length}
+            pageRangeDisplayed={5}
+            onChange={(pageNo) =>
+              this.setState((prevState) => ({
+                bulk_transaction_history_table: {
+                  ...prevState.bulk_transaction_history_table,
+                  current_page: pageNo,
+                },
+              }))
+            }
           />
         </div>
       </div>
