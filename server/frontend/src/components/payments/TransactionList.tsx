@@ -15,8 +15,9 @@ import { TableColumnType, TableList } from '../templates/TableList';
 // HoCs
 import { DataProps, withData } from '../hoc/WithData';
 
-// CSS
 import { PaymentsTransactionRecord } from '@karya/core';
+import { CSVLink } from 'react-csv';
+import Pagination from 'react-js-pagination';
 
 // Create the connector
 const connector = withData('payments_transaction');
@@ -24,14 +25,24 @@ const connector = withData('payments_transaction');
 // Box list props
 type TransactionListProps = DataProps<typeof connector>;
 
+type TransactionListState = {
+  tableCollapsed: boolean;
+  transaction_table: {
+    total_rows_per_page: number;
+    current_page: number;
+  };
+};
+
 type TransactionTableRecord = PaymentsTransactionRecord & { failure_reason: string | null };
 
 // Box list component
-class TransactionList extends React.Component<TransactionListProps> {
-  state: {
-    tableCollapsed: boolean;
-  } = {
+class TransactionList extends React.Component<TransactionListProps, TransactionListState> {
+  state: TransactionListState = {
     tableCollapsed: false,
+    transaction_table: {
+      total_rows_per_page: 10,
+      current_page: 1,
+    },
   };
 
   handleTableCollapseClick = () => {
@@ -42,13 +53,15 @@ class TransactionList extends React.Component<TransactionListProps> {
   };
 
   render() {
-    const data: TransactionTableRecord[] = this.props.payments_transaction.data.map((item) => {
-      return {
-        ...item,
-        created_at: new Date(item.created_at).toDateString(),
-        failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
-      };
-    });
+    const data: TransactionTableRecord[] = this.props.payments_transaction.data
+      .map((item) => {
+        return {
+          ...item,
+          created_at: new Date(item.created_at).toDateString(),
+          failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
+        };
+      })
+      .reverse();
 
     const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table';
 
@@ -75,6 +88,10 @@ class TransactionList extends React.Component<TransactionListProps> {
     return (
       <div>
         <h1 className='page-title'>Transactions History</h1>
+        <CSVLink data={data} filename='transactionsData' className='btn' id='download-btn'>
+          <i className='material-icons left'>download</i>Download data
+        </CSVLink>
+        <br />
         <a href='#' onClick={this.handleTableCollapseClick}>
           {collapseTableText}
         </a>
@@ -84,8 +101,25 @@ class TransactionList extends React.Component<TransactionListProps> {
           <div className='basic-table'>
             <TableList<TransactionTableRecord>
               columns={tableColumns}
-              rows={data}
+              rows={data.slice(
+                (this.state.transaction_table.current_page - 1) * this.state.transaction_table.total_rows_per_page,
+                this.state.transaction_table.current_page * this.state.transaction_table.total_rows_per_page,
+              )}
               emptyMessage='No transaction has been made'
+            />
+            <Pagination
+              activePage={this.state.transaction_table.current_page}
+              itemsCountPerPage={this.state.transaction_table.total_rows_per_page}
+              totalItemsCount={data.length}
+              pageRangeDisplayed={5}
+              onChange={(pageNo) =>
+                this.setState((prevState) => ({
+                  transaction_table: {
+                    ...prevState.transaction_table,
+                    current_page: pageNo,
+                  },
+                }))
+              }
             />
           </div>
         )}
