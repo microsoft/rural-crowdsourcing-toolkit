@@ -19,6 +19,7 @@ import { DataProps, withData } from '../hoc/WithData';
 import { BulkPaymentsTransactionRecord } from '@karya/core';
 import { CSVLink } from 'react-csv';
 import Pagination from 'react-js-pagination';
+import { ColTextInput } from '../templates/FormInputs';
 
 // Create the connector
 const connector = withData('bulk_payments_transaction');
@@ -32,6 +33,7 @@ type BulkTransactionHistoryListState = {
     total_rows_per_page: number;
     current_page: number;
   };
+  batch_id_input: string;
 };
 
 // Box list component
@@ -44,10 +46,28 @@ class BulkTransactionHistoryList extends React.Component<
       total_rows_per_page: 10,
       current_page: 1,
     },
+    batch_id_input: '',
+  };
+
+  // Initialize materialize fields
+  componentDidMount() {
+    M.updateTextFields();
+    M.AutoInit();
+  }
+
+  // On update, update materialize fields
+  componentDidUpdate() {
+    M.updateTextFields();
+    M.AutoInit();
+  }
+
+  // Handle input change
+  handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.setState({ ...this.state, [e.currentTarget.id]: e.currentTarget.value });
   };
 
   render() {
-    const data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data
+    var data: BulkTransactionTableRecord[] = this.props.bulk_payments_transaction.data
       .map((item) => {
         return {
           ...item,
@@ -56,7 +76,12 @@ class BulkTransactionHistoryList extends React.Component<
         };
       })
       .reverse();
-    console.log(data);
+
+    // Filtering data by batch ID
+    const { batch_id_input } = this.state;
+    if (batch_id_input !== undefined && batch_id_input !== '') {
+      data = data.filter((t) => t.id.startsWith(batch_id_input));
+    }
 
     // get error element
     const errorElement =
@@ -81,6 +106,16 @@ class BulkTransactionHistoryList extends React.Component<
         <CSVLink data={data} filename='bulkTransactionHistoryData' className='btn' id='download-btn'>
           <i className='material-icons left'>download</i>Download data
         </CSVLink>
+        <div className='row' id='text_filter_row'>
+          <ColTextInput
+            id='batch_id_input'
+            value={this.state.batch_id_input}
+            onChange={this.handleInputChange}
+            label='Filter by batch ID'
+            width='s10 m8 l4'
+            required={false}
+          />
+        </div>
         <div className='basic-table'>
           <TableList<BulkTransactionTableRecord>
             columns={tableColumns}

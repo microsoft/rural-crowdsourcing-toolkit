@@ -18,6 +18,7 @@ import { DataProps, withData } from '../hoc/WithData';
 import { PaymentsTransactionRecord } from '@karya/core';
 import { CSVLink } from 'react-csv';
 import Pagination from 'react-js-pagination';
+import { ColTextInput } from '../templates/FormInputs';
 
 // Create the connector
 const connector = withData('payments_transaction');
@@ -31,6 +32,10 @@ type TransactionListState = {
     total_rows_per_page: number;
     current_page: number;
   };
+  worker_id_input: string;
+  bulk_id_input: string;
+  account_id_input: string;
+  payout_id_input: string;
 };
 
 type TransactionTableRecord = PaymentsTransactionRecord & { failure_reason: string | null };
@@ -43,6 +48,27 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       total_rows_per_page: 10,
       current_page: 1,
     },
+    worker_id_input: '',
+    bulk_id_input: '',
+    account_id_input: '',
+    payout_id_input: '',
+  };
+
+  // Initialize materialize fields
+  componentDidMount() {
+    M.updateTextFields();
+    M.AutoInit();
+  }
+
+  // On update, update materialize fields
+  componentDidUpdate() {
+    M.updateTextFields();
+    M.AutoInit();
+  }
+
+  // Handle input change
+  handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    this.setState({ ...this.state, [e.currentTarget.id]: e.currentTarget.value });
   };
 
   handleTableCollapseClick = () => {
@@ -53,7 +79,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
   };
 
   render() {
-    const data: TransactionTableRecord[] = this.props.payments_transaction.data
+    var data: TransactionTableRecord[] = this.props.payments_transaction.data
       .map((item) => {
         return {
           ...item,
@@ -64,6 +90,30 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       .reverse();
 
     const collapseTableText = this.state.tableCollapsed ? 'Show Table' : 'Collapse Table';
+
+    // Filtering data by worker ID
+    const { worker_id_input } = this.state;
+    if (worker_id_input !== undefined && worker_id_input !== '') {
+      data = data.filter((t) => t.worker_id.startsWith(worker_id_input));
+    }
+
+    // Filtering data by bulk ID
+    const { bulk_id_input } = this.state;
+    if (bulk_id_input !== undefined && bulk_id_input !== '') {
+      data = data.filter((t) => t.bulk_id?.startsWith(bulk_id_input));
+    }
+
+    // Filtering data by account ID
+    const { account_id_input } = this.state;
+    if (account_id_input !== undefined && account_id_input !== '') {
+      data = data.filter((t) => t.account_id.startsWith(account_id_input));
+    }
+
+    // Filtering data by payout ID
+    const { payout_id_input } = this.state;
+    if (payout_id_input !== undefined && payout_id_input !== '') {
+      data = data.filter((t) => t.payout_id?.startsWith(payout_id_input));
+    }
 
     // get error element
     const errorElement =
@@ -98,30 +148,66 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
         {errorElement}
         {this.props.payments_transaction.status === 'IN_FLIGHT' && <ProgressBar />}
         {!this.state.tableCollapsed && (
-          <div className='basic-table'>
-            <TableList<TransactionTableRecord>
-              columns={tableColumns}
-              rows={data.slice(
-                (this.state.transaction_table.current_page - 1) * this.state.transaction_table.total_rows_per_page,
-                this.state.transaction_table.current_page * this.state.transaction_table.total_rows_per_page,
-              )}
-              emptyMessage='No transaction has been made'
-            />
-            <Pagination
-              activePage={this.state.transaction_table.current_page}
-              itemsCountPerPage={this.state.transaction_table.total_rows_per_page}
-              totalItemsCount={data.length}
-              pageRangeDisplayed={5}
-              onChange={(pageNo) =>
-                this.setState((prevState) => ({
-                  transaction_table: {
-                    ...prevState.transaction_table,
-                    current_page: pageNo,
-                  },
-                }))
-              }
-            />
-          </div>
+          <>
+            <div className='row' id='text_filter_row'>
+              <ColTextInput
+                id='worker_id_input'
+                value={this.state.worker_id_input}
+                onChange={this.handleInputChange}
+                label='Filter by worker ID'
+                width='s10 m8 l4'
+                required={false}
+              />
+              <ColTextInput
+                id='bulk_id_input'
+                value={this.state.bulk_id_input}
+                onChange={this.handleInputChange}
+                label='Filter by bulk ID'
+                width='s10 m8 l4'
+                required={false}
+              />
+              <ColTextInput
+                id='account_id_input'
+                value={this.state.account_id_input}
+                onChange={this.handleInputChange}
+                label='Filter by account ID'
+                width='s10 m8 l4'
+                required={false}
+              />
+              <ColTextInput
+                id='payout_id_input'
+                value={this.state.payout_id_input}
+                onChange={this.handleInputChange}
+                label='Filter by payout ID'
+                width='s10 m8 l4'
+                required={false}
+              />
+            </div>
+            <div className='basic-table'>
+              <TableList<TransactionTableRecord>
+                columns={tableColumns}
+                rows={data.slice(
+                  (this.state.transaction_table.current_page - 1) * this.state.transaction_table.total_rows_per_page,
+                  this.state.transaction_table.current_page * this.state.transaction_table.total_rows_per_page,
+                )}
+                emptyMessage='No transaction has been made'
+              />
+              <Pagination
+                activePage={this.state.transaction_table.current_page}
+                itemsCountPerPage={this.state.transaction_table.total_rows_per_page}
+                totalItemsCount={data.length}
+                pageRangeDisplayed={5}
+                onChange={(pageNo) =>
+                  this.setState((prevState) => ({
+                    transaction_table: {
+                      ...prevState.transaction_table,
+                      current_page: pageNo,
+                    },
+                  }))
+                }
+              />
+            </div>
+          </>
         )}
       </div>
     );
