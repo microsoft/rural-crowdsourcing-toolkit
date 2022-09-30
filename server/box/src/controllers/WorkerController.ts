@@ -119,7 +119,5 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
   if (workerLeaderboardrecord != undefined) {
     topRecords.push(workerLeaderboardrecord);
   }
-  // Remove workers who are not yet registered
-  const filteredRecords = topRecords.filter((record, idx, _) => record.name != null);
-  HttpResponse.OK(ctx, filteredRecords);
+  HttpResponse.OK(ctx, topRecords);
 };
