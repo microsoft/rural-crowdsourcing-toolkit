@@ -55,7 +55,7 @@ export async function createLeaderboardMV() {
     ON worker.id = points.worker_id
     WHERE worker.profile IS NOT NULL
       `,
-    'wgroup'
+    'id'
   );
   // Create INDEX on matview for concurrency
   await knex.raw(`CREATE UNIQUE INDEX ON leaderboard (id)`);
