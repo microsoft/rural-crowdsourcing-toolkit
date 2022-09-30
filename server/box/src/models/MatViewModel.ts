@@ -57,6 +57,8 @@ export async function createLeaderboardMV() {
       `,
     'wgroup'
   );
+  // Create INDEX on matview for concurrency
+  await knex.raw(`CREATE UNIQUE INDEX ON leaderboard (id)`);
 }
 
 export async function refreshLeaderboardMV() {
