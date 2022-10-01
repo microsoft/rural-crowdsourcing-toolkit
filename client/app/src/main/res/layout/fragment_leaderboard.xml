@@ -13,11 +13,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleText="@string/leaderboard_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/leaderboardRv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?colorPrimaryLight"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_leaderboard_entry" />
 
     <TextView
         android:id="@+id/emptyLeaderboardTv"
@@ -34,24 +51,5 @@
         app:layout_constraintTop_toBottomOf="@id/appTb"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/leaderboardRv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:background="?colorPrimaryLight"
-        android:clipToPadding="false"
-        android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_5sdp"
-        android:scrollbars="none"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emptyLeaderboardTv"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_leaderboard_entry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
