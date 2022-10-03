@@ -208,13 +208,14 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
 
     val rectangleCoors = sourceImageIv.coordinatesForRectCropBoxes
     val polygonCoors = sourceImageIv.coordinatesForPolygonCropBoxes
+
+    viewModel.imageMatrix = Matrix(sourceImageIv.imageMatrix)
+
     if (rectangleCoors.isEmpty() && polygonCoors.isEmpty()) {
       // Display an alert box warning the user of no annotation boxes
       skipTask(true, getString(R.string.no_annotation_box_dialog_title_text), getString(R.string.skip_task_warning))
       return
     }
-
-    viewModel.imageMatrix = Matrix(sourceImageIv.imageMatrix)
 
     viewModel.setRectangleCoors(rectangleCoors)
     viewModel.setPolygonCoors(polygonCoors)
