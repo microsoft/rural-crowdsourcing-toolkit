@@ -11,10 +11,10 @@ import { promises as fsp } from 'fs';
 import { processInputFile } from '../task-ops/ops/InputProcessor';
 import { TaskRecordType } from '@karya/core';
 
-const task_id = process.argv[1];
-const jsonPath = process.argv[2];
-const tgzFilePath = process.argv[3];
-const taskFolder = process.argv[4];
+const task_id = process.argv[2];
+const jsonPath = process.argv[3];
+const tgzFilePath = process.argv[4];
+const taskFolder = process.argv[5];
 
 /** Main Script */
 (async () => {
