@@ -284,6 +284,8 @@ export async function downloadPendingKaryaFiles() {
         await fs.promises.access(filepath);
         const checksum = await getChecksum(filepath, file.algorithm);
         if (checksum == file.checksum) {
+          // Update db
+          await BasicModel.updateSingle('karya_file', { id: file.id }, { in_box: true, url: null });
           return;
         }
         // Incorrect checksum; Proceed further
