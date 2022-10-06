@@ -22,6 +22,7 @@ import axios, { AxiosInstance } from 'axios';
 import { cronLogger } from './Cron';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
+import { fips } from 'crypto';
 
 export async function getLanguageAssets(axiosLocal: AxiosInstance) {
   cronLogger.info('Fetching language assets');
@@ -277,6 +278,20 @@ export async function downloadPendingKaryaFiles() {
     await BBPromise.mapSeries(pendingFiles, async (file) => {
       if (file.url == null) return;
       const filepath = `${localFolderPath}/${file.container_name}/${file.name}`;
+
+      // Ignore download if the file already exist and checksum is correct
+      try {
+        await fs.promises.access(filepath);
+        const checksum = await getChecksum(filepath, file.algorithm);
+        if (checksum == file.checksum) {
+          // Update db
+          await BasicModel.updateSingle('karya_file', { id: file.id }, { in_box: true, url: null });
+          return;
+        }
+        // Incorrect checksum; Proceed further
+      } catch (e) {
+        // File not present; Proceed further
+      }
 
       try {
         // Download file
