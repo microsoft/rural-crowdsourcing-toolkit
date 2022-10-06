@@ -25,6 +25,7 @@ import { backendImageAnnotationScenario } from './scenarios/ImageAnnotation';
 import { backendTextTranslationValidationScenario } from './scenarios/TextTranslationValidation';
 import { backendSpeechTranscriptionScenario } from './scenarios/SpeechTranscription';
 import { backendImageAnnotationValidationScenario } from './scenarios/ImageAnnotationValidation';
+import { backendVideoAnnotationScenario } from './scenarios/VideoAnnotation';
 
 // Local scenario Map
 export const backendScenarioMap: {
@@ -47,4 +48,5 @@ export const backendScenarioMap: {
   TEXT_TRANSLATION_VALIDATION: backendTextTranslationValidationScenario,
   SPEECH_TRANSCRIPTION: backendSpeechTranscriptionScenario,
   IMAGE_ANNOTATION_VALIDATION: backendImageAnnotationValidationScenario,
+  VIDEO_ANNOTATION: backendVideoAnnotationScenario,
 };
