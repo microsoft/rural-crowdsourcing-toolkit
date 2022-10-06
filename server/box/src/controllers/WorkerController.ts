@@ -119,6 +119,5 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
   if (workerLeaderboardrecord != undefined) {
     topRecords.push(workerLeaderboardrecord);
   }
-
   HttpResponse.OK(ctx, topRecords);
 };

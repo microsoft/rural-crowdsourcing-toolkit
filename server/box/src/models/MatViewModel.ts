@@ -55,7 +55,7 @@ export async function createLeaderboardMV() {
     ON worker.id = points.worker_id
     WHERE worker.profile IS NOT NULL
       `,
-    'wgroup'
+    'id'
   );
 }
 

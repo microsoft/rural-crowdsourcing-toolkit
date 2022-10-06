@@ -147,7 +147,7 @@ SELECT tw.*, t3.amount FROM
  */
 export async function getLeaderboardRecords(
   worker: WorkerRecord
-): Promise<(WorkerRecord & { XP: Number; rank: Number })[]> {
+): Promise<(WorkerRecord & { XP: Number; rank: Number; name: String })[]> {
   const leaderboardRecords = await knex.raw(`SELECT *, RANK() OVER (ORDER BY XP DESC) as rank FROM leaderboard WHERE 
     wgroup = '${worker.wgroup}'`);
   return leaderboardRecords.rows;
