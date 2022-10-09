@@ -45,6 +45,7 @@ export const get: KaryaMiddleware = async (ctx) => {
       gender,
       language,
       tags,
+      params: tags,
       created_at,
       last_updated_at,
     };
@@ -71,7 +72,8 @@ export const update: KaryaMiddleware = async (ctx) => {
       profile_updated_at: new Date().toISOString(),
     }
   );
-
+  // @ts-ignore
+  updatedRecord.params = updatedRecord.tags;
   HttpResponse.OK(ctx, updatedRecord);
 };
 
@@ -87,7 +89,8 @@ export const registerWorker: KaryaMiddleware = async (ctx) => {
     { reg_mechanism: 'phone-otp', registered_at: now, profile_updated_at: now }
   );
   const id_token = ctx.state.entity.id_token;
-  ctx.state.entity = { ...record, id_token };
+  // @ts-ignore
+  ctx.state.entity = { ...record, id_token, params: ctx.state.entity.tags };
 
   HttpResponse.OK(ctx, ctx.state.entity);
 };
