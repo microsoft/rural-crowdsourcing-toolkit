@@ -393,7 +393,11 @@ abstract class BaseMTRendererViewModel(
         }
       }
 
-      if (_inputFileDoesNotExist.value) return@launch
+      if (_inputFileDoesNotExist.value) {
+        // Dialog saying input file does not exist?
+        navigateBack()
+        return@launch
+      }
 
       outputData =
         if (!currentAssignment.output.isJsonNull && currentAssignment.output.asJsonObject.has("data")) {
