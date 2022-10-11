@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.microsoft.research.karya.data.exceptions.NoWorkerException
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.repo.AuthRepository
+import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
 import javax.inject.Inject
@@ -16,6 +17,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import java.math.BigInteger
+import java.security.MessageDigest
+import java.util.*
 
 enum class AUTH_STATUS {
   LOGGED_IN,
@@ -23,6 +27,8 @@ enum class AUTH_STATUS {
   UNAUTHENTICATED,
   LOGGED_OUT
 }
+private const val WFC_CODE_SEED="93848374"
+
 
 class AuthManager
 @Inject
@@ -104,4 +110,39 @@ constructor(
   private fun setAuthStatus(status: AUTH_STATUS) {
     _currAuthStatus.postValue(status)
   }
+
+  suspend fun authorizeWorkFromCenterUser(code: String): Boolean {
+    val today = DateUtils.getCurrentDate().substring(0,10)
+    val message = WFC_CODE_SEED + today + "\n"
+    val md5Encoder = MessageDigest.getInstance("MD5")
+    md5Encoder.update(message.toByteArray(), 0, message.length)
+    val hash = BigInteger(1, md5Encoder.digest()).toString(16).substring(0,6)
+    if (code == hash) {
+      // TODO: hour offset is hard coded
+      val centerAuthExpirationTime = Date().time + 2 * 60 * 60 * 1000
+      val centerAuthExpTimeKey = stringPreferencesKey(PreferenceKeys.CENTER_AUTH_EXP_TIME)
+      applicationContext.dataStore.edit { prefs -> prefs[centerAuthExpTimeKey] = centerAuthExpirationTime.toString() }
+      return true
+    }
+    return false
+  }
+
+  suspend fun revokeWFCAuthorization() {
+    val centerAuthExpTimeKey = stringPreferencesKey(PreferenceKeys.CENTER_AUTH_EXP_TIME)
+    applicationContext.dataStore.edit { prefs -> prefs.remove(centerAuthExpTimeKey) }
+  }
+
+  suspend fun isWorkFromCenterAuthenticated(): Boolean {
+    val centerAuthExpTimeKey = stringPreferencesKey(PreferenceKeys.CENTER_AUTH_EXP_TIME)
+    val data = applicationContext.dataStore.data.first()
+    val centerAuthExpirationTime = data[centerAuthExpTimeKey] ?: return false
+
+    val currentTime = Date().time
+    if (currentTime > centerAuthExpirationTime.toLong()) {
+      return false
+    }
+
+    return true
+  }
+
 }

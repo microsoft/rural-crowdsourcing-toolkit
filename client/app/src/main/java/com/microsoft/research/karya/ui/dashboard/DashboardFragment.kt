@@ -201,8 +201,10 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       }
 
       binding.revokeWFCAuthorizationBtn.setOnClickListener {
-        viewModel.revokeWFCAuthorization()
-        binding.centerCode.text.clear()
+        viewLifecycleScope.launch {
+          viewModel.revokeWFCAuthorization()
+          binding.centerCode.text.clear()
+        }
       }
 
       loadProfilePic()
@@ -393,16 +395,17 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         }
       }
       if (action != null) {
-        // Check if user is in center
-        if (viewModel.workFromCenterUser.value) {
-          viewModel.checkWorkFromCenterUserAuth()
-          if (!viewModel.userInCenter.value) {
-            binding.centerCode.requestFocus()
-            return
+        viewLifecycleScope.launch {
+          // Check if user is in center
+          if (viewModel.workFromCenterUser.value) {
+            if (!viewModel.checkWorkFromCenterUserAuth()) {
+              binding.centerCode.requestFocus()
+              return@launch
+            }
           }
-        }
 
-        findNavController().navigate(action)
+          findNavController().navigate(action)
+        }
       }
     }
   }
