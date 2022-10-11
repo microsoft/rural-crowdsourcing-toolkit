@@ -22,7 +22,7 @@ export type ContactsResponse = {
   created_at: string;
 };
 
-export type ContactType = 'worker';
+export type ContactType = 'WORKER';
 
 // Razorpay Funds
 export type FundAccountRequest =

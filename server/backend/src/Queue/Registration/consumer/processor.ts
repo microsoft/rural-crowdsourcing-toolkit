@@ -28,9 +28,7 @@ export default async (job: Job<RegistrationQJobData>) => {
   try {
     await processJob(job);
   } catch (error: any) {
-    ErrorLogger.error(
-      `Registration Id ${job.data.accountRecord.id}: Error Stack: ${error.stack}`
-    );
+    ErrorLogger.error(`Registration Id ${job.data.accountRecord.id}: Error Stack: ${error.stack}`);
     await cleanUpOnError(error, job);
     throw error;
   }
@@ -128,7 +126,7 @@ const getContactsID = async (workerId: string) => {
   const contactsRequestBody: ContactsRequest = {
     name: workerId,
     contact: workerRecord.phone_number!,
-    type: 'worker',
+    type: 'WORKER',
   };
   // 2. Make the post request
   // TODO @enhancement: Maybe rertry the request few times before marking the record as failed
