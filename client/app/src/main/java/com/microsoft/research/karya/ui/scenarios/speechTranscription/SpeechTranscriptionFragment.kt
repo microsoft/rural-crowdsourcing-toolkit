@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.data.model.karya.enums.AssistantAudio
 import com.microsoft.research.karya.ui.scenarios.common.BaseMTRendererFragment
@@ -88,6 +89,7 @@ class SpeechTranscriptionFragment : BaseMTRendererFragment(R.layout.microtask_sp
 
     audioPlayer.setAndExoPlayerListener(object : AndExoPlayerListener {
       override fun onExoPlayerError(errorMessage: String?) {
+        FirebaseCrashlytics.getInstance().recordException(Throwable("Audio error: $errorMessage"))
         viewModel.handleCorruptAudio(errorMessage)
       }
     })

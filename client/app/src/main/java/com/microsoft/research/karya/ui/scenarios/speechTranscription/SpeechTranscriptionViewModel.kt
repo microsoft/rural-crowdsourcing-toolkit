@@ -336,8 +336,8 @@ constructor(
     outputData.addProperty("flag", "corrupt")
     outputData.addProperty("message", msg)
 
-    // Move to next task
-    handleNextClick()
+    // Move to the dashboard
+    navigateBack()
   }
 
 }
