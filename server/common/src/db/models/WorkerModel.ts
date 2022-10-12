@@ -100,7 +100,7 @@ export async function getTotalSpent(worker_id: string): Promise<number> {
 
 export async function getTotalEarned(worker_id: string): Promise<number> {
   const response = await knex.raw(
-    `SELECT SUM(credits + base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id}`
+    `SELECT SUM(COALESCE(credits, 0) + max_base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id}`
   );
   const earned = response.rows[0].total;
   return earned ?? 0;
