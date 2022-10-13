@@ -109,7 +109,7 @@ export async function getWeekEarned(worker_id: string): Promise<number> {
   const current = new Date().getTime();
   const lastWeek = new Date(current - 7 * 24 * 3600 * 1000).toISOString();
   const response = await knex.raw(
-    `SELECT SUM(credits + base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id} AND completed_at > '${lastWeek}'`
+    `SELECT SUM(COALESCE(credits, 0) + max_base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('SUBMITTED', 'VERIFIED') AND completed_at > '${lastWeek}'`
   );
   const earned = response.rows[0].total;
   return earned ?? 0;
