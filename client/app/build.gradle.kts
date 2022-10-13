@@ -134,6 +134,7 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Navigation.fragmentKtx)
   implementation(Dependencies.AndroidX.Navigation.uiKtx)
+  implementation("com.google.android.play:core-ktx:1.8.1")
 
   kapt(Dependencies.AndroidX.Room.roomCompiler)
 
