@@ -81,7 +81,8 @@ export async function getBalance(worker_id: string): Promise<number> {
   FROM payments_transaction WHERE worker_id = ${worker_id} 
   AND status IN ('created', 'queued', 'processing', 'processed', 'failed_after_transaction') )
   as total 
-  FROM microtask_assignment WHERE status IN ('SUBMITTED', 'VERIFIED') AND worker_id = ${worker_id};`);
+  FROM microtask_assignment WHERE status IN ('COMPLETED', 'VERIFIED') AND worker_id = ${worker_id} AND submitted_to_server_at IS NOT NULL
+  AND task_id NOT BETWEEN 25 AND 36;`);
   let balance = response.rows[0].total;
   return balance ? balance : 0;
 }
