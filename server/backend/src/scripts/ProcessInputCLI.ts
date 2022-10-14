@@ -23,7 +23,13 @@ const uncompressed = process.argv[6] == 'true' ? true : false;
   setupBlobStore();
 
   const task = (await BasicModel.getSingle('task', { id: task_id })) as TaskRecordType;
-  await fsp.mkdir(taskFolder);
+  try {
+    if (!uncompressed) {
+      await fsp.mkdir(taskFolder);
+    }
+  } catch (e) {
+    // pass
+  }
 
   await processInputFile(task, jsonPath, tgzFilePath, taskFolder, uncompressed);
 })().finally(() => knex.destroy());
