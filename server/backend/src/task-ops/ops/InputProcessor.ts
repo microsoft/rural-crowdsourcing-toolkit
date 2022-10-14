@@ -31,7 +31,8 @@ export async function processInputFile(
   task: TaskRecordType,
   jsonFilePath: string | undefined,
   tgzFilePath: string | undefined,
-  taskFolder: string
+  taskFolder: string,
+  tarUncompressed: boolean = false
 ) {
   // Extract the scenario corresponding to the task
   const scenario_name = task.scenario_name;
@@ -65,7 +66,9 @@ export async function processInputFile(
     if (!tgzFilePath) {
       throw new Error('Task requires tgz file input');
     }
-    await tar.x({ file: tgzFilePath, C: taskFolder });
+    if (!tarUncompressed) {
+      await tar.x({ file: tgzFilePath, C: taskFolder });
+    }
   }
 
   // Process input files for the scenario
@@ -105,15 +108,25 @@ export async function processInputFile(
 
         // Update the microtask record
         await BasicModel.updateSingle('microtask', { id: mtRecord.id }, { input_file_id: fileRecord.id });
+
+        if (tarUncompressed) {
+          try {
+            await fsp.unlink(inputTgzFilePath);
+          } catch (e) {
+            // ignore
+          }
+        }
       }
     });
   });
 
   // Clean up the input files
-  try {
-    await fsp.rmdir(taskFolder, { recursive: true });
-  } catch (e) {
-    // Something went wrong while cleaning up
-    // Ignore
+  if (!tarUncompressed) {
+    try {
+      await fsp.rmdir(taskFolder, { recursive: true });
+    } catch (e) {
+      // Something went wrong while cleaning up
+      // Ignore
+    }
   }
 }

@@ -15,6 +15,7 @@ const task_id = process.argv[2];
 const jsonPath = process.argv[3];
 const tgzFilePath = process.argv[4];
 const taskFolder = process.argv[5];
+const uncompressed = process.argv[6] == 'true' ? true : false;
 
 /** Main Script */
 (async () => {
@@ -24,5 +25,5 @@ const taskFolder = process.argv[5];
   const task = (await BasicModel.getSingle('task', { id: task_id })) as TaskRecordType;
   await fsp.mkdir(taskFolder);
 
-  await processInputFile(task, jsonPath, tgzFilePath, taskFolder);
+  await processInputFile(task, jsonPath, tgzFilePath, taskFolder, uncompressed);
 })().finally(() => knex.destroy());
