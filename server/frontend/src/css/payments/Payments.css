@@ -1,0 +1,18 @@
+.header-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.history-btn {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+.table-headline {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}

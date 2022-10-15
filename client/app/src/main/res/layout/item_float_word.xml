@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/float_word_card"
+    android:id="@+id/float_sentence_card"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +16,7 @@
         android:paddingVertical="4dp">
 
         <TextView
-            android:id="@+id/word"
+            android:id="@+id/sentence"
             android:layout_weight="3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,9 +33,9 @@
             android:layout_marginLeft="@dimen/_4sdp"
             android:layout_width="@dimen/_16sdp"
             android:layout_height="@dimen/_16sdp"
-            app:layout_constraintTop_toTopOf="@id/word"
-            app:layout_constraintBottom_toBottomOf="@id/word"
-            app:layout_constraintLeft_toRightOf="@id/word"
+            app:layout_constraintTop_toTopOf="@id/sentence"
+            app:layout_constraintBottom_toBottomOf="@id/sentence"
+            app:layout_constraintLeft_toRightOf="@id/sentence"
             android:src="@drawable/ic_cross_on" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

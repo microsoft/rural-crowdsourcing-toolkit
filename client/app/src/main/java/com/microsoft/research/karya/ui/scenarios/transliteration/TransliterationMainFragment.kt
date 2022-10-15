@@ -52,9 +52,9 @@ class TransliterationMainFragment :
 
     setupObservers()
 
-    textTransliteration.inputType =
+    sentenceEt.inputType =
       InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-    textTransliteration.filters = arrayOf(
+    sentenceEt.filters = arrayOf(
       InputFilter { source, start, end, dest, dstart, dend ->
         return@InputFilter source.replace(Regex("[^a-z]*"), "")
       }
@@ -67,7 +67,7 @@ class TransliterationMainFragment :
 
     addBtn.setOnClickListener { addWord() }
 
-    textTransliteration.onSubmit { addWord() }
+    sentenceEt.onSubmit { addWord() }
 
     nextBtn.setOnClickListener { onNextClick() }
 
@@ -78,7 +78,7 @@ class TransliterationMainFragment :
 
     errorTv.gone() // Remove any existing errors
 
-    val word = textTransliteration.text.toString()
+    val word = sentenceEt.text.toString()
     val outputVariants = viewModel.outputVariants.value!!
     val inputVariants = viewModel.inputVariants.value!!
 
@@ -160,7 +160,7 @@ class TransliterationMainFragment :
     viewModel.wordTvText.observe(
       viewLifecycleOwner.lifecycle,
       viewLifecycleScope
-    ) { text -> wordTv.text = text }
+    ) { text -> contextTv.text = text }
 
     viewModel.outputVariants.observe(viewLifecycleOwner) { variants ->
 
@@ -168,7 +168,7 @@ class TransliterationMainFragment :
 
       for ((word, wordDetail) in variants) {
         val view = layoutInflater.inflate(R.layout.item_float_word, null)
-        view.word.text = word
+        view.sentence.text = word
 
         when (wordDetail.verificationStatus) {
           WordVerificationStatus.VALID -> setValidUI(view)
@@ -203,7 +203,7 @@ class TransliterationMainFragment :
       userVariantLayout.removeAllViews()
       for (word in variants.keys.reversed()) {
         val view = layoutInflater.inflate(R.layout.item_float_word, null)
-        view.word.text = word
+        view.sentence.text = word
 
         setNewUI(view)
 
@@ -212,13 +212,13 @@ class TransliterationMainFragment :
         userVariantLayout.addView(view)
       }
       // Clear the edittext
-      textTransliteration.setText("")
+      sentenceEt.setText("")
     }
 
   }
 
   private fun setValidUI(view: View) {
-    view.float_word_card.background.setTint(
+    view.float_sentence_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
         R.color.c_light_green
@@ -228,7 +228,7 @@ class TransliterationMainFragment :
   }
 
   private fun setInvaidUI(view: View) {
-    view.float_word_card.background.setTint(
+    view.float_sentence_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
         R.color.c_red
@@ -238,7 +238,7 @@ class TransliterationMainFragment :
   }
 
   private fun setNewUI(view: View) {
-    view.float_word_card.background.setTint(
+    view.float_sentence_card.background.setTint(
       ContextCompat.getColor(
         requireContext(),
         R.color.c_light_grey
@@ -248,7 +248,7 @@ class TransliterationMainFragment :
   }
 
   private fun setUnknownUI(view: View) {
-    view.float_word_card.background.setTint(Color.LTGRAY)
+    view.float_sentence_card.background.setTint(Color.LTGRAY)
     view.removeImageView.gone()
   }
 

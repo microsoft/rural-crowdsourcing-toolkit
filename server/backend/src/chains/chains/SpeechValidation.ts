@@ -34,6 +34,7 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
         },
         input_file_id: assignment.output_file_id,
         deadline: toTask.deadline,
+        base_credits: toTask.params.baseCreditsPerMicrotask,
         credits: toTask.params.creditsPerMicrotask,
         status: 'INCOMPLETE',
       };

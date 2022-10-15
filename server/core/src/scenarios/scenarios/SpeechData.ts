@@ -13,10 +13,8 @@ type SpeechDataTaskInputParameters = {
   compress: boolean;
   sampling_rate: string;
   bitwidth: string;
-  allowSkipping: boolean;
   maxRecordingLength?: number;
   noForcedReplay: boolean;
-  includeLogs: boolean;
 };
 
 // Speech data input format
@@ -77,14 +75,6 @@ const task_input: BaseSpeechDataScenario['task_input'] = [
   },
 
   {
-    id: 'allowSkipping',
-    label: 'Allow users to skip sentences',
-    description: 'Allow users to skip recording sentences',
-    required: false,
-    type: 'boolean',
-  },
-
-  {
     id: 'noForcedReplay',
     label: 'Avoid forced replay of recorded sentence',
     description:
@@ -99,14 +89,6 @@ const task_input: BaseSpeechDataScenario['task_input'] = [
     description: 'If the recording length exceeds the given number, the recording will be rejected by the app',
     required: false,
     type: 'int',
-  },
-
-  {
-    id: 'includeLogs',
-    label: 'Include logs in output',
-    description: 'Include detailed work logs in output',
-    required: false,
-    type: 'boolean',
   },
 ];
 

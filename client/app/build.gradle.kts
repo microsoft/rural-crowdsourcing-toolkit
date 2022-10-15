@@ -12,10 +12,10 @@ plugins {
 }
 
 android {
-  compileSdkVersion(30)
+  compileSdkVersion(31)
   defaultConfig {
     applicationId = "com.microsoft.research.karya"
-    minSdkVersion(21)
+    minSdkVersion(24)
     targetSdkVersion(30)
     multiDexEnabled = true
     versionCode = 25
@@ -162,9 +162,6 @@ dependencies {
   implementation("com.intuit.ssp:ssp-android:1.0.6")
   implementation("com.intuit.sdp:sdp-android:1.0.6")
 
-  // Zoomable image
-  implementation("com.jsibbold:zoomage:1.3.1")
-
   // Themed button toggle group
   implementation("nl.bryanderidder:themed-toggle-button-group:1.3.4")
 
@@ -173,6 +170,8 @@ dependencies {
 
   // Android rating bar
   implementation("me.zhanghai.android.materialratingbar:library:1.3.1")
+  // Custom aars
+  implementation(files("libs/zoomage-debug.aar"))
 
   // Video data collection
   "largeImplementation" ("com.github.HamidrezaAmz:MagicalExoPlayer:2.0.6")

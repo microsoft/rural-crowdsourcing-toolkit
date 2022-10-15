@@ -23,6 +23,8 @@ import {
   getUpdatedWorkers,
   getVerifiedAssignments,
   getLanguageAssets,
+  getAccountRecords,
+  getTransactionRecords,
 } from './ReceiveFromServer';
 
 /**
@@ -112,4 +114,9 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Log for successful completion of sync
   cronLogger.info(`Completed sync for box ${box.id}`);
+  // Get updated account records
+  await getAccountRecords(axios);
+
+  // Get updated account records
+  await getTransactionRecords(axios);
 }

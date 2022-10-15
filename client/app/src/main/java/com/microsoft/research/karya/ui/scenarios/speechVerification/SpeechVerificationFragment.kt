@@ -240,7 +240,7 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
     nextBtnState: ButtonState
   ) {
     playBtn.isClickable = playBtnState != ButtonState.DISABLED
-    backBtnCv.isClickable = backBtnState != ButtonState.DISABLED
+    backBtn.isClickable = backBtnState != ButtonState.DISABLED
     nextBtnCv.isClickable = nextBtnState != ButtonState.DISABLED
 
     playBtn.setBackgroundResource(
@@ -259,7 +259,7 @@ class SpeechVerificationFragment : BaseMTRendererFragment(R.layout.microtask_spe
       }
     )
 
-    backBtnCv.backIv.setBackgroundResource(
+    backBtn.backIv.setBackgroundResource(
       when (backBtnState) {
         ButtonState.DISABLED -> R.drawable.ic_back_disabled
         ButtonState.ENABLED -> R.drawable.ic_back_enabled

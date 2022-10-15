@@ -123,7 +123,7 @@
         </action>
         <action
             android:id="@+id/action_dashboardActivity_to_imageLabelling"
-            app:destination="@id/imageLabellingFragment">
+            app:destination="@id/imageLabellingFlow">
             <argument android:name="taskId" />
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
@@ -159,6 +159,27 @@
         <action
             android:id="@+id/action_dashboardActivity_to_signVideoVerification"
             app:destination="@id/signVideoVerificationFragment">
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_speechTranscriptionFragment"
+            app:destination="@id/speechTranscriptionFragment" >
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_imageAnnotationFragment"
+            app:destination="@id/imageAnnotationFragment" >
+            <argument android:name="taskId" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+        </action>
+        <action
+            android:id="@+id/action_dashboardActivity_to_sentenceCorpusFragment"
+            app:destination="@id/sentenceCorpusFragment" >
             <argument android:name="taskId" />
             <argument android:name="completed" app:argType="integer" />
             <argument android:name="total" app:argType="integer" />
@@ -223,17 +244,33 @@
             android:id="@+id/action_imageTranscriptionFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/imageLabellingFragment"
-        android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.ImageLabellingFragment"
-        android:label="imageLabellingFragment">
-        <argument android:name="taskId" app:argType="string" />
-        <argument android:name="completed" app:argType="integer" />
-        <argument android:name="total" app:argType="integer" />
-        <action
-            android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity" />
-    </fragment>
+    <navigation
+        android:id="@+id/imageLabellingFlow"
+        app:startDestination="@id/imageLabellingFragment">
+        <fragment
+            android:id="@+id/imageLabellingFragment"
+            android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.ImageLabellingFragment"
+            android:label="imageLabellingFragment">
+            <argument android:name="taskId" app:argType="string" />
+            <argument android:name="completed" app:argType="integer" />
+            <argument android:name="total" app:argType="integer" />
+            <action
+                android:id="@+id/action_imageLabellingFragment_to_dashboardActivity"
+                app:destination="@id/dashboardActivity" />
+            <action
+                android:id="@+id/action_imageLabellingFragment_to_imageLabellingCameraFragment"
+                app:destination="@id/imageLabellingCameraFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/imageLabellingCameraFragment"
+            android:name="com.microsoft.research.karya.ui.scenarios.imageLabelling.CameraFragment"
+            android:label="imageLabellingCameraFragment">
+
+            <action
+                android:id="@+id/action_imageLabellingCameraFragment_to_imageLabellingFragment"
+                app:destination="@id/imageLabellingFragment" />
+        </fragment>
+    </navigation>
     <fragment
         android:id="@+id/quizFragment"
         android:name="com.microsoft.research.karya.ui.scenarios.quiz.QuizMainFragment"
@@ -287,6 +324,39 @@
         <argument android:name="total" app:argType="integer" />
         <action
             android:id="@+id/action_signVideoVerificationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/speechTranscriptionFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.speechTranscription.SpeechTranscriptionFragment"
+        android:label="SpeechTranscriptionFragment">
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_speechTranscriptionFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageAnnotationFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.imageAnnotation.ImageAnnotationFragment"
+        android:label="ImageAnnotationFragment" >
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_imageAnnotationFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/sentenceCorpusFragment"
+        android:name="com.microsoft.research.karya.ui.scenarios.sentenceCorpus.SentenceCorpusFragment"
+        android:label="SentenceCorpusFragment" >
+        <argument android:name="taskId" app:argType="string" />
+        <argument android:name="completed" app:argType="integer" />
+        <argument android:name="total" app:argType="integer" />
+        <action
+            android:id="@+id/action_sentenceCorpusFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
     </fragment>
 </navigation>

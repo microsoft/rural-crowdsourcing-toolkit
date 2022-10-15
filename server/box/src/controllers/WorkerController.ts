@@ -5,7 +5,7 @@
 
 import { KaryaMiddleware } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
-import { BasicModel } from '@karya/common';
+import { BasicModel, WorkerModel } from '@karya/common';
 import { Worker } from '@karya/core';
 
 /**
@@ -56,32 +56,22 @@ export const get: KaryaMiddleware = async (ctx) => {
 };
 
 /**
- * Update the worker information.
+ * Update the profile for the worker.
  * @param ctx Karya request context
  */
 export const update: KaryaMiddleware = async (ctx) => {
-  const action = ctx.request.query['action'];
-
-  // action should be either register or update
-  if (action != 'register' && action != 'update') {
-    HttpResponse.BadRequest(ctx, 'Missing or invalid action parameter');
-    return;
-  }
-
   // Get updates from the request body
-  const updates: Worker = ctx.request.body;
-  updates.profile_updated_at = new Date().toISOString();
+  const profile: Object = ctx.request.body;
 
-  if (action == 'register') {
-    const { year_of_birth, gender } = updates;
-    if (!year_of_birth || !gender) {
-      HttpResponse.BadRequest(ctx, 'Missing year of birth or gender with registration request');
-      return;
+  const updatedRecord = await BasicModel.updateSingle(
+    'worker',
+    { id: ctx.state.entity.id },
+    {
+      profile: profile,
+      profile_updated_at: new Date().toISOString(),
     }
-  }
+  );
 
-  // TODO: check if only the updatable properties are updated
-  const updatedRecord = await BasicModel.updateSingle('worker', { id: ctx.state.entity.id }, updates);
   HttpResponse.OK(ctx, updatedRecord);
 };
 
@@ -107,4 +97,26 @@ export const registerWorker: KaryaMiddleware = async (ctx) => {
  */
 export const sendGeneratedIdToken: KaryaMiddleware = async (ctx) => {
   HttpResponse.OK(ctx, { id_token: ctx.state.entity.id_token });
+};
+
+/**
+ * Returns 10 workers with most XP points and one additional leaderboard entry for the worker requesting leaderboard
+ */
+export const getLeaderboard: KaryaMiddleware = async (ctx) => {
+  const workerId = ctx.state.entity.id;
+  const worker = await BasicModel.getSingle('worker', { id: workerId });
+
+  const records = await WorkerModel.getLeaderboardRecords(worker);
+
+  // If empty response return empty list
+  if (records.length == 0) {
+    return HttpResponse.OK(ctx, [])
+  }
+
+  const topRecords = records.slice(0, 10);
+  const workerLeaderboardrecord = records.find((record) => record.id === workerId)!;
+  // Add worker leaderboard record to the leaderboard
+  topRecords.push(workerLeaderboardrecord);
+
+  HttpResponse.OK(ctx, topRecords);
 };

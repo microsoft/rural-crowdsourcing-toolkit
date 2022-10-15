@@ -23,7 +23,7 @@
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
     <TextView
-        android:id="@+id/wordTv"
+        android:id="@+id/contextTv"
         style="@style/MicrotaskInputText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -43,13 +43,13 @@
         android:background="@drawable/ic_next_enabled"
         android:contentDescription="@string/back"
         android:soundEffectsEnabled="false"
-        app:layout_constraintBottom_toBottomOf="@id/wordTv"
+        app:layout_constraintBottom_toBottomOf="@id/contextTv"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/wordTv" />
+        app:layout_constraintTop_toTopOf="@id/contextTv" />
 
 
     <EditText
-        android:id="@+id/textTransliteration"
+        android:id="@+id/sentenceEt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
@@ -67,9 +67,9 @@
         android:scrollHorizontally="false"
         android:textColor="#000000"
         android:textSize="@dimen/_16ssp"
-        app:layout_constraintLeft_toLeftOf="@id/wordTv"
+        app:layout_constraintLeft_toLeftOf="@id/contextTv"
         app:layout_constraintRight_toLeftOf="@id/addBtn"
-        app:layout_constraintTop_toBottomOf="@id/wordTv"
+        app:layout_constraintTop_toBottomOf="@id/contextTv"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -80,9 +80,9 @@
         android:layout_marginVertical="@dimen/_8sdp"
         android:textSize="@dimen/_12ssp"
         android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
+        app:layout_constraintLeft_toLeftOf="@id/sentenceEt"
         app:layout_constraintRight_toRightOf="@id/addBtn"
-        app:layout_constraintTop_toBottomOf="@id/textTransliteration"
+        app:layout_constraintTop_toBottomOf="@id/sentenceEt"
         tools:text="THIS IS AN ERROR MESSAGE" />
 
     <androidx.core.widget.NestedScrollView
@@ -92,7 +92,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintHeight_max="@dimen/_350sdp"
         android:layout_marginVertical="@dimen/_8sdp"
-        app:layout_constraintLeft_toLeftOf="@id/textTransliteration"
+        app:layout_constraintLeft_toLeftOf="@id/sentenceEt"
         app:layout_constraintRight_toRightOf="@id/addBtn"
         app:layout_constraintTop_toBottomOf="@id/errorTv">
 
@@ -133,11 +133,11 @@
         android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/ic_add_button"
         android:contentDescription="@string/next"
-        app:layout_constraintBottom_toBottomOf="@id/textTransliteration"
+        app:layout_constraintBottom_toBottomOf="@id/sentenceEt"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textTransliteration" />
+        app:layout_constraintTop_toTopOf="@id/sentenceEt" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
