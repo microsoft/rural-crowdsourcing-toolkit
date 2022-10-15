@@ -110,7 +110,7 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
 
   // If empty response return empty list
   if (records.length == 0) {
-    return HttpResponse.OK(ctx, [])
+    return HttpResponse.OK(ctx, []);
   }
 
   const topRecords = records.slice(0, 10);

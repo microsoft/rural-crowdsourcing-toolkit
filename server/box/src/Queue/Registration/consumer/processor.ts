@@ -14,9 +14,7 @@ export default async (job: Job<RegistrationQJobData>) => {
   try {
     await processJob(job);
   } catch (error: any) {
-    ErrorLogger.error(
-      `Account Record Id ${job.data.accountRecord.id}: Error Stack: ${error.stack}`
-    );
+    ErrorLogger.error(`Account Record Id ${job.data.accountRecord.id}: Error Stack: ${error.stack}`);
     await cleanUpOnError(error, job);
     throw error;
   }

@@ -33,11 +33,12 @@ export type StoreStateView<View extends ViewName> = {
 // Construct the store state
 export type AllState = {
   [id in DbTableName]: StoreStateDb<id>;
-} & {
-  [id in ViewName]: StoreStateView<id>;
-} & {
-  auth: { cwp: ServerUserRecord | null } & RequestStatus;
-};
+} &
+  {
+    [id in ViewName]: StoreStateView<id>;
+  } & {
+    auth: { cwp: ServerUserRecord | null } & RequestStatus;
+  };
 
 // Store actions
 type StoreActions = BackendRequestInitAction | BackendRequestSuccessAction | BackendRequestFailureAction;

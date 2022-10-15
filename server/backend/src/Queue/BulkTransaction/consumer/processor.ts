@@ -19,9 +19,7 @@ export default async (job: Job<BulkTransactionQJobData>) => {
   try {
     await processJob(job);
   } catch (error: any) {
-    ErrorLogger.error(
-      `Bulk Transaction Id ${job.data.bulkTransactionRecord.id}: Stack : ${error.stack}`
-    );
+    ErrorLogger.error(`Bulk Transaction Id ${job.data.bulkTransactionRecord.id}: Stack : ${error.stack}`);
     await cleanUpOnError(error, job);
     throw error;
   }
