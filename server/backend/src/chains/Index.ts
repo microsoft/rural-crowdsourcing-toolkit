@@ -14,6 +14,7 @@ import { sentenceCorpusValidationChain } from './chains/SentenceCorpusValidation
 import { signLanguageVideoValidation } from './chains/SignLanguageVideoValidation';
 import { speechTranscriptionValidationChain } from './chains/SpeechTranscriptionValidation';
 import { speechValidationChain } from './chains/SpeechValidation';
+import { verifiedSpeechTranscriptionChain } from './chains/VerifiedSpeechTranscription';
 import { videoAnnotationValidation } from './chains/VideoAnnotationValidation';
 import { xliterationValidationChain } from './chains/XliterationValidation';
 
@@ -26,6 +27,7 @@ export const backendChainMap: { [key in ChainName]: BackendChainInterface<any, a
   IMAGE_ANNOTATION_VALIDATION: imageAnnotationValidation,
   SPEECH_TRANSCRIPTION_VALIDATION: speechTranscriptionValidationChain,
   VIDEO_ANNOTATION_VALIDATION: videoAnnotationValidation,
+  VERIFIED_SPEECH_TRANSCRIPTION: verifiedSpeechTranscriptionChain,
 };
 
 /**
