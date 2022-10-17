@@ -35,9 +35,9 @@ const processJob = async (job: Job<TransactionQJobData>) => {
   let transactionRecord: PaymentsTransactionRecord = job.data.transactionRecord;
   // Check if user has sufficient balance
   // Add the transaction amount since the transaction record has status CREATED and would be subtracted in getBalace function
-  const userBalance = (await WorkerModel.getBalance(transactionRecord.worker_id)) + parseInt(transactionRecord.amount);
+  const userBalance = (await WorkerModel.getBalance(transactionRecord.worker_id)) + transactionRecord.amount;
   //TODO @test: Write a test here
-  if (userBalance < parseInt(transactionRecord.amount)) {
+  if (userBalance < transactionRecord.amount) {
     throw new InsufficientBalanceError('Insufficient Balance');
   }
   const result = await sendPayoutRequest(transactionRecord, job.data.fundId);
@@ -62,7 +62,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
   const payoutRequestBody: PayoutRequest = {
     account_number: transactionRecord.source_account,
     // Converting rupees to paisa
-    amount: parseFloat(transactionRecord.amount!) * 100,
+    amount: transactionRecord.amount! * 100,
     currency: transactionRecord.currency,
     fund_account_id: fundId,
     mode: transactionRecord.mode,
