@@ -289,7 +289,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['box_id', ['>', 'box'], 'not unique', 'not nullable', 'not mutable'],
         ['bulk_id', ['bigint'], 'not unique', 'nullable', 'not mutable'],
         ['payout_id', ['string', 64], 'unique', 'nullable', 'mutable'],
-        ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+        ['amount', ['float'], 'not unique', 'not nullable', 'not mutable'],
         ['currency', ['string', 64], 'not unique', 'not nullable', 'not mutable'],
         ['account_id', ['>', 'payments_account'], 'not unique', 'not nullable', 'not mutable'],
         ['worker_id', ['>', 'worker'], 'not unique', 'not nullable', 'not mutable'],
@@ -305,7 +305,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
     bulk_payments_transaction: {
       columns: [
         ['user_id', ['>', 'server_user'], 'not unique', 'not nullable', 'not mutable'],
-        ['amount', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
+        ['amount', ['float'], 'not unique', 'not nullable', 'not mutable'],
         ['n_workers', ['bigint'], 'not unique', 'not nullable', 'not mutable'],
         ['status', ['string', 64], 'not unique', 'not nullable', 'mutable'],
         ['meta', ['object'], 'not unique', 'nullable', 'mutable'],
