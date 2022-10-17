@@ -59,6 +59,8 @@ type BulkPaymentsListState = {
   };
   all_workers_selected: boolean;
   worker_id_input: string;
+  access_code_input: string;
+  phone_number_input: string;
 };
 
 // Box list component
@@ -67,6 +69,8 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     workers_eligible: {},
     all_workers_selected: true,
     worker_id_input: '',
+    access_code_input: '',
+    phone_number_input: ''
   };
 
   // Initialize materialize fields
@@ -147,12 +151,23 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
 
     const { all_workers_selected } = this.state;
     const { worker_id_input } = this.state;
+    const { access_code_input } = this.state;
+    const { phone_number_input } = this.state;
 
     // Filtering workers by worker ID
     var workers_filtered = workers;
     if (worker_id_input !== undefined && worker_id_input !== '') {
       workers_filtered = workers.filter((w) => w.id.startsWith(worker_id_input));
     }
+
+    if (access_code_input !== undefined && access_code_input !== '') {
+      workers_filtered = workers.filter((w) => w.access_code.startsWith(access_code_input));
+    }
+
+    if (phone_number_input !== undefined && phone_number_input !== '') {
+      workers_filtered = workers.filter((w) => w.phone_number!.startsWith(phone_number_input));
+    }
+
 
     // get error element
     const errorElement =
@@ -181,7 +196,10 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
           );
         },
       },
-      { header: 'Worker ID', type: 'field', field: 'id' },
+      { header: 'Worker IDs', type: 'field', field: 'id' },
+      { header: 'Access Code ', type: 'field', field: 'access_code' },
+      { header: 'Phone Number ', type: 'field', field: 'phone_number' },
+      { header: 'Worker Info', type: 'field', field: 'profile' },
       { header: 'Amount ', type: 'field', field: 'amount' },
     ];
 
@@ -201,6 +219,22 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
             value={this.state.worker_id_input}
             onChange={this.handleInputChange}
             label='Search by worker ID'
+            width='s10 m8 l4'
+            required={false}
+          />
+          <ColTextInput
+            id='access_code_input'
+            value={this.state.access_code_input}
+            onChange={this.handleInputChange}
+            label='Search by access code'
+            width='s10 m8 l4'
+            required={false}
+          />
+          <ColTextInput
+            id='phone_number_input'
+            value={this.state.access_code_input}
+            onChange={this.handleInputChange}
+            label='Search by access code'
             width='s10 m8 l4'
             required={false}
           />
