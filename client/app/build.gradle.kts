@@ -180,7 +180,7 @@ dependencies {
   // Android rating bar
   implementation("me.zhanghai.android.materialratingbar:library:1.3.1")
   // Custom aars
-  implementation(files("libs/zoomage-debug.aar"))
+//  implementation(files("libs/zoomage-debug.aar"))
 
   // Grid layout for lower API levels
   implementation ("androidx.gridlayout:gridlayout:1.0.0")
@@ -194,4 +194,6 @@ dependencies {
   "largeImplementation" ("com.google.mlkit:face-detection:16.1.2")
   "largeImplementation" ("com.github.fishwjy:VideoCompressor:master-SNAPSHOT")
 
+  // Zoomage
+  implementation(project(":zoomage"))
 }
