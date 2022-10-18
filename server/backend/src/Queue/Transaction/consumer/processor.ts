@@ -62,7 +62,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
   const payoutRequestBody: PayoutRequest = {
     account_number: transactionRecord.source_account,
     // Converting rupees to paisa
-    amount: transactionRecord.amount! * 100,
+    amount: Math.floor(transactionRecord.amount! * 100),
     currency: transactionRecord.currency,
     fund_account_id: fundId,
     mode: transactionRecord.mode,
