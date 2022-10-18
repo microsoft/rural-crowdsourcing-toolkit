@@ -70,7 +70,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     all_workers_selected: true,
     worker_id_input: '',
     access_code_input: '',
-    phone_number_input: ''
+    phone_number_input: '',
   };
 
   // Initialize materialize fields
@@ -144,10 +144,16 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
   };
 
   render() {
-    const workers = this.props.payments_eligible_worker.data;
-    const totalAmount = workers.reduce((acc, item) => item.amount + acc, 0);
-
     this.handleWorkersEligibleIsEmpty();
+
+    const workers = this.props.payments_eligible_worker.data;
+    const totalAmount = workers.reduce((acc, worker) => {
+      var checked = this.state.workers_eligible[worker.id];
+      if (checked) {
+        acc += worker.amount;
+      }
+      return acc;
+    }, 0);
 
     const { all_workers_selected } = this.state;
     const { worker_id_input } = this.state;
@@ -167,7 +173,6 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     if (phone_number_input !== undefined && phone_number_input !== '') {
       workers_filtered = workers.filter((w) => w.phone_number!.startsWith(phone_number_input));
     }
-
 
     // get error element
     const errorElement =
@@ -232,9 +237,9 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
           />
           <ColTextInput
             id='phone_number_input'
-            value={this.state.access_code_input}
+            value={this.state.phone_number_input}
             onChange={this.handleInputChange}
-            label='Search by access code'
+            label='Search by phone number'
             width='s10 m8 l4'
             required={false}
           />
