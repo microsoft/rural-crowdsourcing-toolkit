@@ -24,13 +24,13 @@ export async function getAssignableMicrotaskGroups(
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
   const maxAssignedGroups = knex<MicrotaskGroupAssignmentRecord>('microtask_group_assignment')
-    .groupBy('microtask_group_id')
-    .havingRaw(`count(microtask_group_id) >= ${maxAssignments}`)
-    .pluck('microtask_group_id');
+    .groupBy('group_id')
+    .havingRaw(`count(group_id) >= ${maxAssignments}`)
+    .pluck('group_id');
 
   const workerAssignedGroups = knex<MicrotaskGroupAssignmentRecord>('microtask_group_assignment')
     .where('worker_id', worker.id)
-    .pluck('microtask_group_id');
+    .pluck('group_id');
 
   const microtaskGroups = await knex<MicrotaskGroupRecord>('microtask_group')
     .where('task_id', task.id)
@@ -57,10 +57,17 @@ export async function getTotalCredits(microtaskGroup: MicrotaskGroupRecord) {
  */
 export async function getCompletedAssignmentsCount(microtaskGroup: MicrotaskGroupRecord) {
   const completedAssignmentsCount = await knex<MicrotaskGroupAssignmentRecord>('microtask_group_assignment')
-    .where('microtask_group_id', microtaskGroup.id)
+    .where('group_id', microtaskGroup.id)
     .whereIn('status', ['COMPLETED'])
     .count();
   return completedAssignmentsCount[0].count;
+}
+
+export async function getAssignedCount(worker_id: string, task_id: string) {
+  const assignedCount = await knex<MicrotaskGroupAssignmentRecord>('microtask_group_assignment')
+    .where('worker_id', worker_id)
+    .count();
+  return assignedCount[0].count as number;
 }
 
 /**
