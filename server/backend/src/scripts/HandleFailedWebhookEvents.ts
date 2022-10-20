@@ -18,7 +18,7 @@ const RAZORPAY_CONTACTS_RELATIVE_URL = 'payouts';
 (async () => {
   setupDbConnection();
   // get records with non final states
-  const knexResponse = await knex.raw(`SELECT * from payment_transaction WHERE STATUS IN (${FINAL_TRANSACTION_STATES.toString()})`)
+  const knexResponse = await knex.raw(`SELECT * from payments_transaction WHERE STATUS IN (${FINAL_TRANSACTION_STATES.toString()})`)
   const transactionRecords: PaymentsTransactionRecord[] = knexResponse.rows
 
   for (const transactionRecord of transactionRecords) {
