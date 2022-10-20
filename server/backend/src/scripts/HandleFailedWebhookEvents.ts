@@ -19,7 +19,7 @@ const RAZORPAY_CONTACTS_RELATIVE_URL = 'payouts';
   setupDbConnection();
   const formattedFinalStates = FINAL_TRANSACTION_STATES.map((state, idx, arr) => `'${state}'`)
   // get records with non final states
-  const knexResponse = await knex.raw(`SELECT * from payments_transaction WHERE STATUS IN (${formattedFinalStates})`)
+  const knexResponse = await knex.raw(`SELECT * from payments_transaction WHERE STATUS NOT IN (${formattedFinalStates})`)
   const transactionRecords: PaymentsTransactionRecord[] = knexResponse.rows
 
   for (const transactionRecord of transactionRecords) {
