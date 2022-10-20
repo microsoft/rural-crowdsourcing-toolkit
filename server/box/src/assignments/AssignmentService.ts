@@ -12,6 +12,7 @@ import {
   TaskRecord,
   TaskRecordType,
   ScenarioName,
+  TaskAssignmentRecord,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
@@ -28,18 +29,39 @@ const assigning: { [id: string]: boolean } = {};
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
 export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
+  assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment' });
+
   // Check if we are currently assigning anything to these workers
-  if (assigning[worker.id]) return;
+  if (assigning[worker.id]) {
+    assignmentLogger.info({ worker_id: worker.id, message: 'Already assigning' });
+    return;
+  }
   assigning[worker.id] = true;
 
   try {
     // If worker is disabled, return
-    if (WorkerModel.isDisabled(worker)) return;
+    if (WorkerModel.isDisabled(worker)) {
+      assigning[worker.id] = false;
+      assignmentLogger.info({ worker_id: worker.id, message: 'Worker disabled' });
+      return;
+    }
+
+    // Determine worker week
+    const regTime = new Date(worker.registered_at).getTime();
+    const currentTime = Date.now();
+    const diffMilli = currentTime - regTime;
+    const diffWeeks = Math.floor(diffMilli / 1000 / 3600 / 24 / 7);
+    const weekId = diffWeeks + 1;
+    const weekTag = `week${weekId}`;
+    worker.tags.tags.push(weekTag);
+
+    assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
 
     // Check if the worker has incomplete assignments. If so, return
     const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
     if (hasCurrentAssignments) {
       assigning[worker.id] = false;
+      assignmentLogger.info({ worker_id: worker.id, message: 'Worker has assignments' });
       return;
     }
 
@@ -72,7 +94,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       if (task.status == 'COMPLETED') return;
 
       // check if the task is assignable to the worker
-      if (!assignable(task, worker)) return;
+      if (!assignable(task, taskAssignment, worker)) return;
 
       // If tasks of this scenario have already been assigned to the worker, return
       if (scenarioAssigned.get(task.scenario_name)) return;
@@ -194,10 +216,11 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       });
     });
 
+    assignmentLogger.info({ worker_id: worker.id, message: 'Assignment completed' });
     assigning[worker.id] = false;
   } catch (e) {
     assigning[worker.id] = false;
-    throw e;
+    assignmentLogger.info({ worker_id: worker.id, message: 'Exception in assignment service' });
   }
 }
 
@@ -252,12 +275,15 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
  * @param task Task record
  * @param worker Worker record
  */
-function assignable(task: TaskRecord, worker: WorkerRecord): boolean {
+function assignable(task: TaskRecord, taskAssignment: TaskAssignmentRecord, worker: WorkerRecord): boolean {
   let workerTags = worker.tags.tags;
   if (worker.wgroup) workerTags.push(worker.wgroup);
 
   let taskTags = task.itags.itags;
   if (task.wgroup) taskTags.push(task.wgroup);
+
+  const taskAssignmentTags = (taskAssignment.params.tags as string[]) ?? [];
+  taskTags = taskTags.concat(taskAssignmentTags);
 
   return taskTags.every((tag) => workerTags.includes(tag));
 }
