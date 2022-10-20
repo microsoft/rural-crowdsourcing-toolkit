@@ -204,7 +204,6 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
       { header: 'Worker IDs', type: 'field', field: 'id' },
       { header: 'Access Code ', type: 'field', field: 'access_code' },
       { header: 'Phone Number ', type: 'field', field: 'phone_number' },
-      { header: 'Worker Info', type: 'field', field: 'profile' },
       { header: 'Amount ', type: 'field', field: 'amount' },
     ];
 
