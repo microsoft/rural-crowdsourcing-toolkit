@@ -12,6 +12,7 @@ import {
   TaskRecord,
   TaskRecordType,
   ScenarioName,
+  TaskAssignmentRecord,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
@@ -93,7 +94,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       if (task.status == 'COMPLETED') return;
 
       // check if the task is assignable to the worker
-      if (!assignable(task, worker)) return;
+      if (!assignable(task, taskAssignment, worker)) return;
 
       // If tasks of this scenario have already been assigned to the worker, return
       if (scenarioAssigned.get(task.scenario_name)) return;
@@ -274,12 +275,15 @@ function reorder<T extends { id: string }>(array: T[], order: AssignmentOrder) {
  * @param task Task record
  * @param worker Worker record
  */
-function assignable(task: TaskRecord, worker: WorkerRecord): boolean {
+function assignable(task: TaskRecord, taskAssignment: TaskAssignmentRecord, worker: WorkerRecord): boolean {
   let workerTags = worker.tags.tags;
   if (worker.wgroup) workerTags.push(worker.wgroup);
 
   let taskTags = task.itags.itags;
   if (task.wgroup) taskTags.push(task.wgroup);
+
+  const taskAssignmentTags = (taskAssignment.params.tags as string[]) ?? [];
+  taskTags = taskTags.concat(taskAssignmentTags);
 
   return taskTags.every((tag) => workerTags.includes(tag));
 }
