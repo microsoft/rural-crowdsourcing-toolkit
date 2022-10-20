@@ -14,7 +14,7 @@ export class TransactionQWrapper extends BullMqWrapper<TransactionQJobData> {
     let createdTransactionRecord = await BasicModel.insertRecord('payments_transaction', {
       bulk_id: payload.bulk_id ? payload.bulk_id : null,
       box_id: payload.boxId,
-      amount: payload.amount.toString(),
+      amount: payload.amount,
       currency: payload.currency,
       account_id: payload.accountId,
       worker_id: payload.workerId,

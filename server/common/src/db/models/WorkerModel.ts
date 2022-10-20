@@ -76,13 +76,13 @@ export async function markDisabled(worker_id: string): Promise<WorkerRecord> {
  * Get Balance (credits - claimed) for a particular worker
  */
 export async function getBalance(worker_id: string): Promise<number> {
-  const response = await knex.raw(`SELECT  COALESCE(sum(credits), 0) - 
+  const response = await knex.raw(`SELECT  COALESCE(sum(credits), 0) + COALESCE(sum(max_base_credits), 0) - 
   (SELECT COALESCE(sum(amount), 0)  
   FROM payments_transaction WHERE worker_id = ${worker_id} 
-  AND status IN ('created', 'queued', 'processing', 'processed', 'failed_after_transaction') ) +
-  (SELECT COALESCE(sum(max_base_credits), 0) FROM microtask_assignment WHERE worker_id = ${worker_id} AND status IN ('SUBMITTED', 'VERIFIED'))
+  AND status IN ('created', 'queued', 'processing', 'processed', 'failed_after_transaction') )
   as total 
-  FROM microtask_assignment WHERE status='VERIFIED' AND worker_id = ${worker_id};`);
+  FROM microtask_assignment WHERE status IN ('COMPLETED', 'VERIFIED') AND worker_id = ${worker_id} AND submitted_to_server_at IS NOT NULL
+  AND task_id NOT BETWEEN 25 AND 36;`);
   let balance = response.rows[0].total;
   return balance ? balance : 0;
 }
@@ -100,7 +100,8 @@ export async function getTotalSpent(worker_id: string): Promise<number> {
 
 export async function getTotalEarned(worker_id: string): Promise<number> {
   const response = await knex.raw(
-    `SELECT SUM(credits + base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id}`
+    `SELECT SUM(COALESCE(credits, 0) + max_base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('COMPLETED', 'VERIFIED') AND submitted_to_server_at IS NOT NULL
+    AND task_id NOT BETWEEN 25 AND 36`
   );
   const earned = response.rows[0].total;
   return earned ?? 0;
@@ -110,7 +111,8 @@ export async function getWeekEarned(worker_id: string): Promise<number> {
   const current = new Date().getTime();
   const lastWeek = new Date(current - 7 * 24 * 3600 * 1000).toISOString();
   const response = await knex.raw(
-    `SELECT SUM(credits + base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id} AND completed_at > '${lastWeek}'`
+    `SELECT SUM(COALESCE(credits, 0) + max_base_credits) as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('COMPLETED', 'VERIFIED') AND submitted_to_server_at IS NOT NULL
+    AND task_id NOT BETWEEN 25 AND 36 AND completed_at > '${lastWeek}'`
   );
   const earned = response.rows[0].total;
   return earned ?? 0;
@@ -126,7 +128,7 @@ SELECT tw.*, t3.amount FROM
     (SELECT t2.worker_id, t2.sac-COALESCE(t1.sat,0) as amount FROM (SELECT worker_id, sum(amount)
      AS SAT FROM payments_transaction  WHERE status IN 
      ('created', 'queued', 'processing', 'processed') GROUP BY worker_id  ) t1 
-     RIGHT JOIN (SELECT worker_id,sum(credits)+sum(max_base_credits) AS SAC FROM microtask_assignment WHERE status='VERIFIED' GROUP BY worker_id) t2
+     RIGHT JOIN (SELECT worker_id,sum(COALESCE(credits, 0))+sum(max_base_credits) AS SAC FROM microtask_assignment WHERE status IN ('VERIFIED', 'COMPLETED') AND task_id NOT BETWEEN 25 AND 36 GROUP BY worker_id) t2
      ON (t1.worker_id = t2.worker_id)) t3 INNER JOIN (select * from worker where payments_active=true) tw ON (t3.worker_id=tw.id) 
      INNER JOIN (SELECT * FROM payments_account WHERE STATUS='VERIFIED') ta ON (tw.selected_account=ta.id);
    `);
@@ -147,7 +149,7 @@ SELECT tw.*, t3.amount FROM
  */
 export async function getLeaderboardRecords(
   worker: WorkerRecord
-): Promise<(WorkerRecord & { XP: Number; rank: Number })[]> {
+): Promise<(WorkerRecord & { XP: Number; rank: Number; name: String })[]> {
   const leaderboardRecords = await knex.raw(`SELECT *, RANK() OVER (ORDER BY XP DESC) as rank FROM leaderboard WHERE 
     wgroup = '${worker.wgroup}'`);
   return leaderboardRecords.rows;

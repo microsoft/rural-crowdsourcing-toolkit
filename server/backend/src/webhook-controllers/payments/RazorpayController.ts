@@ -42,11 +42,20 @@ const verifyWebhookSignature = (webhookBody: Object, webhookSignature: string, w
 };
 
 /**
- * Function to update transaction record on getting a payout update (webhook) from Razorpay
+ * Middleware to update transaction record on getting a payout update (webhook) from Razorpay
  */
 
-export const updateTransaction: Application.Middleware = async (ctx, next) => {
+export const updateTransactionMiddleware: Application.Middleware = async (ctx, next) => {
   const payoutEntity: PayoutResponse = ctx.request.body.payload.payout.entity;
+  await updateTransactionRecord(payoutEntity)
+  HttpResponse.OK(ctx, ctx.body);
+};
+
+/**
+ * Update transaction record with a given payout entity (part of razorpay's payout webhook response)
+ * @param payoutEntity : entity object from razorpay webhook's response
+ */
+export const updateTransactionRecord = async (payoutEntity: PayoutResponse) => {
   // Get the transaction record with the payout ID
   let transactionRecord: PaymentsTransactionRecord;
   try {
@@ -60,11 +69,11 @@ export const updateTransaction: Application.Middleware = async (ctx, next) => {
   // Check if status of record can be updated
   if (FINAL_TRANSACTION_STATES.includes(currentStatus)) {
     console.log(`payout status already in ${currentStatus}, cannot be updated to ${razorpayStatus}`);
-    return HttpResponse.OK(ctx, {});
+    return
   }
   // Queued status is to be ignored for current processing transactions
   if (currentStatus == TransactionStatus.PROCESSING && razorpayStatus == TransactionStatus.QUEUED) {
-    return HttpResponse.OK(ctx, {});
+    return
   }
 
   // Update the transaction record status
@@ -87,6 +96,4 @@ export const updateTransaction: Application.Middleware = async (ctx, next) => {
     const accountRecord = await BasicModel.getSingle('payments_account', { id: transactionRecord.account_id });
     await PaymentsAccountModel.updateStatusOnTransactionRecordUpdate(updatedTransactionRecord, accountRecord);
   }
-
-  HttpResponse.OK(ctx, ctx.body);
-};
+}

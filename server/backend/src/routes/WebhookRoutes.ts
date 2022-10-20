@@ -15,5 +15,5 @@ webhookRouter.post(
   '/payments/razorpay/payouts',
   BodyParser(),
   RazorpayController.authenticateWebhookRequest,
-  RazorpayController.updateTransaction
+  RazorpayController.updateTransactionMiddleware
 );

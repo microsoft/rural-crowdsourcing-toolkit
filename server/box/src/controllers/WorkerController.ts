@@ -45,6 +45,7 @@ export const get: KaryaMiddleware = async (ctx) => {
       gender,
       language,
       tags,
+      params: tags,
       created_at,
       last_updated_at,
     };
@@ -71,7 +72,8 @@ export const update: KaryaMiddleware = async (ctx) => {
       profile_updated_at: new Date().toISOString(),
     }
   );
-
+  // @ts-ignore
+  updatedRecord.params = updatedRecord.tags;
   HttpResponse.OK(ctx, updatedRecord);
 };
 
@@ -87,7 +89,8 @@ export const registerWorker: KaryaMiddleware = async (ctx) => {
     { reg_mechanism: 'phone-otp', registered_at: now, profile_updated_at: now }
   );
   const id_token = ctx.state.entity.id_token;
-  ctx.state.entity = { ...record, id_token };
+  // @ts-ignore
+  ctx.state.entity = { ...record, id_token, params: ctx.state.entity.tags };
 
   HttpResponse.OK(ctx, ctx.state.entity);
 };
@@ -110,13 +113,14 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
 
   // If empty response return empty list
   if (records.length == 0) {
-    return HttpResponse.OK(ctx, [])
+    return HttpResponse.OK(ctx, []);
   }
 
   const topRecords = records.slice(0, 10);
   const workerLeaderboardrecord = records.find((record) => record.id === workerId)!;
   // Add worker leaderboard record to the leaderboard
-  topRecords.push(workerLeaderboardrecord);
-
+  if (workerLeaderboardrecord != undefined) {
+    topRecords.push(workerLeaderboardrecord);
+  }
   HttpResponse.OK(ctx, topRecords);
 };
