@@ -59,6 +59,7 @@ type BulkPaymentsListState = {
   };
   all_workers_selected: boolean;
   worker_id_input: string;
+  unique_id: string;
   access_code_input: string;
   phone_number_input: string;
 };
@@ -69,6 +70,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     workers_eligible: {},
     all_workers_selected: true,
     worker_id_input: '',
+    unique_id: '',
     access_code_input: '',
     phone_number_input: '',
   };
@@ -202,6 +204,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         },
       },
       { header: 'Worker IDs', type: 'field', field: 'id' },
+      { header: 'Unique ID', type: 'field', field: 'unique_id'},
       { header: 'Access Code ', type: 'field', field: 'access_code' },
       { header: 'Phone Number ', type: 'field', field: 'phone_number' },
       { header: 'Amount ', type: 'field', field: 'amount' },
@@ -218,6 +221,14 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         <br />
         <b className='table-headline'>{workers.length ? `Total Amount: ₹${totalAmount}` : undefined}</b>
         <div className='row' id='worker-id-search-row'>
+          <ColTextInput
+            id='unique_id'
+            value={this.state.unique_id}
+            onChange={this.handleInputChange}
+            label='Search by unique ID'
+            width='s10 m8 l4'
+            required={false}
+          />
           <ColTextInput
             id='worker_id_input'
             value={this.state.worker_id_input}

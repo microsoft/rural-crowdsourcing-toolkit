@@ -2,7 +2,10 @@ import { WorkerRecord } from '@karya/core';
 
 // type for payment eligible workers response
 
-export type PaymentEligibleWorkerRecord = WorkerRecord & { amount: number };
+export type PaymentEligibleWorkerRecord = WorkerRecord & { 
+  amount: number,
+  unique_id: string
+};
 
 export declare type ViewName = 'payments_eligible_worker';
 

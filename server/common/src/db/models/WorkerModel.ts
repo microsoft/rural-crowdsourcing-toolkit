@@ -124,7 +124,7 @@ export async function getWeekEarned(worker_id: string): Promise<number> {
  */
 export async function getEligibleWorkersForPayments(): Promise<any[]> {
   const response = await knex.raw(`
-SELECT tw.*, t3.amount FROM 
+SELECT tw.*, t3.amount, tw.extras->>'unique_id' as unique_id FROM 
     (SELECT t2.worker_id, t2.sac-COALESCE(t1.sat,0) as amount FROM (SELECT worker_id, sum(amount)
      AS SAT FROM payments_transaction  WHERE status IN 
      ('created', 'queued', 'processing', 'processed') GROUP BY worker_id  ) t1 
