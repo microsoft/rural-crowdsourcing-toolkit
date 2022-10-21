@@ -357,4 +357,8 @@
     <string name="profile_missing_field_error_msg">Please fill all the fields</string>
     <string name="profile_gender_male_label">Male</string>
     <string name="profile_gender_female_label">Female</string>
+
+    <!-- Holiday Message -->
+    <string name="sunday_message">Today is Sunday. Take the day off!</string>
+    <string name="diwali_message">Happy Diwali! Enjoy the break. You can start work again on Thursday!</string>
 </resources>

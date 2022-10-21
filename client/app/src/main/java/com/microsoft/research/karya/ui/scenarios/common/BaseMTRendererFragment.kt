@@ -116,6 +116,21 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
         dialog.show()
       }
     }
+
+    viewModel.holidayMessage.observe(viewLifecycleOwner.lifecycle, lifecycleScope) { messagePair ->
+      if (messagePair.first) {
+        val messageRes = messagePair.second
+        val message = requireContext().getString(messageRes)
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(message)
+        builder.setNeutralButton(R.string.okay) { _, _ ->
+          findNavController().popBackStack()
+        }
+        val dialog = builder.create()
+        dialog.show()
+      }
+    }
   }
 
   fun skipTask(showAlertBox: Boolean, title: String, msg: String) {
