@@ -227,7 +227,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         <b className='table-headline'>{workers.length ? `Total Amount: ₹${totalAmount}` : undefined}</b>
         <div className='row' id='worker-id-search-row'>
           <ColTextInput
-            id='unique_id'
+            id='unique_id_input'
             value={this.state.unique_id_input}
             onChange={this.handleInputChange}
             label='Search by unique ID'
