@@ -61,6 +61,10 @@ class SplashScreenFragment : Fragment(R.layout.fragment_splash_screen) {
       }
     }
 
+    appUpdateInfoTask.addOnFailureListener {
+      setupSplashScreen()
+    }
+
   }
 
   private fun setupSplashScreen() {
