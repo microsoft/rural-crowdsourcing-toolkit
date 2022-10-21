@@ -59,7 +59,7 @@ type BulkPaymentsListState = {
   };
   all_workers_selected: boolean;
   worker_id_input: string;
-  unique_id: string;
+  unique_id_input: string;
   access_code_input: string;
   phone_number_input: string;
 };
@@ -70,7 +70,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     workers_eligible: {},
     all_workers_selected: true,
     worker_id_input: '',
-    unique_id: '',
+    unique_id_input: '',
     access_code_input: '',
     phone_number_input: '',
   };
@@ -161,6 +161,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     const { worker_id_input } = this.state;
     const { access_code_input } = this.state;
     const { phone_number_input } = this.state;
+    const { unique_id_input } = this.state
 
     // Filtering workers by worker ID
     var workers_filtered = workers;
@@ -174,6 +175,10 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
 
     if (phone_number_input !== undefined && phone_number_input !== '') {
       workers_filtered = workers.filter((w) => w.phone_number!.startsWith(phone_number_input));
+    }
+
+    if (unique_id_input !== undefined && unique_id_input !== '') {
+      workers_filtered = workers.filter((w) => w.unique_id!.startsWith(unique_id_input));
     }
 
     // get error element
@@ -223,7 +228,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         <div className='row' id='worker-id-search-row'>
           <ColTextInput
             id='unique_id'
-            value={this.state.unique_id}
+            value={this.state.unique_id_input}
             onChange={this.handleInputChange}
             label='Search by unique ID'
             width='s10 m8 l4'
