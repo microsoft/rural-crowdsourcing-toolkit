@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-  compileSdkVersion(31)
+  compileSdkVersion(32)
   defaultConfig {
     applicationId = "com.microsoft.research.karya"
     minSdkVersion(24)

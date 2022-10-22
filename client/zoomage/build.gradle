@@ -31,7 +31,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "androidx.appcompat:appcompat:1.3.0-rc01"
     implementation files('libs/polygon-1.0.2.jar')
 
     testImplementation 'junit:junit:4.12'
