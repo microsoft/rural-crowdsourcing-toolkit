@@ -314,7 +314,7 @@ class DashboardSyncWorker(
     val microtaskIds = microTaskRepository.getSubmittedMicrotasksWithInputFiles()
     for (id in microtaskIds) {
       // input tarball
-      val tarBallPath = microtaskOutputContainer.getBlobPath(id)
+      val tarBallPath = microtaskInputContainer.getBlobPath(id)
       val tarBall = File(tarBallPath)
       if (tarBall.exists()) {
         tarBall.delete()
