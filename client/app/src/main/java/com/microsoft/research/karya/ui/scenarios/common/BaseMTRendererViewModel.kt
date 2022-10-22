@@ -92,6 +92,10 @@ abstract class BaseMTRendererViewModel(
     return this::currentAssignment.isInitialized
   }
 
+  protected fun isCurrentMicrotaskInitialized(): Boolean {
+    return this::currentMicroTask.isInitialized
+  }
+
   protected fun navigateBack() {
     viewModelScope.launch { _navigateBack.emit(true) }
   }
