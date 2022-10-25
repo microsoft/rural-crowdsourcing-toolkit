@@ -152,7 +152,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
   private fun handleAddBoxClick() {
     // TODO: Remove this code, temporary change for stanford study
     // Allow for addition of only one polygon
-    if (sourceImageIv.coordinatesForPolygonCropBoxes.size > 0) {
+    if (sourceImageIv.coordinatesForPolygonCropBoxes.size > 0 || sourceImageIv.coordinatesForRectCropBoxes.size > 0) {
       return
     }
     // TODO: Remove this code, temporary change for stanford study
