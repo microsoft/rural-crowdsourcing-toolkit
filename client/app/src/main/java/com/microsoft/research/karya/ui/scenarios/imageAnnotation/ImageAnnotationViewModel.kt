@@ -61,6 +61,8 @@ constructor(
   var annotationType = CropObjectType.RECTANGLE;
   // Number of sides
   var numberOfSides = 4;
+  // Limit
+  var limit = 1;
   // Do we need to remember state of annotation
   var rememberAnnotationState = false;
   // Current Image Matrix
@@ -97,6 +99,12 @@ constructor(
     } catch (e: Exception) {
       // Since default shape is rectangle
       4
+    }
+
+    limit = try {
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("limit").asInt
+    } catch (e: Exception) {
+      1
     }
 
     // Remember state?

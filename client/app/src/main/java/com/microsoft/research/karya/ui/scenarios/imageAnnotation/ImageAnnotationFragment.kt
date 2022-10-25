@@ -206,6 +206,15 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       return
     }
 
+    if (rectangleCoors.size + polygonCoors.size > viewModel.limit) {
+      val builder = AlertDialog.Builder(requireContext())
+      builder.setMessage("Too many boxes")
+      builder.setNeutralButton(R.string.okay) { _, _ -> return@setNeutralButton }
+      val dialog = builder.create()
+      dialog.show()
+      return
+    }
+
     viewModel.setRectangleCoors(rectangleCoors)
     viewModel.setPolygonCoors(polygonCoors)
     viewModel.handleNextCLick()
