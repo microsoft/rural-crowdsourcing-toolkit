@@ -49,6 +49,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
   private val args: ImageAnnotationFragmentArgs by navArgs()
   private var rectangleCropCoors: HashMap<String, RectF>? = null
   private var polygonCropCoors: HashMap<String, Polygon>? = null
+  private var inputAnnotationIds: MutableList<String> = mutableListOf()
 
   // Array of Pair to hold label names and corresponding colors
   lateinit var labelDetailArray: Array<Pair<String, Int>>
@@ -115,7 +116,9 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     // Set listeners to add crop object
     addBoxButton.setOnClickListener { handleAddBoxClick() }
     // Set Listeners to remove box
-    removeBoxButton.setOnClickListener { sourceImageIv.removeCropObject(sourceImageIv.focusedCropObjectId) }
+    removeBoxButton.setOnClickListener {
+      sourceImageIv.removeCropObject(sourceImageIv.focusedCropObjectId)
+    }
 
     // Set Listener to lock a crop box
     lockCropBtn.setOnClickListener {
@@ -144,20 +147,6 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
       spinner_item_color.setCardBackgroundColor(polygonData.color)
       labelTv.text = labels[colors.indexOf(polygonData.color)]
     }
-
-    // Set listener to add crop object after the image is loaded
-    sourceImageIv.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-      override fun onPreDraw(): Boolean {
-        return try {
-          viewModel.renderOutputData()
-          // Note that returning "true" is important or else the drawing pass will be canceled
-          true
-        } finally {
-          // Remove listener as further notifications are not needed
-          sourceImageIv.viewTreeObserver.removeOnPreDrawListener(this)
-        }
-      }
-    })
   }
 
   private fun handleAddBoxClick() {
@@ -226,19 +215,33 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
     viewModel.imageFilePath.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { path ->
       if (path.isNotEmpty()) {
         val image: Bitmap = BitmapFactory.decodeFile(path)
+        sourceImageIv.viewTreeObserver.addOnPreDrawListener(object: ViewTreeObserver.OnPreDrawListener {
+          override fun onPreDraw(): Boolean {
+            return try {
+              viewModel.setInputAnnotations()
+              true
+            } finally {
+              // Remove listener as further notifications are not needed
+              sourceImageIv.viewTreeObserver.removeOnPreDrawListener(this)
+            }
+          }
+        })
         sourceImageIv.setImageBitmap(image)
       }
       //TODO: Put an else condition to put a placeholder image
 
-      if (viewModel.rememberAnnotationState) {
-        return@observe
+//      if (viewModel.rememberAnnotationState) {
+//        return@observe
+//      }
+//
+      val ids = sourceImageIv.allCropRectangleIds + sourceImageIv.allCropPolygonIds
+      if (inputAnnotationIds.size > 0) {
+        for (id in ids) {
+          sourceImageIv.removeCropObject(id)
+        }
       }
 
-      // Clear the existing boxes
-      val ids = sourceImageIv.allCropRectangleIds + sourceImageIv.allCropPolygonIds
-      for (id in ids) {
-        sourceImageIv.removeCropObject(id)
-      }
+      inputAnnotationIds.clear()
     }
 
     sourceImageIv.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
@@ -263,6 +266,15 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
         }
       }
     })
+
+    // Update rectangles
+    viewModel.updateRectangles.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { count ->
+      val rectangles = viewModel.rectangleCoors.value
+      for ((key, rect) in rectangles) {
+        sourceImageIv.addCropRectangle(key, colors[0], rect)
+        inputAnnotationIds.add(key)
+      }
+    }
 
     viewModel.playRecordPromptTrigger.observe(
       viewLifecycleOwner.lifecycle,

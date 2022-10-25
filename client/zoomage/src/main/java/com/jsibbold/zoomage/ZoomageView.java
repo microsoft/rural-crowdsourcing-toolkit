@@ -36,6 +36,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -522,17 +523,21 @@ public class ZoomageView extends AppCompatImageView implements OnScaleGestureLis
         path.addRect(overlayRect, Path.Direction.CW);
 
         // Draw Overlay for crop rectangle
-        if(focusedCropId != null
-                && cropRectFMap.size() > 0) {
-            RectFData rectFData = cropRectFMap.get(focusedCropId);
-            RectF rectF = rectFData.rectF;
-            RectF scaledRectF = new RectF(
-                    Common.scaleAndTranslateX(rectF.left, matrixValues),
-                    Common.scaleAndTranslateY(rectF.top, matrixValues),
-                    Common.scaleAndTranslateX(rectF.right, matrixValues),
-                    Common.scaleAndTranslateY(rectF.bottom, matrixValues)
-            );
-            path.addRect(scaledRectF, Path.Direction.CCW);
+        try {
+            if (focusedCropId != null
+                    && cropRectFMap.size() > 0) {
+                RectFData rectFData = cropRectFMap.get(focusedCropId);
+                RectF rectF = rectFData.rectF;
+                RectF scaledRectF = new RectF(
+                        Common.scaleAndTranslateX(rectF.left, matrixValues),
+                        Common.scaleAndTranslateY(rectF.top, matrixValues),
+                        Common.scaleAndTranslateX(rectF.right, matrixValues),
+                        Common.scaleAndTranslateY(rectF.bottom, matrixValues)
+                );
+                path.addRect(scaledRectF, Path.Direction.CCW);
+            }
+        } catch (Exception e) {
+            // Why am I here?
         }
 
         if (polygonMap.size() > 0){
@@ -718,7 +723,8 @@ public class ZoomageView extends AppCompatImageView implements OnScaleGestureLis
     public void addCropRectangle(String id, int color, RectF rectF) {
         // Check if Id is unique
         if (cropRectFMap.containsKey(id)) {
-            throw new IllegalArgumentException("Crop rectangle with provided ID: " + id + "already exists");
+            // throw new IllegalArgumentException("Crop rectangle with provided ID: " + id + "already exists");
+            cropRectFMap.remove(id);
         }
         // Convert the coordinates according to the canvas dimensions and state
         float convertedLeft = Common.reverseScaleAndTranslateX(rectF.left * (bounds.right - bounds.left) + bounds.left, matrixValues);

@@ -50,6 +50,9 @@ constructor(
   private val _rectangleCoors: MutableStateFlow<HashMap<String, RectF>> = MutableStateFlow(HashMap())
   val rectangleCoors = _rectangleCoors.asStateFlow()
 
+  private val _updateRectangles = MutableStateFlow(0)
+  val updateRectangles = _updateRectangles.asStateFlow()
+
   // Labelled Polygon coordinates
   private val _polygonCoors: MutableStateFlow<HashMap<String, Polygon>> = MutableStateFlow(HashMap())
   val polygonCoors = _polygonCoors.asStateFlow()
@@ -114,6 +117,36 @@ constructor(
 
   private fun playRecordPrompt() {
     _playRecordPromptTrigger.value = true
+  }
+
+  fun setInputAnnotations() {
+    if (!isCurrentMicrotaskInitialized()) return
+
+    if (!currentMicroTask.input.asJsonObject.getAsJsonObject("data").has("annotations")) return
+
+    val annotations = try {
+      currentMicroTask.input.asJsonObject.getAsJsonObject("data").getAsJsonObject("annotations")
+    } catch (e: Exception) {
+      JsonObject()
+    }
+
+    if (annotationType == CropObjectType.RECTANGLE) {
+      setInputRectangleAnnotations(annotations)
+    } else {
+      setInputPolygonAnnotations(annotations)
+    }
+  }
+
+  private fun setInputPolygonAnnotations(annotations: JsonObject) {}
+
+  private fun setInputRectangleAnnotations(annotations: JsonObject) {
+    // HACK: Assume only one label and only one annotation in that label
+    val label = annotations.keySet().elementAt(0)
+    val rcs = annotations.getAsJsonArray(label).get(0).asJsonArray
+    val rectangle = RectF(rcs.get(0).asFloat, rcs.get(1).asFloat, rcs.get(2).asFloat, rcs.get(3).asFloat)
+    val rectangleMap = hashMapOf(Pair(label, rectangle))
+    setRectangleCoors(rectangleMap)
+    _updateRectangles.value = _updateRectangles.value + 1
   }
 
   /**
