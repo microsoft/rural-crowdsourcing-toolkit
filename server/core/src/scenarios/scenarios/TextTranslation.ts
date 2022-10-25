@@ -12,6 +12,8 @@ type TextTranslationTaskInputParameters = {
   sourceLanguage: LanguageCode;
   targetLanguage: LanguageCode;
   mode: string;
+  depthCount: number;
+  forwardCount: number;
 };
 
 // Text translation microtask input format
@@ -40,17 +42,31 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
   {
     id: 'mode',
     type: 'enum',
-    label: 'AI support (none | bow | dd1 | dd2)',
+    label: 'AI support (none | bow | dropdown)',
     description:
       'Provide support for translation through an ML model. none: No support. bow: Bag of words. dd1: Drop down suggestions with 1 word. dd2: Drop down suggestions with 2 words',
     list: [
       ['none', 'No AI Support'],
-      ['bow', 'Bag of Words (displayed as buttons)'],
-      ['dd1', 'Dropdown suggestions (one word at a time)'],
-      ['dd2', 'Dropdown suggestions (two words at a time)'],
+      ['static_bow', 'Static Bag of Words (displayed as buttons)'],
+      ['dynamic_bow', 'Dynamic Bag of Words (displayed as buttons)'],
+      ['dropdown', 'Dropdown suggestions'],
     ],
     required: true,
   },
+  {
+    id: 'depthCount',
+    type: 'int',
+    label: 'Number of parralel sentences for providing suggestions (Leave empty for no assistance)',
+    description: "Number of sentences to consider in parralel while providing suggestions",
+    required: false
+  },
+  {
+    id: 'forwardCount',
+    type: 'int',
+    label: 'Number of words per sentence for suggestion (Leave empty for no assistance)',
+    description: "",
+    required: false
+  }
 ];
 
 // Text translation task input file format
