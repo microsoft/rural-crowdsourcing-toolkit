@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+regex='^(feat|fix|docs|style|refactor|test|build|ci|perf)(\(.+\))?\:\s(.{3,70})'
+red='\033[0;31m'
+
+echo "\n\n> Checking commit message format"
+# .gitmessage
+if ! grep -iqE "$regex" "$1"; then
+    echo  "$red Your commit message does not follow the guideline"
+    echo  "$red See the guideline: .gitmessage"
+    echo  "$red Run: cat './.gitmessage'"
+    echo  "$red COMMIT FAILED: INVALID COMMIT MESSAGE"
+    exit 1
+else
+    echo "VALID COMMIT MESSAGE"
+fi

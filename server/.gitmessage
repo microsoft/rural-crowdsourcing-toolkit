@@ -1,0 +1,56 @@
+#────────────────── Commit Message Format ────────────────────────────────────────────────┤
+# <TITLE>
+# <BLANK LINE>
+# <SUMMARY>
+# Describe the motivation behind this change - explain WHY you are making this change.
+# Wrap all lines at 100 characters.
+# </SUMMARY>
+# <BLANK LINE>
+# Fixes|Closes #<issue number>
+#
+# TITLE FORMAT
+# <type>: <short summary>
+#   │                 │
+#   │                 └─⫸ Summary in present tense. Not capitalized. No period at the end. Maximum length is 70 characters
+#   │
+#   └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|style|test
+#────────────────── Commit Message Format ────────────────────────────────────────────────┤
+
+
+#────────────────── More Info ────────────────────────────────────────────────────────────┤
+# ^(feat|fix|docs|style|refactor|test|build|ci|perf)(\(.+\))?\:\s(.{3,})
+# Title is compulsory and body is optional
+#────────────────── More Info ────────────────────────────────────────────────────────────┤
+
+
+#────────────────── Example Commit Messages ────────────────────────────────────────────────┤
+
+# # # # # # # # Example: Simple refactor  # # # # # # # # # # # # # # # # # # # # # # # # #
+# refactor: rename refreshDynamicEmbeddedViews to refreshEmbeddedViews                    #
+#                                                                                         #
+# Improve code readability. The original name no longer matches how the function is used. #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+# # # # # # # # Example: Simple docs change # # # # # # # # # # # # # # # # # #
+# docs: clarify the service limitation in providers.md guide                  #
+#                                                                             #
+# Fixes #36332                                                                #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+# # # # # # # # Example: A bug fix  # # # # # # # # # # # # # # # # # # # # # #
+# fix: ensure lockfile is removed when `analyzeFn` fails                      #
+#                                                                             #
+# Previously an error thrown in the `analyzeFn` would cause the ngcc process  #
+# to exit immediately without removing the lockfile, and potentially before   #
+# the un-locker process had been successfully spawned resulting in the        #
+# lockfile being orphaned and left behind.                                    #
+#                                                                             #
+# Now we catch these errors and remove the lockfile as needed.                #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+#────────────────── Example Message Format ────────────────────────────────────────────────┤
+
+
+# This is an adoption of https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit
