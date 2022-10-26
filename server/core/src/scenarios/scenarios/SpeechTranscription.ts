@@ -13,7 +13,7 @@ type SpeechTranscriptionTaskInputParameters = {
 };
 
 // Speech Transcription microtask input format
-type SpeechTranscriptionMicrotaskInput = { sentence: string };
+type SpeechTranscriptionMicrotaskInput = { sentence?: string; transcript?: string };
 type SpeechTranscriptionMicrotaskInputFiles = { recording: string };
 
 // Speech transcription microtask output format
@@ -40,9 +40,7 @@ const task_input_file: BaseSpeechTranscriptionScenario['task_input_file'] = {
   json: {
     required: true,
     description: `JSON file containing an array of objects. Each object must have a sentence field that contains the sentence prompt for transcription hint and a recording field that contains the name of the recording file`,
-    schema: Joi.array().items(
-      Joi.object({ sentence: Joi.string().required(), recording: Joi.string().required() }).unknown(true)
-    ),
+    schema: Joi.array().items(Joi.object({ sentence: Joi.string(), recording: Joi.string().required() }).unknown(true)),
   },
   tgz: {
     required: true,
@@ -57,7 +55,7 @@ export const baseSpeechTranscriptionScenario: BaseSpeechTranscriptionScenario = 
   description: 'This scenario allows users to provide transcription for an audio recording',
   task_input,
   task_input_file,
-  microtask_input: Joi.object({ sentence: Joi.string().required() }).unknown(true),
+  microtask_input: Joi.object({ sentence: Joi.string() }).unknown(true),
   microtask_input_files: ['recording'],
   microtask_output: Joi.object({
     accuracy: Joi.number().required(),

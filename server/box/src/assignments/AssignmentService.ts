@@ -112,10 +112,20 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         // Get all assignable microtask groups
         let assignableGroups = await policy.assignableMicrotaskGroups(worker, task, taskAssignment.params);
 
+        const microtaskLimit = (taskAssignment.params.maxMicrotasksPerUser as number) || 0;
+        let assignLimit = 10;
+        let assignedCount = -1;
+        if (microtaskLimit > 0) {
+          assignedCount = await MicrotaskGroupModel.getAssignedCount(worker.id, task.id);
+          assignLimit = microtaskLimit - assignedCount;
+          if (assignLimit < 0) assignLimit = 0;
+        }
+
         // Reorder the groups based on assignment order
         reorder(assignableGroups, task.group_assignment_order);
 
-        assignableGroups = assignableGroups.slice(0, batchSize);
+        assignLimit = assignLimit < batchSize ? assignLimit : batchSize;
+        assignableGroups = assignableGroups.slice(0, assignLimit);
 
         // Identify the prefix that fits within max credits
         for (const group of assignableGroups) {
