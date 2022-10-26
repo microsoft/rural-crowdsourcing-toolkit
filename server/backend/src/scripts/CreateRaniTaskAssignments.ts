@@ -23,10 +23,10 @@ const taskAssignmentLimits: { [id in ScenarioName]: { [id in Week]: number | nul
   },
 
   SPEECH_DATA: {
-    week1: 2500,
-    week2: 2500 + 1000,
-    week3: 2500 + 1000 + 1000,
-    week4: 2500 + 1000 + 1000 + 1000,
+    week1: 1000,
+    week2: 1000 + 1000,
+    week3: 1000 + 1000 + 1000,
+    week4: 1000 + 1000 + 1000 + 250,
   },
 
   SPEECH_TRANSCRIPTION: {
