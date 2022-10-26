@@ -7,7 +7,6 @@ smartphone.
 ## Prerequisites
 
 ---
-
 You need to install and setup the following applications before setting up the
 backend server.
 
@@ -29,6 +28,8 @@ backend server.
 We have converted the codebase into a monorepo to enable effective sharing of
 modules between different server components. We currently use `lerna` to manage
 dependencies and compilation.
+
+Make sure you have [Node](https://nodejs.org/en/download/) installed in your system with version 14.20.1 as versions above 16 might create problems in lerna build.
 
 ### 1. Install `lerna` and other necessary packages.
 
