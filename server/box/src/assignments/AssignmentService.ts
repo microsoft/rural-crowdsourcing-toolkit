@@ -23,6 +23,9 @@ const assignmentLogger = karyaLogger({ name: 'assignments' });
 // Current assignment map for workers
 const assigning: { [id: string]: boolean } = {};
 
+// max week ID
+const MAX_WEEK_ID = 4;
+
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments
  * @param worker worker to whom assignments will be assigned
@@ -51,7 +54,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const currentTime = Date.now();
     const diffMilli = currentTime - regTime;
     const diffWeeks = Math.floor(diffMilli / 1000 / 3600 / 24 / 7);
-    const weekId = diffWeeks + 1;
+    const weekId = diffWeeks + 1 > MAX_WEEK_ID ? MAX_WEEK_ID : diffWeeks + 1;
     const weekTag = `week${weekId}`;
     worker.tags.tags.push(weekTag);
 
