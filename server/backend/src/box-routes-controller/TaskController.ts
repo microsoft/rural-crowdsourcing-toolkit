@@ -127,6 +127,9 @@ export const submitCompletedAssignments: TaskRouteMiddleware = async (ctx) => {
 
   // Upsert all new assignments
   const response = await BBPromise.mapSeries(assignments, async (assignment) => {
+    if (assignment.status == 'COMPLETED') {
+      assignment.base_credits = assignment.max_base_credits;
+    }
     await BasicModel.upsertRecord('microtask_assignment', { ...assignment, submitted_to_server_at });
     return { id: assignment.id, submitted_to_server_at };
   });
@@ -165,7 +168,7 @@ export const getVerifiedAssignments: TaskRouteMiddleware = async (ctx) => {
 
   const verified = await BasicModel.getRecords(
     'microtask_assignment',
-    { task_id: task.id, status: 'VERIFIED' },
+    { task_id: task.id, status: 'VERIFIED', box_id: ctx.state.entity.id },
     [],
     [['verified_at', from, null]],
     'verified_at',

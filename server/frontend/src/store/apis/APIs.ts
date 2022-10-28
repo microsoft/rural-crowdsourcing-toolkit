@@ -6,9 +6,11 @@
 import * as DBT from '@karya/core';
 import { LanguageCode } from '@karya/core';
 import { AuthHeader } from '../../components/auth/Auth.extra';
+import { BulkPaymentsTransactionRequest } from '../../data/Index';
+import { ViewName } from '../../data/Views';
 import { GET, handleError, POST, PUT } from './HttpUtils';
 
-export type DbParamsType<Table extends DBT.DbTableName> = Table extends 'server_user'
+export type DbParamsType<Table extends DBT.DbTableName | ViewName> = Table extends 'server_user'
   ? 'DBT.ServerUser'
   : Table extends 'box'
   ? 'DBT.Box'
@@ -216,6 +218,32 @@ export type BackendRequestInitAction =
       type: 'BR_INIT';
       store: 'karya_file';
       label: 'GET_LANGUAGE_ASSETS';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'payments_account';
+      label: 'GET_ALL';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'payments_transaction';
+      label: 'GET_ALL';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'payments_eligible_worker';
+      label: 'GET_ALL';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'bulk_payments_transaction';
+      label: 'GET_ALL';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'bulk_payments_transaction';
+      request: BulkPaymentsTransactionRequest;
+      label: 'CREATE';
     };
 
 export type StoreList = BackendRequestInitAction['store'];
@@ -382,6 +410,35 @@ export type BackendRequestSuccessAction =
       store: 'karya_file';
       label: 'GET_LANGUAGE_ASSETS';
       response: DBT.KaryaFileRecord[];
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'payments_account';
+      label: 'GET_ALL';
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'payments_transaction';
+      label: 'GET_ALL';
+      response: DBT.PaymentsAccount[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'payments_eligible_worker';
+      label: 'GET_ALL';
+      response: (DBT.WorkerRecord & { amount: number })[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'bulk_payments_transaction';
+      label: 'GET_ALL';
+      response: DBT.BulkPaymentsTransactionRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'bulk_payments_transaction';
+      label: 'CREATE';
+      response: DBT.BulkPaymentsTransactionRecord;
     };
 
 export type BackendRequestFailureAction = {
@@ -673,6 +730,56 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/lang-assets'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get worker accounts for payment
+    if (action.store === 'payments_account' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/account'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get payment transaction records
+    if (action.store === 'payments_transaction' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/transactions'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get bulk payment transaction records
+    if (action.store === 'bulk_payments_transaction' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/transactions/bulk_payments'),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Create new bulk payment transaction
+    if (action.store === 'bulk_payments_transaction' && action.label === 'CREATE') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await POST('/payments/transactions/bulk_payments', action.request),
+      } as BackendRequestSuccessAction;
+    }
+
+    // Get payable workers with their respective amount
+    if (action.store === 'payments_eligible_worker' && action.label === 'GET_ALL') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/payments/worker/eligible'),
       } as BackendRequestSuccessAction;
     }
 

@@ -41,7 +41,7 @@ export const get: KaryaMiddleware = async (ctx) => {
   const limit = limit_param ? Number.parseInt(limit_param, 10) : 1000;
 
   if (assignment_type == 'verified') {
-    const records = await BasicModel.getRecords(
+    const assignments = await BasicModel.getRecords(
       'microtask_assignment',
       { worker_id: worker.id, status: 'VERIFIED' },
       [],
@@ -49,7 +49,9 @@ export const get: KaryaMiddleware = async (ctx) => {
       'verified_at',
       limit
     );
-    HttpResponse.OK(ctx, records);
+    const taskIds = new Set(assignments.map((mta) => mta.task_id));
+    const tasks = await BasicModel.getRecords('task', {}, [['id', [...taskIds]]]);
+    HttpResponse.OK(ctx, { tasks, assignments });
   } else {
     // TODO: Adjust max credits
     await assignMicrotasksForWorker(worker, 10000);
@@ -93,7 +95,7 @@ export const submit: KaryaMiddleware = async (ctx) => {
         await BasicModel.updateSingle(
           'microtask_assignment',
           { id },
-          { ...updates, submitted_to_box_at, base_credits: assignment.max_base_credits, submitted_to_server_at: null }
+          { ...updates, submitted_to_box_at, submitted_to_server_at: null }
         );
         if (assignment.status == 'COMPLETED') {
           // TODO: Handle microtask assignment completion, by invoking policy

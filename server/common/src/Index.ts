@@ -8,3 +8,4 @@ export * from './db/Index';
 export * from './auth/Index';
 export * from './logging/Index';
 export * from './access-code/Index';
+export * from './payments/Index';

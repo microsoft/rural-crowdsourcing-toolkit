@@ -12,4 +12,6 @@ export * from '../languages/Index';
 export * from '../scenarios/Index';
 export * from '../policies/Index';
 export * from '../chains/Index';
+export * from '../payments/Index';
+export * from '../errors/Index';
 export * from '@karya/checksum';

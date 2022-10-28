@@ -13,6 +13,7 @@ import { needIdToken } from '../controllers/Middlewares';
 import * as WorkerController from '../controllers/WorkerController';
 import * as KaryaFileController from '../controllers/KaryaFileController';
 import * as AssignmentController from '../controllers/AssignmentController';
+import * as PaymentsController from '../controllers/PaymentsController';
 import { KaryaIDTokenHandlerTemplate, KaryaIDTokenState } from '@karya/common';
 import { OTPHandlerTemplate, OTPState } from '@karya/common';
 
@@ -30,6 +31,8 @@ const router = new Router<KaryaDefaultState>();
 // Worker get and update routes
 router.get('/worker', WorkerController.get);
 router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
+//Get leaderboard corresponding to a worker
+router.get('/worker/leaderboard', needIdToken, WorkerController.getLeaderboard);
 
 // OTP routes
 router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, OTPHandler.generate);
@@ -85,9 +88,25 @@ router.put(
   BodyParser({ jsonLimit: '20mb' }),
   AssignmentController.submitSkippedExpired
 );
+router.put(
+  '/skipped_assignments',
+  needIdToken,
+  BodyParser({ jsonLimit: '20mb' }),
+  AssignmentController.submitSkippedExpired
+);
 router.get('/assignments', needIdToken, AssignmentController.get);
 
 // Token Routes
 router.get('/renew_id_token', needIdToken, generateToken, WorkerController.sendGeneratedIdToken);
+
+// Payments Routes
+router.post('/payments/accounts', BodyParser(), PaymentsController.addAccount);
+router.put('/payments/accounts/:id/verify', BodyParser(), PaymentsController.verifyAccount);
+router.get('/payments/accounts/current', PaymentsController.getCurrentActiveAccount);
+router.get('/payments/transaction', PaymentsController.getTransactionRecords);
+
+// Get Balance for a worker
+router.get('/payments/worker/:id/balance', PaymentsController.getWorkerBalance);
+router.get('/payments/worker/earnings', PaymentsController.getWorkerEarningStatus);
 
 export default router;

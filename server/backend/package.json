@@ -21,6 +21,8 @@
     "@koa/cors": "^2.2.2",
     "bluebird": "^3.5.5",
     "bull": "^3.18.0",
+    "bullmq": "^1.57.0",
+    "crypto-js": "^4.1.1",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
@@ -32,6 +34,7 @@
   "devDependencies": {
     "@types/bluebird": "^3.5.32",
     "@types/bull": "^3.14.4",
+    "@types/crypto-js": "^4.0.2",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/koa": "^2.11.4",
     "@types/koa-router": "^7.4.1",

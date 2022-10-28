@@ -41,6 +41,11 @@ import TaskAssignmentList from './components/task_assignment/TaskAssignmentList'
 /** language components */
 import LangAsset from './components/lang/LangAsset';
 
+/** payments components */
+import BulkPaymentsList from './components/payments/BulkPaymentsList';
+import GenerateBulkPaymentsTable from './components/payments/GenerateBulkPaymentsTable';
+import PaymentsDashboard from './components/payments/PaymentsDashboard';
+
 const Routes = (
   <Switch>
     {/** Auth routes */}
@@ -81,6 +86,9 @@ const Routes = (
 
             {/** Language routes */}
             <AdminRoute exact path='/lang-assets' component={LangAsset} />
+
+            {/** Payments routes */}
+            <AdminRoute exact path='/payments' component={PaymentsDashboard} />
           </Switch>
         </div>
       </main>

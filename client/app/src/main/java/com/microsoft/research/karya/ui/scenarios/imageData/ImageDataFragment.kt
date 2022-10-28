@@ -22,7 +22,6 @@ import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.gesture.Gesture
 import com.otaliastudios.cameraview.gesture.GestureAction
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.microtask_common_back_button.view.*
 import kotlinx.android.synthetic.main.microtask_common_next_button.view.*
 import kotlinx.android.synthetic.main.microtask_image_data.*
 import java.io.File
@@ -174,7 +173,7 @@ class ImageDataFragment : BaseMTRendererFragment(R.layout.microtask_image_data) 
       }
     }
 
-    backBtnCv.setOnClickListener { }
+    backBtn.setOnClickListener { }
   }
 
   private fun updateNavigationState() {

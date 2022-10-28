@@ -11,7 +11,9 @@ import { BaseScenarioInterface } from '../ScenarioInterface';
 type ImageLabellingTaskInputParameters = {
   language: LanguageCode;
   labels: string[];
+  single: boolean;
   training: boolean;
+  imageByUsers: string;
 };
 
 // Image transcription microtask input/output format
@@ -46,11 +48,31 @@ export const baseImageLabellingScenario: BaseImageLabellingScenario = {
     },
 
     {
+      id: 'single',
+      type: 'boolean',
+      label: 'Select only a single label',
+      description: 'Allow users to select only a single label',
+      required: false,
+    },
+
+    {
       id: 'training',
       label: 'Training Task?',
       description: 'Is this task for training end users?',
       type: 'boolean',
       required: false,
+    },
+
+    {
+      id: 'imageByUsers',
+      type: 'enum',
+      label: 'Image By Users/Server?',
+      description: 'Should the images be taken by the user or provided by the server',
+      required: true,
+      list: [
+        ['user', 'User'],
+        ['server', 'Server'],
+      ],
     },
   ],
 

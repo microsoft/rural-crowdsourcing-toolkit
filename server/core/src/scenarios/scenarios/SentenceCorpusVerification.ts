@@ -13,7 +13,7 @@ type SentenceCorpusVerificationTaskInputParameters = {
 };
 
 // Input/output format
-type SentenceCorpusVerificationStatus = 'NEW' | 'VALID' | 'INVALID' | 'UNKNOWN';
+type SentenceCorpusVerificationStatus = 'NEW' | 'VALID' | 'ERRORS' | 'INVALID' | 'UNKNOWN';
 
 type SentenceCorpusVerificationMicrotaskInput = {
   prompt: string;

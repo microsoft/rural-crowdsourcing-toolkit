@@ -245,6 +245,9 @@
     <!-- Image data collection strings -->
     <string name="image_data_collection_instruction">Take a picture of the front cover. Move to a random page. Take pictures of # continuous pages from the random page</string>
 
+    <!-- Image annotation strings -->
+    <string name="image_annotation_instruction">Annotation instruction goes here</string>
+
     <!-- Sentence validation strings -->
     <string name="sentence_validation_instruction">Is the sentence below correct?</string>
     <string name="grammar_question">Is the above sentence grammatically correct?</string>
@@ -260,4 +263,13 @@
     <string name="next">next</string>
     <string name="back">back</string>
     <string name="skip_task_warning">Are you sure, you want to skip the task?</string>
+    <string name="no_transcription_error_msg">Please enter the transcription</string>
+    <string name="speech_transcription_instruction">Transcribe the audio below</string>
+    <string name="proceed_text">Proceed</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="no_annotation_box_annotation_message_text">No boxes are drawn to the screen. Do you want to proceed?</string>
+    <string name="no_annotation_box_dialog_title_text">No Box Drawn</string>
+    <string name="select_image_annotation_label_dialog_instruction">Select Label</string>
+    <string name="image_annotation_edit_label">Select new label</string>
+    <string name="image_labelling_take_picture_text">Take Picture</string>
 </resources>

@@ -14,12 +14,15 @@ import {
   TaskRecord,
   WorkerRecord,
   getChecksum,
+  PaymentsAccountRecord,
+  PaymentsTransactionRecord,
 } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import axios, { AxiosInstance } from 'axios';
 import { cronLogger } from './Cron';
 import { envGetString } from '@karya/misc-utils';
 import fs from 'fs';
+import { fips } from 'crypto';
 
 export async function getLanguageAssets(axiosLocal: AxiosInstance) {
   cronLogger.info('Fetching language assets');
@@ -62,6 +65,12 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
   const response = await knex<WorkerRecord>('worker').max('tags_updated_at');
   const latest_tag_updated_time = response[0].max || new Date(0).toISOString();
 
+  // Response type for get updated workes query
+  type UpdatedWorkerRespnse = Pick<
+    WorkerRecord,
+    'id' | 'tags' | 'tags_updated_at' | 'payments_active' | 'payments_meta' | 'selected_account'
+  >[];
+
   // Get updated workers
   let updatedWorkerData: WorkerRecord[];
   try {
@@ -74,12 +83,16 @@ export async function getUpdatedWorkers(axiosLocal: AxiosInstance) {
     return;
   }
 
-  // Update tag information for workers
+  // Update tag and payment information for workers
   try {
     await BBPromise.mapSeries(updatedWorkerData, async (worker) => {
-      const { id, tags, tags_updated_at } = worker;
+      const { id, tags, tags_updated_at, payments_active, payments_meta, selected_account } = worker;
       try {
-        await BasicModel.updateSingle('worker', { id }, { tags, tags_updated_at });
+        await BasicModel.updateSingle(
+          'worker',
+          { id },
+          { tags, tags_updated_at, payments_active, payments_meta, selected_account }
+        );
       } catch (e) {
         await BasicModel.upsertRecord('worker', worker);
       }
@@ -266,6 +279,20 @@ export async function downloadPendingKaryaFiles() {
       if (file.url == null) return;
       const filepath = `${localFolderPath}/${file.container_name}/${file.name}`;
 
+      // Ignore download if the file already exist and checksum is correct
+      try {
+        await fs.promises.access(filepath);
+        const checksum = await getChecksum(filepath, file.algorithm);
+        if (checksum == file.checksum) {
+          // Update db
+          await BasicModel.updateSingle('karya_file', { id: file.id }, { in_box: true, url: null });
+          return;
+        }
+        // Incorrect checksum; Proceed further
+      } catch (e) {
+        // File not present; Proceed further
+      }
+
       try {
         // Download file
         await downloadKaryaFile(file.url, filepath);
@@ -357,4 +384,62 @@ export async function getVerifiedAssignments(box: BoxRecord, axiosLocal: AxiosIn
       responseLength = verifiedAssignments.length;
     }
   });
+}
+
+/**
+ * Get all account record updates from the server
+ */
+export async function getAccountRecords(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting updated account records`);
+  // Get latest receive time on transaction records
+  const response = await knex<PaymentsTransactionRecord>('payments_transaction').max('last_updated_at');
+  const latest_update_time = response[0].max || new Date(0).toISOString();
+
+  let accountRecords: PaymentsAccountRecord[];
+
+  try {
+    const response = await axiosLocal.get<PaymentsAccountRecord[]>(`/payments/accounts/updates`, {
+      params: { from: latest_update_time },
+    });
+    accountRecords = response.data;
+  } catch (e) {
+    cronLogger.error('Failed to get update for account records');
+  }
+
+  try {
+    await BBPromise.mapSeries(accountRecords!, async (accountRecord) => {
+      await BasicModel.upsertRecord('payments_account', accountRecord);
+    });
+  } catch (e) {
+    cronLogger.error('Failed to upsert the account records');
+  }
+}
+
+/**
+ * Get all transaction record updates from the server
+ */
+export async function getTransactionRecords(axiosLocal: AxiosInstance) {
+  cronLogger.info(`Getting updated transaction records`);
+  // Get latest receive time on transaction records
+  const response = await knex<PaymentsTransactionRecord>('payments_transaction').max('last_updated_at');
+  const latest_update_time = response[0].max || new Date(0).toISOString();
+
+  let transactionRecords: PaymentsTransactionRecord[];
+
+  try {
+    const response = await axiosLocal.get<PaymentsTransactionRecord[]>(`/payments/transactions/updates`, {
+      params: { from: latest_update_time },
+    });
+    transactionRecords = response.data;
+  } catch (e) {
+    cronLogger.error('Failed to get update for transaction records');
+  }
+
+  try {
+    await BBPromise.mapSeries(transactionRecords!, async (transactionRecord) => {
+      await BasicModel.upsertRecord('payments_transaction', transactionRecord);
+    });
+  } catch (e) {
+    cronLogger.error('Failed to upsert the account records');
+  }
 }
