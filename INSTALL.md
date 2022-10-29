@@ -84,9 +84,13 @@ For Windows Users:
 Start the postgresql server -> `# > sudo service postgresql start`
 
 Step into postgres cmd line -> `#> psql postgres`
+
 Create a Role -> `#> CREATE ROLE username WITH LOGIN PASSWORD 'quoted password'`
+
 Alter the Role to create a Database -> `#> ALTER ROLE username CREATEDB;`
+
 Step into the user's cmd line space to create a Database -> `#> psql postgres -U username`
+
 Create a Database -> `#> CREATE DATABASE databasename;`
 
 Copy the `.sample.env` file
