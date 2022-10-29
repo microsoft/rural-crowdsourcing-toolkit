@@ -147,7 +147,7 @@ Click on the "Box" tab and generate an access code for a new box.
 ### 1. Setup the config file
 
 Copy the `.sample.env` file to `.env` and fill out the fields. 
-Create a postgresql role and database for the backend server, update the username, password and db name in .env file (follow the steps of server backend for the same). If for the test
+Create a postgresql role and database for the box server, update the username, password and db name in .env file (follow the steps of server backend for the same). If for the test
 setup the box and the server are running on the same machine, then the box
 database name should be different from the server database name.
 
