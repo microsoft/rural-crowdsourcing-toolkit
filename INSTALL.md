@@ -75,7 +75,21 @@ Paste the username and password in KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD in .e
 
 ### 1. Setup the config
 
-Create a postgres database for the backend server. Copy the `.sample.env` file
+Create a postgres role and database for the backend server and update the username, password and db name in .env file. 
+
+For Mac Users: 
+Start the postgresql server -> `#> brew services start postgresql`
+
+For Windows Users:
+Start the postgresql server -> `# > sudo service postgresql start`
+
+Step into postgres cmd line -> `#> psql postgres`
+Create a Role -> `#> CREATE ROLE username WITH LOGIN PASSWORD 'quoted password'`
+Alter the Role to create a Database -> `#> ALTER ROLE username CREATEDB;`
+Step into the user's cmd line space to create a Database -> `#> psql postgres -U username`
+Create a Database -> `#> CREATE DATABASE databasename;`
+
+Copy the `.sample.env` file
 in the backend folder to `.env`. Fill out all the fields in the `.env` file.
 
 ### 2. Reset the database
