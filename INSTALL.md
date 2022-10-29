@@ -75,7 +75,7 @@ Paste the username and password in KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD in .e
 
 ### 1. Setup the config
 
-Create a postgres role and database for the backend server and update the username, password and db name in .env file. 
+Create a postgresql role and database for the backend server and update the username, password and db name in .env file. 
 
 For Mac Users: 
 Start the postgresql server -> `#> brew services start postgresql`
@@ -128,7 +128,7 @@ Copy the `.sample.env` file to `.env` and fill out the fields.
 ### 3. Sign up admin user
 
 Open the frontend server URL on a browser. Sign up using the admin access code
-that you received from the backend `ResetDB.js` script.
+that you received from the backend `ResetDB.js` script. (Make sure that the backend server is up and running when you are inputting admin access code on frotend server).
 
 ### 4. Generate access codes for work provider (optional)
 
@@ -146,7 +146,8 @@ Click on the "Box" tab and generate an access code for a new box.
 
 ### 1. Setup the config file
 
-Copy the `.sample.env` file to `.env` and fill out the fields. If for the test
+Copy the `.sample.env` file to `.env` and fill out the fields. 
+Create a postgresql role and database for the backend server, update the username, password and db name in .env file (follow the steps of server backend for the same). If for the test
 setup the box and the server are running on the same machine, then the box
 database name should be different from the server database name.
 
