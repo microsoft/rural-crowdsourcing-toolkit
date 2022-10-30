@@ -46,7 +46,6 @@ let scriptSequence = ['recreate-tables', 'auth-bootstrap'];
   setupDbConnection();
 
   // Remove server users from keycloak
-  const allServerUsers = await BasicModel.getRecords('server_user', {});
   await KeycloakUtils.removeAllUsers();
 
   await BBPromise.mapSeries(scriptSequence, async (action) => {
