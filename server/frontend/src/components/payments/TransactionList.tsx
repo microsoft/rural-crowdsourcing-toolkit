@@ -90,7 +90,6 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
         return {
           ...item,
           created_at: new Date(item.created_at).toDateString(),
-          unique_id: item.meta ? ((item.meta as any).unique_id as string) : null,
           failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
         };
       })
