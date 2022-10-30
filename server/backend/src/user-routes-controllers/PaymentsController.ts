@@ -89,7 +89,7 @@ export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
 
   // Get all relevant transaction records
   // TODO @enhancement: Apply pagination
-  let transactionRecords: PaymentsTransactionRecord[];
+  let transactionRecords: (PaymentsTransactionRecord | { unique_id: string | null })[];
   if (qUserId) {
     // Get records for a particular user
     transactionRecords = await BasicModel.getRecords(
