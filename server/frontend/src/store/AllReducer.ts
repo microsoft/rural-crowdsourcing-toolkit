@@ -34,10 +34,10 @@ export type StoreStateView<View extends ViewName> = {
 export type AllState = {
   [id in DbTableName]: StoreStateDb<id>;
 } & {
-  [id in ViewName]: StoreStateView<id>;
-} & {
-  auth: { cwp: ServerUserRecord | null } & RequestStatus;
-};
+    [id in ViewName]: StoreStateView<id>;
+  } & {
+    auth: { cwp: ServerUserRecord | null } & RequestStatus;
+  };
 
 // Store actions
 type StoreActions = BackendRequestInitAction | BackendRequestSuccessAction | BackendRequestFailureAction;
@@ -60,6 +60,7 @@ const initState: AllState = {
   box: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   karya_file: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   payments_account: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
+  payments_transaction_table: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   payments_transaction: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   bulk_payments_transaction: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },
   payments_eligible_worker: { data: [], last_fetched_at: new Date(0), status: 'SUCCESS' },

@@ -21,7 +21,7 @@ import Pagination from 'react-js-pagination';
 import { ColTextInput } from '../templates/FormInputs';
 
 // Create the connector
-const connector = withData('payments_transaction');
+const connector = withData('payments_transaction_table');
 
 // Box list props
 type TransactionListProps = DataProps<typeof connector>;
@@ -32,13 +32,18 @@ type TransactionListState = {
     total_rows_per_page: number;
     current_page: number;
   };
+  unique_id_input: string;
   worker_id_input: string;
   bulk_id_input: string;
   account_id_input: string;
   payout_id_input: string;
 };
 
-type TransactionTableRecord = PaymentsTransactionRecord & { failure_reason: string | null };
+type TransactionTableRecord = PaymentsTransactionRecord & 
+  { 
+    unique_id: string | null,
+    failure_reason: string | null
+  };
 
 // Box list component
 class TransactionList extends React.Component<TransactionListProps, TransactionListState> {
@@ -49,6 +54,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       current_page: 1,
     },
     worker_id_input: '',
+    unique_id_input: '',
     bulk_id_input: '',
     account_id_input: '',
     payout_id_input: '',
@@ -79,11 +85,12 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
   };
 
   render() {
-    var data: TransactionTableRecord[] = this.props.payments_transaction.data
+    var data: TransactionTableRecord[] = this.props.payments_transaction_table.data
       .map((item) => {
         return {
           ...item,
           created_at: new Date(item.created_at).toDateString(),
+          unique_id: item.meta ? ((item.meta as any).unique_id as string) : null,
           failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
         };
       })
@@ -117,13 +124,14 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
 
     // get error element
     const errorElement =
-      this.props.payments_transaction.status === 'FAILURE' ? (
-        <ErrorMessage message={this.props.payments_transaction.messages} />
+      this.props.payments_transaction_table.status === 'FAILURE' ? (
+        <ErrorMessage message={this.props.payments_transaction_table.messages} />
       ) : null;
 
     // Box table columns
     const tableColumns: Array<TableColumnType<TransactionTableRecord>> = [
       { header: 'Worker ID', type: 'field', field: 'worker_id' },
+      { header: 'Unique ID', type: 'field', field: 'unique_id' },
       { header: 'Bulk ID ', type: 'field', field: 'bulk_id' },
       { header: 'Amount ', type: 'field', field: 'amount' },
       { header: 'Account ID', type: 'field', field: 'account_id' },
@@ -146,7 +154,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
           {collapseTableText}
         </a>
         {errorElement}
-        {this.props.payments_transaction.status === 'IN_FLIGHT' && <ProgressBar />}
+        {this.props.payments_transaction_table.status === 'IN_FLIGHT' && <ProgressBar />}
         {!this.state.tableCollapsed && (
           <>
             <div className='row' id='text_filter_row'>
@@ -155,6 +163,14 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
                 value={this.state.worker_id_input}
                 onChange={this.handleInputChange}
                 label='Filter by worker ID'
+                width='s10 m8 l4'
+                required={false}
+              />
+              <ColTextInput
+                id='unique_id_input'
+                value={this.state.unique_id_input}
+                onChange={this.handleInputChange}
+                label='Filter by unique ID'
                 width='s10 m8 l4'
                 required={false}
               />

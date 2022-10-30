@@ -221,7 +221,7 @@ export type BackendRequestInitAction =
     }
   | {
       type: 'BR_INIT';
-      store: 'payments_transaction';
+      store: 'payments_transaction_table';
       label: 'GET_ALL';
     }
   | {
@@ -724,7 +724,7 @@ export async function backendRequest(
     }
 
     // Get payment transaction records
-    if (action.store === 'payments_transaction' && action.label === 'GET_ALL') {
+    if (action.store === 'payments_transaction_table' && action.label === 'GET_ALL') {
       return {
         type: 'BR_SUCCESS',
         store,
