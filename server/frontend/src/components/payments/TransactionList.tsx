@@ -19,6 +19,7 @@ import { PaymentsTransactionRecord } from '@karya/core';
 import { CSVLink } from 'react-csv';
 import Pagination from 'react-js-pagination';
 import { ColTextInput } from '../templates/FormInputs';
+import { PaymentsTransactionTableRecord } from '../../data/Views';
 
 // Create the connector
 const connector = withData('payments_transaction_table');
@@ -35,15 +36,10 @@ type TransactionListState = {
   unique_id_input: string;
   worker_id_input: string;
   bulk_id_input: string;
+  phone_number_input: string;
   account_id_input: string;
   payout_id_input: string;
 };
-
-type TransactionTableRecord = PaymentsTransactionRecord & 
-  { 
-    unique_id: string | null,
-    failure_reason: string | null
-  };
 
 // Box list component
 class TransactionList extends React.Component<TransactionListProps, TransactionListState> {
@@ -56,6 +52,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
     worker_id_input: '',
     unique_id_input: '',
     bulk_id_input: '',
+    phone_number_input: '',
     account_id_input: '',
     payout_id_input: '',
   };
@@ -85,7 +82,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
   };
 
   render() {
-    var data: TransactionTableRecord[] = this.props.payments_transaction_table.data
+    var data: PaymentsTransactionTableRecord[] = this.props.payments_transaction_table.data
       .map((item) => {
         return {
           ...item,
@@ -128,11 +125,12 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       ) : null;
 
     // Box table columns
-    const tableColumns: Array<TableColumnType<TransactionTableRecord>> = [
+    const tableColumns: Array<TableColumnType<PaymentsTransactionTableRecord>> = [
       { header: 'Worker ID', type: 'field', field: 'worker_id' },
       { header: 'Unique ID', type: 'field', field: 'unique_id' },
       { header: 'Bulk ID ', type: 'field', field: 'bulk_id' },
       { header: 'Amount ', type: 'field', field: 'amount' },
+      { header: 'Phno ', type: 'field', field: 'phone_number' },
       { header: 'Account ID', type: 'field', field: 'account_id' },
       { header: 'Mode', type: 'field', field: 'mode' },
       { header: 'Purpose', type: 'field', field: 'purpose' },
@@ -182,6 +180,14 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
                 required={false}
               />
               <ColTextInput
+                id='phone_number_input'
+                value={this.state.phone_number_input}
+                onChange={this.handleInputChange}
+                label='Filter by bulk ID'
+                width='s10 m8 l4'
+                required={false}
+              />
+              <ColTextInput
                 id='account_id_input'
                 value={this.state.account_id_input}
                 onChange={this.handleInputChange}
@@ -199,7 +205,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
               />
             </div>
             <div className='basic-table'>
-              <TableList<TransactionTableRecord>
+              <TableList<PaymentsTransactionTableRecord>
                 columns={tableColumns}
                 rows={data.slice(
                   (this.state.transaction_table.current_page - 1) * this.state.transaction_table.total_rows_per_page,
