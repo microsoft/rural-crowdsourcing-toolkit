@@ -3,7 +3,7 @@ import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
 import { BulkTransactionQWrapper } from '../Queue/BulkTransaction/BulkTransactionQWrapper';
 import { BulkTransactionQConfig } from '../Queue/BulkTransaction/BulkTransactionQConfig';
-import { BasicModel, WorkerModel } from '@karya/common';
+import { BasicModel, PaymentsTransactionModel, WorkerModel } from '@karya/common';
 
 // Controller to process bulk payments request
 export const processBulkPayments: UserRouteMiddleware = async (ctx) => {
@@ -99,7 +99,7 @@ export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
       [['last_updated_at', from, null]]
     );
   } else {
-    transactionRecords = await BasicModel.getRecords('payments_transaction', {}, [], [['last_updated_at', from, null]]);
+    transactionRecords = await PaymentsTransactionModel.getPaymentsTransactionData()
   }
 
   HttpResponse.OK(ctx, transactionRecords);
