@@ -100,10 +100,22 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       data = data.filter((t) => t.worker_id.startsWith(worker_id_input));
     }
 
+    // Filtering data by unique ID
+    const { unique_id_input } = this.state;
+    if (unique_id_input !== undefined && unique_id_input !== '') {
+      data = data.filter((t) => t.unique_id.startsWith(unique_id_input));
+    }
+
     // Filtering data by bulk ID
     const { bulk_id_input } = this.state;
     if (bulk_id_input !== undefined && bulk_id_input !== '') {
       data = data.filter((t) => t.bulk_id?.startsWith(bulk_id_input));
+    }
+
+    // Filtering data by phone number
+    const { phone_number_input } = this.state;
+    if (phone_number_input !== undefined && phone_number_input !== '') {
+      data = data.filter((t) => t.phone_number?.startsWith(phone_number_input));
     }
 
     // Filtering data by account ID
@@ -183,7 +195,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
                 id='phone_number_input'
                 value={this.state.phone_number_input}
                 onChange={this.handleInputChange}
-                label='Filter by bulk ID'
+                label='Filter by phone number'
                 width='s10 m8 l4'
                 required={false}
               />
