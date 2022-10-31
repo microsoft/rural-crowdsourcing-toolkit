@@ -103,7 +103,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
     // Filtering data by unique ID
     const { unique_id_input } = this.state;
     if (unique_id_input !== undefined && unique_id_input !== '') {
-      data = data.filter((t) => t.unique_id.startsWith(unique_id_input));
+      data = data.filter((t) => t.unique_id?.startsWith(unique_id_input));
     }
 
     // Filtering data by bulk ID
