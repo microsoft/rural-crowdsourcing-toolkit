@@ -364,8 +364,23 @@ constructor(
   fun handleCorruptAudio() {
     outputData.addProperty("flag", "corrupt")
 
-    // Move to the dashboard
-    navigateBack()
+    /** Disable all buttons */
+    setButtonStates(ButtonState.DISABLED, ButtonState.DISABLED, ButtonState.DISABLED)
+
+    if (activityState == ActivityState.PLAYBACK) {
+      mediaPlayer!!.stop()
+    }
+    mediaPlayer!!.release()
+    mediaPlayer = null
+
+    viewModelScope.launch {
+      expireAndSaveCurrentMicrotask()
+      setActivityState(ActivityState.INIT)
+      moveToNextMicrotask()
+      // Reset Flow layout
+      _assistWords.value = arrayListOf()
+    }
+
   }
 
 }
