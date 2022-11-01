@@ -225,7 +225,7 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
           sourceImageIv.setImageBitmap(image)
         } catch(e: Exception) {
           FirebaseCrashlytics.getInstance().recordException(e)
-          FirebaseCrashlytics.getInstance().log("Image Load Failure: ${viewModel.currentMicroTask.id} ${viewModel.currentAssignment.id}")
+          FirebaseCrashlytics.getInstance().log("Image Load Failure: ${viewModel.currentMicroTask.id} ${viewModel.currentAssignment.id} $path")
           findNavController().popBackStack()
         }
       }
