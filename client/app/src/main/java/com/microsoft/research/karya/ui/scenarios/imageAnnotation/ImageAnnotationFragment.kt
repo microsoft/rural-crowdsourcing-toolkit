@@ -12,9 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.jsibbold.zoomage.dataClass.Polygon
 import com.jsibbold.zoomage.enums.CropObjectStatus
 import com.jsibbold.zoomage.enums.CropObjectType
@@ -218,8 +220,14 @@ class ImageAnnotationFragment : BaseMTRendererFragment(R.layout.microtask_image_
   private fun setupObservers() {
     viewModel.imageFilePath.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { path ->
       if (path.isNotEmpty()) {
-        val image: Bitmap = BitmapFactory.decodeFile(path)
-        sourceImageIv.setImageBitmap(image)
+        try {
+          val image: Bitmap = BitmapFactory.decodeFile(path)
+          sourceImageIv.setImageBitmap(image)
+        } catch(e: Exception) {
+          FirebaseCrashlytics.getInstance().recordException(e)
+          FirebaseCrashlytics.getInstance().log("Image Load Failure: ${viewModel.currentMicroTask.id} ${viewModel.currentAssignment.id}")
+          findNavController().popBackStack()
+        }
       }
       //TODO: Put an else condition to put a placeholder image
 

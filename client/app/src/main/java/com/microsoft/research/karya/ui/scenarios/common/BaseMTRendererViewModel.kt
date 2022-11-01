@@ -60,7 +60,7 @@ abstract class BaseMTRendererViewModel(
   protected var currentAssignmentIndex: Int = 0
 
   lateinit var currentMicroTask: MicroTaskRecord
-  protected lateinit var currentAssignment: MicroTaskAssignmentRecord
+  lateinit var currentAssignment: MicroTaskAssignmentRecord
 
   // Microtask group id -- track this to move back to dashboard on group boundaries
   private var groupId: String? = null
