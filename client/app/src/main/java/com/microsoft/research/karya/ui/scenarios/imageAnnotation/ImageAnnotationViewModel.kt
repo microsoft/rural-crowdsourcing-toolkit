@@ -54,7 +54,7 @@ constructor(
   val polygonCoors = _polygonCoors.asStateFlow()
 
   // Annotation type
-  var annotationType = CropObjectType.RECTANGLE;
+  var annotationType = CropObjectType.POLYGON;
   // Number of sides
   var numberOfSides = 4;
 
@@ -77,7 +77,7 @@ constructor(
     val annotationTypeString = try {
       currentMicroTask.input.asJsonObject.getAsJsonObject("data").get("annotationType").asString
     } catch (e: Exception) {
-      "RECTANGLE"
+      "POLYGON"
     }
 
     annotationType = if (annotationTypeString == "POLYGON") CropObjectType.POLYGON
