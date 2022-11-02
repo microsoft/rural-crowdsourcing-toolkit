@@ -17,7 +17,6 @@ export const verifiedSpeechTranscriptionChain: BackendChainInterface<'SPEECH_VER
       const microtask = microtasks[i];
 
       // Get the input sentence and recording for the verification
-      const sentence = microtask.input.data.sentence;
       const recording = microtask.input.files!.recording;
 
       // Get recording accuracy
@@ -29,7 +28,7 @@ export const verifiedSpeechTranscriptionChain: BackendChainInterface<'SPEECH_VER
           ? {
               task_id: toTask.id,
               input: {
-                data: { sentence: microtask.input.data.sentence },
+                data: microtask.input.data,
                 files: { recording },
               },
               input_file_id: microtask.input_file_id,

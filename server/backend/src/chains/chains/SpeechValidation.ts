@@ -29,7 +29,7 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
       const chainedMicrotask: MicrotaskType<'SPEECH_VERIFICATION'> = {
         task_id: toTask.id,
         input: {
-          data: { sentence: microtask.input.data.sentence },
+          data: microtask.input.data,
           files: { recording },
         },
         input_file_id: assignment.output_file_id,

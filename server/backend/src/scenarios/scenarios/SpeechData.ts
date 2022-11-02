@@ -31,9 +31,10 @@ async function processInputFile(
   const sentences: { sentence: string; hint?: string }[] = jsonData!;
   const microtasks = sentences.map((sentence) => {
     const files = sentence.hint ? { files: { hint: sentence.hint } } : {};
+    const { hint, ...data } = sentence;
     const mt: MicrotaskType<'SPEECH_DATA'> = {
       task_id: task.id,
-      input: { data: { sentence: sentence.sentence }, ...files },
+      input: { data, ...files },
       deadline: task.deadline,
       credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
