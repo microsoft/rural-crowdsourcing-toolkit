@@ -91,15 +91,15 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
   let hash = calculateHash(ctx.state.entity.id, accountBody.account.id, accountBody.account.ifsc || '');
 
   // Determine if there is already a record with the given hash
-  try {
-    let record = await BasicModel.getSingle('payments_account', { hash });
-    // Send the existing record
-    const result = underscore.pick(record, accountRegResObjectFields);
-    HttpResponse.OK(ctx, result);
-    return;
-  } catch (e) {
-    mainLogger.info(`Cant find account record with hash ${hash} for user_id: ${ctx.state.entity.id}`);
-  }
+  // try {
+  //   let record = await BasicModel.getSingle('payments_account', { hash });
+  //   // Send the existing record
+  //   const result = underscore.pick(record, accountRegResObjectFields);
+  //   HttpResponse.OK(ctx, result);
+  //   return;
+  // } catch (e) {
+  //   mainLogger.info(`Cant find account record with hash ${hash} for user_id: ${ctx.state.entity.id}`);
+  // }
   // Create and enque account registration task
   let jobPayload: RegistrationQPayload = {
     boxId: ctx.state.entity.box_id,
