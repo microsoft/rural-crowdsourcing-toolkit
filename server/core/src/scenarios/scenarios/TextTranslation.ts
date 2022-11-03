@@ -64,7 +64,7 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
     id: 'forwardCount',
     type: 'int',
     label: 'Number of words per sentence for suggestion (Leave empty for no assistance)',
-    description: "",
+    description: "Number of words to predict ahead",
     required: false
   }
 ];
