@@ -8,9 +8,9 @@ import * as HttpResponse from '@karya/http-response';
 const policyParser = new PolicyParser(Policy);
 
 export const tokenAuthoriser: UserRouteMiddleware = async (ctx, next) => {
-  const resourceTokens = policyParser.getResourceTokens(ctx);
+  const resourceTokens = policyParser.getResourceTokens(ctx); //reource == api
   const serverUser = await BasicModel.getSingle('server_user', { id: ctx.state.entity.id });
-  const userTokens = await TokenAuthHandler.getTokens(serverUser);
+  const userTokens = [serverUser.role];
 
   const accessAllowed = isAccessAllowed(userTokens, resourceTokens);
   if (!accessAllowed) return HttpResponse.Forbidden(ctx, 'User does not have enough permissions, please contact admin');

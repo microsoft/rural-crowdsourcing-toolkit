@@ -12,7 +12,7 @@ import { Promise as BBPromise } from 'bluebird';
 import { knex, setupDbConnection, ServerDbFunctions, mainLogger as logger, BasicModel } from '@karya/common';
 import { bootstrapAuth } from './AuthBootstrap';
 import { createAllMatViews } from '../models/MatViewModel';
-import * as KeycloakUtils from '../utils/auth/KeycloakUtils';
+// import * as KeycloakUtils from '../utils/auth/KeycloakUtils';
 
 /**
  * Function to recreate all tables in the database
@@ -46,12 +46,12 @@ let scriptSequence = ['recreate-tables', 'auth-bootstrap'];
   setupDbConnection();
 
   // Remove server users from keycloak
-  try {
-    const allServerUsers = await BasicModel.getRecords('server_user', {});
-    await KeycloakUtils.removeAllUsers();
-  } catch (e) {
-    logger.warn(e)
-  }
+  // try {
+  //   const allServerUsers = await BasicModel.getRecords('server_user', {});
+  //   await KeycloakUtils.removeAllUsers();
+  // } catch (e) {
+  //   logger.warn(e)
+  // }
 
 
   await BBPromise.mapSeries(scriptSequence, async (action) => {
