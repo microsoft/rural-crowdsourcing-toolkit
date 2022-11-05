@@ -161,8 +161,15 @@ export const verifyAccount: KaryaMiddleware = async (ctx, next) => {
 
 export const getCurrentActiveAccount: KaryaMiddleware = async (ctx, next) => {
   const workerId = ctx.state.entity.id;
+  // Get selected account for worker
+  const select_account_id = ctx.state.entity.selected_account;
+  // If id is not empty return the account record
+  if (select_account_id != null) {
+    const accountRecord = BasicModel.getSingle('payments_account', {id: select_account_id})
+    return HttpResponse.OK(ctx, accountRecord)
+  }
 
-  // Return lastest account with the worker_id
+  // Return lastest account with the worker_id is no account selected
   const accountRecord: PaymentsAccountRecord = (
     await BasicModel.getRecords('payments_account', { worker_id: workerId }, [], [], 'created_at')
   ).pop() || {
