@@ -27,7 +27,6 @@ export const verifyAccount: BoxRouteMiddleware = async (ctx, next) => {
   // TODO: Need to validate incoming request
   // Validate Request
   // Verify if account exits
-  console.log(ctx.request.body);
   const workerId = ctx.request.body.workerId;
   const accountId = ctx.params.id;
   const confirm = ctx.request.body.confirm;
@@ -74,6 +73,43 @@ export const verifyAccount: BoxRouteMiddleware = async (ctx, next) => {
     HttpResponse.InternalError(ctx, 'Could not update the account status. Something went wrong.');
   }
 };
+
+/**
+ * Marks status to VERIFICATION from REJECTED for an account to let user select the account if it was earlier rejected
+ * @param ctx 
+ * @param next 
+ */
+export const undoRejection: BoxRouteMiddleware = async (ctx, next) => {
+  const workerId = ctx.request.body.workerId;
+  const accountId = ctx.params.id;
+  let accountRecord: PaymentsAccountRecord;
+  // Fetch the account
+  try {
+    accountRecord = await BasicModel.getSingle('payments_account', { id: accountId });
+  } catch (err) {
+    HttpResponse.BadRequest(ctx, 'Account Id is not valid');
+    return;
+  }
+
+  // Verify if account is associated with the worker
+  if (accountRecord!.worker_id != workerId) {
+    HttpResponse.BadRequest(ctx, 'Account Id is not associated with the worker');
+  }
+
+  // Verify if the account is rejected
+  if (accountRecord!.status != AccountTaskStatus.REJECTED) {
+    HttpResponse.BadRequest(ctx, `Provided account id has the status ${accountRecord!.status}`);
+    return;
+  }
+
+  // update account record status
+  const updatedAccountRecord = await BasicModel.updateSingle('payments_account', { id: accountId }, { status: AccountTaskStatus.VERIFICATION })
+
+  // update select account for user
+  await BasicModel.updateSingle('worker', { id: workerId }, { selected_account: accountRecord.id })
+
+  return HttpResponse.OK(ctx, updatedAccountRecord)
+}
 
 /**
  * Get Updated Account Records for a particular box

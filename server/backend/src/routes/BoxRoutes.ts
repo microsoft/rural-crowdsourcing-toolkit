@@ -140,3 +140,6 @@ boxRouter.get(
 );
 
 boxRouter.put('/payments/accounts/:id/verify', Middlewares.needIdToken, BodyParser(), PaymentsController.verifyAccount);
+
+// Change status of a account from reject to verification
+boxRouter.put('/payments/accounts/:id/undoRejection', Middlewares.needIdToken, BodyParser(), PaymentsController.undoRejection);

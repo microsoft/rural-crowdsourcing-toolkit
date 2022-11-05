@@ -2,13 +2,14 @@ import { KaryaMiddleware } from '../KoaContextState';
 import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core';
 import { BasicModel, mainLogger, WorkerModel } from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
-import { calculateHash } from '@karya/misc-utils';
+import { calculateHash, envGetString } from '@karya/misc-utils';
 import * as underscore from 'underscore';
 import { RegistrationQWrapper } from '../Queue/Registration/RegistrationQWrapper';
 import { RegistrationQPayload } from '../Queue/Registration/Types';
 import { RegistrationQConfig } from '../Queue/Registration/RegistrationQConfig';
 import { VerifyAccountQWrapper } from '../Queue/VerifyAccount/VerifyAccountQWrapper';
 import { VerifyAccountQConfig } from '../Queue/VerifyAccount/VerifyAccountQConfig';
+import axios from 'axios';
 
 type accountRegReqObject = {
   type: 'bank_account' | 'vpa';
@@ -91,15 +92,48 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
   let hash = calculateHash(ctx.state.entity.id, accountBody.account.id, accountBody.account.ifsc || '');
 
   // Determine if there is already a record with the given hash
-  // try {
-  //   let record = await BasicModel.getSingle('payments_account', { hash });
-  //   // Send the existing record
-  //   const result = underscore.pick(record, accountRegResObjectFields);
-  //   HttpResponse.OK(ctx, result);
-  //   return;
-  // } catch (e) {
-  //   mainLogger.info(`Cant find account record with hash ${hash} for user_id: ${ctx.state.entity.id}`);
-  // }
+  let accountRecord: PaymentsAccountRecord | null = null
+  try {
+    accountRecord = await BasicModel.getSingle('payments_account', { hash });
+  } catch (e) {
+    mainLogger.info(`Cant find account record with hash ${hash} for user_id: ${ctx.state.entity.id}`);
+  }
+
+  if (accountRecord != null) {
+    try {
+      // The record exists, check if the status is rejected
+      if (accountRecord.status != AccountTaskStatus.REJECTED) {
+        const errorMsg = `The account with id: ${accountRecord.id} already exists and is not rejected`
+        mainLogger.error(errorMsg);
+        return HttpResponse.BadRequest(ctx, errorMsg)
+      }
+      // First change selected account for the worker
+      const updatedWorker = await BasicModel.updateSingle('worker', {id: accountRecord.worker_id}, {selected_account: accountRecord.id})
+      const backendAxios = axios.create({
+        baseURL: envGetString('BACKEND_SERVER_URL'),
+      });
+      // set request header
+      const box = (await BasicModel.getRecords('box', {}))[0];
+      const headers = { 'karya-id-token': box.id_token! };
+      // Make the request
+      const response = await backendAxios.put<PaymentsAccountRecord>(
+        `api_box/payments/accounts/${accountRecord.id}/undoRejection`,
+        {
+          workerId: accountRecord.worker_id,
+        },
+        { headers: headers }
+      );
+      //Update the status in box
+      const updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: response.data.id}, {status: response.data.status})
+      // Send the record
+      const result = underscore.pick(updatedAccountRecord, accountRegResObjectFields);
+      HttpResponse.OK(ctx, result);
+      return;
+    } catch (e) {
+      mainLogger.info(`Cannot unreject account for worker: ${accountRecord.worker_id} for account: ${accountRecord.id}`);
+    }
+  }
+  
   // Create and enque account registration task
   let jobPayload: RegistrationQPayload = {
     boxId: ctx.state.entity.box_id,
