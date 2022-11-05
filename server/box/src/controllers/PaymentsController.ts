@@ -199,7 +199,7 @@ export const getCurrentActiveAccount: KaryaMiddleware = async (ctx, next) => {
   const select_account_id = ctx.state.entity.selected_account;
   // If id is not empty return the account record
   if (select_account_id != null) {
-    const accountRecord = BasicModel.getSingle('payments_account', {id: select_account_id})
+    const accountRecord = await BasicModel.getSingle('payments_account', {id: select_account_id})
     return HttpResponse.OK(ctx, accountRecord)
   }
 
