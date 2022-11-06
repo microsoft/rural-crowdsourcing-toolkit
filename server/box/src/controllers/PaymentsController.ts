@@ -1,5 +1,5 @@
 import { KaryaMiddleware } from '../KoaContextState';
-import { AccountTaskStatus, PaymentsAccountRecord } from '@karya/core';
+import { AccountTaskStatus, PaymentsAccountRecord, WorkerRecord } from '@karya/core';
 import { BasicModel, mainLogger, WorkerModel } from '@karya/common';
 import * as HttpResponse from '@karya/http-response';
 import { calculateHash, envGetString } from '@karya/misc-utils';
@@ -89,7 +89,7 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
   }
 
   // No account verification in progress. Calculate hash from worker id, account id and ifsc code
-  let hash = calculateHash(ctx.state.entity.id, accountBody.account.id, accountBody.account.ifsc || '');
+  let hash = calculateHash(ctx.state.entity.id, accountBody.account.id, accountBody.account.ifsc || '', accountBody.name);
 
   // Determine if there is already a record with the given hash
   let accountRecord: PaymentsAccountRecord | null = null
