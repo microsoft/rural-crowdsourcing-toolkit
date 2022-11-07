@@ -111,12 +111,10 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
   handleBooleanSelectAll: ChangeEventHandler<HTMLInputElement> = (e) => {
     const workers_eligible = this.state.workers_eligible;
     const all_workers_selected = e.currentTarget.checked;
-    if (all_workers_selected) {
-      for (let key in workers_eligible) {
-        workers_eligible[key] = true;
-      }
-      this.setState({ workers_eligible });
+    for (let key in workers_eligible) {
+      workers_eligible[key] = all_workers_selected;
     }
+    this.setState({ workers_eligible });
     this.setState({ all_workers_selected });
   };
 
