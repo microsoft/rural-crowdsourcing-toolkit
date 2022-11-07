@@ -44,11 +44,23 @@ const taskAssignmentLimits: { [id in ScenarioName]: { [id in Week]: number | nul
   },
 };
 
+// @ts-ignore
+const week5Limits: { [id in ScenarioName]: { week5: number | null } } = {
+  IMAGE_ANNOTATION: {
+    week5: 890 + 690 + 690 + 490 + 890,
+  },
+
+  SPEECH_DATA: {
+    week5: 1000 + 1000 + 1000 + 250 + 1000,
+  },
+};
+
 /** Main Script */
 (async () => {
   setupDbConnection();
 
   const tasks = await BasicModel.getRecords('task', {}, [], [], 'id');
+  const currentLimits = week5Limits;
 
   // For each task, loop through and create the necessary task assignments
   await BBPromise.mapSeries(tasks, async (task) => {
@@ -56,10 +68,10 @@ const taskAssignmentLimits: { [id in ScenarioName]: { [id in Week]: number | nul
     if (task.status == 'COMPLETED') return;
 
     // Return if scenario does not have limits
-    if (!(task.scenario_name in taskAssignmentLimits)) return;
+    if (!(task.scenario_name in currentLimits)) return;
 
     // Get the limits
-    const limits = Object.entries(taskAssignmentLimits[task.scenario_name]);
+    const limits = Object.entries(currentLimits[task.scenario_name]);
 
     // Create the limit
     await BBPromise.mapSeries(limits, async ([week, limit]) => {
