@@ -30,6 +30,9 @@ export async function bootstrapAuth() {
   /** Create an admin user */
   const workProvider: ServerUser = {
     role: 'ADMIN',
+    role_mappings: {
+      role_mappings: ['ADMIN']
+  },
     access_code,
     full_name: '',
     email: '',

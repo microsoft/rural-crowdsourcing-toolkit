@@ -72,6 +72,7 @@ const karyaDb: DatabaseSpec<KaryaTableName, KaryaString, KaryaObject> = {
         ['auth_id', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['id_token', ['text'], 'unique', 'nullable', 'mutable'],
         ['role', ['string', 32, 'ServerRole'], 'not unique', 'not nullable', 'not mutable'],
+        ['role_mappings', ['stringarray'], 'not unique', 'nullable', 'mutable'],
         ['full_name', ['string', 64], 'not unique', 'nullable', 'mutable'],
         ['email', ['string', 64], 'not unique', 'nullable', 'mutable'],
       ],
