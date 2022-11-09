@@ -34,7 +34,7 @@ router.put('/worker', needIdToken, BodyParser(), WorkerController.update);
 //Get leaderboard corresponding to a worker
 router.get('/worker/leaderboard', needIdToken, WorkerController.getLeaderboard);
 // Get worker week
-router.get('/worker/:id/week', needIdToken, WorkerController.getWorkerWeek)
+router.get('/worker/week', needIdToken, WorkerController.getWorkerWeek)
 
 // OTP routes
 router.put<WorkerOTPState, {}>('/worker/otp/generate', OTPHandler.checkPhoneNumber, OTPHandler.generate);
