@@ -124,3 +124,18 @@ export const getLeaderboard: KaryaMiddleware = async (ctx) => {
   }
   HttpResponse.OK(ctx, topRecords);
 };
+
+/**
+ * Get worker week
+ */
+export const getWorkerWeek: KaryaMiddleware = async (ctx) => {
+  const worker = ctx.state.entity;
+  const regTime = new Date(worker.registered_at).getTime();
+  const currentTime = Date.now();
+  const diffMilli = currentTime - regTime;
+  const diffDays = Math.floor(diffMilli / 1000 / 3600 / 24);
+  const diffWeeks = Math.floor(diffMilli / 1000 / 3600 / 24 / 7);
+  const weekId = diffWeeks + 1;
+  const dayId = (diffDays % 7) + 1;
+  HttpResponse.OK(ctx, { week: weekId, day: dayId });
+};
