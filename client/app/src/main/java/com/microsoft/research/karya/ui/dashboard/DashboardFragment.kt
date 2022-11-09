@@ -8,6 +8,7 @@ import android.view.View
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -61,23 +62,36 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       val isFirstTime = data[firstRunKey] ?: true
       if (isFirstTime) onFirstTimeVisit()
       datastore.edit { prefs -> prefs[firstRunKey] = false }
-
-      // Get Worker's Week and Day from datastore
-      val weekKey = intPreferencesKey(PreferenceKeys.CURRENT_WEEK)
-      val dayKey = intPreferencesKey(PreferenceKeys.CURRENT_DAY)
-
-      val week = data[weekKey] ?: 0
-      val day = data[dayKey] ?: 0
-
-      // Set Views
-      binding.weekTv.text = week.toString()
-      binding.dayTv.text = day.toString()
+      updateWorkWeek()
     }
   }
 
   // Function is invoked when the fragment is run for the first time
   private fun onFirstTimeVisit() {
     syncWithServer()
+  }
+
+  private suspend fun updateWorkWeek() {
+    val datastore = requireContext().dataStore
+    val data = datastore.data.first()
+
+    // Get Worker's Week and Day from datastore
+    val regTimeKey = stringPreferencesKey(PreferenceKeys.REG_TIME)
+    val weekKey = intPreferencesKey(PreferenceKeys.CURRENT_WEEK)
+    val dayKey = intPreferencesKey(PreferenceKeys.CURRENT_DAY)
+
+    val regTime = (data[regTimeKey] ?: "0").toLong()
+    val currentTime = System.currentTimeMillis()
+    val diff = currentTime - regTime
+    val ngWeek = (diff / 1000 / 60 / 60 / 24 / 7) + 1
+    val ngDay = ((diff / 1000 / 60 / 60 / 24) % 7) + 1
+
+    val week = data[weekKey] ?: 0
+    val day = data[dayKey] ?: 0
+
+    // Set Views
+    binding.weekTv.text = if (regTime > 0) ngWeek.toString() else "-"
+    binding.dayTv.text = if (regTime > 0) ngDay.toString() else "-"
   }
 
   private fun observeUi() {
@@ -154,6 +168,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             if (progress == 100)
               viewLifecycleScope.launch {
                 viewModel.refreshList()
+                updateWorkWeek()
               }
           }
           if (workInfo != null && workInfo.state == WorkInfo.State.FAILED) {
@@ -164,6 +179,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
                 ERROR_LVL.ERROR
               )
               viewModel.refreshList()
+              updateWorkWeek()
             }
           }
         }
