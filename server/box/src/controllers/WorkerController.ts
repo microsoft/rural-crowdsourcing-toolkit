@@ -138,5 +138,5 @@ export const getWorkerWeek: KaryaMiddleware = async (ctx) => {
   const diffWeeks = Math.floor(diffMilli / 1000 / 3600 / 24 / 7);
   const weekId = diffWeeks + 1;
   const dayId = (diffDays % 7) + 1;
-  HttpResponse.OK(ctx, { week: weekId, day: dayId });
+  HttpResponse.OK(ctx, { regTime, week: weekId, day: dayId });
 };
