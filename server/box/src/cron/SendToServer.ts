@@ -153,7 +153,7 @@ export async function sendNewAssignments(box: BoxRecord, axiosLocal: AxiosInstan
   try {
     cronLogger.info(`Sending new assignments to server`);
     // Get all task assignments for the box
-    const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
+    const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
     const task_ids = task_assignments.map((ta) => ta.task_id);
     const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]]);
 
@@ -197,7 +197,7 @@ export async function sendCompletedAssignments(box: BoxRecord, axiosLocal: Axios
   try {
     cronLogger.info(`Sending completed assignments to server`);
     // Get all task assignments for the box
-    const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id });
+    const task_assignments = await BasicModel.getRecords('task_assignment', { box_id: box.id, status: 'ASSIGNED' });
     const task_ids = task_assignments.map((ta) => ta.task_id);
     const tasks = await BasicModel.getRecords('task', {}, [['id', task_ids]]);
 
