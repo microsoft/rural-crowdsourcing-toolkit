@@ -35,8 +35,8 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao, leaderboardDao: LeaderboardDao): WorkerRepository {
-    return WorkerRepository(workerAPI, workerDao, leaderboardDao)
+  fun provideWorkerRepository(workerAPI: WorkerAPI, workerDao: WorkerDao, leaderboardDao: LeaderboardDao, datastore: DataStore<Preferences>): WorkerRepository {
+    return WorkerRepository(workerAPI, workerDao, leaderboardDao, datastore)
   }
 
   @Provides

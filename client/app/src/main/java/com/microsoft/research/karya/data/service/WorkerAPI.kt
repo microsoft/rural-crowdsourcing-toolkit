@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.microsoft.research.karya.data.model.karya.LeaderboardRecord
 import com.microsoft.research.karya.data.model.karya.WorkerRecord
 import com.microsoft.research.karya.data.remote.request.RegisterOrUpdateWorkerRequest
+import com.microsoft.research.karya.data.remote.response.WorkerWeekResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -62,4 +63,9 @@ interface WorkerAPI {
   suspend fun getLeaderBoard(
     @Header("karya-id-token") idToken: String,
   ): Response<List<LeaderboardRecord>>
+
+  @GET("/worker/week")
+  suspend fun getWorkerWorkingWeekAndDay(
+    @Header("karya-id-token") idToken: String,
+  ): Response<WorkerWeekResponse>
 }

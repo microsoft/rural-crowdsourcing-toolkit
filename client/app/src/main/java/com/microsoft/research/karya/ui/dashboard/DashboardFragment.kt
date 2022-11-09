@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -60,6 +61,17 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       val isFirstTime = data[firstRunKey] ?: true
       if (isFirstTime) onFirstTimeVisit()
       datastore.edit { prefs -> prefs[firstRunKey] = false }
+
+      // Get Worker's Week and Day from datastore
+      val weekKey = intPreferencesKey(PreferenceKeys.CURRENT_WEEK)
+      val dayKey = intPreferencesKey(PreferenceKeys.CURRENT_DAY)
+
+      val week = data[weekKey] ?: 0
+      val day = data[dayKey] ?: 0
+
+      // Set Views
+      binding.weekTv.text = week.toString()
+      binding.dayTv.text = day.toString()
     }
   }
 

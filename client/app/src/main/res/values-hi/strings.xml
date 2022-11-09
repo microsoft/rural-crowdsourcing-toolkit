@@ -207,6 +207,8 @@
     <string name="sync_prompt_message">आपने ऐसे कार्य पूरे कर लिए हैं जिन्हें सर्वर पर सबमिट किया जा सकता है। क्या आप अभी टास्क सबमिट करना चाहते हैं?</string>
     <string name="yes">हां</string>
     <string name="no">ना</string>
+    <string name="week_label">सप्ताह</string>
+    <string name="day_label">दिन</string>
 
     <!-- Sync -->
     <string name="reset_assignment_warning">कुछ आउटपुट फ़ाइलें गायब थीं।</string>

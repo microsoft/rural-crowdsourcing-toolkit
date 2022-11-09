@@ -206,6 +206,8 @@
     <string name="tasks_verified">verified</string>
     <string name="tasks_skipped">skipped</string>
     <string name="tasks_expired">expired</string>
+    <string name="week_label">Week</string>
+    <string name="day_label">Day</string>
 
     <!-- Leaderboard -->
     <string name="leaderboard_title">Leaderboard</string>

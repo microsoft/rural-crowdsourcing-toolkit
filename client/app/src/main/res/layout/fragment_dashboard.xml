@@ -69,12 +69,12 @@
 
     <LinearLayout
         android:id="@+id/accessCodeLl"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/workFromCenterLL">
+        app:layout_constraintTop_toBottomOf="@id/workFromCenterLL"
+        app:layout_constraintLeft_toLeftOf="@id/syncCv">
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,6 +85,47 @@
 
         <TextView
             android:id="@+id/accessCodeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textColor="@color/c_light_grey"
+            android:textSize="@dimen/_10ssp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weekAndDayll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/workFromCenterLL"
+        app:layout_constraintRight_toRightOf="@id/syncCv">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/week_label"
+            android:textColor="@color/c_light_grey"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/weekTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textColor="@color/c_light_grey"
+            android:textSize="@dimen/_10ssp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:text="@string/day_label"
+            android:textColor="@color/c_light_grey"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/dayTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"

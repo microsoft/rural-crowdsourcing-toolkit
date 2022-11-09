@@ -1,0 +1,19 @@
+R_DEF: Internal format may change without notice
+local
+attr? zoomage_animateOnReset
+attr? zoomage_autoCenter
+attr? zoomage_autoResetMode
+attr? zoomage_doubleTapToZoom
+attr? zoomage_doubleTapToZoomScaleFactor
+attr? zoomage_maxScale
+attr? zoomage_minCropRecHeight
+attr? zoomage_minCropRecWidth
+attr? zoomage_minScale
+attr? zoomage_restrictBounds
+attr? zoomage_translatable
+attr? zoomage_zoomable
+id ALWAYS
+id NEVER
+id OVER
+id UNDER
+styleable ZoomageView zoomage_zoomable zoomage_translatable zoomage_restrictBounds zoomage_animateOnReset zoomage_doubleTapToZoom zoomage_doubleTapToZoomScaleFactor zoomage_autoCenter zoomage_minScale zoomage_maxScale zoomage_minCropRecHeight zoomage_minCropRecWidth zoomage_autoResetMode

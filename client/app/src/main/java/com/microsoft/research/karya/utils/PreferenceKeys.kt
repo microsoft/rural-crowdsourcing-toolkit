@@ -15,4 +15,6 @@ object PreferenceKeys {
   const val WORKER_ACCOUNT_ID = "worker_account_id"
   const val BASE_URL = "base_url"
   const val CENTER_AUTH_EXP_TIME = "center_auth_exp_time"
+  const val CURRENT_WEEK = "current_week"
+  const val CURRENT_DAY = "current_day"
 }
