@@ -83,10 +83,11 @@ export const update: KaryaMiddleware = async (ctx) => {
 export const registerWorker: KaryaMiddleware = async (ctx) => {
   // extract relevant fields from worker.
   const now = new Date().toISOString();
+  const registered_at = ctx.state.entity.registered_at ?? now;
   const record = await BasicModel.updateSingle(
     'worker',
     { id: ctx.state.entity.id },
-    { reg_mechanism: 'phone-otp', registered_at: now, profile_updated_at: now }
+    { reg_mechanism: 'phone-otp', registered_at, profile_updated_at: now }
   );
   const id_token = ctx.state.entity.id_token;
   // @ts-ignore
