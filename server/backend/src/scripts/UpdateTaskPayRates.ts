@@ -64,7 +64,7 @@ const taskPayRates: { [id in ScenarioName]: { [id in PayType]: number } } = {
     await BasicModel.updateSingle('task', { id: task.id }, { params });
 
     // Update all microtasks
-    /* await BasicModel.updateRecords(
+    await BasicModel.updateRecords(
       'microtask',
       { task_id: task.id },
       { base_credits: payRate * 0.75, credits: payRate * 0.25 }
@@ -75,6 +75,6 @@ const taskPayRates: { [id in ScenarioName]: { [id in PayType]: number } } = {
       'microtask_assignment',
       { task_id: task.id, status: 'ASSIGNED' },
       { max_base_credits: payRate * 0.75, max_credits: payRate * 0.25 }
-    ); */
+    );
   });
 })().finally(() => knex.destroy());
