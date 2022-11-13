@@ -7,8 +7,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { knex, setupDbConnection, setupBlobStore, BasicModel } from '@karya/common';
-import { promises as fsp } from 'fs';
-import { processInputFile } from '../task-ops/ops/InputProcessor';
 import { ScenarioName, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 
@@ -17,19 +15,19 @@ type PayType = 'low' | 'med' | 'high';
 // @ts-ignore
 const taskPayRates: { [id in ScenarioName]: { [id in PayType]: number } } = {
   IMAGE_ANNOTATION: {
-    low: 0.7,
-    med: 1.85,
-    high: 3.6,
+    low: 0.35,
+    med: 0.925,
+    high: 1.8,
   },
   SPEECH_DATA: {
-    low: 0.2,
-    med: 0.55,
-    high: 1.2,
+    low: 0.1,
+    med: 0.275,
+    high: 0.6,
   },
   SPEECH_TRANSCRIPTION: {
-    low: 1.1,
-    med: 2.21,
-    high: 4.38,
+    low: 0.55,
+    med: 1.105,
+    high: 2.19,
   },
   SENTENCE_CORPUS: {
     low: 10,

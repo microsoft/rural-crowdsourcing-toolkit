@@ -9,49 +9,52 @@ dotenv.config();
 import { knex, setupDbConnection, setupBlobStore, BasicModel } from '@karya/common';
 import { ScenarioName, TaskAssignment, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
-import { t } from 'tar';
 
-type Week = 'week1' | 'week2' | 'week3' | 'week4';
+type Week = 'week1' | 'week2' | 'week3' | 'week4' | 'week5';
 
 // @ts-ignore
 const taskAssignmentLimits: { [id in ScenarioName]: { [id in Week]: number | null } } = {
   IMAGE_ANNOTATION: {
-    week1: 890,
-    week2: 890 + 690,
-    week3: 890 + 690 + 690,
-    week4: 890 + 690 + 690 + 490,
+    week1: 1304,
+    week2: 1304 + 1104,
+    week3: 1304 + 1104 + 1104,
+    week4: 1304 + 1104 + 1104 + 1104,
+    week5: 1304 + 1104 + 1104 + 1104 + 904,
   },
 
   SPEECH_DATA: {
-    week1: 1000,
-    week2: 1000 + 1000,
-    week3: 1000 + 1000 + 1000,
-    week4: 1000 + 1000 + 1000 + 250,
+    week1: 1300,
+    week2: 1300 + 1300,
+    week3: 1300 + 1300 + 1300,
+    week4: 1300 + 1300 + 1300 + 1300,
+    week5: 1300 + 1300 + 1300 + 1300 + 1300,
   },
 
   SPEECH_TRANSCRIPTION: {
     week1: null,
-    week2: 580,
-    week3: 580 + 580,
-    week4: 580 + 580 + 590,
+    week2: 875,
+    week3: 875 + 875,
+    week4: 875 + 875 + 875,
+    week5: 875 + 875 + 875 + 875,
   },
 
   SENTENCE_CORPUS: {
     week1: null,
     week2: null,
-    week3: 25,
-    week4: 25 + 25,
+    week3: null,
+    week4: 25,
+    week5: 25 + 25,
   },
 };
 
 // @ts-ignore
 const week5Limits: { [id in ScenarioName]: { week5: number | null } } = {
   IMAGE_ANNOTATION: {
-    week5: 890 + 690 + 690 + 490 + 890,
+    week5: 890 + 1104 + 1104 + 490 + 890,
   },
 
   SPEECH_DATA: {
-    week5: 1000 + 1000 + 1000 + 250 + 1000,
+    week5: 1300 + 1300 + 1300 + 250 + 1300,
   },
 };
 
@@ -82,7 +85,7 @@ const week5Limits: { [id in ScenarioName]: { week5: number | null } } = {
         policy: 'N_TOTAL',
         status: 'ASSIGNED',
         params: {
-          n: 1000,
+          n: 1300,
           maxMicrotasksPerUser: limit,
           tags: [week],
         },
