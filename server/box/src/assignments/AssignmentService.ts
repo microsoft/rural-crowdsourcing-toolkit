@@ -24,7 +24,7 @@ const assignmentLogger = karyaLogger({ name: 'assignments' });
 const assigning: { [id: string]: boolean } = {};
 
 // max week ID
-const MAX_WEEK_ID = 4;
+const MAX_WEEK_ID = 5;
 
 /**
  * Assign microtask/microtaskgroup depending on the task to a worker and returns the assignments
