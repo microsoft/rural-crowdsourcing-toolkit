@@ -63,7 +63,7 @@ const week5Limits: { [id in ScenarioName]: { week5: number | null } } = {
   setupDbConnection();
 
   const tasks = await BasicModel.getRecords('task', {}, [], [], 'id');
-  const currentLimits = week5Limits;
+  const currentLimits = taskAssignmentLimits;
 
   // For each task, loop through and create the necessary task assignments
   await BBPromise.mapSeries(tasks, async (task) => {
