@@ -8,6 +8,7 @@ import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
+import RoleMappings from "../utils/auth/tokenAuthoriser/RoleMappings";
 // import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 /**
@@ -19,6 +20,13 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
   if (server_user.role === 'ADMIN') {
     return HttpResponse.BadRequest(ctx, 'Cannot create user with ADMIN role');
+  }
+  if (server_user.role === 'WORK_PROVIDER') {
+    server_user.role_mappings = RoleMappings.WORK_PROVIDER
+  }
+  if (server_user.role === 'COORDINATOR'){
+    server_user.role_mappings = RoleMappings.COORDINATOR
+
   }
 
   // Generate access code and ensure it is not repeated
