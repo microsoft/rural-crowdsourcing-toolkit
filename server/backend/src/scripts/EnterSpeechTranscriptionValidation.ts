@@ -48,6 +48,10 @@ if (!validationFile || validationFile == '') {
     // Update the verification and report for the source assignment
     const asstId = updatedRecord.input.chain.assignmentId;
     const assignment = await BasicModel.getSingle('microtask_assignment', { id: asstId });
+    if (assignment.status == 'VERIFIED') {
+      return;
+    }
+
     const now = new Date().toISOString();
     await BasicModel.updateSingle(
       'microtask_assignment',
