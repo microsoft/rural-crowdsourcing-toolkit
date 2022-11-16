@@ -29,12 +29,12 @@ if (!validationFile || validationFile == '') {
   await BBPromise.mapSeries(lines, async (line) => {
     const [mtid, rating] = line.split('\t');
 
-    const accuracy = rating == 'good' ? 2 : rating == 'okay' ? 1 : rating == 'bad' ? 0 : null;
+    const accuracy = rating == 'good' ? 1 : rating == 'okay' ? 0.5 : rating == 'bad' ? 0 : null;
     if (accuracy == null) {
       console.log(`Invalid rating for mtid ${mtid}`);
       return;
     }
-    const fraction = accuracy == 2 ? 1 : 0;
+    const fraction = accuracy == 1 ? 1 : 0;
 
     const report = { accuracy, fraction };
 
