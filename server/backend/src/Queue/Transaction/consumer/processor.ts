@@ -33,16 +33,21 @@ const processJob = async (job: Job<TransactionQJobData>) => {
   let transactionRecord: PaymentsTransactionRecord = job.data.transactionRecord;
   // Check if user has sufficient balance
   // Add the transaction amount since the transaction record has status CREATED and would be subtracted in getBalace function
-  const userBalance = (await WorkerModel.getBalance(transactionRecord.worker_id)) + transactionRecord.amount;
-  //TODO @test: Write a test here
-  if (
-    (transactionRecord.purpose != 'VERIFICATION' || transactionRecord.amount > 5) &&
-    userBalance < transactionRecord.amount
-  ) {
-    throw new InsufficientBalanceError(
-      `Insufficient Balance: User Balance - ${userBalance}, Transaction Amount: ${transactionRecord.amount}`
-    );
+  const dbBalance = await WorkerModel.getBalance(transactionRecord.worker_id);
+  const userBalance = dbBalance + transactionRecord.amount;
+
+  // If db balance is negative, it means transaction amount is more than user's balance
+  if (dbBalance < 0) {
+    // Let verification transactions go through
+    // Let small amounts go through
+    // If difference is less than 5, go through (floating point error)
+    if (!(transactionRecord.purpose == 'VERIFICATION' || transactionRecord.amount < 5 || dbBalance > -5)) {
+      throw new InsufficientBalanceError(
+        `Insufficient Balance: User Balance - ${userBalance}, Transaction Amount: ${transactionRecord.amount}`
+      );
+    }
   }
+
   const result = await sendPayoutRequest(transactionRecord, job.data.fundId);
   // Update the status of account record
   // TODO: @Quick: Change the status to transaction created when we have the webhooks working
