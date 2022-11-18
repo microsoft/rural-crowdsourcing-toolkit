@@ -161,7 +161,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     const { worker_id_input } = this.state;
     const { access_code_input } = this.state;
     const { phone_number_input } = this.state;
-    const { unique_id_input } = this.state
+    const { unique_id_input } = this.state;
 
     // Filtering workers by worker ID
     var workers_filtered = workers;
@@ -209,7 +209,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         },
       },
       { header: 'Worker IDs', type: 'field', field: 'id' },
-      { header: 'Unique ID', type: 'field', field: 'unique_id'},
+      { header: 'Unique ID', type: 'field', field: 'unique_id' },
       { header: 'Access Code ', type: 'field', field: 'access_code' },
       { header: 'Phone Number ', type: 'field', field: 'phone_number' },
       { header: 'Amount ', type: 'field', field: 'amount' },
@@ -274,7 +274,9 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
           </div>
           <TableList<PaymentEligibleWorkerRecord>
             columns={tableColumns}
-            rows={workers_filtered}
+            rows={workers_filtered.sort((a, b) => {
+              return a.amount > b.amount ? -1 : 1;
+            })}
             emptyMessage='No worker pending for payment'
           />
         </div>
