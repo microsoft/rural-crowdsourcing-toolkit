@@ -23,9 +23,7 @@ export default async (job: Job<TransactionQJobData>) => {
   try {
     await processJob(job);
   } catch (error: any) {
-    ErrorLogger.error(
-      `Transaction Id ${job.data.transactionRecord.id}: Error Stack: ${error.stack}`
-    );
+    ErrorLogger.error(`Transaction Id ${job.data.transactionRecord.id}: Error Stack: ${error.stack}`);
     await cleanUpOnError(error, job);
     throw error;
   }
@@ -37,7 +35,10 @@ const processJob = async (job: Job<TransactionQJobData>) => {
   // Add the transaction amount since the transaction record has status CREATED and would be subtracted in getBalace function
   const userBalance = (await WorkerModel.getBalance(transactionRecord.worker_id)) + transactionRecord.amount;
   //TODO @test: Write a test here
-  if (userBalance < transactionRecord.amount) {
+  if (
+    (transactionRecord.purpose != 'VERIFICATION' || transactionRecord.amount > 5) &&
+    userBalance < transactionRecord.amount
+  ) {
     throw new InsufficientBalanceError('Insufficient Balance');
   }
   const result = await sendPayoutRequest(transactionRecord, job.data.fundId);
