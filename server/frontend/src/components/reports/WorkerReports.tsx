@@ -60,7 +60,8 @@ const connector = compose(withAuth, dataConnector, reduxConnector);
 type WorkerReportsProps = DataProps<typeof dataConnector> & ConnectedProps<typeof reduxConnector> & AuthProps;
 
 const weeks = ['week1', 'week2', 'week3', 'week4'] as const;
-const regions = ['region1', 'region2', 'region3', 'region4'] as const;
+// const regions = ['region1', 'region2', 'region3', 'region4'] as const;
+const regions = ['round2'] as const;
 
 // component state
 type WorkerReportsState = {
@@ -73,7 +74,7 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
   // Initial state
   state: WorkerReportsState = {
     week: 'week1',
-    region: 'region1',
+    region: 'round2',
   };
 
   componentDidMount() {
@@ -125,7 +126,7 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
     this.props.task.data.forEach((t) => {
       weekRegionMap[t.id] = {
         week: t.itags.itags.filter((tag) => tag.startsWith('week'))[0],
-        region: t.itags.itags.filter((tag) => tag.startsWith('region'))[0],
+        region: 'round2',
       };
     });
 
