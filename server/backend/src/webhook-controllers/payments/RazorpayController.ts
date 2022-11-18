@@ -46,9 +46,15 @@ const verifyWebhookSignature = (webhookBody: Object, webhookSignature: string, w
  */
 
 export const updateTransactionMiddleware: Application.Middleware = async (ctx, next) => {
-  const payoutEntity: PayoutResponse = ctx.request.body.payload.payout.entity;
-  await updateTransactionRecord(payoutEntity)
-  HttpResponse.OK(ctx, ctx.body);
+  try {
+    const payoutEntity: PayoutResponse = ctx.request.body.payload.payout.entity;
+    await updateTransactionRecord(payoutEntity);
+    HttpResponse.OK(ctx, ctx.body);
+  } catch (e) {
+    console.log(e);
+    console.log(ctx.body);
+    HttpResponse.OK(ctx, ctx.body);
+  }
 };
 
 /**
@@ -69,11 +75,11 @@ export const updateTransactionRecord = async (payoutEntity: PayoutResponse) => {
   // Check if status of record can be updated
   if (FINAL_TRANSACTION_STATES.includes(currentStatus)) {
     console.log(`payout status already in ${currentStatus}, cannot be updated to ${razorpayStatus}`);
-    return
+    return;
   }
   // Queued status is to be ignored for current processing transactions
   if (currentStatus == TransactionStatus.PROCESSING && razorpayStatus == TransactionStatus.QUEUED) {
-    return
+    return;
   }
 
   // Update the transaction record status
@@ -96,4 +102,4 @@ export const updateTransactionRecord = async (payoutEntity: PayoutResponse) => {
     const accountRecord = await BasicModel.getSingle('payments_account', { id: transactionRecord.account_id });
     await PaymentsAccountModel.updateStatusOnTransactionRecordUpdate(updatedTransactionRecord, accountRecord);
   }
-}
+};
