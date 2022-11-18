@@ -51,8 +51,7 @@ export const updateTransactionMiddleware: Application.Middleware = async (ctx, n
     await updateTransactionRecord(payoutEntity);
     HttpResponse.OK(ctx, ctx.body);
   } catch (e) {
-    console.log(e);
-    console.log(ctx.body);
+    console.log('Entity not present?', ctx.request.body);
     HttpResponse.OK(ctx, ctx.body);
   }
 };
