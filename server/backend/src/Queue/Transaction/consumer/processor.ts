@@ -39,7 +39,9 @@ const processJob = async (job: Job<TransactionQJobData>) => {
     (transactionRecord.purpose != 'VERIFICATION' || transactionRecord.amount > 5) &&
     userBalance < transactionRecord.amount
   ) {
-    throw new InsufficientBalanceError('Insufficient Balance');
+    throw new InsufficientBalanceError(
+      `Insufficient Balance: User Balance - ${userBalance}, Transaction Amount: ${transactionRecord.amount}`
+    );
   }
   const result = await sendPayoutRequest(transactionRecord, job.data.fundId);
   // Update the status of account record
