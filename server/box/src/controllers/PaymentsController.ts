@@ -95,8 +95,12 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
     }
   }
 
-  // No account verification in progress. Calculate hash from worker id, account id and ifsc code
-  let hash = calculateHash(ctx.state.entity.id, accountBody.account.id, accountBody.account.ifsc || '', accountBody.name);
+  // No account verification in progress. 
+  // Calculate hash from worker id, account id and ifsc code for bank account
+  // and from worker id and account id in case of UPI
+  let hash = accountBody.type == 'bank_account' 
+    ? calculateHash(ctx.state.entity.id, accountBody.account.id, accountBody.account.ifsc!, accountBody.name)
+    : calculateHash(ctx.state.entity.id, accountBody.account.id)
 
   // Determine if there is already a record with the given hash
   let accountRecord: PaymentsAccountRecord | null = null
