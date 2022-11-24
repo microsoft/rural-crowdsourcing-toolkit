@@ -48,12 +48,20 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
     )
   ) {
     isAccountBodyValid = false;
+  } else {
+    // Clean up
+    accountBody.name = accountBody.name.trim()
+    // Remove extra spaces in name
+    accountBody.name = accountBody.name.replace("/\s+/g", " ")
+    accountBody.account.id = accountBody.account.id?.trim()
   }
 
   if (accountBody.type == 'bank_account') {
     if (!(accountBody.account.ifsc && typeof accountBody.account.ifsc == 'string')) {
       isAccountBodyValid = false;
     }
+    // Clean up
+    accountBody.account.ifsc = accountBody.account.ifsc?.trim() 
   } else if (accountBody.type != 'vpa') {
     isAccountBodyValid = false;
   }
