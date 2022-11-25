@@ -11,6 +11,7 @@ import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigOb
 import { TransactionQPayload } from '../../Transaction/Types';
 import { ErrorLogger } from '../Utils';
 import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
+import { Promise as BBPromise } from 'bluebird'
 
 // Setting up Db Connection
 setupDbConnection();
@@ -42,7 +43,7 @@ const processJob = async (job: Job<BulkTransactionQJobData>) => {
   // Create transaction for every record
   const failedForWorkerIds: string[] = [];
 
-  for (const transactionRequest of bulkTransactionRequest) {
+  await BBPromise.mapSeries(bulkTransactionRequest, async (transactionRequest) => {
     try {
       // Get Worker Record
       const workerRecord = await BasicModel.getSingle('worker', { id: transactionRequest.workerId });
@@ -81,7 +82,7 @@ const processJob = async (job: Job<BulkTransactionQJobData>) => {
       );
       failedForWorkerIds.push(transactionRequest.workerId);
     }
-  }
+  })
 
   // Check if all transactions failed
   if (failedForWorkerIds.length == bulkTransactionRequest.length) {
