@@ -91,6 +91,7 @@ export const updateTransactionRecord = async (payoutEntity: PayoutResponse) => {
       meta: {
         ...transactionRecord.meta,
         UTR: payoutEntity.utr,
+        fees: payoutEntity.fees,
         failure_reason: payoutEntity.failure_reason,
       },
     }
