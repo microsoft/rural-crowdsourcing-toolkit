@@ -6,7 +6,6 @@ export default {
     connection: {
       host: 'localhost',
       port: 6379,
-    },
-    concurrency: 1000,
+    }
   },
 };
