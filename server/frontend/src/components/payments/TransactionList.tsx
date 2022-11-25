@@ -86,6 +86,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       .map((item) => {
         return {
           ...item,
+          fees: item.meta ? ((item.meta as any).fees as string) : null,
           created_at: new Date(item.created_at).toDateString(),
           failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
         };
