@@ -8,6 +8,7 @@ export type PaymentEligibleWorkerRecord = WorkerRecord & {
 };
 
 export type PaymentsTransactionTableRecord = PaymentsTransactionRecord & {
+  fees: number | null,
   unique_id: string | null,
   phone_number: string,
   failure_reason: string | null

@@ -86,7 +86,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       .map((item) => {
         return {
           ...item,
-          fees: item.meta ? ((item.meta as any).fees as string) : null,
+          fees: item.meta ? ((item.meta as any).fees as number)/100 : null,
           created_at: new Date(item.created_at).toDateString(),
           failure_reason: item.meta ? ((item.meta as any).failure_reason as string) : null,
         };
@@ -143,6 +143,7 @@ class TransactionList extends React.Component<TransactionListProps, TransactionL
       { header: 'Unique ID', type: 'field', field: 'unique_id' },
       { header: 'Bulk ID ', type: 'field', field: 'bulk_id' },
       { header: 'Amount ', type: 'field', field: 'amount' },
+      { header: 'Fees ', type: 'field', field: 'fees' },
       { header: 'Phno ', type: 'field', field: 'phone_number' },
       { header: 'Account ID', type: 'field', field: 'account_id' },
       { header: 'Mode', type: 'field', field: 'mode' },
