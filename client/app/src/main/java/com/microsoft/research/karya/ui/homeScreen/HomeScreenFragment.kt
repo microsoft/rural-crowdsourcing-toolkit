@@ -65,7 +65,13 @@ class HomeScreenFragment : BaseFragment(R.layout.fragment_home_screen) {
         val workerBalance = viewModel.earningStatus.value.totalEarned
         // Navigate only if worker total earning is greater than 2 rs.
         if (workerBalance > 2.0f) {
-          viewModel.navigatePayment()
+          viewLifecycleScope.launch {
+            try {
+              viewModel.navigatePayment()
+            } catch (e: Error) {
+              Toast.makeText(requireContext(), "Cannot fetch account information. Please check your internet", Toast.LENGTH_LONG).show()
+            }
+          }
         } else {
           Toast.makeText(requireContext(), "Please earn at least Rs 2", Toast.LENGTH_LONG).show()
         }

@@ -15,6 +15,8 @@ import com.microsoft.research.karya.data.service.PaymentAPI
 import com.microsoft.research.karya.utils.PreferenceKeys
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -179,10 +181,24 @@ constructor(
     return EarningStatus(weekEarned, totalEarned, totalPaid)
   }
 
-  suspend fun getPaymentRecordStatus(workerId: String) =
+  suspend fun getPaymentRecordStatus(workerId: String, idToken: String) =
     withContext(Dispatchers.IO) {
       val count = paymentAccountDao.getPaymentRecordCount()
-      if (count == 0) return@withContext AccountRecordStatus.UNINITIALISED
+      if (count == 0) {
+        var userAccountExists = false
+        var cannotGetResponse = false
+        getCurrentAccount(idToken)
+          .catch {
+            cannotGetResponse = true
+          }
+          .collect { response ->
+            if (response.status == AccountRecordStatus.UNINITIALISED.toString()) return@collect
+            userAccountExists = true
+            updatePaymentRecord(workerId, response)
+          }
+        if (cannotGetResponse) return@withContext AccountRecordStatus.CANNOT_UPDATE
+        if (!userAccountExists) return@withContext AccountRecordStatus.UNINITIALISED
+      }
       val status = paymentAccountDao.getStatusForWorkerId(workerId)
       println(status)
       return@withContext status

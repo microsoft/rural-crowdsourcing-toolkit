@@ -19,6 +19,7 @@ enum class AccountRecordStatus(val status: String) {
   VERIFICATION("VERIFICATION"),
   CONFIRMATION_RECEIVED("CONFIRMATION_RECEIVED"),
   VERIFIED("VERIFIED"),
+  CANNOT_UPDATE("CANNOT_UPDATE")
   ;
 
   fun getNavigationDestination(): PaymentFlowNavigation {
@@ -34,6 +35,7 @@ enum class AccountRecordStatus(val status: String) {
       CONFIRMATION_RECEIVED,
       VERIFICATION -> PaymentFlowNavigation.VERIFICATION
       VERIFIED -> PaymentFlowNavigation.DASHBOARD
+      CANNOT_UPDATE -> throw Error("Cannot determine status of account record")
     }
   }
 }
