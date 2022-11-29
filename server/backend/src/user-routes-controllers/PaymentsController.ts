@@ -91,6 +91,7 @@ export const getTransactionRecords: UserRouteMiddleware = async (ctx) => {
   // TODO @enhancement: Apply pagination
   let transactionRecords: (PaymentsTransactionRecord | { 
     phone_number: string,
+    name: string,
     unique_id: string | null 
   })[];
   if (qUserId) {
