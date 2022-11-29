@@ -11,7 +11,7 @@ export type PaymentsTransactionTableRecord = PaymentsTransactionRecord & {
   fees: number | null,
   unique_id: string | null,
   phone_number: string,
-  profile: JSON,
+  profile: object,
   failure_reason: string | null
 }
 
