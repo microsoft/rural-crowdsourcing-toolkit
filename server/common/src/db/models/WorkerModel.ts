@@ -46,6 +46,14 @@ export async function allWorkerTaskSummary(): Promise<any[]> {
   return response.rows;
 }
 
+/**
+ * Get summary info of workers for a particular task
+ */
+export async function allWorkerTaskSummaryRound2(): Promise<any[]> {
+  const response = await knex.raw(`SELECT * FROM worker_task_summary_round2`);
+  return response.rows;
+}
+
 /** Code to handle worker disabling */
 const disabledTag = '_DISABLED_';
 

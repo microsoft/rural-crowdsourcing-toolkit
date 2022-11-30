@@ -191,6 +191,11 @@ export type BackendRequestInitAction =
   | {
       type: 'BR_INIT';
       store: 'worker';
+      label: 'GET_WORKER_TASK_ROUND2';
+    }
+  | {
+      type: 'BR_INIT';
+      store: 'worker';
       label: 'DISABLE_WORKER';
       worker_id: string;
       request: {};
@@ -385,6 +390,12 @@ export type BackendRequestSuccessAction =
       type: 'BR_SUCCESS';
       store: 'worker';
       label: 'GET_WORKER_TASK';
+      response: DBT.WorkerRecord[];
+    }
+  | {
+      type: 'BR_SUCCESS';
+      store: 'worker';
+      label: 'GET_WORKER_TASK_ROUND2';
       response: DBT.WorkerRecord[];
     }
   | {
@@ -690,6 +701,15 @@ export async function backendRequest(
         store,
         label,
         response: await GET('/worker_task_summary'),
+      } as BackendRequestSuccessAction;
+    }
+
+    if (action.store === 'worker' && action.label === 'GET_WORKER_TASK_ROUND2') {
+      return {
+        type: 'BR_SUCCESS',
+        store,
+        label,
+        response: await GET('/worker_task_summary_round2'),
       } as BackendRequestSuccessAction;
     }
 

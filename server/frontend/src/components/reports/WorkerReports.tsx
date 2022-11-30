@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch: any) => {
       const action: BackendRequestInitAction = {
         type: 'BR_INIT',
         store: 'worker',
-        label: 'GET_WORKER_TASK',
+        label: 'GET_WORKER_TASK_ROUND2',
       };
       dispatch(action);
     },
@@ -108,6 +108,7 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
 
     type Extras = {
       task_id: string;
+      week: string;
       assigned: number;
       skipped: number;
       expired: number;
@@ -118,19 +119,17 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
     const workers = this.props.workers_data as (WorkerRecord & Extras)[];
 
     const { week, region } = this.state;
-    const task_ids = this.props.task.data
-      .filter((t) => t.itags.itags.includes(week) && t.itags.itags.includes(region))
-      .map((t) => t.id);
+    const task_ids = this.props.task.data.filter((t) => t.itags.itags.includes(region)).map((t) => t.id);
 
-    const weekRegionMap: { [id: string]: { week: string; region: string } } = {};
-    this.props.task.data.forEach((t) => {
-      weekRegionMap[t.id] = {
-        week: t.itags.itags.filter((tag) => tag.startsWith('week'))[0],
-        region: 'round2',
-      };
-    });
+    // const weekRegionMap: { [id: string]: { week: string; region: string } } = {};
+    // this.props.task.data.forEach((t) => {
+    //   weekRegionMap[t.id] = {
+    //     week: t.itags.itags.filter((tag) => tag.startsWith('week'))[0],
+    //     region: 'round2',
+    //   };
+    // });
 
-    const filtered_workers = workers.filter((w) => task_ids.includes(w.task_id));
+    const filtered_workers = workers.filter((w) => task_ids.includes(w.task_id) && w.week == week);
     const merged_workers: { [id: string]: typeof workers[0] } = {};
 
     filtered_workers.forEach((w) => {
@@ -168,7 +167,7 @@ class WorkerReports extends React.Component<WorkerReportsProps, WorkerReportsSta
           id: `I${w.id}`,
           access_code: `A${w.access_code}`,
           task_id: w.task_id,
-          ...weekRegionMap[w.task_id],
+          week: w.week,
           assigned: w.assigned,
           skipped: w.skipped,
           expired: w.expired,

@@ -33,11 +33,12 @@ export type StoreStateView<View extends ViewName> = {
 // Construct the store state
 export type AllState = {
   [id in DbTableName]: StoreStateDb<id>;
-} & {
-  [id in ViewName]: StoreStateView<id>;
-} & {
-  auth: { cwp: ServerUserRecord | null } & RequestStatus;
-};
+} &
+  {
+    [id in ViewName]: StoreStateView<id>;
+  } & {
+    auth: { cwp: ServerUserRecord | null } & RequestStatus;
+  };
 
 // Store actions
 type StoreActions = BackendRequestInitAction | BackendRequestSuccessAction | BackendRequestFailureAction;
@@ -186,6 +187,11 @@ const storeReducer: StoreReducer = (state = initState, action) => {
 
   // Worker task summary
   if (action.store === 'worker' && action.label === 'GET_WORKER_TASK') {
+    return { ...state, worker: { data: action.response, last_fetched_at: new Date(), status } };
+  }
+
+  // Worker task summary
+  if (action.store === 'worker' && action.label === 'GET_WORKER_TASK_ROUND2') {
     return { ...state, worker: { data: action.response, last_fetched_at: new Date(), status } };
   }
 
