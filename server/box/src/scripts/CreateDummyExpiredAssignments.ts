@@ -38,7 +38,28 @@ const taskCount = [300, 200, 500];
     const weekId = diffWeeks;
 
     const result = await knex.raw(
-      `select task_id, sum(week1::int) as w1, sum(week2::int) as w2, sum(week3::int) as w3, sum(week4::int) as w4 from (select mta.worker_id, mta.task_id, mta.created_at < w.registered_at + interval '7 days' as week1, mta.created_at < w.registered_at + interval '14 days' as week2, mta.created_at < w.registered_at + interval '21 days' as week3, mta.created_at < w.registered_at + interval '28 days' as week4 from microtask_assignment as mta left join worker as w on mta.worker_id = w.id where worker_id=${worker.id}) as summary group by task_id, worker_id;`
+      `select 
+        task_id, 
+        sum(week1::int) as w1, 
+        sum(week2::int) as w2, 
+        sum(week3::int) as w3, 
+        sum(week4::int) as w4 
+      from 
+        (
+          select 
+            mta.worker_id, 
+            mta.task_id, 
+            mta.created_at < w.registered_at + interval '7 days' as week1, 
+            mta.created_at < w.registered_at + interval '14 days' as week2, 
+            mta.created_at < w.registered_at + interval '21 days' as week3, 
+            mta.created_at < w.registered_at + interval '28 days' as week4 
+          from microtask_assignment as mta 
+          left join worker as w 
+          on mta.worker_id = w.id 
+          where 
+            worker_id=${worker.id}
+        ) as summary 
+      group by task_id, worker_id;`
     );
 
     const lang = worker.tags.tags.includes('bengali') ? 'bengali' : 'hindi';
@@ -58,7 +79,9 @@ const taskCount = [300, 200, 500];
     for (let i = 0; i < weekId; i++) {
       const currentAssigned = assignedMap[i];
       for (let j = 0; j < 3; j++) {
-        const excess = taskCount[j] - currentAssigned[taskMap[j]];
+        let assigned = currentAssigned[taskMap[j]] ?? 0;
+        if (assigned < taskCount[j] * i) assigned = taskCount[j] * i;
+        const excess = taskCount[j] * (i + 1) - assigned;
         if (!isNaN(excess) && excess > 0) {
           expireList.push([worker.id, taskMap[j], i, excess]);
         }
