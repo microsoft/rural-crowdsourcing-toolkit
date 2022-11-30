@@ -14,6 +14,7 @@ type TextTranslationTaskInputParameters = {
   mode: string;
   depthCount: number;
   forwardCount: number;
+  triggerInterval: number;
 };
 
 // Text translation microtask input format
@@ -65,6 +66,13 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
     type: 'int',
     label: 'Number of words per sentence for suggestion (Leave empty for no assistance)',
     description: "Number of words to predict ahead",
+    required: false
+  },
+  {
+    id: 'triggerInterval',
+    type: 'int',
+    label: 'Trigger interval',
+    description: "Trigger interval for suggestion",
     required: false
   }
 ];
