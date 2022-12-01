@@ -166,6 +166,19 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
           if (assignLimit < 0) assignLimit = 0;
         }
 
+        if (assignLimit == 0) {
+          assignmentLogger.info({
+            worker_id: worker.id,
+            task_id: task.id,
+            batch_size: batchSize,
+            limit: microtaskLimit,
+            previous: assignedCount,
+            current: assignLimit,
+            message: 'Assignment limit reached',
+          });
+          return;
+        }
+
         // get all assignable microtasks
         let assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
 
