@@ -90,6 +90,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       scenarioAssigned.set(scenario, await MicrotaskModel.hasIncompleteMicrotasksForScenario(worker.id, scenario));
     });
 
+    assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment loop' });
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
       // Get task for the assignment
@@ -178,6 +179,8 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
           });
           return;
         }
+
+        assignmentLogger.info({ worker_id: worker.id, message: `Getting microtasks from ${task.id}` });
 
         // get all assignable microtasks
         let assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
