@@ -27,7 +27,7 @@ if (!validationFile || validationFile == '') {
   const lines = data.toString().split('\n');
 
   await BBPromise.mapSeries(lines, async (line) => {
-    const [mtid, rating] = line.split('\t');
+    const [mtid, rating, recordingRating] = line.split('\t');
 
     const accuracy = rating == 'good' ? 1 : rating == 'okay' ? 0.5 : rating == 'bad' ? 0 : null;
     if (accuracy == null) {
