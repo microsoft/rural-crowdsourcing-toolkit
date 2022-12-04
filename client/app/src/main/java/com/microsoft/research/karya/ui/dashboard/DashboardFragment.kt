@@ -47,8 +47,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   val viewModel: DashboardViewModel by viewModels()
   private lateinit var syncWorkRequest: OneTimeWorkRequest
 
-  private var dialog: AlertDialog? = null
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()
@@ -72,6 +70,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   }
 
   private suspend fun updateWorkWeek() {
+    val weekDayTriple = getWorkerWeekAndDay()
+    val week = weekDayTriple.first
+    val day = weekDayTriple.second
+    val regTime = weekDayTriple.third
+    // Set Views
+    binding.weekTv.text = if (regTime > 0) week.toString() else "-"
+    binding.dayTv.text = if (regTime > 0) day.toString() else "-"
+  }
+
+  private suspend fun getWorkerWeekAndDay(): Triple<Long, Long, Long> {
     val datastore = requireContext().dataStore
     val data = datastore.data.first()
 
@@ -86,12 +94,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     val ngWeek = (diff / 1000 / 60 / 60 / 24 / 7) + 1
     val ngDay = ((diff / 1000 / 60 / 60 / 24) % 7) + 1
 
-    val week = data[weekKey] ?: 0
-    val day = data[dayKey] ?: 0
-
-    // Set Views
-    binding.weekTv.text = if (regTime > 0) ngWeek.toString() else "-"
-    binding.dayTv.text = if (regTime > 0) ngDay.toString() else "-"
+    return Triple(ngWeek, ngDay, regTime)
   }
 
   private fun observeUi() {
@@ -254,6 +257,15 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       })
     binding.syncCv.enable()
     data.apply {
+      var totalAssignedTasks = 0
+      taskInfoData.forEach { taskInfo: TaskInfo -> totalAssignedTasks += taskInfo.taskStatus.assignedMicrotasks }
+      if (taskInfoData.isNotEmpty() && totalAssignedTasks == 0) {
+        viewLifecycleScope.launch {
+          val weekDayTriple = getWorkerWeekAndDay()
+          val week = weekDayTriple.first
+          if (week >= 5) showDialogueForStudyCompletion()
+        }
+      }
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
     }
 
@@ -269,7 +281,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
   }
 
   private fun showDialogueToSync() {
-
+    var dialog: AlertDialog? = null
     if (dialog != null && dialog!!.isShowing) return
 
     val builder: AlertDialog.Builder? = activity?.let {
@@ -288,6 +300,27 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       }
       setNegativeButton(R.string.no, null)
     }
+
+    dialog = builder?.create()
+    dialog!!.show()
+  }
+
+  private fun showDialogueForStudyCompletion() {
+    var dialog: AlertDialog? = null
+    if (dialog != null && dialog!!.isShowing) return
+
+    val builder: AlertDialog.Builder? = activity?.let {
+      AlertDialog.Builder(it)
+    }
+
+    // Set buttons
+    builder?.apply {
+      setPositiveButton(
+        R.string.okay, null
+      )
+    }
+
+    builder?.setMessage(R.string.week_tasks_completed_msg)
 
     dialog = builder?.create()
     dialog!!.show()
