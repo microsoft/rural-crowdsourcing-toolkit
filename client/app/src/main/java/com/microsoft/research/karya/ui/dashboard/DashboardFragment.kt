@@ -263,7 +263,8 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         viewLifecycleScope.launch {
           val weekDayTriple = getWorkerWeekAndDay()
           val week = weekDayTriple.first
-          if (week >= 5) showDialogueForStudyCompletion()
+          if (week >= 5) showDialogueForTaskCompletion(R.string.study_completed_msg)
+          else if (week < 5) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
         }
       }
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
@@ -305,7 +306,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     dialog!!.show()
   }
 
-  private fun showDialogueForStudyCompletion() {
+  private fun showDialogueForTaskCompletion(msgId: Int) {
     var dialog: AlertDialog? = null
     if (dialog != null && dialog!!.isShowing) return
 
@@ -320,7 +321,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       )
     }
 
-    builder?.setMessage(R.string.week_tasks_completed_msg)
+    builder?.setMessage(msgId)
 
     dialog = builder?.create()
     dialog!!.show()
