@@ -156,6 +156,16 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
               }
               viewModel.setProgress(100)
               viewModel.refreshList()
+              // CHeck if we need to show task completion dialogue
+              val anyTaskInCompletedOrAssigned = viewModel.anyTaskInCompletedOrAssigned()
+              if (!anyTaskInCompletedOrAssigned) {
+                viewLifecycleScope.launch {
+                  val weekDayTriple = getWorkerWeekAndDay()
+                  val week = weekDayTriple.first
+                  if (week >= 5) showDialogueForTaskCompletion(R.string.study_completed_msg)
+                  else if (week < 5) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
+                }
+              }
             }
           }
           if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
@@ -257,16 +267,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       })
     binding.syncCv.enable()
     data.apply {
-      var totalAssignedTasks = 0
-      taskInfoData.forEach { taskInfo: TaskInfo -> totalAssignedTasks += taskInfo.taskStatus.assignedMicrotasks }
-      if (taskInfoData.isNotEmpty() && totalAssignedTasks == 0) {
-        viewLifecycleScope.launch {
-          val weekDayTriple = getWorkerWeekAndDay()
-          val week = weekDayTriple.first
-          if (week >= 5) showDialogueForTaskCompletion(R.string.study_completed_msg)
-          else if (week < 5) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
-        }
-      }
       (binding.tasksRv.adapter as TaskListAdapter).updateList(taskInfoData)
     }
 

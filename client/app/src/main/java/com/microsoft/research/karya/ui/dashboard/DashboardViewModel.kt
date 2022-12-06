@@ -186,4 +186,12 @@ constructor(
   fun setProgress(i: Int) {
     _progress.value = i
   }
+
+  suspend fun anyTaskInCompletedOrAssigned(): Boolean {
+    val summary = taskRepository.getTaskSummary()
+    if (summary.completedMicrotasks > 0 || summary.assignedMicrotasks > 0) {
+      return true
+    }
+    return false
+  }
 }
