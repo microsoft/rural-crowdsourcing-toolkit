@@ -205,6 +205,7 @@
     <string name="tasks_submitted">सादर केलेत</string>
     <string name="tasks_verified">वेरिफाईड</string>
     <string name="sync_prompt_message">तुम्ही सर्व्हरवर सबमिट करता येणारी कार्ये पूर्ण केली आहेत. तर आता तुम्हाला तुमचे काम सबमिट करायचे आहे का?</string>
+    <string name="week_task_completed_msg">अभिनंदन! आपण या आठवड्याचे कार्य पूर्ण केले आहे. तुम्हाला पुढील आठवड्यात आणखी कार्ये मिळतील!</string>
     <string name="yes">होय</string>
     <string name="no">नहीं</string>
     <string name="week_label">आठवडा</string>

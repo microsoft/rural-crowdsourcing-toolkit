@@ -205,6 +205,8 @@
     <string name="tasks_submitted">प्रस्तुत</string>
     <string name="tasks_verified">वेरिफाईड</string>
     <string name="sync_prompt_message">आपने ऐसे कार्य पूरे कर लिए हैं जिन्हें सर्वर पर सबमिट किया जा सकता है। क्या आप अभी टास्क सबमिट करना चाहते हैं?</string>
+    <string name="week_task_completed_msg">बधाई हो! आपने इस सप्ताह का कार्य पूरा कर लिया है। आपको अगले सप्ताह और कार्य मिलेंगे!</string>
+
     <string name="yes">हां</string>
     <string name="no">ना</string>
     <string name="week_label">सप्ताह</string>

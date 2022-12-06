@@ -216,12 +216,10 @@
 
 
     <string name="sync_prompt_message">You have completed tasks that can be submitted to the server. Do you want to submit the tasks now?</string>
-    <string name="week_tasks_completed_msg">"Congratulations! Aapka pehla Rani ka project complete ho gaya hai. Yeh ek research project tha jo complete hua hai. Agar koi aur projects aate hai, jisme aapko aur lambe samay tak job milsakta hai, hum aapko directly contact karenge. Aap Rani helpline number:+91 85913 45837
- Save kar liyega. Issi se call aayega.
-
-Hum aapko aapke performance ke hisaab se certificate denge jab aapke ghar pe hum ek survey karne aayenge.
-
-Hume asha hai ki aapko yeh Rani pe kaam ke dauran kuch naya seekhne ko mila aur aap aur kaam karna chahenge. Myna Mahila Foundation auroton ke kaam aur sehat pe kaam karti hai aur hamesha aap ko support karegi."</string>
+    <string name="study_completed_msg">Congratulations! Aapka pehla Rani ka project complete ho gaya hai. Yeh ek research project tha jo complete hua hai. Agar koi aur projects aate hai, jisme aapko aur lambe samay tak job milsakta hai, hum aapko directly contact karenge. Aap Rani helpline number:+91 85913 45837
+    Save kar liyega. Issi se call aayega.Hum aapko aapke performance ke hisaab se certificate denge jab aapke ghar pe hum ek survey karne aayenge.
+    Hume asha hai ki aapko yeh Rani pe kaam ke dauran kuch naya seekhne ko mila aur aap aur kaam karna chahenge. Myna Mahila Foundation auroton ke kaam aur sehat pe kaam karti hai aur hamesha aap ko support karegi.</string>
+    <string name="week_task_completed_msg">Congratulations! You have completed this week\'s task. You will get more tasks next week!</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
