@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PaymentTransactionResponse(
   @SerializedName("account_id") val accountId: String,
-  @SerializedName("amount") val amount: Int,
+  @SerializedName("amount") val amount: Float,
   @SerializedName("box_id") val boxId: String,
   @SerializedName("meta") val meta: Meta,
   @SerializedName("mode") val mode: String,

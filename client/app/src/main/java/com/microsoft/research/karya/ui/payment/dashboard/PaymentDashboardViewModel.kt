@@ -73,7 +73,7 @@ constructor(
 
           val userTransactionDetail =
             UserTransactionDetail(
-              amount = transaction.amount.toFloat(),
+              amount = transaction.amount,
               utr = transaction.utr,
               date = userDate ?: "",
               status = transaction.status
