@@ -9,6 +9,7 @@ dotenv.config();
 import { knex, setupDbConnection, BasicModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
 import { MicrotaskAssignment } from '@karya/core';
+import cron from 'node-cron';
 
 const realRun = process.argv[2] == 'r';
 
@@ -21,10 +22,7 @@ const taskIdMaps: { [id in string]: string[] } = {
 
 const taskCount = [300, 200, 500];
 
-/** Main Script */
-(async () => {
-  setupDbConnection();
-
+const createDummyAssignments = async () => {
   // Get all relevant worker records
   const workers = await BasicModel.getRecords('worker', {});
   const r2workers = workers.filter((w) => w.reg_mechanism != null && w.tags.tags.includes('round2'));
@@ -113,4 +111,11 @@ const taskCount = [300, 200, 500];
       console.log(worker_id, task_id, week_id, excess);
     });
   });
-})().finally(() => knex.destroy());
+};
+
+setupDbConnection();
+
+cron.schedule('30 22 * * *', createDummyAssignments);
+
+/** Main Script */
+createDummyAssignments().finally(() => knex.destroy());
