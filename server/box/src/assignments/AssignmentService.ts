@@ -16,6 +16,7 @@ import {
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
+import { createDummyAssignmentsForWorker } from '../scripts/CreateDummyExpiredAssignments';
 
 // Create an assignment logger
 const assignmentLogger = karyaLogger({ name: 'assignments' });
@@ -52,8 +53,14 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     const diffMilli = currentTime - regTime;
     const diffWeeks = Math.floor(diffMilli / 1000 / 3600 / 24 / 7);
     const weekId = diffWeeks + 1;
+    const dayOfWeek = Math.floor(diffMilli / 1000 / 3600 / 24) % 7;
     const weekTag = `week${weekId}`;
     worker.tags.tags.push(weekTag);
+
+    if (dayOfWeek == 0) {
+      assignmentLogger.info({ worker_id: worker.id, message: 'Creating dummy assignments' });
+      await createDummyAssignmentsForWorker(worker);
+    }
 
     assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
 
