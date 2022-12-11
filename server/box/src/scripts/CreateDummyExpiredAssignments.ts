@@ -103,7 +103,9 @@ export async function createDummyAssignmentsForWorker(worker: WorkerRecord) {
         await BasicModel.insertRecord('microtask_assignment', mta);
       });
     }
-    console.log(worker_id, task_id, week_id, excess);
+    if (!module.parent) {
+      console.log(worker_id, task_id, week_id, excess);
+    }
   });
 }
 
@@ -117,9 +119,11 @@ const createDummyAssignments = async () => {
   });
 };
 
-setupDbConnection();
+if (!module.parent) {
+  setupDbConnection();
 
-cron.schedule('30 22 * * *', createDummyAssignments);
+  cron.schedule('30 22 * * *', createDummyAssignments);
 
-/** Main Script */
-createDummyAssignments().finally(() => knex.destroy());
+  /** Main Script */
+  createDummyAssignments().finally(() => knex.destroy());
+}
