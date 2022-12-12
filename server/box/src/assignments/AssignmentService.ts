@@ -20,6 +20,32 @@ import { localPolicyMap } from './policies/Index';
 // Create an assignment logger
 const assignmentLogger = karyaLogger({ name: 'assignments' });
 
+// Hack: Optimizing assignment pathway
+const langs = ['HI', 'MR', 'EN', 'UR'] as const;
+type Lang = typeof langs[number];
+const pays = ['pay-high', 'pay-low', 'pay-med'] as const;
+type Pay = typeof pays[number];
+const task_map = {
+  'pay-low': {
+    HI: ['59', '42', '5'],
+    MR: ['58', '41', '4'],
+    EN: ['61', '3', '44'],
+    UR: ['60', '6', '43'],
+  },
+  'pay-high': {
+    HI: ['67', '19', '50'],
+    MR: ['66', '17', '49'],
+    EN: ['69', '8', '52'],
+    UR: ['68', '21', '51'],
+  },
+  'pay-med': {
+    HI: ['63', '18', '46'],
+    MR: ['62', '15', '45'],
+    EN: ['7', '48', '65'],
+    UR: ['64', '20', '47'],
+  },
+};
+
 // Current assignment map for workers
 const assigning: { [id: string]: boolean } = {};
 
@@ -71,8 +97,18 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     let availableCredits = maxCredits;
     let tasksAssigned = false;
 
+    // Optimization: Get worker task ids based on tags?
+    const wtags = worker.tags.tags;
+    const pay = wtags.filter((t) => pays.includes(t as Pay))[0] as Pay | undefined;
+    const lang = wtags.filter((t) => langs.includes(t as Lang))[0] as Lang | undefined;
+    let wtasks: string[] | undefined = undefined;
+
+    if (pay && lang) {
+      wtasks = task_map[pay][lang];
+    }
+
     // get all available tasks i.e. all of which are in assigned state
-    const taskAssignments = await BasicModel.getRecords(
+    let taskAssignments = await BasicModel.getRecords(
       'task_assignment',
       {
         box_id: worker.box_id,
@@ -81,6 +117,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       [],
       [],
       'task_id'
+    );
+    taskAssignments = taskAssignments.filter(
+      (ta) => wtasks == undefined || ((ta.params.tags as string[]).includes(weekTag) && wtasks.includes(ta.task_id))
     );
 
     // Get all the assigned counts for the worker
