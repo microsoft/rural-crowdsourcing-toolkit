@@ -33,9 +33,12 @@ export async function getAssignableMicrotasks(
 
   const unassignableMicrotasks = new Set(await workerAssignedMicrotasks.union(maxAssignedMicrotasks));
 
+  const limit = task.assignment_batch_size || 100;
   const microtasks = await knex<MicrotaskRecord>('microtask')
     .where('task_id', task.id)
-    .where('status', 'not in', ['COMPLETED'])
+    .whereNot('status', 'COMPLETED')
+    .orderByRaw('random()')
+    .limit(limit * 4)
     .select();
 
   return microtasks.filter((mt) => !unassignableMicrotasks.has(mt.id));
