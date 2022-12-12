@@ -191,15 +191,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
           actual: assignableMicrotasks.length,
         });
 
-        // Identify prefix that fits within max credits
-        for (const microtask of assignableMicrotasks) {
-          if (availableCredits - microtask.credits > 0) {
-            chosenMicrotasks.push(microtask);
-            availableCredits -= microtask.credits;
-          } else {
-            break;
-          }
-        }
+        chosenMicrotasks = assignableMicrotasks;
       } else {
         throw new Error('Invalid assignment granularity for task');
       }
