@@ -83,6 +83,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       'task_id'
     );
 
+    // Get all the assigned counts for the worker
+    const allAssignedCount = await MicrotaskModel.getAllAssignedCount(worker.id);
+
     assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment loop' });
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
@@ -152,7 +155,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         let assignLimit = 1000;
         let assignedCount = -1;
         if (microtaskLimit > 0) {
-          assignedCount = await MicrotaskModel.getAssignedCount(worker.id, task.id);
+          assignedCount = allAssignedCount[task.id] || 0;
           assignLimit = microtaskLimit - assignedCount;
           if (assignLimit < 0) assignLimit = 0;
         }

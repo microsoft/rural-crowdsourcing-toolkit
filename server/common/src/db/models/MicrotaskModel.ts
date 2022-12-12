@@ -41,6 +41,18 @@ export async function getAssignableMicrotasks(
   return microtasks.filter((mt) => !unassignableMicrotasks.has(mt.id));
 }
 
+export async function getAllAssignedCount(worker_id: string) {
+  const allAssignedCount = await knex.raw(
+    `select task_id, count(*) from microtask_assignment where worker_id = ${worker_id} group by task_id`
+  );
+  const rows: { task_id: string; count: string }[] = allAssignedCount.rows;
+  const result: { [id: string]: number } = {};
+  rows.forEach(({ task_id, count }) => {
+    result[task_id] = Number.parseInt(count, 10);
+  });
+  return result;
+}
+
 export async function getAssignedCount(worker_id: string, task_id: string) {
   const assignedCount = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('worker_id', worker_id)
