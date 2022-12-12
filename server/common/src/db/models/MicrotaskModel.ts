@@ -20,12 +20,18 @@ export async function getAssignableMicrotasks(
   worker: WorkerRecord,
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
-  const maxAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
-    .where('task_id', task.id)
-    .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
-    .groupBy('microtask_id')
-    .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
-    .pluck('microtask_id');
+  const maxAssignedMicrotasks =
+    maxAssignments > 1
+      ? knex<MicrotaskAssignmentRecord>('microtask_assignment')
+          .where('task_id', task.id)
+          .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
+          .groupBy('microtask_id')
+          .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
+          .pluck('microtask_id')
+      : knex<MicrotaskAssignmentRecord>('microtask_assignment')
+          .where('task_id', task.id)
+          .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
+          .pluck('microtask_id');
 
   const workerAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('worker_id', worker.id)
