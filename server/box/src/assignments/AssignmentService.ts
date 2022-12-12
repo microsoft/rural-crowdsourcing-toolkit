@@ -83,13 +83,6 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       'task_id'
     );
 
-    // Per-scenario assignment status
-    const scenarioAssigned: Map<ScenarioName, boolean> = new Map();
-    const scenarios: ScenarioName[] = ['SPEECH_DATA', 'SPEECH_TRANSCRIPTION', 'IMAGE_ANNOTATION', 'SENTENCE_CORPUS'];
-    await BBPromise.mapSeries(scenarios, async (scenario) => {
-      scenarioAssigned.set(scenario, await MicrotaskModel.hasIncompleteMicrotasksForScenario(worker.id, scenario));
-    });
-
     assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment loop' });
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
@@ -99,9 +92,6 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
       // check if the task is assignable to the worker
       if (!assignable(task, taskAssignment, worker)) return;
-
-      // If tasks of this scenario have already been assigned to the worker, return
-      if (scenarioAssigned.get(task.scenario_name)) return;
 
       const policy_name = taskAssignment.policy;
       const policy = localPolicyMap[policy_name];
@@ -215,7 +205,6 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       }
 
       if (chosenMicrotasks.length > 0) {
-        scenarioAssigned.set(task.scenario_name, true);
         tasksAssigned = true;
       }
 
