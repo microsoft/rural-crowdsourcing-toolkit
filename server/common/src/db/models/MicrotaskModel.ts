@@ -20,24 +20,18 @@ export async function getAssignableMicrotasks(
   worker: WorkerRecord,
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
-  const maxAssignedMicrotasks =
-    maxAssignments > 1
-      ? knex<MicrotaskAssignmentRecord>('microtask_assignment')
-          .where('task_id', task.id)
-          .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
-          .groupBy('microtask_id')
-          .havingRaw(`count(microtask_id) >= ${maxAssignments}`)
-          .pluck('microtask_id')
-      : knex<MicrotaskAssignmentRecord>('microtask_assignment')
-          .where('task_id', task.id)
-          .whereNotIn('status', ['SKIPPED', 'EXPIRED'])
-          .pluck('microtask_id');
+  const assignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('task_id', task.id)
+    .pluck('microtask_id');
 
   const workerAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
     .where('worker_id', worker.id)
     .pluck('microtask_id');
 
-  const unassignableMicrotasks = new Set(await workerAssignedMicrotasks.union(maxAssignedMicrotasks));
+  const unassignableMicrotasks =
+    maxAssignments == 1
+      ? new Set(await workerAssignedMicrotasks.union(assignedMicrotasks))
+      : new Set(await workerAssignedMicrotasks);
 
   const limit = task.assignment_batch_size || 100;
   const microtasks = await knex<MicrotaskRecord>('microtask')
