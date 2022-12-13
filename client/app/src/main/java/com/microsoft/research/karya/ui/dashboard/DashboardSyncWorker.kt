@@ -213,12 +213,14 @@ class DashboardSyncWorker(
     val worker = authManager.getLoggedInWorker()
     checkNotNull(worker.idToken) { "Worker's idToken was null" }
 
-    val from = assignmentRepository.getNewAssignmentsFromTime(worker.id)
+    if (assignmentRepository.getIncompleteAssignments().isEmpty()) {
+      val from = assignmentRepository.getNewAssignmentsFromTime(worker.id)
 
-    // Get Assignment DB updates
-    assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
-      .getNewAssignments(worker.idToken, from)
-      .collect()
+      // Get Assignment DB updates
+      assignmentRepository //TODO: IMPLEMENT .CATCH BEFORE .COLLECT AND SEND ERROR
+        .getNewAssignments(worker.idToken, from)
+        .collect()
+    }
 
     // Get Worker Balance
     try {
@@ -228,13 +230,13 @@ class DashboardSyncWorker(
       warningMsg = "Cannot update payment information"
     }
     // Get Worker Week and day
-    workerRepository
-      .getWorkerWorkingWeekAndDay(worker.idToken)
-      .collect()
-    // Get Leaderboard data
-    workerRepository
-      .updateLeaderboard(worker.idToken)
-      .collect()
+//    workerRepository
+//      .getWorkerWorkingWeekAndDay(worker.idToken)
+//      .collect()
+//    // Get Leaderboard data
+//    workerRepository
+//      .updateLeaderboard(worker.idToken)
+//      .collect()
   }
 
   /**
