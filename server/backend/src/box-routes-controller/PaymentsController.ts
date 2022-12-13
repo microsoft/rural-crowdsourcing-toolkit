@@ -10,6 +10,8 @@ export const addAccount: BoxRouteMiddleware = async (ctx) => {
   // TODO: Need to validate incoming request
   try {
     const accountRecord: PaymentsAccountRecord = ctx.request.body;
+    // Update selected account
+    BasicModel.updateSingle('worker', { id: accountRecord.worker_id }, { selected_account: accountRecord.id })
     const registrationQWrapper = new RegistrationQWrapper(RegistrationQConfig);
     const qResult = await registrationQWrapper.enqueue(accountRecord.id, {
       accountRecord: { ...accountRecord },

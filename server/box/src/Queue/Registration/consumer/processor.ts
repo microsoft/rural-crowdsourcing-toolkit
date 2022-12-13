@@ -33,6 +33,7 @@ const processJob = async (job: Job<RegistrationQJobData>) => {
     headers: headers,
   });
   await BasicModel.updateSingle('payments_account', { id: accountRecord.id }, { ...response.data });
+  await BasicModel.updateSingle('worker', {id: accountRecord.worker_id}, {selected_account: accountRecord.id})
 };
 
 const cleanUpOnError = async (error: any, job: Job<RegistrationQJobData>) => {

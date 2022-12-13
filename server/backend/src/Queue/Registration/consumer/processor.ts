@@ -46,7 +46,6 @@ const processJob = async (job: Job<RegistrationQJobData>) => {
     'worker',
     { id: accountRecord.worker_id },
     {
-      selected_account: accountRecord.id,
       payments_meta: {
         contacts_id: contactsId,
       },

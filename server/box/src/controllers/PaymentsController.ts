@@ -214,10 +214,8 @@ export const getCurrentActiveAccount: KaryaMiddleware = async (ctx, next) => {
     return HttpResponse.OK(ctx, accountRecord)
   }
 
-  // Return lastest account with the worker_id is no account selected
-  const accountRecord: PaymentsAccountRecord = (
-    await BasicModel.getRecords('payments_account', { worker_id: workerId }, [], [], 'created_at')
-  ).pop() || {
+  // Return empty account record, if no record found
+  const accountRecord: PaymentsAccountRecord = {
     id: '',
     account_type: '',
     active: false,
