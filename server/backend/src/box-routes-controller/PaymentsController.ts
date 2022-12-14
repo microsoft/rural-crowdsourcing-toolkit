@@ -81,9 +81,9 @@ export const verifyAccount: BoxRouteMiddleware = async (ctx, next) => {
  * @param ctx 
  * @param next 
  */
-export const undoRejection: BoxRouteMiddleware = async (ctx, next) => {
+export const changeSelectedAccount: BoxRouteMiddleware = async (ctx, next) => {
   const workerId = ctx.request.body.workerId;
-  const accountId = ctx.params.id;
+  const accountId = ctx.request.body.selectedAccount;
   let accountRecord: PaymentsAccountRecord;
   // Fetch the account
   try {
@@ -99,18 +99,21 @@ export const undoRejection: BoxRouteMiddleware = async (ctx, next) => {
   }
 
   // Verify if the account is rejected
-  if (accountRecord!.status != AccountTaskStatus.REJECTED) {
+  if (accountRecord!.status != AccountTaskStatus.REJECTED && accountRecord!.status != AccountTaskStatus.VERIFIED) {
     HttpResponse.BadRequest(ctx, `Provided account id has the status ${accountRecord!.status}`);
     return;
   }
 
   // update account record status
-  const updatedAccountRecord = await BasicModel.updateSingle('payments_account', { id: accountId }, { status: AccountTaskStatus.VERIFICATION })
+  if (accountRecord.status == AccountTaskStatus.REJECTED) {
+    const updatedAccountRecord = await BasicModel.updateSingle('payments_account', { id: accountId }, { status: AccountTaskStatus.VERIFICATION })
+    return HttpResponse.OK(ctx, updatedAccountRecord)
+  }
 
   // update select account for user
   await BasicModel.updateSingle('worker', { id: workerId }, { selected_account: accountRecord.id })
 
-  return HttpResponse.OK(ctx, updatedAccountRecord)
+  return HttpResponse.OK(ctx, accountRecord)
 }
 
 /**

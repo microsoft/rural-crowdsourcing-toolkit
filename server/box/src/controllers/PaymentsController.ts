@@ -113,13 +113,11 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
   if (accountRecord != null) {
     try {
       // The record exists, check if the status is rejected
-      if (accountRecord.status != AccountTaskStatus.REJECTED) {
-        const errorMsg = `The account with id: ${accountRecord.id} already exists and is not rejected`
+      if (accountRecord.status != AccountTaskStatus.REJECTED && accountRecord.status != AccountTaskStatus.VERIFIED) {
+        const errorMsg = `The account with id: ${accountRecord.id} already exists and is not rejected or verified`
         mainLogger.error(errorMsg);
         return HttpResponse.BadRequest(ctx, errorMsg)
       }
-      // First change selected account for the worker
-      const updatedWorker = await BasicModel.updateSingle('worker', {id: accountRecord.worker_id}, {selected_account: accountRecord.id})
       const backendAxios = axios.create({
         baseURL: envGetString('BACKEND_SERVER_URL'),
       });
@@ -128,20 +126,23 @@ export const addAccount: KaryaMiddleware = async (ctx, next) => {
       const headers = { 'karya-id-token': box.id_token! };
       // Make the request
       const response = await backendAxios.put<PaymentsAccountRecord>(
-        `api_box/payments/accounts/${accountRecord.id}/undoRejection`,
+        `api_box/payments/accounts/changeSelectedAccount`,
         {
           workerId: accountRecord.worker_id,
+          selectedAccount: accountRecord.id
         },
         { headers: headers }
       );
       //Update the status in box
       const updatedAccountRecord = await BasicModel.updateSingle('payments_account', {id: response.data.id}, {status: response.data.status})
+      // Change selected account
+      const updatedWorker = await BasicModel.updateSingle('worker', {id: accountRecord.worker_id}, {selected_account: accountRecord.id})
       // Send the record
       const result = underscore.pick(updatedAccountRecord, accountRegResObjectFields);
       HttpResponse.OK(ctx, result);
       return;
     } catch (e) {
-      mainLogger.info(`Cannot unreject account for worker: ${accountRecord.worker_id} for account: ${accountRecord.id}`);
+      mainLogger.info(`Cannot change account for worker: ${accountRecord.worker_id} for account: ${accountRecord.id}`);
     }
   }
   
