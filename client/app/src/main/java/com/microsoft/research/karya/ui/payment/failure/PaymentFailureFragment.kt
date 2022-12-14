@@ -14,6 +14,7 @@ import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PaymentFailureFragment : Fragment(R.layout.fragment_payment_failure) {
@@ -43,7 +44,16 @@ class PaymentFailureFragment : Fragment(R.layout.fragment_payment_failure) {
       .launchIn(viewLifecycleScope)
   }
 
-  private fun render(paymentVerificationModel: PaymentFailureModel) {}
+  private fun render(paymentVerificationModel: PaymentFailureModel) {
+    viewLifecycleScope.launch {
+      val failureReason = viewModel.getFailureReason()
+      val baseMsg = getString(R.string.payment_registration_failure_message)
+      if (failureReason.isNullOrEmpty()) {
+        binding.description.text = "$baseMsg\nReason: $failureReason"
+      }
+      binding.description.text = baseMsg
+    }
+  }
 
   private fun navigateToDashboard() {
     findNavController().navigate(R.id.action_paymentFailureFragment_to_homeScreen)

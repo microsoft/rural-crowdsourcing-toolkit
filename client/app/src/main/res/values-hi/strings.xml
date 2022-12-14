@@ -259,6 +259,7 @@
     <string name="verification_request_processing">हम आपकी भुगतान जानकारी की जांच कर रहे हैं। कृपया कुछ घंटों में फिर से जांचें। यदि आप अपनी भुगतान जानकारी सबमिट करने के एक दिन बाद भी यह संदेश देखते हैं, तो अपने समन्वयक से संपर्क करें।</string>
     <string name="verification_request_processed">आपकी भुगतान जानकारी सत्यापित करने के लिए, हमने आपको ₹2 भेजे हैं। कृपया पुष्टि करें कि क्या आपको उपयुक्त बटन पर क्लिक करके राशि प्राप्त हुई है।</string>
     <string name="verification_loading">आपके भुगतान सत्यापन की स्थिति की जाँच करना। कृपया प्रतीक्षा करें।</string>
+    <string name="wait">कृपया प्रतीक्षा करें। हम जानकारी एकत्र कर रहे हैं।</string>
     <string name="received_verification_amount">हाँ। मुझे मेरे खाते में ₹2 मिले हैं</string>
     <string name="not_received_verification_amount">नहीं। मुझे अपने खाते में ₹2 प्राप्त नहीं हुए हैं</string>
 

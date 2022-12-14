@@ -258,6 +258,7 @@
     <string name="verification_request_processing">आम्ही तुमची पेमेंट माहिती तपासत आहोत. कृपया काही तासांनी पुन्हा तपासा. तुमची देय माहिती सबमिट केल्यानंतर एक दिवस तुम्हाला हा संदेश दिसत असल्यास, तुमच्या समन्वयकाशी संपर्क साधा.</string>
     <string name="verification_request_processed">तुमच्या पेमेंट माहितीची पडताळणी करण्यासाठी, आम्ही तुम्हाला ₹2 पाठवले आहेत. कृपया योग्य बटणावर क्लिक करून तुम्हाला रक्कम मिळाली आहे का याची खात्री करा.</string>
     <string name="verification_loading">तुमच्या पेमेंट पडताळणीची स्थिती तपासत आहे. कृपया थांबा.</string>
+    <string name="wait">कृपया थांबा. आम्ही माहिती गोळा करत आहोत.</string>
     <string name="received_verification_amount">होय. मला माझ्या खात्यात ₹2 मिळाले आहेत</string>
     <string name="not_received_verification_amount">नाही. मला माझ्या खात्यात ₹2 मिळालेले नाहीत</string>
 

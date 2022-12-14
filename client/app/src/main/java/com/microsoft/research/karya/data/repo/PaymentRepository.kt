@@ -43,7 +43,7 @@ constructor(
           workerId = workerId,
           accountRecordId = paymentInfoResponse.id ?: "",
           accountType = paymentInfoResponse.accountType,
-          failure_reason = "",
+          failure_reason = paymentInfoResponse.meta!!.failure_reason ?: "",
           status = AccountRecordStatus.valueOf(paymentInfoResponse.status),
           ifsc = ifsc,
           name = paymentInfoResponse.meta!!.name
@@ -161,7 +161,7 @@ constructor(
       datastore.edit { prefs -> prefs[weekEarned] = earningsResponse.weekEarned }
       datastore.edit { prefs -> prefs[totalPaid] = earningsResponse.totalPaid }
       datastore.edit { prefs -> prefs[totalEarned] = earningsResponse.totalEarned }
-      with (earningsResponse) {
+      with(earningsResponse) {
         emit(EarningStatus(this.weekEarned, this.totalEarned, this.totalPaid))
       }
     } else {
@@ -183,22 +183,19 @@ constructor(
 
   suspend fun getPaymentRecordStatus(workerId: String, idToken: String) =
     withContext(Dispatchers.IO) {
-      val count = paymentAccountDao.getPaymentRecordCount()
-      if (count == 0) {
-        var userAccountExists = false
-        var cannotGetResponse = false
-        getCurrentAccount(idToken)
-          .catch {
-            cannotGetResponse = true
-          }
-          .collect { response ->
-            if (response.status == AccountRecordStatus.UNINITIALISED.toString()) return@collect
-            userAccountExists = true
-            updatePaymentRecord(workerId, response)
-          }
-        if (cannotGetResponse) return@withContext AccountRecordStatus.CANNOT_UPDATE
-        if (!userAccountExists) return@withContext AccountRecordStatus.UNINITIALISED
-      }
+      var userAccountExists = false
+      var cannotGetResponse = false
+      getCurrentAccount(idToken)
+        .catch {
+          cannotGetResponse = true
+        }
+        .collect { response ->
+          if (response.status == AccountRecordStatus.UNINITIALISED.toString()) return@collect
+          userAccountExists = true
+          updatePaymentRecord(workerId, response)
+        }
+      if (cannotGetResponse) return@withContext AccountRecordStatus.CANNOT_UPDATE
+      if (!userAccountExists) return@withContext AccountRecordStatus.UNINITIALISED
       val status = paymentAccountDao.getStatusForWorkerId(workerId)
       println(status)
       return@withContext status

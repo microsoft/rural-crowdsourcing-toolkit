@@ -273,6 +273,7 @@
     <string name="verification_request_processing">We are checking your payment information. Please check again in a few hours. If you still see this message one day after submitting your payment information, contact your coordinator.</string>
     <string name="verification_request_processed">To verify your payment information, we have sent you ₹2. Please confirm if you have received the amount by clicking the appropriate button.</string>
     <string name="verification_loading">Checking the status of your payment verification. Please wait.</string>
+    <string name="wait">Please wait. We are collecting details.</string>
     <string name="received_verification_amount">Yes. I have received ₹2 in my account</string>
     <string name="not_received_verification_amount">No. I have not received ₹2 in my account</string>
 

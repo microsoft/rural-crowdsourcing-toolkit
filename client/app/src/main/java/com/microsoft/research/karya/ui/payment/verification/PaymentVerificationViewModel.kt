@@ -108,7 +108,9 @@ constructor(
           paymentRepository.updatePaymentRecord(worker.id, paymentInfoResponse)
           when (paymentInfoResponse.status) {
             "CONFIRMATION_RECEIVED" -> {
-              navigateSuccess()
+              // Navigate to failure if account was rejected
+              if (!confirm) navigateFailure()
+              else navigateSuccess()
             }
             "CONFIRMATION_FAILED" -> {
               navigateFailure()
