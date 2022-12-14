@@ -48,10 +48,11 @@ class PaymentFailureFragment : Fragment(R.layout.fragment_payment_failure) {
     viewLifecycleScope.launch {
       val failureReason = viewModel.getFailureReason()
       val baseMsg = getString(R.string.payment_registration_failure_message)
-      if (failureReason.isNullOrEmpty()) {
+      if (!failureReason.isNullOrEmpty()) {
         binding.description.text = "$baseMsg\nReason: $failureReason"
+      } else {
+        binding.description.text = baseMsg
       }
-      binding.description.text = baseMsg
     }
   }
 
