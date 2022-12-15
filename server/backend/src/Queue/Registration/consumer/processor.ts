@@ -58,6 +58,10 @@ const processJob = async (job: Job<RegistrationQJobData>) => {
   // Only include last 4 digit of account number
   // @ts-ignore
   accountsMeta.account.id = accountsMeta.account.id.slice(-4);
+  // Check if same fund_id already exists (ideally this should not happen if input was cleaned when user entered account details)
+  const similarAccount = await BasicModel.getSingle('payments_account', {fund_id: fundsId})
+  // If same fund_id exists delete its fundId
+  await BasicModel.updateSingle('payments_account', {id: similarAccount.id}, {fund_id: null})
   // Update the account record with the obtained fund id
   const updatedAccountRecord = await BasicModel.updateSingle(
     'payments_account',
