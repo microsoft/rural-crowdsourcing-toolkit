@@ -16,7 +16,7 @@ import { RegistrationQJobData } from '../Types';
 import { TransactionQconfigObject } from '../../Transaction/TransactionQconfigObject';
 import { TransactionQWrapper } from '../../Transaction/TransactionQWrapper';
 import { TransactionQPayload } from '../../Transaction/Types';
-import { ErrorLogger } from '../Utils';
+import { ErrorLogger, QLogger } from '../Utils';
 
 const RAZORPAY_CONTACTS_RELATIVE_URL = 'contacts';
 const RAZORPAY_FUND_ACCOUNT_RELATIVE_URL = 'fund_accounts';
@@ -59,9 +59,13 @@ const processJob = async (job: Job<RegistrationQJobData>) => {
   // @ts-ignore
   accountsMeta.account.id = accountsMeta.account.id.slice(-4);
   // Check if same fund_id already exists (ideally this should not happen if input was cleaned when user entered account details)
-  const similarAccount = await BasicModel.getSingle('payments_account', {fund_id: fundsId})
-  // If same fund_id exists delete its fundId
-  await BasicModel.updateSingle('payments_account', {id: similarAccount.id}, {fund_id: null})
+  try {
+    const similarAccount = await BasicModel.getSingle('payments_account', {fund_id: fundsId})
+    // If same fund_id exists delete its fundId
+    await BasicModel.updateSingle('payments_account', {id: similarAccount.id}, {fund_id: null})
+  } catch (e: any) {
+    QLogger.info(`Cannot find fund account id: ${e.message}`)
+  }
   // Update the account record with the obtained fund id
   const updatedAccountRecord = await BasicModel.updateSingle(
     'payments_account',
