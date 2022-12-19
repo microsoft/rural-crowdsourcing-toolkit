@@ -127,7 +127,7 @@ export async function getEligibleWorkersForPayments(): Promise<any[]> {
 SELECT tw.*, t3.amount::int, tw.extras->>'unique_id' as unique_id FROM 
     (SELECT t2.worker_id, t2.sac-COALESCE(t1.sat,0) as amount FROM (SELECT worker_id, sum(amount)
      AS SAT FROM payments_transaction  WHERE status IN 
-     ('created', 'queued', 'processing', 'processed') GROUP BY worker_id  ) t1 
+     ('created', 'queued', 'processing', 'processed', 'failed_after_transaction') GROUP BY worker_id  ) t1 
      RIGHT JOIN (SELECT worker_id,sum(COALESCE(credits, 0))+sum(max_base_credits) AS SAC FROM microtask_assignment WHERE status IN ('VERIFIED', 'COMPLETED') AND task_id NOT BETWEEN 25 AND 36 GROUP BY worker_id) t2
      ON (t1.worker_id = t2.worker_id)) t3 INNER JOIN (select * from worker where payments_active=true) tw ON (t3.worker_id=tw.id) 
      INNER JOIN (SELECT * FROM payments_account WHERE STATUS='VERIFIED') ta ON (tw.selected_account=ta.id)
