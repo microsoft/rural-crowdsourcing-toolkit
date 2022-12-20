@@ -11,12 +11,13 @@ import { promises as fsp } from 'fs';
 import { TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 
-type PayType = 'low' | 'med' | 'high';
+type PayType = 'low' | 'med' | 'high' | 'trial';
 
 const src_task_id = process.argv[2];
 const dst_task_id = process.argv[3];
 const var_type_arg = process.argv[4] as PayType;
 const date_offset = process.argv[5];
+const limit: number = parseInt(process.argv[6])
 
 // @ts-ignore
 const taskPayRates: { [id in ScenarioName]: { [id in PayType]: number } } = {
@@ -24,25 +25,29 @@ const taskPayRates: { [id in ScenarioName]: { [id in PayType]: number } } = {
     low: 0.7,
     med: 1.85,
     high: 3.6,
+    trial: 0,
   },
   SPEECH_DATA: {
     low: 0.2,
     med: 0.55,
     high: 1.2,
+    trial: 0,
   },
   SPEECH_TRANSCRIPTION: {
     low: 1.1,
     med: 2.21,
     high: 4.38,
+    trial: 0,
   },
   SENTENCE_CORPUS: {
     low: 10,
     med: 25,
     high: 50,
+    trial: 0,
   },
 };
 
-const variant_type = (['high', 'low', 'med'] as const).includes(var_type_arg) ? var_type_arg : null;
+const variant_type = (['high', 'low', 'med', 'trial'] as const).includes(var_type_arg) ? var_type_arg : null;
 
 if (variant_type == null) {
   throw 'Invalid variant type';
@@ -68,7 +73,9 @@ if (variant_type == null) {
     'microtask',
     { task_id: src_task_id },
     [],
-    [['created_at', date_offset, null]]
+    [['created_at', date_offset, null]],
+    undefined,
+    Number.isNaN(limit) ? undefined : limit
   );
 
   await BBPromise.mapSeries(mts, async (mt) => {
