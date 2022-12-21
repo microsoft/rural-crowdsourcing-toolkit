@@ -119,7 +119,9 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
       'task_id'
     );
     taskAssignments = taskAssignments.filter(
-      (ta) => wtasks == undefined || ((ta.params.tags as string[]).includes(weekTag) && wtasks.includes(ta.task_id))
+      (ta) =>
+        wtasks == undefined ||
+        ((!ta.params.tags || (ta.params.tags as string[]).includes(weekTag)) && wtasks.includes(ta.task_id))
     );
 
     // Get all the assigned counts for the worker
