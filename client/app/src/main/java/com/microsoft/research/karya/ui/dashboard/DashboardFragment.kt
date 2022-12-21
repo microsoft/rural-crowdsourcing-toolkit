@@ -91,8 +91,8 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
     val regTime = (data[regTimeKey] ?: "0").toLong()
     val currentTime = System.currentTimeMillis()
     val diff = currentTime - regTime
-    val ngWeek = (diff / 1000 / 60 / 60 / 24 / 7) + 1
-    val ngDay = ((diff / 1000 / 60 / 60 / 24) % 7) + 1
+    val ngWeek = if (regTime == 0L) 0 else (diff / 1000 / 60 / 60 / 24 / 7) + 1
+    val ngDay = if (regTime == 0L) 0 else ((diff / 1000 / 60 / 60 / 24) % 7) + 1
 
     return Triple(ngWeek, ngDay, regTime)
   }
