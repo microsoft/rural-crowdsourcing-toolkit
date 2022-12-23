@@ -22,6 +22,9 @@ export const speechTranscriptionValidationChain: BackendChainInterface<
       // Temporary fix for output files that may be sent as array
       const recording = microtask.input.files!.recording;
 
+      // Hack to mark 40% of the transcriptions as completed
+      const status = Math.random() < 0.4 ? 'COMPLETED' : 'INCOMPLETE';
+
       const chainedMicrotask: MicrotaskType<'SPEECH_VERIFICATION'> = {
         task_id: toTask.id,
         input: {
@@ -32,7 +35,7 @@ export const speechTranscriptionValidationChain: BackendChainInterface<
         deadline: toTask.deadline,
         base_credits: toTask.params.baseCreditsPerMicrotask,
         credits: toTask.params.creditsPerMicrotask,
-        status: 'INCOMPLETE',
+        status,
       };
       return chainedMicrotask;
     });
