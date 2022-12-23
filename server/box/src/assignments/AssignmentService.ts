@@ -127,7 +127,11 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     // Get all the assigned counts for the worker
     const allAssignedCount = await MicrotaskModel.getAllAssignedCount(worker.id);
 
-    assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment loop' });
+    assignmentLogger.info({
+      worker_id: worker.id,
+      message: 'Entering assignment loop',
+      tas: taskAssignments.map((ta) => ta.id),
+    });
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
       // Get task for the assignment
