@@ -87,13 +87,17 @@ export const getMicrotasks: TaskRouteMiddleware = async (ctx) => {
   }
 
   // Get any input files for these microtasks
-  const karya_file_ids = microtasks.map((mt) => mt.input_file_id).filter((id): id is string => id != null);
+  const karya_file_ids = microtasks
+    .filter((mt) => mt.status == 'INCOMPLETE')
+    .map((mt) => mt.input_file_id)
+    .filter((id): id is string => id != null);
   const karya_files = await BasicModel.getRecords('karya_file', {}, [['id', karya_file_ids]]);
 
   // Get SAS tokens for the karya files
   karya_files.forEach((kf) => {
     // Microtask input files should have been uploaded to the blob store
     kf.url = getBlobSASURL(kf.url!, 'r');
+    kf.in_box = false;
   });
 
   HttpResponse.OK(ctx, { groups, microtasks, karya_files });
