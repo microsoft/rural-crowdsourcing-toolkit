@@ -460,7 +460,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
         viewLifecycleScope.launch {
           // Check if user is in center
           if (viewModel.workFromCenterUser.value) {
-            if (!viewModel.checkWorkFromCenterUserAuth()) {
+            if (!arrayOf("70", "71", "72", "73").contains(taskId)  && !viewModel.checkWorkFromCenterUserAuth()) {
               binding.centerCode.requestFocus()
               return@launch
             }
