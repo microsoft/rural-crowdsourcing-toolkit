@@ -224,7 +224,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
         let assignableMicrotasks = await policy.assignableMicrotasks(worker, task, taskAssignment.params);
 
         // reorder according to task spec
-        reorder(assignableMicrotasks, task.microtask_assignment_order);
+        // reorder(assignableMicrotasks, task.microtask_assignment_order);
 
         assignLimit = assignLimit < batchSize ? assignLimit : batchSize;
         assignableMicrotasks = assignableMicrotasks.slice(0, assignLimit);
@@ -272,6 +272,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
           status: 'ASSIGNED',
         });
       });
+      assignmentLogger.info({ worker_id: worker.id, message: `Assignment completed for task: ${task.id}` });
     });
 
     assignmentLogger.info({ worker_id: worker.id, message: 'Assignment completed' });

@@ -30,7 +30,7 @@ export async function getAssignableMicrotasks(
 
   const unassignableMicrotasks =
     maxAssignments == 1
-      ? new Set(await workerAssignedMicrotasks.union(assignedMicrotasks))
+      ? new Set(await assignedMicrotasks)
       : new Set(await workerAssignedMicrotasks);
 
   const limit = task.assignment_batch_size || 100;
