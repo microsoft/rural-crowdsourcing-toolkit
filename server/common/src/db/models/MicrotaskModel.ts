@@ -20,28 +20,25 @@ export async function getAssignableMicrotasks(
   worker: WorkerRecord,
   maxAssignments: number = Number.MAX_SAFE_INTEGER
 ) {
-  const assignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
-    .where('task_id', task.id)
-    .pluck('microtask_id');
+  const unitAssignableMicrotasks = knex<MicrotaskRecord>('microtask as mt')
+    .where({ task_id: task.id, status: 'INCOMPLETE' })
+    .whereNotExists(knex<MicrotaskAssignmentRecord>('microtask_assignment').whereRaw('microtask_id = mt.id'));
 
-  const workerAssignedMicrotasks = knex<MicrotaskAssignmentRecord>('microtask_assignment')
-    .where('worker_id', worker.id)
-    .pluck('microtask_id');
+  const workerAssignableMicrotasks = knex<MicrotaskRecord>('microtask as mt')
+    .where({ task_id: task.id, status: 'INCOMPLETE' })
+    .whereNotExists(
+      knex<MicrotaskAssignmentRecord>('microtask_assignment')
+        .where({ worker_id: worker.id })
+        .whereRaw('microtask_id = mt.id')
+    );
 
-  const unassignableMicrotasks =
-    maxAssignments == 1
-      ? new Set(await assignedMicrotasks)
-      : new Set(await workerAssignedMicrotasks);
-
-  const limit = task.assignment_batch_size || 100;
-  const microtasks = await knex<MicrotaskRecord>('microtask')
-    .where('task_id', task.id)
-    .whereNot('status', 'COMPLETED')
+  const baseQuery = maxAssignments == 1 ? unitAssignableMicrotasks : workerAssignableMicrotasks;
+  const microtasks = await baseQuery
     .orderByRaw('random()')
-    .limit(limit * 4)
+    .limit(task.assignment_batch_size || 100)
     .select();
 
-  return microtasks.filter((mt) => !unassignableMicrotasks.has(mt.id));
+  return microtasks;
 }
 
 export async function getAllAssignedCount(worker_id: string) {
