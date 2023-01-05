@@ -28,7 +28,8 @@ export const verifiedSpeechTranscriptionChain: BackendChainInterface<'SPEECH_VER
           ? {
               task_id: toTask.id,
               input: {
-                data: microtask.input.data,
+                // @ts-ignore
+                data: { ...microtask.input.data, report: assignment.output.data },
                 files: { recording },
               },
               input_file_id: microtask.input_file_id,
@@ -40,7 +41,8 @@ export const verifiedSpeechTranscriptionChain: BackendChainInterface<'SPEECH_VER
           : {
               task_id: toTask.id,
               input: {
-                data: { sentence: microtask.input.data.sentence },
+                // @ts-ignore
+                data: { ...microtask.input.data, report: assignment.output.data },
                 files: { recording },
               },
               input_file_id: microtask.input_file_id,
