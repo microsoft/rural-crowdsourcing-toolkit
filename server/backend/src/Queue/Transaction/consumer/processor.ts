@@ -89,7 +89,15 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
     response = await razorPayAxios.post<PayoutResponse>(RAZORPAY_PAYOUTS_RELATIVE_URL, payoutRequestBody, config);
     createdPayout = response.data;
   } catch (e: any) {
-    throw new RazorPayRequestError(e.response.data.error.description);
+    // Log the error
+    // Check if error description exists if not, add the string for original error
+    if (e.response.data.error.description) {
+      throw new RazorPayRequestError(e.response.data.error.description);
+    } else {
+      ErrorLogger.error(`Transaction Id ${transactionRecord.id}: Error Stack: ${e.stack}`);
+      throw new RazorPayRequestError(e);
+    }
+    
   }
 
   // Update the transaction record
