@@ -8,7 +8,8 @@ import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
 import { UserRouteMiddleware } from '../routes/UserRoutes';
 import * as HttpResponse from '@karya/http-response';
-import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
+import RoleMappings from "../utils/auth/tokenAuthoriser/RoleMappings";
+// import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 /**
  * Create a new server user. Cannot create an admin through this endpoint.
@@ -19,6 +20,13 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
   if (server_user.role === 'ADMIN') {
     return HttpResponse.BadRequest(ctx, 'Cannot create user with ADMIN role');
+  }
+  if (server_user.role === 'WORK_PROVIDER') {
+    server_user.role_mappings = RoleMappings.WORK_PROVIDER
+  }
+  if (server_user.role === 'COORDINATOR'){
+    server_user.role_mappings = RoleMappings.COORDINATOR
+
   }
 
   // Generate access code and ensure it is not repeated
@@ -38,7 +46,7 @@ export const create: UserRouteMiddleware = async (ctx) => {
 
   const record = await BasicModel.insertRecord('server_user', server_user);
   // Assign work-provider role
-  await TokenAuthHandler.assignRole(record, server_user.role!);
+  // await TokenAuthHandler.assignRole(record, server_user.role!);
   HttpResponse.OK(ctx, record);
 };
 

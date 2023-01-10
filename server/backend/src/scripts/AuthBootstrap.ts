@@ -6,7 +6,7 @@
 import { BasicModel } from '@karya/common';
 import { ServerUser } from '@karya/core';
 import { getCreationCode } from '@karya/misc-utils';
-import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
+// import * as TokenAuthHandler from '../utils/auth/tokenAuthoriser/tokenAuthHandler/TokenAuthHandler';
 
 /**
  * Function to bootstrap authentication. Creates an admin user and outputs a creation code.
@@ -30,6 +30,9 @@ export async function bootstrapAuth() {
   /** Create an admin user */
   const workProvider: ServerUser = {
     role: 'ADMIN',
+    role_mappings: {
+      role_mappings: ['ADMIN']
+  },
     access_code,
     full_name: '',
     email: '',
@@ -40,7 +43,7 @@ export async function bootstrapAuth() {
   const insertedRecord = await BasicModel.insertRecord('server_user', workProvider);
 
   /**Create role for admin */
-  await TokenAuthHandler.assignRole(insertedRecord, 'ADMIN');
+  // await TokenAuthHandler.assignRole(insertedRecord, 'ADMIN');
 
   if (insertedRecord === null) {
     throw new Error('Failed to create record');
