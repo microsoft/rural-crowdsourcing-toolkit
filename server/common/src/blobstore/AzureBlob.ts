@@ -209,7 +209,7 @@ export async function replaceBlobWithFile(
     const blobClient = container.getBlockBlobClient(newBlobName);
     await blobClient.uploadFile(filepath);
     return blobClient.url;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e.message);
   }
 }

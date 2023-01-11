@@ -228,6 +228,7 @@ export const coreScenarioParameters: ParameterArray<CoreScenarioParamsType> = [
  * Return the language string for a task record to be displayed in the web app
  */
 export function languageString(task: TaskRecordType) {
+  // @ts-ignore
   return scenarioMap[task.scenario_name].languageString(task);
 }
 

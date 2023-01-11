@@ -157,6 +157,7 @@ export async function getRecords<TableName extends DbTableName, ColumnType exten
   let query = knex(tableName).where(match);
   // add whereIns
   whereIns.forEach((filter) => {
+    // @ts-ignore
     query = query.whereIn(filter[0], filter[1]);
   });
   // and ranges
