@@ -286,7 +286,7 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     assigning[worker.id] = false;
   } catch (e) {
     assigning[worker.id] = false;
-    assignmentLogger.info({ worker_id: worker.id, message: 'Exception in assignment service' });
+    assignmentLogger.info({ worker_id: worker.id, message: 'Exception in assignment service', detail: e.message });
   }
 }
 
