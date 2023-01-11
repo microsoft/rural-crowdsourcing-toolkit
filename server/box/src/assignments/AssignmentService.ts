@@ -16,9 +16,16 @@ import {
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
+import Bull from 'bull';
 
 // Create an assignment logger
 const assignmentLogger = karyaLogger({ name: 'assignments' });
+
+// Create an assignment queue
+export const assignmentQueue = new Bull<WorkerRecord>('WORKER_ASSIGNMENT_QUEUE');
+assignmentQueue.process(async (job) => {
+  await preassignMicrotasksForWorker(job.data, 10000);
+});
 
 // Hack: Optimizing assignment pathway
 const langs = ['HI', 'MR', 'EN', 'UR'] as const;
@@ -57,7 +64,7 @@ const MAX_WEEK_ID = 5;
  * @param worker worker to whom assignments will be assigned
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
-export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
+async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
   assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment' });
 
   // Check if we are currently assigning anything to these workers
@@ -91,6 +98,14 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
     if (hasCurrentAssignments) {
       assigning[worker.id] = false;
       assignmentLogger.info({ worker_id: worker.id, message: 'Worker has assignments' });
+      return;
+    }
+
+    // Check if worker has preassignments
+    const hasPreAssignments = await MicrotaskModel.hasPreassignedMicrotasks(worker.id);
+    if (hasPreAssignments) {
+      assigning[worker.id] = false;
+      assignmentLogger.info({ worker_id: worker.id, message: 'Worker has preassignments' });
       return;
     }
 
@@ -254,7 +269,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
           box_id: worker.box_id,
           group_id: group.id,
           worker_id: worker.id,
-          status: 'ASSIGNED',
+          status: 'PREASSIGNED',
         });
       });
 
@@ -269,7 +284,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
           max_base_credits: microtask.base_credits,
           base_credits: 0.0,
           max_credits: microtask.credits,
-          status: 'ASSIGNED',
+          status: 'PREASSIGNED',
         });
       });
       assignmentLogger.info({ worker_id: worker.id, message: `Assignment completed for task: ${task.id}` });

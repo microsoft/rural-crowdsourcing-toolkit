@@ -42,5 +42,5 @@ const taskAssignmentStatuses = ['ASSIGNED', 'COMPLETED'] as const;
 export type TaskAssignmentStatus = typeof taskAssignmentStatuses[number];
 
 // Microtask Assignment Status
-const microtaskAssignmentStatuses = ['ASSIGNED', 'COMPLETED', 'SKIPPED', 'EXPIRED', 'VERIFIED'] as const;
+const microtaskAssignmentStatuses = ['PREASSIGNED', 'ASSIGNED', 'COMPLETED', 'SKIPPED', 'EXPIRED', 'VERIFIED'] as const;
 export type MicrotaskAssignmentStatus = typeof microtaskAssignmentStatuses[number];
