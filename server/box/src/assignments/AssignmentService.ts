@@ -64,7 +64,7 @@ const MAX_WEEK_ID = 5;
  * @param worker worker to whom assignments will be assigned
  * @param maxCredits max amount of credits of tasks that will assigned to the user
  */
-async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
+export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
   assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment' });
 
   // Check if we are currently assigning anything to these workers
@@ -92,14 +92,6 @@ async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCredits: nu
     worker.tags.tags.push(weekTag);
 
     assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
-
-    // Check if the worker has incomplete assignments. If so, return
-    const hasCurrentAssignments = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
-    if (hasCurrentAssignments) {
-      assigning[worker.id] = false;
-      assignmentLogger.info({ worker_id: worker.id, message: 'Worker has assignments' });
-      return;
-    }
 
     // Check if worker has preassignments
     const hasPreAssignments = await MicrotaskModel.hasPreassignedMicrotasks(worker.id);
