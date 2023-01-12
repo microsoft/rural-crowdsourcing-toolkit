@@ -28,12 +28,12 @@ async function processInputFile(
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList<'TEXT_TRANSLATION_VALIDATION'>> {
-  const sentences: { source: string; target: string }[] = jsonData!!;
+  const sentences: { source: string[] }[] = jsonData!!;
   console.log(jsonData);
-  const microtasks = sentences.map((sentencePair) => {
+  const microtasks = sentences.map((sentenceTranslations) => {
     const mt: MicrotaskType<'TEXT_TRANSLATION_VALIDATION'> = {
       task_id: task.id,
-      input: { data: sentencePair },
+      input: { data: sentenceTranslations },
       deadline: task.deadline,
       credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',

@@ -15,8 +15,7 @@ type TextTranslationValidationTaskInputParameters = {
 
 // Text translation microtask input format
 type TextTranslationValidationMicrotaskInput = {
-  source: string;
-  target: string;
+  source: string[];
 };
 type TextTranslationValidationMicrotaskInputFiles = {};
 
@@ -44,8 +43,8 @@ const task_input: BaseTextTranslationValidationScenario['task_input'] = [
 const task_input_file: BaseTextTranslationValidationScenario['task_input_file'] = {
   json: {
     required: true,
-    description: `JSON file containing an array of objects. Each object must contain two field 'source' and 'target' which have values for source and target sentence respectively.`,
-    schema: Joi.array().items(Joi.object({ source: Joi.string(), target: Joi.string() }).unknown(true)),
+    description: `JSON file containing an array of objects. Each object must contain one field 'source' having value which is an array of translations.`,
+    schema: Joi.array().items(Joi.object({ source: Joi.string(), target: Joi.array().items(Joi.string()) }).unknown(true)),
   },
   tgz: { required: false },
 };
@@ -54,7 +53,7 @@ const task_input_file: BaseTextTranslationValidationScenario['task_input_file'] 
 export const baseTextTranslationValidationScenario: BaseTextTranslationValidationScenario = {
   name: 'TEXT_TRANSLATION_VALIDATION',
   full_name: 'Text-to-Text Translation Validation',
-  description: 'This scenario allows users to specify a score to a translation for a language pair',
+  description: 'This scenario allows users to specify a score to translations for a language pair',
   task_input,
   task_input_file,
   microtask_input: Joi.object({ source: Joi.string(), target: Joi.string() }).unknown(true),
