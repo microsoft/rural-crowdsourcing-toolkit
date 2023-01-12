@@ -81,7 +81,7 @@ const task_input: BaseTextTranslationScenario['task_input'] = [
 const task_input_file: BaseTextTranslationScenario['task_input_file'] = {
   json: {
     required: true,
-    description: `JSON file containing an array of objects. Each object must have a sentence field that contains the sentence prompt for the recording.`,
+    description: `JSON file containing an array of objects. Each object must have a sentence field that contains the sentence prompt for the translation.`,
     schema: Joi.array().items(Joi.object({ sentence: Joi.string() }).unknown(true)),
   },
   tgz: { required: false },
