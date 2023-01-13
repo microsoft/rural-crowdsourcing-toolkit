@@ -18,7 +18,7 @@ type TextTranslationTaskInputParameters = {
 };
 
 // Text translation microtask input format
-type TextTranslationMicrotaskInput = { sentence: string };
+type TextTranslationMicrotaskInput = { sentence: string, providedTranslation: string | null | undefined, bow: string | null | undefined };
 type TextTranslationMicrotaskInputFiles = {};
 
 // Text translation microtask output format
@@ -83,9 +83,9 @@ const task_input_file: BaseTextTranslationScenario['task_input_file'] = {
     required: true,
     description: `JSON file containing an array of objects. 
     Each object must have a sentence field that contains the sentence prompt for the translation, \n 
-    a providedTranslation field that contains a translation which needs an edit, provide an empty string to this field to provide no translation, \n
-    and a bow field that contains a sentence, words for which will be used to provide with static bow assistance`,
-    schema: Joi.array().items(Joi.object({ sentence: Joi.string(), providedTranslation: Joi.string(), bow: Joi.string() }).unknown(true)),
+    an optional providedTranslation field that contains a translation which needs an edit \n
+    and an optional bow field that contains a sentence, words for which will be used to provide with static bow assistance`,
+    schema: Joi.array().items(Joi.object({ sentence: Joi.string().required(), providedTranslation: Joi.string(), bow: Joi.string() }).unknown(true)),
   },
   tgz: { required: false },
 };
@@ -97,9 +97,9 @@ export const baseTextTranslationScenario: BaseTextTranslationScenario = {
   description: 'This scenario allows for translation of text (sentences) from one language to another',
   task_input,
   task_input_file,
-  microtask_input: Joi.object({ sentence: Joi.string().required() }).unknown(true),
+  microtask_input: Joi.object({ sentence: Joi.string().required(), providedTranslation: Joi.string(), bow: Joi.string() }).unknown(true),
   microtask_input_files: [],
-  microtask_output: Joi.object({ sentence: Joi.string().required() }).unknown(true),
+  microtask_output: Joi.object({ target: Joi.string().required() }).unknown(true),
   microtask_output_files: [],
   assignment_granularity: 'MICROTASK',
   group_assignment_order: 'EITHER',
