@@ -6,9 +6,9 @@
 import { KaryaMiddleware } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
 import { MicrotaskAssignmentRecord } from '@karya/core';
-import { BasicModel } from '@karya/common';
+import { BasicModel, MicrotaskModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
-import { assignMicrotasksForWorker } from '../assignments/AssignmentService';
+import { assignmentQueue } from '../assignments/AssignmentService';
 
 /**
  * Get list of (new or verified) assignments for a worker
@@ -53,21 +53,25 @@ export const get: KaryaMiddleware = async (ctx) => {
     const tasks = await BasicModel.getRecords('task', {}, [['id', [...taskIds]]]);
     HttpResponse.OK(ctx, { tasks, assignments });
   } else {
-    // TODO: Adjust max credits
-    await assignMicrotasksForWorker(worker, 10000);
-    const assignments = await BasicModel.getRecords(
-      'microtask_assignment',
-      { worker_id: worker.id, status: 'ASSIGNED' },
-      [],
-      [['created_at', from, null]],
-      'created_at'
-    );
+    const hasAssigned = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
+
+    const assignments = hasAssigned
+      ? await BasicModel.getRecords('microtask_assignment', { worker_id: worker.id, status: 'ASSIGNED' })
+      : await BasicModel.updateRecords(
+          'microtask_assignment',
+          { worker_id: worker.id, status: 'PREASSIGNED' },
+          { status: 'ASSIGNED' }
+        );
+
     const mtIds = assignments.map((mta) => mta.microtask_id);
     const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
     // This can be optimized to just be distinct task_ids
     const taskIds = microtasks.map((t) => t.task_id);
     const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
     HttpResponse.OK(ctx, { tasks, microtasks, assignments });
+
+    // Add worker to the preassignment queue
+    await assignmentQueue.add(worker);
   }
 };
 

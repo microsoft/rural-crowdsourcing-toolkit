@@ -78,11 +78,23 @@ export async function getCompletedAssignmentsCount(microtask_id: string) {
  * @param worker_id ID of the worker
  */
 export async function hasIncompleteMicrotasks(worker_id: string): Promise<boolean> {
-  const incompleteMicrotasks = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
-    .where('worker_id', worker_id)
-    .whereIn('status', ['ASSIGNED'])
-    .select();
-  return incompleteMicrotasks.length > 0;
+  const result: { exists: boolean } = await knex.first(
+    knex.raw(
+      'exists ?',
+      knex<MicrotaskAssignmentRecord>('microtask_assignment').where({ worker_id, status: 'ASSIGNED' }).select()
+    )
+  );
+  return result.exists;
+}
+
+export async function hasPreassignedMicrotasks(worker_id: string): Promise<boolean> {
+  const result: { exists: boolean } = await knex.first(
+    knex.raw(
+      'exists ?',
+      knex<MicrotaskAssignmentRecord>('microtask_assignment').where({ worker_id, status: 'PREASSIGNED' }).select()
+    )
+  );
+  return result.exists;
 }
 
 export async function hasIncompleteMicrotasksForScenario(worker_id: string, scenario: ScenarioName) {
