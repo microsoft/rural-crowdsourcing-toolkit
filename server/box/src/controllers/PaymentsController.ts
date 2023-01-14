@@ -278,6 +278,7 @@ export const getWorkerEarningStatus: KaryaMiddleware = async (ctx, next) => {
   const worker_id = ctx.state.entity.id;
   const total_earned = await WorkerModel.getTotalEarned(worker_id);
   const week_earned = await WorkerModel.getWeekEarned(worker_id);
-  const total_paid = await WorkerModel.getTotalSpent(worker_id);
+  let total_paid = await WorkerModel.getTotalSpent(worker_id);
+  if (total_paid > total_earned) total_paid = total_earned
   return HttpResponse.OK(ctx, { total_earned, week_earned, total_paid });
 };
