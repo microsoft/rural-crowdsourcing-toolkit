@@ -214,7 +214,9 @@ export const getTransactionRecords: KaryaMiddleware = async (ctx, next) => {
 export const getWorkerBalance: KaryaMiddleware = async (ctx, next) => {
   // TODO @enhancement: Validate the input
   const workerId = ctx.params.id;
-  const workerBalance = await WorkerModel.getBalance(workerId);
+  let workerBalance = await WorkerModel.getBalance(workerId);
+  // TODO: Temporary fix, postgres real type issue, balance may result in negative. Send 0 if negative balance
+  workerBalance = workerBalance < 0 ? 0 : workerBalance
   const totalSpent = await WorkerModel.getTotalSpent(workerId);
   return HttpResponse.OK(ctx, { worker_balance: workerBalance, total_spent: totalSpent });
 };
