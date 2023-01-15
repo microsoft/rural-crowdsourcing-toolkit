@@ -189,7 +189,7 @@ export const submitInputFiles: TaskRouteMiddleware = async (ctx) => {
         } else if (name.endsWith('csv')) {
           const csvData = await fsp.readFile(path);
           const jsonData = csvToJson(csvData.toString());
-          await fsp.writeFile(`${folderPath}/${uniqueName}.json`, jsonData);
+          await fsp.writeFile(`${folderPath}/${uniqueName}.json`, JSON.stringify(jsonData));
         }
         await fsp.unlink(path);
       }

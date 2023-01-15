@@ -72,6 +72,7 @@ export async function processInputFile(
   }
 
   // Process input files for the scenario
+  // @ts-ignore
   const groups = await scenario.processInputFile(task, taskJsonInput, tgzFilePath, taskFolder);
 
   // Create microtask groups and microtasks
