@@ -156,16 +156,6 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
               }
               viewModel.setProgress(100)
               viewModel.refreshList()
-              // CHeck if we need to show task completion dialogue
-              val anyTaskInCompletedOrAssigned = viewModel.anyTaskInCompletedOrAssigned()
-              if (!anyTaskInCompletedOrAssigned) {
-                viewLifecycleScope.launch {
-                  val weekDayTriple = getWorkerWeekAndDay()
-                  val week = weekDayTriple.first
-                  if (week >= 5) showDialogueForTaskCompletion(R.string.study_completed_msg)
-                  else if (week < 5) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
-                }
-              }
             }
           }
           if (workInfo != null && workInfo.state == WorkInfo.State.ENQUEUED) {
@@ -196,6 +186,24 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
             }
           }
         }
+    }
+  }
+
+  private suspend fun checkToShowTaskCompletionMessage(taskInfoData: List<TaskInfo>) {
+    var totalMicrotaskCount = 0
+    taskInfoData.forEach { taskInfo ->
+      val taskMicrotaskCount =  with(taskInfo.taskStatus) {completedMicrotasks + expiredMicrotasks + skippedMicrotasks + submittedMicrotasks}
+      totalMicrotaskCount += taskMicrotaskCount
+    }
+    val weekTriple = getWorkerWeekAndDay()
+    val week = weekTriple.first
+    when(week) {
+      1L -> if (totalMicrotaskCount >= 2604) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
+      2L -> if (totalMicrotaskCount >= 5883) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
+      3L -> if (totalMicrotaskCount >= 9162) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
+      4L -> if (totalMicrotaskCount >= 12441) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
+      5L -> if (totalMicrotaskCount >= 15520) showDialogueForTaskCompletion(R.string.week_task_completed_msg)
+      else -> if (totalMicrotaskCount >= 15520) showDialogueForTaskCompletion(R.string.study_completed_msg)
     }
   }
 
