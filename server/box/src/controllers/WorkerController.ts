@@ -14,46 +14,51 @@ import { Worker } from '@karya/core';
  * @param ctx Karya request context
  */
 export const get: KaryaMiddleware = async (ctx) => {
-  // extract relevant fields from worker.
-  const {
-    id,
-    access_code,
-    reg_mechanism,
-    phone_number,
-    auth_id,
-    id_token,
-    full_name,
-    year_of_birth,
-    gender,
-    language,
-    tags,
-    created_at,
-    last_updated_at,
-  } = ctx.state.entity;
+  // // extract relevant fields from worker.
+  // const {
+  //   id,
+  //   access_code,
+  //   reg_mechanism,
+  //   phone_number,
+  //   auth_id,
+  //   id_token,
+  //   full_name,
+  //   year_of_birth,
+  //   gender,
+  //   language,
+  //   tags,
+  //   created_at,
+  //   last_updated_at,
+  // } = ctx.state.entity;
 
-  // If auth mechanism is id token, then return all relevant fields
-  if (ctx.state.auth_mechanism == 'karya-id-token') {
-    const worker = {
-      id,
-      access_code,
-      reg_mechanism,
-      phone_number,
-      auth_id,
-      id_token,
-      full_name,
-      year_of_birth,
-      gender,
-      language,
-      tags,
-      params: tags,
-      created_at,
-      last_updated_at,
-    };
-    HttpResponse.OK(ctx, worker);
-  } else if (ctx.state.auth_mechanism == 'access-code') {
-    const worker = { id, language, reg_mechanism };
-    HttpResponse.OK(ctx, worker);
-  }
+  // // If auth mechanism is id token, then return all relevant fields
+  // if (ctx.state.auth_mechanism == 'karya-id-token') {
+  //   const worker = {
+  //     id,
+  //     access_code,
+  //     reg_mechanism,
+  //     phone_number,
+  //     auth_id,
+  //     id_token,
+  //     full_name,
+  //     year_of_birth,
+  //     gender,
+  //     language,
+  //     tags,
+  //     params: tags,
+  //     created_at,
+  //     last_updated_at,
+  //   };
+  //   HttpResponse.OK(ctx, worker);
+  // } else if (ctx.state.auth_mechanism == 'access-code') {
+  //   const worker = { id, language, reg_mechanism };
+  //   HttpResponse.OK(ctx, worker);
+  // }
+
+  // @ts-ignore
+  ctx.state.entity = { ...record, id_token, params: ctx.state.entity.tags };
+
+  HttpResponse.OK(ctx, ctx.state.entity);
 };
 
 /**
