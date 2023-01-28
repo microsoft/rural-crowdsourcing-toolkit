@@ -254,7 +254,7 @@ const assignMicrotasks = async (microtasks: MicrotaskRecord[], workerId: string)
       var createMicrotasks = microtaskCreationFunctions[interfaceIdx]
       for(var setIdx = 0; setIdx < sets.length; setIdx++) {
           var microtasks = await createMicrotasks(sets[setIdx]!!, taskIdMap)
-          await assignMicrotasks(microtasks, workerIds[setIdx])
+        //   await assignMicrotasks(microtasks, workerIds[setIdx])
       }
       // Rotate the set
       const firstSet = sets.shift()!!
