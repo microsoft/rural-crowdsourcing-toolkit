@@ -99,7 +99,7 @@ const createMicrotasksForStaticBOW = async (sets: Sentence[], taskIdMap: TaskMap
     await BBPromise.mapSeries(sets, async (obj) => {
         const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
             task_id,
-            input: { data: {sentence: obj.sentence, providedTranslation: obj.providedTranslation, bow: ""} },
+            input: { data: {sentence: obj.sentence, providedTranslation: "", bow: obj.bow.join(' ')} },
             deadline: task.deadline,
             credits: task.params.creditsPerMicrotask,
             status: 'INCOMPLETE',
@@ -118,7 +118,7 @@ const createMicrotasksForDynamicBOW = async (sets: Sentence[], taskIdMap: TaskMa
     await BBPromise.mapSeries(sets, async (obj) => {
         const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
             task_id,
-            input: { data: {sentence: obj.sentence, providedTranslation: obj.providedTranslation, bow: ""} },
+            input: { data: {sentence: obj.sentence, providedTranslation: "", bow: ""} },
             deadline: task.deadline,
             credits: task.params.creditsPerMicrotask,
             status: 'INCOMPLETE',
@@ -137,7 +137,7 @@ const createMicrotasksForNextWordBOW = async (sets: Sentence[], taskIdMap: TaskM
     await BBPromise.mapSeries(sets, async (obj) => {
         const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
             task_id,
-            input: { data: {sentence: obj.sentence, providedTranslation: obj.providedTranslation, bow: ""} },
+            input: { data: {sentence: obj.sentence, providedTranslation: "", bow: ""} },
             deadline: task.deadline,
             credits: task.params.creditsPerMicrotask,
             status: 'INCOMPLETE',
@@ -156,7 +156,7 @@ const createMicrotasksForNextWordDropDown = async (sets: Sentence[], taskIdMap: 
     await BBPromise.mapSeries(sets, async (obj) => {
         const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
             task_id,
-            input: { data: {sentence: obj.sentence, providedTranslation: obj.providedTranslation, bow: ""} },
+            input: { data: {sentence: obj.sentence, providedTranslation: "", bow: ""} },
             deadline: task.deadline,
             credits: task.params.creditsPerMicrotask,
             status: 'INCOMPLETE',
