@@ -45,7 +45,7 @@ type TaskMap = {
 type Sentence = {
     sentence: string,
     providedTranslation: string,
-    bow: string[]
+    BOW: string[]
 }
 
 const QUIZ_QUESTIONS = [
@@ -99,7 +99,7 @@ const createMicrotasksForStaticBOW = async (sets: Sentence[], taskIdMap: TaskMap
     await BBPromise.mapSeries(sets, async (obj) => {
         const mt: MicrotaskType<'TEXT_TRANSLATION'> = {
             task_id,
-            input: { data: {sentence: obj.sentence, providedTranslation: "", bow: obj.bow.join(' ')} },
+            input: { data: {sentence: obj.sentence, providedTranslation: "", bow: obj.BOW.join(' ')} },
             deadline: task.deadline,
             credits: task.params.creditsPerMicrotask,
             status: 'INCOMPLETE',
