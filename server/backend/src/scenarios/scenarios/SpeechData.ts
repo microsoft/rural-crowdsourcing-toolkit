@@ -28,13 +28,19 @@ async function processInputFile(
   tarFilePath?: string,
   task_folder?: string
 ): Promise<MicrotaskList<'SPEECH_DATA'>> {
-  const sentences: { sentence: string; hint?: string }[] = jsonData!;
+  const sentences: { sentence: string; hint?: string; prompt_image?: string }[] = jsonData!;
   const microtasks = sentences.map((sentence) => {
-    const files = sentence.hint ? { files: { hint: sentence.hint } } : {};
+    const files: { hint?: string; prompt_image?: string } = {};
+    if (sentence.hint) {
+      files.hint = sentence.hint;
+    }
+    if (sentence.prompt_image) {
+      files.prompt_image = sentence.prompt_image;
+    }
     const { hint, ...data } = sentence;
     const mt: MicrotaskType<'SPEECH_DATA'> = {
       task_id: task.id,
-      input: { data, ...files },
+      input: { data, files },
       deadline: task.deadline,
       credits: task.params.creditsPerMicrotask,
       status: 'INCOMPLETE',
