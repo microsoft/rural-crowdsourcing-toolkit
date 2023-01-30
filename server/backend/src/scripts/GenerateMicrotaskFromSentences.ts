@@ -33,6 +33,7 @@ import { Promise as BBPromise } from 'bluebird';
 const SET_SIZE = 36;
 
 type TaskMap = {
+    quiz: string,
     baseline: string,
     post_edited: string,
     static_bow: string,
@@ -46,6 +47,12 @@ type Sentence = {
     providedTranslation: string,
     bow: string[]
 }
+
+const QUIZ_QUESTIONS = [
+  { "question": "Please enter your name", "type": "text", "key": "name" },
+  { "question": "Specify your gender", "type": "mcq", "key": "gender", "options": ["male", "female"] },
+  { "question": "How old are you?", "type": "text", "key": "age" }
+]
 
 const createMicrotasksForBaseline = async (sets: Sentence[], taskIdMap: TaskMap) => {
     const task_id = taskIdMap["baseline"]
@@ -161,35 +168,23 @@ const createMicrotasksForNextWordDropDown = async (sets: Sentence[], taskIdMap: 
     return microtasks
 }
 
-const assignMicrotasks = async (microtasks: MicrotaskRecord[], workerId: string) => {
-    const worker = await BasicModel.getSingle('worker', {id: workerId})
-    await BBPromise.mapSeries(microtasks, async (microtask) => {
-        const x = {
-            box_id: worker.box_id,
-            task_id: microtask.task_id,
-            microtask_id: microtask.id,
-            worker_id: worker.id,
-            deadline: microtask.deadline,
-            wgroup: worker.wgroup,
-            max_base_credits: microtask.base_credits,
-            base_credits: 0.0,
-            max_credits: microtask.credits,
-            status: 'ASSIGNED',
-          }
-          console.log(x)
-        await BasicModel.insertRecord('microtask_assignment', {
-          box_id: worker.box_id,
-          task_id: microtask.task_id,
-          microtask_id: microtask.id,
-          worker_id: worker.id,
-          deadline: microtask.deadline,
-          wgroup: worker.wgroup,
-          max_base_credits: microtask.base_credits,
-          base_credits: 0.0,
-          max_credits: microtask.credits,
-          status: 'ASSIGNED',
-        });
-      });
+const createMicrotasksForQuiz = async (taskIdMap: TaskMap) => {
+    const task_id = taskIdMap["quiz"]
+    const task = await BasicModel.getSingle('task', {id: task_id}) as TaskRecordType<'QUIZ'>
+    const microtasks: MicrotaskRecord[] = []
+    await BBPromise.mapSeries(QUIZ_QUESTIONS, async (questionObj: any) => {
+      const mt: MicrotaskType<'QUIZ'> = {
+        task_id: task.id,
+        input: { data: questionObj },
+        deadline: task.deadline,
+        credits: task.params.creditsPerMicrotask,
+        status: 'INCOMPLETE',
+        base_credits: task.params.baseCreditsPerMicrotask,
+      };
+      const microtask = await BasicModel.insertRecord('microtask', mt)
+      microtasks.push(microtask)
+    })
+    return microtasks
 }
 
 /** Main Script */
@@ -249,17 +244,18 @@ const assignMicrotasks = async (microtasks: MicrotaskRecord[], workerId: string)
       createMicrotasksForNextWordBOW,
       createMicrotasksForNextWordDropDown
   ]
+  // Create microtasks for quiz
+  createMicrotasksForQuiz(taskIdMap)
   
-    for (var interfaceIdx = 0; interfaceIdx < 6; interfaceIdx++) {
-      var createMicrotasks = microtaskCreationFunctions[interfaceIdx]
-      for(var setIdx = 0; setIdx < sets.length; setIdx++) {
-          var microtasks = await createMicrotasks(sets[setIdx]!!, taskIdMap)
-        //   await assignMicrotasks(microtasks, workerIds[setIdx])
-      }
-      // Rotate the set
-      const firstSet = sets.shift()!!
-      sets.push(firstSet)
+  for (var interfaceIdx = 0; interfaceIdx < 6; interfaceIdx++) {
+    var createMicrotasks = microtaskCreationFunctions[interfaceIdx]
+    for(var setIdx = 0; setIdx < sets.length; setIdx++) {
+        var microtasks = await createMicrotasks(sets[setIdx]!!, taskIdMap)
+      //   await assignMicrotasks(microtasks, workerIds[setIdx])
     }
-    
-  })().finally(() => knex.destroy());
+    // Rotate the set
+    const firstSet = sets.shift()!!
+    sets.push(firstSet)
+  }
+})().finally(() => knex.destroy());
 
