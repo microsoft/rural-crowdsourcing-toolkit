@@ -46,6 +46,23 @@ type TaskMap = {
     for(var workerId of workerIds) {
         const worker = await BasicModel.getSingle('worker', {id: workerId})
         for (var key of Object.keys(taskIdMap)) {
+          if ((key) == 'quiz') {
+            const mts = await BasicModel.getRecords('microtask', {task_id: taskIdMap[key as keyof TaskMap]})
+            await BBPromise.mapSeries(mts, async (microtask) => {
+              await BasicModel.insertRecord('microtask_assignment', {
+                box_id: worker.box_id,
+                task_id: microtask.task_id,
+                microtask_id: microtask.id,
+                worker_id: worker.id,
+                deadline: microtask.deadline,
+                wgroup: worker.wgroup,
+                max_base_credits: microtask.base_credits,
+                base_credits: 0.0,
+                max_credits: microtask.credits,
+                status: 'ASSIGNED',
+              });
+            })
+          } else {
             const mtsResponse = await knex.raw(`select * from microtask where task_id = ${taskIdMap[key as keyof TaskMap]} and id not in (select microtask_id from microtask_assignment) limit ${SET_SIZE};`)
             const mts = mtsResponse.rows as  MicrotaskRecord[]
             await BBPromise.mapSeries(mts, async (microtask) => {
@@ -62,6 +79,7 @@ type TaskMap = {
                   status: 'ASSIGNED',
                 });
               });
+          }
         }
     }
     
