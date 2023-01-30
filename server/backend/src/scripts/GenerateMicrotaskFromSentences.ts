@@ -211,7 +211,7 @@ const createMicrotasksForQuiz = async (taskIdMap: TaskMap) => {
     const sentencesString = fs.readFileSync(sentencesFile).toString();
     const sentencesJsonArray: Sentence[] = JSON.parse(sentencesString)
   
-    const workerIds = fs.readFileSync(workerIdsFile).toString().split('\n');
+    const workerIds = fs.readFileSync(workerIdsFile).toString().split('\n').filter(id => id.length);
   
     const taskIdMapString = fs.readFileSync(taskIdMapFile).toString();
     const taskIdMap: TaskMap = JSON.parse(taskIdMapString)
