@@ -54,7 +54,7 @@ export const get: KaryaMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, { tasks, assignments });
   } else {
     // TODO: Adjust max credits
-    await assignMicrotasksForWorker(worker, 10000);
+    // await assignMicrotasksForWorker(worker, 10000);
     const assignments = await BasicModel.getRecords(
       'microtask_assignment',
       { worker_id: worker.id, status: 'ASSIGNED' },
@@ -62,12 +62,13 @@ export const get: KaryaMiddleware = async (ctx) => {
       [['created_at', from, null]],
       'created_at'
     );
-    const mtIds = assignments.map((mta) => mta.microtask_id);
+    const filteredAssignments = assignments.filter(mta => mta.id == assignments[0].id)
+    const mtIds = filteredAssignments.map((mta) => mta.microtask_id);
     const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
     // This can be optimized to just be distinct task_ids
     const taskIds = microtasks.map((t) => t.task_id);
     const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
-    HttpResponse.OK(ctx, { tasks, microtasks, assignments });
+    HttpResponse.OK(ctx, { tasks, microtasks, filteredAssignments });
   }
 };
 
