@@ -71,7 +71,7 @@ export const get: KaryaMiddleware = async (ctx) => {
     // This can be optimized to just be distinct task_ids
     const taskIds = microtasks.map((t) => t.task_id);
     const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
-    HttpResponse.OK(ctx, { tasks, microtasks, filteredAssignments });
+    HttpResponse.OK(ctx, { tasks, microtasks, 'assignments': filteredAssignments });
   }
 };
 
