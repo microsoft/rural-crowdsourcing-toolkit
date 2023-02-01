@@ -54,7 +54,8 @@ export interface BackendChainInterface<FromScenario extends ScenarioName, ToScen
     fromTask: TaskRecordType<FromScenario>,
     toTask: TaskRecordType<ToScenario>,
     assignments: AssignmentRecordType<FromScenario>[],
-    microtasks: MicrotaskRecordType<FromScenario>[]
+    microtasks: MicrotaskRecordType<FromScenario>[],
+    task_folder: string
   ): Promise<MicrotaskType<ToScenario>[]>;
 
   /**

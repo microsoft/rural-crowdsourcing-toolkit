@@ -5,8 +5,10 @@
  * Handle Karya File specific tasks
  */
 
-import { BasicModel, uploadBlobFromFile } from '@karya/common';
+import { BasicModel, downloadBlob, uploadBlobFromFile } from '@karya/common';
 import { ChecksumAlgorithm, getChecksum, KaryaFile, KaryaFileRecord, BlobParameters, getBlobName } from '@karya/core';
+import { promises as fsp } from 'fs';
+import tar from 'tar';
 
 /**
  * Handler to upload a karya file to the blob store, create its checksum and add
@@ -48,4 +50,17 @@ export async function upsertKaryaFile(
     ? await BasicModel.updateSingle('karya_file', { id: currentFileID }, kf)
     : await BasicModel.insertRecord('karya_file', kf);
   return upsertedRecord;
+}
+
+/**
+ * Download a karya file and extract it into a folder
+ * @param id ID of the karya file
+ * @param folder_path Path to the folder where the file should be extracted
+ */
+export async function downloadAndExtractKaryaFile(id: string, folder_path: string) {
+  const kf = await BasicModel.getSingle('karya_file', { id });
+  const tgzPath = `${folder_path}/${kf.name}`;
+  await downloadBlob(kf.url!, tgzPath);
+  await tar.x({ C: folder_path, file: tgzPath });
+  await fsp.unlink(tgzPath);
 }

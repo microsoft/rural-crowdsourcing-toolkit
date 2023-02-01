@@ -5,6 +5,8 @@
 
 import { baseSpeechValidationChain, MicrotaskType } from '@karya/core';
 import { BackendChainInterface } from '../BackendChainInterface';
+import { downloadAndExtractKaryaFile } from '../../models/KaryaFileModel';
+import { Promise as BBPromise } from 'bluebird';
 
 export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH_VERIFICATION'> = {
   ...baseSpeechValidationChain,
@@ -12,27 +14,28 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
   /**
    * Generate speech verification microtasks for completed speech data assignments
    */
-  async handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks) {
-    const chainedMicrotasks = assignments.map((assignment, i) => {
+  async handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks, folder_path) {
+    const chainedMicrotasks = await BBPromise.mapSeries(assignments, async (assignment, i) => {
       const microtask = microtasks[i];
 
       // Temporary fix for output files that may be sent as array
       const output_files = assignment.output!.files!;
-      let recording: string;
+      const recording = output_files.recording;
 
-      if (output_files instanceof Array) {
-        recording = output_files[0];
-      } else {
-        recording = output_files.recording;
+      // Check if the microtask has any input files
+      const mt_input_file_id = microtask.input_file_id;
+      if (mt_input_file_id != null) {
+        await downloadAndExtractKaryaFile(mt_input_file_id, folder_path);
+        await downloadAndExtractKaryaFile(assignment.output_file_id!, folder_path);
       }
 
       const chainedMicrotask: MicrotaskType<'SPEECH_VERIFICATION'> = {
         task_id: toTask.id,
         input: {
           data: microtask.input.data,
-          files: { recording },
+          files: mt_input_file_id != null ? { ...output_files, ...microtask.input.files } : { recording },
         },
-        input_file_id: assignment.output_file_id,
+        input_file_id: mt_input_file_id != null ? null : assignment.output_file_id,
         deadline: toTask.deadline,
         base_credits: toTask.params.baseCreditsPerMicrotask,
         credits: toTask.params.creditsPerMicrotask,
@@ -56,27 +59,13 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
       if (report.auto) {
         fraction = report.fraction;
       } else {
-        const { accuracy, volume, quality, fluency: rfluency } = report;
-        const fluency = rfluency ?? 0;
+        const { accuracy, volume, quality } = report;
 
-        // if (accuracy == 0 || volume == 0 || quality == 0 || fluency == 0) {
-        //   fraction = 0;
-        // } else if (accuracy == 1 || fluency == 1) {
-        //   fraction = 0.75;
-        // } else {
-        //   fraction = 1;
-        // }
-
-        const sum = accuracy + quality + volume;
-        if (accuracy == 0 || quality == 0 || volume == 0) {
+        if (accuracy < 2 || quality == 0 || volume == 0) {
           fraction = 0;
-        } else if (sum == 3) {
-          fraction = 0.25;
-        } else if (sum == 4) {
+        } else if (volume == 1 || quality == 1) {
           fraction = 0.5;
-        } else if (sum == 5) {
-          fraction = 0.75;
-        } else if (sum == 6) {
+        } else if (accuracy == 2 && quality == 2 && volume == 2) {
           fraction = 1;
         }
       }

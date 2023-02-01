@@ -4,9 +4,20 @@
 // Entry point for the backend task chaining module
 
 import { BasicModel } from '@karya/common';
-import { AssignmentRecordType, ChainName, MicrotaskRecordType, TaskLinkRecord, TaskRecordType } from '@karya/core';
+import {
+  AssignmentRecordType,
+  BlobParameters,
+  ChainName,
+  getBlobName,
+  MicrotaskRecordType,
+  TaskLinkRecord,
+  TaskRecordType,
+} from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 import { handleNewlyCompletedAssignments } from '../task-ops/policies/Index';
+import { envGetString } from '@karya/misc-utils';
+import { promises as fsp } from 'fs';
+import tar from 'tar';
 
 import { BackendChainInterface, ChainedMicrotaskRecordType, ChainedMicrotaskType } from './BackendChainInterface';
 import { imageAnnotationValidation } from './chains/ImageAnnotationValidation';
@@ -17,6 +28,7 @@ import { speechValidationChain } from './chains/SpeechValidation';
 import { verifiedSpeechTranscriptionChain } from './chains/VerifiedSpeechTranscription';
 import { videoAnnotationValidation } from './chains/VideoAnnotationValidation';
 import { xliterationValidationChain } from './chains/XliterationValidation';
+import { upsertKaryaFile } from '../models/KaryaFileModel';
 
 // Backend chain map
 export const backendChainMap: { [key in ChainName]: BackendChainInterface<any, any> } = {
@@ -57,9 +69,24 @@ export async function executeForwardLink(
     return BasicModel.getSingle('microtask', { id: assignment.microtask_id }) as Promise<MicrotaskRecordType>;
   });
 
+  // Create a temp folder
+  const localFolder = envGetString('LOCAL_FOLDER');
+  const folder_path = `${localFolder}/microtask-input/${toTask.id}`;
+  try {
+    await fsp.mkdir(folder_path);
+  } catch (e) {
+    // pass
+  }
+
   // TODO: Need to handle other link parameters appropriately
   // Invoke the link
-  const toMicrotasks = await chainObj.handleCompletedFromAssignments(fromTask, toTask, assignments, microtasks);
+  const toMicrotasks = await chainObj.handleCompletedFromAssignments(
+    fromTask,
+    toTask,
+    assignments,
+    microtasks,
+    folder_path
+  );
 
   // Create the chained microtasks objects
   const chainedMicrotasks = toMicrotasks.map((mt, i) => {
@@ -83,7 +110,26 @@ export async function executeForwardLink(
 
   // Insert the chained microtasks
   await BBPromise.mapSeries(chainedMicrotasks, async (mt) => {
-    await BasicModel.insertRecord('microtask', mt);
+    const mtRecord = await BasicModel.insertRecord('microtask', mt);
+
+    // Check if the chained microtask requires a new input file
+    const input_files = Object.values(mt.input!.files ?? {});
+    if (input_files.length > 0 && mt.input_file_id == null) {
+      const inputBlobParams: BlobParameters = {
+        cname: 'microtask-input',
+        microtask_id: mtRecord.id,
+        ext: 'tgz',
+      };
+      const inputTgzFileName = getBlobName(inputBlobParams);
+      const inputTgzFilePath = `${folder_path}/${inputTgzFileName}`;
+
+      // Create the tar ball
+      await tar.c({ C: folder_path, file: inputTgzFilePath, gzip: true }, input_files);
+      const fileRecord = await upsertKaryaFile(inputTgzFilePath, 'MD5', inputBlobParams);
+
+      // Update the microtask record
+      await BasicModel.updateSingle('microtask', { id: mtRecord.id }, { input_file_id: fileRecord.id });
+    }
   });
 }
 
