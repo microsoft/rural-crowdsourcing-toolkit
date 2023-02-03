@@ -62,16 +62,18 @@ export const get: KaryaMiddleware = async (ctx) => {
       [['created_at', from, null]],
       'created_at'
     );
-    var filteredAssignments = assignments.filter(mta => mta.task_id == '10')
-    if (filteredAssignments.length == 0) {
-      filteredAssignments = assignments.filter(mta => mta.task_id == assignments[0].task_id)
-    }
-    const mtIds = filteredAssignments.map((mta) => mta.microtask_id);
+    const mtIds = assignments.map((mta) => mta.microtask_id);
+    // var filteredAssignments = assignments.filter(mta => mta.task_id == '10')
+    // if (filteredAssignments.length == 0) {
+    //   filteredAssignments = assignments.filter(mta => mta.task_id == assignments[0].task_id)
+    // }
+    // const mtIds = filteredAssignments.map((mta) => mta.microtask_id);
     const microtasks = await BasicModel.getRecords('microtask', {}, [['id', mtIds]]);
     // This can be optimized to just be distinct task_ids
+    
     const taskIds = microtasks.map((t) => t.task_id);
     const tasks = await BasicModel.getRecords('task', {}, [['id', taskIds]]);
-    HttpResponse.OK(ctx, { tasks, microtasks, 'assignments': filteredAssignments });
+    HttpResponse.OK(ctx, { tasks, microtasks, assignments });
   }
 };
 
