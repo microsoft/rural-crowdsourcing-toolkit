@@ -85,7 +85,11 @@ export async function createLocalFolders(localFolder: string) {
  *
  * @returns Object containing the container name and blob name
  */
-export function getParts(blobURL: string): { cname: ContainerName; blobName: string; ext: string } {
+export function getParts(argBlobURL: string): { cname: ContainerName; blobName: string; ext: string } {
+  let blobURL = argBlobURL;
+  if (argBlobURL.startsWith('https://karyaraniblob.')) {
+    blobURL = argBlobURL.replace('karyaraniblob', 'karyaraniblob2');
+  }
   if (blobURL.indexOf(rootURL) !== 0) {
     throw Error(`Invalid blob URL ${blobURL}`);
   }
