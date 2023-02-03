@@ -1,0 +1,43 @@
+{
+    "QUIZ": {
+        "name": "QUIZ",
+        "description": "",
+        "display_name": "QUIZ TASK",
+        "assignment_batch_size": 100,
+        "assignment_granularity": "MICROTASK",
+        "group_assignment_order": "EITHER",
+        "microtask_assignment_order": "SEQUENTIAL",
+        "scenario_name": "QUIZ",
+        "params": {
+          "n": 1000,
+          "maxMicrotasksPerUser": 0,
+          "instruction": "Answer the questions",
+          "baseCreditsPerMicrotask": 10,
+          "creditsPerMicrotask": 10,
+          "includeLogs":true,
+          "language": "EN"
+        },
+        "policy": "N_TOTAL"
+    },
+    "SCORING": {
+      "name": "SCORING",
+      "description": "",
+      "display_name": "",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION_VALIDATION",
+      "params": {
+        "n": 3,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "Score the following translations. The rules of scoring can be viewed by clicking the assistant button on top right",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI"
+      },
+      "policy": "N_TOTAL"
+    }
+}

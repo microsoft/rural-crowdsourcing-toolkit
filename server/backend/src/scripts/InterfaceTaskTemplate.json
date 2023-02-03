@@ -1,0 +1,143 @@
+{
+    "BASELINE": {
+      "name": "BASELINE",
+      "description": "",
+      "display_name": "Plain Text Translation",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION",
+      "params": {
+        "n": 1,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "Translate the sentences below, if you think the translation is not in the dialect that you know, mark it as dialectically ambigous",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI",
+        "mode": "none"
+      },
+      "policy": "N_TOTAL"
+    },
+    "POST_EDITED": {
+      "name": "POST_EDITED",
+      "description": "",
+      "display_name": "Post Edited Text Translation",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION",
+      "params": {
+        "n": 1,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "Post Edited Text Translation",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI",
+        "mode": "none"
+      },
+      "policy": "N_TOTAL"
+    },
+    "STATIC_BOW": {
+      "name": "STATIC_BOW",
+      "description": "",
+      "display_name": "Static BOW",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION",
+      "params": {
+        "n": 1,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "Translate the sentences below, you may choose suggestion bubbles at the bottom to do a translation",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI",
+        "mode": "static_bow"
+      },
+      "policy": "N_TOTAL"
+    },
+    "DYNAMIC_BOW": {
+      "name": "DYNAMIC_BOW",
+      "description": "",
+      "display_name": "Dynamic BOW",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION",
+      "params": {
+        "n": 1,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "Translate the sentences below, you may choose suggestion bubbles at the bottom to do a translation",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI",
+        "mode": "dynamic_bow",
+        "depthCount": 3,
+        "forwardCount": 2,
+        "triggerInterval": 1
+      },
+      "policy": "N_TOTAL"
+    },
+    "NEXT_BOW": {
+      "name": "Next Word BOW",
+      "description": "",
+      "display_name": "Next Word BOW",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION",
+      "params": {
+        "n": 1,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "Translate the sentences below, you may choose suggestion from the dropdown to do a translation",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI",
+        "mode": "dynamic_bow",
+        "depthCount": 2,
+        "forwardCount": 1,
+        "triggerInterval": 1
+      },
+      "policy": "N_TOTAL"
+    },
+    "NEXT_WORD_DROPDOWN": {
+      "name": "Next Word Dropdown",
+      "description": "plain translation",
+      "display_name": "Next Word BOW",
+      "assignment_batch_size": 100,
+      "assignment_granularity": "MICROTASK",
+      "group_assignment_order": "EITHER",
+      "microtask_assignment_order": "RANDOM",
+      "scenario_name": "TEXT_TRANSLATION",
+      "params": {
+        "n": 1,
+        "maxMicrotasksPerUser": 36,
+        "instruction": "instruction",
+        "baseCreditsPerMicrotask": 10,
+        "creditsPerMicrotask": 10,
+        "includeLogs":true,
+        "sourceLanguage": "EN",
+        "targetLanguage": "HI",
+        "mode": "dropdown",
+        "depthCount": 4,
+        "forwardCount": 1,
+        "triggerInterval": 1
+      },
+      "policy": "N_TOTAL"
+    }
+  }
