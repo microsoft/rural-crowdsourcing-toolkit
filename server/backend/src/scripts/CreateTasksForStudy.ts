@@ -11,6 +11,10 @@ import * as fs from 'fs';
 import { MicrotaskType, Task, TaskAssignment, TaskAssignmentRecord, TaskRecord } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 
+const SENTENCE_SET_SIZE = 36
+const NUMBER_OF_GROUPS = 3
+const NUMBER_OF_INTERFACES = 6
+
 type Sentence = {
     sentence: string,
     providedTranslation: string,
@@ -178,27 +182,26 @@ const createScoringTasks = async ( taskTemplate: {[key: string]: Task}) => {
     process.exit();
   }
 
-  if (sentencesJsonArray.length %36 != 0 && sentencesJsonArray.length != numberOfWorkers) {
+  if (sentencesJsonArray.length %SENTENCE_SET_SIZE != 0 && sentencesJsonArray.length != numberOfWorkers) {
     console.log(`Invalid sentence length: ${sentencesJsonArray.length}`);
     process.exit();
   }
 
   const sentenceSet: Sentence[][] = []
 
-  for (var g=0; g<(sentencesJsonArray.length)/36; g++) {
-    sentenceSet.push(sentencesJsonArray.slice(g*36, (g+1)*36))
+  for (var g=0; g<(sentencesJsonArray.length)/SENTENCE_SET_SIZE; g++) {
+    sentenceSet.push(sentencesJsonArray.slice(g*SENTENCE_SET_SIZE, (g+1)*SENTENCE_SET_SIZE))
   }
 
-  const workerSetLength = numberOfWorkers/3
+  const workerSetLength = numberOfWorkers/NUMBER_OF_GROUPS
 
   // Start Task creation
   // 1. Create quiz task
   await createQuizTask(nonInterfaceTaskTemplate)
 
   // 2. Create translation tasks
-  for (var g=0; g<workerSetLength; g++) {
-    const workerSubset = workerIds.slice(g*workerSetLength, (g+1)*workerSetLength)
-    const sentenceSubset = sentenceSet.slice(g*6, (g+1)*6)
+  for (var g=0; g<NUMBER_OF_GROUPS; g++) {
+    const sentenceSubset = sentenceSet.slice(g*NUMBER_OF_INTERFACES, (g+1)*NUMBER_OF_INTERFACES)
     console.log(sentenceSubset.length, "YES", sentenceSet.length)
     for (var w=(g*workerSetLength); w<(g+1)*workerSetLength; w++) {
         for (var s = 0; s<6; s++) {
