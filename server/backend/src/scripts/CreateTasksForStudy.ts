@@ -32,7 +32,7 @@ const createTaskAssignment = async (task: TaskRecord) => {
             maxMicrotaskPerUser: task.params.maxMicrotasksPerUser
         },
         deadline: null,
-        status: "COMPLETED",
+        status: "ASSIGNED",
         extras: null
     }
     await BasicModel.insertRecord("task_assignment", taskAssignmentObj)

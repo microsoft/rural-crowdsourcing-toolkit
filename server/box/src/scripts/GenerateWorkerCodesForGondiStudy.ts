@@ -71,7 +71,7 @@ const NUMBER_OF_INTERFACES = 6;
 
     // Generate a worker record
     const now = new Date().toISOString();
-    const tags: string[] = [`A${idx+1}`];
+    const tags: string[] = [`A${idx+1}`, "INMT_STUDY"];
     // Populate tags
     for (var i=0; i<NUMBER_OF_INTERFACES; i++) tags.push(`I${i+1}`);
     const createWorker: Worker = {
