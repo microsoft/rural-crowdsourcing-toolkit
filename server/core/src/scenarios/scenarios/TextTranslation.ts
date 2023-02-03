@@ -22,7 +22,7 @@ type TextTranslationMicrotaskInput = { sentence: string, providedTranslation: st
 type TextTranslationMicrotaskInputFiles = {};
 
 // Text translation microtask output format
-type TextTranslationMicrotaskOutput = { sentence: string };
+type TextTranslationMicrotaskOutput = { translation: string };
 type TextTranslationMicrotaskOutputFiles = {};
 
 // Base text translation scenario type
@@ -99,7 +99,7 @@ export const baseTextTranslationScenario: BaseTextTranslationScenario = {
   task_input_file,
   microtask_input: Joi.object({ sentence: Joi.string().required(), providedTranslation: Joi.string(), bow: Joi.string() }).unknown(true),
   microtask_input_files: [],
-  microtask_output: Joi.object({ target: Joi.string().required() }).unknown(true),
+  microtask_output: Joi.object({ translation: Joi.string().required() }).unknown(true),
   microtask_output_files: [],
   assignment_granularity: 'MICROTASK',
   group_assignment_order: 'EITHER',

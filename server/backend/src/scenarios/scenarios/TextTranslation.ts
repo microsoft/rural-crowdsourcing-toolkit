@@ -65,7 +65,7 @@ export const backendTextTranslationScenario: IBackendScenarioInterface<BaseTextT
       // Generate JSON data
       const jsonData = {
         source: mt.input.data.sentence,
-        translation: assignment.output!.data.sentence,
+        translation: assignment.output!.data.translation,
         worker_id: assignment.worker_id,
         report: assignment.report,
         credits: assignment.credits,
