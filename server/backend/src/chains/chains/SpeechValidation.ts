@@ -59,13 +59,13 @@ export const speechValidationChain: BackendChainInterface<'SPEECH_DATA', 'SPEECH
       if (report.auto) {
         fraction = report.fraction;
       } else {
-        const { accuracy, volume, quality } = report;
+        const { accuracy, volume, quality, fluency } = report;
 
-        if (accuracy < 2 || quality == 0 || volume == 0) {
+        if (accuracy < 2 || quality == 0 || volume == 0 || fluency == 0) {
           fraction = 0;
-        } else if (volume == 1 || quality == 1) {
+        } else if (volume == 1 || quality == 1 || fluency == 1) {
           fraction = 0.5;
-        } else if (accuracy == 2 && quality == 2 && volume == 2) {
+        } else if (accuracy == 2 && quality == 2 && volume == 2 && fluency == 2) {
           fraction = 1;
         }
       }
