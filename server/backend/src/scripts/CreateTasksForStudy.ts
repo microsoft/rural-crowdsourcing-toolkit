@@ -8,12 +8,18 @@ dotenv.config();
 
 import { knex, setupDbConnection, BasicModel } from '@karya/common';
 import * as fs from 'fs';
-import { MicrotaskType, Task, TaskAssignment, TaskAssignmentRecord, TaskRecord } from '@karya/core';
+import { MicrotaskRecord, MicrotaskType, Task, TaskAssignment, TaskAssignmentRecord, TaskRecord, TaskRecordType } from '@karya/core';
 import { Promise as BBPromise } from 'bluebird';
 
 const SENTENCE_SET_SIZE = 36
 const NUMBER_OF_GROUPS = 3
 const NUMBER_OF_INTERFACES = 6
+
+const QUIZ_QUESTIONS = [
+    { "question": "What languages do you speak/read/write?", "type": "dropdown", "key": "language", "options": ["Hindi", "English", "Gondi", "Punjabi", "Bengali", "Assamese", "Kannada", "Tamil", "Urdu", "Odia", "Gujrati", "Tamil", "Telugu", "Malyalam"] },
+    { "question": "Since how long have you been using a Virtual Hindi Keyboard?", "type": "mcq", "key": "keyboard", "options": ["24 hours", "< 15 hours", "< 2 hours", "none a day"] },
+    { "question": "What dialect of Gondi do you use?", "type": "dropdown", "key": "dialect", "options": ["Khari boli", "Braj Bhasha", "Haryanvi", "Awadhi", "Bhojpuri"] }
+  ]
 
 type Sentence = {
     sentence: string,
@@ -101,7 +107,20 @@ const createQuizTask = async ( taskTemplate: {[key: string]: Task}) => {
         itags: {itags: ["INMT_STUDY"]},
         status: "SUBMITTED",
     }
-    const quizTask = await BasicModel.insertRecord('task', quizTaskObj)
+    const quizTask = (await BasicModel.insertRecord('task', quizTaskObj)) as TaskRecordType<'QUIZ'>
+
+    await BBPromise.mapSeries(QUIZ_QUESTIONS, async (questionObj: any) => {
+      const mt: MicrotaskType<'QUIZ'> = {
+        task_id: quizTask.id,
+        input: { data: questionObj },
+        deadline: quizTask.deadline,
+        credits: quizTask.params.creditsPerMicrotask,
+        status: 'INCOMPLETE',
+        base_credits: quizTask.params.baseCreditsPerMicrotask,
+      };
+      await BasicModel.insertRecord('microtask', mt)
+    })
+
     await createTaskAssignment(quizTask)
 }
 
