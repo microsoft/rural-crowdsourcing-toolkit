@@ -13,6 +13,7 @@ import { envGetString } from '@karya/misc-utils';
 
 const server_url = envGetString('BACKEND_SERVER_URL', '');
 const NUMBER_OF_INTERFACES = 6;
+const NUMBER_OF_GROUPS = 3;
 
 (async () => {
   setupDbConnection();
@@ -40,6 +41,7 @@ const NUMBER_OF_INTERFACES = 6;
   }
 
   const n = Number.parseInt(nString)
+  const workersInEachGroup = n/NUMBER_OF_GROUPS
 
   // Access code info
   const accessCodeInfo: AccessCodeInfo = {
@@ -56,6 +58,7 @@ const NUMBER_OF_INTERFACES = 6;
   console.log(n)
 
   for(var idx=0; idx<n; idx++) {
+    const groupId = Math.floor((idx)/workersInEachGroup) + 1
     // Get a new acess code
     let access_code: string = '';
 
@@ -71,7 +74,7 @@ const NUMBER_OF_INTERFACES = 6;
 
     // Generate a worker record
     const now = new Date().toISOString();
-    const tags: string[] = [`A${idx+1}`, "INMT_STUDY"];
+    const tags: string[] = [`A${idx+1}`, `G${groupId}`, "INMT_STUDY"];
     // Populate tags
     for (var i=0; i<NUMBER_OF_INTERFACES; i++) tags.push(`I${i+1}`);
     const createWorker: Worker = {
