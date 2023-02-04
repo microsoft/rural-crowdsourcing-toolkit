@@ -371,8 +371,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
 
       files_submitted = true;
       // Show the output table if there are file records left after the input ones
-      if (i !== file_records.length) {
-        outputFileTable = (
+      outputFileTable = (
           <table id='output-table'>
             <thead>
               <tr>
@@ -408,8 +407,7 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
               )}
             </tbody>
           </table>
-        );
-      }
+      );
     }
 
     // Task link table and creation form
