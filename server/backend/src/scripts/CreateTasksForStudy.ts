@@ -106,7 +106,6 @@ const createQuizTask = async ( taskTemplate: {[key: string]: Task}) => {
 }
 
 const createScoringTasks = async ( taskTemplate: {[key: string]: Task}) => {
-    const partialQuizTask = taskTemplate['QUIZ']
     // create scoring tasks
     // 1. create model scoring task
     const partialScoringTask = taskTemplate['SCORING']
@@ -122,7 +121,7 @@ const createScoringTasks = async ( taskTemplate: {[key: string]: Task}) => {
     // 2. Create chain scoring tasks
     for (var i=0; i<3; i++) {
         const scoringTaskObj: Task = {
-            ...partialQuizTask,
+            ...partialScoringTask,
             name: `GROUP_${i}_SCORING`,
             work_provider_id: "-1",
             itags: {itags: ["INMT_STUDY", `G${i+1}`]},
