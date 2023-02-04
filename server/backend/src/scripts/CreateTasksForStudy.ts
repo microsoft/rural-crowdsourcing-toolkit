@@ -49,7 +49,7 @@ const createInterfaceTasks = async (groupId: number, workerId: number, interface
     const taskKey = keys[interfaceId-1]
     const taskObject: Task = {
         ...taskTemplate[taskKey],
-        name: `$A${workerId}I${interfaceId}_${taskTemplate[taskKey].name}`,
+        name: `A${workerId}I${interfaceId}_${taskTemplate[taskKey].name}`,
         work_provider_id: "-1",
         itags: {itags: ["INMT_STUDY", `A${workerId}`, `I${interfaceId}`, `G${groupId}`]},
         status: "SUBMITTED",
