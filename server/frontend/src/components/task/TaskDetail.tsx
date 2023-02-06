@@ -326,7 +326,6 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
     // Input file table and output file table
     let inputFileTable = null;
     let outputFileTable = null;
-    let files_submitted = false;
     let i = 0,
       j = 0;
     // Show input file table if there are submitted files already
@@ -369,7 +368,6 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
         </table>
       );
 
-      files_submitted = true;
       // Show the output table if there are file records left after the input ones
       outputFileTable = (
           <table id='output-table'>
@@ -772,7 +770,6 @@ class TaskDetail extends React.Component<TaskDetailProps, TaskDetailState> {
                 className='btn-flat'
                 id='generate-btn'
                 onClick={this.props.generateOutput}
-                disabled={!files_submitted}
               >
                 <i className='material-icons left'>add</i>
                 Generate New
