@@ -2,7 +2,7 @@
     "BASELINE": {
       "name": "BASELINE",
       "description": "",
-      "display_name": "Plain Text Translation",
+      "display_name": "अनुवाद",
       "assignment_batch_size": 100,
       "assignment_granularity": "MICROTASK",
       "group_assignment_order": "EITHER",
@@ -11,7 +11,7 @@
       "params": {
         "n": 1,
         "maxMicrotasksPerUser": 36,
-        "instruction": "Translate the sentences below, if you think the translation is not in the dialect that you know, mark it as dialectically ambigous",
+        "instruction": "नीचे दिए गए वाक्यों का अनुवाद करें",
         "baseCreditsPerMicrotask": 10,
         "creditsPerMicrotask": 10,
         "includeLogs":true,
@@ -24,7 +24,7 @@
     "POST_EDITED": {
       "name": "POST_EDITED",
       "description": "",
-      "display_name": "Post Edited Text Translation",
+      "display_name": "अनुवाद सुधार",
       "assignment_batch_size": 100,
       "assignment_granularity": "MICROTASK",
       "group_assignment_order": "EITHER",
@@ -33,7 +33,7 @@
       "params": {
         "n": 1,
         "maxMicrotasksPerUser": 36,
-        "instruction": "Post Edited Text Translation",
+        "instruction": "नीचे दिए गए वाक्यों का अनुवाद करें, यदि आपको लगता है कि अनुवाद उस बोली में नहीं है जिसे आप जानते हैं, तो बॉक्स में टिक करें",
         "baseCreditsPerMicrotask": 10,
         "creditsPerMicrotask": 10,
         "includeLogs":true,
@@ -46,7 +46,7 @@
     "STATIC_BOW": {
       "name": "STATIC_BOW",
       "description": "",
-      "display_name": "Static BOW",
+      "display_name": "शब्द मदद अनुवाद",
       "assignment_batch_size": 100,
       "assignment_granularity": "MICROTASK",
       "group_assignment_order": "EITHER",
@@ -55,7 +55,7 @@
       "params": {
         "n": 1,
         "maxMicrotasksPerUser": 36,
-        "instruction": "Translate the sentences below, you may choose suggestion bubbles at the bottom to do a translation",
+        "instruction": "नीचे दिए गए वाक्यों का अनुवाद करें, आप अनुवाद करने के लिए दिए गए सुझाव शब्द चुन सकते हैं",
         "baseCreditsPerMicrotask": 10,
         "creditsPerMicrotask": 10,
         "includeLogs":true,
@@ -68,7 +68,7 @@
     "DYNAMIC_BOW": {
       "name": "DYNAMIC_BOW",
       "description": "",
-      "display_name": "Dynamic BOW",
+      "display_name": "बदलते शब्द मदद अनुवाद",
       "assignment_batch_size": 100,
       "assignment_granularity": "MICROTASK",
       "group_assignment_order": "EITHER",
@@ -77,7 +77,7 @@
       "params": {
         "n": 1,
         "maxMicrotasksPerUser": 36,
-        "instruction": "Translate the sentences below, you may choose suggestion bubbles at the bottom to do a translation",
+        "instruction": "नीचे दिए गए वाक्यों का अनुवाद करें, आप अनुवाद करने के लिए बदलते हुए सुझाव शब्दों को चुन सकते हैं",
         "baseCreditsPerMicrotask": 10,
         "creditsPerMicrotask": 10,
         "includeLogs":true,
@@ -93,7 +93,7 @@
     "NEXT_BOW": {
       "name": "Next Word BOW",
       "description": "",
-      "display_name": "Next Word BOW",
+      "display_name": "अगला शब्द मदद अनुवाद",
       "assignment_batch_size": 100,
       "assignment_granularity": "MICROTASK",
       "group_assignment_order": "EITHER",
@@ -102,7 +102,7 @@
       "params": {
         "n": 1,
         "maxMicrotasksPerUser": 36,
-        "instruction": "Translate the sentences below, you may choose suggestion from the dropdown to do a translation",
+        "instruction": "नीचे दिए गए वाक्यों का अनुवाद करें, आप अनुवाद करने के लिए बदलते हुए सुझाव शब्दों को चुन सकते हैं",
         "baseCreditsPerMicrotask": 10,
         "creditsPerMicrotask": 10,
         "includeLogs":true,
@@ -118,7 +118,7 @@
     "NEXT_WORD_DROPDOWN": {
       "name": "Next Word Dropdown",
       "description": "plain translation",
-      "display_name": "Next Word BOW",
+      "display_name": "सूची मदद अनुवाद",
       "assignment_batch_size": 100,
       "assignment_granularity": "MICROTASK",
       "group_assignment_order": "EITHER",
@@ -127,7 +127,7 @@
       "params": {
         "n": 1,
         "maxMicrotasksPerUser": 36,
-        "instruction": "instruction",
+        "instruction": "नीचे दिए गए वाक्यों का अनुवाद करें, अनुवाद करते समय आप सूची में दिखाई देने वाले शब्दों को चुन सकते हैं",
         "baseCreditsPerMicrotask": 10,
         "creditsPerMicrotask": 10,
         "includeLogs":true,
