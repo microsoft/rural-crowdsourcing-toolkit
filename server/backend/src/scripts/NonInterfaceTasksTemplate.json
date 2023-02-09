@@ -32,8 +32,8 @@
         "n": 3,
         "maxMicrotasksPerUser": 36,
         "instruction": "दिए गए अनुवादों को अंक दें। स्कोरिंग के नियम शीर्ष दाईं ओर स्थित सहायक बटन पर क्लिक करके देखे जा सकते हैं",
-        "baseCreditsPerMicrotask": 10,
-        "creditsPerMicrotask": 10,
+        "baseCreditsPerMicrotask": 15,
+        "creditsPerMicrotask": 15,
         "includeLogs":true,
         "sourceLanguage": "EN",
         "targetLanguage": "HI"
