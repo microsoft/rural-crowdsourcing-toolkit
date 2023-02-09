@@ -9,57 +9,72 @@ dotenv.config();
 import { knex, setupDbConnection, BasicModel, WorkerModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
 import { MicrotaskAssignmentRecord, MicrotaskRecord, MicrotaskType } from '@karya/core';
+import { exit } from 'process';
 
 declare type TextTranslationTaskMap = {[key: string]: string[]}
 declare type TextTranslationValidationTaskMap = {[key: string]: string}
 
 const SPLIT_FACTOR = 3
 const NUMBER_OF_INTERFACES = 6
+const NUMBER_OF_INTERFACES_FILTER = 4
 
 const isGroupChainable = async (ttIds: string[]) => {
     let ambigousMtaGroups: MicrotaskAssignmentRecord[][] = []
     let nonAmbigousMtaGroups: MicrotaskAssignmentRecord[][] = []
-    let totalMts = 0
     let isGroupComplete = true
 
-    const response = await knex.raw(`SELECT * from microtask WHERE task_id in (${ttIds.join(",")}) order by input`)
+    const task_list = ttIds.join(",")
+    console.log(ttIds[0])
+    const response = await knex.raw(`SELECT * from microtask WHERE task_id in (${task_list}) order by input->'data'->>'sentenceId'`)
     const allMts = response.rows as MicrotaskRecord[]
+    let a=0, na = 0
+    const groupId = {"G1": 0, "G2": 0, "G3": 0}
 
     for(var i = 0; i < allMts.length; i = i+NUMBER_OF_INTERFACES) {
         const mtas = []
-        let isAmbigous = false
+        let isAmbiguous = false
         for (var j=0; j < NUMBER_OF_INTERFACES; j++) {
             const currentMt = allMts[i+j]
+            const currentTask = await BasicModel.getSingle('task', {id: currentMt.task_id})
+            // @ts-ignore
+            groupId[currentTask.itags.itags[3]] += 1
             try {
-                const mta = await BasicModel.getSingle('microtask_assignment', {task_id: currentMt.id, status: 'VERIFIED'})
+                const mta = await BasicModel.getSingle('microtask_assignment', {microtask_id: currentMt.id, status: 'VERIFIED'})
                 // TODO: ASK VIVEK FOR STATUS CONFIRMATION
-
-                if((mta.extras as any).ambigous) {
-                    isAmbigous = true
+                // console.log((mta.output?.data as any))
+                if((mta.output?.data as any).ambiguous == true) {
+                    isAmbiguous = true
+                    a += 1
                 }
-                mtas.push(mta)
-            } catch {
+                if (currentTask.params.mode != 'none') {
+                    // console.log(currentTask.params.mode, i, j, currentMt.task_id)
+                    mtas.push(mta)
+                }
+            } catch(e) {
                 isGroupComplete = false
                 break
             }
         }
 
         // Check if all mtas were completed
-        if (mtas.length != NUMBER_OF_INTERFACES) continue
+        if (mtas.length != NUMBER_OF_INTERFACES_FILTER) {
+            continue
+        }
         // Add to respective array
-        if (isAmbigous) {
+        if (isAmbiguous) {
             ambigousMtaGroups.push(mtas)
         } else {
             nonAmbigousMtaGroups.push(mtas)
         }
     }
 
-    const requiredSentences = (totalMts/NUMBER_OF_INTERFACES)/SPLIT_FACTOR
+    const requiredSentences = (allMts.length/NUMBER_OF_INTERFACES)/SPLIT_FACTOR
+    console.log("Required sentences", requiredSentences, allMts.length, nonAmbigousMtaGroups.length, ambigousMtaGroups.length, a, isGroupComplete, groupId)
 
     // Check if non ambigous mtas are not enough
     if (nonAmbigousMtaGroups.length < requiredSentences) {
         // See if mtas are completed
-        if (isGroupComplete) return null
+        if (!isGroupComplete) return null
     }
 
     // Group is chainable
@@ -67,12 +82,13 @@ const isGroupChainable = async (ttIds: string[]) => {
 
     if (nonAmbigousMtaGroups.length >= requiredSentences) {
         // Return required nonAmbigous Assignments
-        chainableMtaGroups = nonAmbigousMtaGroups.slice(requiredSentences)
+        chainableMtaGroups = nonAmbigousMtaGroups.slice(0, requiredSentences)
     } else {
         // non ambigous assignment is not enough, take rest of assignments from ambigous mtas
         chainableMtaGroups = nonAmbigousMtaGroups
-        ambigousMtaGroups.slice(requiredSentences - nonAmbigousMtaGroups.length).forEach(mta => chainableMtaGroups.push(mta))
+        ambigousMtaGroups.slice(0, requiredSentences - nonAmbigousMtaGroups.length).forEach(mta => chainableMtaGroups.push(mta))
     }
+    // console.log("Chainable microtask", chainableMtaGroups.length, nonAmbigousMtaGroups.length, ambigousMtaGroups.length, requiredSentences)
 
     return chainableMtaGroups
 }
@@ -91,17 +107,22 @@ async (ttvTaskMap: TextTranslationValidationTaskMap, chainableMtaGroups: Microta
 
 
     await BBPromise.mapSeries(chainableMtaGroups, async mtaGroup => {
-        const microtask = await BasicModel.getSingle('microtask', {"id": mtaGroup[0].task_id}) as MicrotaskType<'TEXT_TRANSLATION'>
-        const sourceSentence = microtask.input!!.data.sentence
-        const validationMt: MicrotaskType<'TEXT_TRANSLATION_VALIDATION'> = {
+        try {
+            const microtask = await BasicModel.getSingle('microtask', {"id": mtaGroup[0].microtask_id}) as MicrotaskType<'TEXT_TRANSLATION'>
+            const sourceSentence = microtask.input!!.data.sentence
+            const validationMt: MicrotaskType<'TEXT_TRANSLATION_VALIDATION'> = {
             task_id: targetTask.id,
-            input: {data: {source: sourceSentence, translations: mtaGroup.map(mta => (mta.output!!.data as any).translation)}},
+            // @ts-ignore
+            input: {data: {source: sourceSentence, translations: mtaGroup.map(mta => (mta.output!!.data as any).translation), sentenceId: microtask.input?.data.sentenceId}},
             deadline: targetTask.deadline,
             credits: targetTask.params.creditsPerMicrotask as number,
             status: 'INCOMPLETE',
             base_credits: targetTask.params.baseCreditsPerMicrotask as number,
-        };
-        await BasicModel.insertRecord('microtask', validationMt)
+            };
+            await BasicModel.insertRecord('microtask', validationMt)
+        } catch (e) {
+            console.log(e)
+        }
     })
 
 }
@@ -117,16 +138,16 @@ async (ttvTaskMap: TextTranslationValidationTaskMap, chainableMtaGroups: Microta
   // For text translation
   const ttGroupIds = Object.keys(ttTaskMap)
   await BBPromise.mapSeries(ttGroupIds, async gId => {
-    const response = await knex.raw(`SELECT id FROM TASK WHERE scenario_name = 'TEXT_TRANSLATION' AND itags::text like %${gId}%`)
-    response.rows.forEach( (id: string) =>  ttTaskMap[gId].push(id))
+    const response = await knex.raw(`SELECT id FROM TASK WHERE scenario_name = 'TEXT_TRANSLATION' AND itags::text like '%${gId}%'`)
+    response.rows.forEach( (row: any) =>  ttTaskMap[gId].push(row.id))
   })
 
   // For text translation validation
   const ttvGroupIds = Object.keys(ttvTaskMap)
   await BBPromise.mapSeries(ttvGroupIds, async gId => {
-    const response = await knex.raw(`SELECT id FROM TASK WHERE scenario_name = 'TEXT_TRANSLATION_VALIDATION' AND itags::text like %${gId}%`)
+    const response = await knex.raw(`SELECT id FROM TASK WHERE scenario_name = 'TEXT_TRANSLATION_VALIDATION' AND itags::text like '%${gId}%' AND itags::text like '%R1%'`)
     console.log("TTV tassks belonging to single group", response.rows.length)
-    response.rows[0].forEach( (id: string) =>  ttvTaskMap[gId] = id)
+    response.rows.forEach( (row: any) =>  ttvTaskMap[gId] = row.id)
   })
 
   // Check if groups are assignable
@@ -145,4 +166,4 @@ async (ttvTaskMap: TextTranslationValidationTaskMap, chainableMtaGroups: Microta
 
 
 
-})().finally(() => knex.destroy());
+})().finally(() => console.log("DOOOOO"));

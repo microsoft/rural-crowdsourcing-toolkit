@@ -13,6 +13,7 @@ import { Promise as BBPromise } from 'bluebird';
 
 const SENTENCE_SET_SIZE = 36
 const NUMBER_OF_GROUPS = 3
+const NUMBER_OF_ROUNDS = 2
 const NUMBER_OF_INTERFACES = 6
 
 const QUIZ_QUESTIONS = [
@@ -21,7 +22,10 @@ const QUIZ_QUESTIONS = [
     { "question": "What dialect of Gondi do you use?", "type": "dropdown", "key": "dialect", "options": ["Khari boli", "Braj Bhasha", "Haryanvi", "Awadhi", "Bhojpuri"] }
   ]
 
+const INTERFACES = ["BASELINE", "POST_EDITED", "STATIC_BOW", "DYNAMIC_BOW", "NEXT_BOW", "NEXT_WORD_DROPDOWN"]
+
 type Sentence = {
+    id: number | undefined,
     sentence: string,
     providedTranslation: string,
     BOW: string[]
@@ -45,8 +49,7 @@ const createTaskAssignment = async (task: TaskRecord) => {
 }
 
 const createInterfaceTasks = async (groupId: number, workerId: number, interfaceId: number, taskTemplate: {[key: string]: Task}, sentenceSubset: Sentence[]) => {
-    const keys = Object.keys(taskTemplate)
-    const taskKey = keys[interfaceId-1]
+    const taskKey = INTERFACES[interfaceId-1]
     const taskObject: Task = {
         ...taskTemplate[taskKey],
         name: `A${workerId}I${interfaceId}_${taskTemplate[taskKey].name}`,
@@ -70,22 +73,22 @@ const createInterfaceTasks = async (groupId: number, workerId: number, interface
         var input: any = {input: {}}
         switch(taskKey) {
             case "BASELINE": 
-                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: ""} } }
+                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: "", sentenceId: obj.id} } }
                 break
             case "POST_EDITED": 
-                input = { input: {data: {sentence: obj.sentence, providedTranslation: obj.providedTranslation, bow: ""} } }
+                input = { input: {data: {sentence: obj.sentence, providedTranslation: obj.providedTranslation, bow: "" , sentenceId: obj.id} } }
                 break
             case "STATIC_BOW":
-                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: obj.BOW.join(' ')} } }
+                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: obj.BOW.join(' '), sentenceId: obj.id} } }
                 break
             case "DYNAMIC_BOW":
-                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: ""} } }
+                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: "", sentenceId: obj.id} } }
                 break
             case "NEXT_BOW":
-                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: ""} } }
+                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: "", sentenceId: obj.id} } }
                 break
             case "NEXT_WORD_DROPDOWN":
-                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: ""} } }
+                input = { input: {data: {sentence: obj.sentence, providedTranslation: "", bow: "", sentenceId: obj.id} } }
                 break
         }
         const mt = {
@@ -138,16 +141,19 @@ const createScoringTasks = async ( taskTemplate: {[key: string]: Task}) => {
     const modelScoringTask = await BasicModel.insertRecord('task', modelScoringTaskObj)
     await createTaskAssignment(modelScoringTask)
     // 2. Create chain scoring tasks
-    for (var i=0; i<3; i++) {
+    for (var r=0; r<NUMBER_OF_ROUNDS; r++) {
+      for (var g=0; g<NUMBER_OF_GROUPS; g++) {
         const scoringTaskObj: Task = {
             ...partialScoringTask,
-            name: `GROUP_${i}_SCORING`,
+            name: `GROUP_${g+1}_ROUND_${r+1}_SCORING`,
             work_provider_id: "-1",
-            itags: {itags: ["INMT_STUDY", `G${i+1}`]},
+            itags: {itags: ["INMT_STUDY", `G${g+1}`, `R${r+1}`]},
             status: "SUBMITTED"
         }
         const scoringTask = await BasicModel.insertRecord('task', scoringTaskObj)
         await createTaskAssignment(scoringTask)
+    }
+
     }
 }
 
@@ -183,6 +189,11 @@ const createScoringTasks = async ( taskTemplate: {[key: string]: Task}) => {
   // Read sentence file
   const sentencesString = fs.readFileSync(sentencesFile).toString();
   const sentencesJsonArray: Sentence[] = JSON.parse(sentencesString)
+
+  for (var i=0; i<sentencesJsonArray.length; i++) {
+    const sentence = sentencesJsonArray[i]
+    sentence.id = i
+  }
 
   // Read worker file
   const workerIds = fs.readFileSync(workerIdFile).toString().split('\n').filter(id => id.length);
@@ -222,12 +233,12 @@ const createScoringTasks = async ( taskTemplate: {[key: string]: Task}) => {
     const sentenceSubset = sentenceSet.slice(g*NUMBER_OF_INTERFACES, (g+1)*NUMBER_OF_INTERFACES)
     console.log(sentenceSubset.length, "YES", sentenceSet.length)
     for (var w=(g*workerSetLength); w<(g+1)*workerSetLength; w++) {
-        for (var s = 0; s<6; s++) {
-            const task = await createInterfaceTasks(g+1, w+1, s+1, interfaceTaskTemplate, sentenceSubset[s])
+        for (var i = 0; i<6; i++) {
+            const task = await createInterfaceTasks(g+1, w+1, i+1, interfaceTaskTemplate, sentenceSubset[i])
         }
         // Rotate the set
-        const firstSet = sentenceSet.shift()!!
-        sentenceSet.push(firstSet)
+        const firstSet = sentenceSubset.shift()!!
+        sentenceSubset.push(firstSet)
     }
   }
 
