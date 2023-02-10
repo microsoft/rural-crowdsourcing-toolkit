@@ -89,6 +89,7 @@ export async function assignMicrotasksForWorker(worker: WorkerRecord, maxCredits
 
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
+      if (tasksAssigned) return;
       // Get task for the assignment
       const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
       if (task.status == 'COMPLETED') return;
