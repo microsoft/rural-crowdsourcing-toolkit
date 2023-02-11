@@ -14,6 +14,7 @@ type SpeechDataTaskInputParameters = {
   sampling_rate: string;
   bitwidth: string;
   maxRecordingLength?: number;
+  minRecordingLength?: number;
   noForcedReplay: boolean;
 };
 
@@ -81,6 +82,14 @@ const task_input: BaseSpeechDataScenario['task_input'] = [
       'App will not force the users to listen to their recorded sentence. Users can optionally listen if they want to',
     required: false,
     type: 'boolean',
+  },
+
+  {
+    id: 'minRecordingLength',
+    label: 'Min limit on the recording length in seconds',
+    description: 'If the recording length is below the given number, the recording will be rejected by the app',
+    required: false,
+    type: 'int',
   },
 
   {
