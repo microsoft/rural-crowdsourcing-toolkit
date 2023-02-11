@@ -80,7 +80,7 @@ const NUMBER_OF_GROUPS = 3;
     const createWorker: Worker = {
       access_code: access_code,
       box_id: box.id,
-      language: "EN",
+      language: "HI",
       tags: { tags },
       tags_updated_at: now,
     };
