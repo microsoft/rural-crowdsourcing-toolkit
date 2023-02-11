@@ -17,9 +17,9 @@ const NUMBER_OF_ROUNDS = 2
 const NUMBER_OF_INTERFACES = 6
 
 const QUIZ_QUESTIONS = [
-    { "question": "What languages do you speak/read/write?", "type": "dropdown", "key": "language", "options": ["Hindi", "English", "Gondi", "Punjabi", "Bengali", "Assamese", "Kannada", "Tamil", "Urdu", "Odia", "Gujrati", "Tamil", "Telugu", "Malyalam"] },
-    { "question": "Since how long have you been using a Virtual Hindi Keyboard?", "type": "mcq", "key": "keyboard", "options": ["24 hours", "< 15 hours", "< 2 hours", "none a day"] },
-    { "question": "What dialect of Gondi do you use?", "type": "dropdown", "key": "dialect", "options": ["Khari boli", "Braj Bhasha", "Haryanvi", "Awadhi", "Bhojpuri"] }
+    { "question": "आप कौन कौन सी भाषा बोलते, पढ़ते या लिखते हैं", "type": "dropdown", "key": "language", "options": ["हिंदी", "अंग्रेजी", "गोंडी", "पंजाबी", "बंगाली", "असमिया", "कन्नड़", "तमिल", "उर्दू", "ओडिया", "गुजराती", "तमिल", "तेलुगु "," मलयालम"] },
+    { "question": "आप कितने समय से हिंदी कीबोर्ड का उपयोग कर रहे हैं?", "type": "mcq", "key": "keyboard", "options": ["24 घंटे", "15 घंटे से कम", "2 घंटे से कम", "कभी नहीं"] },
+    { "question": "आप गोंडी की किस बोली का प्रयोग करते हैं?", "type": "dropdown", "key": "dialect", "options": ["छत्तीसगढ़ी", "महाराष्ट्र","मध्य प्रदेश", "आदिलाबाद", "ओडिया"] }
   ]
 
 const INTERFACES = ["BASELINE", "POST_EDITED", "STATIC_BOW", "DYNAMIC_BOW", "NEXT_BOW", "NEXT_WORD_DROPDOWN"]
