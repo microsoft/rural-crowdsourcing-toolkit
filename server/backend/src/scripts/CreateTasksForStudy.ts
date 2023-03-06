@@ -39,7 +39,7 @@ const createTaskAssignment = async (task: TaskRecord) => {
         policy: task.policy,
         params: {
             n: task.params.n,
-            maxMicrotaskPerUser: task.params.maxMicrotasksPerUser
+            maxMicrotasksPerUser: task.params.maxMicrotasksPerUser
         },
         deadline: null,
         status: "ASSIGNED",
