@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 
 class UserInteractionListener(
     private val lifecycleOwner: LifecycleOwner,
-    private val onInactivityTimeout: () -> Unit,
-    private val inactivityTimeout: Long = 30000,
+    private val onInactivityTimeout: (timeoutCount: Int) -> Unit,
+    private val inactivityTimeout: Long,
 ) : DefaultLifecycleObserver {
 
     init {
@@ -21,14 +21,20 @@ class UserInteractionListener(
 
     private var interactionTimeoutJob: Job? = null
 
-    fun restartTimeout() {
+  /**
+   * This variable keeps tracks of number of timeouts in one session
+   */
+  private var timeoutsCount = 0;
+
+  fun restartTimeout() {
         interactionTimeoutJob?.cancel()
         interactionTimeoutJob = lifecycleOwner.lifecycleScope.launch {
           Log.d("UserInteractionListener::", "restartTimeout()")
             delay(inactivityTimeout)
             if (isActive) {
               Log.d("UserInteractionListener::", "onInactivityTimeout()")
-              onInactivityTimeout()
+              timeoutsCount++;
+              onInactivityTimeout(timeoutsCount)
             }
         }
     }
