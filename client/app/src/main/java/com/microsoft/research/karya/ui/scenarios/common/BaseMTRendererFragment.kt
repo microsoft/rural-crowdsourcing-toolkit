@@ -81,8 +81,8 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
     if (inactivityCount <= Constants.MAX_ALLOWED_TIMEOUTS) {
       var dialogTimeoutJob: Job? = null
       val dialogBuilder = AlertDialog.Builder(requireContext())
-        .setTitle("No activity for more than 30s was observed")
-        .setMessage("Please tap okay to start doing work!")
+        .setTitle(getString(R.string.inactivity_timeout_title, (Constants.TIMEOUT_DURATION_MILLIS / 1000)))
+        .setMessage(R.string.inactivity_timeout_message)
         .setNegativeButton(R.string.cancel_text) { _, _ ->
           // if dialog is shown, then we're sure that userInteractionListener is initialised so it is safe to directly use restartTimeout()
           userInteractionListener.restartTimeout()
@@ -113,7 +113,7 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
       viewLifecycleOwner.lifecycleScope.launch {
         Toast.makeText(
           requireContext(),
-          "You've reached the maximum timeout limits of ${Constants.MAX_ALLOWED_TIMEOUTS} times!",
+          getString(R.string.max_timeout_reached_msg, Constants.MAX_ALLOWED_TIMEOUTS),
           Toast.LENGTH_SHORT
         ).show()
         requireContext().dataStore.edit { it[PreferenceKeys.INACTIVITY_TIMEOUT] = System.currentTimeMillis() }
