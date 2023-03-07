@@ -3,6 +3,7 @@ package com.microsoft.research.karya.ui.scenarios.common
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.LayoutRes
@@ -19,6 +20,10 @@ import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.observe
 import kotlinx.android.synthetic.main.microtask_common_header.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
@@ -74,17 +79,35 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
 
   private fun handleInactivityTimeout(inactivityCount: Int) {
     if (inactivityCount <= Constants.MAX_ALLOWED_TIMEOUTS) {
-      AlertDialog.Builder(requireContext())
+      var dialogTimeoutJob: Job? = null
+      val dialogBuilder = AlertDialog.Builder(requireContext())
         .setTitle("No activity for more than 30s was observed")
         .setMessage("Please tap okay to start doing work!")
         .setNegativeButton(R.string.cancel_text) { _, _ ->
           // if dialog is shown, then we're sure that userInteractionListener is initialised so it is safe to directly use restartTimeout()
           userInteractionListener.restartTimeout()
+          // cancel the dialog timeout
+          dialogTimeoutJob?.cancel()
         }
         .setPositiveButton(R.string.okay) { _, _ ->
           userInteractionListener.restartTimeout()
+          dialogTimeoutJob?.cancel()
         }
-        .show()
+        .create()
+      dialogBuilder.show()
+
+      // Create a timer to auto dismiss the dialog after 30s
+      // if the dialog is dismissed manually, the job should get cancelled
+      var dialogTimer = 30
+      dialogTimeoutJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        while (isActive && dialogTimer > 0) {
+          delay(1000)
+          dialogTimer--
+          Log.d("BaseMTRendererFragment::handleInactivityTimeout", "Dialog will automatically dismiss in: $dialogTimer")
+        }
+        dialogBuilder.dismiss()
+        if (isActive) findNavController().popBackStack()
+      }
     } else {
       // the user has passed maximum allowed timeouts
       viewLifecycleOwner.lifecycleScope.launch {
