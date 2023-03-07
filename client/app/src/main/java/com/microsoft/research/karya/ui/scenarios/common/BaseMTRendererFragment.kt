@@ -4,16 +4,22 @@ import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.microsoft.research.karya.R
 import com.microsoft.research.karya.ui.MainActivity
 import com.microsoft.research.karya.ui.base.BaseFragment
+import com.microsoft.research.karya.utils.Constants
 import com.microsoft.research.karya.utils.DateUtils
+import com.microsoft.research.karya.utils.PreferenceKeys
+import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.observe
 import kotlinx.android.synthetic.main.microtask_common_header.*
+import kotlinx.coroutines.launch
 
 abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
   BaseFragment(contentLayoutId) {
@@ -60,24 +66,38 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
 
     userInteractionListener = UserInteractionListener(
       lifecycleOwner = viewLifecycleOwner,
-      inactivityTimeout = 10000,
-      onInactivityTimeout = { showTimeoutDialog() }
+      inactivityTimeout = Constants.TIMEOUT_DURATION_MILLIS,
+      onInactivityTimeout = { handleInactivityTimeout(it) }
     )
     (requireActivity() as MainActivity).setUserInteractionCallback { userInteractionListener.restartTimeout() }
   }
 
-  private fun showTimeoutDialog() {
-    AlertDialog.Builder(requireContext())
-      .setTitle("No activity for more than 30s was observed")
-      .setMessage("Please tap okay to start doing work!")
-      .setNegativeButton(R.string.cancel_text) { _, _ ->
-        // if dialog is shown, then we're sure that userInteractionListener is initialised so it is safe to directly use restartTimeout()
-        userInteractionListener.restartTimeout()
+  private fun handleInactivityTimeout(inactivityCount: Int) {
+    if (inactivityCount <= Constants.MAX_ALLOWED_TIMEOUTS) {
+      AlertDialog.Builder(requireContext())
+        .setTitle("No activity for more than 30s was observed")
+        .setMessage("Please tap okay to start doing work!")
+        .setNegativeButton(R.string.cancel_text) { _, _ ->
+          // if dialog is shown, then we're sure that userInteractionListener is initialised so it is safe to directly use restartTimeout()
+          userInteractionListener.restartTimeout()
+        }
+        .setPositiveButton(R.string.okay) { _, _ ->
+          userInteractionListener.restartTimeout()
+        }
+        .show()
+    } else {
+      // the user has passed maximum allowed timeouts
+      viewLifecycleOwner.lifecycleScope.launch {
+        Toast.makeText(
+          requireContext(),
+          "You've reached the maximum timeout limits of ${Constants.MAX_ALLOWED_TIMEOUTS} times!",
+          Toast.LENGTH_SHORT
+        ).show()
+        requireContext().dataStore.edit { it[PreferenceKeys.INACTIVITY_TIMEOUT] = System.currentTimeMillis() }
+        // navigate back to dashboard
+        findNavController().popBackStack()
       }
-      .setPositiveButton(R.string.okay) { _, _ ->
-        userInteractionListener.restartTimeout()
-      }
-      .show()
+    }
   }
 
   /** On permission result, if any permission is not granted, return immediately */

@@ -1,5 +1,7 @@
 package com.microsoft.research.karya.utils
 
+import androidx.datastore.preferences.core.longPreferencesKey
+
 object PreferenceKeys {
   const val APP_LANGUAGE = "app_language"
   const val ID_TOKEN_KEY = "id_token_key"
@@ -18,4 +20,5 @@ object PreferenceKeys {
   const val REG_TIME="reg_time"
   const val CURRENT_WEEK = "current_week"
   const val CURRENT_DAY = "current_day"
+  val INACTIVITY_TIMEOUT = longPreferencesKey("inactivity_timeout")
 }
