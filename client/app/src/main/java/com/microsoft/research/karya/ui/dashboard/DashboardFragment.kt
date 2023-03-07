@@ -393,7 +393,7 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
       val remainingTime = ALLOW_AFTER_TIMEOUT_DURATION_MILLIS - diffMillis // 10 minutes - difference
       Toast.makeText(
         requireContext(),
-        "You've been noticed to crossed maximum timeout limit, please try again after ${remainingTime / 1000} seconds!",
+        getString(R.string.timeout_retry_msg, remainingTime/1000),
         Toast.LENGTH_SHORT
       ).show()
       return

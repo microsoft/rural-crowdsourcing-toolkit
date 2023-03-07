@@ -368,4 +368,11 @@
     <!-- Holiday Message -->
     <string name="sunday_message">Today is Sunday. Take the day off!</string>
     <string name="diwali_message">Happy Diwali! Enjoy the break. You can start work again on Thursday!</string>
+
+    <!--    Timeout Messages-->
+    <string name="inactivity_timeout_title">No activity for more than %d seconds was observed</string>
+    <string name="inactivity_timeout_message">Please tap okay to start doing work!</string>
+    <string name="max_timeout_reached_msg">You\'ve reached the maximum timeout limits of %d times!</string>
+    <string name="timeout_retry_msg">You\'ve been noticed to crossed maximum timeout limit, please try again after %d seconds!</string>
+
 </resources>
