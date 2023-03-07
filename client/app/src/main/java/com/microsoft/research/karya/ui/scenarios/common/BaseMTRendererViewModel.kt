@@ -164,7 +164,7 @@ abstract class BaseMTRendererViewModel(
 
   // TODO: Move logging to another module
   /** Add a string message to the log */
-  protected fun log(message: String) {
+  fun log(message: String) {
     val logObj = JsonObject()
     val currentTime = DateUtils.getCurrentDate()
     logObj.add("ts", Gson().toJsonTree(currentTime))

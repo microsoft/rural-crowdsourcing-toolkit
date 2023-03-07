@@ -230,4 +230,14 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
     alertDialog!!.show()
   }
 
+  override fun onPause() {
+    super.onPause()
+    viewModel.log("BaseMTRendererFragment::onPause()")
+  }
+
+  override fun onResume() {
+    super.onResume()
+    viewModel.log("BaseMTRendererFragment::onResume()")
+  }
+
 }
