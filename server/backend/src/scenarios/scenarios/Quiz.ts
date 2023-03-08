@@ -5,6 +5,8 @@
 
 import { IBackendScenarioInterface } from '../ScenarioInterface';
 import { baseQuizScenario, BaseQuizScenario, MicrotaskType } from '@karya/core';
+import { Promise as BBPromise } from 'bluebird';
+import { promises as fsp } from 'fs';
 
 // Backend text translation scenario
 export const backendQuizScenario: IBackendScenarioInterface<BaseQuizScenario> = {
@@ -19,10 +21,18 @@ export const backendQuizScenario: IBackendScenarioInterface<BaseQuizScenario> = 
    */
   async processInputFile(task, jsonData, tarFilePath, taskFolder) {
     const mts: any[] = jsonData!!;
-    const microtasks = mts.map((mtData) => {
+    const microtasks = await BBPromise.mapSeries(mts, async ({images, ...rest}) => {
+      await BBPromise.mapSeries(images, async image => {
+        const filePath = `${taskFolder}/${image}`;
+        try {
+          await fsp.access(filePath);
+        } catch (e) {
+          throw new Error(`Image file not present`);
+        }
+      });
       const mt: MicrotaskType<'QUIZ'> = {
         task_id: task.id,
-        input: { data: mtData },
+        input: { data: rest, files: {images} },
         deadline: task.deadline,
         credits: task.params.creditsPerMicrotask,
         status: 'INCOMPLETE',

@@ -15,6 +15,8 @@ type QuizTaskInputParameters = {
 
 // Quiz microtask input format
 type TextQuestion = {
+  questionType: string;
+  questionImage: string;
   question: string;
   type: 'text';
   long: boolean;
@@ -22,8 +24,11 @@ type TextQuestion = {
 };
 
 type MCQuestion = {
+  questionType: string;
+  questionImage: string;
   question: string;
   type: 'mcq';
+  optionType: string;
   options: string[];
   multiple: boolean;
   key: string;
@@ -33,6 +38,8 @@ type QuizMicrotaskInput = TextQuestion | MCQuestion;
 
 const textQuestion = Joi.object<TextQuestion>({
   type: Joi.string().valid('text').required(),
+  questionType: Joi.string().required(),
+  questionImage: Joi.string(),
   question: Joi.string().required(),
   long: Joi.boolean().default(false),
   key: Joi.string().required(),
@@ -40,7 +47,10 @@ const textQuestion = Joi.object<TextQuestion>({
 
 const mcQuestion = Joi.object<MCQuestion>({
   type: Joi.string().valid('mcq').required(),
+  questionType: Joi.string().required(),
+  questionImage: Joi.string(),
   question: Joi.string().required(),
+  optionType: Joi.string().required(),
   options: Joi.array().items(Joi.string()).required(),
   multiple: Joi.boolean().default(false),
   key: Joi.string().required(),
@@ -74,7 +84,7 @@ export const baseQuizScenario: BaseQuizScenario = {
     `,
       schema: Joi.array().items(textQuestion, mcQuestion),
     },
-    tgz: { required: false },
+    tgz: { required: true, description: 'Tar ball containing all the images referenced in the json input' },
   },
   // @ts-ignore
   microtask_input: Joi.alternatives().try(textQuestion, mcQuestion),
