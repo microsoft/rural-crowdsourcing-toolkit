@@ -76,7 +76,7 @@ constructor(
    */
   fun submitResponse() {
     val key = _question.value.key
-    val res = when (_question.value.type) {
+    val res = when (_question.value.questionType) {
       QuestionType.text -> _textResponse.value
       QuestionType.mcq -> _mcqResponse.value
       else -> "invalid"

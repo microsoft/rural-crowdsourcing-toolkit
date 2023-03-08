@@ -6,9 +6,17 @@ enum class QuestionType {
   invalid
 }
 
+enum class OptionType {
+  text,
+  image,
+  invalid
+}
+
 data class Question(
-  val type: QuestionType,
+  val questionType: QuestionType,
+  val optionType: OptionType = OptionType.invalid,
   val question: String = "",
+  val questionImage: String? = null,
   val key: String = "",
   val long: Boolean? = false,
   val options: ArrayList<String>? = arrayListOf(),

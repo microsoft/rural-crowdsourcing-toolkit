@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/microtaskTb" />
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/inputFrame"
         style="@style/MicrotaskInputFrame"
         android:layout_width="match_parent"
@@ -23,15 +23,25 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instructionTv">
 
+        <ImageView
+            android:id="@+id/questionIv"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            android:src="@mipmap/ic_launcher_round"
+            android:padding="@dimen/_8sdp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/questionTv"
             style="@style/MicrotaskInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_20ssp"
-            tools:text="What is your name?" />
+            tools:text="What is your name?"
+            app:layout_constraintTop_toBottomOf="@id/questionIv"/>
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -59,20 +69,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            app:layout_constraintEnd_toStartOf="@id/nextBtn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mcqResponseGroup"
             tools:text="My Name" />
 
-        <include
-            android:id="@+id/nextBtn"
-            layout="@layout/microtask_common_next_button"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"
-            app:layout_constraintBottom_toBottomOf="@id/textResponseEt"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textResponseEt" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imageResponseRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mcqResponseGroup"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/nextBtn"
+        android:layout_margin="@dimen/_16sdp"
+        layout="@layout/microtask_common_next_button"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
