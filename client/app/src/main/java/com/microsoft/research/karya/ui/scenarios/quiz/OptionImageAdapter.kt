@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.quiz
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.microsoft.research.karya.R
 
-class OptionImageAdapter(private val dataSet: ArrayList<String>, private val onImageOptionCheckboxClickListener: OnImageOptionCheckboxClickListener) :
+class OptionImageAdapter(private val dataSet: List<String>, private val onImageOptionCheckboxClickListener: OnImageOptionCheckboxClickListener) :
   RecyclerView.Adapter<OptionImageAdapter.ViewHolder>() {
 
   var optionSelected = -1

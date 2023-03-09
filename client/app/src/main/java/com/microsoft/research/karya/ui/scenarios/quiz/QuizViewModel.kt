@@ -37,6 +37,11 @@ constructor(
 
   // UI Elements controlled by the view model
 
+  // Images
+  // Pair represents the map where first element is image name and second element is image path
+  private val _inputFileImages: MutableStateFlow<HashMap<String, String>> = MutableStateFlow(hashMapOf())
+  val inputFileImages = _inputFileImages.asStateFlow()
+
   // Question
   private val _question: MutableStateFlow<Question> =
     MutableStateFlow(Question(QuestionType.invalid))
@@ -55,6 +60,14 @@ constructor(
     // Parse question from microtask input
     val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
     _question.value = Gson().fromJson(inputData, Question::class.java)
+
+    val inputImageNames = currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("images").asJsonArray
+    val imageFilePaths = hashMapOf<String, String>()
+    inputImageNames.forEach {
+      val filePath = microtaskInputContainer.getMicrotaskInputFilePath(currentMicroTask.id, it.asString)
+      imageFilePaths[it.asString] = filePath
+    }
+    _inputFileImages.value = imageFilePaths
   }
 
   /**

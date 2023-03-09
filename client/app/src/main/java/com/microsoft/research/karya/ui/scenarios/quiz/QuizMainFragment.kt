@@ -1,6 +1,5 @@
 package com.microsoft.research.karya.ui.scenarios.quiz
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.TypedValue
@@ -58,7 +57,8 @@ class QuizMainFragment : BaseMTRendererFragment(R.layout.microtask_quiz) {
     viewModel.question.observe(viewLifecycleOwner.lifecycle, viewLifecycleScope) { question ->
       questionTv.text = question.question
       if (!question.questionImage.isNullOrEmpty()) {
-        val questionImage = BitmapFactory.decodeFile(question.questionImage)
+        val questionImagePath = viewModel.inputFileImages.value[question.questionImage]
+        val questionImage = BitmapFactory.decodeFile(questionImagePath)
         questionIv.setImageBitmap(questionImage)
         questionIv.visible()
       } else {
@@ -108,7 +108,12 @@ class QuizMainFragment : BaseMTRendererFragment(R.layout.microtask_quiz) {
               mcqResponseGroup.gone()
               textResponseEt.gone()
 
-              val adapter = OptionImageAdapter(question.options!!, object: OnImageOptionCheckboxClickListener {
+              val optionImagesPath = question.options!!.map { optionImageName ->
+                viewModel.inputFileImages.value[optionImageName]!!
+              }
+
+
+              val adapter = OptionImageAdapter(optionImagesPath, object: OnImageOptionCheckboxClickListener {
                 override fun onClick(imageName: String) {
                   viewModel.updateMCQResponse(imageName)
                 }
