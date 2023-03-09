@@ -111,7 +111,12 @@ constructor(
     _currAuthStatus.postValue(status)
   }
 
-  suspend fun authorizeWorkFromCenterUser(code: String): Boolean {
+  /**
+   * Authorises center code and set the expiry time for work from center users
+   * @param code: the code to authorize for work from center
+   * @param expireAfter: Hours after which the user's center authentication will be expired. Default is 2 hours
+   */
+  suspend fun authorizeWorkFromCenterUser(code: String, expireAfter: Int = 2): Boolean {
     val today = DateUtils.getCurrentDate().substring(0,10)
     val message = WFC_CODE_SEED + today + "\n"
     val md5Encoder = MessageDigest.getInstance("MD5")
@@ -119,7 +124,7 @@ constructor(
     val hash = BigInteger(1, md5Encoder.digest()).toString(16).substring(0,6)
     if (code == hash) {
       // TODO: hour offset is hard coded
-      val centerAuthExpirationTime = Date().time + 2 * 60 * 60 * 1000
+      val centerAuthExpirationTime = Date().time + expireAfter * 60 * 60 * 1000
       val centerAuthExpTimeKey = stringPreferencesKey(PreferenceKeys.CENTER_AUTH_EXP_TIME)
       applicationContext.dataStore.edit { prefs -> prefs[centerAuthExpTimeKey] = centerAuthExpirationTime.toString() }
       return true

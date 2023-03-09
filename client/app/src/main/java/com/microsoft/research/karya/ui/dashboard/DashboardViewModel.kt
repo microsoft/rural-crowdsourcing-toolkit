@@ -43,6 +43,8 @@ constructor(
   private val _workerAccessCode: MutableStateFlow<String> = MutableStateFlow("")
   val workerAccessCode = _workerAccessCode.asStateFlow()
 
+  var workerTags: List<String>? = null
+
   // Work from center user
   private val _workFromCenterUser: MutableStateFlow<Boolean> = MutableStateFlow(false)
   val workFromCenterUser = _workFromCenterUser.asStateFlow()
@@ -57,11 +59,10 @@ constructor(
       try {
         if (worker.params != null && !worker.params.isJsonNull) {
           val tags = worker.params.asJsonObject.getAsJsonArray("tags")
-          for (tag in tags) {
-            if (tag.asString == "_wfc_") {
-              _workFromCenterUser.value = true
-              checkWorkFromCenterUserAuth()
-            }
+          workerTags = tags.map { it.asString }
+          if (workerTags!!.contains("_wfc_")) {
+            _workFromCenterUser.value = true
+            checkWorkFromCenterUserAuth()
           }
         }
       } catch (e: Exception) {
@@ -72,7 +73,14 @@ constructor(
 
   fun authorizeWorkFromCenterUser(code: String) {
     viewModelScope.launch {
-      val isAuthenticated = authManager.authorizeWorkFromCenterUser(code)
+      // Check if the user is work from home-center
+      val worker = authManager.getLoggedInWorker()
+      var expireTime = 2
+      if (workerTags != null && workerTags!!.contains("_wfhc_")) {
+          // Set 8 hours of expiry time for work from home-center users
+          expireTime = 8
+      }
+      val isAuthenticated = authManager.authorizeWorkFromCenterUser(code, expireTime)
       if (isAuthenticated) {
         _userInCenter.value = true
       }

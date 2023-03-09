@@ -125,6 +125,9 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           binding.revokeWFCAuthorizationBtn.gone()
         } else {
           binding.wfcEnterCodeLL.gone()
+          if (viewModel.workerTags != null) {
+            if (viewModel.workerTags!!.contains("_wfhc_")) return@observe
+          }
           binding.revokeWFCAuthorizationBtn.visible()
         }
       }
@@ -137,6 +140,9 @@ class DashboardFragment : SessionFragment(R.layout.fragment_dashboard) {
           binding.revokeWFCAuthorizationBtn.gone()
         } else {
           binding.wfcEnterCodeLL.gone()
+          if (viewModel.workerTags != null) {
+            if (viewModel.workerTags!!.contains("_wfhc_")) return@observe
+          }
           binding.revokeWFCAuthorizationBtn.visible()
         }
       }
