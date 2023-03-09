@@ -7,7 +7,6 @@ smartphone.
 ## Prerequisites
 
 ---
-
 You need to install and setup the following applications before setting up the
 backend server.
 
@@ -29,6 +28,8 @@ backend server.
 We have converted the codebase into a monorepo to enable effective sharing of
 modules between different server components. We currently use `lerna` to manage
 dependencies and compilation.
+
+Make sure you have [Node](https://nodejs.org/en/download/) installed in your system with version 14.20.1 as versions above 16 might create problems in lerna build.
 
 ### 1. Install `lerna` and other necessary packages.
 
@@ -74,7 +75,25 @@ Paste the username and password in KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD in .e
 
 ### 1. Setup the config
 
-Create a postgres database for the backend server. Copy the `.sample.env` file
+Create a postgresql role and database for the backend server and update the username, password and db name in .env file. 
+
+For Mac Users: 
+Start the postgresql server -> `#> brew services start postgresql`
+
+For Windows Users:
+Start the postgresql server -> `# > sudo service postgresql start`
+
+Step into postgres cmd line -> `#> psql postgres`
+
+Create a Role -> `#> CREATE ROLE username WITH LOGIN PASSWORD 'quoted password'`
+
+Alter the Role to create a Database -> `#> ALTER ROLE username CREATEDB;`
+
+Step into the user's cmd line space to create a Database -> `#> psql postgres -U username`
+
+Create a Database -> `#> CREATE DATABASE databasename;`
+
+Copy the `.sample.env` file
 in the backend folder to `.env`. Fill out all the fields in the `.env` file.
 
 ### 2. Reset the database
@@ -109,7 +128,7 @@ Copy the `.sample.env` file to `.env` and fill out the fields.
 ### 3. Sign up admin user
 
 Open the frontend server URL on a browser. Sign up using the admin access code
-that you received from the backend `ResetDB.js` script.
+that you received from the backend `ResetDB.js` script. (Make sure that the backend server is up and running when you are inputting admin access code on frotend server).
 
 ### 4. Generate access codes for work provider (optional)
 
@@ -127,7 +146,8 @@ Click on the "Box" tab and generate an access code for a new box.
 
 ### 1. Setup the config file
 
-Copy the `.sample.env` file to `.env` and fill out the fields. If for the test
+Copy the `.sample.env` file to `.env` and fill out the fields. 
+Create a postgresql role and database for the box server, update the username, password and db name in .env file (follow the steps of server backend for the same). If for the test
 setup the box and the server are running on the same machine, then the box
 database name should be different from the server database name.
 
