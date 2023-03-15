@@ -111,6 +111,7 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
     } else {
       // the user has passed maximum allowed timeouts
       viewLifecycleOwner.lifecycleScope.launch {
+        viewModel.expireAllTasks()
         Toast.makeText(
           requireContext(),
           getString(R.string.max_timeout_reached_msg, Constants.MAX_ALLOWED_TIMEOUTS),

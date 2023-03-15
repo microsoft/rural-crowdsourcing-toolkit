@@ -22,7 +22,6 @@ import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.FileUtils
 import com.microsoft.research.karya.utils.MicrotaskAssignmentOutput
 import com.microsoft.research.karya.utils.MicrotaskInput
-import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.getBlobPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -515,6 +514,23 @@ abstract class BaseMTRendererViewModel(
     viewModelScope.launch {
       skipAndSaveCurrentMicrotask()
       moveToNextMicrotask()
+    }
+  }
+
+  /**
+   * Expire all microtasks
+   */
+  fun expireAllTasks() {
+    viewModelScope.launch {
+      while (hasNextMicrotask()) {
+        withContext(Dispatchers.IO) {
+          assignmentRepository.markExpire(
+            microtaskAssignmentIDs[currentAssignmentIndex],
+            date = DateUtils.getCurrentDate()
+          )
+        }
+        currentAssignmentIndex++
+      }
     }
   }
 }
