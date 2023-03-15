@@ -8,7 +8,7 @@ import * as HttpResponse from '@karya/http-response';
 import { MicrotaskAssignmentRecord } from '@karya/core';
 import { BasicModel, MicrotaskModel } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
-import { assignmentQueue } from '../assignments/AssignmentService';
+import { assignmentQueue, preassignMicrotasksForWorker } from '../assignments/AssignmentService';
 
 /**
  * Get list of (new or verified) assignments for a worker
@@ -54,6 +54,10 @@ export const get: KaryaMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, { tasks, assignments });
   } else {
     const hasAssigned = await MicrotaskModel.hasIncompleteMicrotasks(worker.id);
+    const raniRound2 = worker.tags.tags.includes('rani-round2');
+    if (raniRound2) {
+      await preassignMicrotasksForWorker(worker, 10000);
+    }
 
     const assignments = hasAssigned
       ? await BasicModel.getRecords('microtask_assignment', { worker_id: worker.id, status: 'ASSIGNED' })
@@ -71,7 +75,9 @@ export const get: KaryaMiddleware = async (ctx) => {
     HttpResponse.OK(ctx, { tasks, microtasks, assignments });
 
     // Add worker to the preassignment queue
-    await assignmentQueue.add(worker);
+    if (!raniRound2) {
+      await assignmentQueue.add(worker);
+    }
   }
 };
 

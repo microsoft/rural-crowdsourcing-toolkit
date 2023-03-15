@@ -67,6 +67,8 @@ const MAX_WEEK_ID = 5;
 export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCredits: number): Promise<void> {
   assignmentLogger.info({ worker_id: worker.id, message: 'Entering assignment' });
 
+  const raniRound2 = worker.tags.tags.includes('rani-round2');
+
   // Check if we are currently assigning anything to these workers
   if (assigning[worker.id]) {
     assignmentLogger.info({ worker_id: worker.id, message: 'Already assigning' });
@@ -90,6 +92,12 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     const weekId = diffWeeks + 1 > MAX_WEEK_ID ? MAX_WEEK_ID : diffWeeks + 1;
     const weekTag = `week${weekId}`;
     worker.tags.tags.push(weekTag);
+
+    // Add day tag
+    const diffDays = Math.floor(diffMilli / 1000 / 3600 / 24);
+    const dayId = diffDays + 1;
+    const dayTag = `day${dayId}`;
+    worker.tags.tags.push(dayTag);
 
     assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
 
@@ -123,7 +131,7 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
       },
       [],
       [],
-      'task_id'
+      'id'
     );
     taskAssignments = taskAssignments.filter(
       (ta) =>
@@ -141,6 +149,11 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     });
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
+      // Hack: Round 2 rani tasks should not overlap
+      if (raniRound2 && tasksAssigned) {
+        return;
+      }
+
       // Get task for the assignment
       const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
       if (task.status == 'COMPLETED') return;
@@ -265,13 +278,18 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
         });
       });
 
+      // Set deadline as 8 hours from when they receive the task
+      const now = Date.now();
+      const deadlineTs = now + 16 * 3600 * 1000;
+      const deadline = new Date(deadlineTs).toISOString();
+
       await BBPromise.mapSeries(chosenMicrotasks, async (microtask) => {
         await BasicModel.insertRecord('microtask_assignment', {
           box_id: worker.box_id,
           task_id: task.id,
           microtask_id: microtask.id,
           worker_id: worker.id,
-          deadline: microtask.deadline,
+          deadline: raniRound2 ? deadline : microtask.deadline,
           wgroup: worker.wgroup,
           max_base_credits: microtask.base_credits,
           base_credits: 0.0,
