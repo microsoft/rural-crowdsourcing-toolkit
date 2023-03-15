@@ -39,17 +39,18 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/_20ssp"
             tools:text="What is your name?"
-            app:layout_constraintTop_toBottomOf="@id/questionIv"/>
+            app:layout_constraintTop_toBottomOf="@id/questionIv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_20sdp"
-        app:layout_constraintTop_toBottomOf="@id/inputFrame">
+        app:layout_constraintTop_toBottomOf="@id/inputFrame"
+        app:layout_constraintBottom_toTopOf="@id/nextBtn">
 
         <nl.bryanderidder.themedtogglebuttongroup.ThemedToggleButtonGroup
             android:id="@+id/mcqResponseGroup"
@@ -81,7 +82,8 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mcqResponseGroup"/>
+            app:layout_constraintTop_toBottomOf="@id/mcqResponseGroup"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

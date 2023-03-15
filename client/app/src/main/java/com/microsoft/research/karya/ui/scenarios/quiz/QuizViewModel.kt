@@ -44,7 +44,7 @@ constructor(
 
   // Question
   private val _question: MutableStateFlow<Question> =
-    MutableStateFlow(Question(QuestionType.invalid))
+    MutableStateFlow(Question(Type.invalid))
   val question = _question.asStateFlow()
 
   // Text response
@@ -57,9 +57,6 @@ constructor(
    * Setup quiz microtask
    */
   override fun setupMicrotask() {
-    // Parse question from microtask input
-    val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
-    _question.value = Gson().fromJson(inputData, Question::class.java)
 
     val inputImageNames = currentMicroTask.input.asJsonObject.getAsJsonObject("files").get("images").asJsonArray
     val imageFilePaths = hashMapOf<String, String>()
@@ -68,6 +65,10 @@ constructor(
       imageFilePaths[it.asString] = filePath
     }
     _inputFileImages.value = imageFilePaths
+
+    // Parse question from microtask input
+    val inputData = currentMicroTask.input.asJsonObject.getAsJsonObject("data")
+    _question.value = Gson().fromJson(inputData, Question::class.java)
   }
 
   /**
@@ -89,9 +90,9 @@ constructor(
    */
   fun submitResponse() {
     val key = _question.value.key
-    val res = when (_question.value.questionType) {
-      QuestionType.text -> _textResponse.value
-      QuestionType.mcq -> _mcqResponse.value
+    val res = when (_question.value.type) {
+      Type.text -> _textResponse.value
+      Type.mcq -> _mcqResponse.value
       else -> "invalid"
     }
     outputData.addProperty(key, res)

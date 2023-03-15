@@ -1,6 +1,6 @@
 package com.microsoft.research.karya.ui.scenarios.quiz
 
-enum class QuestionType {
+enum class Type {
   text,
   mcq,
   invalid
@@ -13,7 +13,7 @@ enum class OptionType {
 }
 
 data class Question(
-  val questionType: QuestionType,
+  val type: Type,
   val optionType: OptionType = OptionType.invalid,
   val question: String = "",
   val questionImage: String? = null,

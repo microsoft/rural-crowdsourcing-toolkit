@@ -65,21 +65,21 @@ class QuizMainFragment : BaseMTRendererFragment(R.layout.microtask_quiz) {
         questionIv.gone()
       }
 
-      when (question.questionType) {
-        QuestionType.invalid -> {
+      when (question.type) {
+        Type.invalid -> {
           textResponseEt.invisible()
           mcqResponseGroup.invisible()
           imageResponseRv.invisible()
         }
 
-        QuestionType.text -> {
+        Type.text -> {
           textResponseEt.visible()
           mcqResponseGroup.gone()
           imageResponseRv.gone()
           textResponseEt.minLines = if (question.long == true) 3 else 1
         }
 
-        QuestionType.mcq -> {
+        Type.mcq -> {
           when (question.optionType) {
             OptionType.text -> {
               mcqResponseGroup.visible()
