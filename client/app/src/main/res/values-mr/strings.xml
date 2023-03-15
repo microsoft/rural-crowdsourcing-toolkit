@@ -337,5 +337,7 @@
     <string name="profile_missing_field_error_msg">कृपया सर्व फील्ड भरा</string>
     <string name="profile_gender_male_label">पुरुष</string>
     <string name="profile_gender_female_label">स्त्री</string>
+
+    <string name="inactivity_timeout_message">कृपया काम सुरू करण्यासाठी ओके दाबा! अॅप उघडे असताना तुम्ही काम करणे थांबवल्यास तुमची कार्ये कालबाह्य होतील</string>
 </resources>
 

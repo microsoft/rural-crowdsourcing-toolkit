@@ -338,5 +338,7 @@
     <string name="profile_missing_field_error_msg">कृपया सभी फ़ील्ड भरें</string>
     <string name="profile_gender_male_label">पुरुष</string>
     <string name="profile_gender_female_label">महिला</string>
+
+    <string name="inactivity_timeout_message">काम करना शुरू करने के लिए कृपया ओके दबाएं! यदि आप ऐप के खुले रहने के दौरान काम करना बंद कर देते हैं तो आपके कार्य समाप्त हो जाएंगे</string>
 </resources>
 
