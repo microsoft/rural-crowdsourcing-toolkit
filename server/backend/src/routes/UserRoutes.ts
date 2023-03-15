@@ -18,7 +18,6 @@ import * as TaskLinkController from '../user-routes-controllers/TaskLinkControll
 import * as WorkerController from '../user-routes-controllers/WorkerController';
 import * as LanguageController from '../user-routes-controllers/LanguageController';
 import * as PaymentsController from '../user-routes-controllers/PaymentsController';
-import { tokenAuthoriser } from '../utils/auth/tokenAuthoriser/Index';
 
 // Default state for all routes
 export type DefaultUserRouteState = {
@@ -117,14 +116,14 @@ userRouter.get('GET_ALL_BOXES', '/boxes', Middlewares.needIdToken, Middlewares.o
  */
 
 // Create a new task
-userRouter.post('CREATE_TASK', '/tasks', Middlewares.needIdToken, tokenAuthoriser, BodyParser(), TaskController.create);
+userRouter.post('CREATE_TASK', '/tasks', Middlewares.needIdToken, BodyParser(), TaskController.create);
 
 // Edit task
 userRouter.put(
   'EDIT_TASK',
   '/task/:id',
   Middlewares.needIdToken,
-  tokenAuthoriser,
+
   BodyParser(),
   TaskController.editTask
 );
@@ -134,9 +133,8 @@ userRouter.post<TaskController.TaskRouteState, {}>(
   'SUBMIT_TASK_INPUT_FILE',
   '/task/:id/input_files',
   Middlewares.needIdToken,
-  tokenAuthoriser,
-  // @ts-ignore
   TaskController.checkTask,
+  // @ts-ignore
   BodyParser({ multipart: true }),
   TaskController.submitInputFiles
 );
@@ -146,9 +144,8 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   'GET_TASK_IO_FILES',
   '/task/:id/input_files',
   Middlewares.needIdToken,
-  tokenAuthoriser,
-  // @ts-ignore
   TaskController.checkTask,
+  // @ts-ignore
   TaskController.getFiles
 );
 
@@ -160,9 +157,8 @@ userRouter.post<TaskController.TaskRouteState, {}>(
   'CREATE_OUTPUT_FILE',
   '/task/:id/output_file',
   Middlewares.needIdToken,
-  tokenAuthoriser,
-  // @ts-ignore
   TaskController.checkTask,
+  // @ts-ignore
   TaskController.generateOutput
 );
 
@@ -190,9 +186,8 @@ userRouter.put<TaskController.TaskRouteState, {}>(
   'MARK_TASK_COMPLETE',
   '/task/:id/mark_complete',
   Middlewares.needIdToken,
-  tokenAuthoriser,
-  // @ts-ignores
   TaskController.checkTask,
+  // @ts-ignores
   TaskController.markComplete
 );
 
@@ -228,9 +223,8 @@ userRouter.post<TaskController.TaskRouteState, {}>(
   'CREATE_TASK_LINK',
   '/task/:id/task_links',
   Middlewares.needIdToken,
-  tokenAuthoriser,
-  // @ts-ignore
   TaskController.checkTask,
+  // @ts-ignore
   BodyParser(),
   TaskLinkController.create
 );
@@ -240,9 +234,8 @@ userRouter.get<TaskController.TaskRouteState, {}>(
   'GET_ALL_TASK_LINKS',
   '/task/:id/task_links',
   Middlewares.needIdToken,
-  tokenAuthoriser,
-  // @ts-ignore
   TaskController.checkTask,
+  // @ts-ignore
   TaskLinkController.get
 );
 
@@ -299,7 +292,7 @@ userRouter.post(
   'SUBMIT_LANGUAGE_ASSETS',
   '/lang-assets/:code',
   Middlewares.needIdToken,
-  tokenAuthoriser,
+
   BodyParser({ multipart: true }),
   // @ts-ignore
   LanguageController.submitLangAsset
