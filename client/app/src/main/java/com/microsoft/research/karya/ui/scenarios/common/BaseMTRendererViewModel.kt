@@ -531,6 +531,12 @@ abstract class BaseMTRendererViewModel(
         }
         currentAssignmentIndex++
       }
+      withContext(Dispatchers.IO) {
+        assignmentRepository.markExpire(
+          microtaskAssignmentIDs[currentAssignmentIndex],
+          date = DateUtils.getCurrentDate()
+        )
+      }
     }
   }
 }

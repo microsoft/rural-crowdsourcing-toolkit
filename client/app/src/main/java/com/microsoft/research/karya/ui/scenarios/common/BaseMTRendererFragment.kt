@@ -19,6 +19,7 @@ import com.microsoft.research.karya.utils.DateUtils
 import com.microsoft.research.karya.utils.PreferenceKeys
 import com.microsoft.research.karya.utils.extensions.dataStore
 import com.microsoft.research.karya.utils.extensions.observe
+import com.microsoft.research.karya.utils.extensions.viewLifecycleScope
 import kotlinx.android.synthetic.main.microtask_common_header.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -72,12 +73,16 @@ abstract class BaseMTRendererFragment(@LayoutRes contentLayoutId: Int) :
     userInteractionListener = UserInteractionListener(
       lifecycleOwner = viewLifecycleOwner,
       inactivityTimeout = Constants.TIMEOUT_DURATION_MILLIS,
-      onInactivityTimeout = { handleInactivityTimeout(it) }
+      onInactivityTimeout = { viewLifecycleScope.launch { handleInactivityTimeout(it) } }
     )
     (requireActivity() as MainActivity).setUserInteractionCallback { userInteractionListener.restartTimeout() }
   }
 
-  private fun handleInactivityTimeout(inactivityCount: Int) {
+  private suspend fun handleInactivityTimeout(inactivityCount: Int) {
+    val worker = authManagerBase.getLoggedInWorker()
+    val tags = worker.params!!.asJsonObject.getAsJsonArray("tags")
+    val workerTags = tags.map { it.asString }
+    if (!workerTags.contains("_handle_inactivity_")) return
     if (inactivityCount <= Constants.MAX_ALLOWED_TIMEOUTS) {
       var dialogTimeoutJob: Job? = null
       val dialogBuilder = AlertDialog.Builder(requireContext())
