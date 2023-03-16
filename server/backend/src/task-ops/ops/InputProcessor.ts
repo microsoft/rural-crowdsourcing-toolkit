@@ -114,7 +114,7 @@ export async function processInputFile(
         const inputTgzFilePath = `${taskFolder}/${inputTgzFileName}`;
 
         // Create the tar ball
-        await tar.c({ C: taskFolder, file: inputTgzFilePath, gzip: true }, fileList);
+        await tar.c({ C: taskFolder, file: inputTgzFilePath, gzip: true }, realFileList);
         const fileRecord = await upsertKaryaFile(inputTgzFilePath, 'MD5', inputBlobParams);
 
         // Update the microtask record
