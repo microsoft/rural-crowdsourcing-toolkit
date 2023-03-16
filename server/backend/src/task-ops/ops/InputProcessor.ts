@@ -94,6 +94,7 @@ export async function processInputFile(
       // create and upload microtask input files if necessary
       if (mtRecord.input.files) {
         const fileList = Object.values(mtRecord.input.files);
+
         const realFileList: string[] = [];
         fileList.forEach((f: string | string[]) => {
           if (f instanceof Array) {
@@ -104,6 +105,8 @@ export async function processInputFile(
             realFileList.push(f);
           }
         });
+
+        if (realFileList.length == 0) return;
 
         const inputBlobParams: BlobParameters = {
           cname: 'microtask-input',
