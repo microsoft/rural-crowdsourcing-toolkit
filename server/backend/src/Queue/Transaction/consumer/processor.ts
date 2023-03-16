@@ -115,7 +115,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
       }
     );
   } catch (e: any) {
-    throw new Error('Could not update the transaction record after successful payout request');
+    throw new Error(e);
   }
 };
 
@@ -157,7 +157,7 @@ const cleanUpOnError = async (error: any, job: Job<TransactionQJobData>) => {
     ...transactionRecord.meta,
     failure_server: 'server',
     failure_source: 'Transaction Queue Processor',
-    failure_reason: error.message,
+    failure_reason: error.message + " test log",
   };
   const updatedStatus = transactionRequestSucess
     ? TransactionStatus.FAILED_AFTER_TRANSACTION
