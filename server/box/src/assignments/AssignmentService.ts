@@ -11,7 +11,6 @@ import {
   PolicyName,
   TaskRecord,
   TaskRecordType,
-  ScenarioName,
   TaskAssignmentRecord,
 } from '@karya/core';
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
@@ -149,11 +148,6 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     });
     // iterate over all tasks to see which all can user perform
     await BBPromise.mapSeries(taskAssignments, async (taskAssignment) => {
-      // Hack: Round 2 rani tasks should not overlap
-      if (raniRound2 && tasksAssigned) {
-        return;
-      }
-
       // Get task for the assignment
       const task = (await BasicModel.getSingle('task', { id: taskAssignment.task_id })) as TaskRecordType;
       if (task.status == 'COMPLETED') return;
