@@ -109,13 +109,13 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
       { id: transactionRecord.id },
       {
         payout_id: createdPayout.id,
-        UTR: createdPayout.utr,
         status: createdPayout.status,
         meta: updatedMeta,
       }
     );
   } catch (e: any) {
-    throw new Error(e);
+    ErrorLogger.error(`Error after successful payout for transaction: ${transactionRecord.id} with error: ${e.message}`)
+    throw new Error('Could not update the transaction record after successful payout request');
   }
 };
 
