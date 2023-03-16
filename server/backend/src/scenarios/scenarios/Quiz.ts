@@ -21,8 +21,8 @@ export const backendQuizScenario: IBackendScenarioInterface<BaseQuizScenario> = 
    */
   async processInputFile(task, jsonData, tarFilePath, taskFolder) {
     const mts: any[] = jsonData!!;
-    const microtasks = await BBPromise.mapSeries(mts, async ({images, ...rest}) => {
-      await BBPromise.mapSeries(images, async image => {
+    const microtasks = await BBPromise.mapSeries(mts, async ({ images, ...rest }) => {
+      await BBPromise.mapSeries(images, async (image) => {
         const filePath = `${taskFolder}/${image}`;
         try {
           await fsp.access(filePath);
@@ -32,7 +32,7 @@ export const backendQuizScenario: IBackendScenarioInterface<BaseQuizScenario> = 
       });
       const mt: MicrotaskType<'QUIZ'> = {
         task_id: task.id,
-        input: { data: rest, files: {images} },
+        input: { data: rest, files: { images } },
         deadline: task.deadline,
         credits: task.params.creditsPerMicrotask,
         status: 'INCOMPLETE',
