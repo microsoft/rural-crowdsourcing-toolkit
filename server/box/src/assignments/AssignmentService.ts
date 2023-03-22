@@ -55,7 +55,7 @@ const task_map = {
     MR: ['79', '75', '83'],
     EN: ['82', '86', '78'],
     UR: ['81', '85', '77'],
-  }
+  },
 };
 
 // Current assignment map for workers
@@ -123,10 +123,12 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     const lang = wtags.filter((t) => langs.includes(t as Lang))[0] as Lang | undefined;
     let wtasks: string[] | undefined = undefined;
 
-    if (pay && lang) {
-      wtasks = task_map[pay][lang];
-    } else if (lang) {
-      wtasks = task_map["no-pay"][lang]
+    if (!raniRound2) {
+      if (pay && lang) {
+        wtasks = task_map[pay][lang];
+      } else if (lang) {
+        wtasks = task_map['no-pay'][lang];
+      }
     }
 
     // get all available tasks i.e. all of which are in assigned state
@@ -143,9 +145,10 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     taskAssignments = taskAssignments.filter(
       (ta) =>
         wtasks == undefined ||
-        ((!ta.params.tags || 
-          (ta.params.tags as string[]).includes(weekTag) || 
-          (ta.params.tags as string[]).includes(dayTag)) && wtasks.includes(ta.task_id))
+        ((!ta.params.tags ||
+          (ta.params.tags as string[]).includes(weekTag) ||
+          (ta.params.tags as string[]).includes(dayTag)) &&
+          wtasks.includes(ta.task_id))
     );
 
     // Get all the assigned counts for the worker
