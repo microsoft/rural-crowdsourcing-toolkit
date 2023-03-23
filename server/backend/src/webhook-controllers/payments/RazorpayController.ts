@@ -87,7 +87,6 @@ export const updateTransactionRecord = async (payoutEntity: PayoutResponse) => {
     { id: transactionRecord.id },
     {
       status: razorpayStatus,
-      UTR: payoutEntity.utr,
       meta: {
         ...transactionRecord.meta,
         UTR: payoutEntity.utr,
