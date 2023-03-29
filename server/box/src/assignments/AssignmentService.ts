@@ -296,7 +296,7 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
           task_id: task.id,
           microtask_id: microtask.id,
           worker_id: worker.id,
-          deadline: raniRound2 ? deadline : microtask.deadline,
+          deadline: (raniRound2 && task.scenario_name != 'QUIZ') ? deadline : microtask.deadline,
           wgroup: worker.wgroup,
           max_base_credits: microtask.base_credits,
           base_credits: 0.0,
