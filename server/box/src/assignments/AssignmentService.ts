@@ -278,6 +278,8 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
           batch_size: batchSize,
           limit: microtaskLimit,
           previous: assignedCount,
+          dayLimit,
+          dayAssignedCount,
           current: assignLimit,
           actual: assignableMicrotasks.length,
         });
