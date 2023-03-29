@@ -104,6 +104,10 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
     const dayTag = `day${dayId}`;
     worker.tags.tags.push(dayTag);
 
+    // Compute day start timestamp
+    // Day starts at 10 AM
+    const dayStart = (Math.floor(currentTime / 1000 / 3600 / 24) * 24 + 10) * 3600 * 1000;
+
     assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
 
     // Check if worker has preassignments
@@ -232,6 +236,16 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
           if (assignLimit < 0) assignLimit = 0;
         }
 
+        // Check if there is a daily limit
+        let dayAssignedCount = 0;
+        const dayLimit = (taskAssignment.params.dayLimit as number) || 0;
+        if (dayLimit > 0) {
+          dayAssignedCount = await MicrotaskModel.getAssignedCountForDay(worker.id, task.id, dayStart);
+          const pendingDayAssignment = dayLimit - dayAssignedCount;
+          if (assignLimit > pendingDayAssignment) assignLimit = pendingDayAssignment;
+          if (assignLimit < 0) assignLimit = 0;
+        }
+
         if (assignLimit == 0) {
           assignmentLogger.info({
             worker_id: worker.id,
@@ -239,6 +253,8 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
             batch_size: batchSize,
             limit: microtaskLimit,
             previous: assignedCount,
+            dayLimit,
+            dayAssignedCount,
             current: assignLimit,
             message: 'Assignment limit reached',
           });
@@ -296,7 +312,7 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
           task_id: task.id,
           microtask_id: microtask.id,
           worker_id: worker.id,
-          deadline: (raniRound2 && task.scenario_name != 'QUIZ') ? deadline : microtask.deadline,
+          deadline: raniRound2 && task.scenario_name != 'QUIZ' ? deadline : microtask.deadline,
           wgroup: worker.wgroup,
           max_base_credits: microtask.base_credits,
           base_credits: 0.0,

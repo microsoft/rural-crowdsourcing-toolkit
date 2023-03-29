@@ -61,6 +61,19 @@ export async function getAssignedCount(worker_id: string, task_id: string) {
   return assignedCount[0].count as number;
 }
 
+export async function getAssignedCountForDay(worker_id: string, task_id: string, startTimeStamp: number) {
+  const endTimeStamp = startTimeStamp + 24 * 60 * 60 * 1000;
+  const startTime = new Date(startTimeStamp).toISOString();
+  const endTime = new Date(endTimeStamp).toISOString();
+  const assignedCount = await knex<MicrotaskAssignmentRecord>('microtask_assignment')
+    .where('worker_id', worker_id)
+    .where('task_id', task_id)
+    .where('created_at', '>', startTime)
+    .where('created_at', '<=', endTime)
+    .count();
+  return assignedCount[0].count as number;
+}
+
 /**
  * Get the number of completed assignments for a given microtask
  * @param microtask Microtask record
