@@ -1,0 +1,78 @@
+{
+  "name": "@karya/frontend",
+  "version": "2.0.0",
+  "private": true,
+  "dependencies": {
+    "@karya/core": "^2.0.0",
+    "@karya/parameter-specs": "^2.0.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "axios": "^0.21.2",
+    "bluebird": "^3.7.2",
+    "export-from-json": "^1.3.4",
+    "history": "^4.10.1",
+    "materialize-css": "^1.0.0",
+    "moment": "^2.29.1",
+    "react": "^16.13.1",
+    "react-csv": "^2.0.3",
+    "react-dom": "^16.13.1",
+    "react-google-login": "^5.1.21",
+    "react-materialize": "^3.9.3",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "recharts": "^2.0.9",
+    "redux": "^4.0.5",
+    "tar-stream": "^2.1.4"
+  },
+  "scripts": {
+    "compile": "tsc -b tsconfig.json",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "preinstall": "npm-force-resolutions",
+    "postinstall": "npm-force-resolutions"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.32",
+    "@types/materialize-css": "^1.0.8",
+    "@types/react": "^16.9.51",
+    "@types/react-csv": "^1.1.2",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/tar-stream": "^2.1.0",
+    "npm-force-resolutions": "^0.0.10",
+    "typescript": "^4.2.4"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 120
+  },
+  "resolutions": {
+    "set-value": "^4.0.1",
+    "immer": "^9.0.6",
+    "glob-parent": "^5.1.2",
+    "ssri": "^8.0.1",
+    "tar": "^6.1.9",
+    "ejs": "^3.1.6",
+    "dns-packet": "1.3.2"
+  }
+}

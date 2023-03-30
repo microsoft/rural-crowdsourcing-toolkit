@@ -1,0 +1,19 @@
+{
+  "name": "karya",
+  "version": "2.0.0",
+  "description": "This package implements the server components of the rural crowdsourcing platform.",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "lerna": "^4.0.0",
+    "lerna-audit": "^1.3.3",
+    "prettier": "^2.2.1",
+    "prettier-eslint-cli": "^5.0.1",
+    "typescript": "^4.2.3"
+  }
+}

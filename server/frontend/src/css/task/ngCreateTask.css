@@ -1,0 +1,219 @@
+#breadcrumbs-nav {
+  position: relative;
+  left: 0%;
+  width: 98%;
+  background-color: #fff;
+  box-shadow: rgba(27, 31, 35, 0.07) 0px 1px 0px, rgba(255, 255, 255, 0.28) 0px 1px 0px inset;
+  height: 3.3rem;
+  border-top-right-radius: 0.3em;
+}
+
+.breadcrumb {
+  color: #b4bdc6;
+  font-size: 0.88em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+  font-weight: 600;
+}
+
+.breadcrumb:before {
+  font-size: 16px;
+  color: #b4bdc6;
+}
+
+.breadcrumb:hover {
+  color: #1ccfbd;
+}
+
+.breadcrumb:last-child {
+  color: #1ccfbd;
+  display: inline;
+}
+
+#select-txt {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin-left: 3%;
+  margin-top: 4%;
+  color: #717787;
+}
+
+.scenarios label:before,
+.scenarios label:after {
+  position: absolute;
+  opacity: 0;
+}
+
+@media only screen and (min-width: 600px) {
+  .scenario-card {
+    position: relative;
+    background-color: #fdfdfd;
+    border-radius: 7px;
+    padding: 2.5%;
+    padding-top: 10%;
+    margin-bottom: 10%;
+    margin-top: 20%;
+    margin-left: 8%;
+    margin-right: 27%;
+    height: 12em;
+    text-decoration: none;
+    z-index: 0;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    text-align: center;
+    transition: all 0.2s ease-out;
+  }
+
+  .scenario-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px,
+      rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 12px 12px;
+    top: -2px;
+    background-color: white;
+  }
+
+  .scenario-name {
+    font-size: 1.14em;
+    color: #717787;
+    font-weight: 600;
+  }
+
+  .description {
+    padding-left: 3.5%;
+    padding-right: 3.5%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .scenario-card {
+    position: relative;
+    background-color: #fdfdfd;
+    border-radius: 7px;
+    padding-top: 2%;
+    margin-bottom: 4%;
+    margin-top: 8%;
+    margin-left: 6%;
+    text-decoration: none;
+    z-index: 0;
+    overflow: hidden;
+    border: 1px solid #f2f8f9;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    transition: all 0.2s ease-out;
+  }
+
+  .scenario-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px,
+      rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 12px 12px;
+    top: -2px;
+    background-color: white;
+    border-radius: 7px;
+  }
+
+  .scenario-name {
+    margin-left: 4%;
+    font-size: 14px;
+    color: #717787;
+    font-weight: 600;
+  }
+
+  .description {
+    margin-left: 5%;
+    margin-right: 1%;
+  }
+}
+
+#task-form {
+  margin-left: 4%;
+}
+
+.form-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #717787;
+}
+
+#description-div {
+  margin-top: 5.5em;
+}
+
+#description {
+  font-family: 'Titillium Web', sans-serif;
+  color: #717787;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5%;
+}
+
+#task-form input,
+#task-form textarea {
+  margin-bottom: 0.5%;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#task-form .checkbox-row {
+  margin-bottom: 5.5%;
+}
+
+#tags {
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5%;
+  margin-top: 2%;
+  border-bottom: none;
+}
+
+#tags.focus {
+  border-bottom: none;
+  box-shadow: none;
+}
+
+#tags #tags_input {
+  top: 0%;
+  left: 0%;
+  position: absolute;
+  width: 100%;
+}
+
+#tags #tags_input:focus {
+  border-bottom: 1px solid #26a69a;
+  box-shadow: 0 1px 0 0 #26a69a;
+}
+
+#tags #tags_input:focus + label {
+  transform: translateY(-14px) scale(0.8);
+}
+
+#tags label .active_input {
+  transform: translateY(-14px) scale(0.8);
+}
+
+.chip {
+  position: relative;
+  top: 4rem;
+  color: #717787;
+  background-color: #f5f6fa;
+  margin-top: 1.5%;
+}
+
+.chip i {
+  cursor: pointer;
+  float: right;
+  font-size: 16px;
+  line-height: 32px;
+  padding-left: 8px;
+}
+
+#task-form button {
+  margin-left: 12%;
+  margin-top: 3%;
+}
+
+#submit-task-btn {
+  background-color: #4fc3f7;
+}
+
+#submit-task-btn:hover {
+  background-color: #29b6f6;
+}

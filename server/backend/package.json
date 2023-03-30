@@ -1,0 +1,42 @@
+{
+  "name": "@karya/backend",
+  "version": "2.0.0",
+  "description": "This package implements the backend server of this rural crowdsourcing toolkit",
+  "private": true,
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@azure/identity": "^1.1.0",
+    "@azure/keyvault-secrets": "^4.1.0",
+    "@karya/common": "^2.0.0",
+    "@karya/core": "^2.0.0",
+    "@karya/http-response": "^2.0.0",
+    "@karya/logger": "^2.0.0",
+    "@karya/misc-utils": "^2.0.0",
+    "@karya/parameter-specs": "^2.0.0",
+    "@koa/cors": "^2.2.2",
+    "bluebird": "^3.5.5",
+    "bull": "^3.18.0",
+    "dotenv": "^8.2.0",
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-router": "^7.4.0",
+    "papaparse": "^5.3.1",
+    "tar": "^6.1.9"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.32",
+    "@types/bull": "^3.14.4",
+    "@types/koa": "^2.11.4",
+    "@types/koa-router": "^7.4.1",
+    "@types/koa__cors": "^3.0.2",
+    "@types/node": "^13.13.46",
+    "@types/papaparse": "^5.2.5",
+    "@types/tar": "^4.0.3",
+    "typescript": "^4.2.3"
+  }
+}

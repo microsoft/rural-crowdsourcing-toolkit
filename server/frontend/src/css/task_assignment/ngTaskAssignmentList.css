@@ -1,0 +1,59 @@
+#create-assignment-link {
+  margin-left: 46%;
+}
+
+#create-assignment-link button {
+  color: #fff;
+  background-color: #4fc3f7;
+  border-radius: 7px;
+  margin-bottom: 1%;
+}
+
+#task-assignment-table table {
+  margin-left: 3%;
+  width: 94%;
+}
+
+#task-assignment-table td {
+  padding-top: 2.2%;
+  padding-bottom: 2.2%;
+}
+
+#task-assignment-table td:nth-child(1),
+#task-assignment-table td:nth-child(2) {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.96em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+#task-assignment-table td:nth-child(1) {
+  width: 36%;
+}
+
+#task-assignment-table td:nth-child(3),
+#task-assignment-table td:nth-child(4) {
+  font-size: 0.85em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 15%;
+}
+
+#task-assignment-table td:nth-child(4) {
+  width: 25%;
+}
+
+#task-assignment-table th:nth-child(4) {
+  padding-left: 4%;
+}
+
+#task-assignment-table td:nth-child(4) span {
+  display: inline-block;
+  text-align: center;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  width: 58%;
+  background-color: #f0f8ff;
+  border-radius: 7px;
+}

@@ -1,0 +1,115 @@
+Problem
+=======
+
+How does the Android App determine the IP address of the box it is supposed to
+talk to? Current solution bakes the IP address / URL as part of the APK. This
+results in an explosion of Android apps making it impractical to maintain.
+
+
+Goal
+====
+
+We should have to maintain only one APK.
+
+
+Idea
+====
+
+Our idea is to embed information about the URL of a box into every access code
+that the box generates. This information can then be used by the app to
+determine the URL of the box the app should talk to based on the access code
+entered by the user.
+
+
+Design of Embedded Access Codes
+===============================
+
+In this section, we describe the design of how we embed information about box
+URL in the access code. As there are several approaches possible, we design
+multiple versions with the version information also embedded in the access code.
+
+In the new model, access codes can be of any length. As a result, as the user is
+typing the numeric access code, the app should continuously check for its
+validity to determine the box URL.
+
+
+Access Codes with No Embedded Information
+-----------------------------------------
+
+Before embedded access codes, apks were shipped with the URL information of the
+box server that they are supposed to talk to. In these cases, access codes were
+purely random with no structured information. In such cases, the app can avoid
+parsing the access codes completely.
+
+
+Access Code Version Information
+-------------------------------
+
+If information is embedded in the access code, then the first step is to convert
+the access code into an integer of at most 53 bits. The least significant 2 bits
+of the integer represent the design version of the access code. Depending on
+these version bits, the app must parse the remaining bits of the integer
+appropriately.
+
+
+Version 0 Access Codes
+----------------------
+
+Version 0 access codes only embed length information. They assume that the app
+knows the URL of the box. The least significant 2 bits are both 0s. The next
+four bits (bits 2 - 5) encode the length information. More specifically, if the
+length of the access code is 'n' digits, the bits 2-5 store n - 1. Therefore,
+the minimum possible length is 1 and the maximum possible length is 16. Below is
+the representation of the bits starting with the LSB.
+
+00 LLLL RRR...R
+
+LLLL are the four length bits. RRR...R are the random bits. The number of these
+bits depends on the length. 
+
+
+Version 1 Access Codes
+----------------------
+
+Below is the bitwise representation of a V1 access code, starting with the LSB.
+
+10 L B E M III...I RRR...R
+
+* The least significant two bits represent version 1
+* L - length bit. 0 => 8 digits, 1 => 16 digits
+* B - box type. 0 => physical box, 1 => virtual box
+* E - environment. 0 => dev/test, 1 => prod
+* M -> embedding mechanism. 0 => direct map, 1 => template
+* III...I -> embedded information (length depends on other parameters)
+* RRR...R -> random bits (length depends on other parameters)  
+
+If the box type is physical OR the environment is dev/test, the apk is assumed
+to have the information about the box URL. There is no additional information
+embedded, i.e., number I bits is 0. All remaining bits are used for random bits.
+
+If the box type is virtual AND the environment is prod, then additional
+information is embedded to determine the URL. The number of these bits is
+determined by the mechanism used for embedding (M bit).
+
+B = 1, E = 1, M = 0: Direct mapping
+
+In this case, the access code stores a 6-bit index (IIIIII). This number is used
+to directly index into a table of URLs to determine the URL of the specific box.
+Clearly, this mechanism can only support up to 64 boxes.
+
+
+B = 1, E = 1, M = 1: Template
+
+In this case, the access code stores 9 bits of additional information (3 bits of
+template index and 6 bits of ID). A template is a class of URLs with a single
+'#' character in them: e.g., "https://karyabox#.eastus.cloudapp.azure.com". The
+template index is used to determine a specific template from the list of
+templates. The URL is then determined by replacing the '#' in the template with
+the template ID. This mechanism can support up to 512 boxes (8 templates and 64
+boxes per template).
+
+
+Version 2/3 Access Codes
+------------------------
+
+Version 2 and 3 access codes are not supported now and are reserved for future.

@@ -1,0 +1,27 @@
+#task-assignment-form {
+  margin-left: 4%;
+  margin-top: 5%;
+}
+
+#task-assignment-form input {
+  margin-bottom: 0.5%;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#task-assignment-form .select-wrapper {
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+#task-assignment-form button {
+  margin-left: 6%;
+  margin-top: 5%;
+}
+
+#submit-assignment-btn {
+  background-color: #4fc3f7;
+}
+
+#submit-assignment-btn:hover {
+  background-color: #29b6f6;
+}

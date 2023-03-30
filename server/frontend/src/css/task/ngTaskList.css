@@ -1,0 +1,144 @@
+#create-task-link {
+  margin-left: 70%;
+}
+
+#create-task-link button {
+  color: #fff;
+  background-color: #4fc3f7;
+  border-radius: 7px;
+  margin-bottom: 1%;
+}
+
+#filter_row div {
+  margin-left: 4%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+#filter_row input {
+  font-size: 1.1em;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+.collapsible {
+  box-shadow: none;
+  border: none;
+}
+
+.collapsible-header {
+  border-bottom: 1px dashed rgba(180, 189, 198, 0.8);
+}
+
+.collapsible-body {
+  border-bottom: 1px solid rgba(180, 189, 198, 0.4);
+  padding-bottom: 0.5em;
+}
+
+.collapsible i {
+  font-size: 1.5em;
+  color: #a4d4ff;
+  margin-top: 0.2%;
+  margin-left: 1%;
+}
+
+.task-name {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #717787;
+  margin-top: 0.5%;
+  margin-bottom: 0.5%;
+  margin-left: 1.5%;
+  width: 10%;
+}
+
+.badge {
+  font-size: 0.85em !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #717787 !important;
+}
+
+.status {
+  width: 12%;
+  margin-right: 5%;
+  background-color: #f0f8ff;
+  border-radius: 7px;
+}
+
+.scenario {
+  margin-left: 3% !important;
+  width: 25%;
+}
+
+.language {
+  margin-left: 6% !important;
+  width: 15%;
+}
+
+.arrow-2 {
+  display: inline-block;
+  height: 5px;
+  width: 5px;
+  border: 1px solid #2bbbad;
+  border-width: 1px 1px 0 0;
+  transform: rotate(45deg);
+  margin-left: 3%;
+  margin-bottom: 1%;
+}
+
+.arrow-2:after {
+  content: '';
+  display: block;
+  height: 5px;
+  width: 5px;
+  border: 1px solid #2bbbad;
+  border-width: 1px 1px 0 0;
+  transform: translate(5px, -6px);
+}
+
+.details-link {
+  width: 10%;
+  color: #2bbbad;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88em;
+  transition: all 0.1s ease;
+}
+
+.details-link:hover {
+  transform: scale(1.08);
+}
+
+.body-col {
+  display: inline-block;
+  width: 33%;
+  color: #717787;
+  border-right: 2px solid rgba(235, 237, 236, 0.7);
+}
+
+.body-col:last-of-type {
+  border-right: none;
+}
+
+.body-col:first-of-type {
+  margin-left: 1%;
+}
+
+.body-col p {
+  font-size: 0.83em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+
+.body-col span {
+  font-size: 1.1em !important;
+  font-weight: 500;
+  margin-left: 3%;
+}

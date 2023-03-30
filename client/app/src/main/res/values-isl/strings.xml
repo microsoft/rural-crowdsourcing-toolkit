@@ -1,0 +1,59 @@
+<resources>
+    <string name="s_consent_form_title">Consent Form</string>
+    <string name="s_access_code_title">Enter Access Code</string>
+    <string name="s_otp_title">Enter OTP</string>
+    <string name="s_phone_number_title">Enter Phone Number</string>
+    <string name="s_age_title">Select Age Group</string>
+    <string name="s_gender_title">Select Gender</string>
+    <string name="s_profile_pic_title">Select Profile Picture</string>
+    <string name="s_dashboard_title">Dashboard</string>
+    <string name="s_consent_form_agree">Yes</string>
+    <string name="s_consent_form_disagree">No. I have not</string>
+    <string name="s_consent_form_text">
+        <![CDATA[
+        <h3>Karya Participation Consent Form</h3>
+        <br/>
+        <big>
+        <p>Thank you for using the Karya platform for completing your classroom homework. As part
+        of the homework, you will be submitting video recordings of yourself signing different
+        sentences. You should have received a consent form for the same from the course
+        coordinators. Please confirm that you have read and agreed to that consent form.</p>
+        <br/>
+
+        <p>If you have not received the consent form, you can access it at the following link:
+        <a href="https://forms.gle/iifktU7MyrUY7bYHA">Course Consent Form</a></p>
+        <br/>
+
+        <p>Have you agreed to the consent form shared by your course coordinator</p>
+        </big>
+ ]]>
+    </string>
+    <string name="s_access_code_prompt">You should have received a 8-digit access code from your
+        teacher. Please enter that access code below.</string>
+    <string name="s_phone_number_prompt">To use Karya, you need to register with our application using your phone number. Please enter your phone number below.</string>
+    <string name="s_otp_prompt">We have sent you a 6-digit OTP via SMS. Please enter that OTP below</string>
+    <string name="s_invalid_otp">You have entered an invalid OTP</string>
+    <string name="s_resend_otp">Resend OTP</string>
+    <string name="s_profile_picture_prompt">Please click your profile picture. You can skip this step if you do not want a profile picture</string>
+    <string name="s_gender_prompt">Please choose your gender</string>
+    <string name="s_male">Male</string>
+    <string name="s_female">Female</string>
+    <string name="s_age_prompt">Please enter your year of birth</string>
+    <string name="s_phone_number_already_used">Your phone number is already registered. Please try with another phone number.</string>
+    <string name="s_sync_tasks">Submit Homework / Get New Homework</string>
+    <string name="s_tasks_available">sentences not attempted</string>
+    <string name="s_tasks_completed">sentences completed</string>
+    <string name="s_tasks_skipped">sentences skipped</string>
+    <string name="s_tasks_submitted">sentences submitted</string>
+    <string name="s_tasks_verified">sentences graded</string>
+
+    <string name="transliteration_hint">Start Typing…</string>
+    <string name="text_transliteration_desc">Please transliterate the following word from English to Hindi</string>
+    <string name="alphanumericString">abcdefghijklmnopqrstuvwxyz</string>
+
+    <string name="video_record_button">I Understand and start recording</string>
+    <string name="record_preview_message">The preview of the recording would appear here</string>
+    <string name="dialogTitle">Skip sentence or record it later?</string>
+    <string name="dialogMessage">Do you want to skip this sentence or record it later? Skipped sentences cannot be attempted again.</string>
+    <string name="FAILED_UPLOAD_RECORD_AGAIN_MSG">Some files did not upload. Please record them again</string>
+</resources>

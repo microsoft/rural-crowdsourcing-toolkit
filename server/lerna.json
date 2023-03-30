@@ -1,0 +1,4 @@
+{
+  "packages": ["core", "backend", "box", "frontend", "common", "utils/*"],
+  "version": "2.0.0"
+}

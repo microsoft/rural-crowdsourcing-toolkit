@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
+        android:id="@+id/appTb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.kofigyan.stateprogressbar.StateProgressBar
+        android:id="@+id/dottedScreenPb"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        app:spb_checkStateCompleted="true"
+        app:spb_currentStateDescriptionColor="?attr/colorAccent"
+        app:spb_currentStateNumber="three"
+        app:spb_maxStateNumber="three"
+        app:spb_stateBackgroundColor="#BDBDBD"
+        app:spb_stateDescriptionColor="#808080"
+        app:spb_stateForegroundColor="?attr/colorAccent"
+        app:spb_stateNumberBackgroundColor="#808080"
+        app:spb_stateNumberForegroundColor="#eeeeee" />
+
+    <TextView
+        android:id="@+id/ageGroupPromptTv"
+        style="@style/multilineText"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:gravity="center|center_vertical"
+        android:text="@string/s_age_prompt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dottedScreenPb" />
+
+    <EditText
+        android:id="@+id/ageEt"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_55sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:background="@drawable/blue_rounded_border"
+        android:fontFamily="monospace"
+        android:inputType="number"
+        android:maxLength="4"
+        android:hint="----"
+        android:paddingHorizontal="@dimen/_32sdp"
+        android:textSize="@dimen/_26ssp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@id/loadingContainer"
+        app:layout_constraintTop_toBottomOf="@+id/ageGroupPromptTv" />
+
+    <FrameLayout
+        android:id="@+id/loadingContainer"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="@dimen/_55sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ageEt"
+        app:layout_constraintBottom_toBottomOf="@id/ageEt">
+
+        <ImageView
+            android:id="@+id/submitAgeGroupIb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next"
+            app:srcCompat="@drawable/ic_next_disabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/failToRegisterTv"
+        style="@style/multilineError"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:text="@string/s_invalid_otp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loadingContainer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

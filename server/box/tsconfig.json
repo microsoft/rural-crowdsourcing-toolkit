@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "lib": ["es2018", "dom"],
+  },
+  "references": [],
+  "exclude": ["node_modules", "dist"]
+}

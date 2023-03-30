@@ -1,0 +1,40 @@
+{
+  "name": "@karya/common",
+  "version": "2.0.0",
+  "description": "This package implements all common modules for the karya platform",
+  "private": true,
+  "license": "MIT",
+  "main": "dist/Index",
+  "types": "dist/Index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist* && rm -rf tsconfig*.tsbuildinfo",
+    "compile": "tsc -b tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.33",
+    "@types/cookies": "^0.7.6",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/koa": "^2.13.1",
+    "@types/node": "^14.14.35",
+    "@types/uuid": "^8.3.1",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.5.0",
+    "@karya/core": "^2.0.0",
+    "@karya/http-response": "^2.0.0",
+    "@karya/logger": "^2.0.0",
+    "@karya/misc-utils": "^2.0.0",
+    "axios": "^0.21.2",
+    "bluebird": "^3.7.2",
+    "google-auth-library": "^7.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.4",
+    "pg": "^8.6.0",
+    "uuid": "^8.3.2"
+  }
+}

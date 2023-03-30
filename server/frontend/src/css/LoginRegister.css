@@ -1,0 +1,162 @@
+#main-card {
+  background-color: #fff;
+  border-radius: 5px;
+  border: none;
+  box-shadow: none;
+  margin-top: 3%;
+  color: #717787;
+  font-family: 'Montserrat', sans-serif;
+  max-width: 800px;
+}
+
+.card-title {
+  font-size: 1.45em !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.03em;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+#login-text {
+  padding-bottom: 7%;
+}
+
+#login-section {
+  padding: 2rem 0;
+  margin-right: 1%;
+}
+
+#login-btn {
+  text-align: center;
+}
+
+#login-btn button,
+#choose-btn button {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.97em !important;
+  box-shadow: rgba(6, 24, 44, 0.1) 0px 0px 0px 1px, rgba(6, 24, 44, 0.25) 0px 4px 6px -1px,
+    rgba(255, 255, 255, 0.06) 0px 1px 0px inset !important;
+}
+
+#register-btn-div {
+  margin-top: 10%;
+  margin-left: 12%;
+}
+
+#register-btn {
+  background-color: #ef5350;
+}
+
+#register-btn:hover {
+  background-color: #f44336;
+}
+
+#choose-btn button {
+  margin-left: 10%;
+}
+
+#or {
+  margin: 2rem;
+  font-size: 13px;
+}
+
+.or-separator {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 4%;
+}
+
+.or-separator:before,
+.or-separator:after {
+  content: '';
+  border-top: 2px solid #ebedec;
+  flex: 1px;
+}
+
+#enter-code-txt {
+  margin-top: 5%;
+  margin-bottom: 3%;
+  margin-left: 4%;
+  font-size: 0.9em;
+}
+
+#signup-form {
+  padding: 0px;
+}
+
+#access_code {
+  font-family: 'Titillium Web', sans-serif;
+  color: #717787;
+  letter-spacing: 0.08em;
+  margin-bottom: 5%;
+  height: 2.4rem;
+  border-bottom: 1px solid #b4bdc6;
+}
+
+#access-code-div {
+  margin-left: 5%;
+}
+
+.profile-details {
+  margin-top: 6%;
+  margin-left: 12% !important;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  border-radius: 3px;
+}
+
+#main-card #email {
+  margin-bottom: 0.2%;
+  padding-bottom: 1.2%;
+  color: #717787;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.83em;
+  letter-spacing: 0.03em;
+  border-bottom: none;
+  height: 1.2rem;
+}
+
+#main-card #full_name {
+  margin-bottom: 0.4%;
+  padding-top: 1.2%;
+  color: #717787;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95em;
+  letter-spacing: 0.01em;
+  border-bottom: none;
+  height: 1.2rem;
+  font-weight: 500;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 992px) {
+  .card-title {
+    font-size: 1.4em !important;
+  }
+
+  #login-btn button,
+  #choose-btn button {
+    font-size: 0.9em !important;
+  }
+
+  #or {
+    margin: 2rem;
+    font-size: 10px;
+  }
+
+  #enter-code-txt {
+    font-size: 0.82em;
+    font-weight: 400;
+  }
+
+  #signup-form .input-field > label {
+    font-size: 0.82em;
+  }
+
+  #access_code {
+    font-size: 0.97em;
+  }
+}

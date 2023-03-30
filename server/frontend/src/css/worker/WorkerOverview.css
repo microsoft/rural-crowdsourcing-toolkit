@@ -1,0 +1,44 @@
+#workers-title {
+  padding-left: 3%;
+  padding-bottom: 3%;
+  margin-top: 3%;
+}
+
+#sort_row,
+#display_row {
+  margin-left: 8%;
+  margin-bottom: 0.05%;
+}
+
+#reg_row {
+  margin-left: 20%;
+}
+
+#sort_row p,
+#display_row p,
+#reg_row p {
+  display: inline-block;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 1.1em;
+  color: #717787;
+  letter-spacing: 0.08em;
+}
+
+#sort_row label {
+  margin-left: 7%;
+}
+
+#display_row label {
+  margin-left: 5%;
+  display: inline-block;
+}
+
+#reg_row label {
+  margin-left: 3%;
+}
+
+#sort_row span,
+#display_row span,
+#reg_row span {
+  font-size: 1.2em;
+}

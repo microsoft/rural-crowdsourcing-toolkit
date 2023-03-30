@@ -1,0 +1,10 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+#
+# This is a sample config file that describes the parameters that should be
+# provided to register a box
+
+access_code=
+location=
+gps=
+url=

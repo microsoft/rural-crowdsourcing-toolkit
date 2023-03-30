@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:translationZ="@dimen/_5sdp"
+    app:cardCornerRadius="@dimen/_5sdp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
+        android:id="@+id/taskLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_5sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_15sdp">
+
+            <TextView
+                android:id="@+id/taskNameTv"
+                style="@style/Widget.textMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textSize="@dimen/_20ssp"
+                tools:text="Task name" />
+
+            <TextView
+                android:id="@+id/scenarioNameTv"
+                style="@style/Widget.textMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="start"
+                android:textSize="@dimen/_12ssp"
+                tools:text="Scenario Name" />
+
+            <ProgressBar
+                android:id="@+id/completedTasksPb"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:progress="60"
+                android:progressBackgroundTint="@color/colorLightGrey2"
+                android:progressTint="#6C6"
+                android:scaleY="2" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/incompleteCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#EEE"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/numIncompleteTv"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="#F66"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="9999" />
+
+            <TextView
+                android:id="@+id/numIncompleteLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="#F66"
+                android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_available"
+                app:layout_constraintBaseline_toBaselineOf="@id/numIncompleteTv"
+                app:layout_constraintStart_toEndOf="@id/numIncompleteTv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/completedCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/numCompletedTv"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="#6C6"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6" />
+
+            <TextView
+                android:id="@+id/numCompletedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="#6C6"
+                android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_completed"
+                app:layout_constraintBaseline_toBaselineOf="@id/numCompletedTv"
+                app:layout_constraintStart_toEndOf="@id/numCompletedTv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/skippedCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/numSkippedTv"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="#0000FF"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6" />
+
+            <TextView
+                android:id="@+id/numSkippedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="#0000FF"
+                android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_skipped"
+                app:layout_constraintBaseline_toBaselineOf="@id/numSkippedTv"
+                app:layout_constraintStart_toEndOf="@id/numSkippedTv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/submittedCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EEE"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/numSubmittedTv"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6" />
+
+            <TextView
+                android:id="@+id/numSubmittedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_submitted"
+                app:layout_constraintBaseline_toBaselineOf="@id/numSubmittedTv"
+                app:layout_constraintStart_toEndOf="@id/numSubmittedTv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/verifiedCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/numVerifiedTv"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="#000"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6" />
+
+            <TextView
+                android:id="@+id/numVerifiedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="#000"
+                android:textSize="@dimen/_15ssp"
+                android:text="@string/s_tasks_verified"
+                app:layout_constraintBaseline_toBaselineOf="@id/numVerifiedTv"
+                app:layout_constraintStart_toEndOf="@id/numVerifiedTv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

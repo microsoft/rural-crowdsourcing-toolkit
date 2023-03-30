@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.microsoft.research.karya.ui.views.KaryaToolbar
+        android:id="@+id/appTb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/creationCodePromptTv"
+        style="@style/multilineText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:text="@string/s_access_code_prompt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appTb"
+        tools:text="@string/access_code_prompt_desc" />
+
+
+    <EditText
+        android:id="@+id/creationCodeEt"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_margin="@dimen/_16sdp"
+        android:background="@drawable/blue_rounded_border"
+        android:digits="0123456789"
+        android:fontFamily="monospace"
+        android:hint="@string/creation_code_hint"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:maxLength="9"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:textSize="@dimen/_17ssp"
+        app:layout_constraintEnd_toStartOf="@id/loadingContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/creationCodePromptTv" />
+
+    <FrameLayout
+        android:id="@+id/loadingContainer"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        app:layout_constraintStart_toEndOf="@id/creationCodeEt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/creationCodeEt"
+        app:layout_constraintBottom_toBottomOf="@id/creationCodeEt">
+
+        <ImageView
+            android:id="@+id/submitAccessCodeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next"
+            app:srcCompat="@drawable/ic_next_disabled" />
+
+        <ProgressBar
+            android:id="@+id/loadingPb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/creationCodeStatusIv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:contentDescription="@string/status_check"
+        app:layout_constraintStart_toStartOf="@id/creationCodeEt"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintTop_toBottomOf="@id/creationCodeEt"
+        app:layout_constraintWidth_percent="0.1"
+        app:srcCompat="@drawable/ic_cross_off" />
+
+
+    <TextView
+        android:id="@+id/creationCodeErrorTv"
+        style="@style/multilineError"
+        android:layout_width="@dimen/_0sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="@id/creationCodeEt"
+        app:layout_constraintStart_toEndOf="@id/creationCodeStatusIv"
+        app:layout_constraintTop_toTopOf="@id/creationCodeStatusIv"
+        tools:text="@string/invalid_creation_code_desc" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
