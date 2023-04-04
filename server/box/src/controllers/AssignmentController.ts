@@ -60,7 +60,11 @@ export const get: KaryaMiddleware = async (ctx) => {
     )
 
     // Adding completed asignment as well
-    completedAssignments.forEach(assignment => assignments.push(assignment))
+    completedAssignments.forEach(assignment => {
+      // @ts-ignore sending completed assignments as submitted
+      assignment.status = "SUBMITTED"
+      assignments.push(assignment)
+    })
 
     const taskIds = new Set(assignments.map((mta) => mta.task_id));
     const tasks = await BasicModel.getRecords('task', {}, [['id', [...taskIds]]]);
