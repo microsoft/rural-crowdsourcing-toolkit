@@ -49,6 +49,19 @@ export const get: KaryaMiddleware = async (ctx) => {
       'verified_at',
       limit
     );
+
+    const completedAssignments = await BasicModel.getRecords(
+      'microtask_assignment',
+      { worker_id: worker.id, status: 'COMPLETED' },
+      [],
+      [['verified_at', from, null]],
+      'verified_at',
+      limit
+    )
+
+    // Adding completed asignment as well
+    completedAssignments.forEach(assignment => assignments.push(assignment))
+
     const taskIds = new Set(assignments.map((mta) => mta.task_id));
     const tasks = await BasicModel.getRecords('task', {}, [['id', [...taskIds]]]);
     HttpResponse.OK(ctx, { tasks, assignments });
