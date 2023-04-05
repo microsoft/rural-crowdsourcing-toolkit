@@ -6,9 +6,11 @@
 import { KaryaMiddleware } from '../KoaContextState';
 import * as HttpResponse from '@karya/http-response';
 import { MicrotaskAssignmentRecord } from '@karya/core';
-import { BasicModel, MicrotaskModel } from '@karya/common';
+import { BasicModel, MicrotaskModel, karyaLogger } from '@karya/common';
 import { Promise as BBPromise } from 'bluebird';
 import { assignmentQueue, preassignMicrotasksForWorker } from '../assignments/AssignmentService';
+
+const assignmentLogger = karyaLogger({ name: 'assignments' });
 
 /**
  * Get list of (new or verified) assignments for a worker
@@ -119,11 +121,15 @@ export const submit: KaryaMiddleware = async (ctx) => {
         // assignments through this route
       } else {
         const { id, ...updates } = assignment;
-        await BasicModel.updateSingle(
-          'microtask_assignment',
-          { id },
-          { ...updates, submitted_to_box_at, submitted_to_server_at: null }
-        );
+        try {
+          await BasicModel.updateSingle(
+            'microtask_assignment',
+            { id },
+            { ...updates, submitted_to_box_at, submitted_to_server_at: null }
+          );
+        } catch(e: any) {
+          assignmentLogger.error({worker_id: assignment.worker_id, error: e.message})
+        }
         if (assignment.status == 'COMPLETED') {
           // TODO: Handle microtask assignment completion, by invoking policy
         }
@@ -158,7 +164,11 @@ export const submitSkippedExpired: KaryaMiddleware = async (ctx) => {
         // assignments through this route
       } else {
         const { id, ...updates } = assignment;
-        await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
+        try {
+          await BasicModel.updateSingle('microtask_assignment', { id }, { ...updates, submitted_to_box_at });
+        } catch(e: any) {
+          assignmentLogger.error({worker_id: assignment.worker_id, error: e.message})
+        }
         ids.push(id);
       }
     });
