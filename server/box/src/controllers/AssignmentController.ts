@@ -47,7 +47,7 @@ export const get: KaryaMiddleware = async (ctx) => {
       'microtask_assignment',
       { worker_id: worker.id, status: 'VERIFIED' },
       [],
-      [['verified_at', from, null]],
+      [], // TEMP: Removing because of null verification fields
       'verified_at',
       limit
     );
