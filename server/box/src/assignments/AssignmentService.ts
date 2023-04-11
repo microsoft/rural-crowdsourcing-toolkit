@@ -106,7 +106,7 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
 
     // Compute day start timestamp
     // Day starts at 10 AM
-    const dayStart = (Math.floor(currentTime / 1000 / 3600 / 24) * 24 + 10) * 3600 * 1000;
+    const dayStart = (Math.floor(currentTime / 1000 / 3600 / 24) * 24) * 3600 * 1000;
 
     assignmentLogger.info({ worker_id: worker.id, tags: worker.tags });
 
