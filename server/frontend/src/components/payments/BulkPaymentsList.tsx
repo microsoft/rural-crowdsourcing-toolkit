@@ -139,7 +139,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         return {
           workerId: worker.id,
           amount: worker.amount,
-          round: worker.tags.tags[0] = "rani-rct" ? "baseline" : "endline"
+          round: worker.tags.tags[0] == "rani-rct" ? "baseline" : "endline"
         };
       });
 
