@@ -56,7 +56,7 @@ export const get: KaryaMiddleware = async (ctx) => {
       'microtask_assignment',
       { worker_id: worker.id, status: 'COMPLETED' },
       [],
-      [['completed_at', from, null]],
+      [],
       'completed_at',
       limit
     )
