@@ -139,6 +139,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
         return {
           workerId: worker.id,
           amount: worker.amount,
+          round: worker.tags.tags[0] = "rani-rct" ? "baseline" : "endline"
         };
       });
 
@@ -211,6 +212,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
       { header: 'Worker IDs', type: 'field', field: 'id' },
       { header: 'Unique ID', type: 'field', field: 'unique_id' },
       { header: 'Access Code ', type: 'field', field: 'access_code' },
+      { header: 'Round', type: 'field', field: 'round' },
       { header: 'Phone Number ', type: 'field', field: 'phone_number' },
       { header: 'Amount ', type: 'field', field: 'amount' },
     ];

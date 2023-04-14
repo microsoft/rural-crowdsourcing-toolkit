@@ -4,7 +4,8 @@ import { PaymentsTransactionRecord, WorkerRecord } from '@karya/core';
 
 export type PaymentEligibleWorkerRecord = WorkerRecord & {
   amount: number,
-  unique_id: string
+  unique_id: string,
+  round: string
 };
 
 export type PaymentsTransactionTableRecord = PaymentsTransactionRecord & {
