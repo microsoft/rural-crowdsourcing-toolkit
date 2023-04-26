@@ -26,6 +26,7 @@ import {
   getAccountRecords,
   getTransactionRecords,
 } from './ReceiveFromServer';
+import { generateRaniReport } from './scripts/GenerateRaniWorkerReport';
 
 /**
  * Sync specified box with server
@@ -119,4 +120,7 @@ export async function syncBoxWithServer(box: BoxRecord) {
 
   // Get updated account records
   await getTransactionRecords(axios);
+
+  // generate worker report
+  await generateRaniReport();
 }
