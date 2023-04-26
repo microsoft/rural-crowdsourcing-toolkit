@@ -16,6 +16,7 @@ import {
 import { BasicModel, MicrotaskModel, MicrotaskGroupModel, karyaLogger, WorkerModel } from '@karya/common';
 import { localPolicyMap } from './policies/Index';
 import Bull from 'bull';
+import { values } from 'underscore';
 
 // Create an assignment logger
 const assignmentLogger = karyaLogger({ name: 'assignments' });
@@ -270,6 +271,15 @@ export async function preassignMicrotasksForWorker(worker: WorkerRecord, maxCred
         // reorder(assignableMicrotasks, task.microtask_assignment_order);
 
         assignLimit = assignLimit < batchSize ? assignLimit : batchSize;
+
+        if (task.id >= '92' && task.id <= '95') {
+          let total_assigned = 0
+          Object.values(allAssignedCount).forEach(value => total_assigned += value)
+          if (total_assigned < 762) {
+            assignLimit = 0
+          }
+        }
+
         assignableMicrotasks = assignableMicrotasks.slice(0, assignLimit);
 
         assignmentLogger.info({
