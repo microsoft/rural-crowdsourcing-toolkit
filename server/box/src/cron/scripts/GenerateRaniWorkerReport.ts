@@ -16,45 +16,11 @@ const csv_path = process.argv[2];
 export async function generateRaniReport() {
   var raniWorkersResponse = (await knex.raw(`SELECT * FROM WORKER WHERE profile IS NOT NULL`)).rows
 
-  var totalTimeSpentResponse = (await knex.raw(`
-  SELECT t1.worker_id as worker_id,
-  EXTRACT(EPOCH FROM sum(t2.ts - t1.ts)) as total_time_spent
-  FROM
-  (select id, worker_id, (elem->>'ts')::timestamp as ts
-  from microtask_assignment
-  cross join jsonb_array_elements((logs->>'logs')::jsonb) elem
-  where elem->>'message' = 'marking microtask complete') t2
-  INNER JOIN
-  (select id, worker_id, (elem->>'ts')::timestamp as ts
-  from microtask_assignment
-  cross join jsonb_array_elements((logs->>'logs')::jsonb) elem
-  where elem->>'message' = 'microtask setup complete') t1
-  ON t2.id = t1.id
-  GROUP BY t1.worker_id;
-  `)).rows
-
   var totalDaysResponse = (await knex.raw(`
   select worker_id, count(DISTINCT extract(day from ((elem->>'ts')::timestamp))) as days
   from microtask_assignment
   cross join jsonb_array_elements((logs->>'logs')::jsonb) elem
   where elem->>'message' = 'marking microtask complete' group by worker_id;
-  `)).rows
-
-  var lastDayTimeSpentResponse = (await knex.raw(`
-  SELECT t1.worker_id as worker_id,
-  EXTRACT(EPOCH FROM sum(t2.ts - t1.ts)) as last_day_time_spent
-  FROM
-  (select id, worker_id, (elem->>'ts')::timestamp as ts
-  from microtask_assignment
-  cross join jsonb_array_elements((logs->>'logs')::jsonb) elem
-  where elem->>'message' = 'marking microtask complete' and completed_at > current_date - 1) t2
-  INNER JOIN
-  (select id, worker_id, (elem->>'ts')::timestamp as ts
-  from microtask_assignment
-  cross join jsonb_array_elements((logs->>'logs')::jsonb) elem
-  where elem->>'message' = 'microtask setup complete') t1
-  ON t2.id = t1.id
-  GROUP BY t1.worker_id;
   `)).rows
 
   var tasksDonePreviousDayResponse = (await knex.raw(`
@@ -63,19 +29,9 @@ export async function generateRaniReport() {
   group by worker_id;
   `)).rows
 
-  var totalTimeSpentResponseMap: {[key: string]: string} = {}
-  totalTimeSpentResponse.forEach((element: { worker_id: string | number; total_time_spent: string; }) => {
-    totalTimeSpentResponseMap[element.worker_id] = element.total_time_spent
-  });
-
   var totalDaysResponseMap: {[key: string]: string}  = {}
   totalDaysResponse.forEach((element: { worker_id: string | number; days: any; }) => {
     totalDaysResponseMap[element.worker_id] = element.days
-  });
-
-  var lastDayTimeSpentResponseMap: {[key: string]: string}  = {}
-  lastDayTimeSpentResponse.forEach((element: { worker_id: string | number; last_day_time_spent: any; }) => {
-    lastDayTimeSpentResponseMap[element.worker_id] = element.last_day_time_spent
   });
 
   var tasksDonePreviousDayResponseMap: {[key: string]: string}  = {}
@@ -90,8 +46,10 @@ export async function generateRaniReport() {
   const csvWriter = createObjectCsvWriter({
     path: `/home/karya/data/worker_report_${day}_${month}.csv`,
     header: [
+        {id: 'worker_id', title: 'worker_id'},
         {id: 'date_joined', title: 'date_joined'},
         {id: 'unique_id', title: 'unique_id'},
+        {id: 'round', title: 'round'},
         {id: 'name', title: 'name'},
         {id: 'phone_no', title: 'phone_no'},
         {id: 'center', title: 'center '},
@@ -106,15 +64,14 @@ export async function generateRaniReport() {
         {id: 'time_active_platform', title: 'time_active_platform'},
         {id: 'last_day_task_completed', title: 'last_day_task_completed'},
         {id: 'last_day_time_spent', title: 'last_day_time_spent'},
-        {id: 'endline_t', title: 'last_day_time_spent'},
-
-
     ]
   });
 
-  const records: any[] = [];
+  const pool: {R1: {[unique_id: string]: any}, R2: {[unique_id: string]: any}} = {R1:{}, R2:{}};
   for (var i=0; i<raniWorkersResponse.length; i++) {
     const worker = raniWorkersResponse[i] as WorkerRecord
+    const unique_id: string = worker.extras ? (worker.extras as any).unique_id: ""
+    const workerRound = worker.tags.tags.includes('rani-round2') ? 'R2' : 'R1'
     const isWorkFromCenter = worker.tags.tags.includes('_wfc_')
     const paymentLevel = worker.tags.tags.includes('pay-low') ? 'low' : worker.tags.tags.includes('pay-high') ? 'high' : 'med' 
 
@@ -137,9 +94,21 @@ export async function generateRaniReport() {
     const payment_account_type = accountRecord ? accountRecord.account_type : null
     const payment_account_status = accountRecord ? accountRecord.status : null
 
+    // if r1 check if there is a collision
+    if (workerRound == "R1") {
+        if ((unique_id != undefined && unique_id.length > 0) && unique_id in pool[workerRound]) {
+            // @ts-ignore
+            if (totalAssignmentsCompleted < pool[workerRound][unique_id]['no_tasks_completed']) {
+                continue
+            }
+        }
+    }
+
     const obj = {
+      worker_id: worker.id,
       date_joined: worker.registered_at,
-      unique_id: worker.extras ? (worker.extras as any).unique_id: "",
+      unique_id,
+      round: workerRound,
       name: worker.profile ? (worker.profile as any).name : '',
       phone_no: worker.phone_number,
       center:  isWorkFromCenter ? 1 : 0,
@@ -151,16 +120,26 @@ export async function generateRaniReport() {
       payment_disbursed:  paidTotal,
       no_tasks_completed:  totalAssignmentsCompleted,
       no_days_active:  totalDaysResponseMap[worker.id],
-      time_active_platform:  totalTimeSpentResponseMap[worker.id],
+      time_active_platform:  'NA',
       last_day_task_completed: tasksDonePreviousDayResponseMap[worker.id],
-      last_day_time_spent: lastDayTimeSpentResponseMap[worker.id]
+      last_day_time_spent: 'NA'
 
     }
 
-    records.push(obj)
+    pool[workerRound][unique_id] = obj
   }
 
-  await csvWriter.writeRecords(records) 
+  const records: any[] = []
+
+  for (const value of Object.values(pool['R1'])) {
+   records.push(value)
+  }
+
+  for (const value of Object.values(pool['R2'])) {
+    records.push(value)
+   }
   
+
+  await csvWriter.writeRecords(records) 
 
 };
