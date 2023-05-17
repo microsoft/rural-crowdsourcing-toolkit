@@ -136,11 +136,9 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     const requestBody: BulkPaymentsTransactionRequest = this.props.payments_eligible_worker.data
       .filter((worker) => this.state.workers_eligible[worker.id] === true)
       .map((worker) => {
-        console.log(worker.tags)
         return {
           workerId: worker.id,
           amount: worker.amount,
-          round: worker.tags.tags[0] == "rani-rct" ? "baseline" : "endline"
         };
       });
 
@@ -150,7 +148,12 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
   render() {
     this.handleWorkersEligibleIsEmpty();
 
-    const workers = this.props.payments_eligible_worker.data;
+    const workers = this.props.payments_eligible_worker.data.map(worker => {
+      worker.round = worker.tags.tags[0] == "rani-rct" ? "baseline" : "endline"
+      return worker
+    });
+
+    console.log(workers)
     const totalAmount = workers.reduce((acc, worker) => {
       var checked = this.state.workers_eligible[worker.id];
       if (checked) {
