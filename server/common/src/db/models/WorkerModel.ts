@@ -81,7 +81,7 @@ export async function getBalance(worker_id: string): Promise<number> {
   FROM payments_transaction WHERE worker_id = ${worker_id}
   AND status IN ('created', 'queued', 'processing', 'processed', 'failed_after_transaction'))
   )::int as total 
-  FROM microtask_assignment WHERE status IN ('COMPLETED', 'VERIFIED') AND worker_id = ${worker_id} AND submitted_to_server_at IS NOT NULL
+  FROM microtask_assignment WHERE status IN ('COMPLETED', 'VERIFIED') AND worker_id = ${worker_id}
   AND task_id NOT BETWEEN 25 AND 36;`);
   let balance = response.rows[0].total;
   return balance ? balance : 0;
@@ -100,7 +100,7 @@ export async function getTotalSpent(worker_id: string): Promise<number> {
 
 export async function getTotalEarned(worker_id: string): Promise<number> {
   const response = await knex.raw(
-    `SELECT SUM(COALESCE(credits, 0) + max_base_credits)::int as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('COMPLETED', 'VERIFIED') AND submitted_to_server_at IS NOT NULL
+    `SELECT SUM(COALESCE(credits, 0) + max_base_credits)::int as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('COMPLETED', 'VERIFIED')
     AND task_id NOT BETWEEN 25 AND 36`
   );
   const earned = response.rows[0].total;
@@ -111,7 +111,7 @@ export async function getWeekEarned(worker_id: string): Promise<number> {
   const current = new Date().getTime();
   const lastWeek = new Date(current - 7 * 24 * 3600 * 1000).toISOString();
   const response = await knex.raw(
-    `SELECT SUM(COALESCE(credits, 0) + max_base_credits)::int as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('COMPLETED', 'VERIFIED') AND submitted_to_server_at IS NOT NULL
+    `SELECT SUM(COALESCE(credits, 0) + max_base_credits)::int as total FROM microtask_assignment WHERE worker_id=${worker_id} AND status IN ('COMPLETED', 'VERIFIED')
     AND task_id NOT BETWEEN 25 AND 36 AND completed_at > '${lastWeek}'`
   );
   const earned = response.rows[0].total;
