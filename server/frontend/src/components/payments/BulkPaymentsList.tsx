@@ -136,6 +136,7 @@ class BulkPaymentsList extends React.Component<BulkPaymentsListProps, BulkPaymen
     const requestBody: BulkPaymentsTransactionRequest = this.props.payments_eligible_worker.data
       .filter((worker) => this.state.workers_eligible[worker.id] === true)
       .map((worker) => {
+        console.log(worker.tags)
         return {
           workerId: worker.id,
           amount: worker.amount,
