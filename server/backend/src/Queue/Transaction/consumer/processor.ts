@@ -92,7 +92,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
     // Log the error
     // Check if error description exists if not, add the string for original error
     if (e.response.data.error.description) {
-      throw new RazorPayRequestError(e.response.data.error + ": " + e.response.data.error.description);
+      throw new RazorPayRequestError(e.response.data.error.reason + ": " + e.response.data.error.description);
     } else {
       ErrorLogger.error(`Transaction Id ${transactionRecord.id}: Error Stack: ${e.stack}`);
       throw new RazorPayRequestError(e);
