@@ -92,7 +92,7 @@ const sendPayoutRequest = async (transactionRecord: PaymentsTransactionRecord, f
     // Log the error
     // Check if error description exists if not, add the string for original error
     if (e.response.data.error.description) {
-      throw new RazorPayRequestError(e.response.data.error.description);
+      throw new RazorPayRequestError(e.response.data.error + ": " + e.response.data.error.description);
     } else {
       ErrorLogger.error(`Transaction Id ${transactionRecord.id}: Error Stack: ${e.stack}`);
       throw new RazorPayRequestError(e);
@@ -157,7 +157,7 @@ const cleanUpOnError = async (error: any, job: Job<TransactionQJobData>) => {
     ...transactionRecord.meta,
     failure_server: 'server',
     failure_source: 'Transaction Queue Processor',
-    failure_reason: error.message + " test log",
+    failure_reason: error.message,
   };
   const updatedStatus = transactionRequestSucess
     ? TransactionStatus.FAILED_AFTER_TRANSACTION
